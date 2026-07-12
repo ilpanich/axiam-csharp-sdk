@@ -15,7 +15,7 @@ point.
 **Build:**
 
 ```bash
-dotnet build sdks/csharp/examples/AspNetCoreSample -c Release
+dotnet build examples/AspNetCoreSample -c Release
 ```
 
 **Run against a live AXIAM server (manual-only — see 21-VALIDATION.md):**
@@ -23,7 +23,7 @@ dotnet build sdks/csharp/examples/AspNetCoreSample -c Release
 ```bash
 export Axiam__BaseUrl=https://your-axiam-instance
 export Axiam__TenantId=your-tenant-slug
-dotnet run --project sdks/csharp/examples/AspNetCoreSample
+dotnet run --project examples/AspNetCoreSample
 ```
 
 What to observe:
@@ -49,7 +49,7 @@ A console app demonstrating all four SDK capabilities via ONLY the public
 **Build:**
 
 ```bash
-dotnet build sdks/csharp/examples/Quickstart -c Release
+dotnet build examples/Quickstart -c Release
 ```
 
 **Run against a live AXIAM server + broker (manual-only):**
@@ -62,7 +62,7 @@ export AXIAM_PASSWORD='your-password'
 export AXIAM_TOTP_CODE=123456          # only needed if MFA is enabled
 export AXIAM_AMQP_URI=amqp://guest:guest@localhost:5672
 export AXIAM_AMQP_SIGNING_KEY_HEX=<hex-encoded per-tenant AMQP signing secret>
-dotnet run --project sdks/csharp/examples/Quickstart
+dotnet run --project examples/Quickstart
 ```
 
 Each phase is wrapped in a try/catch so the example still builds and documents
@@ -73,7 +73,7 @@ the AMQP phase does the same when no broker is reachable.
 ## CI
 
 Both examples are built by `.github/workflows/sdk-ci-csharp.yml` on every
-`sdks/csharp/**` pull request, ensuring they stay compilable against the current
+pull request, ensuring they stay compilable against the current
 SDK source tree. Neither example is executed in CI — running them end-to-end
 requires a live AXIAM server (and, for the Quickstart AMQP phase, a live
 RabbitMQ broker), which is manual-only per `21-VALIDATION.md`.

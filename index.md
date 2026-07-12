@@ -11,5 +11,5 @@ API reference for the AXIAM .NET packages:
   claim check, and applies the CSRF double-submit check to cookie-authenticated
   state-changing requests.
 
-See the [AXIAM SDK contract](https://github.com/ilpanich/axiam/blob/main/sdks/CONTRACT.md)
+See the [AXIAM SDK contract](https://github.com/ilpanich/axiam-csharp-sdk/blob/main/CONTRACT.md)
 for the behaviour every AXIAM SDK guarantees.
