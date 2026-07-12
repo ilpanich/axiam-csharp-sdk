@@ -40,6 +40,13 @@ jobs:
       # /p:CoverletOutputFormat (that MSBuild property only applies to coverlet's
       # msbuild integration, which this repo does not reference) — so the format is
       # passed inline with the RunConfiguration override below.
+      #
+      # ExcludeByFile drops generated code under any obj/ directory (the gRPC/protobuf
+      # client stubs under Axiam.Sdk/obj/**/axiam/v1/*.cs). Those files are build output,
+      # not tracked in git, and Coveralls' coverage-reporter cannot map an untracked
+      # source path to a git blob — it aborts the whole tracefile with
+      # "KeyError: Missing hash key: nil" the moment it sees one, so they must never
+      # reach the lcov report in the first place.
       - name: dotnet test (with coverage)
         run: >
           dotnet test Axiam.Sdk.sln -c Release --no-build
@@ -47,15 +54,24 @@ jobs:
           --results-directory ./TestResults
           --logger "console;verbosity=normal"
           -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov
+          DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile="**/obj/**/*.cs"
 
       # Each test project writes its own lcov.info into a GUID-named subdirectory
       # of ./TestResults. Coveralls needs a single file, so merge them: lcov is a
       # line-oriented, concatenable format (records are delimited by end_of_record),
-      # so concatenation is a valid merge and Coveralls folds the per-file records.
+      # so concatenation is a valid merge and Coveralls folds the per-file records —
+      # PROVIDED every file ends on a newline. Plain `cat` does not insert one, and
+      # coverlet's per-project coverage.info does not end with a trailing newline, so
+      # naive `cat file1 file2` glues file1's last `end_of_record` directly onto
+      # file2's first `SF:` line into one corrupted line. That line stops being a
+      # valid record boundary, and Coveralls' lcov parser aborts the entire tracefile
+      # with "KeyError: Missing hash key: nil" once it loses track of the current
+      # file. `awk 1` normalizes this: it reprints every input record (regardless of
+      # source file) followed by a newline, so the join is always newline-safe.
       - name: Merge lcov reports
         run: |
           set -euo pipefail
-          find ./TestResults \( -name 'coverage.info' -o -name 'lcov.info' \) -print | tee /dev/stderr | xargs cat > ./lcov.info
+          find ./TestResults \( -name 'coverage.info' -o -name 'lcov.info' \) -print | tee /dev/stderr | xargs awk 1 > ./lcov.info
           if [ ! -s ./lcov.info ]; then
             echo "::error::No lcov coverage report was produced by dotnet test."
             exit 1
