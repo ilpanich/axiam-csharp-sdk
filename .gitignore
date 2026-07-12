@@ -9,6 +9,15 @@ obj/
 *.nupkg
 *.snupkg
 
+# DocFX output — `docfx metadata` writes api/, `docfx build` writes _site/;
+# both are regenerated on every docs-publish run and served from gh-pages.
+_site/
+api/
+
+# Test + coverage output (coverage.yml)
+TestResults/
+lcov.info
+
 # IDE / editor
 .vs/
 *.user

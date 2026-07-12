@@ -6,7 +6,7 @@
     <Version>0.0.0</Version>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Description>Official C# client SDK for AXIAM IAM</Description>
-    <RepositoryUrl>https://github.com/ilpanich/axiam</RepositoryUrl>
+    <RepositoryUrl>https://github.com/ilpanich/axiam-csharp-sdk</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -71,11 +71,16 @@
   </ItemGroup>
 
   <!-- Client-only codegen (SDK never hosts a gRPC server) — the C# Grpc.Tools
-       exception to the repo-wide buf pipeline (D-05, sdks/CONTRACT.md closing note).
+       exception to the repo-wide buf pipeline (D-01/D-05, CONTRACT.md closing note).
        Generated stubs land under obj/ (gitignored) and are bundled compiled into the
-       published package; sdks/buf.gen.yaml is intentionally NOT touched for C#. -->
+       published package; this SDK runs no `buf generate` step.
+
+       ProtoRoot is load-bearing: protoc derives the generated C# namespace
+       (Axiam.V1) from each .proto's path RELATIVE to ProtoRoot. Point it anywhere
+       but the directory that contains `axiam/v1/` and the stubs silently move to
+       another namespace, surfacing as CS0234 rather than as a path error. -->
   <ItemGroup>
-    <Protobuf Include="../../../proto/axiam/v1/*.proto" GrpcServices="Client" ProtoRoot="../../../proto" />
+    <Protobuf Include="../proto/axiam/v1/*.proto" GrpcServices="Client" ProtoRoot="../proto" />
   </ItemGroup>
 
 </Project>

@@ -6,7 +6,7 @@
     <Version>0.0.0</Version>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Description>ASP.NET Core middleware, DI extensions, and policy-based authorization for the AXIAM C# SDK (Axiam.Sdk).</Description>
-    <RepositoryUrl>https://github.com/ilpanich/axiam</RepositoryUrl>
+    <RepositoryUrl>https://github.com/ilpanich/axiam-csharp-sdk</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
