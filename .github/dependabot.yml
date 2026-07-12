@@ -1,0 +1,22 @@
+# .github/dependabot.yml
+# Automated dependency updates — mirrors the AXIAM monorepo's D-16 policy.
+# `nuget` at the repo root covers every .csproj reachable from Axiam.Sdk.sln
+# (both packages, both test projects) plus the two example projects.
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      minor-patch:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday

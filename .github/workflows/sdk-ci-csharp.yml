@@ -1,0 +1,207 @@
+name: SDK CI — C#
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  scaffold-check:
+    name: SDK Scaffold Check
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - name: Verify LICENSE file
+        run: test -f LICENSE
+
+  build-test:
+    name: Build, test, TLS-bypass gate, pack
+    # No event-name restriction: this job runs BOTH on a pull_request AND on a
+    # tag push (vX.Y.Z) — the publish job below is gated behind it via `needs:`,
+    # so a tag can only publish after restore/build/test/the SC#4 grep gate/pack
+    # have all passed on that exact tagged commit.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Set up .NET 8 SDK
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9  # v4.3.1
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: dotnet restore
+        run: dotnet restore Axiam.Sdk.sln
+
+      # Builds the whole two-package solution (Axiam.Sdk, Axiam.Sdk.AspNetCore)
+      # plus both xUnit test projects (Axiam.Sdk.Tests, Axiam.Sdk.AspNetCore.Tests).
+      - name: dotnet build (Axiam.Sdk.sln, Release)
+        run: dotnet build Axiam.Sdk.sln -c Release --no-restore
+
+      # SC#3: the runnable examples must compile under <Nullable>enable> against
+      # the CURRENT SDK source (ProjectReference, not the published packages).
+      # Neither example is part of Axiam.Sdk.sln, so each is built explicitly.
+      - name: dotnet build — AspNetCoreSample example (SC#3)
+        run: dotnet build examples/AspNetCoreSample -c Release
+
+      - name: dotnet build — Quickstart example
+        run: dotnet build examples/Quickstart -c Release
+
+      # Full solution test run: SC#2 single-flight (RefreshGuardSingleFlightTests),
+      # the AMQP HMAC verify-before-handler matrix (HmacVerifyTests,
+      # AmqpConsumerTests), JWKS Ed25519 verification (JwksVerifierTests), the
+      # CR-04 redaction regression (SensitiveRedactionTests), REST/gRPC authz
+      # (AuthzRestClientTests, GrpcAuthzClientTests), SC#1 client construction
+      # (ClientConstructionTests), the SC#3 ASP.NET Core WebApplicationFactory
+      # integration (AspNetCoreMiddlewareTests), and the SC#4 in-suite TLS guard
+      # (TlsBypassGrepGateTests).
+      - name: dotnet test (full solution)
+        run: dotnet test Axiam.Sdk.sln -c Release --no-build --logger "console;verbosity=normal"
+
+      # CI-03: fail on any transitively-referenced package with a known
+      # vulnerability. `dotnet list --vulnerable` exits 0 even when it prints
+      # advisories, so grep the output and fail explicitly.
+      - name: Dependency vulnerability scan (CI-03)
+        run: |
+          dotnet list Axiam.Sdk.sln package --vulnerable --include-transitive 2>&1 | tee vuln.txt
+          if grep -q "has the following vulnerable packages" vuln.txt; then
+            echo "::error::Vulnerable NuGet packages detected"; exit 1
+          fi
+
+      # §6/SC#4/T-21-21: strict TLS is always on; the only escape hatch is the
+      # additive customCa chain-trust-store callback (CustomTrustStore /
+      # CustomRootTrust markers) — no unconditional-true
+      # ServerCertificateCustomValidationCallback bypass anywhere in Axiam.Sdk or
+      # Axiam.Sdk.AspNetCore. This is a belt-and-suspenders CI-native gate
+      # independent of the test runner, mirroring TlsBypassGrepGateTests.cs (which
+      # the `dotnet test` step above already ran).
+      - name: TLS-bypass gate — no TLS-bypass patterns (SC#4)
+        run: |
+          set +e
+          matches=$(grep -rn "ServerCertificateCustomValidationCallback" Axiam.Sdk Axiam.Sdk.AspNetCore --include=*.cs | grep -v "CustomTrustStore")
+          set -e
+          if [ -n "$matches" ]; then
+            echo "::error::TLS-bypass gate failed — disallowed ServerCertificateCustomValidationCallback usage found (only the additive customCa CustomTrustStore pattern is permitted):"
+            echo "$matches"
+            exit 1
+          fi
+          echo "TLS-bypass gate passed — no disallowed usage found."
+
+      # SC#5/D-04: dotnet pack produces a valid, SourceLink-enabled,
+      # deterministic .nupkg + .snupkg for both published packages. This is a
+      # dry-run/verification gate on every PR; the publish job below re-packs
+      # on the tagged commit (at the tag's version) before pushing to nuget.org.
+      - name: dotnet pack — Axiam.Sdk (SC#5)
+        run: dotnet pack Axiam.Sdk -c Release --no-build -o ./nupkgs
+
+      - name: dotnet pack — Axiam.Sdk.AspNetCore (SC#5)
+        run: dotnet pack Axiam.Sdk.AspNetCore -c Release --no-build -o ./nupkgs
+
+      # D-01/D-05: Grpc.Tools generates gRPC stubs at BUILD time into obj/
+      # (gitignored) rather than committing them (the documented C# exception to
+      # the buf pipeline every other AXIAM SDK uses) — there is no
+      # committed-stub-vs-regen diff to check, so no drift-check job is needed.
+      # The build/pack steps above already prove the codegen against
+      # proto/axiam/v1/*.proto compiles and ships into the package.
+
+  # Publishing to a public registry is IRREVERSIBLE — NuGet refuses to re-use a
+  # version number. Git tags are NOT branch-scoped, so without this gate a release
+  # tag cut on a feature branch would ship unreviewed code to the world under a
+  # version that can never be reclaimed. The publish job below `needs:` this.
+  verify-tag-on-main:
+    name: Verify tag is on main
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Assert the tagged commit is an ancestor of origin/main
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "${GITHUB_SHA}" origin/main; then
+            echo "::error::Tag ${GITHUB_REF_NAME} points at ${GITHUB_SHA}, which is NOT on origin/main. Release tags must be cut from main."
+            exit 1
+          fi
+          echo "OK: ${GITHUB_REF_NAME} (${GITHUB_SHA}) is on origin/main."
+
+  publish:
+    name: Publish to NuGet
+    # Manual-on-tag, side-effecting job: only runs when a maintainer pushes a
+    # vX.Y.Z tag, and only after build-test (restore/build/test/grep-gate/pack)
+    # has passed on that exact tagged commit.
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: [build-test, verify-tag-on-main]
+    runs-on: ubuntu-latest
+    # The nuget.org Trusted Publishing policy for this repo is bound to the
+    # `production` GitHub environment: the OIDC token this job presents carries
+    # the environment name as a claim, and nuget.org rejects the exchange if it
+    # does not match the policy. Removing/renaming this breaks publishing.
+    environment: production
+    permissions:
+      # id-token: write is what lets this job mint the GitHub OIDC token that
+      # NuGet/login exchanges for a short-lived API key. Without it the token
+      # request fails and login cannot produce a key.
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Set up .NET 8 SDK
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9  # v4.3.1
+        with:
+          dotnet-version: '8.0.x'
+
+      # Both .csproj files carry a placeholder <Version>0.0.0</Version>; the
+      # release version is the git tag and is the single source of truth. Derive
+      # it once and feed it to build+pack so the assembly version, the .nupkg
+      # version, and the tag can never disagree.
+      - name: Derive package version from tag
+        id: version
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not encode a SemVer version (expected vX.Y.Z[-prerelease])."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Publishing version $version"
+
+      - name: dotnet restore
+        run: dotnet restore Axiam.Sdk.sln
+
+      - name: dotnet build (Release)
+        run: dotnet build Axiam.Sdk.sln -c Release --no-restore -p:Version=${{ steps.version.outputs.version }}
+
+      - name: dotnet pack — Axiam.Sdk + Axiam.Sdk.AspNetCore (SC#5, D-04)
+        run: |
+          set -euo pipefail
+          dotnet pack Axiam.Sdk -c Release --no-build -o ./nupkgs -p:Version=${{ steps.version.outputs.version }}
+          dotnet pack Axiam.Sdk.AspNetCore -c Release --no-build -o ./nupkgs -p:Version=${{ steps.version.outputs.version }}
+
+      # Trusted Publishing (OIDC): no long-lived NUGET_API_KEY secret exists. This
+      # step exchanges the job's GitHub OIDC token for an API key that nuget.org
+      # only honours for ~1 hour, so it must run immediately before the push.
+      # `user` is the nuget.org profile name (NOT an email address).
+      # https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing
+      - name: NuGet login (OIDC -> short-lived API key)
+        id: login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841  # v1.2.0
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      # `dotnet nuget push` auto-detects and pushes the matching .snupkg symbol
+      # package alongside each .nupkg in the same output directory.
+      - name: dotnet nuget push (Axiam.Sdk + Axiam.Sdk.AspNetCore)
+        run: >
+          dotnet nuget push "./nupkgs/*.nupkg"
+          --api-key "${{ steps.login.outputs.NUGET_API_KEY }}"
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate

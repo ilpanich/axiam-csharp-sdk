@@ -1,0 +1,70 @@
+name: Coverage
+
+# Line coverage for the two published packages, reported to Coveralls.
+#
+# coverlet (bundled with every test project via the Microsoft.NET.Test.Sdk /
+# `--collect:"XPlat Code Coverage"` data collector) emits Cobertura by default;
+# Coveralls' action consumes lcov, so the format is switched explicitly via the
+# DataCollectionRunSettings knob below. Both test projects write their own
+# lcov.info under TestResults/, and coverallsapp/github-action globs them.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  coverage:
+    name: Test coverage (coverlet -> Coveralls)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Set up .NET 8 SDK
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9  # v4.3.1
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: dotnet restore
+        run: dotnet restore Axiam.Sdk.sln
+
+      - name: dotnet build (Release)
+        run: dotnet build Axiam.Sdk.sln -c Release --no-restore
+
+      # `--collect:"XPlat Code Coverage"` is coverlet's data-collector mode. Its
+      # output format is set through the runsettings the collector reads, NOT via
+      # /p:CoverletOutputFormat (that MSBuild property only applies to coverlet's
+      # msbuild integration, which this repo does not reference) — so the format is
+      # passed inline with the RunConfiguration override below.
+      - name: dotnet test (with coverage)
+        run: >
+          dotnet test Axiam.Sdk.sln -c Release --no-build
+          --collect:"XPlat Code Coverage"
+          --results-directory ./TestResults
+          --logger "console;verbosity=normal"
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov
+
+      # Each test project writes its own lcov.info into a GUID-named subdirectory
+      # of ./TestResults. Coveralls needs a single file, so merge them: lcov is a
+      # line-oriented, concatenable format (records are delimited by end_of_record),
+      # so concatenation is a valid merge and Coveralls folds the per-file records.
+      - name: Merge lcov reports
+        run: |
+          set -euo pipefail
+          find ./TestResults \( -name 'coverage.info' -o -name 'lcov.info' \) -print | tee /dev/stderr | xargs cat > ./lcov.info
+          if [ ! -s ./lcov.info ]; then
+            echo "::error::No lcov coverage report was produced by dotnet test."
+            exit 1
+          fi
+          wc -l ./lcov.info
+
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e  # v2.3.7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./lcov.info
+          format: lcov

@@ -1,0 +1,72 @@
+name: Docs Publish
+
+# Publishes this SDK's DocFX API reference to THIS repository's own GitHub Pages
+# site (gh-pages branch, site root) on a release tag.
+#
+# In the monorepo this job deployed into a `sdk/csharp/` subtree of the shared
+# Pages site. Now that the C# SDK is its own repository, its docs own the site
+# root — there is no sibling content to preserve, so no destination_dir.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+# gh-pages is a single branch: serialize deploys so two tags pushed together
+# cannot race each other's commit.
+concurrency:
+  group: docs-publish
+  cancel-in-progress: false
+
+jobs:
+  # A release tag must be cut from main — same gate as sdk-ci-csharp.yml.
+  verify-tag-on-main:
+    name: Verify tag is on main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Assert the tagged commit is an ancestor of origin/main
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "${GITHUB_SHA}" origin/main; then
+            echo "::error::Tag ${GITHUB_REF_NAME} is not on origin/main — refusing to publish docs."
+            exit 1
+          fi
+          echo "OK: ${GITHUB_REF_NAME} is on origin/main."
+
+  docs-csharp:
+    name: C# SDK docs (DocFX)
+    needs: verify-tag-on-main
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9  # v4.3.1
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build API docs
+        run: |
+          set -euo pipefail
+          dotnet tool install -g docfx
+          export PATH="$PATH:$HOME/.dotnet/tools"
+          # REQUIRED before `docfx metadata`: the Axiam.V1 gRPC types are
+          # generated from proto/ by Grpc.Tools during the build. DocFX's Roslyn
+          # pass does not run codegen, so without a prior build it fails with
+          # CS0234 ("namespace 'V1' does not exist") and emits ZERO API files
+          # while still reporting "Build succeeded".
+          dotnet build Axiam.Sdk.sln -c Release
+          docfx metadata docfx.json
+          docfx build docfx.json
+      - name: Deploy to GitHub Pages (site root)
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          commit_message: "docs: publish API docs for ${{ github.ref_name }}"
