@@ -78,6 +78,27 @@ jobs:
           fi
           wc -l ./lcov.info
 
+      # Regression gate: fail if merged line coverage drops below the floor.
+      # The two test projects each instrument the shared Axiam.Sdk assembly, so
+      # a line covered by EITHER run counts as covered (union) — the same fold
+      # Coveralls applies. Set below the current ~93.7% so it never false-fails;
+      # ratchet upward as coverage rises.
+      - name: Enforce coverage floor
+        run: |
+          total=$(awk -F: '
+            /^SF:/ { sf=$2 }
+            /^DA:/ {
+              split($2, a, ",");
+              key = sf ":" a[1];
+              if (a[2]+0 > 0) cov[key]=1; else if (!(key in cov)) cov[key]=0;
+            }
+            END { t=0; c=0; for (k in cov) { t++; if (cov[k]) c++ } printf "%.2f", (t ? 100*c/t : 0) }
+          ' ./lcov.info)
+          echo "Merged line coverage: ${total}%"
+          awk -v t="$total" 'BEGIN { exit (t+0 >= 92) ? 0 : 1 }' || {
+            echo "::error::coverage ${total}% is below the 92% floor"; exit 1;
+          }
+
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e  # v2.3.7
         with:
