@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class AxiamAuthMiddleware | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class AxiamAuthMiddleware | AXIAM .NET SDK ">
+      
+      <meta name="description" content="ASP.NET Core authentication middleware (D-06, CONTRACT.md &#167;10 &amp;quot;ASP.NET Core&amp;quot; row: app.UseMiddleware&amp;lt;AxiamAuthMiddleware&amp;gt;() in Program.cs). Mirrors sdks/java/.../spring/AxiamAuthenticationFilter.java&#39;s authoritative sequence (extract → verify → exp-check → cross-tenant-check → inject-identity → 401 JSON on failure), adapted to ASP.NET Core&#39;s / integration point — the direct analog of Java D-14&#39;s Spring SecurityContext integration.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamAuthMiddleware.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamAuthMiddleware%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware">
+
+
+
+  <h1 id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware" class="text-break">
+Class AxiamAuthMiddleware  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.AspNetCore.html">AspNetCore</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.AspNetCore.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>ASP.NET Core authentication middleware (D-06, CONTRACT.md §10 &quot;ASP.NET Core&quot;
+row: <code>app.UseMiddleware&lt;AxiamAuthMiddleware&gt;()</code> in <code>Program.cs</code>).
+Mirrors <code>sdks/java/.../spring/AxiamAuthenticationFilter.java</code>'s authoritative
+sequence (extract → verify → exp-check → cross-tenant-check →
+inject-identity → 401 JSON on failure), adapted to ASP.NET Core's
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.security.claims.claimsprincipal">ClaimsPrincipal</a>/<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.httpcontext.user">User</a> integration point —
+the direct analog of Java D-14's Spring <code>SecurityContext</code> integration.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class AxiamAuthMiddleware</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">AxiamAuthMiddleware</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Security-critical invariants (T-21-17, T-21-19, T-21-20):</p>
+<ul><li>
+When NO credential is presented at all, the request is passed through
+unauthenticated — the framework's own <code>[Authorize]</code>/authorization middleware
+401s it (via <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.html">AxiamAuthorizationMiddlewareResultHandler</a>, registered by
+<a class="xref" href="Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.html#Axiam_Sdk_AspNetCore_ServiceCollectionExtensions_AddAxiamAspNetCore_Microsoft_Extensions_DependencyInjection_IServiceCollection_System_Action_Axiam_Sdk_AspNetCore_AxiamOptions__">AddAxiamAspNetCore(IServiceCollection, Action&lt;AxiamOptions&gt;)</a>). This middleware never
+rejects a request for the mere absence of a token (Java filter lines 78-83
+precedent) — doing so would incorrectly 401 public/anonymous endpoints that never
+carry a token at all.
+</li><li>
+When a token IS presented, it is verified via the shared <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a>'s
+internal <code>JwksVerifier</code> local fast path: alg-pinned Ed25519 signature check,
+THEN the mandatory post-signature <code>tenant_id</code> claim check (Pitfall 3 — the JWKS
+document is organization-wide, not tenant-scoped, so signature validity alone never
+implies tenant authorization). An explicit <code>exp</code> re-check is performed here too
+as defense in depth, mirroring the Java filter's lines 88-91 even though
+<code>JwksVerifier.VerifyAsync</code> already checks <code>exp</code> internally.
+</li><li>
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.httpcontext.user">User</a> is rebuilt from scratch on every request from a fresh
+<code>VerifyAsync</code> call — it is NEVER cached beyond the current request, and never
+beyond the token's own remaining TTL (§10).
+</li><li>
+Every failure path writes a standardized JSON body via
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.httpresponsejsonextensions.writeasjsonasync#microsoft-aspnetcore-http-httpresponsejsonextensions-writeasjsonasync-1(microsoft-aspnetcore-http-httpresponse-0-system-threading-cancellationtoken)">WriteAsJsonAsync&lt;TValue&gt;(HttpResponse, TValue, CancellationToken)</a>
+(System.Text.Json) — never manual string concatenation, so a message containing
+quotes/control characters can never produce malformed or injected JSON
+(PATTERNS.md "Standardized JSON error body").
+</li><li>
+CSRF (cookie double-submit, CONTRACT.md §3): when the credential was sourced
+from the <code>axiam_access</code> COOKIE (not the <code>Authorization</code> header) and the
+request method is state-changing (anything other than GET/HEAD/OPTIONS), this
+middleware additionally requires the <code>X-CSRF-Token</code> request header to be
+present and equal (constant-time, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.security.cryptography.cryptographicoperations.fixedtimeequals">FixedTimeEquals(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;)</a>)
+to the <code>axiam_csrf</code> cookie value, rejecting with 403 on mismatch/absence.
+Bearer-header requests are CSRF-immune by construction — a cross-site attacker
+cannot set arbitrary request headers — but a cookie automatically attached by the
+browser is not, and in any same-site deployment where <code>axiam_access</code> reaches
+this app, the non-<code>httpOnly</code> <code>axiam_csrf</code> cookie does too. This mirrors,
+locally, the same double-submit check the AXIAM server performs on its own
+endpoints (§3).
+</li></ul>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware__ctor_" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)">
+  AxiamAuthMiddleware(RequestDelegate)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Constructs the middleware. Registered by the ASP.NET Core pipeline
+(<code>app.UseMiddleware&lt;AxiamAuthMiddleware&gt;()</code>), which supplies <code class="paramref">next</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AxiamAuthMiddleware(RequestDelegate next)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>next</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.requestdelegate">RequestDelegate</a></dt>
+    <dd><p>The next delegate in the middleware pipeline.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware_InvokeAsync_" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.InvokeAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware_InvokeAsync_Microsoft_AspNetCore_Http_HttpContext_Axiam_Sdk_AxiamClient_Microsoft_Extensions_Options_IOptions_Axiam_Sdk_AspNetCore_AxiamOptions__" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,Axiam.Sdk.AxiamClient,Microsoft.Extensions.Options.IOptions{Axiam.Sdk.AspNetCore.AxiamOptions})">
+  InvokeAsync(HttpContext, AxiamClient, IOptions&lt;AxiamOptions&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Convention-based ASP.NET Core middleware invocation. <code class="paramref">client</code> and
+<code class="paramref">optionsAccessor</code> are resolved per-request from
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.httpcontext.requestservices">RequestServices</a> (the standard <code>UseMiddleware&lt;T&gt;</code>
+pattern for additional <code>InvokeAsync</code> parameters beyond <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.httpcontext">HttpContext</a>)
+— they are singletons registered by <a class="xref" href="Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.html#Axiam_Sdk_AspNetCore_ServiceCollectionExtensions_AddAxiam_Microsoft_Extensions_DependencyInjection_IServiceCollection_System_Action_Axiam_Sdk_AspNetCore_AxiamOptions__">AddAxiam(IServiceCollection, Action&lt;AxiamOptions&gt;)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task InvokeAsync(HttpContext context, AxiamClient client, IOptions&lt;AxiamOptions&gt; optionsAccessor)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>context</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.httpcontext">HttpContext</a></dt>
+    <dd></dd>
+    <dt><code>client</code> <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a></dt>
+    <dd></dd>
+    <dt><code>optionsAccessor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1">IOptions</a>&lt;<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html">AxiamOptions</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

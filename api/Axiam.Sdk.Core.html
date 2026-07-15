@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace Axiam.Sdk.Core | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace Axiam.Sdk.Core | AXIAM .NET SDK ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Core">
+
+  <h1 id="Axiam_Sdk_Core" data-uid="Axiam.Sdk.Core" class="text-break">Namespace Axiam.Sdk.Core</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
+      <dd><p>Authentication failure: wrong credentials, expired session, MFA failure, or a 401 on
+refresh (CONTRACT.md §2, D-12). Always constructed via <a class="xref" href="Axiam.Sdk.Core.ErrorMapper.html">ErrorMapper</a>
+so REST and gRPC transports cannot drift on the error taxonomy.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.AuthzError.html">AuthzError</a></dt>
+      <dd><p>Authorization failure: the caller lacks permission for the requested operation
+(CONTRACT.md §2, D-12). Always constructed via <a class="xref" href="Axiam.Sdk.Core.ErrorMapper.html">ErrorMapper</a> so REST
+and gRPC transports cannot drift on the error taxonomy.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.ErrorMapper.html">ErrorMapper</a></dt>
+      <dd><p>Central status→error mapper (CONTRACT.md §2, D-12). The single source of
+truth for both the HTTP status table and the gRPC status-code table so the REST and
+gRPC transports cannot drift on the error taxonomy.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a></dt>
+      <dd><p>Transport-level failure: connection refused, timeout, TLS error, DNS failure, or a
+server-side 5xx (CONTRACT.md §2).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.SensitiveJsonConverterFactory.html">SensitiveJsonConverterFactory</a></dt>
+      <dd><p>Factory that produces the closed <a class="xref" href="Axiam.Sdk.Core.SensitiveJsonConverter-1.html">SensitiveJsonConverter&lt;T&gt;</a> for a given
+<a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a>. An open-generic converter referenced from a
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterattribute">JsonConverterAttribute</a> MUST be a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonconverterfactory">JsonConverterFactory</a>:
+<code>System.Text.Json</code> cannot instantiate an open-generic <code>JsonConverter&lt;T&gt;</code>
+directly (it throws because the type still contains generic parameters).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.SensitiveJsonConverter-1.html">SensitiveJsonConverter&lt;T&gt;</a></dt>
+      <dd><p><code>System.Text.Json</code> converter for <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a>. Write always emits
+the redacted literal; Read is intentionally unsupported — a <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a>
+is a write-only-for-serialization type, so no wire format can ever deserialize a real
+value back into one.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.TenantContext.html">TenantContext</a></dt>
+      <dd><p>Immutable tenant-identity value object required at <code>AxiamClient</code> construction
+time and propagated on every outgoing request (CONTRACT.md §5: <code>X-Tenant-Id</code>
+header on REST; <code>x-tenant-id</code> gRPC metadata in a later plan). There is no
+default-constructible/blank instance — the constructor throws a runtime guard
+backing the compile-time guarantee that <code>AxiamClient</code>'s own tenant-required
+constructor provides (SC#1): AXIAM is multi-tenant and there is no default tenant.</p>
+</dd>
+    </dl>
+    <h3 id="structs">
+Structs
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a></dt>
+      <dd><p>Wraps a token-carrying value so it can never be accidentally exposed via
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">ToString()</a>, <code>System.Text.Json</code> serialization, or a public
+getter (CONTRACT.md §7, D-12). Only SDK-internal code may construct an instance
+or read the wrapped value, via <span class="xref">Axiam.Sdk.Core.Sensitive&lt;T&gt;.Reveal()</span> — there is intentionally no
+public accessor.</p>
+</dd>
+    </dl>
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

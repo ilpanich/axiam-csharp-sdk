@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ReplayGuard | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ReplayGuard | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Enforces the NEW-4 (sdks/CONTRACT.md &#167;8 &amp;quot;v2 — Replay Protection&amp;quot;) consumer-side gates that run AFTER  has already succeeded on a delivery:">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha/apiSpec/new?filename=Axiam_Sdk_Amqp_ReplayGuard.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Amqp.ReplayGuard%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Amqp.ReplayGuard">
+
+
+
+  <h1 id="Axiam_Sdk_Amqp_ReplayGuard" data-uid="Axiam.Sdk.Amqp.ReplayGuard" class="text-break">
+Class ReplayGuard  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Amqp/ReplayGuard.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Amqp.html">Amqp</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Enforces the NEW-4 (<code>sdks/CONTRACT.md</code> §8 &quot;v2 — Replay Protection&quot;)
+consumer-side gates that run AFTER <a class="xref" href="Axiam.Sdk.Amqp.Hmac.html#Axiam_Sdk_Amqp_Hmac_Verify_System_Byte___System_Byte___">Verify(byte[], byte[])</a> has already
+succeeded on a delivery:</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class ReplayGuard</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ReplayGuard</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Axiam_Sdk_Amqp_ReplayGuard__ctor_" data-uid="Axiam.Sdk.Amqp.ReplayGuard.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Amqp_ReplayGuard__ctor_System_Nullable_System_TimeSpan__" data-uid="Axiam.Sdk.Amqp.ReplayGuard.#ctor(System.Nullable{System.TimeSpan})">
+  ReplayGuard(TimeSpan?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Amqp/ReplayGuard.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="Axiam.Sdk.Amqp.ReplayGuard.html">ReplayGuard</a> with the given freshness skew
+(defaults to <a class="xref" href="Axiam.Sdk.Amqp.ReplayGuard.html#Axiam_Sdk_Amqp_ReplayGuard_DefaultSkew">DefaultSkew</a> when <code class="paramref">skew</code> is
+<code>null</code> or non-positive).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ReplayGuard(TimeSpan? skew = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>skew</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="Axiam_Sdk_Amqp_ReplayGuard_DefaultSkew" data-uid="Axiam.Sdk.Amqp.ReplayGuard.DefaultSkew">
+  DefaultSkew
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Amqp/ReplayGuard.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The default freshness window applied to a delivery's <code>issued_at</code>
+field (mirrors <code>crates/axiam-amqp/src/messages.rs</code>'s
+<code>DEFAULT_FRESHNESS_SKEW_SECS = 300</code>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TimeSpan DefaultSkew</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Axiam_Sdk_Amqp_ReplayGuard_MinKeyVersion" data-uid="Axiam.Sdk.Amqp.ReplayGuard.MinKeyVersion">
+  MinKeyVersion
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Amqp/ReplayGuard.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The lowest AMQP signed-envelope <code>key_version</code> this SDK will
+accept. A message with <code>key_version</code> below this predates the
+mandatory <code>nonce</code>/<code>issued_at</code> replay-protection fields and is
+rejected outright — a hard cutover, there is no v1 grace path (mirrors
+<code>crates/axiam-amqp/src/messages.rs</code>'s <code>MIN_ACCEPTED_KEY_VERSION</code>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int MinKeyVersion = 2</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Amqp_ReplayGuard_Skew_" data-uid="Axiam.Sdk.Amqp.ReplayGuard.Skew*"></a>
+
+  <h3 id="Axiam_Sdk_Amqp_ReplayGuard_Skew" data-uid="Axiam.Sdk.Amqp.ReplayGuard.Skew">
+  Skew
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Amqp/ReplayGuard.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The freshness skew this guard was constructed with.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan Skew { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Amqp_ReplayGuard_Check_" data-uid="Axiam.Sdk.Amqp.ReplayGuard.Check*"></a>
+
+  <h3 id="Axiam_Sdk_Amqp_ReplayGuard_Check_Axiam_Sdk_Amqp_ReplayMetadata_" data-uid="Axiam.Sdk.Amqp.ReplayGuard.Check(Axiam.Sdk.Amqp.ReplayMetadata)">
+  Check(ReplayMetadata)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Amqp/ReplayGuard.cs/#L164"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Validates <code class="paramref">metadata</code> against the NEW-4 replay-protection
+policy and, iff it passes, atomically records its nonce so a second
+delivery of the same nonce is rejected as a replay. Returns <code>true</code>
+iff the message passes all three checks:</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Check(ReplayMetadata metadata)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>metadata</code> <a class="xref" href="Axiam.Sdk.Amqp.ReplayMetadata.html">ReplayMetadata</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Amqp_ReplayGuard_TryExtractMetadata_" data-uid="Axiam.Sdk.Amqp.ReplayGuard.TryExtractMetadata*"></a>
+
+  <h3 id="Axiam_Sdk_Amqp_ReplayGuard_TryExtractMetadata_System_Byte___Axiam_Sdk_Amqp_ReplayMetadata__" data-uid="Axiam.Sdk.Amqp.ReplayGuard.TryExtractMetadata(System.Byte[],Axiam.Sdk.Amqp.ReplayMetadata@)">
+  TryExtractMetadata(byte[], out ReplayMetadata)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Amqp/ReplayGuard.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses <code>key_version</code>, <code>nonce</code>, and <code>issued_at</code> out of an
+already-verified message body. Never throws: a malformed body, or one
+missing <code>nonce</code>/<code>issued_at</code> entirely, returns <code>false</code>
+(which <a class="xref" href="Axiam.Sdk.Amqp.ReplayGuard.html#Axiam_Sdk_Amqp_ReplayGuard_Check_Axiam_Sdk_Amqp_ReplayMetadata_">Check(ReplayMetadata)</a>'s caller must treat as a rejection — an
+unparseable/absent replay-protection field is exactly as unsafe as a
+stale one). A missing/non-numeric <code>key_version</code> yields
+<a class="xref" href="Axiam.Sdk.Amqp.ReplayMetadata.html#Axiam_Sdk_Amqp_ReplayMetadata_KeyVersion">KeyVersion</a> == 0, which is always rejected
+by <a class="xref" href="Axiam.Sdk.Amqp.ReplayGuard.html#Axiam_Sdk_Amqp_ReplayGuard_Check_Axiam_Sdk_Amqp_ReplayMetadata_">Check(ReplayMetadata)</a> since it is below <a class="xref" href="Axiam.Sdk.Amqp.ReplayGuard.html#Axiam_Sdk_Amqp_ReplayGuard_MinKeyVersion">MinKeyVersion</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool TryExtractMetadata(byte[] body, out ReplayMetadata metadata)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>body</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+    <dt><code>metadata</code> <a class="xref" href="Axiam.Sdk.Amqp.ReplayMetadata.html">ReplayMetadata</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

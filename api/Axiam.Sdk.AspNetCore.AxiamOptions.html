@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class AxiamOptions | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class AxiamOptions | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Typed Options-pattern configuration for /  (D-07). Configured via services.AddAxiamAspNetCore(options =&amp;gt; { ... }) — properties are mutable (set, not init) because the .NET Options pattern configures an already-constructed instance through an  delegate.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamOptions.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.AspNetCore.AxiamOptions">
+
+
+
+  <h1 id="Axiam_Sdk_AspNetCore_AxiamOptions" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions" class="text-break">
+Class AxiamOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L10"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.AspNetCore.html">AspNetCore</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.AspNetCore.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Typed Options-pattern configuration for <a class="xref" href="Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.html#Axiam_Sdk_AspNetCore_ServiceCollectionExtensions_AddAxiam_Microsoft_Extensions_DependencyInjection_IServiceCollection_System_Action_Axiam_Sdk_AspNetCore_AxiamOptions__">AddAxiam(IServiceCollection, Action&lt;AxiamOptions&gt;)</a>/
+<a class="xref" href="Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.html#Axiam_Sdk_AspNetCore_ServiceCollectionExtensions_AddAxiamAspNetCore_Microsoft_Extensions_DependencyInjection_IServiceCollection_System_Action_Axiam_Sdk_AspNetCore_AxiamOptions__">AddAxiamAspNetCore(IServiceCollection, Action&lt;AxiamOptions&gt;)</a> (D-07). Configured via
+<code>services.AddAxiamAspNetCore(options =&gt; { ... })</code> — properties are mutable
+(<code>set</code>, not <code>init</code>) because the .NET Options pattern configures an
+already-constructed instance through an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action&lt;T&gt;</a> delegate.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class AxiamOptions</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">AxiamOptions</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamOptions_BaseUrl_" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.BaseUrl*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_BaseUrl" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.BaseUrl">
+  BaseUrl
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The AXIAM server's base URL. Required — passed straight through to the
+underlying <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a> constructor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public required Uri BaseUrl { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamOptions_CustomCaPem_" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.CustomCaPem*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_CustomCaPem" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.CustomCaPem">
+  CustomCaPem
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>PEM-encoded custom CA certificate bytes — the ONLY TLS escape hatch
+(CONTRACT.md §6/SC#4), passed through to the underlying <code>AxiamClient</code>.
+<code>null</code> (the default) uses the system trust store only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[]? CustomCaPem { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamOptions_DefaultTenantId_" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.DefaultTenantId*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_DefaultTenantId" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.DefaultTenantId">
+  DefaultTenantId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The tenant this ASP.NET Core app instance serves. Used for two purposes: (1) to
+construct the single shared <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a> that <code>AddAxiam</code>
+registers, and (2) as <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.html">AxiamAuthMiddleware</a>'s fallback tenant when an
+incoming request does not carry an <code>X-Tenant-ID</code> header (CONTRACT.md
+§5/§10: &quot;Reads X-Tenant-ID (or configured tenant)&quot;). Required — there is
+no silent default tenant anywhere in this SDK; a missing value surfaces as a
+startup-time <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a> from <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a>'s own
+tenant-required constructor (SC#1) the first time the DI container resolves it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public required string DefaultTenantId { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamOptions_JwksCacheTtl_" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.JwksCacheTtl*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_JwksCacheTtl" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.JwksCacheTtl">
+  JwksCacheTtl
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>How long a fetched JWKS document is trusted before
+<a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a>'s <code>JwksVerifier</code> forces a refetch — governs how
+quickly <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.html">AxiamAuthMiddleware</a>'s local verification fast path picks up
+a rotated signing key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan JwksCacheTtl { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamOptions_OrgId_" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.OrgId*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_OrgId" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.OrgId">
+  OrgId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Optional organization UUID, passed through to the underlying
+<code>AxiamClient</code> (mirrors <code>AxiamClientOptions.OrgId</code> — required by the real
+AXIAM login/refresh endpoints beyond §5's documented tenant-only minimum, in
+case the shared client is also used for <code>LoginAsync</code>/<code>RefreshAsync</code>).
+Mutually exclusive with <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_OrgSlug">OrgSlug</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Guid? OrgId { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamOptions_OrgSlug_" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.OrgSlug*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_OrgSlug" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.OrgSlug">
+  OrgSlug
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Optional organization slug, passed through to the underlying
+<code>AxiamClient</code>. Mutually exclusive with <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_OrgId">OrgId</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? OrgSlug { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

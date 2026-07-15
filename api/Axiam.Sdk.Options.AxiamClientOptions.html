@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class AxiamClientOptions | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class AxiamClientOptions | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Typed, options-pattern configuration for AxiamClient (Claude&#39;s Discretion, 21-RESEARCH.md/21-CONTEXT.md D-07).  and  are required here for the future AddAxiam()/ IOptions&amp;lt;AxiamClientOptions&amp;gt; DI registration path (plan 21-06) — AxiamClient&#39;s own tenant-required constructor (this plan, SC#1) sources the tenant/base-URL from its own explicit positional parameters instead, so SC#1&#39;s compile-time guarantee never depends on whether an options object happens to be supplied at all.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha/apiSpec/new?filename=Axiam_Sdk_Options_AxiamClientOptions.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Options.AxiamClientOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Options.AxiamClientOptions">
+
+
+
+  <h1 id="Axiam_Sdk_Options_AxiamClientOptions" data-uid="Axiam.Sdk.Options.AxiamClientOptions" class="text-break">
+Class AxiamClientOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Options/AxiamClientOptions.cs/#L13"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Options.html">Options</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Typed, options-pattern configuration for <code>AxiamClient</code> (Claude's Discretion,
+21-RESEARCH.md/21-CONTEXT.md D-07). <a class="xref" href="Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_BaseUrl">BaseUrl</a> and <a class="xref" href="Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_TenantId">TenantId</a>
+are <code>required</code> here for the future <code>AddAxiam()</code>/
+<code>IOptions&lt;AxiamClientOptions&gt;</code> DI registration path (plan 21-06) —
+<code>AxiamClient</code>'s own tenant-required constructor (this plan, SC#1) sources the
+tenant/base-URL from its own explicit positional parameters instead, so SC#1's
+compile-time guarantee never depends on whether an options object happens to be
+supplied at all.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record AxiamClientOptions : IEquatable&lt;AxiamClientOptions&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">AxiamClientOptions</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Options.AxiamClientOptions.html">AxiamClientOptions</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Options_AxiamClientOptions_BaseUrl_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.BaseUrl*"></a>
+
+  <h3 id="Axiam_Sdk_Options_AxiamClientOptions_BaseUrl" data-uid="Axiam.Sdk.Options.AxiamClientOptions.BaseUrl">
+  BaseUrl
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Options/AxiamClientOptions.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reserved for the future DI/options-pattern registration path (D-07,
+plan 21-06); <code>AxiamClient</code>'s own constructor (this plan) always uses its
+own <code>baseUrl</code> parameter as the source of truth, never this field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public required Uri BaseUrl { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Options_AxiamClientOptions_ConnectTimeout_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.ConnectTimeout*"></a>
+
+  <h3 id="Axiam_Sdk_Options_AxiamClientOptions_ConnectTimeout" data-uid="Axiam.Sdk.Options.AxiamClientOptions.ConnectTimeout">
+  ConnectTimeout
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Options/AxiamClientOptions.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>TCP connect timeout for the SDK-owned <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan ConnectTimeout { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Options_AxiamClientOptions_CustomCaPem_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.CustomCaPem*"></a>
+
+  <h3 id="Axiam_Sdk_Options_AxiamClientOptions_CustomCaPem" data-uid="Axiam.Sdk.Options.AxiamClientOptions.CustomCaPem">
+  CustomCaPem
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Options/AxiamClientOptions.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>PEM-encoded custom CA certificate bytes — the ONLY TLS escape hatch (CONTRACT.md
+§6/SC#4): an ADDITIVE chain-trust-store entry alongside the system trust
+store, never a bypass. <code>null</code> (the default) uses the system trust store only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[]? CustomCaPem { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Options_AxiamClientOptions_JwksCacheTtl_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.JwksCacheTtl*"></a>
+
+  <h3 id="Axiam_Sdk_Options_AxiamClientOptions_JwksCacheTtl" data-uid="Axiam.Sdk.Options.AxiamClientOptions.JwksCacheTtl">
+  JwksCacheTtl
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Options/AxiamClientOptions.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>How long a fetched JWKS document is trusted before <code>JwksVerifier</code>
+forces a refetch.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan JwksCacheTtl { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Options_AxiamClientOptions_MaxRetryAttempts_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.MaxRetryAttempts*"></a>
+
+  <h3 id="Axiam_Sdk_Options_AxiamClientOptions_MaxRetryAttempts" data-uid="Axiam.Sdk.Options.AxiamClientOptions.MaxRetryAttempts">
+  MaxRetryAttempts
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Options/AxiamClientOptions.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Idempotent-only bounded exponential backoff + jitter (Claude's Discretion,
+21-RESEARCH.md/21-CONTEXT.md): state-changing requests (login/refresh/logout)
+never auto-retry. Reserved config surface for a future read-only-retry wrapper
+around <code>AuthzRestClient</code>'s idempotent <code>GET</code>-shaped checks — not yet
+wired into any call path by this plan's tasks.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int MaxRetryAttempts { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Options_AxiamClientOptions_OrgId_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.OrgId*"></a>
+
+  <h3 id="Axiam_Sdk_Options_AxiamClientOptions_OrgId" data-uid="Axiam.Sdk.Options.AxiamClientOptions.OrgId">
+  OrgId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Options/AxiamClientOptions.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Organization UUID resolved by the real AXIAM login/refresh endpoints
+(beyond CONTRACT.md §5's documented tenant-only minimum). Mutually exclusive
+with <a class="xref" href="Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_OrgSlug">OrgSlug</a> — set at most one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Guid? OrgId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Options_AxiamClientOptions_OrgSlug_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.OrgSlug*"></a>
+
+  <h3 id="Axiam_Sdk_Options_AxiamClientOptions_OrgSlug" data-uid="Axiam.Sdk.Options.AxiamClientOptions.OrgSlug">
+  OrgSlug
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Options/AxiamClientOptions.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Organization slug. Mutually exclusive with <a class="xref" href="Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_OrgId">OrgId</a> — set at
+most one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? OrgSlug { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Options_AxiamClientOptions_RequestTimeout_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.RequestTimeout*"></a>
+
+  <h3 id="Axiam_Sdk_Options_AxiamClientOptions_RequestTimeout" data-uid="Axiam.Sdk.Options.AxiamClientOptions.RequestTimeout">
+  RequestTimeout
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Options/AxiamClientOptions.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Overall per-request timeout for the SDK-owned <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan RequestTimeout { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Options_AxiamClientOptions_RetryBaseDelay_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.RetryBaseDelay*"></a>
+
+  <h3 id="Axiam_Sdk_Options_AxiamClientOptions_RetryBaseDelay" data-uid="Axiam.Sdk.Options.AxiamClientOptions.RetryBaseDelay">
+  RetryBaseDelay
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Options/AxiamClientOptions.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Base delay for the bounded exponential backoff described above.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan RetryBaseDelay { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Options_AxiamClientOptions_RetryMaxDelay_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.RetryMaxDelay*"></a>
+
+  <h3 id="Axiam_Sdk_Options_AxiamClientOptions_RetryMaxDelay" data-uid="Axiam.Sdk.Options.AxiamClientOptions.RetryMaxDelay">
+  RetryMaxDelay
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Options/AxiamClientOptions.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Upper bound for the bounded exponential backoff described above.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan RetryMaxDelay { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Options_AxiamClientOptions_TenantId_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.TenantId*"></a>
+
+  <h3 id="Axiam_Sdk_Options_AxiamClientOptions_TenantId" data-uid="Axiam.Sdk.Options.AxiamClientOptions.TenantId">
+  TenantId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Options/AxiamClientOptions.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reserved for the future DI/options-pattern registration path (D-07,
+plan 21-06); <code>AxiamClient</code>'s own constructor (this plan) always uses its
+own <code>tenantId</code> parameter as the source of truth, never this field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public required string TenantId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

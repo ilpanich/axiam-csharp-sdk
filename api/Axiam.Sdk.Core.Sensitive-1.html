@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Struct Sensitive&lt;T&gt; | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Struct Sensitive&lt;T&gt; | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Wraps a token-carrying value so it can never be accidentally exposed via , System.Text.Json serialization, or a public getter (CONTRACT.md &#167;7, D-12). Only SDK-internal code may construct an instance or read the wrapped value, via  — there is intentionally no public accessor.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha/apiSpec/new?filename=Axiam_Sdk_Core_Sensitive_1.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Core.Sensitive%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Core.Sensitive`1">
+
+
+
+  <h1 id="Axiam_Sdk_Core_Sensitive_1" data-uid="Axiam.Sdk.Core.Sensitive`1" class="text-break">
+Struct Sensitive&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Core/Sensitive.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Core.html">Core</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Wraps a token-carrying value so it can never be accidentally exposed via
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">ToString()</a>, <code>System.Text.Json</code> serialization, or a public
+getter (CONTRACT.md §7, D-12). Only SDK-internal code may construct an instance
+or read the wrapped value, via <span class="xref">Axiam.Sdk.Core.Sensitive&lt;T&gt;.Reveal()</span> — there is intentionally no
+public accessor.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(SensitiveJsonConverterFactory))]
+public readonly struct Sensitive&lt;T&gt; : IEquatable&lt;Sensitive&lt;T&gt;&gt;</code></pre>
+  </div>
+
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd></dd>
+  </dl>
+
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;T&gt;&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Core_Sensitive_1_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Per CONTRACT.md §7's C# row (&quot;Struct with <code>ToString()</code> override returning
+<code>&quot;[SENSITIVE]&quot;</code>&quot;): <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html#Axiam_Sdk_Core_Sensitive_1_ToString">ToString()</a> and the paired
+<a class="xref" href="Axiam.Sdk.Core.SensitiveJsonConverter-1.html">SensitiveJsonConverter&lt;T&gt;</a> both always emit the literal
+<code>&quot;[SENSITIVE]&quot;</code>, regardless of the wrapped value. <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html#Axiam_Sdk_Core_Sensitive_1_Equals_System_Object_">Equals(object?)</a>,
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals">Equals(T)</a> and <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html#Axiam_Sdk_Core_Sensitive_1_GetHashCode">GetHashCode()</a> are overridden to
+make a <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a> <b>never value-comparable</b>: <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html#Axiam_Sdk_Core_Sensitive_1_Equals_System_Object_">Equals(object?)</a>
+always returns <code>false</code> and <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html#Axiam_Sdk_Core_Sensitive_1_GetHashCode">GetHashCode()</a> always returns a constant.
+This is deliberate — the default <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetype">ValueType</a> equality a struct would
+otherwise inherit performs a structural, field-by-field <em>value</em> comparison (via
+reflection, and, for a <code>string</code> field, a non-constant-time <code>string.Equals</code>),
+which would open a value-equality/timing side channel on the redacted value and would
+transitively leak into any compiler-synthesized record equality of a type that carries
+a <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a> field. Overriding to a constant closes that channel.</p>
+</div>
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Core_Sensitive_1_Equals_" data-uid="Axiam.Sdk.Core.Sensitive`1.Equals*"></a>
+
+  <h3 id="Axiam_Sdk_Core_Sensitive_1_Equals_Axiam_Sdk_Core_Sensitive__0__" data-uid="Axiam.Sdk.Core.Sensitive`1.Equals(Axiam.Sdk.Core.Sensitive{`0})">
+  Equals(Sensitive&lt;T&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Core/Sensitive.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a> is intentionally never equal to anything — this
+suppresses the structural value comparison a struct would otherwise inherit from
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetype">ValueType</a>, which would be a value-equality/timing side channel
+on the wrapped secret.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(Sensitive&lt;T&gt; other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;T&gt;</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Core_Sensitive_1_Equals_" data-uid="Axiam.Sdk.Core.Sensitive`1.Equals*"></a>
+
+  <h3 id="Axiam_Sdk_Core_Sensitive_1_Equals_System_Object_" data-uid="Axiam.Sdk.Core.Sensitive`1.Equals(System.Object)">
+  Equals(object?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Core/Sensitive.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a> is intentionally never equal to anything — this
+suppresses the structural value comparison a struct would otherwise inherit from
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetype">ValueType</a>, which would be a value-equality/timing side channel
+on the wrapped secret.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object? obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>obj</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Core_Sensitive_1_GetHashCode_" data-uid="Axiam.Sdk.Core.Sensitive`1.GetHashCode*"></a>
+
+  <h3 id="Axiam_Sdk_Core_Sensitive_1_GetHashCode" data-uid="Axiam.Sdk.Core.Sensitive`1.GetHashCode">
+  GetHashCode()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Core/Sensitive.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Always returns a constant — never derives a hash from the wrapped value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Core_Sensitive_1_ToString_" data-uid="Axiam.Sdk.Core.Sensitive`1.ToString*"></a>
+
+  <h3 id="Axiam_Sdk_Core_Sensitive_1_ToString" data-uid="Axiam.Sdk.Core.Sensitive`1.ToString">
+  ToString()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Core/Sensitive.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Always returns the redacted literal, never the wrapped value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="Axiam_Sdk_Core_Sensitive_1_op_Equality_" data-uid="Axiam.Sdk.Core.Sensitive`1.op_Equality*"></a>
+
+  <h3 id="Axiam_Sdk_Core_Sensitive_1_op_Equality_Axiam_Sdk_Core_Sensitive__0__Axiam_Sdk_Core_Sensitive__0__" data-uid="Axiam.Sdk.Core.Sensitive`1.op_Equality(Axiam.Sdk.Core.Sensitive{`0},Axiam.Sdk.Core.Sensitive{`0})">
+  operator ==(Sensitive&lt;T&gt;, Sensitive&lt;T&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Core/Sensitive.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Never equal (see <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html#Axiam_Sdk_Core_Sensitive_1_Equals_System_Object_">Equals(object?)</a>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(Sensitive&lt;T&gt; left, Sensitive&lt;T&gt; right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;T&gt;</dt>
+    <dd></dd>
+    <dt><code>right</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;T&gt;</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Core_Sensitive_1_op_Inequality_" data-uid="Axiam.Sdk.Core.Sensitive`1.op_Inequality*"></a>
+
+  <h3 id="Axiam_Sdk_Core_Sensitive_1_op_Inequality_Axiam_Sdk_Core_Sensitive__0__Axiam_Sdk_Core_Sensitive__0__" data-uid="Axiam.Sdk.Core.Sensitive`1.op_Inequality(Axiam.Sdk.Core.Sensitive{`0},Axiam.Sdk.Core.Sensitive{`0})">
+  operator !=(Sensitive&lt;T&gt;, Sensitive&lt;T&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Core/Sensitive.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Always unequal (see <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html#Axiam_Sdk_Core_Sensitive_1_Equals_System_Object_">Equals(object?)</a>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(Sensitive&lt;T&gt; left, Sensitive&lt;T&gt; right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;T&gt;</dt>
+    <dd></dd>
+    <dt><code>right</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;T&gt;</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

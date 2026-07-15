@@ -1,0 +1,979 @@
+{
+  "source_base_path": "/home/runner/work/axiam-csharp-sdk/axiam-csharp-sdk",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Amqp.AxiamAmqpConsumer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Amqp.AxiamAmqpConsumer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Amqp.AxiamAmqpConsumer",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.AxiamAmqpConsumer.yml\" sourcestartlinenumber=\"1\">AMQP event consumer: verify-before-handler HMAC gate plus the\n<code>sdks/CONTRACT.md</code> §8 ack/nack matrix, built on <code>RabbitMQ.Client</code>\n7.x's async consumer API with automatic connection/topology recovery\nenabled (D-11).</p>\n<p>\n<xref href=\"Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(System.String%2cSystem.String%2cSystem.Byte%5b%5d%2cSystem.Func%7bSystem.Byte%5b%5d%2cSystem.Threading.CancellationToken%2cSystem.Threading.Tasks.Task%7d%2cMicrosoft.Extensions.Logging.ILogger%2cSystem.Nullable%7bSystem.TimeSpan%7d%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> NEVER hands an unverified delivery to the\ncaller-supplied handler — <xref href=\"Axiam.Sdk.Amqp.Hmac.Verify(System.Byte%5b%5d%2cSystem.Byte%5b%5d)\" data-throw-if-not-resolved=\"false\"></xref> runs first, and the\nhandler call site is structurally unreachable until it returns\n<code>true</code>. The remaining outcomes follow the exact §8 decision matrix:\n</p>\n<ul><li>HMAC verification fails → <code>BasicNackAsync(requeue: false)</code>\n+ a security-event log entry that never contains the received or\nexpected HMAC value; the handler is never invoked.</li><li>HMAC verifies but the NEW-4 replay-protection gate\n(<xref href=\"Axiam.Sdk.Amqp.ReplayGuard\" data-throw-if-not-resolved=\"false\"></xref>) rejects the delivery — <code>key_version</code> below\n<xref href=\"Axiam.Sdk.Amqp.ReplayGuard.MinKeyVersion\" data-throw-if-not-resolved=\"false\"></xref>, a stale/future <code>issued_at</code>, or a\nreplayed <code>nonce</code> — → <code>BasicNackAsync(requeue: false)</code> + a security-event\nlog entry; the handler is never invoked.</li><li>Handler returns normally → <code>BasicAckAsync</code>.</li><li>Handler throws <xref href=\"Axiam.Sdk.Amqp.PoisonMessageException\" data-throw-if-not-resolved=\"false\"></xref> (poison\nmessage) → <code>BasicNackAsync(requeue: false)</code>.</li><li>Handler throws any other exception (transient/retryable)\n→ <code>BasicNackAsync(requeue: true)</code>.</li></ul>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Amqp.Hmac.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Amqp.Hmac.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Amqp.Hmac",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.Hmac.yml\" sourcestartlinenumber=\"1\">HMAC-SHA256 verify-before-handler primitive for inbound AMQP messages\n(<code>sdks/CONTRACT.md</code> §8, D-11).</p>\n<p>\n<b>Canonicalization is wire/insertion-order preserving, NEVER\nalphabetically sorted.</b> The canonical Rust signer\n(<code>crates/axiam-amqp/src/messages.rs</code>'s <code>sign_payload</code>) signs the\n<code>serde_json</code> struct-declaration-order serialization of the message\nbody (with <code>hmac_signature</code> absent). <xref href=\"System.Text.Json.Nodes.JsonObject\" data-throw-if-not-resolved=\"false\"></xref> is\nbacked by an ordered dictionary and preserves insertion order from\nparsing by default — <xref href=\"System.Text.Json.Nodes.JsonObject.Remove(System.String)\" data-throw-if-not-resolved=\"false\"></xref> mutates that same\nordered map in place, preserving the relative order of all remaining\nkeys. This is the single load-bearing property of this class: do NOT\nintroduce an alphabetized copy, <code>OrderBy</code>/<code>Sort</code>, or a POCO\ndeserialize-then-reserialize round-trip here — any of those would\nsilently reorder fields and break every cross-language HMAC\nverification.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Amqp.PoisonMessageException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Amqp.PoisonMessageException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Amqp.PoisonMessageException",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.PoisonMessageException.yml\" sourcestartlinenumber=\"1\">Poison-message sentinel a consumer-supplied handler throws to signal that\nthe current delivery must be nacked <b>without</b> requeue, rather than\nthe default nack-with-requeue applied to any other handler exception\n(D-11, <code>sdks/CONTRACT.md</code> §8). Mirrors the Go <code>ErrDrop</code> sentinel\n/ Java <code>ErrDrop</code> exception used by the sibling SDKs.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Amqp.ReplayGuard.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Amqp.ReplayGuard.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Amqp.ReplayGuard",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.ReplayGuard.yml\" sourcestartlinenumber=\"1\">Enforces the NEW-4 (<code>sdks/CONTRACT.md</code> §8 &quot;v2 — Replay Protection&quot;)\nconsumer-side gates that run AFTER <xref href=\"Axiam.Sdk.Amqp.Hmac.Verify(System.Byte%5b%5d%2cSystem.Byte%5b%5d)\" data-throw-if-not-resolved=\"false\"></xref> has already\nsucceeded on a delivery:</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Amqp.ReplayMetadata.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Amqp.ReplayMetadata.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Amqp.ReplayMetadata",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.ReplayMetadata.yml\" sourcestartlinenumber=\"1\">The <code>key_version</code>/<code>nonce</code>/<code>issued_at</code> fields extracted from\nan already HMAC-verified AMQP message body (<code>sdks/CONTRACT.md</code> §8\n&quot;v2 — Replay Protection&quot;, NEW-4). Extraction happens strictly AFTER\n<xref href=\"Axiam.Sdk.Amqp.Hmac.Verify(System.Byte%5b%5d%2cSystem.Byte%5b%5d)\" data-throw-if-not-resolved=\"false\"></xref> has returned <code>true</code> — these values are\nmeaningless (and MUST NOT be trusted) on an unverified body.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Amqp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Amqp.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Amqp",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore.AxiamAuthMiddleware",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.yml\" sourcestartlinenumber=\"1\">ASP.NET Core authentication middleware (D-06, CONTRACT.md §10 &quot;ASP.NET Core&quot;\nrow: <code>app.UseMiddleware&lt;AxiamAuthMiddleware&gt;()</code> in <code>Program.cs</code>).\nMirrors <code>sdks/java/.../spring/AxiamAuthenticationFilter.java</code>'s authoritative\nsequence (extract → verify → exp-check → cross-tenant-check →\ninject-identity → 401 JSON on failure), adapted to ASP.NET Core's\n<xref href=\"System.Security.Claims.ClaimsPrincipal\" data-throw-if-not-resolved=\"false\"></xref>/<xref href=\"Microsoft.AspNetCore.Http.HttpContext.User\" data-throw-if-not-resolved=\"false\"></xref> integration point —\nthe direct analog of Java D-14's Spring <code>SecurityContext</code> integration.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.yml\" sourcestartlinenumber=\"1\">Custom <xref href=\"Microsoft.AspNetCore.Authorization.IAuthorizationMiddlewareResultHandler\" data-throw-if-not-resolved=\"false\"></xref> that writes the\nstandardized JSON error body (CONTRACT.md §10, PATTERNS.md &quot;Standardized JSON\nerror body&quot;) for both authorization outcomes: an unauthenticated result (401) and a\n&quot;lacks permission&quot; result (403 — <code>AxiamPolicyHandler</code> left an\n<xref href=\"Axiam.Sdk.AspNetCore.AxiamRequirement\" data-throw-if-not-resolved=\"false\"></xref> unsatisfied, i.e. <code>AuthzError</code>). On success, the\npipeline continues exactly like the framework default.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.AxiamOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.AxiamOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore.AxiamOptions",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamOptions.yml\" sourcestartlinenumber=\"1\">Typed Options-pattern configuration for <xref href=\"Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.AddAxiam(Microsoft.Extensions.DependencyInjection.IServiceCollection%2cSystem.Action%7bAxiam.Sdk.AspNetCore.AxiamOptions%7d)\" data-throw-if-not-resolved=\"false\"></xref>/\n<xref href=\"Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.AddAxiamAspNetCore(Microsoft.Extensions.DependencyInjection.IServiceCollection%2cSystem.Action%7bAxiam.Sdk.AspNetCore.AxiamOptions%7d)\" data-throw-if-not-resolved=\"false\"></xref> (D-07). Configured via\n<code>services.AddAxiamAspNetCore(options =&gt; { ... })</code> — properties are mutable\n(<code>set</code>, not <code>init</code>) because the .NET Options pattern configures an\nalready-constructed instance through an <xref href=\"System.Action%601\" data-throw-if-not-resolved=\"false\"></xref> delegate.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.AxiamPolicyHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.AxiamPolicyHandler.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore.AxiamPolicyHandler",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamPolicyHandler.yml\" sourcestartlinenumber=\"1\">Routes <code>[Authorize(Policy=&quot;resource:action&quot;)]</code> (e.g.\n<code>&quot;documents:read&quot;</code>) into <code>AxiamClient.Authz.CheckAccessAsync</code> (D-08). No\ndirect Spring analog — Spring's sibling SDK uses method-security annotations rather\nthan an <xref href=\"Microsoft.AspNetCore.Authorization.IAuthorizationHandler\" data-throw-if-not-resolved=\"false\"></xref>/policy-provider pair, so this is the most\nnovel file in the phase (built from RESEARCH.md Pattern 5, reusing the\n<code>AuthzError</code>→403 JSON-body convention from\n<code>AxiamAuthenticationFilter.java</code> lines 102-111).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.AxiamPolicyProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.AxiamPolicyProvider.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore.AxiamPolicyProvider",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamPolicyProvider.yml\" sourcestartlinenumber=\"1\">Builds an <xref href=\"Microsoft.AspNetCore.Authorization.AuthorizationPolicy\" data-throw-if-not-resolved=\"false\"></xref> containing a single\n<xref href=\"Axiam.Sdk.AspNetCore.AxiamRequirement\" data-throw-if-not-resolved=\"false\"></xref> for any policy name shaped <code>&quot;resource:action&quot;</code>\n(e.g. <code>&quot;documents:read&quot;</code>) — the novel .NET-idiom file this phase introduces\n(D-08; no direct Spring/method-security equivalent, built from RESEARCH.md Pattern\n5). Falls back to <xref href=\"Microsoft.AspNetCore.Authorization.DefaultAuthorizationPolicyProvider\" data-throw-if-not-resolved=\"false\"></xref> for every other\npolicy name, so consumer-defined policies (registered via the normal\n<code>AddAuthorization(options =&gt; options.AddPolicy(...))</code> path) keep working\ncompletely unmodified.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.AxiamRequirement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.AxiamRequirement.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore.AxiamRequirement",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamRequirement.yml\" sourcestartlinenumber=\"1\">Authorization requirement for a policy name shaped <code>&quot;resource:action&quot;</code> (e.g.\n<code>&quot;documents:read&quot;</code>), carrying the parsed halves for <xref href=\"Axiam.Sdk.AspNetCore.AxiamPolicyHandler\" data-throw-if-not-resolved=\"false\"></xref>\nto route into <code>CheckAccessAsync</code> (D-08). Built by <xref href=\"Axiam.Sdk.AspNetCore.AxiamPolicyProvider\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore.ServiceCollectionExtensions",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.yml\" sourcestartlinenumber=\"1\"><code>IServiceCollection</code> DI extensions (D-07): <xref href=\"Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.AddAxiam(Microsoft.Extensions.DependencyInjection.IServiceCollection%2cSystem.Action%7bAxiam.Sdk.AspNetCore.AxiamOptions%7d)\" data-throw-if-not-resolved=\"false\"></xref> registers the\ntyped <xref href=\"Axiam.Sdk.AspNetCore.AxiamOptions\" data-throw-if-not-resolved=\"false\"></xref> plus a single shared <xref href=\"Axiam.Sdk.AxiamClient\" data-throw-if-not-resolved=\"false\"></xref>;\n<xref href=\"Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.AddAxiamAspNetCore(Microsoft.Extensions.DependencyInjection.IServiceCollection%2cSystem.Action%7bAxiam.Sdk.AspNetCore.AxiamOptions%7d)\" data-throw-if-not-resolved=\"false\"></xref> additionally wires the policy-based authorization\nsurface (D-08). The raw <code>app.UseMiddleware&lt;AxiamAuthMiddleware&gt;()</code> form\n(CONTRACT.md §10) remains available and works with either registration path.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Jwk.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Jwk.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Jwk",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Jwk.yml\" sourcestartlinenumber=\"1\">A single JSON Web Key from the AXIAM organization-wide JWKS document\n(<code>GET /oauth2/jwks</code>). Shape confirmed against\n<code>crates/axiam-oauth2/src/oidc.rs</code>: <code>kty=OKP</code>, <code>crv=Ed25519</code>,\n<code>x</code> = base64url-encoded raw 32-byte Ed25519 public key, with a deterministic\n<code>kid</code>. Property names are explicitly pinned via <xref href=\"System.Text.Json.Serialization.JsonPropertyNameAttribute\" data-throw-if-not-resolved=\"false\"></xref>\nto the exact lowercase wire field names — never rely on a naming-policy convention.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.JwksDocument.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.JwksDocument.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.JwksDocument",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.JwksDocument.yml\" sourcestartlinenumber=\"1\">The JWKS document envelope returned by <code>GET /oauth2/jwks</code>: <code>{ &quot;keys&quot;: [...] }</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.JwksVerifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.JwksVerifier.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.JwksVerifier",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.JwksVerifier.yml\" sourcestartlinenumber=\"1\">Local EdDSA (Ed25519) JWKS verification (D-02, CONTRACT.md §10 local-verification\nfast path). .NET has no native Ed25519/EdDSA support anywhere in\n<code>System.Security.Cryptography</code> (confirmed research finding — <code>dotnet/runtime</code>\n#14741/#63174 remain unimplemented through .NET 10 GA), so this class uses\n<code>BouncyCastle.Cryptography</code>'s <xref href=\"Org.BouncyCastle.Crypto.Signers.Ed25519Signer\" data-throw-if-not-resolved=\"false\"></xref> /\n<xref href=\"Org.BouncyCastle.Crypto.Parameters.Ed25519PublicKeyParameters\" data-throw-if-not-resolved=\"false\"></xref> directly — the single, well-vetted,\nverify-only crypto dependency D-02 permits.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.LoginResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.LoginResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.LoginResult",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.LoginResult.yml\" sourcestartlinenumber=\"1\">Outcome of <code>LoginAsync</code>/<code>VerifyMfaAsync</code> (CONTRACT.md §1). MFA-required\nis an expected outcome represented as a flag — never thrown as an exception: callers\nMUST check <xref href=\"Axiam.Sdk.Auth.LoginResult.MfaRequired\" data-throw-if-not-resolved=\"false\"></xref> before assuming a session was established.\nMirrors the Java sibling's <code>LoginResult</code> (20-03) field shape.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.RefreshGuard.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.RefreshGuard.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.RefreshGuard",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.RefreshGuard.yml\" sourcestartlinenumber=\"1\">Single-flight token-refresh guard (D-10, CONTRACT.md §9): guarantees exactly\none in-flight refresh call at a time, regardless of how many concurrent callers\nobserve an expired/near-expiry access token. One instance is constructed per\n<code>AxiamClient</code> and shared across the REST and gRPC transports (D-10's\n&quot;one guard across REST + gRPC on one client&quot; requirement) — never a second\ninstance per transport.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.TokenPair.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.TokenPair.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.TokenPair",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.TokenPair.yml\" sourcestartlinenumber=\"1\">An access/refresh token pair with an expiry timestamp. Both token values are wrapped\nin <xref href=\"Axiam.Sdk.Core.Sensitive%601\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md §7, D-12) so neither can leak via\n<xref href=\"System.Object.ToString\" data-throw-if-not-resolved=\"false\"></xref>, JSON serialization, or a log call.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AxiamClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AxiamClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AxiamClient",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AxiamClient.yml\" sourcestartlinenumber=\"1\">The AXIAM C# SDK's public REST entry point (CONTRACT.md §1–§6, §9). The\npublic constructor is the ONLY construction path — <code>tenantId</code> is a required,\npositional argument with no default and no overload that omits it (SC#1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.AuthError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.AuthError.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.AuthError",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.AuthError.yml\" sourcestartlinenumber=\"1\">Authentication failure: wrong credentials, expired session, MFA failure, or a 401 on\nrefresh (CONTRACT.md §2, D-12). Always constructed via <xref href=\"Axiam.Sdk.Core.ErrorMapper\" data-throw-if-not-resolved=\"false\"></xref>\nso REST and gRPC transports cannot drift on the error taxonomy.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.AuthzError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.AuthzError.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.AuthzError",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.AuthzError.yml\" sourcestartlinenumber=\"1\">Authorization failure: the caller lacks permission for the requested operation\n(CONTRACT.md §2, D-12). Always constructed via <xref href=\"Axiam.Sdk.Core.ErrorMapper\" data-throw-if-not-resolved=\"false\"></xref> so REST\nand gRPC transports cannot drift on the error taxonomy.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.ErrorMapper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.ErrorMapper.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.ErrorMapper",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.ErrorMapper.yml\" sourcestartlinenumber=\"1\">Central status→error mapper (CONTRACT.md §2, D-12). The single source of\ntruth for both the HTTP status table and the gRPC status-code table so the REST and\ngRPC transports cannot drift on the error taxonomy.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.NetworkError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.NetworkError.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.NetworkError",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.NetworkError.yml\" sourcestartlinenumber=\"1\">Transport-level failure: connection refused, timeout, TLS error, DNS failure, or a\nserver-side 5xx (CONTRACT.md §2).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.Sensitive-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.Sensitive-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.Sensitive<T>",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.Sensitive-1.yml\" sourcestartlinenumber=\"1\">Wraps a token-carrying value so it can never be accidentally exposed via\n<xref href=\"System.Object.ToString\" data-throw-if-not-resolved=\"false\"></xref>, <code>System.Text.Json</code> serialization, or a public\ngetter (CONTRACT.md §7, D-12). Only SDK-internal code may construct an instance\nor read the wrapped value, via <xref href=\"Axiam.Sdk.Core.Sensitive%601.Reveal\" data-throw-if-not-resolved=\"false\"></xref> — there is intentionally no\npublic accessor.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.SensitiveJsonConverter-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.SensitiveJsonConverter-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.SensitiveJsonConverter<T>",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.SensitiveJsonConverter-1.yml\" sourcestartlinenumber=\"1\"><code>System.Text.Json</code> converter for <xref href=\"Axiam.Sdk.Core.Sensitive%601\" data-throw-if-not-resolved=\"false\"></xref>. Write always emits\nthe redacted literal; Read is intentionally unsupported — a <xref href=\"Axiam.Sdk.Core.Sensitive%601\" data-throw-if-not-resolved=\"false\"></xref>\nis a write-only-for-serialization type, so no wire format can ever deserialize a real\nvalue back into one.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.SensitiveJsonConverterFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.SensitiveJsonConverterFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.SensitiveJsonConverterFactory",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.SensitiveJsonConverterFactory.yml\" sourcestartlinenumber=\"1\">Factory that produces the closed <xref href=\"Axiam.Sdk.Core.SensitiveJsonConverter%601\" data-throw-if-not-resolved=\"false\"></xref> for a given\n<xref href=\"Axiam.Sdk.Core.Sensitive%601\" data-throw-if-not-resolved=\"false\"></xref>. An open-generic converter referenced from a\n<xref href=\"System.Text.Json.Serialization.JsonConverterAttribute\" data-throw-if-not-resolved=\"false\"></xref> MUST be a <xref href=\"System.Text.Json.Serialization.JsonConverterFactory\" data-throw-if-not-resolved=\"false\"></xref>:\n<code>System.Text.Json</code> cannot instantiate an open-generic <code>JsonConverter&lt;T&gt;</code>\ndirectly (it throws because the type still contains generic parameters).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.TenantContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.TenantContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.TenantContext",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.TenantContext.yml\" sourcestartlinenumber=\"1\">Immutable tenant-identity value object required at <code>AxiamClient</code> construction\ntime and propagated on every outgoing request (CONTRACT.md §5: <code>X-Tenant-Id</code>\nheader on REST; <code>x-tenant-id</code> gRPC metadata in a later plan). There is no\ndefault-constructible/blank instance — the constructor throws a runtime guard\nbacking the compile-time guarantee that <code>AxiamClient</code>'s own tenant-required\nconstructor provides (SC#1): AXIAM is multi-tenant and there is no default tenant.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Grpc.AuthInterceptor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Grpc.AuthInterceptor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Grpc.AuthInterceptor",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Grpc.AuthInterceptor.yml\" sourcestartlinenumber=\"1\">Sync-safe <code>authorization</code>/<code>x-tenant-id</code> metadata injection on every outgoing\ngRPC call (CONTRACT.md §5), plus an <code>UNAUTHENTICATED</code> single-flight\nrefresh-and-retry (§9, D-10) that drives the EXACT SAME shared\n<xref href=\"Axiam.Sdk.Auth.RefreshGuard\" data-throw-if-not-resolved=\"false\"></xref> the REST transport uses — never a second guard instance.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.AccessCheck.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.AccessCheck.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.AccessCheck",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.AccessCheck.yml\" sourcestartlinenumber=\"1\">A single authorization check request item for <xref href=\"Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.BatchCheckAsync(System.Collections.Generic.IEnumerable%7bAxiam.Sdk.Grpc.AxiamGrpcAuthzClient.AccessCheck%7d%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Grpc.AxiamGrpcAuthzClient",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.yml\" sourcestartlinenumber=\"1\">gRPC authorization transport (CONTRACT.md §1/§2/§5/§9, D-10).\nWraps ONE long-lived <xref href=\"Grpc.Net.Client.GrpcChannel\" data-throw-if-not-resolved=\"false\"></xref> (via <xref href=\"Axiam.Sdk.Grpc.AxiamGrpcChannel\" data-throw-if-not-resolved=\"false\"></xref> —\nstrict TLS, §6) intercepted by an <xref href=\"Axiam.Sdk.Grpc.AuthInterceptor\" data-throw-if-not-resolved=\"false\"></xref> that shares\nthe EXACT SAME <xref href=\"Axiam.Sdk.Auth.RefreshGuard\" data-throw-if-not-resolved=\"false\"></xref>/session <xref href=\"Axiam.Sdk.AxiamClient\" data-throw-if-not-resolved=\"false\"></xref>'s REST\ntransport uses — never a second guard instance.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Grpc.AxiamGrpcChannel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Grpc.AxiamGrpcChannel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Grpc.AxiamGrpcChannel",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Grpc.AxiamGrpcChannel.yml\" sourcestartlinenumber=\"1\">Constructs the SDK's ONE long-lived gRPC channel (D-10, CONTRACT.md §6) by\nreusing the EXACT SAME strict-TLS <xref href=\"System.Net.Http.HttpClientHandler\" data-throw-if-not-resolved=\"false\"></xref> configuration the\nREST transport uses (<xref href=\"Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler(System.Byte%5b%5d)\" data-throw-if-not-resolved=\"false\"></xref>) —\nadditive <code>customCa</code> chain-trust honored, never a TLS-certificate-validation\nbypass. The channel is disposed by whichever component constructs it\n(<code>Grpc/AxiamGrpcAuthzClient.cs</code>), mirroring the Java sibling's\n<code>AutoCloseable GrpcAuthzClient</code> and Go's <code>ClientConn</code> ownership model.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Grpc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Grpc.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Grpc",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Options.AxiamClientOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Options.AxiamClientOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Options.AxiamClientOptions",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Options.AxiamClientOptions.yml\" sourcestartlinenumber=\"1\">Typed, options-pattern configuration for <code>AxiamClient</code> (Claude's Discretion,\n21-RESEARCH.md/21-CONTEXT.md D-07). <xref href=\"Axiam.Sdk.Options.AxiamClientOptions.BaseUrl\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"Axiam.Sdk.Options.AxiamClientOptions.TenantId\" data-throw-if-not-resolved=\"false\"></xref>\nare <code>required</code> here for the future <code>AddAxiam()</code>/\n<code>IOptions&lt;AxiamClientOptions&gt;</code> DI registration path (plan 21-06) —\n<code>AxiamClient</code>'s own tenant-required constructor (this plan, SC#1) sources the\ntenant/base-URL from its own explicit positional parameters instead, so SC#1's\ncompile-time guarantee never depends on whether an options object happens to be\nsupplied at all.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Options.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Options.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Options",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Rest.AuthzRestClient.AccessCheck.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Rest.AuthzRestClient.AccessCheck.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Rest.AuthzRestClient.AccessCheck",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Rest.AuthzRestClient.AccessCheck.yml\" sourcestartlinenumber=\"1\">A single authorization check request item for <xref href=\"Axiam.Sdk.Rest.AuthzRestClient.BatchCheckAsync(System.Collections.Generic.IEnumerable%7bAxiam.Sdk.Rest.AuthzRestClient.AccessCheck%7d%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Rest.AuthzRestClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Rest.AuthzRestClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Rest.AuthzRestClient",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Rest.AuthzRestClient.yml\" sourcestartlinenumber=\"1\">REST authorization client (CONTRACT.md §1, FND-04): <code>CheckAccessAsync</code>/\n<code>CanAsync</code>/<code>BatchCheckAsync</code> over <code>POST /api/v1/authz/check</code> and\n<code>POST /api/v1/authz/check/batch</code> (mirrors the gRPC\n<code>CheckAccess</code>/<code>BatchCheckAccess</code> semantics a later plan wires up over the\nsame shared session). Exposed as <code>AxiamClient.Authz</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Rest.AxiamHttpClientFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Rest.AxiamHttpClientFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Rest.AxiamHttpClientFactory",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Rest.AxiamHttpClientFactory.yml\" sourcestartlinenumber=\"1\">Builds the SDK-owned <xref href=\"System.Net.Http.HttpClient\" data-throw-if-not-resolved=\"false\"></xref> (D-09 default path) and configures the\n<code>IHttpClientFactory</code>-compatible alternative path (D-09 alt path, wired up by a\nlater plan's <code>AddAxiam()</code>). Both paths guarantee the CONTRACT.md §4\npersistent cookie jar and the §6 no-TLS-bypass policy — a caller-supplied handler\ncan never silently drop either guarantee (client-override safety, Java D-27 analog).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Rest.AxiamHttpMessageHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Rest.AxiamHttpMessageHandler.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Rest.AxiamHttpMessageHandler",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Rest.AxiamHttpMessageHandler.yml\" sourcestartlinenumber=\"1\">Cross-cutting REST transport concerns shared by every request an <code>AxiamClient</code>\nsends (CONTRACT.md §3/§5/§9): injects <code>X-Tenant-Id</code> (§5) and, when a\nsession exists, <code>Authorization: Bearer &lt;access&gt;</code> read from the shared\ncookie jar; reads the <code>axiam_csrf</code> cookie the server sets and echoes it as the\n<code>X-CSRF-Token</code> request header on subsequent state-changing requests (§3 cookie\ndouble-submit — the real AXIAM server only ever delivers the CSRF value via a cookie,\nnever a response header, so the cookie-jar read is the load-bearing path; the\nresponse-header capture is kept as defense-in-depth); and drives a single\nreactive 401→refresh→retry through the shared <xref href=\"Axiam.Sdk.Auth.RefreshGuard\" data-throw-if-not-resolved=\"false\"></xref> — never\na second, independent guard, and never a retry loop (§9.3).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Rest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Rest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Rest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.AuthorizationReflection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.AuthorizationReflection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.AuthorizationReflection",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.AuthorizationReflection.yml\" sourcestartlinenumber=\"1\">Holder for reflection information generated from axiam/v1/authorization.proto</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.AuthorizationService.AuthorizationServiceClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.AuthorizationService.AuthorizationServiceClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.AuthorizationService.AuthorizationServiceClient",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.AuthorizationService.AuthorizationServiceClient.yml\" sourcestartlinenumber=\"1\">Client for AuthorizationService</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.AuthorizationService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.AuthorizationService.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.AuthorizationService",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.AuthorizationService.yml\" sourcestartlinenumber=\"1\">Authorization service for low-latency access checks in service meshes.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.BatchCheckAccessRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.BatchCheckAccessRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.BatchCheckAccessRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.BatchCheckAccessResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.BatchCheckAccessResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.BatchCheckAccessResponse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.CheckAccessRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.CheckAccessRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.CheckAccessRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.CheckAccessResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.CheckAccessResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.CheckAccessResponse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.GetUserRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.GetUserRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.GetUserRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.IntrospectTokenRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.IntrospectTokenRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.IntrospectTokenRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.IntrospectTokenResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.IntrospectTokenResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.IntrospectTokenResponse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.TokenReflection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.TokenReflection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.TokenReflection",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.TokenReflection.yml\" sourcestartlinenumber=\"1\">Holder for reflection information generated from axiam/v1/token.proto</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.TokenService.TokenServiceClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.TokenService.TokenServiceClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.TokenService.TokenServiceClient",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.TokenService.TokenServiceClient.yml\" sourcestartlinenumber=\"1\">Client for TokenService</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.TokenService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.TokenService.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.TokenService",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.TokenService.yml\" sourcestartlinenumber=\"1\">Token service for JWT validation and introspection.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.UserReflection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.UserReflection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.UserReflection",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.UserReflection.yml\" sourcestartlinenumber=\"1\">Holder for reflection information generated from axiam/v1/user.proto</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.UserResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.UserResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.UserResponse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.UserService.UserServiceClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.UserService.UserServiceClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.UserService.UserServiceClient",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.UserService.UserServiceClient.yml\" sourcestartlinenumber=\"1\">Client for UserService</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.UserService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.UserService.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.UserService",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.UserService.yml\" sourcestartlinenumber=\"1\">User service for lookups and credential validation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ValidateCredentialsRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ValidateCredentialsRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ValidateCredentialsRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ValidateCredentialsResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ValidateCredentialsResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ValidateCredentialsResponse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ValidateTokenRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ValidateTokenRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ValidateTokenRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ValidateTokenResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ValidateTokenResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ValidateTokenResponse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1",
+      "Summary": null
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

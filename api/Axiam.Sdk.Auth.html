@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace Axiam.Sdk.Auth | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace Axiam.Sdk.Auth | AXIAM .NET SDK ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Auth">
+
+  <h1 id="Axiam_Sdk_Auth" data-uid="Axiam.Sdk.Auth" class="text-break">Namespace Axiam.Sdk.Auth</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Jwk.html">Jwk</a></dt>
+      <dd><p>A single JSON Web Key from the AXIAM organization-wide JWKS document
+(<code>GET /oauth2/jwks</code>). Shape confirmed against
+<code>crates/axiam-oauth2/src/oidc.rs</code>: <code>kty=OKP</code>, <code>crv=Ed25519</code>,
+<code>x</code> = base64url-encoded raw 32-byte Ed25519 public key, with a deterministic
+<code>kid</code>. Property names are explicitly pinned via <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.serialization.jsonpropertynameattribute">JsonPropertyNameAttribute</a>
+to the exact lowercase wire field names — never rely on a naming-policy convention.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.JwksDocument.html">JwksDocument</a></dt>
+      <dd><p>The JWKS document envelope returned by <code>GET /oauth2/jwks</code>: <code>{ &quot;keys&quot;: [...] }</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.JwksVerifier.html">JwksVerifier</a></dt>
+      <dd><p>Local EdDSA (Ed25519) JWKS verification (D-02, CONTRACT.md §10 local-verification
+fast path). .NET has no native Ed25519/EdDSA support anywhere in
+<code>System.Security.Cryptography</code> (confirmed research finding — <code>dotnet/runtime</code>
+#14741/#63174 remain unimplemented through .NET 10 GA), so this class uses
+<code>BouncyCastle.Cryptography</code>'s <span class="xref">Org.BouncyCastle.Crypto.Signers.Ed25519Signer</span> /
+<span class="xref">Org.BouncyCastle.Crypto.Parameters.Ed25519PublicKeyParameters</span> directly — the single, well-vetted,
+verify-only crypto dependency D-02 permits.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.LoginResult.html">LoginResult</a></dt>
+      <dd><p>Outcome of <code>LoginAsync</code>/<code>VerifyMfaAsync</code> (CONTRACT.md §1). MFA-required
+is an expected outcome represented as a flag — never thrown as an exception: callers
+MUST check <a class="xref" href="Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult_MfaRequired">MfaRequired</a> before assuming a session was established.
+Mirrors the Java sibling's <code>LoginResult</code> (20-03) field shape.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.RefreshGuard.html">RefreshGuard</a></dt>
+      <dd><p>Single-flight token-refresh guard (D-10, CONTRACT.md §9): guarantees exactly
+one in-flight refresh call at a time, regardless of how many concurrent callers
+observe an expired/near-expiry access token. One instance is constructed per
+<code>AxiamClient</code> and shared across the REST and gRPC transports (D-10's
+&quot;one guard across REST + gRPC on one client&quot; requirement) — never a second
+instance per transport.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.TokenPair.html">TokenPair</a></dt>
+      <dd><p>An access/refresh token pair with an expiry timestamp. Both token values are wrapped
+in <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a> (CONTRACT.md §7, D-12) so neither can leak via
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">ToString()</a>, JSON serialization, or a log call.</p>
+</dd>
+    </dl>
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
