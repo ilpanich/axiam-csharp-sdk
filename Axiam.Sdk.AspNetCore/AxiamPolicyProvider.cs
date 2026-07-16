@@ -6,11 +6,12 @@ namespace Axiam.Sdk.AspNetCore;
 
 /// <summary>
 /// Builds an <see cref="AuthorizationPolicy"/> containing a single
-/// <see cref="AxiamRequirement"/> for any policy name shaped <c>"resource:action"</c>
-/// (e.g. <c>"documents:read"</c>) — the novel .NET-idiom file this phase introduces
-/// (D-08; no direct Spring/method-security equivalent, built from RESEARCH.md Pattern
-/// 5). Falls back to <see cref="DefaultAuthorizationPolicyProvider"/> for every other
-/// policy name, so consumer-defined policies (registered via the normal
+/// <see cref="AxiamRequirement"/> for either the structured policy name produced by
+/// <see cref="AxiamAccessAttribute"/> or the legacy policy name shaped
+/// <c>"resource:action"</c> (e.g. <c>"documents:read"</c>) — the novel .NET-idiom file
+/// this phase introduces (D-08; no direct Spring/method-security equivalent, built from
+/// RESEARCH.md Pattern 5). Falls back to <see cref="DefaultAuthorizationPolicyProvider"/>
+/// for every other policy name, so consumer-defined policies (registered via the normal
 /// <c>AddAuthorization(options =&gt; options.AddPolicy(...))</c> path) keep working
 /// completely unmodified.
 /// </summary>
@@ -35,18 +36,35 @@ public sealed class AxiamPolicyProvider : IAuthorizationPolicyProvider
     public Task<AuthorizationPolicy?> GetFallbackPolicyAsync() => _fallback.GetFallbackPolicyAsync();
 
     /// <summary>
-    /// Recognizes a <c>"resource:action"</c>-shaped policy name (exactly one non-empty
-    /// resource half and one non-empty action half, separated by <c>':'</c>) and builds
-    /// an <see cref="AxiamRequirement"/>-backed policy for it on the fly — the consumer
-    /// never has to explicitly register these policies via
-    /// <c>AddAuthorization(options =&gt; options.AddPolicy(...))</c>. Any other policy
-    /// name (including one containing no <c>':'</c>, or an explicitly pre-registered
-    /// policy that happens to be named with a colon) falls through to
+    /// Recognizes two policy-name shapes and builds an <see cref="AxiamRequirement"/>-backed
+    /// policy for either on the fly — the consumer never has to explicitly register these
+    /// policies via <c>AddAuthorization(options =&gt; options.AddPolicy(...))</c>:
+    /// <list type="bullet">
+    /// <item><description>The structured form produced by <see cref="AxiamAccessAttribute"/>
+    /// (<c>"axiam::&lt;action&gt;::&lt;resource&gt;::&lt;scope&gt;::&lt;param&gt;"</c>),
+    /// carrying <see cref="AxiamAccessAttribute.Scope"/> and
+    /// <see cref="AxiamAccessAttribute.ResourceRouteParam"/> through to the built
+    /// requirement. Checked FIRST.</description></item>
+    /// <item><description>The legacy <c>"resource:action"</c>-shaped policy name (exactly
+    /// one non-empty resource half and one non-empty action half, separated by a single
+    /// <c>':'</c>, e.g. <c>"documents:read"</c>) — kept fully supported for existing
+    /// <c>[Authorize(Policy = "resource:action")]</c> consumers.</description></item>
+    /// </list>
+    /// Any other policy name (including one containing no <c>':'</c>, or an explicitly
+    /// pre-registered policy that happens to be named with a colon) falls through to
     /// <see cref="DefaultAuthorizationPolicyProvider"/> unmodified.
     /// </summary>
     public Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(policyName);
+
+        if (AxiamAccessAttribute.TryParse(policyName, out string structuredAction, out string? structuredResource, out string? structuredScope, out string resourceRouteParam))
+        {
+            AuthorizationPolicy structuredPolicy = new AuthorizationPolicyBuilder()
+                .AddRequirements(new AxiamRequirement(structuredResource, structuredAction, structuredScope, resourceRouteParam))
+                .Build();
+            return Task.FromResult<AuthorizationPolicy?>(structuredPolicy);
+        }
 
         int separatorIndex = policyName.IndexOf(Separator);
         if (separatorIndex > 0 && separatorIndex < policyName.Length - 1 &&

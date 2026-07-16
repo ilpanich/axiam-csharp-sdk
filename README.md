@@ -11,11 +11,11 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to CONTRACT.md §1-§10.
+This SDK conforms to CONTRACT.md §1–§11.
 
 See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract.
 
-### §1–§10 conformance checklist
+### §1–§11 conformance checklist
 
 | § | Requirement | Where implemented |
 |---|---|---|
@@ -29,6 +29,68 @@ See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract
 | §8 | AMQP HMAC-SHA256 verify-before-handler, constant-time compare, NEW-4 replay protection (`key_version`/`nonce`/`issued_at`) | `Amqp/Hmac.cs`, `Amqp/AxiamAmqpConsumer.cs`, `Amqp/ReplayGuard.cs` |
 | §9 | `SemaphoreSlim(1,1)` single-flight refresh, one guard across REST + gRPC | `Auth/RefreshGuard.cs` (shared by `AxiamClient` and `Grpc/AuthInterceptor.cs`) |
 | §10 | `app.UseMiddleware<AxiamAuthMiddleware>()` + `ClaimsPrincipal` injection + policy-based `[Authorize]` | `Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
+| §11 | Declarative `[AxiamAccess(action, resource)]` authorization attribute with scope + route-param resolution; `require_auth`/`require_role` as framework-native `[Authorize]`/`[Authorize(Roles = ...)]` | `Axiam.Sdk.AspNetCore/AxiamAccessAttribute.cs`, `AxiamRequirement.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
+
+## Declarative authorization helpers (CONTRACT.md §11)
+
+`Axiam.Sdk.AspNetCore` ships a declarative, per-endpoint authorization attribute built
+strictly on top of the §10 middleware — it never re-implements or bypasses JWKS
+verification, the tenant check, or §3a CSRF; it only consumes the identity
+`AxiamAuthMiddleware` already injected into `HttpContext.User`.
+
+```csharp
+using Axiam.Sdk.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+
+[ApiController]
+[Route("api")]
+public sealed class DocumentsController : ControllerBase
+{
+    // action = "read", resource type = "documents" (sent to CheckAccessAsync as
+    // "documents:read", the server's own "resource:verb" convention). The resource
+    // UUID is resolved from the "id" route value by default.
+    [HttpGet("documents/{id:guid}")]
+    [AxiamAccess("read", "documents")]
+    public IActionResult GetDocument(Guid id) => Ok(new { id });
+
+    // Scope + a non-default route parameter name.
+    [HttpGet("teams/{teamId:guid}/documents")]
+    [AxiamAccess("list", "documents", Scope = "team", ResourceRouteParam = "teamId")]
+    public IActionResult ListTeamDocuments(Guid teamId) => Ok(new { teamId });
+}
+```
+
+`[AxiamAccess(action, resource)]` is sugar over the existing
+`[Authorize(Policy = "resource:action")]` mechanism (`AxiamPolicyProvider`/
+`AxiamPolicyHandler`) — the legacy `"resource:action"` policy-string form remains
+fully supported side by side with the new attribute.
+
+Semantics (CONTRACT.md §11.2, identical to every other AXIAM SDK):
+
+- **Runs strictly after authentication.** No verified identity in `HttpContext.User` →
+  `401 authentication_failed`. The attribute never performs its own token extraction.
+- **Subject propagation.** The check is made for the *request's* authenticated user
+  (`subjectId` = the `user_id` claim `AxiamAuthMiddleware` injected), never for the
+  shared `AxiamClient`'s own session.
+- **Resource resolution.** The resource UUID is resolved from the route value named by
+  `ResourceRouteParam` (default `"id"`). A missing or non-UUID route value is a
+  **programming error** → `400 invalid_request` — never a silent allow, never a
+  `Guid.Empty`/nil-UUID fallback.
+- **Scope.** The optional `Scope` property is passed through to `CheckAccessAsync`
+  verbatim.
+- **Fail-closed on transport failure.** A `NetworkError` while calling the authz
+  endpoint → `503 authz_unavailable` — deny, never allow, on a transport failure.
+- **No decision caching.** Every check is a fresh `CheckAccessAsync` call, exactly like
+  the legacy policy-string form.
+- **Deny outcome.** `403 authorization_denied`.
+
+`require_auth` and `require_role` are not new types in this SDK — they map directly
+onto ASP.NET Core's own `[Authorize]` and `[Authorize(Roles = "admin,editor")]`
+(`AxiamAuthMiddleware` already emits a `ClaimTypes.Role` claim per role, so
+role-based `[Authorize]` works out of the box). `require_role` is a **local** check
+against the verified token's claims — it never calls the AXIAM server, and it is
+documented here (as in every AXIAM SDK) as NOT a substitute for the resource-level
+`[AxiamAccess(...)]` check above.
 
 ## Quickstart
 

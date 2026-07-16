@@ -8,9 +8,10 @@ they always exercise the current source tree.
 ## AspNetCoreSample/
 
 A runnable ASP.NET Core 8+ web app demonstrating `Axiam.Sdk.AspNetCore`'s
-middleware + `ClaimsPrincipal` injection (D-06, CONTRACT.md §10) and the
-policy-based authorization surface (D-08) — the SC#3 success-criterion proof
-point.
+middleware + `ClaimsPrincipal` injection (D-06, CONTRACT.md §10), the legacy
+policy-based authorization surface (D-08), and the declarative
+`[AxiamAccess(...)]` attribute (CONTRACT.md §11) — the SC#3 success-criterion
+proof point.
 
 **Build:**
 
@@ -35,6 +36,9 @@ What to observe:
 | `GET /api/me` with `Authorization: Bearer <valid-token>` | `200` with the injected `ClaimsPrincipal`'s `user_id`/`tenant_id`/`roles` echoed back |
 | `GET /api/documents/{id}` with a valid token whose caller is DENIED `documents:read` | `403` (`AuthzError`) — routed through a fresh `CheckAccessAsync` call, D-08 |
 | `GET /api/documents/{id}` with a valid token whose caller is ALLOWED `documents:read` | `200` |
+| `GET /api/reports/{id}` — declarative `[AxiamAccess("read", "documents")]` (CONTRACT.md §11) — same allow/deny/401 outcomes as `/api/documents/{id}` above | `200` / `403` / `401` |
+| `GET /api/reports/{id}` with a non-UUID `id` route value | `400` (`invalid_request`) — never a silent allow, never a `Guid.Empty` fallback |
+| `GET /api/reports/{id}` while the AXIAM authz endpoint is unreachable | `503` (`authz_unavailable`) — fail-closed, never allow on transport failure |
 
 ## Quickstart/
 
