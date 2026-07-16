@@ -274,6 +274,89 @@ references:
   commentId: N:Axiam.Sdk.AspNetCore
   fullName: Axiam.Sdk.AspNetCore
   nameWithType: Axiam.Sdk.AspNetCore
+- uid: Axiam.Sdk.AspNetCore.AxiamAccessAttribute
+  name: AxiamAccessAttribute
+  href: api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html
+  commentId: T:Axiam.Sdk.AspNetCore.AxiamAccessAttribute
+  fullName: Axiam.Sdk.AspNetCore.AxiamAccessAttribute
+  nameWithType: AxiamAccessAttribute
+- uid: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.#ctor(System.String,System.String)
+  name: AxiamAccessAttribute(string, string?)
+  href: api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute__ctor_System_String_System_String_
+  commentId: M:Axiam.Sdk.AspNetCore.AxiamAccessAttribute.#ctor(System.String,System.String)
+  name.vb: New(String, String)
+  fullName: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.AxiamAccessAttribute(string, string?)
+  fullName.vb: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.New(String, String)
+  nameWithType: AxiamAccessAttribute.AxiamAccessAttribute(string, string?)
+  nameWithType.vb: AxiamAccessAttribute.New(String, String)
+- uid: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.#ctor*
+  name: AxiamAccessAttribute
+  href: api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute__ctor_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamAccessAttribute.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.AxiamAccessAttribute
+  fullName.vb: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.New
+  nameWithType: AxiamAccessAttribute.AxiamAccessAttribute
+  nameWithType.vb: AxiamAccessAttribute.New
+- uid: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Action
+  name: Action
+  href: api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_Action
+  commentId: P:Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Action
+  fullName: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Action
+  nameWithType: AxiamAccessAttribute.Action
+- uid: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Action*
+  name: Action
+  href: api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_Action_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Action
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Action
+  nameWithType: AxiamAccessAttribute.Action
+- uid: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.DefaultResourceRouteParam
+  name: DefaultResourceRouteParam
+  href: api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_DefaultResourceRouteParam
+  commentId: F:Axiam.Sdk.AspNetCore.AxiamAccessAttribute.DefaultResourceRouteParam
+  fullName: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.DefaultResourceRouteParam
+  nameWithType: AxiamAccessAttribute.DefaultResourceRouteParam
+- uid: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Resource
+  name: Resource
+  href: api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_Resource
+  commentId: P:Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Resource
+  fullName: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Resource
+  nameWithType: AxiamAccessAttribute.Resource
+- uid: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Resource*
+  name: Resource
+  href: api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_Resource_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Resource
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Resource
+  nameWithType: AxiamAccessAttribute.Resource
+- uid: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.ResourceRouteParam
+  name: ResourceRouteParam
+  href: api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_ResourceRouteParam
+  commentId: P:Axiam.Sdk.AspNetCore.AxiamAccessAttribute.ResourceRouteParam
+  fullName: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.ResourceRouteParam
+  nameWithType: AxiamAccessAttribute.ResourceRouteParam
+- uid: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.ResourceRouteParam*
+  name: ResourceRouteParam
+  href: api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_ResourceRouteParam_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamAccessAttribute.ResourceRouteParam
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.ResourceRouteParam
+  nameWithType: AxiamAccessAttribute.ResourceRouteParam
+- uid: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Scope
+  name: Scope
+  href: api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_Scope
+  commentId: P:Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Scope
+  fullName: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Scope
+  nameWithType: AxiamAccessAttribute.Scope
+- uid: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Scope*
+  name: Scope
+  href: api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_Scope_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Scope
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Scope
+  nameWithType: AxiamAccessAttribute.Scope
 - uid: Axiam.Sdk.AspNetCore.AxiamAuthMiddleware
   name: AxiamAuthMiddleware
   href: api/Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.html
@@ -529,15 +612,15 @@ references:
   commentId: T:Axiam.Sdk.AspNetCore.AxiamRequirement
   fullName: Axiam.Sdk.AspNetCore.AxiamRequirement
   nameWithType: AxiamRequirement
-- uid: Axiam.Sdk.AspNetCore.AxiamRequirement.#ctor(System.String,System.String)
-  name: AxiamRequirement(string, string)
-  href: api/Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement__ctor_System_String_System_String_
-  commentId: M:Axiam.Sdk.AspNetCore.AxiamRequirement.#ctor(System.String,System.String)
-  name.vb: New(String, String)
-  fullName: Axiam.Sdk.AspNetCore.AxiamRequirement.AxiamRequirement(string, string)
-  fullName.vb: Axiam.Sdk.AspNetCore.AxiamRequirement.New(String, String)
-  nameWithType: AxiamRequirement.AxiamRequirement(string, string)
-  nameWithType.vb: AxiamRequirement.New(String, String)
+- uid: Axiam.Sdk.AspNetCore.AxiamRequirement.#ctor(System.String,System.String,System.String,System.String)
+  name: AxiamRequirement(string?, string, string?, string)
+  href: api/Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement__ctor_System_String_System_String_System_String_System_String_
+  commentId: M:Axiam.Sdk.AspNetCore.AxiamRequirement.#ctor(System.String,System.String,System.String,System.String)
+  name.vb: New(String, String, String, String)
+  fullName: Axiam.Sdk.AspNetCore.AxiamRequirement.AxiamRequirement(string?, string, string?, string)
+  fullName.vb: Axiam.Sdk.AspNetCore.AxiamRequirement.New(String, String, String, String)
+  nameWithType: AxiamRequirement.AxiamRequirement(string?, string, string?, string)
+  nameWithType.vb: AxiamRequirement.New(String, String, String, String)
 - uid: Axiam.Sdk.AspNetCore.AxiamRequirement.#ctor*
   name: AxiamRequirement
   href: api/Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement__ctor_
@@ -587,6 +670,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AspNetCore.AxiamRequirement.Resource
   nameWithType: AxiamRequirement.Resource
+- uid: Axiam.Sdk.AspNetCore.AxiamRequirement.ResourceRouteParam
+  name: ResourceRouteParam
+  href: api/Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_ResourceRouteParam
+  commentId: P:Axiam.Sdk.AspNetCore.AxiamRequirement.ResourceRouteParam
+  fullName: Axiam.Sdk.AspNetCore.AxiamRequirement.ResourceRouteParam
+  nameWithType: AxiamRequirement.ResourceRouteParam
+- uid: Axiam.Sdk.AspNetCore.AxiamRequirement.ResourceRouteParam*
+  name: ResourceRouteParam
+  href: api/Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_ResourceRouteParam_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamRequirement.ResourceRouteParam
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.AxiamRequirement.ResourceRouteParam
+  nameWithType: AxiamRequirement.ResourceRouteParam
+- uid: Axiam.Sdk.AspNetCore.AxiamRequirement.Scope
+  name: Scope
+  href: api/Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_Scope
+  commentId: P:Axiam.Sdk.AspNetCore.AxiamRequirement.Scope
+  fullName: Axiam.Sdk.AspNetCore.AxiamRequirement.Scope
+  nameWithType: AxiamRequirement.Scope
+- uid: Axiam.Sdk.AspNetCore.AxiamRequirement.Scope*
+  name: Scope
+  href: api/Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_Scope_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamRequirement.Scope
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.AxiamRequirement.Scope
+  nameWithType: AxiamRequirement.Scope
 - uid: Axiam.Sdk.AspNetCore.ServiceCollectionExtensions
   name: ServiceCollectionExtensions
   href: api/Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.html

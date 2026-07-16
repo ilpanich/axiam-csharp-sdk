@@ -96,6 +96,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore.AxiamAccessAttribute",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamAccessAttribute.yml\" sourcestartlinenumber=\"1\">Declarative, per-endpoint AXIAM authorization attribute (CONTRACT.md §11\n<code>require_access(action, resource[, scope])</code> — C# maps this to\n<code>[AxiamAccess(...)]</code>). Sugar over the existing <code>&quot;resource:action&quot;</code> policy\nstring mechanism (<xref href=\"Axiam.Sdk.AspNetCore.AxiamPolicyProvider\" data-throw-if-not-resolved=\"false\"></xref>/<xref href=\"Axiam.Sdk.AspNetCore.AxiamPolicyHandler\" data-throw-if-not-resolved=\"false\"></xref>):\nthis attribute serializes its <xref href=\"Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Action\" data-throw-if-not-resolved=\"false\"></xref>/<xref href=\"Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Resource\" data-throw-if-not-resolved=\"false\"></xref>/\n<xref href=\"Axiam.Sdk.AspNetCore.AxiamAccessAttribute.Scope\" data-throw-if-not-resolved=\"false\"></xref>/<xref href=\"Axiam.Sdk.AspNetCore.AxiamAccessAttribute.ResourceRouteParam\" data-throw-if-not-resolved=\"false\"></xref> into a structured policy name\n(<code>&quot;axiam::&lt;action&gt;::&lt;resource&gt;::&lt;scope&gt;::&lt;param&gt;&quot;</code>) that\n<xref href=\"Axiam.Sdk.AspNetCore.AxiamPolicyProvider\" data-throw-if-not-resolved=\"false\"></xref> recognizes and parses ALONGSIDE the legacy\nsingle-colon <code>&quot;resource:action&quot;</code> form (which remains fully supported — see its\nown remarks). Because this type derives from <xref href=\"Microsoft.AspNetCore.Authorization.AuthorizeAttribute\" data-throw-if-not-resolved=\"false\"></xref>, it can\nbe placed directly on a controller/action (<code>[AxiamAccess(&quot;read&quot;, &quot;documents&quot;)]</code>)\nor passed to <code>RequireAuthorization(IAuthorizeData)</code> for minimal APIs — ASP.NET\nCore's own authorization pipeline combines it into a policy via\nPolicy exactly like any other <xref href=\"Microsoft.AspNetCore.Authorization.AuthorizeAttribute\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.yml",
       "output": {
         ".html": {
@@ -120,7 +134,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.yml\" sourcestartlinenumber=\"1\">Custom <xref href=\"Microsoft.AspNetCore.Authorization.IAuthorizationMiddlewareResultHandler\" data-throw-if-not-resolved=\"false\"></xref> that writes the\nstandardized JSON error body (CONTRACT.md §10, PATTERNS.md &quot;Standardized JSON\nerror body&quot;) for both authorization outcomes: an unauthenticated result (401) and a\n&quot;lacks permission&quot; result (403 — <code>AxiamPolicyHandler</code> left an\n<xref href=\"Axiam.Sdk.AspNetCore.AxiamRequirement\" data-throw-if-not-resolved=\"false\"></xref> unsatisfied, i.e. <code>AuthzError</code>). On success, the\npipeline continues exactly like the framework default.</p>\n"
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.yml\" sourcestartlinenumber=\"1\">Custom <xref href=\"Microsoft.AspNetCore.Authorization.IAuthorizationMiddlewareResultHandler\" data-throw-if-not-resolved=\"false\"></xref> that writes the\nstandardized JSON error body (CONTRACT.md §10/§11, PATTERNS.md &quot;Standardized\nJSON error body&quot;) for every authorization outcome: an unauthenticated result (401), a\n&quot;lacks permission&quot; result (403 — <code>AxiamPolicyHandler</code> left an\n<xref href=\"Axiam.Sdk.AspNetCore.AxiamRequirement\" data-throw-if-not-resolved=\"false\"></xref> unsatisfied, i.e. <code>AuthzError</code>), an unresolvable\nresource id (400 <code>invalid_request</code>, CONTRACT.md §11.2.3), and a transport\nfailure while checking access (503 <code>authz_unavailable</code>, fail-closed per\nCONTRACT.md §11.2.5). On success, the pipeline continues exactly like the\nframework default.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -162,7 +176,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.AspNetCore.AxiamPolicyProvider",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamPolicyProvider.yml\" sourcestartlinenumber=\"1\">Builds an <xref href=\"Microsoft.AspNetCore.Authorization.AuthorizationPolicy\" data-throw-if-not-resolved=\"false\"></xref> containing a single\n<xref href=\"Axiam.Sdk.AspNetCore.AxiamRequirement\" data-throw-if-not-resolved=\"false\"></xref> for any policy name shaped <code>&quot;resource:action&quot;</code>\n(e.g. <code>&quot;documents:read&quot;</code>) — the novel .NET-idiom file this phase introduces\n(D-08; no direct Spring/method-security equivalent, built from RESEARCH.md Pattern\n5). Falls back to <xref href=\"Microsoft.AspNetCore.Authorization.DefaultAuthorizationPolicyProvider\" data-throw-if-not-resolved=\"false\"></xref> for every other\npolicy name, so consumer-defined policies (registered via the normal\n<code>AddAuthorization(options =&gt; options.AddPolicy(...))</code> path) keep working\ncompletely unmodified.</p>\n"
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamPolicyProvider.yml\" sourcestartlinenumber=\"1\">Builds an <xref href=\"Microsoft.AspNetCore.Authorization.AuthorizationPolicy\" data-throw-if-not-resolved=\"false\"></xref> containing a single\n<xref href=\"Axiam.Sdk.AspNetCore.AxiamRequirement\" data-throw-if-not-resolved=\"false\"></xref> for either the structured policy name produced by\n<xref href=\"Axiam.Sdk.AspNetCore.AxiamAccessAttribute\" data-throw-if-not-resolved=\"false\"></xref> or the legacy policy name shaped\n<code>&quot;resource:action&quot;</code> (e.g. <code>&quot;documents:read&quot;</code>) — the novel .NET-idiom file\nthis phase introduces (D-08; no direct Spring/method-security equivalent, built from\nRESEARCH.md Pattern 5). Falls back to <xref href=\"Microsoft.AspNetCore.Authorization.DefaultAuthorizationPolicyProvider\" data-throw-if-not-resolved=\"false\"></xref>\nfor every other policy name, so consumer-defined policies (registered via the normal\n<code>AddAuthorization(options =&gt; options.AddPolicy(...))</code> path) keep working\ncompletely unmodified.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -176,7 +190,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.AspNetCore.AxiamRequirement",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamRequirement.yml\" sourcestartlinenumber=\"1\">Authorization requirement for a policy name shaped <code>&quot;resource:action&quot;</code> (e.g.\n<code>&quot;documents:read&quot;</code>), carrying the parsed halves for <xref href=\"Axiam.Sdk.AspNetCore.AxiamPolicyHandler\" data-throw-if-not-resolved=\"false\"></xref>\nto route into <code>CheckAccessAsync</code> (D-08). Built by <xref href=\"Axiam.Sdk.AspNetCore.AxiamPolicyProvider\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamRequirement.yml\" sourcestartlinenumber=\"1\">Authorization requirement carrying everything <xref href=\"Axiam.Sdk.AspNetCore.AxiamPolicyHandler\" data-throw-if-not-resolved=\"false\"></xref> needs\nto run a single AXIAM access check (CONTRACT.md §11): the resource/action halves\n(legacy <code>&quot;resource:action&quot;</code> policy-string form, e.g. <code>&quot;documents:read&quot;</code>, or\nthe structured <xref href=\"Axiam.Sdk.AspNetCore.AxiamAccessAttribute\" data-throw-if-not-resolved=\"false\"></xref> form — both funnel into this same\ntype), plus the optional <xref href=\"Axiam.Sdk.AspNetCore.AxiamRequirement.Scope\" data-throw-if-not-resolved=\"false\"></xref> and the <xref href=\"Axiam.Sdk.AspNetCore.AxiamRequirement.ResourceRouteParam\" data-throw-if-not-resolved=\"false\"></xref>\nroute value name used to resolve the target resource's UUID at request time. Built by\n<xref href=\"Axiam.Sdk.AspNetCore.AxiamPolicyProvider\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",

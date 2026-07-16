@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AxiamPolicyProvider | AXIAM .NET SDK ">
       
-      <meta name="description" content="Builds an  containing a single  for any policy name shaped &amp;quot;resource:action&amp;quot; (e.g. &amp;quot;documents:read&amp;quot;) — the novel .NET-idiom file this phase introduces (D-08; no direct Spring/method-security equivalent, built from RESEARCH.md Pattern 5). Falls back to  for every other policy name, so consumer-defined policies (registered via the normal AddAuthorization(options =&amp;gt; options.AddPolicy(...)) path) keep working completely unmodified.">
+      <meta name="description" content="Builds an  containing a single  for either the structured policy name produced by  or the legacy policy name shaped &amp;quot;resource:action&amp;quot; (e.g. &amp;quot;documents:read&amp;quot;) — the novel .NET-idiom file this phase introduces (D-08; no direct Spring/method-security equivalent, built from RESEARCH.md Pattern 5). Falls back to  for every other policy name, so consumer-defined policies (registered via the normal AddAuthorization(options =&amp;gt; options.AddPolicy(...)) path) keep working completely unmodified.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamPolicyProvider.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamPolicyProvider%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha2/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamPolicyProvider.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamPolicyProvider%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_AspNetCore_AxiamPolicyProvider" data-uid="Axiam.Sdk.AspNetCore.AxiamPolicyProvider" class="text-break">
-Class AxiamPolicyProvider  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamPolicyProvider.cs/#L17"><i class="bi bi-code-slash"></i></a>
+Class AxiamPolicyProvider  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamPolicyProvider.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -98,11 +98,12 @@ Class AxiamPolicyProvider  <a class="header-action link-secondary" title="View s
   </div>
 
   <div class="markdown summary"><p>Builds an <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.authorizationpolicy">AuthorizationPolicy</a> containing a single
-<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a> for any policy name shaped <code>&quot;resource:action&quot;</code>
-(e.g. <code>&quot;documents:read&quot;</code>) — the novel .NET-idiom file this phase introduces
-(D-08; no direct Spring/method-security equivalent, built from RESEARCH.md Pattern
-5). Falls back to <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.defaultauthorizationpolicyprovider">DefaultAuthorizationPolicyProvider</a> for every other
-policy name, so consumer-defined policies (registered via the normal
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a> for either the structured policy name produced by
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html">AxiamAccessAttribute</a> or the legacy policy name shaped
+<code>&quot;resource:action&quot;</code> (e.g. <code>&quot;documents:read&quot;</code>) — the novel .NET-idiom file
+this phase introduces (D-08; no direct Spring/method-security equivalent, built from
+RESEARCH.md Pattern 5). Falls back to <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.defaultauthorizationpolicyprovider">DefaultAuthorizationPolicyProvider</a>
+for every other policy name, so consumer-defined policies (registered via the normal
 <code>AddAuthorization(options =&gt; options.AddPolicy(...))</code> path) keep working
 completely unmodified.</p>
 </div>
@@ -167,7 +168,7 @@ completely unmodified.</p>
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamPolicyProvider__ctor_Microsoft_Extensions_Options_IOptions_Microsoft_AspNetCore_Authorization_AuthorizationOptions__" data-uid="Axiam.Sdk.AspNetCore.AxiamPolicyProvider.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Authorization.AuthorizationOptions})">
   AxiamPolicyProvider(IOptions&lt;AuthorizationOptions&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamPolicyProvider.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamPolicyProvider.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs the provider, wrapping a <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.defaultauthorizationpolicyprovider">DefaultAuthorizationPolicyProvider</a>
@@ -205,7 +206,7 @@ built from the same <code class="paramref">options</code> for the fallback path.
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamPolicyProvider_GetDefaultPolicyAsync" data-uid="Axiam.Sdk.AspNetCore.AxiamPolicyProvider.GetDefaultPolicyAsync">
   GetDefaultPolicyAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamPolicyProvider.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamPolicyProvider.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the default authorization policy.</p>
@@ -238,7 +239,7 @@ built from the same <code class="paramref">options</code> for the fallback path.
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamPolicyProvider_GetFallbackPolicyAsync" data-uid="Axiam.Sdk.AspNetCore.AxiamPolicyProvider.GetFallbackPolicyAsync">
   GetFallbackPolicyAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamPolicyProvider.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamPolicyProvider.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the fallback authorization policy.</p>
@@ -271,16 +272,22 @@ built from the same <code class="paramref">options</code> for the fallback path.
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamPolicyProvider_GetPolicyAsync_System_String_" data-uid="Axiam.Sdk.AspNetCore.AxiamPolicyProvider.GetPolicyAsync(System.String)">
   GetPolicyAsync(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamPolicyProvider.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamPolicyProvider.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Recognizes a <code>&quot;resource:action&quot;</code>-shaped policy name (exactly one non-empty
-resource half and one non-empty action half, separated by <code>':'</code>) and builds
-an <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a>-backed policy for it on the fly — the consumer
-never has to explicitly register these policies via
-<code>AddAuthorization(options =&gt; options.AddPolicy(...))</code>. Any other policy
-name (including one containing no <code>':'</code>, or an explicitly pre-registered
-policy that happens to be named with a colon) falls through to
+  <div class="markdown level1 summary"><p>Recognizes two policy-name shapes and builds an <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a>-backed
+policy for either on the fly — the consumer never has to explicitly register these
+policies via <code>AddAuthorization(options =&gt; options.AddPolicy(...))</code>:</p>
+<ul><li>The structured form produced by <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html">AxiamAccessAttribute</a>
+(<code>"axiam::&lt;action&gt;::&lt;resource&gt;::&lt;scope&gt;::&lt;param&gt;"</code>),
+carrying <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_Scope">Scope</a> and
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_ResourceRouteParam">ResourceRouteParam</a> through to the built
+requirement. Checked FIRST.</li><li>The legacy <code>"resource:action"</code>-shaped policy name (exactly
+one non-empty resource half and one non-empty action half, separated by a single
+<code>':'</code>, e.g. <code>"documents:read"</code>) — kept fully supported for existing
+<code>[Authorize(Policy = "resource:action")]</code> consumers.</li></ul>
+<p>Any other policy name (including one containing no <code>':'</code>, or an explicitly
+pre-registered policy that happens to be named with a colon) falls through to
 <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.defaultauthorizationpolicyprovider">DefaultAuthorizationPolicyProvider</a> unmodified.</p>
 </div>
   <div class="markdown level1 conceptual"></div>

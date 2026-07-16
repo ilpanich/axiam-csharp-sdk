@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha/apiSpec/new?filename=Axiam_Sdk_Core_ErrorMapper.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Core.ErrorMapper%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha2/apiSpec/new?filename=Axiam_Sdk_Core_ErrorMapper.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Core.ErrorMapper%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Core_ErrorMapper" data-uid="Axiam.Sdk.Core.ErrorMapper" class="text-break">
-Class ErrorMapper  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Core/ErrorMapper.cs/#L13"><i class="bi bi-code-slash"></i></a>
+Class ErrorMapper  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk/Core/ErrorMapper.cs/#L13"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -159,16 +159,16 @@ gRPC transports cannot drift on the error taxonomy.</p>
 
   <h3 id="Axiam_Sdk_Core_ErrorMapper_FromGrpcStatus_Grpc_Core_StatusCode_System_String_" data-uid="Axiam.Sdk.Core.ErrorMapper.FromGrpcStatus(Grpc.Core.StatusCode,System.String)">
   FromGrpcStatus(StatusCode, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Core/ErrorMapper.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk/Core/ErrorMapper.cs/#L101"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Maps a gRPC status code to an <a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a>/<a class="xref" href="Axiam.Sdk.Core.AuthzError.html">AuthzError</a>/
 <a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a> per CONTRACT.md §2's gRPC status table:
-<a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha/src/Grpc.Core.Api/StatusCode.cs">Unauthenticated</a>→<a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a>;
-<a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha/src/Grpc.Core.Api/StatusCode.cs">PermissionDenied</a>→<a class="xref" href="Axiam.Sdk.Core.AuthzError.html">AuthzError</a>;
-everything else (<a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha/src/Grpc.Core.Api/StatusCode.cs">Unavailable</a>,
-<a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha/src/Grpc.Core.Api/StatusCode.cs">DeadlineExceeded</a>, <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha/src/Grpc.Core.Api/StatusCode.cs">Internal</a>,
-<a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha/src/Grpc.Core.Api/StatusCode.cs">ResourceExhausted</a>, other)→<a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a>.</p>
+<a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha2/src/Grpc.Core.Api/StatusCode.cs">Unauthenticated</a>→<a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a>;
+<a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha2/src/Grpc.Core.Api/StatusCode.cs">PermissionDenied</a>→<a class="xref" href="Axiam.Sdk.Core.AuthzError.html">AuthzError</a>;
+everything else (<a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha2/src/Grpc.Core.Api/StatusCode.cs">Unavailable</a>,
+<a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha2/src/Grpc.Core.Api/StatusCode.cs">DeadlineExceeded</a>, <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha2/src/Grpc.Core.Api/StatusCode.cs">Internal</a>,
+<a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha2/src/Grpc.Core.Api/StatusCode.cs">ResourceExhausted</a>, other)→<a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -178,7 +178,7 @@ everything else (<a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>code</code> <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha/src/Grpc.Core.Api/StatusCode.cs">StatusCode</a></dt>
+    <dt><code>code</code> <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha2/src/Grpc.Core.Api/StatusCode.cs">StatusCode</a></dt>
     <dd></dd>
     <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
@@ -204,7 +204,7 @@ everything else (<a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/
 
   <h3 id="Axiam_Sdk_Core_ErrorMapper_FromHttpResponse_System_Net_Http_HttpResponseMessage_System_String_" data-uid="Axiam.Sdk.Core.ErrorMapper.FromHttpResponse(System.Net.Http.HttpResponseMessage,System.String)">
   FromHttpResponse(HttpResponseMessage, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Core/ErrorMapper.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk/Core/ErrorMapper.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Maps an HTTP status code to an <a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a>/<a class="xref" href="Axiam.Sdk.Core.AuthzError.html">AuthzError</a>/
@@ -247,7 +247,7 @@ everything else (400/408/429/5xx/other)→<a class="xref" href="Axiam.Sdk.Core.N
 
   <h3 id="Axiam_Sdk_Core_ErrorMapper_FromHttpStatus_System_Net_HttpStatusCode_System_String_" data-uid="Axiam.Sdk.Core.ErrorMapper.FromHttpStatus(System.Net.HttpStatusCode,System.String)">
   FromHttpStatus(HttpStatusCode, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Core/ErrorMapper.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk/Core/ErrorMapper.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Overload for callers that only have the status code (no live response) — e.g. a

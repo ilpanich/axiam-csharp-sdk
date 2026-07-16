@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AxiamAuthorizationMiddlewareResultHandler | AXIAM .NET SDK ">
       
-      <meta name="description" content="Custom  that writes the standardized JSON error body (CONTRACT.md &#167;10, PATTERNS.md &amp;quot;Standardized JSON error body&amp;quot;) for both authorization outcomes: an unauthenticated result (401) and a &amp;quot;lacks permission&amp;quot; result (403 — AxiamPolicyHandler left an  unsatisfied, i.e. AuthzError). On success, the pipeline continues exactly like the framework default.">
+      <meta name="description" content="Custom  that writes the standardized JSON error body (CONTRACT.md &#167;10/&#167;11, PATTERNS.md &amp;quot;Standardized JSON error body&amp;quot;) for every authorization outcome: an unauthenticated result (401), a &amp;quot;lacks permission&amp;quot; result (403 — AxiamPolicyHandler left an  unsatisfied, i.e. AuthzError), an unresolvable resource id (400 invalid_request, CONTRACT.md &#167;11.2.3), and a transport failure while checking access (503 authz_unavailable, fail-closed per CONTRACT.md &#167;11.2.5). On success, the pipeline continues exactly like the framework default.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamAuthorizationMiddlewareResultHandler.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha2/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamAuthorizationMiddlewareResultHandler.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_AspNetCore_AxiamAuthorizationMiddlewareResultHandler" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler" class="text-break">
-Class AxiamAuthorizationMiddlewareResultHandler  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamPolicyHandler.cs/#L135"><i class="bi bi-code-slash"></i></a>
+Class AxiamAuthorizationMiddlewareResultHandler  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamPolicyHandler.cs/#L261"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -98,11 +98,14 @@ Class AxiamAuthorizationMiddlewareResultHandler  <a class="header-action link-se
   </div>
 
   <div class="markdown summary"><p>Custom <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.iauthorizationmiddlewareresulthandler">IAuthorizationMiddlewareResultHandler</a> that writes the
-standardized JSON error body (CONTRACT.md §10, PATTERNS.md &quot;Standardized JSON
-error body&quot;) for both authorization outcomes: an unauthenticated result (401) and a
+standardized JSON error body (CONTRACT.md §10/§11, PATTERNS.md &quot;Standardized
+JSON error body&quot;) for every authorization outcome: an unauthenticated result (401), a
 &quot;lacks permission&quot; result (403 — <code>AxiamPolicyHandler</code> left an
-<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a> unsatisfied, i.e. <code>AuthzError</code>). On success, the
-pipeline continues exactly like the framework default.</p>
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a> unsatisfied, i.e. <code>AuthzError</code>), an unresolvable
+resource id (400 <code>invalid_request</code>, CONTRACT.md §11.2.3), and a transport
+failure while checking access (503 <code>authz_unavailable</code>, fail-closed per
+CONTRACT.md §11.2.5). On success, the pipeline continues exactly like the
+framework default.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -183,11 +186,19 @@ signature+tenant verification succeeds.</p>
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamAuthorizationMiddlewareResultHandler_HandleAsync_Microsoft_AspNetCore_Http_RequestDelegate_Microsoft_AspNetCore_Http_HttpContext_Microsoft_AspNetCore_Authorization_AuthorizationPolicy_Microsoft_AspNetCore_Authorization_Policy_PolicyAuthorizationResult_" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.HandleAsync(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Authorization.AuthorizationPolicy,Microsoft.AspNetCore.Authorization.Policy.PolicyAuthorizationResult)">
   HandleAsync(RequestDelegate, HttpContext, AuthorizationPolicy, PolicyAuthorizationResult)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamPolicyHandler.cs/#L150"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamPolicyHandler.cs/#L284"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>On success, continues the pipeline exactly like the framework default. On failure,
-writes a standardized JSON error body: 403 (<code>authorization_denied</code>) when
+writes a standardized JSON error body, checking
+<span class="xref">Axiam.Sdk.AspNetCore.AxiamPolicyHandler.OutcomeItemKey</span> in <code class="paramref">context</code>'s
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.httpcontext.items">Items</a> FIRST — see that key's remarks for why this,
+rather than <code class="paramref">authorizeResult</code>'s own
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.policy.policyauthorizationresult.authorizationfailure">AuthorizationFailure</a>, is the channel
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyHandler.html">AxiamPolicyHandler</a> actually reaches this handler through: 503
+(<code>authz_unavailable</code>) for a transport failure while checking access, 400
+(<code>invalid_request</code>) for an unresolvable resource id. Absent either signal,
+falls back to the §10 behavior: 403 (<code>authorization_denied</code>) when
 <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.httpcontext.user">User</a> is already authenticated (an <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a>
 was left unsatisfied by <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyHandler.html">AxiamPolicyHandler</a>), otherwise 401
 (<code>authentication_failed</code>). See the type-level remarks for why this branches on

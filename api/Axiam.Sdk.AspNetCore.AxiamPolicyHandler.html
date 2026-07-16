@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamPolicyHandler.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamPolicyHandler%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha2/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamPolicyHandler.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamPolicyHandler%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_AspNetCore_AxiamPolicyHandler" data-uid="Axiam.Sdk.AspNetCore.AxiamPolicyHandler" class="text-break">
-Class AxiamPolicyHandler  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamPolicyHandler.cs/#L26"><i class="bi bi-code-slash"></i></a>
+Class AxiamPolicyHandler  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamPolicyHandler.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -177,7 +177,7 @@ from the server's live additive-only decision, which this SDK must never risk.</
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamPolicyHandler__ctor_Axiam_Sdk_AxiamClient_" data-uid="Axiam.Sdk.AspNetCore.AxiamPolicyHandler.#ctor(Axiam.Sdk.AxiamClient)">
   AxiamPolicyHandler(AxiamClient)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamPolicyHandler.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamPolicyHandler.cs/#L97"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs the handler over the shared <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a> registered by
@@ -215,15 +215,17 @@ from the server's live additive-only decision, which this SDK must never risk.</
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamPolicyHandler_HandleRequirementAsync_Microsoft_AspNetCore_Authorization_AuthorizationHandlerContext_Axiam_Sdk_AspNetCore_AxiamRequirement_" data-uid="Axiam.Sdk.AspNetCore.AxiamPolicyHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,Axiam.Sdk.AspNetCore.AxiamRequirement)">
   HandleRequirementAsync(AuthorizationHandlerContext, AxiamRequirement)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamPolicyHandler.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamPolicyHandler.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Resolves the caller's <code>user_id</code> claim and the target resource id (from route
-data), then calls <code>AxiamClient.Authz.CheckAccessAsync</code> fresh — see the
-type-level remarks for why no decision is ever cached. Succeeds
-<code class="paramref">requirement</code> when allowed; otherwise leaves it unsatisfied so
-<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.html">AxiamAuthorizationMiddlewareResultHandler</a> can map the outcome to a
-standardized 401/403 JSON body.</p>
+  <div class="markdown level1 summary"><p>Resolves the caller's <code>user_id</code> claim and the target resource id (from
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_ResourceRouteParam">ResourceRouteParam</a> route data), then calls
+<code>AxiamClient.Authz.CheckAccessAsync</code> fresh with
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_Scope">Scope</a> — see the type-level remarks for why no
+decision is ever cached. Succeeds <code class="paramref">requirement</code> when allowed;
+otherwise leaves it unsatisfied (or fails it with a sentinel reason for the
+400/503 cases below) so <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.html">AxiamAuthorizationMiddlewareResultHandler</a>
+can map the outcome to a standardized JSON body.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -237,7 +239,7 @@ standardized 401/403 JSON body.</p>
     <dd><p>The ASP.NET Core authorization evaluation context.</p>
 </dd>
     <dt><code>requirement</code> <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a></dt>
-    <dd><p>The parsed <code>resource:action</code> requirement to check.</p>
+    <dd><p>The parsed access-check requirement to evaluate.</p>
 </dd>
   </dl>
 

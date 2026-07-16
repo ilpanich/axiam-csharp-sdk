@@ -95,6 +95,24 @@
 Classes
 </h3>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html">AxiamAccessAttribute</a></dt>
+      <dd><p>Declarative, per-endpoint AXIAM authorization attribute (CONTRACT.md §11
+<code>require_access(action, resource[, scope])</code> — C# maps this to
+<code>[AxiamAccess(...)]</code>). Sugar over the existing <code>&quot;resource:action&quot;</code> policy
+string mechanism (<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyProvider.html">AxiamPolicyProvider</a>/<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyHandler.html">AxiamPolicyHandler</a>):
+this attribute serializes its <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_Action">Action</a>/<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_Resource">Resource</a>/
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_Scope">Scope</a>/<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_ResourceRouteParam">ResourceRouteParam</a> into a structured policy name
+(<code>&quot;axiam::&lt;action&gt;::&lt;resource&gt;::&lt;scope&gt;::&lt;param&gt;&quot;</code>) that
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyProvider.html">AxiamPolicyProvider</a> recognizes and parses ALONGSIDE the legacy
+single-colon <code>&quot;resource:action&quot;</code> form (which remains fully supported — see its
+own remarks). Because this type derives from <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.authorizeattribute">AuthorizeAttribute</a>, it can
+be placed directly on a controller/action (<code>[AxiamAccess(&quot;read&quot;, &quot;documents&quot;)]</code>)
+or passed to <code>RequireAuthorization(IAuthorizeData)</code> for minimal APIs — ASP.NET
+Core's own authorization pipeline combines it into a policy via
+Policy exactly like any other <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.authorizeattribute">AuthorizeAttribute</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.html">AxiamAuthMiddleware</a></dt>
       <dd><p>ASP.NET Core authentication middleware (D-06, CONTRACT.md §10 &quot;ASP.NET Core&quot;
 row: <code>app.UseMiddleware&lt;AxiamAuthMiddleware&gt;()</code> in <code>Program.cs</code>).
@@ -108,11 +126,14 @@ the direct analog of Java D-14's Spring <code>SecurityContext</code> integration
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.html">AxiamAuthorizationMiddlewareResultHandler</a></dt>
       <dd><p>Custom <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.iauthorizationmiddlewareresulthandler">IAuthorizationMiddlewareResultHandler</a> that writes the
-standardized JSON error body (CONTRACT.md §10, PATTERNS.md &quot;Standardized JSON
-error body&quot;) for both authorization outcomes: an unauthenticated result (401) and a
+standardized JSON error body (CONTRACT.md §10/§11, PATTERNS.md &quot;Standardized
+JSON error body&quot;) for every authorization outcome: an unauthenticated result (401), a
 &quot;lacks permission&quot; result (403 — <code>AxiamPolicyHandler</code> left an
-<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a> unsatisfied, i.e. <code>AuthzError</code>). On success, the
-pipeline continues exactly like the framework default.</p>
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a> unsatisfied, i.e. <code>AuthzError</code>), an unresolvable
+resource id (400 <code>invalid_request</code>, CONTRACT.md §11.2.3), and a transport
+failure while checking access (503 <code>authz_unavailable</code>, fail-closed per
+CONTRACT.md §11.2.5). On success, the pipeline continues exactly like the
+framework default.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -138,20 +159,25 @@ novel file in the phase (built from RESEARCH.md Pattern 5, reusing the
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyProvider.html">AxiamPolicyProvider</a></dt>
       <dd><p>Builds an <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.authorizationpolicy">AuthorizationPolicy</a> containing a single
-<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a> for any policy name shaped <code>&quot;resource:action&quot;</code>
-(e.g. <code>&quot;documents:read&quot;</code>) — the novel .NET-idiom file this phase introduces
-(D-08; no direct Spring/method-security equivalent, built from RESEARCH.md Pattern
-5). Falls back to <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.defaultauthorizationpolicyprovider">DefaultAuthorizationPolicyProvider</a> for every other
-policy name, so consumer-defined policies (registered via the normal
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a> for either the structured policy name produced by
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html">AxiamAccessAttribute</a> or the legacy policy name shaped
+<code>&quot;resource:action&quot;</code> (e.g. <code>&quot;documents:read&quot;</code>) — the novel .NET-idiom file
+this phase introduces (D-08; no direct Spring/method-security equivalent, built from
+RESEARCH.md Pattern 5). Falls back to <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.authorization.defaultauthorizationpolicyprovider">DefaultAuthorizationPolicyProvider</a>
+for every other policy name, so consumer-defined policies (registered via the normal
 <code>AddAuthorization(options =&gt; options.AddPolicy(...))</code> path) keep working
 completely unmodified.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html">AxiamRequirement</a></dt>
-      <dd><p>Authorization requirement for a policy name shaped <code>&quot;resource:action&quot;</code> (e.g.
-<code>&quot;documents:read&quot;</code>), carrying the parsed halves for <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyHandler.html">AxiamPolicyHandler</a>
-to route into <code>CheckAccessAsync</code> (D-08). Built by <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyProvider.html">AxiamPolicyProvider</a>.</p>
+      <dd><p>Authorization requirement carrying everything <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyHandler.html">AxiamPolicyHandler</a> needs
+to run a single AXIAM access check (CONTRACT.md §11): the resource/action halves
+(legacy <code>&quot;resource:action&quot;</code> policy-string form, e.g. <code>&quot;documents:read&quot;</code>, or
+the structured <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html">AxiamAccessAttribute</a> form — both funnel into this same
+type), plus the optional <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_Scope">Scope</a> and the <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_ResourceRouteParam">ResourceRouteParam</a>
+route value name used to resolve the target resource's UUID at request time. Built by
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyProvider.html">AxiamPolicyProvider</a>.</p>
 </dd>
     </dl>
     <dl class="jumplist">

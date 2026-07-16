@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AxiamRequirement | AXIAM .NET SDK ">
       
-      <meta name="description" content="Authorization requirement for a policy name shaped &amp;quot;resource:action&amp;quot; (e.g. &amp;quot;documents:read&amp;quot;), carrying the parsed halves for  to route into CheckAccessAsync (D-08). Built by .">
+      <meta name="description" content="Authorization requirement carrying everything  needs to run a single AXIAM access check (CONTRACT.md &#167;11): the resource/action halves (legacy &amp;quot;resource:action&amp;quot; policy-string form, e.g. &amp;quot;documents:read&amp;quot;, or the structured  form — both funnel into this same type), plus the optional  and the  route value name used to resolve the target resource&#39;s UUID at request time. Built by .">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamRequirement.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamRequirement%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha2/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamRequirement.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamRequirement%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_AspNetCore_AxiamRequirement" data-uid="Axiam.Sdk.AspNetCore.AxiamRequirement" class="text-break">
-Class AxiamRequirement  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamRequirement.cs/#L10"><i class="bi bi-code-slash"></i></a>
+Class AxiamRequirement  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamRequirement.cs/#L14"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,9 +97,13 @@ Class AxiamRequirement  <a class="header-action link-secondary" title="View sour
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.AspNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Authorization requirement for a policy name shaped <code>&quot;resource:action&quot;</code> (e.g.
-<code>&quot;documents:read&quot;</code>), carrying the parsed halves for <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyHandler.html">AxiamPolicyHandler</a>
-to route into <code>CheckAccessAsync</code> (D-08). Built by <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyProvider.html">AxiamPolicyProvider</a>.</p>
+  <div class="markdown summary"><p>Authorization requirement carrying everything <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyHandler.html">AxiamPolicyHandler</a> needs
+to run a single AXIAM access check (CONTRACT.md §11): the resource/action halves
+(legacy <code>&quot;resource:action&quot;</code> policy-string form, e.g. <code>&quot;documents:read&quot;</code>, or
+the structured <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html">AxiamAccessAttribute</a> form — both funnel into this same
+type), plus the optional <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_Scope">Scope</a> and the <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_ResourceRouteParam">ResourceRouteParam</a>
+route value name used to resolve the target resource's UUID at request time. Built by
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyProvider.html">AxiamPolicyProvider</a>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -160,26 +164,36 @@ to route into <code>CheckAccessAsync</code> (D-08). Built by <a class="xref" hre
 
   <a id="Axiam_Sdk_AspNetCore_AxiamRequirement__ctor_" data-uid="Axiam.Sdk.AspNetCore.AxiamRequirement.#ctor*"></a>
 
-  <h3 id="Axiam_Sdk_AspNetCore_AxiamRequirement__ctor_System_String_System_String_" data-uid="Axiam.Sdk.AspNetCore.AxiamRequirement.#ctor(System.String,System.String)">
-  AxiamRequirement(string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamRequirement.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamRequirement__ctor_System_String_System_String_System_String_System_String_" data-uid="Axiam.Sdk.AspNetCore.AxiamRequirement.#ctor(System.String,System.String,System.String,System.String)">
+  AxiamRequirement(string?, string, string?, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamRequirement.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Constructs the requirement from the parsed halves of a <code>&quot;resource:action&quot;</code> policy name.</p>
+  <div class="markdown level1 summary"><p>Constructs the requirement from the parsed halves of a policy name, plus the
+optional scope and route-parameter name.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AxiamRequirement(string resource, string action)</code></pre>
+    <pre><code class="lang-csharp hljs">public AxiamRequirement(string? resource, string action, string? scope = null, string resourceRouteParam = &quot;id&quot;)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>resource</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The resource-type half of the policy name (e.g. <code>&quot;documents&quot;</code>). Required, non-blank.</p>
+    <dd><p>The resource-type half of the policy name (e.g. <code>&quot;documents&quot;</code>).
+Optional — when <code>null</code>, <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_PolicyName">PolicyName</a> is <code class="paramref">action</code> alone.</p>
 </dd>
     <dt><code>action</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd><p>The action half of the policy name (e.g. <code>&quot;read&quot;</code>). Required, non-blank.</p>
+</dd>
+    <dt><code>scope</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional scope for sub-resource granularity, passed through to
+<code>CheckAccessAsync</code> verbatim.</p>
+</dd>
+    <dt><code>resourceRouteParam</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The name of the route value whose UUID identifies
+the target resource. Defaults to <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_DefaultResourceRouteParam">DefaultResourceRouteParam</a> (<code>&quot;id&quot;</code>).</p>
 </dd>
   </dl>
 
@@ -202,7 +216,7 @@ to route into <code>CheckAccessAsync</code> (D-08). Built by <a class="xref" hre
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamRequirement_Action" data-uid="Axiam.Sdk.AspNetCore.AxiamRequirement.Action">
   Action
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamRequirement.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamRequirement.cs/#L23"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The action half of the policy name (e.g. <code>&quot;read&quot;</code>).</p>
@@ -234,13 +248,14 @@ to route into <code>CheckAccessAsync</code> (D-08). Built by <a class="xref" hre
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamRequirement_PolicyName" data-uid="Axiam.Sdk.AspNetCore.AxiamRequirement.PolicyName">
   PolicyName
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamRequirement.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamRequirement.cs/#L69"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The full <code>&quot;resource:action&quot;</code> string this requirement was parsed from — sent
-verbatim as the wire <code>action</code> field to <code>POST /api/v1/authz/check</code>, which
-documents its own <code>action</code> field with exactly this &quot;resource:verb&quot; shape
-(e.g. the real server's own doc example is <code>&quot;users:get&quot;</code>).</p>
+  <div class="markdown level1 summary"><p>The full <code>&quot;resource:action&quot;</code> (or bare <code>action</code>, when <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_Resource">Resource</a>
+is <code>null</code>) string this requirement was built from — sent verbatim as the wire
+<code>action</code> field to <code>POST /api/v1/authz/check</code>, which documents its own
+<code>action</code> field with exactly this &quot;resource:verb&quot; shape (e.g. the real server's
+own doc example is <code>&quot;users:get&quot;</code>).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -269,15 +284,87 @@ documents its own <code>action</code> field with exactly this &quot;resource:ver
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamRequirement_Resource" data-uid="Axiam.Sdk.AspNetCore.AxiamRequirement.Resource">
   Resource
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk.AspNetCore/AxiamRequirement.cs/#L13"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamRequirement.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The resource-type half of the policy name (e.g. <code>&quot;documents&quot;</code>).</p>
+  <div class="markdown level1 summary"><p>The resource-type half of the policy name (e.g. <code>&quot;documents&quot;</code>).
+<code>null</code> when the requirement was built from an <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html">AxiamAccessAttribute</a>
+with no <code>resource</code> argument — in that case <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_PolicyName">PolicyName</a> is
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_Action">Action</a> alone.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Resource { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string? Resource { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamRequirement_ResourceRouteParam_" data-uid="Axiam.Sdk.AspNetCore.AxiamRequirement.ResourceRouteParam*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamRequirement_ResourceRouteParam" data-uid="Axiam.Sdk.AspNetCore.AxiamRequirement.ResourceRouteParam">
+  ResourceRouteParam
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamRequirement.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The name of the route/path value whose UUID identifies the target
+resource (CONTRACT.md §11.2.3b). Defaults to
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.html#Axiam_Sdk_AspNetCore_AxiamAccessAttribute_DefaultResourceRouteParam">DefaultResourceRouteParam</a> (<code>&quot;id&quot;</code>) for
+requirements built from the legacy <code>&quot;resource:action&quot;</code> policy-string form.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ResourceRouteParam { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamRequirement_Scope_" data-uid="Axiam.Sdk.AspNetCore.AxiamRequirement.Scope*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamRequirement_Scope" data-uid="Axiam.Sdk.AspNetCore.AxiamRequirement.Scope">
+  Scope
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk.AspNetCore/AxiamRequirement.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Optional scope for sub-resource granularity (CONTRACT.md §11.2.4),
+passed through to <code>CheckAccessAsync</code> verbatim. <code>null</code> when no scope was
+specified.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Scope { get; }</code></pre>
   </div>
 
 

@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha/apiSpec/new?filename=Axiam_Sdk_Grpc_AxiamGrpcAuthzClient.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Grpc.AxiamGrpcAuthzClient%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha2/apiSpec/new?filename=Axiam_Sdk_Grpc_AxiamGrpcAuthzClient.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Grpc.AxiamGrpcAuthzClient%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient" class="text-break">
-Class AxiamGrpcAuthzClient  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L32"><i class="bi bi-code-slash"></i></a>
+Class AxiamGrpcAuthzClient  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -98,7 +98,7 @@ Class AxiamGrpcAuthzClient  <a class="header-action link-secondary" title="View 
   </div>
 
   <div class="markdown summary"><p>gRPC authorization transport (CONTRACT.md §1/§2/§5/§9, D-10).
-Wraps ONE long-lived <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha/src/Grpc.Net.Client/GrpcChannel.cs">GrpcChannel</a> (via <a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcChannel.html">AxiamGrpcChannel</a> —
+Wraps ONE long-lived <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha2/src/Grpc.Net.Client/GrpcChannel.cs">GrpcChannel</a> (via <a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcChannel.html">AxiamGrpcChannel</a> —
 strict TLS, §6) intercepted by an <a class="xref" href="Axiam.Sdk.Grpc.AuthInterceptor.html">AuthInterceptor</a> that shares
 the EXACT SAME <a class="xref" href="Axiam.Sdk.Auth.RefreshGuard.html">RefreshGuard</a>/session <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a>'s REST
 transport uses — never a second guard instance.</p>
@@ -178,7 +178,7 @@ denial — never an over-grant.
 
   <h3 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient__ctor_Axiam_Sdk_AxiamClient_System_Uri_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.#ctor(Axiam.Sdk.AxiamClient,System.Uri)">
   AxiamGrpcAuthzClient(AxiamClient, Uri?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L56"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs the gRPC authz transport from <code class="paramref">client</code>'s exposed
@@ -224,7 +224,7 @@ session (RefreshGuard/tenant/token) this gRPC transport shares.</p>
 
   <h3 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_BatchCheckAsync_System_Collections_Generic_IEnumerable_Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_AccessCheck__System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.BatchCheckAsync(System.Collections.Generic.IEnumerable{Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.AccessCheck},System.Threading.CancellationToken)">
   BatchCheckAsync(IEnumerable&lt;AccessCheck&gt;, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L136"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L136"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>BatchCheckAccess</code> (CONTRACT.md §1); results are returned in the same
@@ -266,7 +266,7 @@ shared <code>AuthInterceptor</code>).</p>
 
   <h3 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_CheckAccessAsync_System_String_System_String_System_String_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.CheckAccessAsync(System.String,System.String,System.String,System.String,System.Threading.CancellationToken)">
   CheckAccessAsync(string, string, string?, string?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L107"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L107"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>CheckAccess</code> (CONTRACT.md §1). On <code>UNAUTHENTICATED</code>, the shared
@@ -315,11 +315,11 @@ taxonomy the REST transport uses.</p>
 
   <h3 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_Dispose" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.Dispose">
   Dispose()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L163"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha2/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L163"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The channel is shut down with the client — a no-op when this instance was
-built over a caller-owned <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha/src/Grpc.Core.Api/CallInvoker.cs">CallInvoker</a> (the internal test seam).</p>
+built over a caller-owned <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha2/src/Grpc.Core.Api/CallInvoker.cs">CallInvoker</a> (the internal test seam).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
