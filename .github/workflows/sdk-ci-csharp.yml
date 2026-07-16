@@ -189,29 +189,35 @@ jobs:
           dotnet pack Axiam.Sdk -c Release --no-build -o ./nupkgs -p:Version=${{ steps.version.outputs.version }}
           dotnet pack Axiam.Sdk.AspNetCore -c Release --no-build -o ./nupkgs -p:Version=${{ steps.version.outputs.version }}
 
-      - name: Upload unsigned packages (SignPath input)
-        id: unsigned
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
-        with:
-          name: unsigned-nupkgs
-          path: ./nupkgs/*.nupkg
-          if-no-files-found: error
-
-      # Code-signs the .nupkg files produced above via SignPath before they are
-      # published to nuget.org. Requires: repo secret SIGNPATH_API_TOKEN, repo
-      # variables SIGNPATH_ORGANIZATION_ID / SIGNPATH_PROJECT_SLUG /
-      # SIGNPATH_SIGNING_POLICY_SLUG, and the SignPath GitHub app installed and
-      # connected to this repository.
-      - name: Sign packages via SignPath
-        uses: signpath/github-action-submit-signing-request@v1  # SignPath's official submit-signing-request action
-        with:
-          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
-          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
-          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
-          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
-          github-artifact-id: ${{ steps.unsigned.outputs.artifact-id }}
-          wait-for-completion: true
-          output-artifact-directory: ./signed
+      # ── Code signing (SignPath) — TEMPORARILY DISABLED ─────────────────────
+      # To re-enable signed releases:
+      #   1. Uncomment the two steps below (artifact upload + SignPath signing).
+      #   2. Change the `dotnet nuget push` source further down from
+      #      "./nupkgs/*.nupkg" back to "./signed/*.nupkg".
+      # Requires: repo secret SIGNPATH_API_TOKEN; repo variables
+      # SIGNPATH_ORGANIZATION_ID / SIGNPATH_PROJECT_SLUG /
+      # SIGNPATH_SIGNING_POLICY_SLUG; and the SignPath GitHub app installed on
+      # this repository. Until then, releases publish UNSIGNED packages.
+      #
+      # - name: Upload unsigned packages (SignPath input)
+      #   id: unsigned
+      #   uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+      #   with:
+      #     name: unsigned-nupkgs
+      #     path: ./nupkgs/*.nupkg
+      #     if-no-files-found: error
+      #
+      # - name: Sign packages via SignPath
+      #   uses: signpath/github-action-submit-signing-request@v1  # SignPath's official submit-signing-request action
+      #   with:
+      #     api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+      #     organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+      #     project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+      #     signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+      #     github-artifact-id: ${{ steps.unsigned.outputs.artifact-id }}
+      #     wait-for-completion: true
+      #     output-artifact-directory: ./signed
+      # ───────────────────────────────────────────────────────────────────────
 
       # Trusted Publishing (OIDC): no long-lived NUGET_API_KEY secret exists. This
       # step exchanges the job's GitHub OIDC token for an API key that nuget.org
@@ -225,12 +231,13 @@ jobs:
           user: ${{ secrets.NUGET_USER }}
 
       # `dotnet nuget push` auto-detects and pushes the matching .snupkg symbol
-      # package alongside each .nupkg in the same output directory. Pushes the
-      # SIGNED packages from ./signed (produced by the SignPath step above),
-      # not the unsigned ./nupkgs output.
+      # package alongside each .nupkg in the same output directory.
+      # NOTE: SignPath signing is currently disabled (see the commented block
+      # above), so this pushes the UNSIGNED packages from ./nupkgs. When you
+      # re-enable SignPath, change this source back to "./signed/*.nupkg".
       - name: dotnet nuget push (Axiam.Sdk + Axiam.Sdk.AspNetCore)
         run: >
-          dotnet nuget push "./signed/*.nupkg"
+          dotnet nuget push "./nupkgs/*.nupkg"
           --api-key "${{ steps.login.outputs.NUGET_API_KEY }}"
           --source https://api.nuget.org/v3/index.json
           --skip-duplicate
