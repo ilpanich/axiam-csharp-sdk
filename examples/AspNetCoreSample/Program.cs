@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 // AspNetCoreSample (SC#3): a runnable ASP.NET Core 8+ web app demonstrating
 // Axiam.Sdk.AspNetCore's middleware + ClaimsPrincipal injection (D-06/CONTRACT.md
-// §10) and the policy-based authorization surface (D-08). See README.md for how
-// to run this against a live AXIAM server (manual-only per 21-VALIDATION.md) and
-// what to observe: 401 without a token, 401/403 with an invalid/denied token,
-// 200 with a valid, authorized token.
+// §10), the legacy policy-string authorization surface (D-08), and the
+// declarative [AxiamAccess(...)] attribute (CONTRACT.md §11). See README.md for
+// how to run this against a live AXIAM server (manual-only per 21-VALIDATION.md)
+// and what to observe: 401 without a token, 400/401/403/503 with an invalid/
+// denied/unresolvable/unreachable check, 200 with a valid, authorized token.
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -54,6 +55,13 @@ namespace AspNetCoreSample
     /// by the AXIAM server's RBAC engine -&gt; 403 (<c>AuthzError</c>); a valid token
     /// whose caller is allowed -&gt; 200. Every check is a FRESH
     /// <c>CheckAccessAsync</c> call — never a client-side cache.</description></item>
+    /// <item><description><c>GET /api/reports/{id}</c> —
+    /// <c>[AxiamAccess("read", "documents")]</c>: the CONTRACT.md &#167;11 declarative
+    /// equivalent of the endpoint above, same outcomes plus two additional ones the
+    /// legacy policy-string form does not surface as cleanly: a missing/non-UUID
+    /// <c>id</c> route value -&gt; 400 (<c>invalid_request</c>), and a transport
+    /// failure while calling the authz endpoint -&gt; 503 (<c>authz_unavailable</c>,
+    /// fail-closed).</description></item>
     /// </list>
     /// </summary>
     [ApiController]
@@ -73,9 +81,26 @@ namespace AspNetCoreSample
 
         /// <summary>Policy-based authorization endpoint (SC#3/D-08 authz half) —
         /// routes through <see cref="AxiamPolicyHandler"/> to a fresh
-        /// <c>CheckAccessAsync("documents:read", ...)</c> call.</summary>
+        /// <c>CheckAccessAsync("documents:read", ...)</c> call. Kept as the legacy
+        /// <c>"resource:action"</c> policy-string form alongside
+        /// <see cref="GetReport(Guid)"/>'s declarative <see cref="AxiamAccessAttribute"/>
+        /// form below — both are fully supported (CONTRACT.md &#167;11).</summary>
         [HttpGet("documents/{id:guid}")]
         [Authorize(Policy = "documents:read")]
         public IActionResult GetDocument(Guid id) => Ok(new { id, status = "ok" });
+
+        /// <summary>
+        /// Declarative CONTRACT.md &#167;11 authorization endpoint —
+        /// <c>[AxiamAccess("read", "documents")]</c> is sugar over the same
+        /// <see cref="AxiamPolicyHandler"/>/fresh <c>CheckAccessAsync</c> call as
+        /// <see cref="GetDocument(Guid)"/> above, resolving the resource id from the
+        /// default <c>"id"</c> route value. A denied caller gets 403
+        /// (<c>authorization_denied</c>); a missing/non-UUID <c>id</c> route value gets
+        /// 400 (<c>invalid_request</c>); an authz-endpoint transport failure gets 503
+        /// (<c>authz_unavailable</c>, fail-closed).
+        /// </summary>
+        [HttpGet("reports/{id:guid}")]
+        [AxiamAccess("read", "documents")]
+        public IActionResult GetReport(Guid id) => Ok(new { id, status = "ok" });
     }
 }
