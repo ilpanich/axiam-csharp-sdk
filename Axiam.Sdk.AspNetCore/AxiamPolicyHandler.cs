@@ -180,6 +180,36 @@ public sealed class AxiamPolicyHandler : AuthorizationHandler<AxiamRequirement>
             context.Fail(new AuthorizationFailureReason(this, AuthzUnavailableReason));
             return;
         }
+        catch (AuthzError)
+        {
+            // CONTRACT.md §11.2.5: a server-issued 403/409 on the check call itself maps
+            // to the SAME deny outcome as an allowed=false body — 403 authorization_denied.
+            // ErrorMapper turns HTTP 403/409 into AuthzError (Core/ErrorMapper.cs); the
+            // openapi.json contract documents a 403 on /api/v1/authz/check for the
+            // subject_id-override path this handler exercises. Leave the requirement
+            // unsatisfied (exactly like the allowed=false branch below) so the result
+            // handler writes the standardized 403 body — never let it escape as an
+            // unhandled 500. The AuthzError carries no token material (Core redaction).
+            return;
+        }
+        catch (AuthError)
+        {
+            // The check call's OWN identity — the application's shared AxiamClient service
+            // session — failed to authenticate to the authz endpoint (HTTP 401 → AuthError),
+            // e.g. its token expired or it lacks the session needed for the check-as subject
+            // override. This is NOT the end user being unauthenticated (they already passed
+            // the user_id claim check above); it is an inability to obtain an authoritative
+            // decision, so fail CLOSED to 503 authz_unavailable rather than 401 — a 401 here
+            // would wrongly tell the end user to re-authenticate. Consistent with the
+            // NetworkError branch and §11.2.5's "couldn't decide → deny".
+            if (httpContext is not null)
+            {
+                httpContext.Items[OutcomeItemKey] = AxiamAuthzOutcome.AuthzUnavailable;
+            }
+
+            context.Fail(new AuthorizationFailureReason(this, AuthzUnavailableReason));
+            return;
+        }
 
         if (allowed)
         {

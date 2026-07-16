@@ -259,6 +259,48 @@ public sealed class AspNetCoreMiddlewareTests
         Assert.Contains("authz_unavailable", body);
     }
 
+    [Fact]
+    public async Task AxiamAccessAttribute_Server403DuringCheck_Returns403()
+    {
+        // A server-issued HTTP 403 on the check call itself (ErrorMapper → AuthzError) —
+        // e.g. the caller lacks authz:check_as for the subject_id override per openapi.json
+        // — must map to 403 authorization_denied per CONTRACT.md §11.2.5, never escape as
+        // an unhandled 500.
+        var fixture = new JwksFixture();
+        var serverHandler = new FakeAxiamServerHandler(fixture.BuildJwksDocument()) { StatusCodeOnCheckAccess = HttpStatusCode.Forbidden };
+        using IHost host = await CreateHostAsync(serverHandler).ConfigureAwait(false);
+        HttpClient client = host.GetTestClient();
+        string token = fixture.SignJwt(Guid.NewGuid().ToString(), TenantId, new[] { "admin" }, DateTimeOffset.UtcNow.AddMinutes(15));
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        HttpResponseMessage response = await client.GetAsync($"/attr-documents/{Guid.NewGuid()}").ConfigureAwait(false);
+        string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Contains("authorization_denied", body);
+    }
+
+    [Fact]
+    public async Task AxiamAccessAttribute_Server401DuringCheck_Returns503()
+    {
+        // A server-issued HTTP 401 on the check call (ErrorMapper → AuthError) means the
+        // application's own service session could not authenticate to the authz endpoint —
+        // an inability to obtain a decision, not the end user being unauthenticated. Fail
+        // CLOSED to 503 authz_unavailable per CONTRACT.md §11.2.5, never 401.
+        var fixture = new JwksFixture();
+        var serverHandler = new FakeAxiamServerHandler(fixture.BuildJwksDocument()) { StatusCodeOnCheckAccess = HttpStatusCode.Unauthorized };
+        using IHost host = await CreateHostAsync(serverHandler).ConfigureAwait(false);
+        HttpClient client = host.GetTestClient();
+        string token = fixture.SignJwt(Guid.NewGuid().ToString(), TenantId, new[] { "admin" }, DateTimeOffset.UtcNow.AddMinutes(15));
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        HttpResponseMessage response = await client.GetAsync($"/attr-documents/{Guid.NewGuid()}").ConfigureAwait(false);
+        string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+        Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
+        Assert.Contains("authz_unavailable", body);
+    }
+
     // --- CSRF cookie double-submit (CR: java/spring-disabled-csrf-protection, C# analog) ---
 
     [Fact]
@@ -484,6 +526,13 @@ public sealed class AspNetCoreMiddlewareTests
         /// &#167;11.2.5 fail-closed 503 path.</summary>
         public bool ThrowNetworkErrorOnCheckAccess { get; set; }
 
+        /// <summary>When set, the <c>POST /api/v1/authz/check</c> call responds with this
+        /// HTTP status instead of 200 — used to exercise a server-issued 403 (→ AuthzError
+        /// → 403 authorization_denied) and 401 (→ AuthError → 503 authz_unavailable) per
+        /// CONTRACT.md &#167;11.2.5. The documented 403 case is the caller lacking
+        /// <c>authz:check_as</c> for the subject_id override.</summary>
+        public HttpStatusCode? StatusCodeOnCheckAccess { get; set; }
+
         /// <summary>The last <c>POST /api/v1/authz/check</c> request body, captured for
         /// wire-level assertions (action/resource_id/scope/subject_id).</summary>
         public JsonElement? LastCheckAccessRequestBody { get; private set; }
@@ -512,6 +561,17 @@ public sealed class AspNetCoreMiddlewareTests
                     string requestJson = await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
                     using JsonDocument requestDoc = JsonDocument.Parse(requestJson);
                     LastCheckAccessRequestBody = requestDoc.RootElement.Clone();
+                }
+
+                if (StatusCodeOnCheckAccess is HttpStatusCode status)
+                {
+                    return new HttpResponseMessage(status)
+                    {
+                        Content = new StringContent(
+                            "{\"error\":\"forbidden\",\"message\":\"simulated server error\"}",
+                            Encoding.UTF8,
+                            "application/json"),
+                    };
                 }
 
                 string body = "{\"allowed\":" + (AllowAccess ? "true" : "false") + "}";
