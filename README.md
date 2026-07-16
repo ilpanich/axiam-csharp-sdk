@@ -1,5 +1,11 @@
 # Axiam.Sdk (C#)
 
+[![CI](https://github.com/ilpanich/axiam-csharp-sdk/actions/workflows/sdk-ci-csharp.yml/badge.svg?branch=main)](https://github.com/ilpanich/axiam-csharp-sdk/actions/workflows/sdk-ci-csharp.yml)
+[![Coverage Status](https://coveralls.io/repos/github/ilpanich/axiam-csharp-sdk/badge.svg?branch=main)](https://coveralls.io/github/ilpanich/axiam-csharp-sdk?branch=main)
+[![NuGet Axiam.Sdk](https://img.shields.io/nuget/v/Axiam.Sdk.svg?label=NuGet%3A%20Axiam.Sdk)](https://www.nuget.org/packages/Axiam.Sdk)
+[![NuGet Axiam.Sdk.AspNetCore](https://img.shields.io/nuget/v/Axiam.Sdk.AspNetCore.svg?label=NuGet%3A%20Axiam.Sdk.AspNetCore)](https://www.nuget.org/packages/Axiam.Sdk.AspNetCore)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access eXtended Identity and Authorization Management.
 
 ## Package identity
