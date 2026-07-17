@@ -17,7 +17,7 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to CONTRACT.md §1–§11.
+This SDK conforms to CONTRACT.md §1–§11 (including §6.1 mTLS client certificates).
 
 See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract.
 
@@ -31,6 +31,7 @@ See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract
 | §4 | Persistent cookie jar (`HttpClientHandler { UseCookies = true, CookieContainer = new() }`) | `Rest/AxiamHttpClientFactory.cs` |
 | §5 | Tenant is a required, non-optional constructor parameter | `AxiamClient`'s single public constructor (SC#1) |
 | §6 | Strict TLS always on; only escape hatch is a `customCa` chain-trust callback — no bypass surface | `Rest/AxiamHttpClientFactory.CreatePrimaryHandler` (verified by the `TlsBypassGrepGateTests` xUnit test + a CI grep gate, SC#4) |
+| §6.1 | Optional client-certificate / mutual-TLS (mTLS) identity (`ClientCertificatePem` + `ClientKeyPem`), applied to **both** REST and gRPC transports; strict server verification stays on (separate code path from §6) | `Options/AxiamClientOptions.ClientCertificatePem`/`ClientKeyPem` → `Rest/AxiamHttpClientFactory.CreatePrimaryHandler`/`ConfigureFactoryHandler` + `Grpc/AxiamGrpcChannel.Create` |
 | §7 | `Sensitive<T>` struct redacting `ToString()`/JSON to `"[SENSITIVE]"` | `Core/Sensitive.cs` |
 | §8 | AMQP HMAC-SHA256 verify-before-handler, constant-time compare, NEW-4 replay protection (`key_version`/`nonce`/`issued_at`) | `Amqp/Hmac.cs`, `Amqp/AxiamAmqpConsumer.cs`, `Amqp/ReplayGuard.cs` |
 | §9 | `SemaphoreSlim(1,1)` single-flight refresh, one guard across REST + gRPC | `Auth/RefreshGuard.cs` (shared by `AxiamClient` and `Grpc/AuthInterceptor.cs`) |
@@ -124,6 +125,42 @@ bool canRead = await client.Authz.CanAsync("documents:read", documentId);
 See [`examples/`](examples/) for a full runnable ASP.NET Core sample (middleware +
 policy authorization, SC#3) and a console quickstart covering REST, gRPC, and
 AMQP.
+
+## mTLS / client certificates (CONTRACT.md §6.1)
+
+AXIAM authenticates IoT devices and service accounts by **mutual TLS**: the client
+presents an X.509 identity certificate (signed by the tenant's organization CA) that the
+server binds to a service account. Configure the client identity with a PEM certificate
+chain plus a PEM private key (PKCS#8 or PKCS#1) via `AxiamClientOptions` — it is applied
+to **both** the REST and gRPC transports of that same client instance:
+
+```csharp
+using Axiam.Sdk;
+using Axiam.Sdk.Options;
+
+var options = new AxiamClientOptions
+{
+    BaseUrl = new Uri("https://your-axiam-instance"),
+    TenantId = "your-tenant-slug",
+    ClientCertificatePem = File.ReadAllBytes("device-cert.pem"), // PEM cert chain
+    ClientKeyPem = File.ReadAllBytes("device-key.pem"),          // PEM private key (secret)
+};
+
+using var client = new AxiamClient(new Uri("https://your-axiam-instance"), "your-tenant-slug", options);
+```
+
+Notes:
+
+- **Opt-in.** Omitting the certificate leaves the SDK's default bearer-cookie behavior
+  unchanged. `ClientCertificatePem` and `ClientKeyPem` must be supplied **together** —
+  providing exactly one throws `ArgumentException` at client construction.
+- **Strict TLS preserved.** Presenting a client certificate never relaxes server
+  verification; the client-cert code path is entirely separate from §6's server-trust
+  handling and installs no permissive server-validation delegate.
+- **Key secrecy (§7).** The private key is secret material — it is never logged,
+  serialized, or exposed via a public getter beyond the options object it is set on.
+- On `Axiam.Sdk.AspNetCore`, the same two properties exist on `AxiamOptions` and flow
+  through to the shared `AxiamClient`.
 
 ## Grpc.Tools exception
 

@@ -33,7 +33,16 @@ public static class AxiamGrpcChannel
     /// Optional PEM-encoded custom CA bytes (&#167;6) — <c>null</c> to trust only the
     /// system trust store, exactly matching the REST transport's own default.
     /// </param>
-    public static GrpcChannel Create(Uri target, byte[]? customCaPem)
+    /// <param name="clientCertPem">
+    /// Optional PEM-encoded client-certificate chain for mutual TLS (&#167;6.1) — the SAME
+    /// identity the REST transport presents, so a single <c>AxiamClient</c> authenticates
+    /// consistently across both transports. MUST accompany <paramref name="clientKeyPem"/>.
+    /// </param>
+    /// <param name="clientKeyPem">
+    /// Optional PEM-encoded private key (PKCS#8/PKCS#1) matching
+    /// <paramref name="clientCertPem"/> (&#167;6.1). MUST accompany it.
+    /// </param>
+    public static GrpcChannel Create(Uri target, byte[]? customCaPem, byte[]? clientCertPem = null, byte[]? clientKeyPem = null)
     {
         ArgumentNullException.ThrowIfNull(target);
 
@@ -43,8 +52,12 @@ public static class AxiamGrpcChannel
         // gRPC channel can never diverge from the REST transport's TLS policy. The only
         // TLS-certificate-validation delegate assigned anywhere under Grpc/ is the one
         // inherited from CreatePrimaryHandler's additive customCa chain-trust-store path
-        // (&#167;6/SC#4) — this method sets nothing further on the handler.
-        HttpClientHandler primaryHandler = AxiamHttpClientFactory.CreatePrimaryHandler(customCaPem);
+        // (&#167;6/SC#4) — this method sets nothing further on the handler. §6.1: the mTLS
+        // client identity (clientCertPem/clientKeyPem) is threaded through the SAME
+        // CreatePrimaryHandler call, so the gRPC channel presents the exact same client
+        // certificate the REST transport does (both-transports requirement) — again with
+        // NO server-verification delegate added here.
+        HttpClientHandler primaryHandler = AxiamHttpClientFactory.CreatePrimaryHandler(customCaPem, clientCertPem, clientKeyPem);
 
         var channelOptions = new GrpcChannelOptions
         {

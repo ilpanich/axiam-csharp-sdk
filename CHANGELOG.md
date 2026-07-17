@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.0-alpha2] - 2026-07-16
+### Added
+
+- Client-certificate / mutual-TLS (mTLS) support (CONTRACT.md §6.1). New
+  `AxiamClientOptions.ClientCertificatePem` / `ClientKeyPem` (PEM certificate chain +
+  PEM PKCS#8/PKCS#1 private key) configure an optional X.509 client identity that is
+  applied to **both** the REST and gRPC transports of the same `AxiamClient`. The
+  matching `Axiam.Sdk.AspNetCore.AxiamOptions.ClientCertificatePem` / `ClientKeyPem`
+  flow through to the shared client. mTLS is opt-in; supplying exactly one of the
+  cert/key pair throws `ArgumentException` at construction. Strict server verification
+  is unchanged — the client-cert path is separate from §6's server-trust handling and
+  adds no TLS-bypass surface. The private key is treated as secret material (§7).
 
 ### Added
 

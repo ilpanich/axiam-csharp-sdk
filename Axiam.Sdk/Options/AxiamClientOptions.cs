@@ -38,6 +38,30 @@ public sealed record AxiamClientOptions
     /// </summary>
     public byte[]? CustomCaPem { get; init; }
 
+    /// <summary>
+    /// PEM-encoded client-certificate chain presented for mutual-TLS (mTLS) client
+    /// authentication (CONTRACT.md &#167;6.1): AXIAM binds this X.509 identity — signed by
+    /// the tenant's organization CA — to a service account or IoT device. Applies to
+    /// <b>both</b> the REST and gRPC transports of the same <c>AxiamClient</c>. Opt-in:
+    /// <c>null</c> (the default) leaves the SDK's bearer-cookie behavior unchanged and
+    /// presents no client certificate. MUST be set together with <see cref="ClientKeyPem"/>
+    /// — supplying exactly one of the two is rejected with an <see cref="ArgumentException"/>
+    /// at client construction. Presenting a client certificate NEVER relaxes strict server
+    /// verification (&#167;6.1 rule 2); this is a separate code path from
+    /// <see cref="CustomCaPem"/>'s server-trust callback.
+    /// </summary>
+    public byte[]? ClientCertificatePem { get; init; }
+
+    /// <summary>
+    /// PEM-encoded private key (PKCS#8 or PKCS#1) matching <see cref="ClientCertificatePem"/>,
+    /// used for mutual-TLS client authentication (CONTRACT.md &#167;6.1). Secret material
+    /// (&#167;7): it is never logged, serialized, or exposed via a public getter beyond this
+    /// options record it is set on (mirrors <see cref="CustomCaPem"/>). MUST be set together
+    /// with <see cref="ClientCertificatePem"/>; supplying exactly one of the two is rejected
+    /// with an <see cref="ArgumentException"/> at client construction.
+    /// </summary>
+    public byte[]? ClientKeyPem { get; init; }
+
     /// <summary>How long a fetched JWKS document is trusted before <c>JwksVerifier</c>
     /// forces a refetch.</summary>
     public TimeSpan JwksCacheTtl { get; init; } = TimeSpan.FromMinutes(5);
