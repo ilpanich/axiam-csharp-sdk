@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha8/apiSpec/new?filename=Axiam_Sdk_Rest_AxiamHttpClientFactory.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Rest.AxiamHttpClientFactory%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha9/apiSpec/new?filename=Axiam_Sdk_Rest_AxiamHttpClientFactory.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Rest.AxiamHttpClientFactory%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Rest_AxiamHttpClientFactory" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory" class="text-break">
-Class AxiamHttpClientFactory  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha8/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L15"><i class="bi bi-code-slash"></i></a>
+Class AxiamHttpClientFactory  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -159,28 +159,35 @@ can never silently drop either guarantee (client-override safety, Java D-27 anal
 
   <a id="Axiam_Sdk_Rest_AxiamHttpClientFactory_ConfigureFactoryHandler_" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.ConfigureFactoryHandler*"></a>
 
-  <h3 id="Axiam_Sdk_Rest_AxiamHttpClientFactory_ConfigureFactoryHandler_System_Net_Http_SocketsHttpHandler_" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.ConfigureFactoryHandler(System.Net.Http.SocketsHttpHandler)">
-  ConfigureFactoryHandler(SocketsHttpHandler)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha8/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L109"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Rest_AxiamHttpClientFactory_ConfigureFactoryHandler_System_Net_Http_SocketsHttpHandler_System_Byte___System_Byte___" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.ConfigureFactoryHandler(System.Net.Http.SocketsHttpHandler,System.Byte[],System.Byte[])">
+  ConfigureFactoryHandler(SocketsHttpHandler, byte[]?, byte[]?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L146"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Re-applies the SDK's cookie jar (§4) and pooled-connection lifetime settings
 onto a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.socketshttphandler">SocketsHttpHandler</a> registered via <code>IHttpClientFactory</code>/
 <code>AddHttpClient</code> (D-09 alt path, wired up by a later plan) — even if the
 caller supplied their own handler instance, client-override safety means the
-cookie jar can never be silently dropped (breaking post-login) and this method
-never touches <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.socketshttphandler.ssloptions">SslOptions</a> at all, so it can never
-weaken TLS.</p>
+cookie jar can never be silently dropped (breaking post-login). The only
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.socketshttphandler.ssloptions">SslOptions</a> this method ever writes is the
+§6.1 mTLS client identity (<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.security.sslclientauthenticationoptions.clientcertificates">ClientCertificates</a>,
+what the client OFFERS) when a client certificate is configured — it never sets
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.security.sslclientauthenticationoptions.remotecertificatevalidationcallback">RemoteCertificateValidationCallback</a> or
+otherwise weakens server verification.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void ConfigureFactoryHandler(SocketsHttpHandler handler)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void ConfigureFactoryHandler(SocketsHttpHandler handler, byte[]? clientCertPem = null, byte[]? clientKeyPem = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>handler</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.socketshttphandler">SocketsHttpHandler</a></dt>
+    <dd></dd>
+    <dt><code>clientCertPem</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+    <dt><code>clientKeyPem</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
     <dd></dd>
   </dl>
 
@@ -199,11 +206,11 @@ weaken TLS.</p>
 
   <h3 id="Axiam_Sdk_Rest_AxiamHttpClientFactory_CreateOwned_System_Byte___" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.CreateOwned(System.Byte[])">
   CreateOwned(byte[]?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha8/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L24"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates the SDK's own, owned <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> over a fresh
-<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclienthandler">HttpClientHandler</a> configured by <a class="xref" href="Axiam.Sdk.Rest.AxiamHttpClientFactory.html#Axiam_Sdk_Rest_AxiamHttpClientFactory_CreatePrimaryHandler_System_Byte___">CreatePrimaryHandler(byte[]?)</a>
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclienthandler">HttpClientHandler</a> configured by <a class="xref" href="Axiam.Sdk.Rest.AxiamHttpClientFactory.html#Axiam_Sdk_Rest_AxiamHttpClientFactory_CreatePrimaryHandler_System_Byte___System_Byte___System_Byte___">CreatePrimaryHandler(byte[]?, byte[]?, byte[]?)</a>
 (§4 cookie jar + §6 no-TLS-bypass).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -234,11 +241,54 @@ weaken TLS.</p>
 
 
 
+  <a id="Axiam_Sdk_Rest_AxiamHttpClientFactory_CreateOwned_" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.CreateOwned*"></a>
+
+  <h3 id="Axiam_Sdk_Rest_AxiamHttpClientFactory_CreateOwned_System_Byte___System_Byte___System_Byte___" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.CreateOwned(System.Byte[],System.Byte[],System.Byte[])">
+  CreateOwned(byte[]?, byte[]?, byte[]?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>mTLS overload of <a class="xref" href="Axiam.Sdk.Rest.AxiamHttpClientFactory.html#Axiam_Sdk_Rest_AxiamHttpClientFactory_CreateOwned_System_Byte___">CreateOwned(byte[]?)</a> (CONTRACT.md §6.1): builds the
+SDK-owned <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> additionally presenting the given PEM
+client-certificate identity for mutual-TLS client authentication.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static HttpClient CreateOwned(byte[]? customCaPem, byte[]? clientCertPem, byte[]? clientKeyPem)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>customCaPem</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+    <dt><code>clientCertPem</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+    <dt><code>clientKeyPem</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Rest_AxiamHttpClientFactory_CreatePrimaryHandler_" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler*"></a>
 
-  <h3 id="Axiam_Sdk_Rest_AxiamHttpClientFactory_CreatePrimaryHandler_System_Byte___" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler(System.Byte[])">
-  CreatePrimaryHandler(byte[]?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha8/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Rest_AxiamHttpClientFactory_CreatePrimaryHandler_System_Byte___System_Byte___System_Byte___" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler(System.Byte[],System.Byte[],System.Byte[])">
+  CreatePrimaryHandler(byte[]?, byte[]?, byte[]?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds the primary <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclienthandler">HttpClientHandler</a> with <code>UseCookies = true</code>
@@ -253,13 +303,20 @@ sharing the exact same cookie-jar/TLS configuration.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static HttpClientHandler CreatePrimaryHandler(byte[]? customCaPem)</code></pre>
+    <pre><code class="lang-csharp hljs">public static HttpClientHandler CreatePrimaryHandler(byte[]? customCaPem, byte[]? clientCertPem = null, byte[]? clientKeyPem = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>customCaPem</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>Optional PEM custom-CA bytes for additive server-trust (§6).</p>
+</dd>
+    <dt><code>clientCertPem</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Optional PEM client-certificate chain for mTLS (§6.1). MUST accompany <code class="paramref">clientKeyPem</code>.</p>
+</dd>
+    <dt><code>clientKeyPem</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Optional PEM private key (PKCS#8/PKCS#1) for mTLS (§6.1). MUST accompany <code class="paramref">clientCertPem</code>.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -274,6 +331,15 @@ sharing the exact same cookie-jar/TLS configuration.</p>
 
 
 
+  <h4 class="section" id="Axiam_Sdk_Rest_AxiamHttpClientFactory_CreatePrimaryHandler_System_Byte___System_Byte___System_Byte____remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>When <code class="paramref">clientCertPem</code>/<code class="paramref">clientKeyPem</code> are supplied
+(CONTRACT.md §6.1), the PEM client-certificate identity is added to
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclienthandler.clientcertificates">ClientCertificates</a> for mutual-TLS client
+authentication. This is a distinct code path from the additive custom-CA
+server-trust callback above: presenting a client certificate NEVER relaxes strict
+server verification (§6.1 rule 2), and this method installs no permissive
+server-validation delegate.</p>
+</div>
 
 
 

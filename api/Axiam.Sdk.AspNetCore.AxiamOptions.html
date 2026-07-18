@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha8/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamOptions.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha9/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamOptions.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_AspNetCore_AxiamOptions" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions" class="text-break">
-Class AxiamOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha8/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L10"><i class="bi bi-code-slash"></i></a>
+Class AxiamOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L10"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -158,7 +158,7 @@ already-constructed instance through an <a class="xref" href="https://learn.micr
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_BaseUrl" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.BaseUrl">
   BaseUrl
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha8/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L14"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The AXIAM server's base URL. Required — passed straight through to the
@@ -187,11 +187,84 @@ underlying <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a> con
 
 
 
+  <a id="Axiam_Sdk_AspNetCore_AxiamOptions_ClientCertificatePem_" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.ClientCertificatePem*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_ClientCertificatePem" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.ClientCertificatePem">
+  ClientCertificatePem
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>PEM-encoded client-certificate chain for mutual-TLS (mTLS) client authentication
+(CONTRACT.md §6.1), passed straight through to the underlying
+<code>AxiamClient</code> and applied to both its REST and gRPC transports. Opt-in;
+<code>null</code> (the default) presents no client certificate. MUST be set together with
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ClientKeyPem">ClientKeyPem</a> — supplying exactly one is rejected with an
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a> when the shared <code>AxiamClient</code> is constructed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[]? ClientCertificatePem { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamOptions_ClientKeyPem_" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.ClientKeyPem*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_ClientKeyPem" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.ClientKeyPem">
+  ClientKeyPem
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>PEM-encoded private key (PKCS#8/PKCS#1) matching <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ClientCertificatePem">ClientCertificatePem</a>
+for mTLS (CONTRACT.md §6.1), passed through to the underlying <code>AxiamClient</code>.
+Secret material (§7): never logged or exposed via a public getter beyond this
+options object (mirrors <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_CustomCaPem">CustomCaPem</a>). MUST be set together with
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ClientCertificatePem">ClientCertificatePem</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[]? ClientKeyPem { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_AspNetCore_AxiamOptions_CustomCaPem_" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.CustomCaPem*"></a>
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_CustomCaPem" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.CustomCaPem">
   CustomCaPem
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha8/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>PEM-encoded custom CA certificate bytes — the ONLY TLS escape hatch
@@ -225,7 +298,7 @@ underlying <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a> con
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_DefaultTenantId" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.DefaultTenantId">
   DefaultTenantId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha8/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The tenant this ASP.NET Core app instance serves. Used for two purposes: (1) to
@@ -264,7 +337,7 @@ tenant-required constructor (SC#1) the first time the DI container resolves it.<
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_JwksCacheTtl" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.JwksCacheTtl">
   JwksCacheTtl
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha8/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L67"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>How long a fetched JWKS document is trusted before
@@ -299,7 +372,7 @@ a rotated signing key.</p>
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_OrgId" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.OrgId">
   OrgId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha8/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Optional organization UUID, passed through to the underlying
@@ -335,7 +408,7 @@ Mutually exclusive with <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamOptions_OrgSlug" data-uid="Axiam.Sdk.AspNetCore.AxiamOptions.OrgSlug">
   OrgSlug
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha8/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha9/Axiam.Sdk.AspNetCore/AxiamOptions.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Optional organization slug, passed through to the underlying

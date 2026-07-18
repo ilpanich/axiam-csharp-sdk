@@ -436,6 +436,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AspNetCore.AxiamOptions.BaseUrl
   nameWithType: AxiamOptions.BaseUrl
+- uid: Axiam.Sdk.AspNetCore.AxiamOptions.ClientCertificatePem
+  name: ClientCertificatePem
+  href: api/Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ClientCertificatePem
+  commentId: P:Axiam.Sdk.AspNetCore.AxiamOptions.ClientCertificatePem
+  fullName: Axiam.Sdk.AspNetCore.AxiamOptions.ClientCertificatePem
+  nameWithType: AxiamOptions.ClientCertificatePem
+- uid: Axiam.Sdk.AspNetCore.AxiamOptions.ClientCertificatePem*
+  name: ClientCertificatePem
+  href: api/Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ClientCertificatePem_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamOptions.ClientCertificatePem
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.AxiamOptions.ClientCertificatePem
+  nameWithType: AxiamOptions.ClientCertificatePem
+- uid: Axiam.Sdk.AspNetCore.AxiamOptions.ClientKeyPem
+  name: ClientKeyPem
+  href: api/Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ClientKeyPem
+  commentId: P:Axiam.Sdk.AspNetCore.AxiamOptions.ClientKeyPem
+  fullName: Axiam.Sdk.AspNetCore.AxiamOptions.ClientKeyPem
+  nameWithType: AxiamOptions.ClientKeyPem
+- uid: Axiam.Sdk.AspNetCore.AxiamOptions.ClientKeyPem*
+  name: ClientKeyPem
+  href: api/Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ClientKeyPem_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamOptions.ClientKeyPem
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.AxiamOptions.ClientKeyPem
+  nameWithType: AxiamOptions.ClientKeyPem
 - uid: Axiam.Sdk.AspNetCore.AxiamOptions.CustomCaPem
   name: CustomCaPem
   href: api/Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_CustomCaPem
@@ -1829,15 +1855,15 @@ references:
   commentId: T:Axiam.Sdk.Grpc.AxiamGrpcChannel
   fullName: Axiam.Sdk.Grpc.AxiamGrpcChannel
   nameWithType: AxiamGrpcChannel
-- uid: Axiam.Sdk.Grpc.AxiamGrpcChannel.Create(System.Uri,System.Byte[])
-  name: Create(Uri, byte[]?)
-  href: api/Axiam.Sdk.Grpc.AxiamGrpcChannel.html#Axiam_Sdk_Grpc_AxiamGrpcChannel_Create_System_Uri_System_Byte___
-  commentId: M:Axiam.Sdk.Grpc.AxiamGrpcChannel.Create(System.Uri,System.Byte[])
-  name.vb: Create(Uri, Byte())
-  fullName: Axiam.Sdk.Grpc.AxiamGrpcChannel.Create(System.Uri, byte[]?)
-  fullName.vb: Axiam.Sdk.Grpc.AxiamGrpcChannel.Create(System.Uri, Byte())
-  nameWithType: AxiamGrpcChannel.Create(Uri, byte[]?)
-  nameWithType.vb: AxiamGrpcChannel.Create(Uri, Byte())
+- uid: Axiam.Sdk.Grpc.AxiamGrpcChannel.Create(System.Uri,System.Byte[],System.Byte[],System.Byte[])
+  name: Create(Uri, byte[]?, byte[]?, byte[]?)
+  href: api/Axiam.Sdk.Grpc.AxiamGrpcChannel.html#Axiam_Sdk_Grpc_AxiamGrpcChannel_Create_System_Uri_System_Byte___System_Byte___System_Byte___
+  commentId: M:Axiam.Sdk.Grpc.AxiamGrpcChannel.Create(System.Uri,System.Byte[],System.Byte[],System.Byte[])
+  name.vb: Create(Uri, Byte(), Byte(), Byte())
+  fullName: Axiam.Sdk.Grpc.AxiamGrpcChannel.Create(System.Uri, byte[]?, byte[]?, byte[]?)
+  fullName.vb: Axiam.Sdk.Grpc.AxiamGrpcChannel.Create(System.Uri, Byte(), Byte(), Byte())
+  nameWithType: AxiamGrpcChannel.Create(Uri, byte[]?, byte[]?, byte[]?)
+  nameWithType.vb: AxiamGrpcChannel.Create(Uri, Byte(), Byte(), Byte())
 - uid: Axiam.Sdk.Grpc.AxiamGrpcChannel.Create*
   name: Create
   href: api/Axiam.Sdk.Grpc.AxiamGrpcChannel.html#Axiam_Sdk_Grpc_AxiamGrpcChannel_Create_
@@ -1870,6 +1896,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Options.AxiamClientOptions.BaseUrl
   nameWithType: AxiamClientOptions.BaseUrl
+- uid: Axiam.Sdk.Options.AxiamClientOptions.ClientCertificatePem
+  name: ClientCertificatePem
+  href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_ClientCertificatePem
+  commentId: P:Axiam.Sdk.Options.AxiamClientOptions.ClientCertificatePem
+  fullName: Axiam.Sdk.Options.AxiamClientOptions.ClientCertificatePem
+  nameWithType: AxiamClientOptions.ClientCertificatePem
+- uid: Axiam.Sdk.Options.AxiamClientOptions.ClientCertificatePem*
+  name: ClientCertificatePem
+  href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_ClientCertificatePem_
+  commentId: Overload:Axiam.Sdk.Options.AxiamClientOptions.ClientCertificatePem
+  isSpec: "True"
+  fullName: Axiam.Sdk.Options.AxiamClientOptions.ClientCertificatePem
+  nameWithType: AxiamClientOptions.ClientCertificatePem
+- uid: Axiam.Sdk.Options.AxiamClientOptions.ClientKeyPem
+  name: ClientKeyPem
+  href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_ClientKeyPem
+  commentId: P:Axiam.Sdk.Options.AxiamClientOptions.ClientKeyPem
+  fullName: Axiam.Sdk.Options.AxiamClientOptions.ClientKeyPem
+  nameWithType: AxiamClientOptions.ClientKeyPem
+- uid: Axiam.Sdk.Options.AxiamClientOptions.ClientKeyPem*
+  name: ClientKeyPem
+  href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_ClientKeyPem_
+  commentId: Overload:Axiam.Sdk.Options.AxiamClientOptions.ClientKeyPem
+  isSpec: "True"
+  fullName: Axiam.Sdk.Options.AxiamClientOptions.ClientKeyPem
+  nameWithType: AxiamClientOptions.ClientKeyPem
 - uid: Axiam.Sdk.Options.AxiamClientOptions.ConnectTimeout
   name: ConnectTimeout
   href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_ConnectTimeout
@@ -2143,12 +2195,15 @@ references:
   commentId: T:Axiam.Sdk.Rest.AxiamHttpClientFactory
   fullName: Axiam.Sdk.Rest.AxiamHttpClientFactory
   nameWithType: AxiamHttpClientFactory
-- uid: Axiam.Sdk.Rest.AxiamHttpClientFactory.ConfigureFactoryHandler(System.Net.Http.SocketsHttpHandler)
-  name: ConfigureFactoryHandler(SocketsHttpHandler)
-  href: api/Axiam.Sdk.Rest.AxiamHttpClientFactory.html#Axiam_Sdk_Rest_AxiamHttpClientFactory_ConfigureFactoryHandler_System_Net_Http_SocketsHttpHandler_
-  commentId: M:Axiam.Sdk.Rest.AxiamHttpClientFactory.ConfigureFactoryHandler(System.Net.Http.SocketsHttpHandler)
-  fullName: Axiam.Sdk.Rest.AxiamHttpClientFactory.ConfigureFactoryHandler(System.Net.Http.SocketsHttpHandler)
-  nameWithType: AxiamHttpClientFactory.ConfigureFactoryHandler(SocketsHttpHandler)
+- uid: Axiam.Sdk.Rest.AxiamHttpClientFactory.ConfigureFactoryHandler(System.Net.Http.SocketsHttpHandler,System.Byte[],System.Byte[])
+  name: ConfigureFactoryHandler(SocketsHttpHandler, byte[]?, byte[]?)
+  href: api/Axiam.Sdk.Rest.AxiamHttpClientFactory.html#Axiam_Sdk_Rest_AxiamHttpClientFactory_ConfigureFactoryHandler_System_Net_Http_SocketsHttpHandler_System_Byte___System_Byte___
+  commentId: M:Axiam.Sdk.Rest.AxiamHttpClientFactory.ConfigureFactoryHandler(System.Net.Http.SocketsHttpHandler,System.Byte[],System.Byte[])
+  name.vb: ConfigureFactoryHandler(SocketsHttpHandler, Byte(), Byte())
+  fullName: Axiam.Sdk.Rest.AxiamHttpClientFactory.ConfigureFactoryHandler(System.Net.Http.SocketsHttpHandler, byte[]?, byte[]?)
+  fullName.vb: Axiam.Sdk.Rest.AxiamHttpClientFactory.ConfigureFactoryHandler(System.Net.Http.SocketsHttpHandler, Byte(), Byte())
+  nameWithType: AxiamHttpClientFactory.ConfigureFactoryHandler(SocketsHttpHandler, byte[]?, byte[]?)
+  nameWithType.vb: AxiamHttpClientFactory.ConfigureFactoryHandler(SocketsHttpHandler, Byte(), Byte())
 - uid: Axiam.Sdk.Rest.AxiamHttpClientFactory.ConfigureFactoryHandler*
   name: ConfigureFactoryHandler
   href: api/Axiam.Sdk.Rest.AxiamHttpClientFactory.html#Axiam_Sdk_Rest_AxiamHttpClientFactory_ConfigureFactoryHandler_
@@ -2165,6 +2220,15 @@ references:
   fullName.vb: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreateOwned(Byte())
   nameWithType: AxiamHttpClientFactory.CreateOwned(byte[]?)
   nameWithType.vb: AxiamHttpClientFactory.CreateOwned(Byte())
+- uid: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreateOwned(System.Byte[],System.Byte[],System.Byte[])
+  name: CreateOwned(byte[]?, byte[]?, byte[]?)
+  href: api/Axiam.Sdk.Rest.AxiamHttpClientFactory.html#Axiam_Sdk_Rest_AxiamHttpClientFactory_CreateOwned_System_Byte___System_Byte___System_Byte___
+  commentId: M:Axiam.Sdk.Rest.AxiamHttpClientFactory.CreateOwned(System.Byte[],System.Byte[],System.Byte[])
+  name.vb: CreateOwned(Byte(), Byte(), Byte())
+  fullName: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreateOwned(byte[]?, byte[]?, byte[]?)
+  fullName.vb: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreateOwned(Byte(), Byte(), Byte())
+  nameWithType: AxiamHttpClientFactory.CreateOwned(byte[]?, byte[]?, byte[]?)
+  nameWithType.vb: AxiamHttpClientFactory.CreateOwned(Byte(), Byte(), Byte())
 - uid: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreateOwned*
   name: CreateOwned
   href: api/Axiam.Sdk.Rest.AxiamHttpClientFactory.html#Axiam_Sdk_Rest_AxiamHttpClientFactory_CreateOwned_
@@ -2172,15 +2236,15 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreateOwned
   nameWithType: AxiamHttpClientFactory.CreateOwned
-- uid: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler(System.Byte[])
-  name: CreatePrimaryHandler(byte[]?)
-  href: api/Axiam.Sdk.Rest.AxiamHttpClientFactory.html#Axiam_Sdk_Rest_AxiamHttpClientFactory_CreatePrimaryHandler_System_Byte___
-  commentId: M:Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler(System.Byte[])
-  name.vb: CreatePrimaryHandler(Byte())
-  fullName: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler(byte[]?)
-  fullName.vb: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler(Byte())
-  nameWithType: AxiamHttpClientFactory.CreatePrimaryHandler(byte[]?)
-  nameWithType.vb: AxiamHttpClientFactory.CreatePrimaryHandler(Byte())
+- uid: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler(System.Byte[],System.Byte[],System.Byte[])
+  name: CreatePrimaryHandler(byte[]?, byte[]?, byte[]?)
+  href: api/Axiam.Sdk.Rest.AxiamHttpClientFactory.html#Axiam_Sdk_Rest_AxiamHttpClientFactory_CreatePrimaryHandler_System_Byte___System_Byte___System_Byte___
+  commentId: M:Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler(System.Byte[],System.Byte[],System.Byte[])
+  name.vb: CreatePrimaryHandler(Byte(), Byte(), Byte())
+  fullName: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler(byte[]?, byte[]?, byte[]?)
+  fullName.vb: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler(Byte(), Byte(), Byte())
+  nameWithType: AxiamHttpClientFactory.CreatePrimaryHandler(byte[]?, byte[]?, byte[]?)
+  nameWithType.vb: AxiamHttpClientFactory.CreatePrimaryHandler(Byte(), Byte(), Byte())
 - uid: Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler*
   name: CreatePrimaryHandler
   href: api/Axiam.Sdk.Rest.AxiamHttpClientFactory.html#Axiam_Sdk_Rest_AxiamHttpClientFactory_CreatePrimaryHandler_
