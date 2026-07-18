@@ -48,4 +48,33 @@ public class AxiamGrpcChannelTests
     {
         Assert.Throws<ArgumentNullException>(() => AxiamGrpcChannel.Create(null!, null));
     }
+
+    [Fact]
+    public void Create_WithClientCert_ReturnsChannel()
+    {
+        (byte[] certPem, byte[] keyPem) = ClientCertPemPair();
+
+        // §6.1: the gRPC channel threads the mTLS client identity through the same
+        // CreatePrimaryHandler the REST transport uses, so both transports present it.
+        using GrpcChannel channel = AxiamGrpcChannel.Create(Target, null, certPem, keyPem);
+
+        Assert.NotNull(channel);
+        Assert.Equal(Target.Authority, channel.Target);
+    }
+
+    [Fact]
+    public void Create_WithMismatchedClientCert_Throws()
+    {
+        (byte[] certPem, _) = ClientCertPemPair();
+
+        Assert.Throws<ArgumentException>(() => AxiamGrpcChannel.Create(Target, null, certPem, null));
+    }
+
+    private static (byte[] CertPem, byte[] KeyPem) ClientCertPemPair()
+    {
+        using ECDsa ecdsa = ECDsa.Create(ECCurve.NamedCurves.nistP256);
+        var req = new CertificateRequest("CN=Axiam mTLS Client", ecdsa, HashAlgorithmName.SHA256);
+        using X509Certificate2 cert = req.CreateSelfSigned(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddYears(1));
+        return (Encoding.ASCII.GetBytes(cert.ExportCertificatePem()), Encoding.ASCII.GetBytes(ecdsa.ExportPkcs8PrivateKeyPem()));
+    }
 }

@@ -41,6 +41,25 @@ public sealed class AxiamOptions
     /// <c>null</c> (the default) uses the system trust store only.</summary>
     public byte[]? CustomCaPem { get; set; }
 
+    /// <summary>
+    /// PEM-encoded client-certificate chain for mutual-TLS (mTLS) client authentication
+    /// (CONTRACT.md &#167;6.1), passed straight through to the underlying
+    /// <c>AxiamClient</c> and applied to both its REST and gRPC transports. Opt-in;
+    /// <c>null</c> (the default) presents no client certificate. MUST be set together with
+    /// <see cref="ClientKeyPem"/> — supplying exactly one is rejected with an
+    /// <see cref="ArgumentException"/> when the shared <c>AxiamClient</c> is constructed.
+    /// </summary>
+    public byte[]? ClientCertificatePem { get; set; }
+
+    /// <summary>
+    /// PEM-encoded private key (PKCS#8/PKCS#1) matching <see cref="ClientCertificatePem"/>
+    /// for mTLS (CONTRACT.md &#167;6.1), passed through to the underlying <c>AxiamClient</c>.
+    /// Secret material (&#167;7): never logged or exposed via a public getter beyond this
+    /// options object (mirrors <see cref="CustomCaPem"/>). MUST be set together with
+    /// <see cref="ClientCertificatePem"/>.
+    /// </summary>
+    public byte[]? ClientKeyPem { get; set; }
+
     /// <summary>How long a fetched JWKS document is trusted before
     /// <see cref="AxiamClient"/>'s <c>JwksVerifier</c> forces a refetch — governs how
     /// quickly <see cref="AxiamAuthMiddleware"/>'s local verification fast path picks up

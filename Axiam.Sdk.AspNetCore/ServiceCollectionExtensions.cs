@@ -84,6 +84,8 @@ public static class ServiceCollectionExtensions
             OrgId = options.OrgId,
             OrgSlug = options.OrgSlug,
             CustomCaPem = options.CustomCaPem,
+            ClientCertificatePem = options.ClientCertificatePem,
+            ClientKeyPem = options.ClientKeyPem,
             JwksCacheTtl = options.JwksCacheTtl,
         };
         return new AxiamClient(options.BaseUrl, options.DefaultTenantId, clientOptions);

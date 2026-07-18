@@ -27,6 +27,21 @@ public class AxiamHttpClientFactoryTests
         return Encoding.ASCII.GetBytes(cert.ExportCertificatePem());
     }
 
+    /// <summary>
+    /// Generates a fresh self-signed client-identity certificate and its PKCS#8 private
+    /// key, both PEM-encoded, entirely in-test (§6.1). No cert/key material is ever
+    /// committed to the repo — every run mints a new ephemeral pair.
+    /// </summary>
+    private static (byte[] CertPem, byte[] KeyPem, string Thumbprint) ClientCertPemPair()
+    {
+        using ECDsa ecdsa = ECDsa.Create(ECCurve.NamedCurves.nistP256);
+        var req = new CertificateRequest("CN=Axiam mTLS Client", ecdsa, HashAlgorithmName.SHA256);
+        using X509Certificate2 cert = req.CreateSelfSigned(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddYears(1));
+        byte[] certPem = Encoding.ASCII.GetBytes(cert.ExportCertificatePem());
+        byte[] keyPem = Encoding.ASCII.GetBytes(ecdsa.ExportPkcs8PrivateKeyPem());
+        return (certPem, keyPem, cert.Thumbprint);
+    }
+
     [Fact]
     public void CreatePrimaryHandler_NoCa_EnablesCookieJar_DisablesRedirect_NoValidationCallback()
     {
@@ -133,5 +148,126 @@ public class AxiamHttpClientFactoryTests
     public void ConfigureFactoryHandler_NullHandler_Throws()
     {
         Assert.Throws<ArgumentNullException>(() => AxiamHttpClientFactory.ConfigureFactoryHandler(null!));
+    }
+
+    // ------------------------------------------------------------------
+    // §6.1 client-certificate / mTLS coverage
+    // ------------------------------------------------------------------
+
+    [Fact]
+    public void CreatePrimaryHandler_NoClientCert_LeavesClientCertificatesEmpty()
+    {
+        HttpClientHandler handler = AxiamHttpClientFactory.CreatePrimaryHandler(null);
+
+        // Opt-in (§6.1 rule 5): with no client cert configured, the handler presents none.
+        Assert.Empty(handler.ClientCertificates);
+    }
+
+    [Fact]
+    public void CreatePrimaryHandler_WithClientCert_PopulatesClientCertificate()
+    {
+        (byte[] certPem, byte[] keyPem, string thumbprint) = ClientCertPemPair();
+
+        HttpClientHandler handler = AxiamHttpClientFactory.CreatePrimaryHandler(null, certPem, keyPem);
+
+        Assert.Single(handler.ClientCertificates);
+        var presented = (X509Certificate2)handler.ClientCertificates[0];
+        Assert.Equal(thumbprint, presented.Thumbprint);
+        Assert.True(presented.HasPrivateKey);
+        Assert.Equal(ClientCertificateOption.Manual, handler.ClientCertificateOptions);
+        // §6.1 rule 2: presenting a client cert must NOT install any server-validation
+        // callback — strict server verification stays on (no CustomCa was supplied here).
+        Assert.Null(handler.ServerCertificateCustomValidationCallback);
+    }
+
+    [Fact]
+    public void CreatePrimaryHandler_ClientCertAlongsideCustomCa_BothConfigured()
+    {
+        (byte[] certPem, byte[] keyPem, string thumbprint) = ClientCertPemPair();
+
+        HttpClientHandler handler = AxiamHttpClientFactory.CreatePrimaryHandler(SelfSignedPem(), certPem, keyPem);
+
+        // The additive server-trust callback (§6) and the client identity (§6.1) are
+        // independent code paths and coexist on the same handler.
+        Assert.NotNull(handler.ServerCertificateCustomValidationCallback);
+        Assert.Single(handler.ClientCertificates);
+        Assert.Equal(thumbprint, ((X509Certificate2)handler.ClientCertificates[0]).Thumbprint);
+    }
+
+    [Fact]
+    public void CreatePrimaryHandler_OnlyClientCert_ThrowsArgumentException()
+    {
+        (byte[] certPem, _, _) = ClientCertPemPair();
+
+        ArgumentException ex = Assert.Throws<ArgumentException>(
+            () => AxiamHttpClientFactory.CreatePrimaryHandler(null, certPem, null));
+        Assert.Equal("clientKeyPem", ex.ParamName);
+    }
+
+    [Fact]
+    public void CreatePrimaryHandler_OnlyClientKey_ThrowsArgumentException()
+    {
+        (_, byte[] keyPem, _) = ClientCertPemPair();
+
+        ArgumentException ex = Assert.Throws<ArgumentException>(
+            () => AxiamHttpClientFactory.CreatePrimaryHandler(null, null, keyPem));
+        Assert.Equal("clientCertPem", ex.ParamName);
+    }
+
+    [Fact]
+    public void CreatePrimaryHandler_NonPemClientCert_ThrowsArgumentException()
+    {
+        byte[] garbageCert = Encoding.ASCII.GetBytes("not a pem certificate");
+        (_, byte[] keyPem, _) = ClientCertPemPair();
+
+        ArgumentException ex = Assert.Throws<ArgumentException>(
+            () => AxiamHttpClientFactory.CreatePrimaryHandler(null, garbageCert, keyPem));
+        Assert.Equal("clientCertPem", ex.ParamName);
+    }
+
+    [Fact]
+    public void CreateOwned_WithClientCert_ReturnsUsableHttpClient()
+    {
+        (byte[] certPem, byte[] keyPem, _) = ClientCertPemPair();
+
+        using HttpClient client = AxiamHttpClientFactory.CreateOwned(null, certPem, keyPem);
+        Assert.NotNull(client);
+    }
+
+    [Fact]
+    public void ConfigureFactoryHandler_WithClientCert_PopulatesSslOptions()
+    {
+        (byte[] certPem, byte[] keyPem, string thumbprint) = ClientCertPemPair();
+        var handler = new SocketsHttpHandler();
+
+        AxiamHttpClientFactory.ConfigureFactoryHandler(handler, certPem, keyPem);
+
+        Assert.NotNull(handler.SslOptions.ClientCertificates);
+        Assert.Equal(1, handler.SslOptions.ClientCertificates!.Count);
+        Assert.Equal(thumbprint, ((X509Certificate2)handler.SslOptions.ClientCertificates[0]!).Thumbprint);
+        // §6.1 rule 2: no server-validation delegate is set on the alt path either.
+        Assert.Null(handler.SslOptions.RemoteCertificateValidationCallback);
+    }
+
+    [Fact]
+    public void ConfigureFactoryHandler_NoClientCert_LeavesSslClientCertificatesUnset()
+    {
+        var handler = new SocketsHttpHandler();
+
+        AxiamHttpClientFactory.ConfigureFactoryHandler(handler);
+
+        // Nothing is written to SslOptions when no client cert is configured.
+        Assert.Null(handler.SslOptions.ClientCertificates);
+    }
+
+    [Fact]
+    public void ConfigureFactoryHandler_OnlyClientCert_ThrowsArgumentException()
+    {
+        (byte[] certPem, _, _) = ClientCertPemPair();
+        var handler = new SocketsHttpHandler();
+
+        ArgumentException ex = Assert.Throws<ArgumentException>(
+            () => AxiamHttpClientFactory.ConfigureFactoryHandler(handler, certPem, null));
+        Assert.Equal("clientKeyPem", ex.ParamName);
     }
 }

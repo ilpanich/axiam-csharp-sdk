@@ -88,7 +88,12 @@ public sealed class AxiamClient : IDisposable
         // regardless of what an optional options object happened to carry.
         _options = baseOptions with { BaseUrl = baseUrl, TenantId = _tenant.TenantId };
 
-        HttpMessageHandler primaryHandler = transportOverride ?? AxiamHttpClientFactory.CreatePrimaryHandler(_options.CustomCaPem);
+        // §6.1: the mTLS client identity (if configured) flows into BOTH transports — the
+        // REST handler built here and the gRPC channel built later from the CustomCaPem/
+        // ClientCertificatePem/ClientKeyPem seam below. A cert/key mismatch throws here,
+        // at client construction, before any network activity.
+        HttpMessageHandler primaryHandler = transportOverride
+            ?? AxiamHttpClientFactory.CreatePrimaryHandler(_options.CustomCaPem, _options.ClientCertificatePem, _options.ClientKeyPem);
         _cookieContainer = (primaryHandler as HttpClientHandler)?.CookieContainer ?? new CookieContainer();
 
         _refreshGuard = new RefreshGuard(DoHttpRefreshAsync);
@@ -125,6 +130,10 @@ public sealed class AxiamClient : IDisposable
     internal Uri BaseUrl => _baseUrl;
 
     internal byte[]? CustomCaPem => _options.CustomCaPem;
+
+    internal byte[]? ClientCertificatePem => _options.ClientCertificatePem;
+
+    internal byte[]? ClientKeyPem => _options.ClientKeyPem;
 
     internal HttpClient TransportHttpClient => _httpClient;
 

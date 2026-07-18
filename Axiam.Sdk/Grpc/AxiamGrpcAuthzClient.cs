@@ -43,7 +43,8 @@ public sealed class AxiamGrpcAuthzClient : IDisposable
     /// <summary>
     /// Constructs the gRPC authz transport from <paramref name="client"/>'s exposed
     /// internal seam (<c>RefreshGuard</c>, <c>JwksVerifier</c>, <c>CurrentAccessToken</c>,
-    /// <c>BaseUrl</c>, <c>CustomCaPem</c>) — this constructor never modifies
+    /// <c>BaseUrl</c>, <c>CustomCaPem</c>, <c>ClientCertificatePem</c>/<c>ClientKeyPem</c>)
+    /// — this constructor never modifies
     /// <see cref="AxiamClient"/> itself.
     /// </summary>
     /// <param name="client">The already-constructed REST <see cref="AxiamClient"/> whose
@@ -62,7 +63,9 @@ public sealed class AxiamGrpcAuthzClient : IDisposable
         _jwksVerifier = client.JwksVerifier;
 
         var interceptor = new AuthInterceptor(_tokenAccessor, _tenantId, client.RefreshGuard);
-        _ownedChannel = AxiamGrpcChannel.Create(grpcTarget ?? client.BaseUrl, client.CustomCaPem);
+        // §6.1: forward the same mTLS client identity the REST transport uses so both
+        // transports of this one AxiamClient present the same client certificate.
+        _ownedChannel = AxiamGrpcChannel.Create(grpcTarget ?? client.BaseUrl, client.CustomCaPem, client.ClientCertificatePem, client.ClientKeyPem);
         _stub = new AuthorizationService.AuthorizationServiceClient(_ownedChannel.Intercept(interceptor));
     }
 
