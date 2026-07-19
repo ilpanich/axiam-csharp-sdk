@@ -1,6 +1,7 @@
 using Axiam.Sdk;
 using Axiam.Sdk.Amqp;
 using Axiam.Sdk.Grpc;
+using Axiam.Sdk.Options;
 
 // Quickstart: demonstrates AxiamClient's four core capabilities using ONLY the
 // SDK's PUBLIC entry points (the Axiam.Sdk surface — no internal/generated
@@ -12,10 +13,20 @@ using Axiam.Sdk.Grpc;
 
 Uri baseUrl = new(Environment.GetEnvironmentVariable("AXIAM_BASE_URL") ?? "https://localhost:8443");
 string tenantId = Environment.GetEnvironmentVariable("AXIAM_TENANT_ID") ?? "acme";
+string orgSlug = Environment.GetEnvironmentVariable("AXIAM_ORG_SLUG") ?? "acme";
 
 // SC#1: tenantId is a required, positional constructor argument — there is no
-// overload or default that omits it.
-using AxiamClient client = new(baseUrl, tenantId);
+// overload or default that omits it. login/refresh additionally require
+// organization context — a tenant slug is only unique within an organization —
+// so OrgSlug (or OrgId) is supplied via AxiamClientOptions; a login body without
+// it is rejected by the server with 400 "must provide org_id or org_slug"
+// (CONTRACT.md §5.1).
+using AxiamClient client = new(baseUrl, tenantId, new AxiamClientOptions
+{
+    BaseUrl = baseUrl,
+    TenantId = tenantId,
+    OrgSlug = orgSlug,
+});
 
 try
 {

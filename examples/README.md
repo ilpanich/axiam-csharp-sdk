@@ -61,6 +61,7 @@ dotnet build examples/Quickstart -c Release
 ```bash
 export AXIAM_BASE_URL=https://your-axiam-instance
 export AXIAM_TENANT_ID=your-tenant-slug
+export AXIAM_ORG_SLUG=your-org-slug        # org context for login/refresh (CONTRACT.md §5.1)
 export AXIAM_EMAIL=you@example.com
 export AXIAM_PASSWORD='your-password'
 export AXIAM_TOTP_CODE=123456          # only needed if MFA is enabled

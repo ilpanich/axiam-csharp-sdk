@@ -108,10 +108,21 @@ dotnet add package Axiam.Sdk.AspNetCore   # optional — ASP.NET Core middleware
 
 ```csharp
 using Axiam.Sdk;
+using Axiam.Sdk.Options;
 
 // tenantId is a required, positional constructor argument (SC#1) — there is no
-// overload or default that omits it (CONTRACT.md §5).
-using var client = new AxiamClient(new Uri("https://your-axiam-instance"), "your-tenant-slug");
+// overload or default that omits it (CONTRACT.md §5). login/refresh additionally
+// require organization context — a tenant slug is only unique within an
+// organization — so supply OrgSlug (or OrgId) via AxiamClientOptions; a login
+// body without it is rejected with 400 "must provide org_id or org_slug"
+// (CONTRACT.md §5.1).
+var baseUrl = new Uri("https://your-axiam-instance");
+using var client = new AxiamClient(baseUrl, "your-tenant-slug", new AxiamClientOptions
+{
+    BaseUrl = baseUrl,
+    TenantId = "your-tenant-slug",
+    OrgSlug = "your-org-slug",
+});
 
 var login = await client.LoginAsync("alice@example.com", "correct horse battery staple");
 if (login.MfaRequired)
@@ -142,6 +153,7 @@ var options = new AxiamClientOptions
 {
     BaseUrl = new Uri("https://your-axiam-instance"),
     TenantId = "your-tenant-slug",
+    OrgSlug = "your-org-slug",                                   // org context for login/refresh (§5.1)
     ClientCertificatePem = File.ReadAllBytes("device-cert.pem"), // PEM cert chain
     ClientKeyPem = File.ReadAllBytes("device-key.pem"),          // PEM private key (secret)
 };
