@@ -33,9 +33,11 @@ public sealed class AxiamGrpcAuthzClient : IDisposable
 {
     private static readonly TimeSpan CheckAccessDeadline = TimeSpan.FromSeconds(3);
     private static readonly TimeSpan BatchCheckDeadline = TimeSpan.FromSeconds(10);
+    private static readonly TimeSpan UserInfoDeadline = TimeSpan.FromSeconds(3);
 
     private readonly GrpcChannel? _ownedChannel;
     private readonly AuthorizationService.AuthorizationServiceClient _stub;
+    private readonly UserInfoService.UserInfoServiceClient _userInfoStub;
     private readonly JwksVerifier? _jwksVerifier;
     private readonly Func<string?> _tokenAccessor;
     private readonly string _tenantId;
@@ -66,7 +68,12 @@ public sealed class AxiamGrpcAuthzClient : IDisposable
         // §6.1: forward the same mTLS client identity the REST transport uses so both
         // transports of this one AxiamClient present the same client certificate.
         _ownedChannel = AxiamGrpcChannel.Create(grpcTarget ?? client.BaseUrl, client.CustomCaPem, client.ClientCertificatePem, client.ClientKeyPem);
-        _stub = new AuthorizationService.AuthorizationServiceClient(_ownedChannel.Intercept(interceptor));
+        // Both service stubs share the ONE intercepted invoker over the ONE long-lived
+        // channel (D-10) — so GetUserInfo reuses the exact same auth + x-tenant-id metadata
+        // and single-flight refresh machinery as CheckAccess/BatchCheckAccess (§1.1).
+        CallInvoker interceptedInvoker = _ownedChannel.Intercept(interceptor);
+        _stub = new AuthorizationService.AuthorizationServiceClient(interceptedInvoker);
+        _userInfoStub = new UserInfoService.UserInfoServiceClient(interceptedInvoker);
     }
 
     /// <summary>
@@ -84,6 +91,7 @@ public sealed class AxiamGrpcAuthzClient : IDisposable
 
         _ownedChannel = null; // the caller owns the channel/server this invoker is bound to
         _stub = new AuthorizationService.AuthorizationServiceClient(invoker);
+        _userInfoStub = new UserInfoService.UserInfoServiceClient(invoker);
         _jwksVerifier = jwksVerifier;
         _tokenAccessor = tokenAccessor ?? throw new ArgumentNullException(nameof(tokenAccessor));
         _tenantId = tenantId;
@@ -154,6 +162,61 @@ public sealed class AxiamGrpcAuthzClient : IDisposable
                 wireRequest, deadline: DateTime.UtcNow.Add(BatchCheckDeadline), cancellationToken: cancellationToken);
             BatchCheckAccessResponse response = await call.ResponseAsync.ConfigureAwait(false);
             return response.Results.Select(r => r.Allowed).ToList();
+        }
+        catch (RpcException ex)
+        {
+            throw ErrorMapper.FromGrpcStatus(ex.StatusCode, DescriptionOf(ex));
+        }
+    }
+
+    /// <summary>
+    /// <c>GetUserInfo</c> (CONTRACT.md &#167;1/&#167;1.1) — the gRPC-only, low-latency
+    /// counterpart of the server's REST <c>GET /oauth2/userinfo</c>. Invokes
+    /// <c>axiam.v1.UserInfoService/GetUserInfo</c> on the SAME intercepted channel
+    /// <see cref="CheckAccessAsync"/> uses, so it carries the identical
+    /// <c>authorization</c>/<c>x-tenant-id</c> metadata (&#167;5) and, on
+    /// <c>UNAUTHENTICATED</c>, the shared <c>AuthInterceptor</c> drives exactly one
+    /// shared-guard refresh + one retry (&#167;9.3) before this method observes a terminal
+    /// failure. The request is empty — identity is derived server-side from the bearer
+    /// token. A terminal gRPC status maps through <see cref="ErrorMapper.FromGrpcStatus"/>
+    /// (&#167;2), the same taxonomy the REST transport uses.
+    /// </summary>
+    /// <param name="cancellationToken">Cancels the in-flight RPC.</param>
+    /// <returns>
+    /// A typed <see cref="UserInfo"/>: <see cref="UserInfo.Sub"/>/
+    /// <see cref="UserInfo.TenantId"/>/<see cref="UserInfo.OrgId"/> are always present;
+    /// <see cref="UserInfo.Email"/> is populated only with the <c>email</c> scope and
+    /// <see cref="UserInfo.PreferredUsername"/> only with the <c>profile</c> scope
+    /// (absent optionals surface as <c>null</c>).
+    /// </returns>
+    /// <exception cref="AuthError">
+    /// Pre-flight, without any wire call, when there is no active session (&#167;1.1.3);
+    /// also for a terminal gRPC <c>UNAUTHENTICATED</c> mapped via
+    /// <see cref="ErrorMapper.FromGrpcStatus"/>.
+    /// </exception>
+    public async Task<UserInfo> GetUserInfoAsync(CancellationToken cancellationToken = default)
+    {
+        // §1.1.3 precondition: a prior successful login (or injected token) is REQUIRED —
+        // with no token this MUST raise the AuthenticationError taxonomy type client-side,
+        // WITHOUT a wire call (mirrors ResolveWireIdentityAsync's no-session guard).
+        if (_tokenAccessor() is null)
+        {
+            throw new AuthError("no active session — call LoginAsync() before GetUserInfoAsync()");
+        }
+
+        try
+        {
+            using AsyncUnaryCall<GetUserInfoResponse> call = _userInfoStub.GetUserInfoAsync(
+                new GetUserInfoRequest(), deadline: DateTime.UtcNow.Add(UserInfoDeadline), cancellationToken: cancellationToken);
+            GetUserInfoResponse response = await call.ResponseAsync.ConfigureAwait(false);
+            return new UserInfo(
+                response.Sub,
+                response.TenantId,
+                response.OrgId,
+                // proto3 `optional` fields expose a HasXxx presence flag — an absent optional
+                // (no scope granted) surfaces as null rather than the empty-string default.
+                response.HasEmail ? response.Email : null,
+                response.HasPreferredUsername ? response.PreferredUsername : null);
         }
         catch (RpcException ex)
         {
