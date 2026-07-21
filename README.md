@@ -17,7 +17,8 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to CONTRACT.md §1–§11 (including §6.1 mTLS client certificates).
+This SDK conforms to CONTRACT.md §1–§11 (including §6.1 mTLS client certificates and the
+§1.1 gRPC-only `get_user_info` operation, contract 1.3).
 
 See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract.
 
@@ -26,6 +27,7 @@ See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract
 | § | Requirement | Where implemented |
 |---|---|---|
 | §1 | PascalCase method map (`Login`/`VerifyMfa`/`Refresh`/`Logout`/`CheckAccess`/`Can`/`BatchCheck`) | `AxiamClient.LoginAsync`/`VerifyMfaAsync`/`RefreshAsync`/`LogoutAsync`; `AuthzRestClient.CheckAccessAsync`/`CanAsync`/`BatchCheckAsync`; `Grpc/AxiamGrpcAuthzClient.CheckAccessAsync`/`BatchCheckAsync` |
+| §1.1 | gRPC-only `GetUserInfoAsync` (`axiam.v1.UserInfoService/GetUserInfo`) — empty request, identity from the bearer token; returns typed `UserInfo { Sub, TenantId, OrgId, Email?, PreferredUsername? }` (scope-gated optionals); reuses the same channel/interceptor/refresh machinery as `CheckAccess`; no REST substitution | `Grpc/AxiamGrpcAuthzClient.GetUserInfoAsync`, `Grpc/UserInfo.cs` |
 | §2 | `AuthError`/`AuthzError`/`NetworkError` taxonomy + HTTP/gRPC status mapping | `Core/ErrorMapper.cs`, `Core/AuthError.cs`, `Core/AuthzError.cs`, `Core/NetworkError.cs` |
 | §3 | Non-browser CSRF: capture `X-CSRF-Token` response header, echo on state-changing requests | `Rest/AxiamHttpMessageHandler.cs` |
 | §4 | Persistent cookie jar (`HttpClientHandler { UseCookies = true, CookieContainer = new() }`) | `Rest/AxiamHttpClientFactory.cs` |
