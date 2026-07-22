@@ -516,6 +516,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Grpc.UserInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Grpc.UserInfo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Grpc.UserInfo",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Grpc.UserInfo.yml\" sourcestartlinenumber=\"1\">The authenticated caller's OIDC-style identity claims, returned by\n<xref href=\"Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.GetUserInfoAsync(System.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md §1.1). The typed\nSDK-facing projection of the wire <code>axiam.v1.GetUserInfoResponse</code> — the low-latency\ngRPC counterpart of the server's REST <code>GET /oauth2/userinfo</code> endpoint.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Grpc.yml",
       "output": {
         ".html": {
@@ -740,6 +754,34 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.GetUserInfoRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.GetUserInfoRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.GetUserInfoRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.GetUserInfoRequest.yml\" sourcestartlinenumber=\"1\">Empty request — every parameter is read from the authorization bearer token,\nnot from request fields.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.GetUserInfoResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.GetUserInfoResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.GetUserInfoResponse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.V1.GetUserRequest.yml",
       "output": {
         ".html": {
@@ -824,6 +866,34 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.UserInfoService.UserInfoServiceClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.UserInfoService.UserInfoServiceClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.UserInfoService.UserInfoServiceClient",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.UserInfoService.UserInfoServiceClient.yml\" sourcestartlinenumber=\"1\">Client for UserInfoService</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.UserInfoService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.UserInfoService.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.UserInfoService",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.UserInfoService.yml\" sourcestartlinenumber=\"1\">OIDC-style userinfo for the <em sourcefile=\"api/Axiam.V1.UserInfoService.yml\" sourcestartlinenumber=\"1\">authenticated</em> caller — the low-latency gRPC\ncounterpart of the REST <code sourcefile=\"api/Axiam.V1.UserInfoService.yml\" sourcestartlinenumber=\"2\">GET /oauth2/userinfo</code> endpoint, analogous to\nZitadel's <code sourcefile=\"api/Axiam.V1.UserInfoService.yml\" sourcestartlinenumber=\"3\">zitadel.auth.v1.AuthService/GetMyUser</code>.</p>\n<p sourcefile=\"api/Axiam.V1.UserInfoService.yml\" sourcestartlinenumber=\"5\">Identity is derived entirely from the <code sourcefile=\"api/Axiam.V1.UserInfoService.yml\" sourcestartlinenumber=\"5\">authorization: Bearer &lt;access_token&gt;</code>\nmetadata header (validated by the server's auth interceptor); the request\nbody is empty. The returned claim set mirrors the REST endpoint exactly,\nincluding OIDC scope gating (see the field comments below).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.V1.UserReflection.yml",
       "output": {
         ".html": {
@@ -877,6 +947,20 @@
       "IsMRef": true,
       "Title": "Axiam.V1.UserService",
       "Summary": "<p sourcefile=\"api/Axiam.V1.UserService.yml\" sourcestartlinenumber=\"1\">User service for lookups and credential validation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.UserinfoReflection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.UserinfoReflection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.UserinfoReflection",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.UserinfoReflection.yml\" sourcestartlinenumber=\"1\">Holder for reflection information generated from axiam/v1/userinfo.proto</p>\n"
     },
     {
       "type": "ManagedReference",

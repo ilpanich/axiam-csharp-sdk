@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class JwksDocument | AXIAM .NET SDK </title>
+      <title>Class UserInfoService | AXIAM .NET SDK </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class JwksDocument | AXIAM .NET SDK ">
+      <meta name="title" content="Class UserInfoService | AXIAM .NET SDK ">
       
-      <meta name="description" content="The JWKS document envelope returned by GET /oauth2/jwks: { &amp;quot;keys&amp;quot;: [...] }.">
+      <meta name="description" content="OIDC-style userinfo for the authenticated caller — the low-latency gRPC counterpart of the REST GET /oauth2/userinfo endpoint, analogous to Zitadel&#39;s zitadel.auth.v1.AuthService/GetMyUser. Identity is derived entirely from the authorization: Bearer &amp;lt;access_token&amp;gt; metadata header (validated by the server&#39;s auth interceptor); the request body is empty. The returned claim set mirrors the REST endpoint exactly, including OIDC scope gating (see the field comments below).">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha16/apiSpec/new?filename=Axiam_Sdk_Auth_JwksDocument.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.JwksDocument%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,25 +84,31 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Axiam.Sdk.Auth.JwksDocument">
+        <article data-uid="Axiam.V1.UserInfoService">
 
 
 
-  <h1 id="Axiam_Sdk_Auth_JwksDocument" data-uid="Axiam.Sdk.Auth.JwksDocument" class="text-break">
-Class JwksDocument  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha16/Axiam.Sdk/Auth/Jwk.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Axiam_V1_UserInfoService" data-uid="Axiam.V1.UserInfoService" class="text-break">
+Class UserInfoService  
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Auth.html">Auth</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.V1.html">V1</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>The JWKS document envelope returned by <code>GET /oauth2/jwks</code>: <code>{ &quot;keys&quot;: [...] }</code>.</p>
+  <div class="markdown summary"><p>OIDC-style userinfo for the <em>authenticated</em> caller — the low-latency gRPC
+counterpart of the REST <code>GET /oauth2/userinfo</code> endpoint, analogous to
+Zitadel's <code>zitadel.auth.v1.AuthService/GetMyUser</code>.</p>
+<p>Identity is derived entirely from the <code>authorization: Bearer &lt;access_token&gt;</code>
+metadata header (validated by the server's auth interceptor); the request
+body is empty. The returned claim set mirrors the REST endpoint exactly,
+including OIDC scope gating (see the field comments below).</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed record JwksDocument : IEquatable&lt;JwksDocument&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public static class UserInfoService</code></pre>
   </div>
 
 
@@ -112,16 +118,10 @@ Class JwksDocument  <a class="header-action link-secondary" title="View source" 
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">JwksDocument</span></div>
+      <div><span class="xref">UserInfoService</span></div>
     </dd>
   </dl>
 
-  <dl class="typelist implements">
-    <dt>Implements</dt>
-    <dd>
-      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.JwksDocument.html">JwksDocument</a>&gt;</div>
-    </dd>
-  </dl>
 
 
   <dl class="typelist inheritedMembers">
@@ -140,6 +140,9 @@ Class JwksDocument  <a class="header-action link-secondary" title="View source" 
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
@@ -152,59 +155,23 @@ Class JwksDocument  <a class="header-action link-secondary" title="View source" 
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="Axiam_Sdk_Auth_JwksDocument__ctor_" data-uid="Axiam.Sdk.Auth.JwksDocument.#ctor*"></a>
-
-  <h3 id="Axiam_Sdk_Auth_JwksDocument__ctor_Axiam_Sdk_Auth_Jwk___" data-uid="Axiam.Sdk.Auth.JwksDocument.#ctor(Axiam.Sdk.Auth.Jwk[])">
-  JwksDocument(Jwk[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha16/Axiam.Sdk/Auth/Jwk.cs/#L22"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The JWKS document envelope returned by <code>GET /oauth2/jwks</code>: <code>{ &quot;keys&quot;: [...] }</code>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JwksDocument(Jwk[] Keys)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>Keys</code> <a class="xref" href="Axiam.Sdk.Auth.Jwk.html">Jwk</a>[]</dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="properties">Properties
 </h2>
 
 
-  <a id="Axiam_Sdk_Auth_JwksDocument_Keys_" data-uid="Axiam.Sdk.Auth.JwksDocument.Keys*"></a>
+  <a id="Axiam_V1_UserInfoService_Descriptor_" data-uid="Axiam.V1.UserInfoService.Descriptor*"></a>
 
-  <h3 id="Axiam_Sdk_Auth_JwksDocument_Keys" data-uid="Axiam.Sdk.Auth.JwksDocument.Keys">
-  Keys
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha16/Axiam.Sdk/Auth/Jwk.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_V1_UserInfoService_Descriptor" data-uid="Axiam.V1.UserInfoService.Descriptor">
+  Descriptor
+  
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Service descriptor</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;keys&quot;)]
-public Jwk[] Keys { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">public static ServiceDescriptor Descriptor { get; }</code></pre>
   </div>
 
 
@@ -213,7 +180,7 @@ public Jwk[] Keys { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="Axiam.Sdk.Auth.Jwk.html">Jwk</a>[]</dt>
+    <dt><span class="xref">ServiceDescriptor</span></dt>
     <dd></dd>
   </dl>
 

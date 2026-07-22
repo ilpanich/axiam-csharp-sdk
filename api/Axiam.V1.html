@@ -126,6 +126,16 @@ Classes
       <dd></dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.GetUserInfoRequest.html">GetUserInfoRequest</a></dt>
+      <dd><p>Empty request — every parameter is read from the authorization bearer token,
+not from request fields.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.GetUserInfoResponse.html">GetUserInfoResponse</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.V1.GetUserRequest.html">GetUserRequest</a></dt>
       <dd></dd>
     </dl>
@@ -153,6 +163,22 @@ Classes
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.UserInfoService.html">UserInfoService</a></dt>
+      <dd><p>OIDC-style userinfo for the <em>authenticated</em> caller — the low-latency gRPC
+counterpart of the REST <code>GET /oauth2/userinfo</code> endpoint, analogous to
+Zitadel's <code>zitadel.auth.v1.AuthService/GetMyUser</code>.</p>
+<p>Identity is derived entirely from the <code>authorization: Bearer &lt;access_token&gt;</code>
+metadata header (validated by the server's auth interceptor); the request
+body is empty. The returned claim set mirrors the REST endpoint exactly,
+including OIDC scope gating (see the field comments below).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.UserInfoService.UserInfoServiceClient.html">UserInfoService.UserInfoServiceClient</a></dt>
+      <dd><p>Client for UserInfoService</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.V1.UserReflection.html">UserReflection</a></dt>
       <dd><p>Holder for reflection information generated from axiam/v1/user.proto</p>
 </dd>
@@ -169,6 +195,11 @@ Classes
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.V1.UserService.UserServiceClient.html">UserService.UserServiceClient</a></dt>
       <dd><p>Client for UserService</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.UserinfoReflection.html">UserinfoReflection</a></dt>
+      <dd><p>Holder for reflection information generated from axiam/v1/userinfo.proto</p>
 </dd>
     </dl>
     <dl class="jumplist">

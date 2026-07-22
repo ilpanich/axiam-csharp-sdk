@@ -105,7 +105,7 @@ refresh-and-retry (§9, D-10) that drives the EXACT SAME shared
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.html">AxiamGrpcAuthzClient</a></dt>
       <dd><p>gRPC authorization transport (CONTRACT.md §1/§2/§5/§9, D-10).
-Wraps ONE long-lived <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha15/src/Grpc.Net.Client/GrpcChannel.cs">GrpcChannel</a> (via <a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcChannel.html">AxiamGrpcChannel</a> —
+Wraps ONE long-lived <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha16/src/Grpc.Net.Client/GrpcChannel.cs">GrpcChannel</a> (via <a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcChannel.html">AxiamGrpcChannel</a> —
 strict TLS, §6) intercepted by an <a class="xref" href="Axiam.Sdk.Grpc.AuthInterceptor.html">AuthInterceptor</a> that shares
 the EXACT SAME <a class="xref" href="Axiam.Sdk.Auth.RefreshGuard.html">RefreshGuard</a>/session <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a>'s REST
 transport uses — never a second guard instance.</p>
@@ -125,6 +125,14 @@ additive <code>customCa</code> chain-trust honored, never a TLS-certificate-vali
 bypass. The channel is disposed by whichever component constructs it
 (<code>Grpc/AxiamGrpcAuthzClient.cs</code>), mirroring the Java sibling's
 <code>AutoCloseable GrpcAuthzClient</code> and Go's <code>ClientConn</code> ownership model.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Grpc.UserInfo.html">UserInfo</a></dt>
+      <dd><p>The authenticated caller's OIDC-style identity claims, returned by
+<a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.html#Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_GetUserInfoAsync_System_Threading_CancellationToken_">GetUserInfoAsync(CancellationToken)</a> (CONTRACT.md §1.1). The typed
+SDK-facing projection of the wire <code>axiam.v1.GetUserInfoResponse</code> — the low-latency
+gRPC counterpart of the server's REST <code>GET /oauth2/userinfo</code> endpoint.</p>
 </dd>
     </dl>
 
