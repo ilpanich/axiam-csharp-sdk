@@ -19,7 +19,7 @@
     <!-- WebApplicationFactory/TestServer host for the SC#3 integration test (Task 3) —
          Microsoft.AspNetCore.Mvc.Testing transitively brings in Microsoft.AspNetCore.TestHost. -->
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.28" />
-    <PackageReference Include="coverlet.collector" Version="6.0.4">
+    <PackageReference Include="coverlet.collector" Version="10.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
