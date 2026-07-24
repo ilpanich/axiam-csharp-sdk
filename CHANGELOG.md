@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-alpha18] - 2026-07-24
+
+### Changed
+
+- Bump Microsoft.AspNetCore.Mvc.Testing and 4 others (#17)
+- Bump actions/setup-dotnet from 5.4.0 to 6.0.0 (#16)
+- Bump coverlet.collector from 6.0.4 to 10.0.1 (#18)
+- Bump xunit.runner.visualstudio from 2.8.2 to 3.1.5 (#19)
+- Ratchet coverage floor 92% -> 94% (#21)
+
 ## [1.0.0-alpha16] - 2026-07-22
 
 ### Changed
