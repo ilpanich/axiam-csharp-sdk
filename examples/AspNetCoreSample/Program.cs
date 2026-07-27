@@ -5,23 +5,34 @@ using Microsoft.AspNetCore.Mvc;
 
 // AspNetCoreSample (SC#3): a runnable ASP.NET Core 8+ web app demonstrating
 // Axiam.Sdk.AspNetCore's middleware + ClaimsPrincipal injection (D-06/CONTRACT.md
-// §10), the legacy policy-string authorization surface (D-08), and the
-// declarative [AxiamAccess(...)] attribute (CONTRACT.md §11). See README.md for
-// how to run this against a live AXIAM server (manual-only per 21-VALIDATION.md)
-// and what to observe: 401 without a token, 400/401/403/503 with an invalid/
-// denied/unresolvable/unreachable check, 200 with a valid, authorized token.
+// §10), the legacy policy-string authorization surface (D-08), the declarative
+// [AxiamAccess(...)] attribute (CONTRACT.md §11), and "Login with AXIAM"
+// (CONTRACT.md §12, MapAxiamOidcLogin). See README.md for how to run this
+// against a live AXIAM server (manual-only per 21-VALIDATION.md) and what to
+// observe: 401 without a token, 400/401/403/503 with an invalid/denied/
+// unresolvable/unreachable check, 200 with a valid, authorized token; for the
+// §12 endpoints, a redirect to AXIAM's authorization endpoint from
+// /login/axiam, and either a redirect or a JSON summary from
+// /login/axiam/callback once the IdP redirects back.
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
 // D-07: DI extensions + Options pattern. AddAxiamAspNetCore() registers the
-// typed AxiamOptions + a single shared AxiamClient AND additionally wires the
-// D-08 policy-based authorization surface ([Authorize(Policy="resource:action")]
-// -> client.CheckAccessAsync, 403 on deny).
+// typed AxiamOptions + a single shared AxiamClient (also registers a
+// MemoryOidcStateStore for the §12 endpoints below, CONTRACT.md §12.3 rule 1)
+// AND additionally wires the D-08 policy-based authorization surface
+// ([Authorize(Policy="resource:action")] -> client.CheckAccessAsync, 403 on
+// deny).
 builder.Services.AddAxiamAspNetCore(options =>
 {
     options.BaseUrl = new Uri(builder.Configuration["Axiam:BaseUrl"] ?? "https://localhost:8443");
     options.DefaultTenantId = builder.Configuration["Axiam:TenantId"] ?? "acme";
+    // CONTRACT.md §12.1: client_id is client CONFIGURATION, not a per-call
+    // argument — required before OidcBegin/OidcExchangeAsync/etc. can be used.
+    // OidcClientSecret is omitted here: the authorization-code + PKCE flow does
+    // not require a confidential client.
+    options.OidcClientId = builder.Configuration["Axiam:OidcClientId"] ?? "aspnetcore-sample";
 });
 
 var app = builder.Build();
@@ -35,6 +46,25 @@ app.UseMiddleware<AxiamAuthMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// CONTRACT.md §12 "Login with AXIAM": wires the login-redirect
+// (GET /login/axiam) and callback (GET /login/axiam/callback) endpoints. The
+// caller owns what a session means (§12 leaves this to the application) —
+// OnSuccessAsync is where this sample WOULD sign its own cookie/session; it
+// only logs here to keep the example server-framework-agnostic about session
+// storage.
+app.MapAxiamOidcLogin("/login/axiam", "/login/axiam/callback", options =>
+{
+    options.RedirectUri = builder.Configuration["Axiam:OidcRedirectUri"]
+        ?? "https://localhost:5001/login/axiam/callback";
+    options.SuccessRedirect = "/api/me";
+    options.OnSuccessAsync = (context, tokens, entry, cancellationToken) =>
+    {
+        string? sub = tokens.IdClaims?.Sub;
+        Console.WriteLine($"OIDC login succeeded for sub={sub}; establish your OWN application session here.");
+        return Task.CompletedTask;
+    };
+});
 
 app.Run();
 

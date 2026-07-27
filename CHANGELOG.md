@@ -88,6 +88,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   authenticate) fails closed to `503 authz_unavailable` — neither escapes as an
   unhandled `500`.
 - SDK now conforms to CONTRACT.md §1–§11 (previously §1–§10).
+- OIDC / SSO relying-party helpers (CONTRACT.md §12, contract 1.4) — "Login with
+  AXIAM" (authorization-code + PKCE), service-account `client_credentials` login,
+  token introspection/revocation, and upstream-IdP federation SSO. The nine
+  canonical operations ship directly on `AxiamClient` (no separate client type):
+  `OidcDiscoverAsync`, `OidcBegin` (no `Async` suffix — pure local computation,
+  no network I/O), `OidcExchangeAsync`, `OidcRefreshAsync`,
+  `LoginClientCredentialsAsync`, `IntrospectAsync`, `RevokeAsync`,
+  `SsoStartAsync`, `SsoCompleteAsync`. New `Auth/Oidc/` types:
+  `OidcConfiguration`, `AuthorizationRequest`, `OidcTokenSet`, `IdTokenClaims`,
+  `IntrospectionResult`, `SsoStartResult`/`SsoCompleteResult`, and the optional
+  `IOidcStateStore`/`MemoryOidcStateStore` (10-minute TTL, single-use
+  `ConsumeAsync`). `Axiam.Sdk.AspNetCore` adds `MapAxiamOidcLogin` — minimal-API
+  login-redirect + callback endpoints wired into the existing DI pipeline (a
+  `MemoryOidcStateStore` is registered by `AddAxiam`/`AddAxiamAspNetCore` unless
+  the app registers its own `IOidcStateStore` first). ID-token validation
+  (§12.4) reuses the existing JWKS verifier (`JwksVerifier`, extended not
+  forked) and enforces `alg=EdDSA`, signature, `iss`, `aud`/`azp`,
+  `exp`/`iat`/`nbf` (±60s skew), and `nonce`, raising `AuthError` with a stable
+  `Reason` (`invalid_alg`, `unknown_kid`, `invalid_signature`,
+  `invalid_issuer`, `invalid_audience`, `token_expired`, `nonce_mismatch`) and
+  discarding the whole token set on any failure. New `OAuthProtocolError` — a
+  sub-type of `AuthError` (existing `catch (AuthError)` code keeps working
+  unchanged) — surfaces an RFC 6749 `OAuth2ErrorResponse` with `Error`/
+  `ErrorDescription`. `Sensitive<T>` gained a public `Expose()` accessor and a
+  public `Wrap()` factory: CONTRACT.md §7 said "the raw token string MUST NOT
+  be exposed via any public getter API," written when every token lived only
+  in the httpOnly cookie jar; §12 delivers `access_token`/`refresh_token`/
+  `id_token` directly in the `/oauth2/token` response body, so the caller MUST
+  be able to read them back out — `ToString()`/JSON serialization still always
+  redact. `LoginClientCredentialsParams.AdoptAsCredential` (the §12.1 "adopt as
+  the client's own bearer credential" MAY) is intentionally NOT implemented in
+  this port — it throws `NotSupportedException` if set. `AxiamHttpMessageHandler`
+  additionally exempts `/oauth2/token`, `/oauth2/introspect`, and
+  `/oauth2/revoke` from the reactive §9 refresh-and-retry (a client-credential
+  `401` is not a session expiry). No new runtime dependency — PKCE/CSPRNG use
+  only `System.Security.Cryptography`. New `examples/AspNetCoreSample`
+  `MapAxiamOidcLogin` wiring and `examples/Quickstart`
+  `LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync` walkthrough.
+- SDK now conforms to CONTRACT.md §1–§12 (previously §1–§11).
 
 ## [1.0.0-alpha] - 2026-07-15
 

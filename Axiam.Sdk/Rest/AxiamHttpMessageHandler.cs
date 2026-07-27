@@ -48,8 +48,25 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
     private const string MfaVerifyPath = "/api/v1/auth/mfa/verify";
     private const string LogoutPath = "/api/v1/auth/logout";
 
+    /// <summary>
+    /// CONTRACT.md &#167;12.3 rule 3 / &#167;12.1 note 5: a <c>401</c> from
+    /// <c>/oauth2/introspect</c> or <c>/oauth2/revoke</c> is a client-credential failure
+    /// (<c>OAuthProtocolError</c>), not a session expiry — retrying a cookie-session
+    /// refresh cannot fix a bad <c>client_secret</c>, so these paths (and
+    /// <c>/oauth2/token</c>, which documents no <c>401</c> at all but is included
+    /// defensively) are exempted from the reactive refresh below exactly like the
+    /// pre-existing auth endpoints below.
+    /// </summary>
+    private const string OAuth2TokenPath = "/oauth2/token";
+    private const string OAuth2IntrospectPath = "/oauth2/introspect";
+    private const string OAuth2RevokePath = "/oauth2/revoke";
+
     private static readonly HashSet<string> ReactiveRefreshExemptPaths =
-        new(StringComparer.Ordinal) { RefreshPath, LoginPath, MfaVerifyPath, LogoutPath };
+        new(StringComparer.Ordinal)
+        {
+            RefreshPath, LoginPath, MfaVerifyPath, LogoutPath,
+            OAuth2TokenPath, OAuth2IntrospectPath, OAuth2RevokePath,
+        };
 
     private const string AccessCookieName = "axiam_access";
     private const string CsrfCookieName = "axiam_csrf";

@@ -1,4 +1,5 @@
 using Axiam.Sdk;
+using Axiam.Sdk.Auth.Oidc;
 using Axiam.Sdk.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +39,13 @@ public static class ServiceCollectionExtensions
 
         services.Configure(configure);
         services.TryAddSingleton(BuildClient);
+
+        // CONTRACT.md §12.3 rule 1: an in-memory IOidcStateStore, registered so
+        // MapAxiamOidcLogin (Axiam.Sdk.AspNetCore's OIDC login/callback glue) has one
+        // available out of the box. TryAdd — an app that wants a shared, multi-instance
+        // store (Redis, a database) registers its own IOidcStateStore BEFORE calling
+        // AddAxiam/AddAxiamAspNetCore and that registration wins.
+        services.TryAddSingleton<IOidcStateStore>(_ => new MemoryOidcStateStore());
         return services;
     }
 
@@ -87,6 +95,9 @@ public static class ServiceCollectionExtensions
             ClientCertificatePem = options.ClientCertificatePem,
             ClientKeyPem = options.ClientKeyPem,
             JwksCacheTtl = options.JwksCacheTtl,
+            OidcClientId = options.OidcClientId,
+            OidcClientSecret = options.OidcClientSecret,
+            OidcDiscoveryTtl = options.OidcDiscoveryTtl,
         };
         return new AxiamClient(options.BaseUrl, options.DefaultTenantId, clientOptions);
     }
