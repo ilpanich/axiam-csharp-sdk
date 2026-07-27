@@ -86,4 +86,37 @@ public sealed record AxiamClientOptions
 
     /// <summary>Upper bound for the bounded exponential backoff described above.</summary>
     public TimeSpan RetryMaxDelay { get; init; } = TimeSpan.FromSeconds(5);
+
+    /// <summary>
+    /// The relying party's OAuth2 <c>client_id</c> (CONTRACT.md &#167;12.1), used on every
+    /// &#167;12 grant and matched against the ID token's <c>aud</c>/<c>azp</c> (&#167;12.4
+    /// rule 4). Required before calling any &#167;12 operation other than
+    /// <c>OidcDiscoverAsync</c> — client_id comes from client configuration, not a
+    /// per-call argument (&#167;12 T1 reference judgment call 21).
+    /// </summary>
+    public string? OidcClientId { get; init; }
+
+    /// <summary>
+    /// A confidential client's <c>client_secret</c> (CONTRACT.md &#167;12.1). Omit for a
+    /// public client: <c>LoginClientCredentialsAsync</c>, <c>IntrospectAsync</c>, and
+    /// <c>RevokeAsync</c> then throw <see cref="Core.AuthError"/>, client-side with no wire
+    /// call (&#167;12.1 note 4 — a public client cannot call them). Held behind
+    /// <see cref="Core.Sensitive{T}"/> internally once the client is constructed.
+    /// </summary>
+    public string? OidcClientSecret { get; init; }
+
+    /// <summary>
+    /// The OIDC discovery-document cache TTL. Floored at 5 minutes per CONTRACT.md
+    /// &#167;12.3 rule 6 — a smaller configured value is silently raised to the floor. The
+    /// default (5 minutes) already satisfies the floor.
+    /// </summary>
+    public TimeSpan OidcDiscoveryTtl { get; init; } = TimeSpan.FromMinutes(5);
+
+    /// <summary>
+    /// The permitted ID-token clock skew, in seconds, for the <c>exp</c>/<c>iat</c>/
+    /// <c>nbf</c> checks (CONTRACT.md &#167;12.4 rule 5). Clamped to [1, 60] — the contract
+    /// forbids configuring it above 60 seconds; a non-positive or larger value falls back
+    /// to the 60-second default rather than being honored.
+    /// </summary>
+    public int OidcClockSkewSeconds { get; init; } = 60;
 }

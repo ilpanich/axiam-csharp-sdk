@@ -25,7 +25,7 @@ namespace Axiam.Sdk;
 /// <see cref="TransportHttpClient"/>) expose this seam without requiring the gRPC plan
 /// (21-05) or the ASP.NET Core plan (21-06) to edit this file.
 /// </remarks>
-public sealed class AxiamClient : IDisposable
+public sealed partial class AxiamClient : IDisposable
 {
     private const string LoginPath = "/api/v1/auth/login";
     private const string MfaVerifyPath = "/api/v1/auth/mfa/verify";
@@ -111,6 +111,12 @@ public sealed class AxiamClient : IDisposable
 
         _jwksVerifier = new JwksVerifier(_httpClient, _baseUrl, _options.JwksCacheTtl);
         _authz = new AuthzRestClient(_httpClient);
+
+        // CONTRACT.md §12 — initializes the OidcClientId/OidcClientSecret/discovery-TTL/
+        // clock-skew fields declared in AxiamClient.Oidc.cs from this same _options
+        // instance. Kept as a separate initializer (rather than inline field
+        // initializers, which cannot see _options) so this constructor stays readable.
+        InitializeOidcState();
     }
 
     /// <summary>REST authorization checks (CONTRACT.md &#167;1, FND-04): <c>CheckAccessAsync</c>/<c>CanAsync</c>/<c>BatchCheckAsync</c>.</summary>
@@ -152,6 +158,7 @@ public sealed class AxiamClient : IDisposable
     {
         _httpClient.Dispose();
         _refreshGuard.Dispose();
+        DisposeOidcState();
     }
 
     // ------------------------------------------------------------------

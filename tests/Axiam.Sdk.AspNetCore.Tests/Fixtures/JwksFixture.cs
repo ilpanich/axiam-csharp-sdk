@@ -82,6 +82,30 @@ public sealed class JwksFixture
         return $"{headerB64}.{payloadB64}.{Base64UrlEncode(signature)}";
     }
 
+    /// <summary>
+    /// Signs an ARBITRARY claims payload with this fixture's real Ed25519 key —
+    /// general-purpose beyond <see cref="SignJwt"/>'s fixed AXIAM-access-token claim shape
+    /// (<c>sub</c>/<c>tenant_id</c>/<c>roles</c>/<c>exp</c>). Used by the CONTRACT.md
+    /// &#167;12 OIDC login/callback integration tests to mint <c>id_token</c>s carrying
+    /// <c>iss</c>/<c>aud</c>/<c>nonce</c>/<c>iat</c>/&#8230; claims.
+    /// </summary>
+    public string SignIdToken(object payload, string? kidOverride = null, bool includeKid = true)
+    {
+        object header = includeKid
+            ? new { alg = "EdDSA", kid = kidOverride ?? Kid }
+            : new { alg = "EdDSA" };
+        string headerB64 = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(header));
+        string payloadB64 = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(payload));
+        byte[] signingInput = Encoding.ASCII.GetBytes($"{headerB64}.{payloadB64}");
+
+        var signer = new Ed25519Signer();
+        signer.Init(forSigning: true, PrivateKey);
+        signer.BlockUpdate(signingInput, 0, signingInput.Length);
+        byte[] signature = signer.GenerateSignature();
+
+        return $"{headerB64}.{payloadB64}.{Base64UrlEncode(signature)}";
+    }
+
     private static string Base64UrlEncode(byte[] bytes) =>
         Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 }

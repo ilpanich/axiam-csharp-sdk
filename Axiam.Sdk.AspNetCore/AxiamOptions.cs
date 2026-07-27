@@ -65,4 +65,23 @@ public sealed class AxiamOptions
     /// quickly <see cref="AxiamAuthMiddleware"/>'s local verification fast path picks up
     /// a rotated signing key.</summary>
     public TimeSpan JwksCacheTtl { get; set; } = TimeSpan.FromMinutes(5);
+
+    /// <summary>
+    /// The relying party's OAuth2 <c>client_id</c> (CONTRACT.md &#167;12.1), passed
+    /// through to the underlying <c>AxiamClient</c>. Required before calling any &#167;12
+    /// OIDC operation other than <c>OidcDiscoverAsync</c> — including the
+    /// <c>MapAxiamOidcLogin</c> "Login with AXIAM" endpoints.
+    /// </summary>
+    public string? OidcClientId { get; set; }
+
+    /// <summary>
+    /// A confidential client's <c>client_secret</c> (CONTRACT.md &#167;12.1), passed
+    /// through to the underlying <c>AxiamClient</c>. Omit for a public client (the
+    /// authorization-code + PKCE "Login with AXIAM" flow does not require one).
+    /// </summary>
+    public string? OidcClientSecret { get; set; }
+
+    /// <summary>The OIDC discovery-document cache TTL, passed through to the underlying
+    /// <c>AxiamClient</c> (CONTRACT.md &#167;12.3 rule 6 floors it at 5 minutes).</summary>
+    public TimeSpan OidcDiscoveryTtl { get; set; } = TimeSpan.FromMinutes(5);
 }

@@ -103,6 +103,48 @@ public sealed class JwksFixture
     public string SignJwtForTenant(string subject, string actualTenantId, string[] roles, DateTimeOffset expiresAt) =>
         SignJwt(subject, actualTenantId, roles, expiresAt);
 
+    /// <summary>
+    /// Signs an ARBITRARY claims payload with this fixture's real Ed25519 key —
+    /// general-purpose beyond <see cref="SignJwt"/>'s fixed AXIAM-access-token claim shape
+    /// (<c>sub</c>/<c>tenant_id</c>/<c>roles</c>/<c>exp</c>). Used by the CONTRACT.md
+    /// &#167;12 OIDC test suite to mint <c>id_token</c>s carrying
+    /// <c>iss</c>/<c>aud</c>/<c>nonce</c>/<c>iat</c>/&#8230; claims.
+    /// </summary>
+    /// <param name="payload">The claims object to serialize as the JWT payload.</param>
+    /// <param name="kidOverride">Overrides the header's <c>kid</c>; defaults to this
+    /// fixture's own <see cref="Kid"/>.</param>
+    /// <param name="includeKid">When <c>false</c>, omits the <c>kid</c> header entirely
+    /// (for testing the "no kid at all" unknown-kid case).</param>
+    public string SignIdToken(object payload, string? kidOverride = null, bool includeKid = true)
+    {
+        object header = includeKid
+            ? new { alg = "EdDSA", kid = kidOverride ?? Kid }
+            : new { alg = "EdDSA" };
+        string headerB64 = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(header));
+        string payloadB64 = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(payload));
+        byte[] signingInput = Encoding.ASCII.GetBytes($"{headerB64}.{payloadB64}");
+
+        var signer = new Ed25519Signer();
+        signer.Init(forSigning: true, PrivateKey);
+        signer.BlockUpdate(signingInput, 0, signingInput.Length);
+        byte[] signature = signer.GenerateSignature();
+
+        return $"{headerB64}.{payloadB64}.{Base64UrlEncode(signature)}";
+    }
+
+    /// <summary>
+    /// Builds a raw, cryptographically-unsigned token from caller-supplied header and
+    /// payload objects, with an arbitrary (never validated for these cases) signature
+    /// segment — for tests that must fail before signature verification is ever reached
+    /// (bad <c>alg</c>, missing/unknown <c>kid</c>).
+    /// </summary>
+    public static string BuildRawToken(object header, object payload, string signaturePart = "unused-signature")
+    {
+        string headerB64 = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(header));
+        string payloadB64 = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(payload));
+        return $"{headerB64}.{payloadB64}.{signaturePart}";
+    }
+
     private static string Base64UrlEncode(byte[] bytes) =>
         Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 

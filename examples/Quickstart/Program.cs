@@ -1,12 +1,15 @@
 using Axiam.Sdk;
 using Axiam.Sdk.Amqp;
+using Axiam.Sdk.Auth.Oidc;
+using Axiam.Sdk.Core;
 using Axiam.Sdk.Grpc;
 using Axiam.Sdk.Options;
 
-// Quickstart: demonstrates AxiamClient's four core capabilities using ONLY the
-// SDK's PUBLIC entry points (the Axiam.Sdk surface — no internal/generated
-// references): two-phase login+MFA, REST authorization, gRPC authorization, and
-// AMQP event consumption with HMAC verify-before-handler. Running this against a
+// Quickstart: demonstrates AxiamClient's core capabilities using ONLY the SDK's
+// PUBLIC entry points (the Axiam.Sdk surface — no internal/generated
+// references): two-phase login+MFA, REST authorization, gRPC authorization,
+// OIDC service-account machine-to-machine login (CONTRACT.md §12), and AMQP
+// event consumption with HMAC verify-before-handler. Running this against a
 // live AXIAM server/broker is manual-only (21-VALIDATION.md) — see README.md.
 // Each phase is wrapped so the example still documents the shape and compiles
 // cleanly even without a reachable server.
@@ -20,12 +23,17 @@ string orgSlug = Environment.GetEnvironmentVariable("AXIAM_ORG_SLUG") ?? "acme";
 // organization context — a tenant slug is only unique within an organization —
 // so OrgSlug (or OrgId) is supplied via AxiamClientOptions; a login body without
 // it is rejected by the server with 400 "must provide org_id or org_slug"
-// (CONTRACT.md §5.1).
+// (CONTRACT.md §5.1). OidcClientId/OidcClientSecret (CONTRACT.md §12.1) are
+// this relying party's OAuth2 client credentials, used by the OIDC phase below
+// — client_id/client_secret are CLIENT CONFIGURATION here, never a per-call
+// argument.
 using AxiamClient client = new(baseUrl, tenantId, new AxiamClientOptions
 {
     BaseUrl = baseUrl,
     TenantId = tenantId,
     OrgSlug = orgSlug,
+    OidcClientId = Environment.GetEnvironmentVariable("AXIAM_OIDC_CLIENT_ID") ?? "quickstart-service-account",
+    OidcClientSecret = Environment.GetEnvironmentVariable("AXIAM_OIDC_CLIENT_SECRET"),
 });
 
 try
@@ -49,7 +57,48 @@ catch (Exception ex)
     Console.WriteLine($"Login/authz phase skipped — no reachable AXIAM server ({ex.Message}). See README.md.");
 }
 
-// --- 4. AMQP event consumption (AsyncEventingBasicConsumer + HMAC verify) --
+// --- 4. OIDC machine-to-machine login (CONTRACT.md §12) ----------------
+// LoginClientCredentialsAsync/IntrospectAsync/RevokeAsync need a UUID
+// tenant_id for the /oauth2/* query parameter (§12.3 rule 4); since this
+// client was constructed with a SLUG (tenantId above), pass one explicitly
+// here (a real app resolves it from its own configuration/service registry).
+Guid? oidcTenantId = Guid.TryParse(Environment.GetEnvironmentVariable("AXIAM_TENANT_UUID"), out Guid parsedTenantId)
+    ? parsedTenantId
+    : null;
+try
+{
+    OidcTokenSet serviceTokens = await client.LoginClientCredentialsAsync(new LoginClientCredentialsParams
+    {
+        TenantId = oidcTenantId,
+    });
+    // AccessToken is Sensitive<string> (§12.5) — Expose() is the documented
+    // §7-vs-§12 accessor (see Sensitive<T>.Expose's doc comment): §12 delivers
+    // tokens directly in the response body, so the caller must be able to read
+    // them back out to use/store/revoke them. Never pass the exposed value to a
+    // log/Console.WriteLine call.
+    string accessToken = serviceTokens.AccessToken.Expose();
+    Console.WriteLine($"OIDC client_credentials login succeeded — access_token expires in {serviceTokens.ExpiresIn}s.");
+
+    IntrospectionResult introspection = await client.IntrospectAsync(new IntrospectParams
+    {
+        Token = serviceTokens.AccessToken,
+        TenantId = oidcTenantId,
+    });
+    Console.WriteLine($"IntrospectAsync => active={introspection.Active}");
+
+    await client.RevokeAsync(new RevokeParams { Token = serviceTokens.AccessToken, TenantId = oidcTenantId });
+    Console.WriteLine("RevokeAsync completed (idempotent — succeeds even if the token was already invalid).");
+}
+catch (AuthError ex)
+{
+    Console.WriteLine($"OIDC phase skipped — {ex.Message}. Set AXIAM_OIDC_CLIENT_SECRET/AXIAM_TENANT_UUID. See README.md.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"OIDC phase skipped — no reachable AXIAM server ({ex.Message}). See README.md.");
+}
+
+// --- 5. AMQP event consumption (AsyncEventingBasicConsumer + HMAC verify) --
 await using AxiamAmqpConsumer amqpConsumer = new();
 try
 {

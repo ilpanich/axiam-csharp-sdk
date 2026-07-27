@@ -17,8 +17,9 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to CONTRACT.md §1–§11 (including §6.1 mTLS client certificates and the
-§1.1 gRPC-only `get_user_info` operation, contract 1.3).
+This SDK conforms to CONTRACT.md §1–§12 (including §6.1 mTLS client certificates, the
+§1.1 gRPC-only `get_user_info` operation, contract 1.3, and the §12 OIDC/SSO
+relying-party helpers, contract 1.4).
 
 See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract.
 
@@ -39,6 +40,7 @@ See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract
 | §9 | `SemaphoreSlim(1,1)` single-flight refresh, one guard across REST + gRPC | `Auth/RefreshGuard.cs` (shared by `AxiamClient` and `Grpc/AuthInterceptor.cs`) |
 | §10 | `app.UseMiddleware<AxiamAuthMiddleware>()` + `ClaimsPrincipal` injection + policy-based `[Authorize]` | `Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
 | §11 | Declarative `[AxiamAccess(action, resource)]` authorization attribute with scope + route-param resolution; `require_auth`/`require_role` as framework-native `[Authorize]`/`[Authorize(Roles = ...)]` | `Axiam.Sdk.AspNetCore/AxiamAccessAttribute.cs`, `AxiamRequirement.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
+| §12 | OIDC/SSO relying-party helpers: `OidcDiscoverAsync`/`OidcBegin`/`OidcExchangeAsync`/`OidcRefreshAsync`/`LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync`/`SsoStartAsync`/`SsoCompleteAsync`; `MapAxiamOidcLogin` ASP.NET Core glue | `AxiamClient.Oidc.cs`, `Auth/Oidc/*.cs`, `Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs` |
 
 ## Declarative authorization helpers (CONTRACT.md §11)
 
@@ -100,6 +102,137 @@ role-based `[Authorize]` works out of the box). `require_role` is a **local** ch
 against the verified token's claims — it never calls the AXIAM server, and it is
 documented here (as in every AXIAM SDK) as NOT a substitute for the resource-level
 `[AxiamAccess(...)]` check above.
+
+## OIDC / SSO relying-party helpers (CONTRACT.md §12)
+
+`Axiam.Sdk` ships the nine canonical §12 operations directly on the existing
+`AxiamClient` (no separate client type) — "Login with AXIAM" via authorization-code +
+PKCE, service-account login via `client_credentials`, token introspection/revocation, and
+the upstream-IdP federation pair:
+
+| Canonical operation | C# method |
+|---|---|
+| `oidc_discover` | `OidcDiscoverAsync` |
+| `oidc_begin` | `OidcBegin` — **no `Async` suffix**: pure local computation, no network I/O (the one deliberate exception to the SDK's `*Async` naming rule) |
+| `oidc_exchange` | `OidcExchangeAsync` |
+| `oidc_refresh` | `OidcRefreshAsync` |
+| `login_client_credentials` | `LoginClientCredentialsAsync` |
+| `introspect` | `IntrospectAsync` |
+| `revoke` | `RevokeAsync` |
+| `sso_start` | `SsoStartAsync` |
+| `sso_complete` | `SsoCompleteAsync` |
+
+```csharp
+using Axiam.Sdk;
+using Axiam.Sdk.Auth.Oidc;
+using Axiam.Sdk.Options;
+
+var baseUrl = new Uri("https://your-axiam-instance");
+using var client = new AxiamClient(baseUrl, "your-tenant-slug", new AxiamClientOptions
+{
+    BaseUrl = baseUrl,
+    TenantId = "your-tenant-slug",
+    // client_id/client_secret are CLIENT CONFIGURATION (CONTRACT.md §12.1) — never a
+    // per-call argument. Omit OidcClientSecret for a public client.
+    OidcClientId = "your-relying-party-client-id",
+});
+
+// 1. Fetch (and cache — §12.3 rule 6) the discovery document.
+OidcConfiguration configuration = await client.OidcDiscoverAsync();
+
+// 2. Build the authorization request — PURE LOCAL COMPUTATION, no network I/O.
+//    The SDK stores NOTHING: persist State/Nonce/CodeVerifier yourself (your own
+//    HTTP session, or the optional IOidcStateStore) and redirect the browser to Url.
+AuthorizationRequest request = client.OidcBegin(configuration, new OidcBeginParams
+{
+    RedirectUri = "https://your-app/callback",
+});
+// redirect the browser to request.Url; stash request.State/Nonce/CodeVerifier
+
+// 3. On the callback, exchange the code — validates the id_token in FULL (§12.4)
+//    before returning; on any failure the whole token set is discarded (§12.4 rule 7).
+OidcTokenSet tokens = await client.OidcExchangeAsync(new OidcExchangeParams
+{
+    Code = "<code from the callback query string>",
+    CodeVerifier = request.CodeVerifier,   // the SAME Sensitive<string> from step 2
+    RedirectUri = "https://your-app/callback",
+    Nonce = request.Nonce,
+});
+
+// AccessToken/RefreshToken/IdToken are Sensitive<string> (§12.5) — Expose() is the
+// documented §7-vs-§12 accessor: unlike the §1–§11 cookie-session surface, §12
+// delivers tokens directly in the response body, so the caller must be able to read
+// them back out to persist/forward/revoke them. ToString()/JSON serialization still
+// always redact regardless.
+string accessToken = tokens.AccessToken.Expose();
+string? subject = tokens.IdClaims?.Sub;
+```
+
+**ASP.NET Core "Login with AXIAM" glue** — `Axiam.Sdk.AspNetCore` provides
+`MapAxiamOidcLogin`, wiring the login-redirect and callback endpoints into the existing
+minimal-API pipeline, backed by an `IOidcStateStore` (`MemoryOidcStateStore` by default,
+registered by `AddAxiam`/`AddAxiamAspNetCore`) that links the two requests of the flow:
+
+```csharp
+using Axiam.Sdk.AspNetCore;
+
+builder.Services.AddAxiamAspNetCore(options =>
+{
+    options.BaseUrl = new Uri("https://your-axiam-instance");
+    options.DefaultTenantId = "your-tenant-slug";
+    options.OidcClientId = "your-relying-party-client-id";
+});
+
+var app = builder.Build();
+// ...
+app.MapAxiamOidcLogin("/login/axiam", "/login/axiam/callback", options =>
+{
+    options.RedirectUri = "https://your-app/login/axiam/callback";
+    options.SuccessRedirect = "/dashboard";
+    // The caller owns what a session means (§12 leaves this to the application) —
+    // this is where you sign your OWN cookie / write your OWN session row.
+    options.OnSuccessAsync = (context, tokens, entry, cancellationToken) =>
+    {
+        // e.g. context.Response.Cookies.Append("your_app_session", ...);
+        return Task.CompletedTask;
+    };
+});
+```
+
+Notes:
+
+- **Caller owns all state (§12.3 rule 1).** `OidcBegin`/`OidcExchangeAsync` never store
+  `state`/`nonce`/`code_verifier` anywhere — your own HTTP session (or `IOidcStateStore`
+  for the ASP.NET Core glue) is the only place they live between the redirect and the
+  callback. `MemoryOidcStateStore` is a single-process, 10-minute-TTL, single-use
+  reference implementation — a multi-instance deployment needs a shared store (Redis, a
+  database): implement `IOidcStateStore` directly.
+- **S256-only PKCE.** `"plain"` is never emitted, never accepted, and not configurable.
+- **`client_id` is client configuration** (`AxiamClientOptions.OidcClientId`), never a
+  per-call argument — required before any §12 operation other than `OidcDiscoverAsync`.
+- **`oidc_refresh` is distinct from `RefreshAsync`.** The §1 cookie/opaque-token session
+  refresh and the §12 OAuth2 `refresh_token` grant are never merged, aliased, or made to
+  fall back to one another.
+- **`IntrospectAsync`/`RevokeAsync`/`LoginClientCredentialsAsync` require a confidential
+  client** (`OidcClientSecret` configured) — a public client gets `AuthError`, client-side,
+  with no wire call.
+- **`RevokeAsync` is idempotent** (RFC 7009): any `2xx`, including for a token the server
+  has never seen, is success.
+- **A `401` from `/oauth2/introspect`/`/oauth2/revoke` never triggers the §9 refresh
+  guard** — a bad `client_secret` is not a session expiry.
+- **`OAuthProtocolError`** (an RFC 6749 `OAuth2ErrorResponse` body) is a sub-type of
+  `AuthError` — existing `catch (AuthError ex)` blocks keep working unchanged; it
+  additionally exposes `Error`/`ErrorDescription`.
+- **ID-token validation (§12.4)** checks `alg` (EdDSA only), signature (via the same
+  JWKS verifier the §10 middleware uses), `iss`, `aud`/`azp`, `exp`/`iat`/`nbf` (±60s
+  skew), and `nonce`. Any failure raises `AuthError` with a stable `Reason` — one of
+  `invalid_alg`, `unknown_kid`, `invalid_signature`, `invalid_issuer`,
+  `invalid_audience`, `token_expired`, `nonce_mismatch` — and discards the entire token
+  set (no partial success).
+
+See [`examples/AspNetCoreSample`](examples/AspNetCoreSample) for a runnable
+`MapAxiamOidcLogin` wiring and [`examples/Quickstart`](examples/Quickstart) for the
+`LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync` machine-to-machine flow.
 
 ## Quickstart
 

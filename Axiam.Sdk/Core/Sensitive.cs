@@ -54,6 +54,36 @@ public readonly struct Sensitive<T> : IEquatable<Sensitive<T>>
     /// <summary>Internal-only accessor — never a public getter (CONTRACT.md &#167;7).</summary>
     internal T Reveal() => _value;
 
+    /// <summary>
+    /// Wraps <paramref name="value"/> in a <see cref="Sensitive{T}"/>. Public — CONTRACT.md
+    /// &#167;12 T1 reference judgment call 6 requires <c>code_verifier</c>/<c>refresh_token</c>/
+    /// <c>token</c>/<c>client_secret</c> inputs to "accept either the wrapped or bare form",
+    /// because a &#167;12 caller typically rehydrates a secret it persisted (as a bare string)
+    /// in its own session store and must be able to hand it back to e.g.
+    /// <c>AxiamClient.OidcExchangeAsync</c>. Wrapping a value can never leak it — only
+    /// <see cref="Expose"/> can — so making construction reachable from outside the SDK
+    /// assembly does not weaken CONTRACT.md &#167;7's redaction guarantee.
+    /// </summary>
+    public static Sensitive<T> Wrap(T value) => new(value);
+
+    /// <summary>
+    /// Returns the wrapped raw value. Public — this is the documented, deliberate
+    /// resolution of the CONTRACT.md &#167;7-vs-&#167;12 conflict recorded for contract
+    /// amendment T9: &#167;7 says "the raw token string MUST NOT be exposed via any public
+    /// getter API", written when every token lived only in the &#167;4 httpOnly cookie jar;
+    /// &#167;12's <c>OidcTokenSet</c> (<c>access_token</c>/<c>refresh_token</c>/<c>id_token</c>)
+    /// changes that premise by delivering tokens directly in the <c>/oauth2/token</c> JSON
+    /// response body, so the calling application MUST be able to read them back out to
+    /// persist, forward, or revoke them later — there is no cookie jar capturing them on its
+    /// behalf. Call this only at the point of actually consuming the value; NEVER pass the
+    /// result to a logging/tracing/diagnostic sink. <see cref="ToString"/> and this type's
+    /// JSON converter (<see cref="SensitiveJsonConverter{T}"/>) still always redact regardless
+    /// of this accessor's existence — the redaction guarantee is unaffected, only the
+    /// explicit, opt-in escape hatch changed from "does not exist" to "exists and is named
+    /// for exactly this purpose".
+    /// </summary>
+    public T Expose() => _value;
+
     /// <summary>Always returns the redacted literal, never the wrapped value.</summary>
     public override string ToString() => "[SENSITIVE]";
 
