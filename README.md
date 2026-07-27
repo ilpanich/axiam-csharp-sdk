@@ -23,7 +23,7 @@ relying-party helpers, contract 1.4).
 
 See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract.
 
-### §1–§11 conformance checklist
+### §1–§12 conformance checklist
 
 | § | Requirement | Where implemented |
 |---|---|---|
