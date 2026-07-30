@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-alpha21] - 2026-07-30
+
+### Added
+
+- Add OIDC/SSO relying-party helpers (CONTRACT.md §12)
+
+### Changed
+
+- Re-sync vendored CONTRACT.md to contract 1.6
+- Re-sync vendored CONTRACT.md to contract 1.5
+- Bump the minor-patch group with 1 update
+- Bump actions/checkout from 7.0.0 to 7.0.1
+
 ## [1.0.0-alpha18] - 2026-07-24
 
 ### Changed
