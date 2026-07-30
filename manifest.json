@@ -138,6 +138,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.yml\" sourcestartlinenumber=\"1\">Configures <xref href=\"Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions.MapAxiamOidcLogin(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder%2cSystem.String%2cSystem.String%2cSystem.Action%7bAxiam.Sdk.AspNetCore.AxiamOidcLoginOptions%7d)\" data-throw-if-not-resolved=\"false\"></xref>'s login-redirect\nand callback endpoints (CONTRACT.md §12). Both endpoints share one options value so\nthe two routes of a login flow cannot drift apart (same redirect URI, same scope).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.AspNetCore.AxiamOptions.yml",
       "output": {
         ".html": {
@@ -191,6 +205,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.AspNetCore.AxiamRequirement",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.AxiamRequirement.yml\" sourcestartlinenumber=\"1\">Authorization requirement carrying everything <xref href=\"Axiam.Sdk.AspNetCore.AxiamPolicyHandler\" data-throw-if-not-resolved=\"false\"></xref> needs\nto run a single AXIAM access check (CONTRACT.md §11): the resource/action halves\n(legacy <code>&quot;resource:action&quot;</code> policy-string form, e.g. <code>&quot;documents:read&quot;</code>, or\nthe structured <xref href=\"Axiam.Sdk.AspNetCore.AxiamAccessAttribute\" data-throw-if-not-resolved=\"false\"></xref> form — both funnel into this same\ntype), plus the optional <xref href=\"Axiam.Sdk.AspNetCore.AxiamRequirement.Scope\" data-throw-if-not-resolved=\"false\"></xref> and the <xref href=\"Axiam.Sdk.AspNetCore.AxiamRequirement.ResourceRouteParam\" data-throw-if-not-resolved=\"false\"></xref>\nroute value name used to resolve the target resource's UUID at request time. Built by\n<xref href=\"Axiam.Sdk.AspNetCore.AxiamPolicyProvider\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions.yml\" sourcestartlinenumber=\"1\">ASP.NET Core minimal-API endpoints implementing &quot;Login with AXIAM&quot; (CONTRACT.md\n§12) — <xref href=\"Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions.MapAxiamOidcLogin(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder%2cSystem.String%2cSystem.String%2cSystem.Action%7bAxiam.Sdk.AspNetCore.AxiamOidcLoginOptions%7d)\" data-throw-if-not-resolved=\"false\"></xref> wires the login-redirect and callback\nendpoints into the existing middleware/DI pipeline, resolving the shared\n<xref href=\"Axiam.Sdk.AxiamClient\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"Axiam.Sdk.Auth.Oidc.IOidcStateStore\" data-throw-if-not-resolved=\"false\"></xref> singletons\n<xref href=\"Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.AddAxiam(Microsoft.Extensions.DependencyInjection.IServiceCollection%2cSystem.Action%7bAxiam.Sdk.AspNetCore.AxiamOptions%7d)\" data-throw-if-not-resolved=\"false\"></xref>/<xref href=\"Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.AddAxiamAspNetCore(Microsoft.Extensions.DependencyInjection.IServiceCollection%2cSystem.Action%7bAxiam.Sdk.AspNetCore.AxiamOptions%7d)\" data-throw-if-not-resolved=\"false\"></xref>\nregister.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -278,6 +306,286 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.AuthorizationRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.AuthorizationRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.AuthorizationRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.AuthorizationRequest.yml\" sourcestartlinenumber=\"1\">The result of <xref href=\"Axiam.Sdk.AxiamClient.OidcBegin(Axiam.Sdk.Auth.Oidc.OidcConfiguration%2cAxiam.Sdk.Auth.Oidc.OidcBeginParams)\" data-throw-if-not-resolved=\"false\"></xref> — everything the caller needs to start\nan authorization-code + PKCE login (CONTRACT.md §12.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.IOidcStateStore.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.IOidcStateStore.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.IOidcStateStore",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.IOidcStateStore.yml\" sourcestartlinenumber=\"1\">An OPTIONAL server-side store for in-flight <code>OidcBegin</code> state (CONTRACT.md §12.3\nrule 1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.IdTokenClaims.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.IdTokenClaims.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.IdTokenClaims",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.IdTokenClaims.yml\" sourcestartlinenumber=\"1\">The decoded, ALREADY-VALIDATED ID-token claim set carried by\n<xref href=\"Axiam.Sdk.Auth.Oidc.OidcTokenSet.IdClaims\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md §12.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.IdTokenFailureReasons.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.IdTokenFailureReasons.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.IdTokenFailureReasons",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.IdTokenFailureReasons.yml\" sourcestartlinenumber=\"1\">The seven CONTRACT.md §12.3 rule 3 / §12.4 stable, machine-readable ID-token\nvalidation failure reason codes, carried on the resulting <xref href=\"Axiam.Sdk.Core.AuthError.Reason\" data-throw-if-not-resolved=\"false\"></xref>.\nExact wire spelling — used verbatim, never translated or localized.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.IntrospectParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.IntrospectParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.IntrospectParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.IntrospectParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.IntrospectAsync(Axiam.Sdk.Auth.Oidc.IntrospectParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (RFC 7662). Requires\nconfidential-client credentials (§12.1 note 4).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.IntrospectionResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.IntrospectionResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.IntrospectionResult",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.IntrospectionResult.yml\" sourcestartlinenumber=\"1\">The RFC 7662 introspection result (wire schema <code>IntrospectionResponse</code>). Only\n<xref href=\"Axiam.Sdk.Auth.Oidc.IntrospectionResult.Active\" data-throw-if-not-resolved=\"false\"></xref> is guaranteed; the server omits the metadata fields for an inactive\ntoken (all <code>null</code>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.LoginClientCredentialsAsync(Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (<code>grant_type=client_credentials</code>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.yml\" sourcestartlinenumber=\"1\">An in-memory reference implementation of <xref href=\"Axiam.Sdk.Auth.Oidc.IOidcStateStore\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md\n§12.3 rule 1): per-instance (never process-global/static), single-use, TTL-bounded,\nbacked by a <xref href=\"System.Collections.Concurrent.ConcurrentDictionary%602\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcBeginParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcBeginParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.OidcBeginParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.OidcBeginParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.OidcBegin(Axiam.Sdk.Auth.Oidc.OidcConfiguration%2cAxiam.Sdk.Auth.Oidc.OidcBeginParams)\" data-throw-if-not-resolved=\"false\"></xref> — a pure local computation, no network\nI/O. <code>client_id</code> comes from the client's own configuration\n(<xref href=\"Axiam.Sdk.Options.AxiamClientOptions.OidcClientId\" data-throw-if-not-resolved=\"false\"></xref>), not a per-call argument (§12\nT1 reference judgment call 21).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.OidcConfiguration",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.yml\" sourcestartlinenumber=\"1\">The OIDC Discovery 1.0 metadata document served by\n<code>GET /.well-known/openid-configuration</code> (wire schema <code>OidcDiscoveryDocument</code>,\nCONTRACT.md §12.1). Every field is required by the server's schema, so this record\nkeeps the wire's exact snake_case property names — it IS a protocol document, not an\nSDK-shaped result.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcExchangeParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcExchangeParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.OidcExchangeParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.OidcExchangeParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.OidcExchangeAsync(Axiam.Sdk.Auth.Oidc.OidcExchangeParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (<code>grant_type=authorization_code</code>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcRefreshParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcRefreshParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.OidcRefreshParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.OidcRefreshParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.OidcRefreshAsync(Axiam.Sdk.Auth.Oidc.OidcRefreshParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (<code>grant_type=refresh_token</code>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcStateEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcStateEntry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.OidcStateEntry",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.OidcStateEntry.yml\" sourcestartlinenumber=\"1\">The tuple an <xref href=\"Axiam.Sdk.Auth.Oidc.IOidcStateStore\" data-throw-if-not-resolved=\"false\"></xref> holds for one in-flight login.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcTokenSet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcTokenSet.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.OidcTokenSet",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.OidcTokenSet.yml\" sourcestartlinenumber=\"1\">A token set returned by the OAuth2 token endpoint (wire schema <code>TokenResponse</code>),\nreturned by <xref href=\"Axiam.Sdk.AxiamClient.OidcExchangeAsync(Axiam.Sdk.Auth.Oidc.OidcExchangeParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>,\n<xref href=\"Axiam.Sdk.AxiamClient.OidcRefreshAsync(Axiam.Sdk.Auth.Oidc.OidcRefreshParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> and\n<xref href=\"Axiam.Sdk.AxiamClient.LoginClientCredentialsAsync(Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.RevokeParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.RevokeParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.RevokeParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.RevokeParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.RevokeAsync(Axiam.Sdk.Auth.Oidc.RevokeParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (RFC 7009). Requires\nconfidential-client credentials (§12.1 note 4).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoCompleteParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoCompleteParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.SsoCompleteParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.SsoCompleteParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.SsoCompleteAsync(Axiam.Sdk.Auth.Oidc.SsoCompleteParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>\n(<code>POST /api/v1/auth/federation/oidc/callback</code>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoCompleteResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoCompleteResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.SsoCompleteResult",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.SsoCompleteResult.yml\" sourcestartlinenumber=\"1\">The result of <xref href=\"Axiam.Sdk.AxiamClient.SsoCompleteAsync(Axiam.Sdk.Auth.Oidc.SsoCompleteParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (wire schema\n<code>SsoLoginSuccessResponse</code>). Carries NO token material — the session arrives as\n<code>Set-Cookie</code>, so the §4 cookie jar (already owned by every\n<xref href=\"Axiam.Sdk.AxiamClient\" data-throw-if-not-resolved=\"false\"></xref>) is what actually captures it (§12.1 note 6).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoStartParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoStartParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.SsoStartParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.SsoStartParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.SsoStartAsync(Axiam.Sdk.Auth.Oidc.SsoStartParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>\n(<code>POST /api/v1/auth/federation/oidc/start</code>). One tenant form\n(<xref href=\"Axiam.Sdk.Auth.Oidc.SsoStartParams.TenantId\" data-throw-if-not-resolved=\"false\"></xref> or <xref href=\"Axiam.Sdk.Auth.Oidc.SsoStartParams.TenantSlug\" data-throw-if-not-resolved=\"false\"></xref>) and one org form\n(<xref href=\"Axiam.Sdk.Auth.Oidc.SsoStartParams.OrgId\" data-throw-if-not-resolved=\"false\"></xref> or <xref href=\"Axiam.Sdk.Auth.Oidc.SsoStartParams.OrgSlug\" data-throw-if-not-resolved=\"false\"></xref>) must be resolvable, from these properties\nor from the client's own construction options (CONTRACT.md §5.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoStartResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoStartResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.SsoStartResult",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.SsoStartResult.yml\" sourcestartlinenumber=\"1\">The result of <xref href=\"Axiam.Sdk.AxiamClient.SsoStartAsync(Axiam.Sdk.Auth.Oidc.SsoStartParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (wire schema\n<code>OidcStartResponse</code>). There is deliberately no nonce: on the federation path the\nnonce never leaves the server (§12.1 note 7). Round-trip <xref href=\"Axiam.Sdk.Auth.Oidc.SsoStartResult.State\" data-throw-if-not-resolved=\"false\"></xref> into\n<xref href=\"Axiam.Sdk.AxiamClient.SsoCompleteAsync(Axiam.Sdk.Auth.Oidc.SsoCompleteParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> unmodified — the server stores it single-use\nwith a 10-minute TTL and recovers the whole login context from it.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Auth.RefreshGuard.yml",
       "output": {
         ".html": {
@@ -344,7 +652,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.Core.AuthError",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.AuthError.yml\" sourcestartlinenumber=\"1\">Authentication failure: wrong credentials, expired session, MFA failure, or a 401 on\nrefresh (CONTRACT.md §2, D-12). Always constructed via <xref href=\"Axiam.Sdk.Core.ErrorMapper\" data-throw-if-not-resolved=\"false\"></xref>\nso REST and gRPC transports cannot drift on the error taxonomy.</p>\n"
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.AuthError.yml\" sourcestartlinenumber=\"1\">Authentication failure: wrong credentials, expired session, MFA failure, a 401 on\nrefresh, an RFC 6749 OAuth2 protocol error (CONTRACT.md §12.3 rule 3 — see\n<xref href=\"Axiam.Sdk.Core.OAuthProtocolError\" data-throw-if-not-resolved=\"false\"></xref>), or a §12.4 ID-token validation failure\n(CONTRACT.md §2, D-12). Always constructed via <xref href=\"Axiam.Sdk.Core.ErrorMapper\" data-throw-if-not-resolved=\"false\"></xref> for the\npre-existing REST/gRPC taxonomy, or directly for the §12 additions, so no code path\ndrifts from the error taxonomy.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -387,6 +695,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Core.NetworkError",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.NetworkError.yml\" sourcestartlinenumber=\"1\">Transport-level failure: connection refused, timeout, TLS error, DNS failure, or a\nserver-side 5xx (CONTRACT.md §2).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.OAuthProtocolError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.OAuthProtocolError.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.OAuthProtocolError",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.OAuthProtocolError.yml\" sourcestartlinenumber=\"1\">An RFC 6749 protocol error returned by an <code>/oauth2/*</code> endpoint as an\n<code>OAuth2ErrorResponse</code> body (<code>invalid_grant</code>, <code>invalid_client</code>,\n<code>invalid_request</code>, <code>unsupported_grant_type</code>, …) — CONTRACT.md\n§2 sub-type table, §12.3 rule 3.</p>\n"
     },
     {
       "type": "ManagedReference",

@@ -96,9 +96,12 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
-      <dd><p>Authentication failure: wrong credentials, expired session, MFA failure, or a 401 on
-refresh (CONTRACT.md §2, D-12). Always constructed via <a class="xref" href="Axiam.Sdk.Core.ErrorMapper.html">ErrorMapper</a>
-so REST and gRPC transports cannot drift on the error taxonomy.</p>
+      <dd><p>Authentication failure: wrong credentials, expired session, MFA failure, a 401 on
+refresh, an RFC 6749 OAuth2 protocol error (CONTRACT.md §12.3 rule 3 — see
+<a class="xref" href="Axiam.Sdk.Core.OAuthProtocolError.html">OAuthProtocolError</a>), or a §12.4 ID-token validation failure
+(CONTRACT.md §2, D-12). Always constructed via <a class="xref" href="Axiam.Sdk.Core.ErrorMapper.html">ErrorMapper</a> for the
+pre-existing REST/gRPC taxonomy, or directly for the §12 additions, so no code path
+drifts from the error taxonomy.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -119,6 +122,14 @@ gRPC transports cannot drift on the error taxonomy.</p>
       <dt><a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a></dt>
       <dd><p>Transport-level failure: connection refused, timeout, TLS error, DNS failure, or a
 server-side 5xx (CONTRACT.md §2).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.OAuthProtocolError.html">OAuthProtocolError</a></dt>
+      <dd><p>An RFC 6749 protocol error returned by an <code>/oauth2/*</code> endpoint as an
+<code>OAuth2ErrorResponse</code> body (<code>invalid_grant</code>, <code>invalid_client</code>,
+<code>invalid_request</code>, <code>unsupported_grant_type</code>, …) — CONTRACT.md
+§2 sub-type table, §12.3 rule 3.</p>
 </dd>
     </dl>
     <dl class="jumplist">

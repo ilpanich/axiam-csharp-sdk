@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class AxiamOidcLoginOptions | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class AxiamOidcLoginOptions | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Configures &#39;s login-redirect and callback endpoints (CONTRACT.md &#167;12). Both endpoints share one options value so the two routes of a login flow cannot drift apart (same redirect URI, same scope).">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha21/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions">
+
+
+
+  <h1 id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions" class="text-break">
+Class AxiamOidcLoginOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha21/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.AspNetCore.html">AspNetCore</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.AspNetCore.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Configures <a class="xref" href="Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions.html#Axiam_Sdk_AspNetCore_OidcLoginEndpointExtensions_MapAxiamOidcLogin_Microsoft_AspNetCore_Routing_IEndpointRouteBuilder_System_String_System_String_System_Action_Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions__">MapAxiamOidcLogin(IEndpointRouteBuilder, string, string, Action&lt;AxiamOidcLoginOptions&gt;)</a>'s login-redirect
+and callback endpoints (CONTRACT.md §12). Both endpoints share one options value so
+the two routes of a login flow cannot drift apart (same redirect URI, same scope).</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class AxiamOidcLoginOptions</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">AxiamOidcLoginOptions</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_OnSuccessAsync_" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.OnSuccessAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_OnSuccessAsync" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.OnSuccessAsync">
+  OnSuccessAsync
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha21/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Called with the validated token set once the exchange succeeds — the hook where an
+application establishes its OWN session (sign a cookie, write a session row, …).
+This class deliberately does not do this for you: what a session means is the
+application's decision. Receives the consumed state entry too, so
+<a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcStateEntry.html#Axiam_Sdk_Auth_Oidc_OidcStateEntry_ReturnTo">ReturnTo</a> and any other application data captured at
+login time is available. May be <code>null</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Func&lt;HttpContext, OidcTokenSet, OidcStateEntry, CancellationToken, Task&gt;? OnSuccessAsync { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-5">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.httpcontext">HttpContext</a>, <a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcTokenSet.html">OidcTokenSet</a>, <a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcStateEntry.html">OidcStateEntry</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_RedirectUri_" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.RedirectUri*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_RedirectUri" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.RedirectUri">
+  RedirectUri
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha21/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The relying party's redirect URI — the public URL of the callback route — replayed
+verbatim on the token exchange (the server compares the two). Required.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public required string RedirectUri { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_RedirectUri_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Mutable (<code>set</code>, not <code>init</code>) — mirrors <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html">AxiamOptions</a>'s existing
+convention: the .NET options-callback pattern
+(<code>MapAxiamOidcLogin(loginPath, callbackPath, options =&gt; { … })</code>)
+configures an already-constructed instance through an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action&lt;T&gt;</a>
+delegate, so properties must be settable after construction.</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_Scope_" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.Scope*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_Scope" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.Scope">
+  Scope
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha21/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The requested scope. <code>&quot;openid&quot;</code> is added automatically when absent
+(CONTRACT.md §12.1 rule 4).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Scope { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_SuccessRedirect_" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.SuccessRedirect*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_SuccessRedirect" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.SuccessRedirect">
+  SuccessRedirect
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha21/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Where to send the browser after a successful login. Falls back to the
+<a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcStateEntry.html#Axiam_Sdk_Auth_Oidc_OidcStateEntry_ReturnTo">ReturnTo</a> captured at login time (from the
+<code>?return_to=</code> query parameter), then to a <code>200</code> JSON summary.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? SuccessRedirect { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

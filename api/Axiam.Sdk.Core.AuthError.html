@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AuthError | AXIAM .NET SDK ">
       
-      <meta name="description" content="Authentication failure: wrong credentials, expired session, MFA failure, or a 401 on refresh (CONTRACT.md &#167;2, D-12). Always constructed via  so REST and gRPC transports cannot drift on the error taxonomy.">
+      <meta name="description" content="Authentication failure: wrong credentials, expired session, MFA failure, a 401 on refresh, an RFC 6749 OAuth2 protocol error (CONTRACT.md &#167;12.3 rule 3 — see ), or a &#167;12.4 ID-token validation failure (CONTRACT.md &#167;2, D-12). Always constructed via  for the pre-existing REST/gRPC taxonomy, or directly for the &#167;12 additions, so no code path drifts from the error taxonomy.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha18/apiSpec/new?filename=Axiam_Sdk_Core_AuthError.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Core.AuthError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha21/apiSpec/new?filename=Axiam_Sdk_Core_AuthError.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Core.AuthError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Core_AuthError" data-uid="Axiam.Sdk.Core.AuthError" class="text-break">
-Class AuthError  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha18/Axiam.Sdk/Core/AuthError.cs/#L8"><i class="bi bi-code-slash"></i></a>
+Class AuthError  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha21/Axiam.Sdk/Core/AuthError.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,14 +97,17 @@ Class AuthError  <a class="header-action link-secondary" title="View source" hre
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Authentication failure: wrong credentials, expired session, MFA failure, or a 401 on
-refresh (CONTRACT.md §2, D-12). Always constructed via <a class="xref" href="Axiam.Sdk.Core.ErrorMapper.html">ErrorMapper</a>
-so REST and gRPC transports cannot drift on the error taxonomy.</p>
+  <div class="markdown summary"><p>Authentication failure: wrong credentials, expired session, MFA failure, a 401 on
+refresh, an RFC 6749 OAuth2 protocol error (CONTRACT.md §12.3 rule 3 — see
+<a class="xref" href="Axiam.Sdk.Core.OAuthProtocolError.html">OAuthProtocolError</a>), or a §12.4 ID-token validation failure
+(CONTRACT.md §2, D-12). Always constructed via <a class="xref" href="Axiam.Sdk.Core.ErrorMapper.html">ErrorMapper</a> for the
+pre-existing REST/gRPC taxonomy, or directly for the §12 additions, so no code path
+drifts from the error taxonomy.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class AuthError : Exception, ISerializable</code></pre>
+    <pre><code class="lang-csharp hljs">public class AuthError : Exception, ISerializable</code></pre>
   </div>
 
 
@@ -126,6 +129,12 @@ so REST and gRPC transports cannot drift on the error taxonomy.</p>
     </dd>
   </dl>
 
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="Axiam.Sdk.Core.OAuthProtocolError.html">OAuthProtocolError</a></div>
+    </dd>
+  </dl>
 
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
@@ -164,6 +173,9 @@ so REST and gRPC transports cannot drift on the error taxonomy.</p>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.targetsite">Exception.TargetSite</a>
     </div>
     <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.serializeobjectstate">Exception.SerializeObjectState</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
     </div>
     <div>
@@ -173,6 +185,9 @@ so REST and gRPC transports cannot drift on the error taxonomy.</p>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
     </div>
     <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
   </dd></dl>
@@ -180,6 +195,15 @@ so REST and gRPC transports cannot drift on the error taxonomy.</p>
 
 
 
+  <h2 id="Axiam_Sdk_Core_AuthError_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Deliberately NOT <code>sealed</code> (CONTRACT.md §2 permits &quot;language-idiomatic
+sub-types&quot; of the three top-level error types, which MUST NOT replace them; §12's
+port addendum item 17 requires <a class="xref" href="Axiam.Sdk.Core.OAuthProtocolError.html">OAuthProtocolError</a> specifically to be a
+sub-type of this class so existing <code>catch (AuthError)</code> call sites keep matching
+it unchanged — that backward compatibility is what makes contract 1.4 additive
+rather than breaking). Every OTHER pre-existing construction site
+(<code>new AuthError(message)</code>) is untouched and keeps compiling exactly as before.</p>
+</div>
 
 
   <h2 class="section" id="constructors">Constructors
@@ -190,7 +214,7 @@ so REST and gRPC transports cannot drift on the error taxonomy.</p>
 
   <h3 id="Axiam_Sdk_Core_AuthError__ctor_System_String_" data-uid="Axiam.Sdk.Core.AuthError.#ctor(System.String)">
   AuthError(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha18/Axiam.Sdk/Core/AuthError.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha21/Axiam.Sdk/Core/AuthError.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs an <a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a> with the given diagnostic message.</p>
@@ -211,6 +235,88 @@ so REST and gRPC transports cannot drift on the error taxonomy.</p>
 
 
 
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Core_AuthError__ctor_" data-uid="Axiam.Sdk.Core.AuthError.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Core_AuthError__ctor_System_String_System_String_" data-uid="Axiam.Sdk.Core.AuthError.#ctor(System.String,System.String)">
+  AuthError(string, string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha21/Axiam.Sdk/Core/AuthError.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Constructs an <a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a> carrying a stable §12.4 ID-token
+validation failure reason code.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AuthError(string message, string? reason)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Describes the authentication failure (CONTRACT.md §2 MUST).</p>
+</dd>
+    <dt><code>reason</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>One of the seven CONTRACT.md §12.4 reason codes, or <code>null</code> for a
+non-ID-token <a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Core_AuthError_Reason_" data-uid="Axiam.Sdk.Core.AuthError.Reason*"></a>
+
+  <h3 id="Axiam_Sdk_Core_AuthError_Reason" data-uid="Axiam.Sdk.Core.AuthError.Reason">
+  Reason
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha21/Axiam.Sdk/Core/AuthError.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>An OPTIONAL, stable, machine-readable failure code. Populated only for a
+CONTRACT.md §12.4 ID-token validation failure, with one of the seven
+contract-fixed reason strings in <a class="xref" href="Axiam.Sdk.Auth.Oidc.IdTokenFailureReasons.html">IdTokenFailureReasons</a>
+(§12 T1 reference judgment call 2: the reason code rides on this EXISTING
+<a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a> type via this additive property, rather than a second
+error class). <code>null</code> for every other <a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a> — including
+every pre-existing construction site and every <a class="xref" href="Axiam.Sdk.Core.OAuthProtocolError.html">OAuthProtocolError</a>,
+which carries its own structured <a class="xref" href="Axiam.Sdk.Core.OAuthProtocolError.html#Axiam_Sdk_Core_OAuthProtocolError_Error">Error</a>/
+<a class="xref" href="Axiam.Sdk.Core.OAuthProtocolError.html#Axiam_Sdk_Core_OAuthProtocolError_ErrorDescription">ErrorDescription</a> pair instead.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Reason { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
 
 
 

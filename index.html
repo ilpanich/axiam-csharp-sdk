@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha18/index.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha21/index.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -77,12 +77,16 @@
 <ul>
 <li><strong><code>Axiam.Sdk</code></strong> — the client: cookie-session authentication (<code>LoginAsync</code>,
 <code>VerifyMfaAsync</code>, <code>RefreshAsync</code>, <code>LogoutAsync</code>), authorization
-(<code>CheckAccessAsync</code>, <code>BatchCheckAsync</code>), the gRPC authorization client, and the
+(<code>CheckAccessAsync</code>, <code>BatchCheckAsync</code>), the gRPC authorization client, the
+OIDC/SSO relying-party helpers (<code>OidcDiscoverAsync</code>, <code>OidcBegin</code>,
+<code>OidcExchangeAsync</code>, <code>OidcRefreshAsync</code>, <code>LoginClientCredentialsAsync</code>,
+<code>IntrospectAsync</code>, <code>RevokeAsync</code>, <code>SsoStartAsync</code>, <code>SsoCompleteAsync</code>), and the
 AMQP consumer with HMAC verification and replay protection.</li>
 <li><strong><code>Axiam.Sdk.AspNetCore</code></strong> — the resource-server middleware for ASP.NET Core:
 verifies the AXIAM JWT locally against a cached JWKS, enforces the cross-tenant
-claim check, and applies the CSRF double-submit check to cookie-authenticated
-state-changing requests.</li>
+claim check, applies the CSRF double-submit check to cookie-authenticated
+state-changing requests, and wires the &quot;Login with AXIAM&quot; OIDC login/callback
+endpoints (<code>MapAxiamOidcLogin</code>).</li>
 </ul>
 <p>See the <a href="https://github.com/ilpanich/axiam-csharp-sdk/blob/main/CONTRACT.md">AXIAM SDK contract</a>
 for the behaviour every AXIAM SDK guarantees.</p>

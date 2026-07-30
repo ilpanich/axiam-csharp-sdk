@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace Axiam.Sdk.Auth.Oidc | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace Axiam.Sdk.Auth.Oidc | AXIAM .NET SDK ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Auth.Oidc">
+
+  <h1 id="Axiam_Sdk_Auth_Oidc" data-uid="Axiam.Sdk.Auth.Oidc" class="text-break">Namespace Axiam.Sdk.Auth.Oidc</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.AuthorizationRequest.html">AuthorizationRequest</a></dt>
+      <dd><p>The result of <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OidcBegin_Axiam_Sdk_Auth_Oidc_OidcConfiguration_Axiam_Sdk_Auth_Oidc_OidcBeginParams_">OidcBegin(OidcConfiguration, OidcBeginParams)</a> — everything the caller needs to start
+an authorization-code + PKCE login (CONTRACT.md §12.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.IdTokenClaims.html">IdTokenClaims</a></dt>
+      <dd><p>The decoded, ALREADY-VALIDATED ID-token claim set carried by
+<a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcTokenSet.html#Axiam_Sdk_Auth_Oidc_OidcTokenSet_IdClaims">IdClaims</a> (CONTRACT.md §12.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.IdTokenFailureReasons.html">IdTokenFailureReasons</a></dt>
+      <dd><p>The seven CONTRACT.md §12.3 rule 3 / §12.4 stable, machine-readable ID-token
+validation failure reason codes, carried on the resulting <a class="xref" href="Axiam.Sdk.Core.AuthError.html#Axiam_Sdk_Core_AuthError_Reason">Reason</a>.
+Exact wire spelling — used verbatim, never translated or localized.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.IntrospectParams.html">IntrospectParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_IntrospectAsync_Axiam_Sdk_Auth_Oidc_IntrospectParams_System_Threading_CancellationToken_">IntrospectAsync(IntrospectParams, CancellationToken)</a> (RFC 7662). Requires
+confidential-client credentials (§12.1 note 4).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.IntrospectionResult.html">IntrospectionResult</a></dt>
+      <dd><p>The RFC 7662 introspection result (wire schema <code>IntrospectionResponse</code>). Only
+<a class="xref" href="Axiam.Sdk.Auth.Oidc.IntrospectionResult.html#Axiam_Sdk_Auth_Oidc_IntrospectionResult_Active">Active</a> is guaranteed; the server omits the metadata fields for an inactive
+token (all <code>null</code>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams.html">LoginClientCredentialsParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LoginClientCredentialsAsync_Axiam_Sdk_Auth_Oidc_LoginClientCredentialsParams_System_Threading_CancellationToken_">LoginClientCredentialsAsync(LoginClientCredentialsParams, CancellationToken)</a> (<code>grant_type=client_credentials</code>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.html">MemoryOidcStateStore</a></dt>
+      <dd><p>An in-memory reference implementation of <a class="xref" href="Axiam.Sdk.Auth.Oidc.IOidcStateStore.html">IOidcStateStore</a> (CONTRACT.md
+§12.3 rule 1): per-instance (never process-global/static), single-use, TTL-bounded,
+backed by a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2">ConcurrentDictionary&lt;TKey, TValue&gt;</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcBeginParams.html">OidcBeginParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OidcBegin_Axiam_Sdk_Auth_Oidc_OidcConfiguration_Axiam_Sdk_Auth_Oidc_OidcBeginParams_">OidcBegin(OidcConfiguration, OidcBeginParams)</a> — a pure local computation, no network
+I/O. <code>client_id</code> comes from the client's own configuration
+(<a class="xref" href="Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_OidcClientId">OidcClientId</a>), not a per-call argument (§12
+T1 reference judgment call 21).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcConfiguration.html">OidcConfiguration</a></dt>
+      <dd><p>The OIDC Discovery 1.0 metadata document served by
+<code>GET /.well-known/openid-configuration</code> (wire schema <code>OidcDiscoveryDocument</code>,
+CONTRACT.md §12.1). Every field is required by the server's schema, so this record
+keeps the wire's exact snake_case property names — it IS a protocol document, not an
+SDK-shaped result.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcExchangeParams.html">OidcExchangeParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OidcExchangeAsync_Axiam_Sdk_Auth_Oidc_OidcExchangeParams_System_Threading_CancellationToken_">OidcExchangeAsync(OidcExchangeParams, CancellationToken)</a> (<code>grant_type=authorization_code</code>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcRefreshParams.html">OidcRefreshParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OidcRefreshAsync_Axiam_Sdk_Auth_Oidc_OidcRefreshParams_System_Threading_CancellationToken_">OidcRefreshAsync(OidcRefreshParams, CancellationToken)</a> (<code>grant_type=refresh_token</code>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcStateEntry.html">OidcStateEntry</a></dt>
+      <dd><p>The tuple an <a class="xref" href="Axiam.Sdk.Auth.Oidc.IOidcStateStore.html">IOidcStateStore</a> holds for one in-flight login.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcTokenSet.html">OidcTokenSet</a></dt>
+      <dd><p>A token set returned by the OAuth2 token endpoint (wire schema <code>TokenResponse</code>),
+returned by <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OidcExchangeAsync_Axiam_Sdk_Auth_Oidc_OidcExchangeParams_System_Threading_CancellationToken_">OidcExchangeAsync(OidcExchangeParams, CancellationToken)</a>,
+<a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OidcRefreshAsync_Axiam_Sdk_Auth_Oidc_OidcRefreshParams_System_Threading_CancellationToken_">OidcRefreshAsync(OidcRefreshParams, CancellationToken)</a> and
+<a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LoginClientCredentialsAsync_Axiam_Sdk_Auth_Oidc_LoginClientCredentialsParams_System_Threading_CancellationToken_">LoginClientCredentialsAsync(LoginClientCredentialsParams, CancellationToken)</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.RevokeParams.html">RevokeParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_RevokeAsync_Axiam_Sdk_Auth_Oidc_RevokeParams_System_Threading_CancellationToken_">RevokeAsync(RevokeParams, CancellationToken)</a> (RFC 7009). Requires
+confidential-client credentials (§12.1 note 4).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoCompleteParams.html">SsoCompleteParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteAsync_Axiam_Sdk_Auth_Oidc_SsoCompleteParams_System_Threading_CancellationToken_">SsoCompleteAsync(SsoCompleteParams, CancellationToken)</a>
+(<code>POST /api/v1/auth/federation/oidc/callback</code>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoCompleteResult.html">SsoCompleteResult</a></dt>
+      <dd><p>The result of <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteAsync_Axiam_Sdk_Auth_Oidc_SsoCompleteParams_System_Threading_CancellationToken_">SsoCompleteAsync(SsoCompleteParams, CancellationToken)</a> (wire schema
+<code>SsoLoginSuccessResponse</code>). Carries NO token material — the session arrives as
+<code>Set-Cookie</code>, so the §4 cookie jar (already owned by every
+<a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a>) is what actually captures it (§12.1 note 6).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoStartParams.html">SsoStartParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoStartAsync_Axiam_Sdk_Auth_Oidc_SsoStartParams_System_Threading_CancellationToken_">SsoStartAsync(SsoStartParams, CancellationToken)</a>
+(<code>POST /api/v1/auth/federation/oidc/start</code>). One tenant form
+(<a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoStartParams.html#Axiam_Sdk_Auth_Oidc_SsoStartParams_TenantId">TenantId</a> or <a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoStartParams.html#Axiam_Sdk_Auth_Oidc_SsoStartParams_TenantSlug">TenantSlug</a>) and one org form
+(<a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoStartParams.html#Axiam_Sdk_Auth_Oidc_SsoStartParams_OrgId">OrgId</a> or <a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoStartParams.html#Axiam_Sdk_Auth_Oidc_SsoStartParams_OrgSlug">OrgSlug</a>) must be resolvable, from these properties
+or from the client's own construction options (CONTRACT.md §5.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoStartResult.html">SsoStartResult</a></dt>
+      <dd><p>The result of <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoStartAsync_Axiam_Sdk_Auth_Oidc_SsoStartParams_System_Threading_CancellationToken_">SsoStartAsync(SsoStartParams, CancellationToken)</a> (wire schema
+<code>OidcStartResponse</code>). There is deliberately no nonce: on the federation path the
+nonce never leaves the server (§12.1 note 7). Round-trip <a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoStartResult.html#Axiam_Sdk_Auth_Oidc_SsoStartResult_State">State</a> into
+<a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteAsync_Axiam_Sdk_Auth_Oidc_SsoCompleteParams_System_Threading_CancellationToken_">SsoCompleteAsync(SsoCompleteParams, CancellationToken)</a> unmodified — the server stores it single-use
+with a 10-minute TTL and recovers the whole login context from it.</p>
+</dd>
+    </dl>
+    <h3 id="interfaces">
+Interfaces
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.IOidcStateStore.html">IOidcStateStore</a></dt>
+      <dd><p>An OPTIONAL server-side store for in-flight <code>OidcBegin</code> state (CONTRACT.md §12.3
+rule 1).</p>
+</dd>
+    </dl>
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

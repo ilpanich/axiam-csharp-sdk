@@ -137,6 +137,13 @@ framework default.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.html">AxiamOidcLoginOptions</a></dt>
+      <dd><p>Configures <a class="xref" href="Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions.html#Axiam_Sdk_AspNetCore_OidcLoginEndpointExtensions_MapAxiamOidcLogin_Microsoft_AspNetCore_Routing_IEndpointRouteBuilder_System_String_System_String_System_Action_Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions__">MapAxiamOidcLogin(IEndpointRouteBuilder, string, string, Action&lt;AxiamOidcLoginOptions&gt;)</a>'s login-redirect
+and callback endpoints (CONTRACT.md §12). Both endpoints share one options value so
+the two routes of a login flow cannot drift apart (same redirect URI, same scope).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html">AxiamOptions</a></dt>
       <dd><p>Typed Options-pattern configuration for <a class="xref" href="Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.html#Axiam_Sdk_AspNetCore_ServiceCollectionExtensions_AddAxiam_Microsoft_Extensions_DependencyInjection_IServiceCollection_System_Action_Axiam_Sdk_AspNetCore_AxiamOptions__">AddAxiam(IServiceCollection, Action&lt;AxiamOptions&gt;)</a>/
 <a class="xref" href="Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.html#Axiam_Sdk_AspNetCore_ServiceCollectionExtensions_AddAxiamAspNetCore_Microsoft_Extensions_DependencyInjection_IServiceCollection_System_Action_Axiam_Sdk_AspNetCore_AxiamOptions__">AddAxiamAspNetCore(IServiceCollection, Action&lt;AxiamOptions&gt;)</a> (D-07). Configured via
@@ -178,6 +185,16 @@ the structured <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamAccessAttribute.h
 type), plus the optional <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_Scope">Scope</a> and the <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamRequirement.html#Axiam_Sdk_AspNetCore_AxiamRequirement_ResourceRouteParam">ResourceRouteParam</a>
 route value name used to resolve the target resource's UUID at request time. Built by
 <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamPolicyProvider.html">AxiamPolicyProvider</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions.html">OidcLoginEndpointExtensions</a></dt>
+      <dd><p>ASP.NET Core minimal-API endpoints implementing &quot;Login with AXIAM&quot; (CONTRACT.md
+§12) — <a class="xref" href="Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions.html#Axiam_Sdk_AspNetCore_OidcLoginEndpointExtensions_MapAxiamOidcLogin_Microsoft_AspNetCore_Routing_IEndpointRouteBuilder_System_String_System_String_System_Action_Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions__">MapAxiamOidcLogin(IEndpointRouteBuilder, string, string, Action&lt;AxiamOidcLoginOptions&gt;)</a> wires the login-redirect and callback
+endpoints into the existing middleware/DI pipeline, resolving the shared
+<a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a> and <a class="xref" href="Axiam.Sdk.Auth.Oidc.IOidcStateStore.html">IOidcStateStore</a> singletons
+<a class="xref" href="Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.html#Axiam_Sdk_AspNetCore_ServiceCollectionExtensions_AddAxiam_Microsoft_Extensions_DependencyInjection_IServiceCollection_System_Action_Axiam_Sdk_AspNetCore_AxiamOptions__">AddAxiam(IServiceCollection, Action&lt;AxiamOptions&gt;)</a>/<a class="xref" href="Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.html#Axiam_Sdk_AspNetCore_ServiceCollectionExtensions_AddAxiamAspNetCore_Microsoft_Extensions_DependencyInjection_IServiceCollection_System_Action_Axiam_Sdk_AspNetCore_AxiamOptions__">AddAxiamAspNetCore(IServiceCollection, Action&lt;AxiamOptions&gt;)</a>
+register.</p>
 </dd>
     </dl>
     <dl class="jumplist">
