@@ -84,6 +84,48 @@ public sealed class AspNetCoreMiddlewareTests
     }
 
     /// <summary>
+    /// CONTRACT.md &#167;10.1 rule 4: the token's <c>tenant_id</c> MUST be asserted against
+    /// the CONFIGURED tenant. <c>X-Tenant-ID</c> is attacker-controlled, so letting it
+    /// select the expected value would compare the token against itself — a vacuous check
+    /// that lets any tenant's token into an app configured for a different one.
+    /// </summary>
+    [Fact]
+    public async Task AttackerSuppliedTenantHeader_CannotOverrideTheConfiguredTenant()
+    {
+        var fixture = new JwksFixture();
+        var serverHandler = new FakeAxiamServerHandler(fixture.BuildJwksDocument());
+        using IHost host = await CreateHostAsync(serverHandler).ConfigureAwait(false);
+        HttpClient client = host.GetTestClient();
+        string token = fixture.SignJwt(Guid.NewGuid().ToString(), OtherTenantId, new[] { "admin" }, DateTimeOffset.UtcNow.AddMinutes(15));
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add("X-Tenant-ID", OtherTenantId);
+
+        HttpResponseMessage response = await client.GetAsync("/protected").ConfigureAwait(false);
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    /// <summary>A matching <c>X-Tenant-ID</c> header still narrows correctly and is admitted.</summary>
+    [Fact]
+    public async Task MatchingTenantHeader_StillNarrowsAndIsAdmitted()
+    {
+        var fixture = new JwksFixture();
+        var serverHandler = new FakeAxiamServerHandler(fixture.BuildJwksDocument());
+        using IHost host = await CreateHostAsync(serverHandler).ConfigureAwait(false);
+        HttpClient client = host.GetTestClient();
+        string userId = Guid.NewGuid().ToString();
+        string token = fixture.SignJwt(userId, TenantId, new[] { "admin" }, DateTimeOffset.UtcNow.AddMinutes(15));
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Add("X-Tenant-ID", TenantId);
+
+        HttpResponseMessage response = await client.GetAsync("/protected").ConfigureAwait(false);
+        string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(userId, body);
+    }
+
+    /// <summary>
     /// CONTRACT.md &#167;10.1 rule 2, end to end through the real ASP.NET Core pipeline: a
     /// signature-valid, correct-tenant, non-expired token carrying NO <c>exp</c> claim at
     /// all is a permanent credential and MUST be rejected. This is the <c>SEC-080</c>

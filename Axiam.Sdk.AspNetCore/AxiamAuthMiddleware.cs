@@ -100,14 +100,17 @@ public sealed class AxiamAuthMiddleware
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(optionsAccessor);
 
-        string? tenantId = context.Request.Headers[TenantHeaderName].FirstOrDefault();
+        // CONTRACT.md §10.1 rule 4: the token's tenant_id MUST be asserted against the
+        // CONFIGURED tenant. X-Tenant-ID is attacker-controlled, so it can only ever
+        // NARROW which tenant this request asserts (checked against the verified claim
+        // below) — it can never substitute for, or widen beyond, the tenant this app was
+        // configured with. Letting the header pick the expected value would make the
+        // whole check vacuous: an attacker would present a token for tenant B alongside
+        // `X-Tenant-ID: B` and be compared against himself.
+        string tenantId = optionsAccessor.Value.DefaultTenantId; // never a silent default (§5)
         if (string.IsNullOrWhiteSpace(tenantId))
         {
-            tenantId = optionsAccessor.Value.DefaultTenantId; // never a silent default (§5)
-        }
-
-        if (string.IsNullOrWhiteSpace(tenantId))
-        {
+            // No configured tenant to compare against — §10.1 rule 4 fails closed.
             await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "no tenant available").ConfigureAwait(false);
             return;
         }
@@ -149,6 +152,22 @@ public sealed class AxiamAuthMiddleware
             {
                 await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "invalid or expired token").ConfigureAwait(false);
                 return;
+            }
+
+            // The header, when supplied, narrows: it must agree with the token's own
+            // verified tenant_id claim (which VerifyAsync has already asserted equals the
+            // configured tenant). Absent the header, that assertion alone is sufficient.
+            string? requestedTenant = context.Request.Headers[TenantHeaderName].FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(requestedTenant))
+            {
+                string? claimedTenant = claims.Value.TryGetProperty("tenant_id", out JsonElement claimedEl)
+                    ? claimedEl.GetString()
+                    : null;
+                if (requestedTenant != claimedTenant)
+                {
+                    await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "invalid or expired token").ConfigureAwait(false);
+                    return;
+                }
             }
 
             string? userId = claims.Value.TryGetProperty("sub", out JsonElement subEl) ? subEl.GetString() : null;

@@ -23,10 +23,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     authoritative implementation rather than two subsets that each look complete alone.
   - **`nbf` is now honoured.** The claim was never read, so a token was accepted before
     its validity window opened.
+  - **The `X-Tenant-ID` request header could OVERRIDE the configured tenant.**
+    `AxiamAuthMiddleware` read `X-Tenant-ID` first and only fell back to
+    `AxiamOptions.DefaultTenantId`, then verified the token against *that*. Because the
+    header is attacker-controlled, presenting a token for tenant B alongside
+    `X-Tenant-ID: B` compared the token against itself — a vacuous check that admitted
+    any tenant's token to an app configured for a different one, and then injected the
+    attacker's tenant into `HttpContext.User`. §10.1 rule 4 requires the assertion be
+    made against the **configured** tenant. The header now only *narrows*: when present
+    it must agree with the verified claim, and it can never select which tenant is
+    expected.
 
   Tokens minted by the AXIAM server are unaffected — they always carry `exp` and never a
   future `nbf`. A guard fed tokens from **another signer sharing the organization-wide
-  JWKS** may start rejecting what it previously accepted. That is the intent.
+  JWKS** — or an application relying on `X-Tenant-ID` to serve multiple tenants from one
+  configured client — may start rejecting what it previously accepted. That is the intent.
 
 ### Added
 
