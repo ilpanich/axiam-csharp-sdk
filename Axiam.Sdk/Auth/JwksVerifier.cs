@@ -19,38 +19,78 @@ namespace Axiam.Sdk.Auth;
 /// verify-only crypto dependency D-02 permits.
 /// </summary>
 /// <remarks>
-/// Security-critical invariants (T-21-06, T-21-07):
-/// <list type="bullet">
-/// <item>
-/// <description>
-/// <c>alg</c> is pinned to <c>"EdDSA"</c> and checked BEFORE any key (<c>kid</c>) lookup —
-/// the token's own header is never trusted to select its verifier (alg-confusion
-/// defense).
-/// </description>
-/// </item>
-/// <item>
-/// <description>
-/// AFTER signature verification succeeds, the <c>tenant_id</c> claim is checked against
-/// the caller-supplied expected tenant. The JWKS document is organization-wide, not
-/// tenant-scoped, so a valid signature alone never implies tenant authorization
-/// (Pitfall 3 — independently confirmed by every sibling SDK).
-/// </description>
-/// </item>
-/// <item>
-/// <description>
-/// <see cref="VerifyAsync"/> NEVER throws for attacker-controlled input — every failure
-/// mode (bad alg, unknown kid, tampered/invalid signature, wrong tenant, expired token,
-/// malformed/non-base64/truncated token) returns <c>null</c>. This matches the AMQP
-/// HMAC verifier's fail-closed convention (<c>Amqp/Hmac.cs</c>).
-/// </description>
-/// </item>
+/// <para>
+/// <see cref="VerifyAsync"/> applies the COMPLETE CONTRACT.md &#167;10.1 "minimum
+/// local-verification set", every rule of which fails closed. This SDK uses NO JWT
+/// library: there is no <c>System.IdentityModel.Tokens.Jwt</c>,
+/// <c>JwtSecurityTokenHandler</c> or <c>TokenValidationParameters</c> anywhere in the
+/// dependency graph (.NET ships no Ed25519 primitive, so the JOSE processing is
+/// hand-rolled over BouncyCastle). Every rule below is therefore enforced explicitly
+/// here rather than delegated to a library whose defaults would need auditing.
+/// </para>
+/// <list type="number">
+/// <item><description>
+/// <b>signature</b> — <c>alg</c> is pinned to <c>"EdDSA"</c> and checked BEFORE any key
+/// (<c>kid</c>) lookup, so <c>alg: none</c> and HS-family confusion are rejected without
+/// ever consulting a key. The token's own header never selects its verifier.
+/// </description></item>
+/// <item><description>
+/// <b><c>exp</c> — REQUIRED.</b> A token carrying no <c>exp</c>, or an <c>exp</c> that is
+/// not a JSON number, is rejected. An absent <c>exp</c> is a *permanent credential*, never
+/// "no expiry constraint" — treating it as the latter is the <c>SEC-080</c> defect.
+/// </description></item>
+/// <item><description>
+/// <b><c>nbf</c></b> — honoured when present; an <c>nbf</c> in the future is rejected. An
+/// absent <c>nbf</c> is valid.
+/// </description></item>
+/// <item><description>
+/// <b><c>tenant_id</c> — REQUIRED and asserted</b> against the caller-supplied expected
+/// tenant, AFTER signature verification succeeds. An absent claim, or an empty expected
+/// tenant, fails closed. The JWKS document is organization-wide, not tenant-scoped, so a
+/// valid signature alone never implies tenant authorization (Pitfall 3 — independently
+/// confirmed by every sibling SDK).
+/// </description></item>
+/// <item><description>
+/// <b><c>iss</c></b> — checked only when this verifier was constructed with an expected
+/// issuer (see <see cref="Options.AxiamClientOptions.ExpectedIssuer"/>). Unset by default.
+/// </description></item>
+/// <item><description>
+/// <b><c>aud</c></b> — checked only when this verifier was constructed with an expected
+/// audience (see <see cref="Options.AxiamClientOptions.ExpectedAudience"/>). Unset by
+/// default. Accepts the single-string and array forms RFC 7519 permits.
+/// </description></item>
+/// <item><description>
+/// <b>clock skew</b> — <see cref="ClockSkewLeeway"/>, a named 60-second constant applied
+/// to rules 2 and 3. It is deliberately NOT operator-configurable.
+/// </description></item>
 /// </list>
+/// <para>
+/// <see cref="VerifyAsync"/> NEVER throws for attacker-controlled input — every failure
+/// mode (bad alg, unknown kid, tampered/invalid signature, wrong tenant, missing/expired/
+/// non-numeric <c>exp</c>, future <c>nbf</c>, issuer/audience mismatch, malformed/
+/// non-base64/truncated token) returns <c>null</c>. This matches the AMQP HMAC verifier's
+/// fail-closed convention (<c>Amqp/Hmac.cs</c>).
+/// </para>
 /// </remarks>
 public sealed class JwksVerifier
 {
+    /// <summary>
+    /// The single, named, bounded clock-skew allowance applied to the <c>exp</c> and
+    /// <c>nbf</c> checks (CONTRACT.md &#167;10.1 rule 7 — RECOMMENDED 60 s).
+    /// </summary>
+    /// <remarks>
+    /// Deliberately a <c>const</c> and not an option: &#167;10.1 requires the leeway be
+    /// "a named constant, not an inline literal" and forbids it being
+    /// "operator-configurable to an unbounded value". Exposing it as a knob is the exact
+    /// failure mode the rule exists to prevent.
+    /// </remarks>
+    public static readonly TimeSpan ClockSkewLeeway = TimeSpan.FromSeconds(60);
+
     private readonly HttpClient _http;
     private readonly Uri _jwksUri;
     private readonly TimeSpan _cacheTtl;
+    private readonly string? _expectedIssuer;
+    private readonly string? _expectedAudience;
 
     private Dictionary<string, byte[]> _keysByKid = new();
     private DateTimeOffset _fetchedAt = DateTimeOffset.MinValue;
@@ -69,8 +109,26 @@ public sealed class JwksVerifier
     /// <param name="httpClient">Used only to fetch the JWKS document; ownership stays with the caller.</param>
     /// <param name="baseUrl">The AXIAM server base URL; the JWKS path is resolved relative to it.</param>
     /// <param name="cacheTtl">How long a fetched JWKS document is trusted before a refetch is forced.</param>
-    public JwksVerifier(HttpClient httpClient, Uri baseUrl, TimeSpan cacheTtl)
-        : this(httpClient, ResolveDefaultJwksUri(baseUrl), cacheTtl, exact: true)
+    /// <param name="expectedIssuer">
+    /// The <c>iss</c> claim value this verifier requires (CONTRACT.md &#167;10.1 rule 5).
+    /// CONDITIONAL: <c>null</c>/empty (the default) means no issuer check is performed at
+    /// all; once supplied, a token whose <c>iss</c> differs — or which carries no
+    /// <c>iss</c> — is rejected. There is no default value and no hardcoded AXIAM issuer.
+    /// </param>
+    /// <param name="expectedAudience">
+    /// The <c>aud</c> value this verifier requires (CONTRACT.md &#167;10.1 rule 6).
+    /// CONDITIONAL: <c>null</c>/empty (the default) means no audience check is performed at
+    /// all; once supplied, a token whose <c>aud</c> does not contain it — including a token
+    /// with no <c>aud</c> at all — is rejected. A verifier fronting a user-facing resource
+    /// server should generally expect <c>axiam:user</c>.
+    /// </param>
+    public JwksVerifier(
+        HttpClient httpClient,
+        Uri baseUrl,
+        TimeSpan cacheTtl,
+        string? expectedIssuer = null,
+        string? expectedAudience = null)
+        : this(httpClient, ResolveDefaultJwksUri(baseUrl), cacheTtl, exact: true, expectedIssuer, expectedAudience)
     {
     }
 
@@ -87,11 +145,21 @@ public sealed class JwksVerifier
     internal static JwksVerifier ForJwksUri(HttpClient httpClient, Uri jwksUri, TimeSpan cacheTtl) =>
         new(httpClient, jwksUri, cacheTtl, exact: true);
 
-    private JwksVerifier(HttpClient httpClient, Uri jwksUri, TimeSpan cacheTtl, bool exact)
+    private JwksVerifier(
+        HttpClient httpClient,
+        Uri jwksUri,
+        TimeSpan cacheTtl,
+        bool exact,
+        string? expectedIssuer = null,
+        string? expectedAudience = null)
     {
         _http = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         _jwksUri = jwksUri ?? throw new ArgumentNullException(nameof(jwksUri));
         _cacheTtl = cacheTtl;
+        // Normalize "" to null so an empty configuration value can never be mistaken for
+        // "expect the empty string" — it means "not configured, so not checked".
+        _expectedIssuer = string.IsNullOrWhiteSpace(expectedIssuer) ? null : expectedIssuer;
+        _expectedAudience = string.IsNullOrWhiteSpace(expectedAudience) ? null : expectedAudience;
     }
 
     // NOT /.well-known/jwks.json — AXIAM does not serve that path
@@ -103,11 +171,15 @@ public sealed class JwksVerifier
     }
 
     /// <summary>
-    /// Verifies <paramref name="jwt"/>'s EdDSA signature against the cached (or freshly
-    /// fetched) org-wide JWKS AND checks the mandatory <c>tenant_id</c> claim against
-    /// <paramref name="expectedTenantId"/>. Returns the decoded claims payload on success;
-    /// returns <c>null</c> for ANY failure. Never throws on malformed or attacker-controlled
-    /// input — see the type-level remarks for the fail-closed contract.
+    /// Verifies <paramref name="jwt"/> against the COMPLETE CONTRACT.md &#167;10.1 minimum
+    /// local-verification set: EdDSA-pinned signature against the cached (or freshly
+    /// fetched) org-wide JWKS, a REQUIRED <c>exp</c>, an <c>nbf</c> honoured when present,
+    /// a mandatory <c>tenant_id</c> asserted against <paramref name="expectedTenantId"/>,
+    /// and the conditional <c>iss</c>/<c>aud</c> checks when this verifier was configured
+    /// with an expectation — all under <see cref="ClockSkewLeeway"/>.
+    /// Returns the decoded claims payload on success; returns <c>null</c> for ANY failure.
+    /// Never throws on malformed or attacker-controlled input — see the type-level remarks
+    /// for the fail-closed contract.
     /// </summary>
     public async Task<JsonElement?> VerifyAsync(string jwt, string expectedTenantId, CancellationToken cancellationToken = default)
     {
@@ -158,24 +230,7 @@ public sealed class JwksVerifier
             using JsonDocument payload = JsonDocument.Parse(payloadJson);
             JsonElement claims = payload.RootElement.Clone();
 
-            // Mandatory cross-tenant check, performed AFTER signature verification
-            // succeeds — a valid org-wide JWKS signature alone never authorizes a
-            // specific tenant (T-21-07, Pitfall 3).
-            if (!claims.TryGetProperty("tenant_id", out JsonElement tenantEl) ||
-                tenantEl.ValueKind != JsonValueKind.String ||
-                tenantEl.GetString() != expectedTenantId)
-            {
-                return null;
-            }
-
-            if (claims.TryGetProperty("exp", out JsonElement expEl) &&
-                expEl.TryGetInt64(out long expSeconds) &&
-                DateTimeOffset.FromUnixTimeSeconds(expSeconds) < DateTimeOffset.UtcNow)
-            {
-                return null; // expired — caller falls back to the reactive refresh path
-            }
-
-            return claims;
+            return ApplyClaimPolicy(claims, expectedTenantId) ? claims : null;
         }
         catch
         {
@@ -275,6 +330,144 @@ public sealed class JwksVerifier
             // code, and a token this class cannot even parse was never validly signed).
             return (null, OidcSignatureFailure.InvalidSignature);
         }
+    }
+
+    /// <summary>
+    /// Applies CONTRACT.md &#167;10.1 rules 2&#8211;7 to already signature-verified claims
+    /// (rule 1 is the alg pin, enforced before any key lookup). Returns <c>false</c> —
+    /// meaning REJECT — for every failure.
+    /// </summary>
+    /// <remarks>
+    /// Every rule fails closed. A required claim that is absent, unparseable, or of the
+    /// wrong JSON type is a rejection; "the claim was missing so there was nothing to
+    /// check" is never treated as success. That conflation is precisely the
+    /// <c>SEC-080</c> defect this method exists to prevent.
+    /// </remarks>
+    private bool ApplyClaimPolicy(JsonElement claims, string expectedTenantId)
+    {
+        // Rule 4 — tenant_id: REQUIRED and asserted, AFTER signature verification
+        // succeeds. A valid org-wide JWKS signature alone never authorizes a specific
+        // tenant (T-21-07, Pitfall 3). An empty expected tenant is already rejected by
+        // VerifyAsync's guard clause, so there is never "nothing to compare against".
+        if (!claims.TryGetProperty("tenant_id", out JsonElement tenantEl) ||
+            tenantEl.ValueKind != JsonValueKind.String ||
+            tenantEl.GetString() != expectedTenantId)
+        {
+            return false;
+        }
+
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+
+        // Rule 2 — exp: REQUIRED. Absent, or present but not a JSON number, is a
+        // rejection. An absent exp is a permanent credential, not an absent constraint.
+        if (!TryReadNumericDate(claims, "exp", out DateTimeOffset expiresAt))
+        {
+            return false;
+        }
+        if (expiresAt <= now - ClockSkewLeeway)
+        {
+            return false; // expired — caller falls back to the reactive refresh path
+        }
+
+        // Rule 3 — nbf: honoured when present, absent is valid. Present-but-malformed is
+        // still a rejection (wrong JSON type ⇒ reject), which is why the "absent" and
+        // "unparseable" cases are distinguished here rather than collapsed.
+        if (claims.TryGetProperty("nbf", out JsonElement nbfEl) && nbfEl.ValueKind != JsonValueKind.Null)
+        {
+            if (!TryReadNumericDate(claims, "nbf", out DateTimeOffset notBefore))
+            {
+                return false;
+            }
+            if (notBefore > now + ClockSkewLeeway)
+            {
+                return false; // not valid yet
+            }
+        }
+
+        // Rule 5 — iss: checked ONLY when an expected issuer was configured.
+        if (_expectedIssuer is not null)
+        {
+            if (!claims.TryGetProperty("iss", out JsonElement issEl) ||
+                issEl.ValueKind != JsonValueKind.String ||
+                issEl.GetString() != _expectedIssuer)
+            {
+                return false;
+            }
+        }
+
+        // Rule 6 — aud: checked ONLY when an expected audience was configured. RFC 7519
+        // §4.1.3 permits a single string or an array of strings; an absent aud can never
+        // contain the expectation, so it fails closed without a special case.
+        if (_expectedAudience is not null && !AudienceContains(claims, _expectedAudience))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Reads an RFC 7519 NumericDate claim ("A JSON numeric value"). Returns <c>false</c>
+    /// when the claim is absent, JSON null, or of any JSON type other than a number — a
+    /// quoted <c>"1700000000"</c> is a JSON string, not a NumericDate, and is rejected
+    /// rather than coerced.
+    /// </summary>
+    private static bool TryReadNumericDate(JsonElement claims, string name, out DateTimeOffset value)
+    {
+        value = default;
+        if (!claims.TryGetProperty(name, out JsonElement el) || el.ValueKind != JsonValueKind.Number)
+        {
+            return false;
+        }
+
+        // TryGetInt64 rejects a fractional NumericDate, which RFC 7519 permits; fall back
+        // to the double form and truncate, the same rounding every sibling SDK applies.
+        if (el.TryGetInt64(out long seconds))
+        {
+            value = DateTimeOffset.FromUnixTimeSeconds(seconds);
+            return true;
+        }
+        if (el.TryGetDouble(out double fractional) &&
+            !double.IsNaN(fractional) &&
+            !double.IsInfinity(fractional) &&
+            fractional >= -62135596800d &&
+            fractional <= 253402300799d)
+        {
+            value = DateTimeOffset.FromUnixTimeSeconds((long)fractional);
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Whether the token's <c>aud</c> claim contains <paramref name="expected"/>, honouring
+    /// both RFC 7519 shapes (a single string, or an array of strings).
+    /// </summary>
+    private static bool AudienceContains(JsonElement claims, string expected)
+    {
+        if (!claims.TryGetProperty("aud", out JsonElement audEl))
+        {
+            return false;
+        }
+
+        if (audEl.ValueKind == JsonValueKind.String)
+        {
+            return audEl.GetString() == expected;
+        }
+
+        if (audEl.ValueKind == JsonValueKind.Array)
+        {
+            foreach (JsonElement entry in audEl.EnumerateArray())
+            {
+                if (entry.ValueKind == JsonValueKind.String && entry.GetString() == expected)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /// <summary>

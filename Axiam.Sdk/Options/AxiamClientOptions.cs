@@ -66,6 +66,26 @@ public sealed record AxiamClientOptions
     /// forces a refetch.</summary>
     public TimeSpan JwksCacheTtl { get; init; } = TimeSpan.FromMinutes(5);
 
+    /// <summary>
+    /// The <c>iss</c> claim value local token verification requires (CONTRACT.md
+    /// &#167;10.1 rule 5). CONDITIONAL and unset by default: <c>null</c> means no issuer
+    /// check is performed at all; once set, a token whose <c>iss</c> differs &#8212; or
+    /// which carries no <c>iss</c> &#8212; is rejected. There is no default value and no
+    /// hardcoded AXIAM issuer anywhere in this SDK; supply your deployment's own issuer.
+    /// </summary>
+    public string? ExpectedIssuer { get; init; }
+
+    /// <summary>
+    /// The <c>aud</c> value local token verification requires (CONTRACT.md &#167;10.1
+    /// rule 6). CONDITIONAL and unset by default: <c>null</c> means no audience check is
+    /// performed at all; once set, a token whose <c>aud</c> does not contain it &#8212;
+    /// including a token with no <c>aud</c> at all &#8212; is rejected. An application
+    /// guarding a user-facing resource server should generally expect <c>axiam:user</c>;
+    /// it is not defaulted, because a service-to-service guard legitimately expects a
+    /// different audience.
+    /// </summary>
+    public string? ExpectedAudience { get; init; }
+
     /// <summary>TCP connect timeout for the SDK-owned <see cref="System.Net.Http.HttpClient"/>.</summary>
     public TimeSpan ConnectTimeout { get; init; } = TimeSpan.FromSeconds(10);
 

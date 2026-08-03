@@ -100,14 +100,17 @@ public sealed class AxiamAuthMiddleware
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(optionsAccessor);
 
-        string? tenantId = context.Request.Headers[TenantHeaderName].FirstOrDefault();
+        // CONTRACT.md §10.1 rule 4: the token's tenant_id MUST be asserted against the
+        // CONFIGURED tenant. X-Tenant-ID is attacker-controlled, so it can only ever
+        // NARROW which tenant this request asserts (checked against the verified claim
+        // below) — it can never substitute for, or widen beyond, the tenant this app was
+        // configured with. Letting the header pick the expected value would make the
+        // whole check vacuous: an attacker would present a token for tenant B alongside
+        // `X-Tenant-ID: B` and be compared against himself.
+        string tenantId = optionsAccessor.Value.DefaultTenantId; // never a silent default (§5)
         if (string.IsNullOrWhiteSpace(tenantId))
         {
-            tenantId = optionsAccessor.Value.DefaultTenantId; // never a silent default (§5)
-        }
-
-        if (string.IsNullOrWhiteSpace(tenantId))
-        {
+            // No configured tenant to compare against — §10.1 rule 4 fails closed.
             await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "no tenant available").ConfigureAwait(false);
             return;
         }
@@ -130,27 +133,41 @@ public sealed class AxiamAuthMiddleware
 
         try
         {
+            // The COMPLETE CONTRACT.md §10.1 minimum local-verification set, in one
+            // call: EdDSA-pinned signature (checked before any key lookup), a REQUIRED
+            // exp, an nbf honoured when present, an asserted tenant_id, the conditional
+            // iss/aud checks, and a bounded 60 s clock skew. VerifyAsync fails closed on
+            // every one of them and returns null; it never throws on
+            // attacker-controlled input.
+            //
+            // This middleware deliberately does NOT re-implement any subset of those
+            // checks itself. A previous "defense-in-depth" exp re-check lived here and
+            // was, like the verifier's own check at the time, conditional on the claim
+            // being PRESENT — so it re-derived the same SEC-080 blind spot instead of
+            // catching it. Two partial checks are not a deeper defense; they are two
+            // subsets that each look complete in isolation. One authoritative
+            // implementation, exercised by the §10.1 negative-test set, is the control.
             JsonElement? claims = await client.JwksVerifier.VerifyAsync(token, tenantId, context.RequestAborted).ConfigureAwait(false);
             if (claims is null)
             {
-                // Covers bad alg, unknown kid, tampered signature, wrong tenant_id
-                // (Pitfall 3), and already-expired tokens — VerifyAsync fails closed on
-                // all of these and returns null; never throws on attacker-controlled
-                // input.
                 await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "invalid or expired token").ConfigureAwait(false);
                 return;
             }
 
-            // Defense-in-depth explicit exp re-check (Java filter lines 88-91) even
-            // though VerifyAsync already checked exp above — the resource-server trust
-            // boundary must never trust an expired token even if some future refactor
-            // of the verifier relaxed its own internal check.
-            if (claims.Value.TryGetProperty("exp", out JsonElement expEl) &&
-                expEl.TryGetInt64(out long expSeconds) &&
-                DateTimeOffset.FromUnixTimeSeconds(expSeconds) < DateTimeOffset.UtcNow)
+            // The header, when supplied, narrows: it must agree with the token's own
+            // verified tenant_id claim (which VerifyAsync has already asserted equals the
+            // configured tenant). Absent the header, that assertion alone is sufficient.
+            string? requestedTenant = context.Request.Headers[TenantHeaderName].FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(requestedTenant))
             {
-                await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "token expired").ConfigureAwait(false);
-                return;
+                string? claimedTenant = claims.Value.TryGetProperty("tenant_id", out JsonElement claimedEl)
+                    ? claimedEl.GetString()
+                    : null;
+                if (requestedTenant != claimedTenant)
+                {
+                    await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "invalid or expired token").ConfigureAwait(false);
+                    return;
+                }
             }
 
             string? userId = claims.Value.TryGetProperty("sub", out JsonElement subEl) ? subEl.GetString() : null;

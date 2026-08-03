@@ -7,9 +7,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- **BREAKING (acceptance tightened).** Align local token verification with the new
+  normative CONTRACT.md §10.1 "minimum local-verification set". Two of the seven rules
+  were not enforced by `JwksVerifier.VerifyAsync`:
+  - **`exp` is now REQUIRED.** The old check read
+    `if (claims.TryGetProperty("exp", …) && expEl.TryGetInt64(…) && expired)` — so a
+    token carrying **no** `exp` at all failed the first conjunct and was admitted, and a
+    token whose `exp` was a JSON *string* failed the second and was also admitted. Both
+    are permanent credentials. This is the `SEC-080` defect verbatim, and it appeared
+    twice: `AxiamAuthMiddleware` carried a "defense-in-depth" `exp` re-check written to
+    the same shape, so it re-derived the same blind spot instead of catching it. That
+    duplicate check has been removed — the guard now routes through the single
+    authoritative implementation rather than two subsets that each look complete alone.
+  - **`nbf` is now honoured.** The claim was never read, so a token was accepted before
+    its validity window opened.
+  - **The `X-Tenant-ID` request header could OVERRIDE the configured tenant.**
+    `AxiamAuthMiddleware` read `X-Tenant-ID` first and only fell back to
+    `AxiamOptions.DefaultTenantId`, then verified the token against *that*. Because the
+    header is attacker-controlled, presenting a token for tenant B alongside
+    `X-Tenant-ID: B` compared the token against itself — a vacuous check that admitted
+    any tenant's token to an app configured for a different one, and then injected the
+    attacker's tenant into `HttpContext.User`. §10.1 rule 4 requires the assertion be
+    made against the **configured** tenant. The header now only *narrows*: when present
+    it must agree with the verified claim, and it can never select which tenant is
+    expected.
+
+  Tokens minted by the AXIAM server are unaffected — they always carry `exp` and never a
+  future `nbf`. A guard fed tokens from **another signer sharing the organization-wide
+  JWKS** — or an application relying on `X-Tenant-ID` to serve multiple tenants from one
+  configured client — may start rejecting what it previously accepted. That is the intent.
+
 ### Added
 
+- Add `AxiamOptions.ExpectedIssuer` / `AxiamOptions.ExpectedAudience` (and the
+  corresponding `AxiamClientOptions` properties, plus optional `JwksVerifier`
+  constructor parameters) — the CONTRACT.md §10.1 rule 5/rule 6 checks. Both are
+  **conditional and default to unset**: with no expectation configured no check is
+  performed, and once configured a mismatching — or absent — claim is rejected. No
+  issuer or audience is hardcoded anywhere in this SDK; an app guarding a user-facing
+  resource server should generally expect `axiam:user`. `aud` accepts both the
+  single-string and array forms RFC 7519 permits.
+- Add `JwksVerifier.ClockSkewLeeway` — the named, bounded 60-second clock-skew constant
+  applied to the `exp`/`nbf` checks (§10.1 rule 7). It is a `static readonly` constant
+  and is deliberately not operator-configurable.
+- Add the complete §10.1 required negative-test set
+  (`tests/Axiam.Sdk.Tests/Contract101LocalVerificationTests.cs`, 26 cases): expired; no
+  `exp`; non-numeric `exp`; numeric-*string* `exp`; null `exp`; future `nbf`; malformed
+  `nbf`; different tenant; no `tenant_id`; no configured tenant; `alg: none`; a real
+  HS256-signed token bearing an EdDSA key id; and issuer/audience mismatch and
+  absent-claim cases. Two of them are additionally asserted end to end through the real
+  ASP.NET Core pipeline in `AspNetCoreMiddlewareTests`, proving the guard routes through
+  the full set rather than a subset of its own.
 - Add webhook signature verifier `Axiam.Sdk.Webhooks.AxiamWebhooks.Verify` (CONTRACT.md §13, T-145)
+
+### Changed
+
+- Re-sync the vendored `CONTRACT.md` with the new normative §10.1.
+
+### Notes
+
+- This SDK uses **no JWT library** — there is no `System.IdentityModel.Tokens.Jwt`,
+  `JwtSecurityTokenHandler`, or `TokenValidationParameters` in its dependency graph
+  (.NET ships no Ed25519 primitive, so JOSE processing is hand-rolled over
+  BouncyCastle). No library default was relied on, and none was changed; every §10.1
+  rule is enforced explicitly in `JwksVerifier`.
 
 ## [1.0.0-alpha23] - 2026-08-02
 

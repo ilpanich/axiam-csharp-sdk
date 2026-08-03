@@ -95,6 +95,8 @@ public static class ServiceCollectionExtensions
             ClientCertificatePem = options.ClientCertificatePem,
             ClientKeyPem = options.ClientKeyPem,
             JwksCacheTtl = options.JwksCacheTtl,
+            ExpectedIssuer = options.ExpectedIssuer,
+            ExpectedAudience = options.ExpectedAudience,
             OidcClientId = options.OidcClientId,
             OidcClientSecret = options.OidcClientSecret,
             OidcDiscoveryTtl = options.OidcDiscoveryTtl,
