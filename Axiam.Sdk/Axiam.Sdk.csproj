@@ -51,7 +51,7 @@
     "fix" this to a native-only path.
   -->
   <ItemGroup>
-    <PackageReference Include="Grpc.Net.Client" Version="2.80.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.83.0" />
     <!-- D-08/27-03 fix: 2.80.0 does not exist for Google.Protobuf (that numbering
          belongs to Grpc.Net.Client/gRPC-C# releases, not the protobuf runtime, which
          is on the 3.x line) — NuGet was silently floor-resolving it to 3.0.0, an old
@@ -62,7 +62,7 @@
          consistency. -->
     <PackageReference Include="Google.Protobuf" Version="3.35.1" />
     <PackageReference Include="RabbitMQ.Client" Version="7.2.1" />
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.10" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
     <PackageReference Include="Grpc.Tools" Version="2.83.0">
