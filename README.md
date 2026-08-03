@@ -17,13 +17,13 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to CONTRACT.md §1–§12 (including §6.1 mTLS client certificates, the
-§1.1 gRPC-only `get_user_info` operation, contract 1.3, and the §12 OIDC/SSO
-relying-party helpers, contract 1.4).
+This SDK conforms to CONTRACT.md §1–§13 (including §6.1 mTLS client certificates, the
+§1.1 gRPC-only `get_user_info` operation, contract 1.3, the §12 OIDC/SSO
+relying-party helpers, contract 1.4, and the §13 webhook signature verifier, T-145).
 
 See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract.
 
-### §1–§12 conformance checklist
+### §1–§13 conformance checklist
 
 | § | Requirement | Where implemented |
 |---|---|---|
@@ -41,6 +41,7 @@ See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract
 | §10 | `app.UseMiddleware<AxiamAuthMiddleware>()` + `ClaimsPrincipal` injection + policy-based `[Authorize]` | `Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
 | §11 | Declarative `[AxiamAccess(action, resource)]` authorization attribute with scope + route-param resolution; `require_auth`/`require_role` as framework-native `[Authorize]`/`[Authorize(Roles = ...)]` | `Axiam.Sdk.AspNetCore/AxiamAccessAttribute.cs`, `AxiamRequirement.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
 | §12 | OIDC/SSO relying-party helpers: `OidcDiscoverAsync`/`OidcBegin`/`OidcExchangeAsync`/`OidcRefreshAsync`/`LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync`/`SsoStartAsync`/`SsoCompleteAsync`; `MapAxiamOidcLogin` ASP.NET Core glue | `AxiamClient.Oidc.cs`, `Auth/Oidc/*.cs`, `Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs` |
+| §13 | Webhook signature verifier: HMAC-SHA256 over `<t>.<raw_body>`, `CryptographicOperations.FixedTimeEquals` constant-time compare on decoded bytes, two-sided 300s default freshness tolerance, `TimeProvider` injection seam, fail-closed on malformed/tampered input | `Webhooks/AxiamWebhooks.cs`, `Webhooks/WebhookEvent.cs`, `Webhooks/WebhookVerificationException.cs` |
 
 ## Declarative authorization helpers (CONTRACT.md §11)
 
@@ -308,6 +309,68 @@ Notes:
   serialized, or exposed via a public getter beyond the options object it is set on.
 - On `Axiam.Sdk.AspNetCore`, the same two properties exist on `AxiamOptions` and flow
   through to the shared `AxiamClient`.
+
+## Webhook signature verification (CONTRACT.md §13)
+
+AXIAM signs every webhook delivery with a Stripe-style signed timestamp in the
+`X-Axiam-Signature` header (`t=<unix_seconds>,v1=<hex_hmac_sha256>`). Verify it with
+`Axiam.Sdk.Webhooks.AxiamWebhooks.Verify` before doing anything with the payload:
+
+```csharp
+using Axiam.Sdk.Core;
+using Axiam.Sdk.Webhooks;
+
+// ASP.NET Core minimal API receiver. EnableBuffering (or reading Request.Body directly,
+// as below, before any model binder touches it) is required — the verifier needs the
+// EXACT raw bytes that were received off the wire. Re-serializing a parsed JSON body
+// changes key order/whitespace and breaks the signature.
+app.MapPost("/webhooks/axiam", async (HttpRequest request) =>
+{
+    using var reader = new MemoryStream();
+    await request.Body.CopyToAsync(reader);
+    byte[] rawBody = reader.ToArray();
+
+    string signatureHeader = request.Headers["X-Axiam-Signature"].ToString();
+    Sensitive<string> webhookSecret = Sensitive<string>.Wrap(configuredWebhookSecret);
+
+    WebhookEvent evt;
+    try
+    {
+        evt = AxiamWebhooks.Verify(webhookSecret, signatureHeader, rawBody);
+    }
+    catch (WebhookVerificationException)
+    {
+        return Results.Unauthorized(); // invalid/stale/malformed signature — never inspect rawBody further
+    }
+
+    // evt.DeliveryId is the at-least-once dedup key (X-Axiam-Delivery) — keep a
+    // short-lived seen-set, since a retry replays a valid signature within the
+    // freshness window.
+    return Results.Ok();
+});
+```
+
+Notes:
+
+- **Raw body only.** `Verify` MUST receive the exact bytes AXIAM sent — never a
+  re-serialized/re-parsed JSON round-trip, which changes key order/whitespace and breaks
+  the MAC. In ASP.NET Core, either call `HttpRequest.EnableBuffering()` before any
+  middleware/model binder reads the body, or read `Request.Body` directly (as above)
+  ahead of MVC model binding.
+- **Constant-time, decoded-bytes comparison.** Uses
+  `System.Security.Cryptography.HMACSHA256` plus `CryptographicOperations.FixedTimeEquals`
+  over the *decoded* MAC bytes — never a hex-string `==` comparison, and a failed hex
+  decode fails closed rather than throwing.
+- **Two-sided freshness.** The default 300-second `tolerance` rejects a stale `t=` *and*
+  a future-dated one (clock-skew abuse); pass a `TimeSpan` to override it, and a
+  `TimeProvider` to make "now" deterministic in tests.
+- **Fail closed and quiet.** Every failure — malformed header, no `v1`, tampered body,
+  wrong secret, timestamp outside tolerance — throws the single
+  `WebhookVerificationException`, whose message never contains the expected signature;
+  the secret is never logged.
+- **Dedup is the receiver's job.** `X-Axiam-Delivery` (surfaced as `WebhookEvent.DeliveryId`
+  when present in the body) is the at-least-once dedup key — retries replay a valid
+  signature inside the freshness window.
 
 ## Grpc.Tools exception
 
