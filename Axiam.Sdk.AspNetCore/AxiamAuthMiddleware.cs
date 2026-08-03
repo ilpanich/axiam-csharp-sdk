@@ -130,26 +130,24 @@ public sealed class AxiamAuthMiddleware
 
         try
         {
+            // The COMPLETE CONTRACT.md §10.1 minimum local-verification set, in one
+            // call: EdDSA-pinned signature (checked before any key lookup), a REQUIRED
+            // exp, an nbf honoured when present, an asserted tenant_id, the conditional
+            // iss/aud checks, and a bounded 60 s clock skew. VerifyAsync fails closed on
+            // every one of them and returns null; it never throws on
+            // attacker-controlled input.
+            //
+            // This middleware deliberately does NOT re-implement any subset of those
+            // checks itself. A previous "defense-in-depth" exp re-check lived here and
+            // was, like the verifier's own check at the time, conditional on the claim
+            // being PRESENT — so it re-derived the same SEC-080 blind spot instead of
+            // catching it. Two partial checks are not a deeper defense; they are two
+            // subsets that each look complete in isolation. One authoritative
+            // implementation, exercised by the §10.1 negative-test set, is the control.
             JsonElement? claims = await client.JwksVerifier.VerifyAsync(token, tenantId, context.RequestAborted).ConfigureAwait(false);
             if (claims is null)
             {
-                // Covers bad alg, unknown kid, tampered signature, wrong tenant_id
-                // (Pitfall 3), and already-expired tokens — VerifyAsync fails closed on
-                // all of these and returns null; never throws on attacker-controlled
-                // input.
                 await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "invalid or expired token").ConfigureAwait(false);
-                return;
-            }
-
-            // Defense-in-depth explicit exp re-check (Java filter lines 88-91) even
-            // though VerifyAsync already checked exp above — the resource-server trust
-            // boundary must never trust an expired token even if some future refactor
-            // of the verifier relaxed its own internal check.
-            if (claims.Value.TryGetProperty("exp", out JsonElement expEl) &&
-                expEl.TryGetInt64(out long expSeconds) &&
-                DateTimeOffset.FromUnixTimeSeconds(expSeconds) < DateTimeOffset.UtcNow)
-            {
-                await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "token expired").ConfigureAwait(false);
                 return;
             }
 

@@ -67,6 +67,27 @@ public sealed class AxiamOptions
     public TimeSpan JwksCacheTtl { get; set; } = TimeSpan.FromMinutes(5);
 
     /// <summary>
+    /// The <c>iss</c> claim value <see cref="AxiamAuthMiddleware"/>'s local verification
+    /// requires (CONTRACT.md &#167;10.1 rule 5). CONDITIONAL and unset by default:
+    /// <c>null</c> means no issuer check is performed at all; once set, a token whose
+    /// <c>iss</c> differs &#8212; or which carries no <c>iss</c> &#8212; is rejected.
+    /// Passed straight through to the underlying <c>AxiamClient</c>. There is no default
+    /// value and no hardcoded AXIAM issuer anywhere in this SDK.
+    /// </summary>
+    public string? ExpectedIssuer { get; set; }
+
+    /// <summary>
+    /// The <c>aud</c> value <see cref="AxiamAuthMiddleware"/>'s local verification
+    /// requires (CONTRACT.md &#167;10.1 rule 6). CONDITIONAL and unset by default:
+    /// <c>null</c> means no audience check is performed at all; once set, a token whose
+    /// <c>aud</c> does not contain it &#8212; including a token with no <c>aud</c> at all
+    /// &#8212; is rejected. An app guarding a user-facing resource server should
+    /// generally set <c>axiam:user</c>; it is not defaulted, because a service-to-service
+    /// guard legitimately expects a different audience.
+    /// </summary>
+    public string? ExpectedAudience { get; set; }
+
+    /// <summary>
     /// The relying party's OAuth2 <c>client_id</c> (CONTRACT.md &#167;12.1), passed
     /// through to the underlying <c>AxiamClient</c>. Required before calling any &#167;12
     /// OIDC operation other than <c>OidcDiscoverAsync</c> — including the

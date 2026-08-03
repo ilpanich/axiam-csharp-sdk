@@ -109,7 +109,12 @@ public sealed partial class AxiamClient : IDisposable
             Timeout = _options.RequestTimeout,
         };
 
-        _jwksVerifier = new JwksVerifier(_httpClient, _baseUrl, _options.JwksCacheTtl);
+        _jwksVerifier = new JwksVerifier(
+            _httpClient,
+            _baseUrl,
+            _options.JwksCacheTtl,
+            _options.ExpectedIssuer,
+            _options.ExpectedAudience);
         _authz = new AuthzRestClient(_httpClient);
 
         // CONTRACT.md §12 — initializes the OidcClientId/OidcClientSecret/discovery-TTL/

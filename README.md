@@ -39,9 +39,49 @@ See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract
 | §8 | AMQP HMAC-SHA256 verify-before-handler, constant-time compare, NEW-4 replay protection (`key_version`/`nonce`/`issued_at`) | `Amqp/Hmac.cs`, `Amqp/AxiamAmqpConsumer.cs`, `Amqp/ReplayGuard.cs` |
 | §9 | `SemaphoreSlim(1,1)` single-flight refresh, one guard across REST + gRPC | `Auth/RefreshGuard.cs` (shared by `AxiamClient` and `Grpc/AuthInterceptor.cs`) |
 | §10 | `app.UseMiddleware<AxiamAuthMiddleware>()` + `ClaimsPrincipal` injection + policy-based `[Authorize]` | `Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
+| §10.1 | Complete minimum local-verification set: EdDSA-pinned signature (before key lookup), **required** `exp`, honoured `nbf`, asserted `tenant_id`, conditional `iss`/`aud`, named 60s clock skew — all fail-closed | `Auth/JwksVerifier.VerifyAsync`/`ApplyClaimPolicy`, exercised by `tests/Axiam.Sdk.Tests/Contract101LocalVerificationTests.cs` |
 | §11 | Declarative `[AxiamAccess(action, resource)]` authorization attribute with scope + route-param resolution; `require_auth`/`require_role` as framework-native `[Authorize]`/`[Authorize(Roles = ...)]` | `Axiam.Sdk.AspNetCore/AxiamAccessAttribute.cs`, `AxiamRequirement.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
 | §12 | OIDC/SSO relying-party helpers: `OidcDiscoverAsync`/`OidcBegin`/`OidcExchangeAsync`/`OidcRefreshAsync`/`LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync`/`SsoStartAsync`/`SsoCompleteAsync`; `MapAxiamOidcLogin` ASP.NET Core glue | `AxiamClient.Oidc.cs`, `Auth/Oidc/*.cs`, `Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs` |
 | §13 | Webhook signature verifier: HMAC-SHA256 over `<t>.<raw_body>`, `CryptographicOperations.FixedTimeEquals` constant-time compare on decoded bytes, two-sided 300s default freshness tolerance, `TimeProvider` injection seam, fail-closed on malformed/tampered input | `Webhooks/AxiamWebhooks.cs`, `Webhooks/WebhookEvent.cs`, `Webhooks/WebhookVerificationException.cs` |
+
+## Local token verification (CONTRACT.md §10.1)
+
+`AxiamAuthMiddleware` verifies access tokens locally through one implementation,
+`JwksVerifier.VerifyAsync`, which applies the **complete** §10.1 minimum
+local-verification set. Every rule fails closed — a required claim that is absent,
+unparseable, or of the wrong JSON type is a rejection, never a skipped check.
+
+| # | Claim | What the verifier does |
+|---|---|---|
+| 1 | signature | Verified against the org-wide JWKS with `alg` pinned to `EdDSA` **before** any `kid` lookup, so `alg: none` and HS-family confusion are rejected without ever consulting a key. |
+| 2 | `exp` | **Required.** No `exp`, or an `exp` that is not a JSON number, is rejected. An absent `exp` is a permanent credential, not an absent constraint. |
+| 3 | `nbf` | Honoured when present; an `nbf` in the future is rejected. An absent `nbf` is valid. |
+| 4 | `tenant_id` | **Required and asserted** against the configured tenant. An absent claim — or an empty configured tenant — is rejected. The JWKS is organization-wide, so a valid signature alone never bounds a token to a tenant. |
+| 5 | `iss` | Checked **only** when `ExpectedIssuer` is configured. Unset by default. |
+| 6 | `aud` | Checked **only** when `ExpectedAudience` is configured. Unset by default; accepts both the single-string and array forms. |
+| 7 | clock skew | `JwksVerifier.ClockSkewLeeway` — a named 60-second constant applied to rules 2 and 3. Deliberately **not** operator-configurable. |
+
+This SDK uses **no JWT library**: there is no `System.IdentityModel.Tokens.Jwt`,
+`JwtSecurityTokenHandler`, or `TokenValidationParameters` anywhere in the dependency
+graph (.NET ships no Ed25519 primitive, so JOSE processing is hand-rolled over
+BouncyCastle). Every rule above is enforced explicitly rather than inherited from a
+library default.
+
+`iss` and `aud` are conditional and default to unset; no issuer or audience is hardcoded
+anywhere. Configure them when your deployment has an expectation to assert — an app
+guarding a user-facing resource server should generally expect `axiam:user`:
+
+```csharp
+services.AddAxiamAspNetCore(options =>
+{
+    options.BaseUrl = new Uri("https://axiam.example.com");
+    options.DefaultTenantId = "acme";
+
+    // CONDITIONAL (§10.1 rules 5 and 6). Omit either one to skip that check entirely.
+    options.ExpectedIssuer = "https://axiam.example.com";
+    options.ExpectedAudience = "axiam:user";
+});
+```
 
 ## Declarative authorization helpers (CONTRACT.md §11)
 

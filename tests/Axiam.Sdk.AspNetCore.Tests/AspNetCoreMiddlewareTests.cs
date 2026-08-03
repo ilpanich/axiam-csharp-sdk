@@ -83,6 +83,54 @@ public sealed class AspNetCoreMiddlewareTests
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
+    /// <summary>
+    /// CONTRACT.md &#167;10.1 rule 2, end to end through the real ASP.NET Core pipeline: a
+    /// signature-valid, correct-tenant, non-expired token carrying NO <c>exp</c> claim at
+    /// all is a permanent credential and MUST be rejected. This is the <c>SEC-080</c>
+    /// defect, and it is asserted at the GUARD level (not just at the verifier) to prove
+    /// <see cref="AxiamAuthMiddleware"/> genuinely routes through the full &#167;10.1 set
+    /// rather than re-deriving a subset of the checks itself.
+    /// </summary>
+    [Fact]
+    public async Task TokenWithNoExpClaim_ProtectedEndpoint_Returns401()
+    {
+        var fixture = new JwksFixture();
+        var serverHandler = new FakeAxiamServerHandler(fixture.BuildJwksDocument());
+        using IHost host = await CreateHostAsync(serverHandler).ConfigureAwait(false);
+        HttpClient client = host.GetTestClient();
+        string token = fixture.SignIdToken(new { sub = Guid.NewGuid().ToString(), tenant_id = TenantId });
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        HttpResponseMessage response = await client.GetAsync("/protected").ConfigureAwait(false);
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    /// <summary>
+    /// CONTRACT.md &#167;10.1 rule 3, end to end: a token whose <c>nbf</c> is in the
+    /// future must be rejected before its validity window opens.
+    /// </summary>
+    [Fact]
+    public async Task TokenWithFutureNbf_ProtectedEndpoint_Returns401()
+    {
+        var fixture = new JwksFixture();
+        var serverHandler = new FakeAxiamServerHandler(fixture.BuildJwksDocument());
+        using IHost host = await CreateHostAsync(serverHandler).ConfigureAwait(false);
+        HttpClient client = host.GetTestClient();
+        string token = fixture.SignIdToken(new
+        {
+            sub = Guid.NewGuid().ToString(),
+            tenant_id = TenantId,
+            exp = DateTimeOffset.UtcNow.AddMinutes(15).ToUnixTimeSeconds(),
+            nbf = DateTimeOffset.UtcNow.AddHours(2).ToUnixTimeSeconds(),
+        });
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        HttpResponseMessage response = await client.GetAsync("/protected").ConfigureAwait(false);
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
     [Fact]
     public async Task ValidToken_PolicyDeny_Returns403()
     {
