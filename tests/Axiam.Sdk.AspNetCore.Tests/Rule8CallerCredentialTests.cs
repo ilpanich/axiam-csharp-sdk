@@ -2,6 +2,8 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Axiam.Sdk;
 using Axiam.Sdk.AspNetCore.Tests.Fixtures;
@@ -55,7 +57,7 @@ public sealed class Rule8CallerCredentialTests
     public async Task FailedCallerToken_IsRejected_EvenWhenAnotherValidTokenExists()
     {
         var fixture = new JwksFixture();
-        var serverHandler = new FakeAxiamServerHandler(fixture.BuildJwksDocument());
+        var serverHandler = new JwksOnlyServerHandler(fixture.BuildJwksDocument());
         using IHost host = await CreateHostAsync(serverHandler).ConfigureAwait(false);
         HttpClient client = host.GetTestClient();
 
@@ -91,7 +93,7 @@ public sealed class Rule8CallerCredentialTests
         // The positive half. A guard that preferred an ambient credential would pass
         // the negative test above while still being wrong.
         var fixture = new JwksFixture();
-        var serverHandler = new FakeAxiamServerHandler(fixture.BuildJwksDocument());
+        var serverHandler = new JwksOnlyServerHandler(fixture.BuildJwksDocument());
         using IHost host = await CreateHostAsync(serverHandler).ConfigureAwait(false);
         HttpClient client = host.GetTestClient();
 
@@ -115,7 +117,7 @@ public sealed class Rule8CallerCredentialTests
         // request continued carrying an identity. A rejected caller must leave the
         // ClaimsPrincipal empty, not merely unauthenticated.
         var fixture = new JwksFixture();
-        var serverHandler = new FakeAxiamServerHandler(fixture.BuildJwksDocument());
+        var serverHandler = new JwksOnlyServerHandler(fixture.BuildJwksDocument());
         using IHost host = await CreateHostAsync(serverHandler).ConfigureAwait(false);
         HttpClient client = host.GetTestClient();
 
@@ -136,7 +138,7 @@ public sealed class Rule8CallerCredentialTests
         // that is perfectly valid for ANOTHER tenant must not be swapped for one that
         // is valid for this one.
         var fixture = new JwksFixture();
-        var serverHandler = new FakeAxiamServerHandler(fixture.BuildJwksDocument());
+        var serverHandler = new JwksOnlyServerHandler(fixture.BuildJwksDocument());
         using IHost host = await CreateHostAsync(serverHandler).ConfigureAwait(false);
         HttpClient client = host.GetTestClient();
 
@@ -151,7 +153,7 @@ public sealed class Rule8CallerCredentialTests
         Assert.DoesNotContain(AppPrincipal, body, StringComparison.Ordinal);
     }
 
-    private static async Task<IHost> CreateHostAsync(FakeAxiamServerHandler serverHandler)
+    private static async Task<IHost> CreateHostAsync(JwksOnlyServerHandler serverHandler)
     {
         AxiamClient fakeClient = AxiamClient.CreateForTesting(
             BaseUrl,
@@ -193,4 +195,35 @@ public sealed class Rule8CallerCredentialTests
         IHost host = await builder.StartAsync().ConfigureAwait(false);
         return host;
     }
+
+    /// <summary>
+    /// Serves only <c>GET /oauth2/jwks</c>. The suite's richer fake server lives as a
+    /// <c>private</c> nested type inside <c>AspNetCoreMiddlewareTests</c> and so is not
+    /// reachable from here; these tests need nothing but the key document, since every
+    /// case is decided by local verification before any authorization call is made.
+    /// A 404 for anything else keeps that assumption honest — an unexpected round-trip
+    /// fails the test rather than passing silently.
+    /// </summary>
+    private sealed class JwksOnlyServerHandler : HttpMessageHandler
+    {
+        private readonly string _jwksJson;
+
+        public JwksOnlyServerHandler(string jwksJson) => _jwksJson = jwksJson;
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            if (request.Method == HttpMethod.Get && request.RequestUri?.AbsolutePath == "/oauth2/jwks")
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(_jwksJson, Encoding.UTF8, "application/json"),
+                });
+            }
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+        }
+    }
+
 }
