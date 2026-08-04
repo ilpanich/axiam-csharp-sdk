@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-alpha24] - 2026-08-04
+
+### Added
+
+- Add AxiamWebhooks.Verify signature verifier (CONTRACT.md §13, T-145)
+
+### Changed
+
+- Add the §10.1 rule-8 guardrail regression tests (#33)
+- Device (mTLS) tokens now carry aud=axiam:m2m (#32)
+- Service accounts can use login_client_credentials (#31)
+- Sync CONTRACT.md §10.1 rule 8 — subject of the decision (#30)
+- Bump coverallsapp/github-action from 2.3.7 to 2.3.8
+- Bump the minor-patch group with 2 updates
+
+### Fixed
+
+- Assert tenant_id against the configured tenant, not a header
+- Enforce the full CONTRACT §10.1 local-verification set
+
 ## [Unreleased]
 
 ### Security
