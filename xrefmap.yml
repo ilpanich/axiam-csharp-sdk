@@ -546,6 +546,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AspNetCore.AxiamOptions.DefaultTenantId
   nameWithType: AxiamOptions.DefaultTenantId
+- uid: Axiam.Sdk.AspNetCore.AxiamOptions.ExpectedAudience
+  name: ExpectedAudience
+  href: api/Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ExpectedAudience
+  commentId: P:Axiam.Sdk.AspNetCore.AxiamOptions.ExpectedAudience
+  fullName: Axiam.Sdk.AspNetCore.AxiamOptions.ExpectedAudience
+  nameWithType: AxiamOptions.ExpectedAudience
+- uid: Axiam.Sdk.AspNetCore.AxiamOptions.ExpectedAudience*
+  name: ExpectedAudience
+  href: api/Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ExpectedAudience_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamOptions.ExpectedAudience
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.AxiamOptions.ExpectedAudience
+  nameWithType: AxiamOptions.ExpectedAudience
+- uid: Axiam.Sdk.AspNetCore.AxiamOptions.ExpectedIssuer
+  name: ExpectedIssuer
+  href: api/Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ExpectedIssuer
+  commentId: P:Axiam.Sdk.AspNetCore.AxiamOptions.ExpectedIssuer
+  fullName: Axiam.Sdk.AspNetCore.AxiamOptions.ExpectedIssuer
+  nameWithType: AxiamOptions.ExpectedIssuer
+- uid: Axiam.Sdk.AspNetCore.AxiamOptions.ExpectedIssuer*
+  name: ExpectedIssuer
+  href: api/Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ExpectedIssuer_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamOptions.ExpectedIssuer
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.AxiamOptions.ExpectedIssuer
+  nameWithType: AxiamOptions.ExpectedIssuer
 - uid: Axiam.Sdk.AspNetCore.AxiamOptions.JwksCacheTtl
   name: JwksCacheTtl
   href: api/Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_JwksCacheTtl
@@ -1032,15 +1058,15 @@ references:
   commentId: T:Axiam.Sdk.Auth.JwksVerifier
   fullName: Axiam.Sdk.Auth.JwksVerifier
   nameWithType: JwksVerifier
-- uid: Axiam.Sdk.Auth.JwksVerifier.#ctor(System.Net.Http.HttpClient,System.Uri,System.TimeSpan)
-  name: JwksVerifier(HttpClient, Uri, TimeSpan)
-  href: api/Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier__ctor_System_Net_Http_HttpClient_System_Uri_System_TimeSpan_
-  commentId: M:Axiam.Sdk.Auth.JwksVerifier.#ctor(System.Net.Http.HttpClient,System.Uri,System.TimeSpan)
-  name.vb: New(HttpClient, Uri, TimeSpan)
-  fullName: Axiam.Sdk.Auth.JwksVerifier.JwksVerifier(System.Net.Http.HttpClient, System.Uri, System.TimeSpan)
-  fullName.vb: Axiam.Sdk.Auth.JwksVerifier.New(System.Net.Http.HttpClient, System.Uri, System.TimeSpan)
-  nameWithType: JwksVerifier.JwksVerifier(HttpClient, Uri, TimeSpan)
-  nameWithType.vb: JwksVerifier.New(HttpClient, Uri, TimeSpan)
+- uid: Axiam.Sdk.Auth.JwksVerifier.#ctor(System.Net.Http.HttpClient,System.Uri,System.TimeSpan,System.String,System.String)
+  name: JwksVerifier(HttpClient, Uri, TimeSpan, string?, string?)
+  href: api/Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier__ctor_System_Net_Http_HttpClient_System_Uri_System_TimeSpan_System_String_System_String_
+  commentId: M:Axiam.Sdk.Auth.JwksVerifier.#ctor(System.Net.Http.HttpClient,System.Uri,System.TimeSpan,System.String,System.String)
+  name.vb: New(HttpClient, Uri, TimeSpan, String, String)
+  fullName: Axiam.Sdk.Auth.JwksVerifier.JwksVerifier(System.Net.Http.HttpClient, System.Uri, System.TimeSpan, string?, string?)
+  fullName.vb: Axiam.Sdk.Auth.JwksVerifier.New(System.Net.Http.HttpClient, System.Uri, System.TimeSpan, String, String)
+  nameWithType: JwksVerifier.JwksVerifier(HttpClient, Uri, TimeSpan, string?, string?)
+  nameWithType.vb: JwksVerifier.New(HttpClient, Uri, TimeSpan, String, String)
 - uid: Axiam.Sdk.Auth.JwksVerifier.#ctor*
   name: JwksVerifier
   href: api/Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier__ctor_
@@ -1051,6 +1077,12 @@ references:
   fullName.vb: Axiam.Sdk.Auth.JwksVerifier.New
   nameWithType: JwksVerifier.JwksVerifier
   nameWithType.vb: JwksVerifier.New
+- uid: Axiam.Sdk.Auth.JwksVerifier.ClockSkewLeeway
+  name: ClockSkewLeeway
+  href: api/Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier_ClockSkewLeeway
+  commentId: F:Axiam.Sdk.Auth.JwksVerifier.ClockSkewLeeway
+  fullName: Axiam.Sdk.Auth.JwksVerifier.ClockSkewLeeway
+  nameWithType: JwksVerifier.ClockSkewLeeway
 - uid: Axiam.Sdk.Auth.JwksVerifier.VerifyAsync(System.String,System.String,System.Threading.CancellationToken)
   name: VerifyAsync(string, string, CancellationToken)
   href: api/Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier_VerifyAsync_System_String_System_String_System_Threading_CancellationToken_
@@ -3903,6 +3935,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Options.AxiamClientOptions.CustomCaPem
   nameWithType: AxiamClientOptions.CustomCaPem
+- uid: Axiam.Sdk.Options.AxiamClientOptions.ExpectedAudience
+  name: ExpectedAudience
+  href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_ExpectedAudience
+  commentId: P:Axiam.Sdk.Options.AxiamClientOptions.ExpectedAudience
+  fullName: Axiam.Sdk.Options.AxiamClientOptions.ExpectedAudience
+  nameWithType: AxiamClientOptions.ExpectedAudience
+- uid: Axiam.Sdk.Options.AxiamClientOptions.ExpectedAudience*
+  name: ExpectedAudience
+  href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_ExpectedAudience_
+  commentId: Overload:Axiam.Sdk.Options.AxiamClientOptions.ExpectedAudience
+  isSpec: "True"
+  fullName: Axiam.Sdk.Options.AxiamClientOptions.ExpectedAudience
+  nameWithType: AxiamClientOptions.ExpectedAudience
+- uid: Axiam.Sdk.Options.AxiamClientOptions.ExpectedIssuer
+  name: ExpectedIssuer
+  href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_ExpectedIssuer
+  commentId: P:Axiam.Sdk.Options.AxiamClientOptions.ExpectedIssuer
+  fullName: Axiam.Sdk.Options.AxiamClientOptions.ExpectedIssuer
+  nameWithType: AxiamClientOptions.ExpectedIssuer
+- uid: Axiam.Sdk.Options.AxiamClientOptions.ExpectedIssuer*
+  name: ExpectedIssuer
+  href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_ExpectedIssuer_
+  commentId: Overload:Axiam.Sdk.Options.AxiamClientOptions.ExpectedIssuer
+  isSpec: "True"
+  fullName: Axiam.Sdk.Options.AxiamClientOptions.ExpectedIssuer
+  nameWithType: AxiamClientOptions.ExpectedIssuer
 - uid: Axiam.Sdk.Options.AxiamClientOptions.JwksCacheTtl
   name: JwksCacheTtl
   href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_JwksCacheTtl
@@ -4303,6 +4361,142 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Rest.AxiamHttpMessageHandler.SendAsync
   nameWithType: AxiamHttpMessageHandler.SendAsync
+- uid: Axiam.Sdk.Webhooks
+  name: Axiam.Sdk.Webhooks
+  href: api/Axiam.Sdk.Webhooks.html
+  commentId: N:Axiam.Sdk.Webhooks
+  fullName: Axiam.Sdk.Webhooks
+  nameWithType: Axiam.Sdk.Webhooks
+- uid: Axiam.Sdk.Webhooks.AxiamWebhooks
+  name: AxiamWebhooks
+  href: api/Axiam.Sdk.Webhooks.AxiamWebhooks.html
+  commentId: T:Axiam.Sdk.Webhooks.AxiamWebhooks
+  fullName: Axiam.Sdk.Webhooks.AxiamWebhooks
+  nameWithType: AxiamWebhooks
+- uid: Axiam.Sdk.Webhooks.AxiamWebhooks.DefaultTolerance
+  name: DefaultTolerance
+  href: api/Axiam.Sdk.Webhooks.AxiamWebhooks.html#Axiam_Sdk_Webhooks_AxiamWebhooks_DefaultTolerance
+  commentId: F:Axiam.Sdk.Webhooks.AxiamWebhooks.DefaultTolerance
+  fullName: Axiam.Sdk.Webhooks.AxiamWebhooks.DefaultTolerance
+  nameWithType: AxiamWebhooks.DefaultTolerance
+- uid: Axiam.Sdk.Webhooks.AxiamWebhooks.Verify(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.ReadOnlySpan{System.Byte},System.Nullable{System.TimeSpan},System.TimeProvider)
+  name: Verify(Sensitive<string>, string, ReadOnlySpan<byte>, TimeSpan?, TimeProvider?)
+  href: api/Axiam.Sdk.Webhooks.AxiamWebhooks.html#Axiam_Sdk_Webhooks_AxiamWebhooks_Verify_Axiam_Sdk_Core_Sensitive_System_String__System_String_System_ReadOnlySpan_System_Byte__System_Nullable_System_TimeSpan__System_TimeProvider_
+  commentId: M:Axiam.Sdk.Webhooks.AxiamWebhooks.Verify(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.ReadOnlySpan{System.Byte},System.Nullable{System.TimeSpan},System.TimeProvider)
+  name.vb: Verify(Sensitive(Of String), String, ReadOnlySpan(Of Byte), TimeSpan?, TimeProvider)
+  fullName: Axiam.Sdk.Webhooks.AxiamWebhooks.Verify(Axiam.Sdk.Core.Sensitive<string>, string, System.ReadOnlySpan<byte>, System.TimeSpan?, System.TimeProvider?)
+  fullName.vb: Axiam.Sdk.Webhooks.AxiamWebhooks.Verify(Axiam.Sdk.Core.Sensitive(Of String), String, System.ReadOnlySpan(Of Byte), System.TimeSpan?, System.TimeProvider)
+  nameWithType: AxiamWebhooks.Verify(Sensitive<string>, string, ReadOnlySpan<byte>, TimeSpan?, TimeProvider?)
+  nameWithType.vb: AxiamWebhooks.Verify(Sensitive(Of String), String, ReadOnlySpan(Of Byte), TimeSpan?, TimeProvider)
+- uid: Axiam.Sdk.Webhooks.AxiamWebhooks.Verify*
+  name: Verify
+  href: api/Axiam.Sdk.Webhooks.AxiamWebhooks.html#Axiam_Sdk_Webhooks_AxiamWebhooks_Verify_
+  commentId: Overload:Axiam.Sdk.Webhooks.AxiamWebhooks.Verify
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webhooks.AxiamWebhooks.Verify
+  nameWithType: AxiamWebhooks.Verify
+- uid: Axiam.Sdk.Webhooks.WebhookEvent
+  name: WebhookEvent
+  href: api/Axiam.Sdk.Webhooks.WebhookEvent.html
+  commentId: T:Axiam.Sdk.Webhooks.WebhookEvent
+  fullName: Axiam.Sdk.Webhooks.WebhookEvent
+  nameWithType: WebhookEvent
+- uid: Axiam.Sdk.Webhooks.WebhookEvent.#ctor(System.Int64,System.Byte[],System.String,System.String)
+  name: WebhookEvent(long, byte[], string?, string?)
+  href: api/Axiam.Sdk.Webhooks.WebhookEvent.html#Axiam_Sdk_Webhooks_WebhookEvent__ctor_System_Int64_System_Byte___System_String_System_String_
+  commentId: M:Axiam.Sdk.Webhooks.WebhookEvent.#ctor(System.Int64,System.Byte[],System.String,System.String)
+  name.vb: New(Long, Byte(), String, String)
+  fullName: Axiam.Sdk.Webhooks.WebhookEvent.WebhookEvent(long, byte[], string?, string?)
+  fullName.vb: Axiam.Sdk.Webhooks.WebhookEvent.New(Long, Byte(), String, String)
+  nameWithType: WebhookEvent.WebhookEvent(long, byte[], string?, string?)
+  nameWithType.vb: WebhookEvent.New(Long, Byte(), String, String)
+- uid: Axiam.Sdk.Webhooks.WebhookEvent.#ctor*
+  name: WebhookEvent
+  href: api/Axiam.Sdk.Webhooks.WebhookEvent.html#Axiam_Sdk_Webhooks_WebhookEvent__ctor_
+  commentId: Overload:Axiam.Sdk.Webhooks.WebhookEvent.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Webhooks.WebhookEvent.WebhookEvent
+  fullName.vb: Axiam.Sdk.Webhooks.WebhookEvent.New
+  nameWithType: WebhookEvent.WebhookEvent
+  nameWithType.vb: WebhookEvent.New
+- uid: Axiam.Sdk.Webhooks.WebhookEvent.Body
+  name: Body
+  href: api/Axiam.Sdk.Webhooks.WebhookEvent.html#Axiam_Sdk_Webhooks_WebhookEvent_Body
+  commentId: P:Axiam.Sdk.Webhooks.WebhookEvent.Body
+  fullName: Axiam.Sdk.Webhooks.WebhookEvent.Body
+  nameWithType: WebhookEvent.Body
+- uid: Axiam.Sdk.Webhooks.WebhookEvent.Body*
+  name: Body
+  href: api/Axiam.Sdk.Webhooks.WebhookEvent.html#Axiam_Sdk_Webhooks_WebhookEvent_Body_
+  commentId: Overload:Axiam.Sdk.Webhooks.WebhookEvent.Body
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webhooks.WebhookEvent.Body
+  nameWithType: WebhookEvent.Body
+- uid: Axiam.Sdk.Webhooks.WebhookEvent.DeliveryId
+  name: DeliveryId
+  href: api/Axiam.Sdk.Webhooks.WebhookEvent.html#Axiam_Sdk_Webhooks_WebhookEvent_DeliveryId
+  commentId: P:Axiam.Sdk.Webhooks.WebhookEvent.DeliveryId
+  fullName: Axiam.Sdk.Webhooks.WebhookEvent.DeliveryId
+  nameWithType: WebhookEvent.DeliveryId
+- uid: Axiam.Sdk.Webhooks.WebhookEvent.DeliveryId*
+  name: DeliveryId
+  href: api/Axiam.Sdk.Webhooks.WebhookEvent.html#Axiam_Sdk_Webhooks_WebhookEvent_DeliveryId_
+  commentId: Overload:Axiam.Sdk.Webhooks.WebhookEvent.DeliveryId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webhooks.WebhookEvent.DeliveryId
+  nameWithType: WebhookEvent.DeliveryId
+- uid: Axiam.Sdk.Webhooks.WebhookEvent.EventType
+  name: EventType
+  href: api/Axiam.Sdk.Webhooks.WebhookEvent.html#Axiam_Sdk_Webhooks_WebhookEvent_EventType
+  commentId: P:Axiam.Sdk.Webhooks.WebhookEvent.EventType
+  fullName: Axiam.Sdk.Webhooks.WebhookEvent.EventType
+  nameWithType: WebhookEvent.EventType
+- uid: Axiam.Sdk.Webhooks.WebhookEvent.EventType*
+  name: EventType
+  href: api/Axiam.Sdk.Webhooks.WebhookEvent.html#Axiam_Sdk_Webhooks_WebhookEvent_EventType_
+  commentId: Overload:Axiam.Sdk.Webhooks.WebhookEvent.EventType
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webhooks.WebhookEvent.EventType
+  nameWithType: WebhookEvent.EventType
+- uid: Axiam.Sdk.Webhooks.WebhookEvent.Timestamp
+  name: Timestamp
+  href: api/Axiam.Sdk.Webhooks.WebhookEvent.html#Axiam_Sdk_Webhooks_WebhookEvent_Timestamp
+  commentId: P:Axiam.Sdk.Webhooks.WebhookEvent.Timestamp
+  fullName: Axiam.Sdk.Webhooks.WebhookEvent.Timestamp
+  nameWithType: WebhookEvent.Timestamp
+- uid: Axiam.Sdk.Webhooks.WebhookEvent.Timestamp*
+  name: Timestamp
+  href: api/Axiam.Sdk.Webhooks.WebhookEvent.html#Axiam_Sdk_Webhooks_WebhookEvent_Timestamp_
+  commentId: Overload:Axiam.Sdk.Webhooks.WebhookEvent.Timestamp
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webhooks.WebhookEvent.Timestamp
+  nameWithType: WebhookEvent.Timestamp
+- uid: Axiam.Sdk.Webhooks.WebhookVerificationException
+  name: WebhookVerificationException
+  href: api/Axiam.Sdk.Webhooks.WebhookVerificationException.html
+  commentId: T:Axiam.Sdk.Webhooks.WebhookVerificationException
+  fullName: Axiam.Sdk.Webhooks.WebhookVerificationException
+  nameWithType: WebhookVerificationException
+- uid: Axiam.Sdk.Webhooks.WebhookVerificationException.#ctor(System.String)
+  name: WebhookVerificationException(string)
+  href: api/Axiam.Sdk.Webhooks.WebhookVerificationException.html#Axiam_Sdk_Webhooks_WebhookVerificationException__ctor_System_String_
+  commentId: M:Axiam.Sdk.Webhooks.WebhookVerificationException.#ctor(System.String)
+  name.vb: New(String)
+  fullName: Axiam.Sdk.Webhooks.WebhookVerificationException.WebhookVerificationException(string)
+  fullName.vb: Axiam.Sdk.Webhooks.WebhookVerificationException.New(String)
+  nameWithType: WebhookVerificationException.WebhookVerificationException(string)
+  nameWithType.vb: WebhookVerificationException.New(String)
+- uid: Axiam.Sdk.Webhooks.WebhookVerificationException.#ctor*
+  name: WebhookVerificationException
+  href: api/Axiam.Sdk.Webhooks.WebhookVerificationException.html#Axiam_Sdk_Webhooks_WebhookVerificationException__ctor_
+  commentId: Overload:Axiam.Sdk.Webhooks.WebhookVerificationException.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Webhooks.WebhookVerificationException.WebhookVerificationException
+  fullName.vb: Axiam.Sdk.Webhooks.WebhookVerificationException.New
+  nameWithType: WebhookVerificationException.WebhookVerificationException
+  nameWithType.vb: WebhookVerificationException.New
 - uid: Axiam.V1
   name: Axiam.V1
   href: api/Axiam.V1.html

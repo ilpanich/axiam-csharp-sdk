@@ -964,6 +964,62 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Webhooks.AxiamWebhooks.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Webhooks.AxiamWebhooks.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Webhooks.AxiamWebhooks",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Webhooks.AxiamWebhooks.yml\" sourcestartlinenumber=\"1\">Verifies the <code>X-Axiam-Signature</code> HMAC-SHA256 header AXIAM attaches to every webhook\ndelivery (CONTRACT.md §13, T-145). Mirrors the server's signer\n(<code>crates/axiam-api-rest/src/webhook.rs</code>'s <code>compute_signature_v2</code>): the MAC covers\nthe ASCII string <code>&lt;t&gt;.&lt;raw_body&gt;</code>, keyed with the webhook secret's raw\nUTF-8 bytes.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Webhooks.WebhookEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Webhooks.WebhookEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Webhooks.WebhookEvent",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Webhooks.WebhookEvent.yml\" sourcestartlinenumber=\"1\">A webhook delivery whose <code>X-Axiam-Signature</code> has already been verified by\n<xref href=\"Axiam.Sdk.Webhooks.AxiamWebhooks.Verify(Axiam.Sdk.Core.Sensitive%7bSystem.String%7d%2cSystem.String%2cSystem.ReadOnlySpan%7bSystem.Byte%7d%2cSystem.Nullable%7bSystem.TimeSpan%7d%2cSystem.TimeProvider)\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md §13). <xref href=\"Axiam.Sdk.Webhooks.WebhookEvent.EventType\" data-throw-if-not-resolved=\"false\"></xref> and\n<xref href=\"Axiam.Sdk.Webhooks.WebhookEvent.DeliveryId\" data-throw-if-not-resolved=\"false\"></xref> are a best-effort parse of the verified body's <code>event</code>/<code>id</code>\nJSON fields — a non-JSON or differently-shaped body still verifies successfully (the MAC only\ncovers the raw bytes, not their JSON shape), it simply leaves those two properties\n<code>null</code>. Callers that need the delivery id for at-least-once dedup (§13.3 rule 7)\nshould prefer the still-available raw <xref href=\"Axiam.Sdk.Webhooks.WebhookEvent.Body\" data-throw-if-not-resolved=\"false\"></xref>/<code>X-Axiam-Delivery</code> header over\nrelying solely on this parse.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Webhooks.WebhookVerificationException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Webhooks.WebhookVerificationException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Webhooks.WebhookVerificationException",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Webhooks.WebhookVerificationException.yml\" sourcestartlinenumber=\"1\">Thrown by <xref href=\"Axiam.Sdk.Webhooks.AxiamWebhooks.Verify(Axiam.Sdk.Core.Sensitive%7bSystem.String%7d%2cSystem.String%2cSystem.ReadOnlySpan%7bSystem.Byte%7d%2cSystem.Nullable%7bSystem.TimeSpan%7d%2cSystem.TimeProvider)\" data-throw-if-not-resolved=\"false\"></xref> when a webhook delivery fails signature\nverification (CONTRACT.md §13.3 rule 6: &quot;fail closed and quiet&quot;).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Webhooks.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Webhooks.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Webhooks",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.yml",
       "output": {
         ".html": {
