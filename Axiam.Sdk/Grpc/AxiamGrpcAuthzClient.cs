@@ -170,6 +170,89 @@ public sealed class AxiamGrpcAuthzClient : IDisposable
     }
 
     /// <summary>
+    /// <c>CheckAccess</c> returning the <b>full</b> decision, including the CONTRACT.md
+    /// &#167;11 rule 9 <c>reason_code</c>.
+    /// </summary>
+    /// <remarks>
+    /// Exists because <see cref="CheckAccessAsync"/> returns a bare <see cref="bool"/> that predates
+    /// that field and cannot carry it without a breaking signature change. Same deadline and
+    /// UNAUTHENTICATED single-flight-retry behaviour as that method.
+    /// </remarks>
+    /// <param name="action">The action to check.</param>
+    /// <param name="resourceId">The resource to check it against.</param>
+    /// <param name="scope">Optional sub-resource scope.</param>
+    /// <param name="subjectId">Optional "check-as" subject override.</param>
+    /// <param name="cancellationToken">Cancels the call.</param>
+    /// <returns>The full decision.</returns>
+    public async Task<AccessDecision> CheckAccessDecisionAsync(
+        string action, string resourceId, string? scope = null, string? subjectId = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(action);
+        ArgumentException.ThrowIfNullOrWhiteSpace(resourceId);
+
+        CheckAccessRequest wire = await BuildWireRequestAsync(action, resourceId, scope, subjectId, cancellationToken).ConfigureAwait(false);
+        try
+        {
+            using AsyncUnaryCall<CheckAccessResponse> call = _stub.CheckAccessAsync(
+                wire, deadline: DateTime.UtcNow.Add(CheckAccessDeadline), cancellationToken: cancellationToken);
+            CheckAccessResponse response = await call.ResponseAsync.ConfigureAwait(false);
+            return ToDecision(response);
+        }
+        catch (RpcException ex)
+        {
+            throw ErrorMapper.FromGrpcStatus(ex.StatusCode, DescriptionOf(ex));
+        }
+    }
+
+    /// <summary>
+    /// <c>BatchCheckAccess</c> returning the <b>full</b> decisions, including each
+    /// <c>reason_code</c> (CONTRACT.md &#167;11 rule 9). Results preserve input order.
+    /// </summary>
+    /// <param name="checks">The checks to evaluate.</param>
+    /// <param name="cancellationToken">Cancels the call.</param>
+    /// <returns>One decision per input check, in order.</returns>
+    public async Task<IReadOnlyList<AccessDecision>> BatchCheckDecisionsAsync(
+        IEnumerable<AccessCheck> checks, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(checks);
+
+        var wireRequest = new BatchCheckAccessRequest();
+        foreach (AccessCheck check in checks)
+        {
+            CheckAccessRequest wire = await BuildWireRequestAsync(check.Action, check.ResourceId, check.Scope, check.SubjectId, cancellationToken)
+                .ConfigureAwait(false);
+            wireRequest.Requests.Add(wire);
+        }
+
+        try
+        {
+            using AsyncUnaryCall<BatchCheckAccessResponse> call = _stub.BatchCheckAccessAsync(
+                wireRequest, deadline: DateTime.UtcNow.Add(BatchCheckDeadline), cancellationToken: cancellationToken);
+            BatchCheckAccessResponse response = await call.ResponseAsync.ConfigureAwait(false);
+            return response.Results.Select(ToDecision).ToList();
+        }
+        catch (RpcException ex)
+        {
+            throw ErrorMapper.FromGrpcStatus(ex.StatusCode, DescriptionOf(ex));
+        }
+    }
+
+    /// <summary>
+    /// Maps a wire <c>CheckAccessResponse</c> to the shared decision record.
+    /// </summary>
+    /// <remarks>
+    /// proto3 renders an unset <c>string</c> as <c>""</c>, so an older server that never set
+    /// field 3 is indistinguishable from one that set it empty — both mean "no reason code", and
+    /// both map to <see langword="null"/> rather than to <c>""</c>, which would be a value callers
+    /// could accidentally branch on.
+    /// </remarks>
+    private static AccessDecision ToDecision(CheckAccessResponse response) =>
+        new(
+            response.Allowed,
+            string.IsNullOrEmpty(response.DenyReason) ? null : response.DenyReason,
+            string.IsNullOrEmpty(response.ReasonCode) ? null : response.ReasonCode);
+
+    /// <summary>
     /// <c>GetUserInfo</c> (CONTRACT.md &#167;1/&#167;1.1) — the gRPC-only, low-latency
     /// counterpart of the server's REST <c>GET /oauth2/userinfo</c>. Invokes
     /// <c>axiam.v1.UserInfoService/GetUserInfo</c> on the SAME intercepted channel

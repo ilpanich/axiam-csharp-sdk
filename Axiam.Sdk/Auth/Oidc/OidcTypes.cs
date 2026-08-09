@@ -44,7 +44,11 @@ public sealed record OidcConfiguration(
     [property: JsonPropertyName("scopes_supported")] IReadOnlyList<string> ScopesSupported,
     [property: JsonPropertyName("token_endpoint_auth_methods_supported")] IReadOnlyList<string> TokenEndpointAuthMethodsSupported,
     [property: JsonPropertyName("claims_supported")] IReadOnlyList<string> ClaimsSupported,
-    [property: JsonPropertyName("grant_types_supported")] IReadOnlyList<string> GrantTypesSupported);
+    [property: JsonPropertyName("grant_types_supported")] IReadOnlyList<string> GrantTypesSupported,
+    [property: JsonPropertyName("device_authorization_endpoint")] string? DeviceAuthorizationEndpoint = null,
+    [property: JsonPropertyName("end_session_endpoint")] string? EndSessionEndpoint = null,
+    [property: JsonPropertyName("backchannel_logout_supported")] bool BackchannelLogoutSupported = false,
+    [property: JsonPropertyName("backchannel_logout_session_supported")] bool BackchannelLogoutSessionSupported = false);
 
 /// <summary>
 /// The result of <see cref="AxiamClient.OidcBegin"/> — everything the caller needs to start
@@ -301,3 +305,183 @@ public sealed class SsoCompleteParams
 /// <see cref="AxiamClient"/>) is what actually captures it (&#167;12.1 note 6).
 /// </summary>
 public sealed record SsoCompleteResult(string UserId, string SessionId, long ExpiresIn, string RedirectUri);
+
+
+// ---------------------------------------------------------------------------
+// §14 Device Authorization Grant (RFC 8628)
+// ---------------------------------------------------------------------------
+
+/// <summary>Arguments to <see cref="AxiamClient.DeviceAuthorizeAsync"/> (CONTRACT.md &#167;14.1).</summary>
+/// <param name="Scope">Space-separated scope to request; omitted when <see langword="null"/>.</param>
+/// <param name="TenantId">Tenant UUID for the mandatory <c>tenant_id</c> query parameter.</param>
+/// <param name="Configuration">A pre-fetched discovery document, or <see langword="null"/> to fetch one.</param>
+public sealed record DeviceAuthorizeParams(
+    string? Scope = null,
+    Guid? TenantId = null,
+    OidcConfiguration? Configuration = null);
+
+/// <summary>
+/// The <c>DeviceAuthorizationResponse</c> — what the device shows its user, plus the
+/// <c>device_code</c> it polls with (CONTRACT.md &#167;14.1).
+/// </summary>
+/// <remarks>
+/// <see cref="DeviceCode"/> is <see cref="Sensitive{T}"/> (&#167;14.5): a bearer credential for the
+/// lifetime of the grant. <see cref="UserCode"/> deliberately is <b>not</b> — it exists to be read
+/// aloud and typed by a human, and wrapping it would defeat the one thing it is for. Neither may be
+/// logged; displaying the user code is the caller's job.
+/// </remarks>
+/// <param name="DeviceCode">The device's polling credential (&#167;14.5 secret).</param>
+/// <param name="UserCode">The short code the human types into the verification page.</param>
+/// <param name="VerificationUri">Where the human goes to enter <paramref name="UserCode"/>.</param>
+/// <param name="VerificationUriComplete">
+/// The verification URI with the user code already embedded, when the server sent one — prefer it
+/// when the device can render a QR code. Never synthesised by concatenation when absent
+/// (&#167;14.3): its format is the server's to choose.
+/// </param>
+/// <param name="ExpiresIn">Seconds until the grant expires. Polling stops here (&#167;14.2 rule 4).</param>
+/// <param name="Interval">
+/// Seconds between polls, from the response, defaulted to 5 when the server omitted it
+/// (&#167;14.2 rule 2).
+/// </param>
+public sealed record DeviceAuthorization(
+    Sensitive<string> DeviceCode,
+    string UserCode,
+    string VerificationUri,
+    string? VerificationUriComplete,
+    int ExpiresIn,
+    int Interval);
+
+/// <summary>Arguments to <see cref="AxiamClient.DevicePollAsync"/> (CONTRACT.md &#167;14.1).</summary>
+/// <param name="DeviceCode">The <c>DeviceCode</c> from <see cref="DeviceAuthorization"/>.</param>
+/// <param name="TenantId">Tenant UUID for the <c>tenant_id</c> query parameter.</param>
+/// <param name="Configuration">A pre-fetched discovery document, or <see langword="null"/>.</param>
+public sealed record DevicePollParams(
+    Sensitive<string> DeviceCode,
+    Guid? TenantId = null,
+    OidcConfiguration? Configuration = null);
+
+/// <summary>Arguments to <see cref="AxiamClient.DeviceLoginAsync"/> (CONTRACT.md &#167;14.3).</summary>
+/// <param name="OnUserCode">
+/// Invoked with the <see cref="DeviceAuthorization"/> <b>before the first poll</b> (&#167;14.3
+/// rule 2), so the caller can display the code. A <see cref="Func{T, TResult}"/> returning a
+/// <see cref="Task"/>, so a device that must await a paint or a redraw can — polling does not begin
+/// until it completes. The SDK never prints the code.
+/// </param>
+/// <param name="Scope">Space-separated scope to request.</param>
+/// <param name="TenantId">Tenant UUID for the <c>tenant_id</c> query parameter.</param>
+/// <param name="Configuration">A pre-fetched discovery document, or <see langword="null"/>.</param>
+/// <param name="AdoptAsCredential">
+/// Mirrors <see cref="LoginClientCredentialsParams.AdoptAsCredential"/>: this port does not
+/// implement adoption and throws <see cref="NotSupportedException"/> when it is set.
+/// &#167;14.3 rule 4 (contract 1.7) defers to the &#167;12.1 adoption MAY, so this SDK takes the
+/// same posture here rather than inventing a second one.
+/// </param>
+public sealed record DeviceLoginParams(
+    Func<DeviceAuthorization, Task> OnUserCode,
+    string? Scope = null,
+    Guid? TenantId = null,
+    OidcConfiguration? Configuration = null,
+    bool AdoptAsCredential = false);
+
+// ---------------------------------------------------------------------------
+// §15 Token Exchange (RFC 8693)
+// ---------------------------------------------------------------------------
+
+/// <summary>Arguments to <see cref="AxiamClient.TokenExchangeAsync"/> (CONTRACT.md &#167;15.1).</summary>
+/// <remarks>
+/// A parameter object rather than positional arguments, because four optional strings in positional
+/// order is a bug waiting to be written (&#167;15.1).
+/// </remarks>
+/// <param name="SubjectToken">The token being exchanged (&#167;15.5 secret).</param>
+/// <param name="ActorToken">
+/// The acting party, when this is a <b>delegation</b> (&#167;15.2 rule 1). Its absence selects
+/// <b>impersonation</b> — a different operation with different risk. The SDK never fills this in.
+/// </param>
+/// <param name="Scopes">Scopes to request; omitted from the body when <see langword="null"/> or empty.</param>
+/// <param name="Audience">The service the issued token is for.</param>
+/// <param name="Resource">RFC 8707 synonym of <paramref name="Audience"/>; the server refuses the pair when they disagree.</param>
+/// <param name="TenantId">Tenant UUID for the <c>tenant_id</c> query parameter.</param>
+/// <param name="Configuration">A pre-fetched discovery document, or <see langword="null"/>.</param>
+public sealed record TokenExchangeParams(
+    Sensitive<string> SubjectToken,
+    Sensitive<string>? ActorToken = null,
+    IReadOnlyList<string>? Scopes = null,
+    string? Audience = null,
+    string? Resource = null,
+    Guid? TenantId = null,
+    OidcConfiguration? Configuration = null);
+
+/// <summary>
+/// The result of an RFC 8693 exchange (wire schema <c>TokenExchangeResponse</c>, &#167;15.1).
+/// </summary>
+/// <remarks>
+/// <b>There is no <c>RefreshToken</c> property, and that is deliberate</b> (&#167;15.2 rule 4).
+/// RFC 8693 issues none, so this type cannot represent one: an application that wants a fresh
+/// exchanged token re-runs the exchange. This result also never enters the &#167;9 single-flight
+/// refresh guard — there is nothing to refresh.
+/// </remarks>
+/// <param name="AccessToken">The issued token (&#167;15.5 secret).</param>
+/// <param name="IssuedTokenType">
+/// What the server actually issued. Mandatory in RFC 8693 &#167;2.2.1 and surfaced rather than
+/// dropped (&#167;15.2 rule 6), so a client that asked for one type and got another can tell.
+/// </param>
+/// <param name="TokenType">The token type (<c>Bearer</c>).</param>
+/// <param name="ExpiresIn">Lifetime in seconds — never longer than the subject token's remaining life.</param>
+/// <param name="Scope">
+/// <b>The granted scope, which may be narrower than requested</b> even on success (&#167;15.2
+/// rule 7); read it rather than assuming the request was honoured verbatim.
+/// </param>
+public sealed record ExchangedToken(
+    Sensitive<string> AccessToken,
+    string IssuedTokenType,
+    string TokenType,
+    long ExpiresIn,
+    string? Scope);
+
+// ---------------------------------------------------------------------------
+// §12.7 Logout helpers
+// ---------------------------------------------------------------------------
+
+/// <summary>Arguments to <see cref="AxiamClient.LogoutUrlAsync"/> (CONTRACT.md &#167;12.7.2).</summary>
+/// <param name="IdToken">
+/// A previously-issued ID token, placed in <c>id_token_hint</c> — the only <i>authenticated</i>
+/// statement of which session is being ended.
+/// </param>
+/// <param name="PostLogoutRedirectUri">
+/// Where the OP should send the browser afterwards. Honoured only on exact match against the
+/// client's registered allow-list — a server-side check the SDK deliberately does not duplicate
+/// (&#167;12.7.2 rule 3).
+/// </param>
+/// <param name="State">
+/// An opaque value echoed back on the redirect. Generated and checked by the caller (&#167;12.7.2
+/// rule 2), never by the SDK.
+/// </param>
+/// <param name="Configuration">A pre-fetched discovery document, or <see langword="null"/>.</param>
+public sealed record LogoutUrlParams(
+    Sensitive<string> IdToken,
+    string? PostLogoutRedirectUri = null,
+    string? State = null,
+    OidcConfiguration? Configuration = null);
+
+/// <summary>What a verified back-channel logout token names (CONTRACT.md &#167;12.7.3).</summary>
+/// <remarks>
+/// Deliberately <b>not</b> a bare <see cref="bool"/>: the RP has to know <i>which</i> session to
+/// end, and a verifier that only says "valid" would force the caller to re-parse the token
+/// themselves, with none of the checks this type is proof of.
+/// </remarks>
+/// <param name="Sid">
+/// The session that ended. <b>When non-<see langword="null"/>, end only this session</b> — falling
+/// back to "every session for <paramref name="Sub"/>" is over-reach the AXIAM server itself refuses
+/// to make.
+/// </param>
+/// <param name="Sub">The subject whose session ended.</param>
+/// <param name="Jti">
+/// Replay identifier. <b>The RP dedups on this, not the SDK.</b> Back-channel delivery is
+/// at-least-once with retry, so a valid token legitimately arrives twice; the SDK has no durable
+/// store and an in-memory guard would silently drop a real second logout after a restart. Surfaced,
+/// never consumed.
+/// </param>
+public sealed record VerifiedLogoutToken(
+    string? Sid,
+    string? Sub,
+    string Jti);

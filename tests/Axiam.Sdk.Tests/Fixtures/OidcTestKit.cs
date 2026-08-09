@@ -24,9 +24,32 @@ public static class OidcTestKit
     /// <summary>Builds a well-formed <c>OidcDiscoveryDocument</c> JSON body for
     /// <paramref name="baseUrl"/>, with <c>issuer</c> equal to the base URL (tests that
     /// need a mismatched issuer build their own document).</summary>
-    public static string DiscoveryJson(Uri baseUrl, string? issuer = null)
+    public static string DiscoveryJson(Uri baseUrl, string? issuer = null, bool withOptionalEndpoints = true)
     {
         string origin = baseUrl.ToString().TrimEnd('/');
+        if (!withOptionalEndpoints)
+        {
+            // The shape an older AXIAM, or a third-party OP without those features,
+            // publishes. Used to assert the SDK errors rather than concatenating a URL
+            // onto the issuer (§12.7.2 rule 1).
+            return JsonSerializer.Serialize(new
+            {
+                issuer = issuer ?? origin,
+                authorization_endpoint = $"{origin}/oauth2/authorize",
+                token_endpoint = $"{origin}/oauth2/token",
+                userinfo_endpoint = $"{origin}/oauth2/userinfo",
+                jwks_uri = $"{origin}/oauth2/jwks",
+                revocation_endpoint = $"{origin}/oauth2/revoke",
+                introspection_endpoint = $"{origin}/oauth2/introspect",
+                response_types_supported = new[] { "code" },
+                subject_types_supported = new[] { "public" },
+                id_token_signing_alg_values_supported = new[] { "EdDSA" },
+                scopes_supported = new[] { "openid" },
+                token_endpoint_auth_methods_supported = new[] { "client_secret_post" },
+                claims_supported = new[] { "sub" },
+                grant_types_supported = new[] { "authorization_code" },
+            });
+        }
         var document = new
         {
             issuer = issuer ?? origin,
@@ -42,7 +65,18 @@ public static class OidcTestKit
             scopes_supported = new[] { "openid" },
             token_endpoint_auth_methods_supported = new[] { "client_secret_post" },
             claims_supported = new[] { "sub" },
-            grant_types_supported = new[] { "authorization_code", "refresh_token", "client_credentials" },
+            grant_types_supported = new[]
+            {
+                "authorization_code",
+                "refresh_token",
+                "client_credentials",
+                "urn:ietf:params:oauth:grant-type:device_code",
+                "urn:ietf:params:oauth:grant-type:token-exchange",
+            },
+            device_authorization_endpoint = $"{origin}/oauth2/device_authorization",
+            end_session_endpoint = $"{origin}/oauth2/end_session",
+            backchannel_logout_supported = true,
+            backchannel_logout_session_supported = true,
         };
         return JsonSerializer.Serialize(document);
     }
@@ -50,8 +84,59 @@ public static class OidcTestKit
     /// <summary>Registers the <c>GET /.well-known/openid-configuration</c> route on
     /// <paramref name="handler"/>, serving <see cref="DiscoveryJson"/> for
     /// <paramref name="baseUrl"/> (defaulting to <see cref="BaseUrl"/>).</summary>
-    public static void MapDiscovery(RoutingHandler handler, Uri? baseUrl = null, string? issuer = null) =>
-        handler.Map("/.well-known/openid-configuration", _ => JsonOk(DiscoveryJson(baseUrl ?? BaseUrl, issuer)));
+    public static void MapDiscovery(RoutingHandler handler, Uri? baseUrl = null, string? issuer = null, bool withOptionalEndpoints = true) =>
+        handler.Map(
+            "/.well-known/openid-configuration",
+            _ => JsonOk(DiscoveryJson(baseUrl ?? BaseUrl, issuer, withOptionalEndpoints)));
+
+    /// <summary>The device code returned by <see cref="DeviceAuthorizationJson"/>.</summary>
+    public const string DeviceCode = "device-code-value";
+
+    /// <summary>The user code returned by <see cref="DeviceAuthorizationJson"/>.</summary>
+    public const string UserCode = "WDJB-MJHT";
+
+    /// <summary>The access token returned by <see cref="ExchangeResponseJson"/>.</summary>
+    public const string IssuedToken = "issued-narrow-token";
+
+    /// <summary>Builds a <c>DeviceAuthorizationResponse</c> wire body.</summary>
+    public static string DeviceAuthorizationJson(Uri? baseUrl = null, int expiresIn = 30, int? interval = 1)
+    {
+        string origin = (baseUrl ?? BaseUrl).ToString().TrimEnd('/');
+        var body = new Dictionary<string, object?>
+        {
+            ["device_code"] = DeviceCode,
+            ["user_code"] = UserCode,
+            ["verification_uri"] = $"{origin}/device",
+            ["verification_uri_complete"] = $"{origin}/device?user_code={UserCode}",
+            ["expires_in"] = expiresIn,
+        };
+        if (interval is not null)
+        {
+            body["interval"] = interval.Value;
+        }
+        return JsonSerializer.Serialize(body);
+    }
+
+    /// <summary>Builds a <c>TokenExchangeResponse</c> wire body.</summary>
+    public static string ExchangeResponseJson(string? scope = "orders:read", string? refreshToken = null)
+    {
+        var body = new Dictionary<string, object?>
+        {
+            ["access_token"] = IssuedToken,
+            ["issued_token_type"] = "urn:ietf:params:oauth:token-type:access_token",
+            ["token_type"] = "Bearer",
+            ["expires_in"] = 300,
+        };
+        if (scope is not null)
+        {
+            body["scope"] = scope;
+        }
+        if (refreshToken is not null)
+        {
+            body["refresh_token"] = refreshToken;
+        }
+        return JsonSerializer.Serialize(body);
+    }
 
     /// <summary>Registers the <c>GET /oauth2/jwks</c> route, serving
     /// <paramref name="fixture"/>'s JWKS document.</summary>
