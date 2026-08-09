@@ -47,3 +47,20 @@ internal sealed record SsoLoginSuccessResponseWire(
     [property: JsonPropertyName("session_id")] string SessionId,
     [property: JsonPropertyName("expires_in")] long ExpiresIn,
     [property: JsonPropertyName("redirect_uri")] string RedirectUri);
+
+/// <summary>200 body of <c>POST /oauth2/device_authorization</c> (CONTRACT.md &#167;14.1).</summary>
+internal sealed record DeviceAuthorizationResponseWire(
+    [property: JsonPropertyName("device_code")] string DeviceCode,
+    [property: JsonPropertyName("user_code")] string UserCode,
+    [property: JsonPropertyName("verification_uri")] string VerificationUri,
+    [property: JsonPropertyName("expires_in")] int ExpiresIn,
+    [property: JsonPropertyName("verification_uri_complete")] string? VerificationUriComplete = null,
+    [property: JsonPropertyName("interval")] int? Interval = null);
+
+/// <summary>200 body of a token-exchange <c>POST /oauth2/token</c> (CONTRACT.md &#167;15.1).</summary>
+internal sealed record TokenExchangeResponseWire(
+    [property: JsonPropertyName("access_token")] string AccessToken,
+    [property: JsonPropertyName("issued_token_type")] string IssuedTokenType,
+    [property: JsonPropertyName("token_type")] string TokenType,
+    [property: JsonPropertyName("expires_in")] long ExpiresIn,
+    [property: JsonPropertyName("scope")] string? Scope = null);

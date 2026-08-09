@@ -52,7 +52,9 @@ public sealed class AuthzRestClient
 
     private sealed record CheckAccessWireResponse(
         [property: JsonPropertyName("allowed")] bool Allowed,
-        [property: JsonPropertyName("reason")] string? Reason);
+        [property: JsonPropertyName("reason")] string? Reason,
+        [property: JsonPropertyName("reason_code")] string? ReasonCode = null);
+
 
     private sealed record BatchCheckWireRequest(
         [property: JsonPropertyName("checks")] IReadOnlyList<CheckAccessWireRequest> Checks);
@@ -93,6 +95,54 @@ public sealed class AuthzRestClient
                 .ReadFromJsonAsync<CheckAccessWireResponse>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             return wire?.Allowed ?? false;
+        }
+    }
+
+    /// <summary>
+    /// <c>POST /api/v1/authz/check</c> returning the <b>full</b> decision, including the
+    /// CONTRACT.md &#167;11 rule 9 <c>reason_code</c>.
+    /// </summary>
+    /// <remarks>
+    /// Exists because <see cref="CheckAccessAsync"/> returns a bare <see cref="bool"/> that predates
+    /// that field and cannot carry it without a breaking signature change. The distinction it
+    /// surfaces is not cosmetic: <c>no_grant</c> means "ask an admin for access",
+    /// <c>denied_by_rule</c> means "an admin has already decided", and an application that cannot
+    /// tell them apart sends users to raise tickets that will be refused.
+    /// </remarks>
+    /// <param name="action">The action to check.</param>
+    /// <param name="resourceId">The resource to check it against.</param>
+    /// <param name="scope">Optional sub-resource scope.</param>
+    /// <param name="subjectId">Optional "check-as" subject override.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>The full decision.</returns>
+    public async Task<AccessDecision> CheckAccessDecisionAsync(
+        string action, Guid resourceId, string? scope = null, Guid? subjectId = null, CancellationToken cancellationToken = default)
+    {
+        var wireRequest = new CheckAccessWireRequest(action, resourceId, scope, subjectId);
+        HttpResponseMessage response;
+        try
+        {
+            response = await _http.PostAsJsonAsync(CheckPath, wireRequest, cancellationToken).ConfigureAwait(false);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw NetworkError.FromException(ex, "checkAccess failed");
+        }
+
+        using (response)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                throw ErrorMapper.FromHttpResponse(response, "checkAccess failed");
+            }
+
+            CheckAccessWireResponse? wire = await response.Content
+                .ReadFromJsonAsync<CheckAccessWireResponse>(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            // §11 rule 9: the reason code is surfaced verbatim, including a value this SDK has
+            // never heard of — the outcome is carried by `allowed` alone, so an unknown code can
+            // never change it.
+            return new AccessDecision(wire?.Allowed ?? false, wire?.Reason, wire?.ReasonCode);
         }
     }
 
@@ -139,6 +189,48 @@ public sealed class AuthzRestClient
                 .ReadFromJsonAsync<BatchCheckWireResponse>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             return wire?.Results.Select(r => r.Allowed).ToList() ?? new List<bool>();
+        }
+    }
+
+    /// <summary>
+    /// <c>POST /api/v1/authz/check/batch</c> returning the <b>full</b> decisions, including each
+    /// <c>reason_code</c> (CONTRACT.md &#167;11 rule 9). Results preserve input order.
+    /// </summary>
+    /// <param name="checks">The checks to evaluate.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>One decision per input check, in order.</returns>
+    public async Task<IReadOnlyList<AccessDecision>> BatchCheckDecisionsAsync(
+        IEnumerable<AccessCheck> checks, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(checks);
+        List<CheckAccessWireRequest> wireChecks = checks
+            .Select(c => new CheckAccessWireRequest(c.Action, c.ResourceId, c.Scope, c.SubjectId))
+            .ToList();
+        var wireRequest = new BatchCheckWireRequest(wireChecks);
+
+        HttpResponseMessage response;
+        try
+        {
+            response = await _http.PostAsJsonAsync(BatchCheckPath, wireRequest, cancellationToken).ConfigureAwait(false);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw NetworkError.FromException(ex, "batchCheck failed");
+        }
+
+        using (response)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                throw ErrorMapper.FromHttpResponse(response, "batchCheck failed");
+            }
+
+            BatchCheckWireResponse? wire = await response.Content
+                .ReadFromJsonAsync<BatchCheckWireResponse>(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            return wire?.Results
+                .Select(r => new AccessDecision(r.Allowed, r.Reason, r.ReasonCode))
+                .ToList() ?? new List<AccessDecision>();
         }
     }
 }
