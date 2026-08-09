@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Axiam.Sdk.Core;
+using Axiam.Sdk.Options;
 
 namespace Axiam.Sdk.Rest;
 
@@ -28,9 +29,37 @@ public sealed class AuthzRestClient
 
     private readonly HttpClient _http;
 
-    internal AuthzRestClient(HttpClient httpClient)
+    private readonly AxiamClientOptions _options;
+    private readonly TelemetryDispatcher _telemetry;
+    private readonly DecisionMemo _memo;
+    private readonly Func<double> _jitter;
+
+    /// <summary>
+    /// Builds an authz client.
+    /// </summary>
+    /// <remarks>
+    /// The §16/§17/§19 collaborators are optional so the existing test seams that
+    /// construct this with only an <see cref="HttpClient"/> keep working. Their
+    /// fallbacks are the contract defaults: the §16 policy at its normative values,
+    /// telemetry inert, and the memo disabled — which is exactly what a caller who
+    /// passed nothing should get.
+    /// </remarks>
+    internal AuthzRestClient(
+        HttpClient httpClient,
+        AxiamClientOptions? options = null,
+        TelemetryDispatcher? telemetry = null,
+        DecisionMemo? memo = null,
+        Func<double>? jitter = null)
     {
         _http = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        _options = options ?? new AxiamClientOptions
+        {
+            BaseUrl = httpClient.BaseAddress ?? new Uri("https://localhost"),
+            TenantId = string.Empty,
+        };
+        _telemetry = telemetry ?? new TelemetryDispatcher(null);
+        _memo = memo ?? new DecisionMemo(TimeSpan.Zero);
+        _jitter = jitter ?? Random.Shared.NextDouble;
     }
 
     /// <summary>A single authorization check request item for <see cref="BatchCheckAsync"/>.</summary>
@@ -118,7 +147,38 @@ public sealed class AuthzRestClient
     public async Task<AccessDecision> CheckAccessDecisionAsync(
         string action, Guid resourceId, string? scope = null, Guid? subjectId = null, CancellationToken cancellationToken = default)
     {
+        // §17: consult the memo first. Disabled by default, in which case this is
+        // one dictionary lookup that always misses.
+        string key = DecisionMemo.Key(subjectId, resourceId, action, scope);
+        if (_memo.Get(key) is { } memoized)
+        {
+            return memoized;
+        }
+
+        // §16: a POST, but side-effect-free, so it is retry-eligible. Eligibility is
+        // "changes no server state", NOT "is a GET" — gating on the verb would
+        // exclude the single most important operation this policy covers.
+        AccessDecision decision = await RetryPolicy.ExecuteAsync(
+            "CheckAccess",
+            _options,
+            _telemetry,
+            _jitter,
+            attempt => SendCheckAsync(action, resourceId, scope, subjectId, attempt, cancellationToken),
+            cancellationToken).ConfigureAwait(false);
+
+        // Only a decision the server actually returned is memoized: reaching here
+        // means success, so §17.1 rule 7's ban on caching a failure is structural
+        // rather than a check that could be forgotten.
+        _memo.Put(key, decision);
+        return decision;
+    }
+
+    /// <summary>One §16 attempt at the single-check call, with its §19 request pair.</summary>
+    private async Task<AccessDecision> SendCheckAsync(
+        string action, Guid resourceId, string? scope, Guid? subjectId, int attempt, CancellationToken cancellationToken)
+    {
         var wireRequest = new CheckAccessWireRequest(action, resourceId, scope, subjectId);
+        TelemetryDispatcher.Span span = _telemetry.StartRequest("CheckAccess", "POST", CheckPath, attempt);
         HttpResponseMessage response;
         try
         {
@@ -126,6 +186,7 @@ public sealed class AuthzRestClient
         }
         catch (HttpRequestException ex)
         {
+            span.End(null, TelemetryOutcome.Failure);
             throw NetworkError.FromException(ex, "checkAccess failed");
         }
 
@@ -133,9 +194,11 @@ public sealed class AuthzRestClient
         {
             if (!response.IsSuccessStatusCode)
             {
+                span.End((int)response.StatusCode, TelemetryOutcome.Failure);
                 throw ErrorMapper.FromHttpResponse(response, "checkAccess failed");
             }
 
+            span.End((int)response.StatusCode, TelemetryOutcome.Success);
             CheckAccessWireResponse? wire = await response.Content
                 .ReadFromJsonAsync<CheckAccessWireResponse>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
