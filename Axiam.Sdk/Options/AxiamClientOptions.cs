@@ -1,5 +1,7 @@
 namespace Axiam.Sdk.Options;
 
+using Axiam.Sdk.Core;
+
 /// <summary>
 /// Typed, options-pattern configuration for <c>AxiamClient</c> (Claude's Discretion,
 /// 21-RESEARCH.md/21-CONTEXT.md D-07). <see cref="BaseUrl"/> and <see cref="TenantId"/>
@@ -93,19 +95,87 @@ public sealed record AxiamClientOptions
     public TimeSpan RequestTimeout { get; init; } = TimeSpan.FromSeconds(30);
 
     /// <summary>
-    /// Idempotent-only bounded exponential backoff + jitter (Claude's Discretion,
-    /// 21-RESEARCH.md/21-CONTEXT.md): state-changing requests (login/refresh/logout)
-    /// never auto-retry. Reserved config surface for a future read-only-retry wrapper
-    /// around <c>AuthzRestClient</c>'s idempotent <c>GET</c>-shaped checks — not yet
-    /// wired into any call path by this plan's tasks.
+    /// Attempt cap for the CONTRACT.md &#167;16 bounded read-only retry policy.
+    /// Defaults to 3 (1 initial + 2 retries).
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <strong>This is now wired.</strong> Until D5 this property — and the two below —
+    /// were a "reserved config surface ... not yet wired into any call path", so the SDK
+    /// performed no read-only retries at all while presenting three knobs that looked
+    /// like it did.
+    /// </para>
+    /// <para>
+    /// <strong>Values above the contract's are clamped down, not honored.</strong>
+    /// &#167;16.1 permits an SDK to <em>lower</em> the attempt cap or disable retry
+    /// outright, never to raise it: a caller who could raise it turns one client into
+    /// the thundering herd this policy exists to prevent, and the whole point of &#167;16
+    /// is eleven SDKs agreeing on one table. Setting 10 gets you 3; setting 1 gets you 1.
+    /// Use <see cref="RetryEnabled"/> to turn retrying off.
+    /// </para>
+    /// </remarks>
     public int MaxRetryAttempts { get; init; } = 3;
 
-    /// <summary>Base delay for the bounded exponential backoff described above.</summary>
+    /// <summary>
+    /// Base delay for the &#167;16 backoff. Defaults to 200ms; a larger value is clamped
+    /// down to it, for the reason given on <see cref="MaxRetryAttempts"/>.
+    /// </summary>
     public TimeSpan RetryBaseDelay { get; init; } = TimeSpan.FromMilliseconds(200);
 
-    /// <summary>Upper bound for the bounded exponential backoff described above.</summary>
+    /// <summary>
+    /// Ceiling on any single &#167;16 backoff. Defaults to 5s; a larger value is clamped
+    /// down to it, for the reason given on <see cref="MaxRetryAttempts"/>.
+    /// </summary>
     public TimeSpan RetryMaxDelay { get; init; } = TimeSpan.FromSeconds(5);
+
+    /// <summary>
+    /// Enables the CONTRACT.md &#167;16 bounded read-only retry policy.
+    /// <strong>Default: <c>true</c>.</strong>
+    /// </summary>
+    /// <remarks>
+    /// Set <c>false</c> to make every operation exactly one attempt. That is the right
+    /// choice for a caller who owns their own retry layer — they know their deadline and
+    /// this SDK does not — but it is not a way to make failures quieter: a transient
+    /// <c>NetworkError</c> simply surfaces immediately.
+    /// </remarks>
+    public bool RetryEnabled { get; init; } = true;
+
+    /// <summary>
+    /// Enables the CONTRACT.md &#167;17 client-side decision memo.
+    /// <strong>Default: <see cref="TimeSpan.Zero"/>, which means disabled</strong> — not
+    /// "cache for zero time".
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <strong>What you are accepting.</strong> The staleness bound is this TTL, <em>in
+    /// both directions</em>. A grant revoked on the server can still read as allowed for
+    /// up to the TTL, and a grant just added can still read as denied for up to the TTL.
+    /// </para>
+    /// <para>
+    /// <strong>Reads-your-own-writes is not guaranteed.</strong> An admin UI that grants
+    /// a role and immediately re-checks is the case that breaks, and it breaks silently.
+    /// If that is your workload, leave this off.
+    /// </para>
+    /// <para>
+    /// Clamped to 5 seconds rather than rejected. Allows and denies are memoized
+    /// identically (asymmetric caching leaks the outcome through latency), failures are
+    /// never memoized, and the memo is cleared on any credential change.
+    /// </para>
+    /// </remarks>
+    public TimeSpan DecisionMemoTtl { get; init; } = TimeSpan.Zero;
+
+    /// <summary>
+    /// Installs a CONTRACT.md &#167;19 telemetry sink.
+    /// </summary>
+    /// <remarks>
+    /// It receives request start/end, &#167;16 retry and &#167;9 refresh events, so
+    /// metrics can be wired without this package depending on any metrics library. A hook
+    /// that throws cannot fail the operation that fired it (&#167;19.2 rule 2), and no
+    /// event payload can carry a token — the event hierarchy is closed with fixed
+    /// property lists (&#167;19.2 rule 3). It is invoked on the calling task, so it must
+    /// not block.
+    /// </remarks>
+    public TelemetryHook? TelemetryHook { get; init; }
 
     /// <summary>
     /// The relying party's OAuth2 <c>client_id</c> (CONTRACT.md &#167;12.1), used on every

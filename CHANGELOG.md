@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **The §16 retry configuration was never wired.** `MaxRetryAttempts`, `RetryBaseDelay` and
+  `RetryMaxDelay` were defaulted, documented, and asserted in `CoreValueTypesTests` — and read
+  by no production code; their own doc comment said "not yet wired into any call path". The SDK
+  therefore performed **no read-only retries at all** while presenting three knobs that looked
+  like it did, leaving §11.2 rule 5's requirement silently unmet. They are wired now, and the
+  conformance tests assert the policy through the public `CheckAccessAsync` surface by counting
+  requests on the wire.
+- **§16.1: the caller can no longer raise the policy above the contract.** All three settings
+  are now clamped *down* to the contract's values. §16.1 permits lowering the attempt cap or
+  disabling retry, never raising either — a caller who could raise them turns one client into
+  the thundering herd the policy exists to prevent. Lowering still works; the clamp is
+  one-directional.
+
+### Added
+
+- **§16 bounded read-only retry policy** (`Core/RetryPolicy.cs`): 3 attempts, 200 ms base, 5 s
+  cap, **full jitter** over `[0, backoff]`, `Retry-After` honored as a floor.
+- **§18 `Dispose()` semantics** — idempotent via `Interlocked`, clears the memo, and
+  use-after-dispose throws `ObjectDisposedException` rather than silently reconnecting. It does
+  **not** log out and never reaches the network.
+- **§19 telemetry hooks** — `AxiamClientOptions.TelemetryHook`, plus the closed
+  `TelemetryEvent` hierarchy (`RequestStartEvent`, `RequestEndEvent`, `RetryEvent`,
+  `RefreshEvent`). A throwing hook cannot fail the operation that fired it (except
+  `OperationCanceledException`, which propagates), and no event payload can carry a token. One
+  request pair per *attempt*.
+- **§17 decision memo — opt-in, off by default** — `AxiamClientOptions.DecisionMemoTtl`, clamped
+  to 5 s, thread-safe. Allows and denies memoized identically, failures never memoized, cleared
+  on any credential change. **Reads-your-own-writes is not guaranteed.**
+- `AxiamClientOptions.RetryEnabled` (§16.6), default `true`.
+- `NetworkError.RetryAfter`, a parsed `TimeSpan` rather than the raw header text, so the
+  fail-closed redaction allowlist is untouched. Both RFC 7231 forms parse.
+
+### Changed
+
+- Re-vendored `CONTRACT.md` at **1.8.2**. `openapi.json` unchanged — docs-only contract revs.
+- `LoginAsync`, `VerifyMfaAsync`, `RefreshAsync` and `LogoutAsync` clear the decision memo
+  (§17.1 rule 9) and reject after dispose (§18.1 rule 4).
+
 ## [1.0.0-alpha24] - 2026-08-04
 
 ### Added

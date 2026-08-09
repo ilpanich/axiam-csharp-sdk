@@ -44,6 +44,11 @@ public sealed partial class AxiamClient : IDisposable
     private readonly RefreshGuard _refreshGuard;
     private readonly JwksVerifier _jwksVerifier;
     private readonly AuthzRestClient _authz;
+    private readonly TelemetryDispatcher _telemetry;
+    private readonly DecisionMemo _decisionMemo;
+
+    /// <summary>§18 shutdown flag, read on every operation.</summary>
+    private int _disposed;
 
     /// <summary>
     /// The ONLY construction path (SC#1) — <paramref name="tenantId"/> is required and
@@ -115,7 +120,11 @@ public sealed partial class AxiamClient : IDisposable
             _options.JwksCacheTtl,
             _options.ExpectedIssuer,
             _options.ExpectedAudience);
-        _authz = new AuthzRestClient(_httpClient);
+        // §17.1 rule 1: off unless the caller asked for it. §19: inert unless a
+        // hook was installed.
+        _telemetry = new TelemetryDispatcher(_options.TelemetryHook);
+        _decisionMemo = new DecisionMemo(_options.DecisionMemoTtl);
+        _authz = new AuthzRestClient(_httpClient, _options, _telemetry, _decisionMemo);
 
         // CONTRACT.md §12 — initializes the OidcClientId/OidcClientSecret/discovery-TTL/
         // clock-skew fields declared in AxiamClient.Oidc.cs from this same _options
@@ -161,10 +170,41 @@ public sealed partial class AxiamClient : IDisposable
     /// </summary>
     public void Dispose()
     {
+        // Idempotent (CONTRACT.md §18.1 rule 2): cleanup runs from error paths, and
+        // an error path that itself throws hides the original failure. Interlocked
+        // also means a concurrent double-dispose does the work once.
+        if (Interlocked.Exchange(ref _disposed, 1) != 0)
+        {
+            return;
+        }
+
+        _decisionMemo.Clear();
         _httpClient.Dispose();
         _refreshGuard.Dispose();
         DisposeOidcState();
     }
+
+    /// <summary>
+    /// Throws if <see cref="Dispose"/> has been called (CONTRACT.md §18.1 rule 4).
+    /// </summary>
+    /// <remarks>
+    /// Use-after-dispose is an error, not a silent reconnect: a client that quietly
+    /// rebuilt its transport would make <see cref="Dispose"/> meaningless and hide the
+    /// lifecycle bug that caused the call. <see cref="ObjectDisposedException"/> is the
+    /// .NET-idiomatic answer here, and unlike the other SDKs' NetworkError it is what a
+    /// .NET caller's existing handlers already expect.
+    /// </remarks>
+    private void EnsureNotDisposed() =>
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+
+    /// <summary>
+    /// Drops memoized decisions (CONTRACT.md §17.1 rule 9).
+    /// </summary>
+    /// <remarks>
+    /// Entries are keyed by subject rather than session, so a re-authentication as a
+    /// <em>different</em> principal would otherwise inherit the previous one's decisions.
+    /// </remarks>
+    private void OnCredentialChange() => _decisionMemo.Clear();
 
     // ------------------------------------------------------------------
     // Auth methods (CONTRACT.md §1): LoginAsync / VerifyMfaAsync / RefreshAsync / LogoutAsync
@@ -178,6 +218,8 @@ public sealed partial class AxiamClient : IDisposable
     /// </summary>
     public async Task<LoginResult> LoginAsync(string email, string password, CancellationToken cancellationToken = default)
     {
+        EnsureNotDisposed();
+        OnCredentialChange();
         ArgumentException.ThrowIfNullOrWhiteSpace(email);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
 
@@ -214,6 +256,8 @@ public sealed partial class AxiamClient : IDisposable
     /// </summary>
     public async Task<LoginResult> VerifyMfaAsync(Sensitive<string> challengeToken, string totpCode, CancellationToken cancellationToken = default)
     {
+        EnsureNotDisposed();
+        OnCredentialChange();
         ArgumentException.ThrowIfNullOrWhiteSpace(totpCode);
 
         var body = new Dictionary<string, object?>
@@ -238,6 +282,8 @@ public sealed partial class AxiamClient : IDisposable
     /// </summary>
     public async Task RefreshAsync(CancellationToken cancellationToken = default)
     {
+        EnsureNotDisposed();
+        OnCredentialChange();
         if (ReadCookie(AccessCookieName) is null)
         {
             throw new AuthError("no access token to refresh — call LoginAsync() first");
@@ -254,6 +300,8 @@ public sealed partial class AxiamClient : IDisposable
     /// </summary>
     public async Task LogoutAsync(CancellationToken cancellationToken = default)
     {
+        EnsureNotDisposed();
+        OnCredentialChange();
         string? access = ReadCookie(AccessCookieName);
         if (access is null)
         {

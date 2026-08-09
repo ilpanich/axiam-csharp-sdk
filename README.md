@@ -17,7 +17,7 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15 (including §6.1 mTLS client
+This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19 (including §6.1 mTLS client
 certificates, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, the §12 OIDC/SSO
 relying-party helpers, contract 1.4, and the §13 webhook signature verifier, T-145).
 
@@ -530,3 +530,105 @@ This exception is intentional and approved (D-01). The C# SDK still tracks the s
 `Axiam.Sdk` (REST + gRPC + AMQP + `Sensitive` + JWKS) and `Axiam.Sdk.AspNetCore`
 (middleware + DI + policy authorization) are both fully implemented and tested. See
 the Quickstart above and [`examples/`](examples/) for runnable code.
+
+## Client quality-of-life (CONTRACT.md §16–§19)
+
+### Retry policy (§16)
+
+Read-only authorization checks retry transient failures under the contract's normative table:
+**3 attempts** (1 initial + 2 retries), 200 ms base, 5 s cap, **full jitter** (uniform over
+`[0, backoff]`), and `Retry-After` honored as a **floor**.
+
+> **This is new behaviour.** `MaxRetryAttempts`, `RetryBaseDelay` and `RetryMaxDelay` have
+> existed on `AxiamClientOptions` since the beginning — defaulted, documented, and asserted in
+> tests — but their own doc comment said they were "not yet wired into any call path", and
+> nothing read them. **The SDK performed no read-only retries at all.** They are wired now.
+
+Only failures that could plausibly succeed on a second attempt are retried: transport errors,
+`408`, `429`, `5xx`. A `401` or `403` is an answer, not a transport failure, and surfaces after
+exactly one attempt. Nothing that changes server state is ever retried.
+
+```csharp
+// Turn it off if you own your own retry layer — you know your deadline, this SDK doesn't.
+var options = new AxiamClientOptions { BaseUrl = baseUrl, TenantId = "acme", RetryEnabled = false };
+```
+
+**Values above the contract's are clamped down, not honored.** §16.1 permits an SDK to *lower*
+the attempt cap or disable retry outright, never to raise it — a caller who could raise it turns
+one client into the thundering herd the policy exists to prevent. Setting `MaxRetryAttempts = 10`
+gets you 3; setting 1 gets you 1. The same applies to `RetryBaseDelay` and `RetryMaxDelay`.
+
+### Deterministic shutdown (§18)
+
+`Dispose()` releases the client's local resources. It is idempotent — `Interlocked` means even a
+concurrent double-dispose does the work once — and any call afterwards throws
+`ObjectDisposedException` rather than silently reconnecting. That is the .NET-idiomatic answer,
+and it is what a caller's existing handlers already expect.
+
+**`Dispose()` does not log out.** It never reaches the network. The server-side session
+deliberately outlives the client object — that is what lets a process restart and resume — so a
+`Dispose()` that logged out would silently end every user's session on each deploy. Call
+`LogoutAsync()` first if ending the session is what you want.
+
+### Telemetry hooks (§19)
+
+Wire metrics without this package depending on any metrics library:
+
+```csharp
+var options = new AxiamClientOptions
+{
+    BaseUrl = baseUrl,
+    TenantId = "acme",
+    TelemetryHook = e =>
+    {
+        switch (e)
+        {
+            case RequestEndEvent end:
+                histogram.Record(end.Duration.TotalMilliseconds, /* labels */);
+                break;
+            case RetryEvent retry:
+                counter.Add(1, /* labels */);
+                break;
+        }
+    },
+};
+```
+
+- **A hook that throws cannot fail the operation that fired it.** One exception:
+  `OperationCanceledException` is re-thrown rather than swallowed, since hiding a cancellation
+  the caller asked for is a correctness concern rather than a metrics one.
+- **No event payload can carry a token.** The event hierarchy is closed — `TelemetryEvent`'s
+  constructor is `private protected`, so no type outside the assembly can derive from it — with
+  fixed property lists.
+- **Path templates, not URLs**, so a metric label cannot become a cardinality bomb.
+
+One `RequestStartEvent`/`RequestEndEvent` pair is emitted **per attempt**, so you can count real
+wire calls.
+
+### Decision memo (§17) — opt-in, off by default
+
+An optional TTL-bounded cache for authorization checks. **Disabled by default**, because §11.2
+rule 6's ban on caching authorization decisions is still the default behaviour.
+
+```csharp
+var options = new AxiamClientOptions
+{
+    BaseUrl = baseUrl,
+    TenantId = "acme",
+    DecisionMemoTtl = TimeSpan.FromSeconds(5), // TimeSpan.Zero (the default) = off
+};
+```
+
+**What you are accepting.** The staleness bound is the TTL, in *both* directions: a grant
+revoked on the server can still read as allowed for up to the TTL, and a grant just added can
+still read as denied for up to the TTL.
+
+> **Reads-your-own-writes is not guaranteed.** An admin UI that grants a role and immediately
+> re-checks is the case that breaks, and it breaks silently. If that is your workload, leave this
+> off.
+
+The TTL is clamped to 5 seconds rather than rejected. Allows and denies are memoized identically
+— asymmetric caching would leak which outcome occurred through latency. Failures are never
+memoized: caching a transport error as a deny would turn a blip into a TTL-long outage. The memo
+is cleared on `LoginAsync`, `VerifyMfaAsync`, `RefreshAsync` and `LogoutAsync`, since entries are
+keyed by subject rather than by session. It is thread-safe.

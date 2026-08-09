@@ -84,7 +84,58 @@ public sealed class NetworkError : Exception
         // only a sanitized status-code summary (no header values, safe or otherwise)
         // survives past this method, satisfying the §2 MUST for a non-null cause chain.
         var inner = new SanitizedCause($"HTTP {(int)response.StatusCode}");
-        return new NetworkError(message, inner);
+        return new NetworkError(message, inner) { RetryAfter = ParseRetryAfter(response) };
+    }
+
+    /// <summary>
+    /// A server-supplied <c>Retry-After</c> hint (CONTRACT.md &#167;16.1), <c>null</c>
+    /// when the response carried none.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// A parsed <see cref="TimeSpan"/>, never the raw header text, so the fail-closed
+    /// redaction discipline this class exists to enforce is untouched: a duration
+    /// cannot carry a token, a URL, or anything else a header might. (<c>Retry-After</c>
+    /// happens to be on the safe allowlist above, but storing the parsed value keeps
+    /// that an incidental fact rather than a dependency.)
+    /// </para>
+    /// <para>
+    /// &#167;16 honors it as a <strong>floor</strong> on the backoff — the server is
+    /// stating when it will be ready, so retrying sooner is not permitted.
+    /// </para>
+    /// </remarks>
+    public TimeSpan? RetryAfter { get; init; }
+
+    /// <summary>
+    /// Reads <c>Retry-After</c> as a duration, <c>null</c> when absent or unusable.
+    /// </summary>
+    /// <remarks>
+    /// Both RFC 7231 forms are accepted: delta-seconds and an HTTP-date. The date form
+    /// is not hypothetical — CDNs and proxies commonly send it on <c>429</c>/<c>503</c>,
+    /// and treating it as unparseable would silently discard the server's own statement
+    /// about when it will be ready. A non-positive value collapses to <c>null</c> rather
+    /// than becoming a floor, since a negative minimum wait is meaningless.
+    /// </remarks>
+    private static TimeSpan? ParseRetryAfter(HttpResponseMessage response)
+    {
+        var header = response.Headers.RetryAfter;
+        if (header is null)
+        {
+            return null;
+        }
+
+        if (header.Delta is { } delta)
+        {
+            return delta > TimeSpan.Zero ? delta : null;
+        }
+
+        if (header.Date is { } date)
+        {
+            TimeSpan until = date - DateTimeOffset.UtcNow;
+            return until > TimeSpan.Zero ? until : null;
+        }
+
+        return null;
     }
 
     /// <summary>
