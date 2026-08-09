@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -457,6 +458,78 @@ public class D5ConformanceTests
         string rendered = string.Join(";", events).ToLowerInvariant();
         Assert.DoesNotContain("eyj", rendered, StringComparison.Ordinal);
         Assert.DoesNotContain("authorization:", rendered, StringComparison.Ordinal);
+    }
+
+    // -----------------------------------------------------------------------
+    // §19.2 rule 6 — a clamp is reported, not swallowed
+    // -----------------------------------------------------------------------
+
+    [Fact]
+    public void ClampingAnAttemptCapEmitsAConfigClampedEvent()
+    {
+        // Clamping is right; clamping SILENTLY is not. Without this event a caller
+        // who set 10 has no way to learn they got 3.
+        var events = new List<TelemetryEvent>();
+        var options = Options(maxAttempts: 10);
+        options = options with { TelemetryHook = events.Add };
+
+        using var client = AxiamClient.CreateForTesting(
+            BaseUrl, "acme", options, new ScriptHandler([HttpStatusCode.OK]));
+
+        ConfigClampedEvent clamp = Assert.Single(events.OfType<ConfigClampedEvent>());
+        Assert.Equal("MaxRetryAttempts", clamp.Setting);
+        Assert.Equal("10", clamp.Requested);
+        Assert.Equal("3", clamp.Effective);
+        Assert.Equal("§16.1", clamp.ContractReference);
+    }
+
+    [Fact]
+    public void ClampingTheMemoTtlEmitsAConfigClampedEvent()
+    {
+        // The clamp that matters most: an operator who set 60s believes their
+        // staleness bound is 60s. It is 5s, and without this nothing says so.
+        var events = new List<TelemetryEvent>();
+        var options = Options(memoTtl: TimeSpan.FromSeconds(60));
+        options = options with { TelemetryHook = events.Add };
+
+        using var client = AxiamClient.CreateForTesting(
+            BaseUrl, "acme", options, new ScriptHandler([HttpStatusCode.OK]));
+
+        ConfigClampedEvent clamp = Assert.Single(
+            events.OfType<ConfigClampedEvent>().Where(e => e.Setting == "DecisionMemoTtl"));
+        Assert.Equal(TimeSpan.FromSeconds(60).ToString(), clamp.Requested);
+        Assert.Equal(DecisionMemo.MaxTtl.ToString(), clamp.Effective);
+        Assert.Equal("§17.1 rule 2", clamp.ContractReference);
+    }
+
+    [Fact]
+    public void AValueAlreadyWithinItsLimitEmitsNothing()
+    {
+        // §19.2 rule 6: an event that fires when nothing happened trains its reader
+        // to ignore it.
+        var events = new List<TelemetryEvent>();
+        var options = Options(maxAttempts: 3, memoTtl: TimeSpan.FromSeconds(2));
+        options = options with { TelemetryHook = events.Add };
+
+        using var client = AxiamClient.CreateForTesting(
+            BaseUrl, "acme", options, new ScriptHandler([HttpStatusCode.OK]));
+
+        Assert.Empty(events.OfType<ConfigClampedEvent>());
+    }
+
+    [Fact]
+    public void LoweringIsNotClampingAndEmitsNothing()
+    {
+        // The clamp is one-directional. A caller who asked for FEWER attempts gets
+        // what they asked for, and no event — nothing was overridden.
+        var events = new List<TelemetryEvent>();
+        var options = Options(maxAttempts: 2, baseDelay: TimeSpan.FromMilliseconds(50));
+        options = options with { TelemetryHook = events.Add };
+
+        using var client = AxiamClient.CreateForTesting(
+            BaseUrl, "acme", options, new ScriptHandler([HttpStatusCode.OK]));
+
+        Assert.Empty(events.OfType<ConfigClampedEvent>());
     }
 
     [Fact]

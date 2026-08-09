@@ -126,6 +126,11 @@ public sealed partial class AxiamClient : IDisposable
         _decisionMemo = new DecisionMemo(_options.DecisionMemoTtl);
         _authz = new AuthzRestClient(_httpClient, _options, _telemetry, _decisionMemo);
 
+        // §19.2 rule 6: a clamped setting is reported, not swallowed. Emitted once,
+        // here, because construction is the only moment an operator can act on it.
+        RetryPolicy.ReportClamps(_options, _telemetry);
+        _decisionMemo.ReportClamp(_options.DecisionMemoTtl, _telemetry);
+
         // CONTRACT.md §12 — initializes the OidcClientId/OidcClientSecret/discovery-TTL/
         // clock-skew fields declared in AxiamClient.Oidc.cs from this same _options
         // instance. Kept as a separate initializer (rather than inline field
