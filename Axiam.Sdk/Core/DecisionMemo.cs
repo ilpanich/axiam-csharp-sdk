@@ -78,6 +78,29 @@ internal sealed class DecisionMemo
         _clock = clock ?? Stopwatch.GetTimestamp;
     }
 
+    /// <summary>
+    /// Emits a <see cref="ConfigClampedEvent"/> if the requested TTL was clamped
+    /// (CONTRACT.md &#167;19.2 rule 6).
+    /// </summary>
+    /// <remarks>
+    /// This is the clamp that matters most to get right: an operator who set a
+    /// 60-second TTL believes their staleness bound is 60 seconds. It is five, and
+    /// without this event nothing anywhere says so.
+    /// </remarks>
+    internal void ReportClamp(TimeSpan requested, TelemetryDispatcher telemetry)
+    {
+        if (!telemetry.Installed || requested <= TimeSpan.Zero || requested == _ttl)
+        {
+            return;
+        }
+
+        telemetry.Emit(new ConfigClampedEvent(
+            nameof(Options.AxiamClientOptions.DecisionMemoTtl),
+            requested.ToString(),
+            _ttl.ToString(),
+            "§17.1 rule 2"));
+    }
+
     /// <summary>Whether this memo does anything. <c>false</c> for the default config.</summary>
     internal bool Enabled => _ttl > TimeSpan.Zero;
 

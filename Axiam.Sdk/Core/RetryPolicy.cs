@@ -1,6 +1,7 @@
 namespace Axiam.Sdk.Core;
 
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Axiam.Sdk.Options;
@@ -136,6 +137,53 @@ internal static class RetryPolicy
     /// answers from the server, not transport failures.
     /// </para>
     /// </remarks>
+    /// <summary>
+    /// Emits one <see cref="ConfigClampedEvent"/> per setting this policy clamped
+    /// (CONTRACT.md &#167;19.2 rule 6).
+    /// </summary>
+    /// <remarks>
+    /// Called once at client construction. Nothing is emitted for a value already
+    /// within its limit — an event that fires when nothing happened trains its
+    /// reader to ignore it.
+    /// </remarks>
+    internal static void ReportClamps(AxiamClientOptions options, TelemetryDispatcher telemetry)
+    {
+        if (!telemetry.Installed)
+        {
+            return;
+        }
+
+        int attempts = EffectiveMaxAttempts(options);
+        if (attempts != options.MaxRetryAttempts)
+        {
+            telemetry.Emit(new ConfigClampedEvent(
+                nameof(AxiamClientOptions.MaxRetryAttempts),
+                options.MaxRetryAttempts.ToString(CultureInfo.InvariantCulture),
+                attempts.ToString(CultureInfo.InvariantCulture),
+                "§16.1"));
+        }
+
+        TimeSpan baseDelay = EffectiveBaseDelay(options);
+        if (baseDelay != options.RetryBaseDelay)
+        {
+            telemetry.Emit(new ConfigClampedEvent(
+                nameof(AxiamClientOptions.RetryBaseDelay),
+                options.RetryBaseDelay.ToString(),
+                baseDelay.ToString(),
+                "§16.1"));
+        }
+
+        TimeSpan maxDelay = EffectiveMaxDelay(options);
+        if (maxDelay != options.RetryMaxDelay)
+        {
+            telemetry.Emit(new ConfigClampedEvent(
+                nameof(AxiamClientOptions.RetryMaxDelay),
+                options.RetryMaxDelay.ToString(),
+                maxDelay.ToString(),
+                "§16.1"));
+        }
+    }
+
     internal static async Task<T> ExecuteAsync<T>(
         string operationName,
         AxiamClientOptions options,

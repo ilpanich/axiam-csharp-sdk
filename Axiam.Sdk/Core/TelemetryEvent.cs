@@ -102,3 +102,36 @@ public sealed record RetryEvent(
 public sealed record RefreshEvent(
     RefreshRole Role,
     TimeSpan Duration) : TelemetryEvent;
+
+/// <summary>
+/// Emitted at construction, once per caller-supplied setting the SDK clamped
+/// (CONTRACT.md &#167;19.1, &#167;19.2 rule 6).
+/// </summary>
+/// <remarks>
+/// <para>
+/// Two places in the contract require clamping rather than rejecting: &#167;16.1's
+/// attempt cap, base delay and delay cap, and &#167;17.1 rule 2's memo TTL. Both
+/// clamps are right — rejecting would break a caller whose configuration was merely
+/// optimistic, and honoring would let one client become the herd &#167;16 exists to
+/// prevent. Doing it <em>silently</em> is the part that is wrong.
+/// </para>
+/// <para>
+/// An operator who set a 60-second memo TTL believes they have one. They have five
+/// seconds, and their staleness reasoning is off by a factor of twelve with nothing
+/// anywhere to say so. This event is what makes the clamp discoverable at the only
+/// moment it can be acted on.
+/// </para>
+/// <para>
+/// It is <strong>not</strong> emitted for a value already within its limit: an event
+/// that fires when nothing happened trains its reader to ignore it.
+/// </para>
+/// </remarks>
+/// <param name="Setting">The setting's name, e.g. <c>MaxRetryAttempts</c>.</param>
+/// <param name="Requested">The value the caller asked for, rendered.</param>
+/// <param name="Effective">The value actually in force, rendered.</param>
+/// <param name="ContractReference">The §-reference for the limit, e.g. <c>§16.1</c>.</param>
+public sealed record ConfigClampedEvent(
+    string Setting,
+    string Requested,
+    string Effective,
+    string ContractReference) : TelemetryEvent;

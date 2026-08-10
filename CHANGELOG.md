@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **§19 `ConfigClampedEvent` (contract 1.9).** The SDK now reports every setting it clamped,
+  once per setting, at construction — `MaxRetryAttempts`, `RetryBaseDelay`, `RetryMaxDelay`
+  (§16.1) and `DecisionMemoTtl` (§17.1 rule 2). Clamping is right; clamping *silently* is not:
+  an operator who set a 60-second memo TTL believes they have one, and their staleness
+  reasoning is off by a factor of twelve with nothing anywhere to say so. Nothing is emitted
+  for a value already within its limit, or for a value that was lowered — an event that fires
+  when nothing happened trains its reader to ignore it.
+
 ### Fixed
 
 - **The §16 retry configuration was never wired.** `MaxRetryAttempts`, `RetryBaseDelay` and
