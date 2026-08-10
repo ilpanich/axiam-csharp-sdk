@@ -1,6 +1,6 @@
 # Axiam.Sdk (C#) — Examples
 
-Two runnable example projects demonstrating the AXIAM C# SDK's public surface
+Three runnable example projects demonstrating the AXIAM C# SDK's public surface
 (`Axiam.Sdk` + `Axiam.Sdk.AspNetCore`). Both build under `<Nullable>enable</Nullable>`
 and reference the SDK's projects directly (not the published NuGet packages), so
 they always exercise the current source tree.
@@ -82,3 +82,49 @@ pull request, ensuring they stay compilable against the current
 SDK source tree. Neither example is executed in CI — running them end-to-end
 requires a live AXIAM server (and, for the Quickstart AMQP phase, a live
 RabbitMQ broker), which is manual-only per `21-VALIDATION.md`.
+
+## TelemetryHook/
+
+A console app demonstrating the D5 surface — CONTRACT.md §16 (bounded read-only
+retry), §17 (decision memo), §18 (`Dispose`) and §19 (telemetry hooks) — with a
+sink that aggregates in-process, so it runs with no metrics dependency.
+
+**Build:**
+
+```bash
+dotnet build examples/TelemetryHook -c Release
+```
+
+**Run** (works without a reachable server — that is the point):
+
+```bash
+export AXIAM_BASE_URL=https://your-axiam-instance
+export AXIAM_TENANT_ID=your-tenant-slug
+dotnet run --project examples/TelemetryHook
+```
+
+Pointed at nothing, it prints:
+
+```
+WARN: MaxRetryAttempts=25 was clamped to 3 (§16.1)
+WARN: DecisionMemoTtl=00:01:00 was clamped to 00:00:05 (§17.1 rule 2)
+check failed: checkAccess failed: HttpRequestException — Connection refused
+--- telemetry ---
+  CheckAccess/Failure: count=3 mean=35ms
+  retries CheckAccess: 2
+  refreshes: 0
+```
+
+Both settings are deliberately configured out of range so the §19.2 rule 6
+`ConfigClampedEvent` is something you *see* rather than something the comments
+promise. This SDK is where that matters most: `MaxRetryAttempts` was publicly
+settable **upward** before D5, which is exactly what §16.1 forbids — a caller
+who can raise the cap turns one client into the herd a backoff exists to
+prevent. The clamp closed it; the event is what stops the clamp being silent.
+
+The three failed attempts with two retries between them are the §16 budget, and
+counting them is only possible because §19.2 rule 5 emits one request pair per
+**attempt** rather than per logical call.
+
+The trailing comment in `Program.cs` maps each event onto its
+OpenTelemetry / prometheus-net equivalent.

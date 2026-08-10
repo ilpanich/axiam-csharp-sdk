@@ -541,4 +541,113 @@ public class D5ConformanceTests
         dispatcher.StartRequest("op", "POST", "/api/v1/authz/check", 1)
             .End(200, TelemetryOutcome.Success);
     }
+
+    // -----------------------------------------------------------------------
+    // §16.7 — the SAME assertions through the bare-bool surface
+    //
+    // Every §16 case above drives CheckAccessDecisionAsync. That is the richer
+    // surface, but it is not the one most callers use, and until this section
+    // existed the difference was load-bearing: CheckAccessAsync, CanAsync and
+    // BatchCheckAsync each posted directly, with no retry budget, no memo and no
+    // request pair, while this suite stayed green. A conformance suite that
+    // proves the policy on a surface nobody calls proves nothing about the
+    // surface they do — which is why §16.7 pins the assertion to the public API
+    // and to requests counted on the wire.
+    //
+    // These cases fail if anyone re-inlines the transport call into a bool method.
+    // -----------------------------------------------------------------------
+
+    private const string BatchAllowBody =
+        """{"results":[{"allowed":true,"reason_code":"allowed"}]}""";
+
+    private static readonly AuthzRestClient.AccessCheck[] OneCheck =
+        [new AuthzRestClient.AccessCheck("read", Resource)];
+
+    [Fact]
+    public async Task TheBoolSurfaceRetriesToo()
+    {
+        var handler = new ScriptHandler([HttpStatusCode.ServiceUnavailable, HttpStatusCode.OK]);
+        AuthzRestClient client = ClientFor(handler, Options());
+
+        Assert.True(await client.CheckAccessAsync("read", Resource));
+        Assert.Equal(2, handler.Calls);
+    }
+
+    [Fact]
+    public async Task TheBoolSurfaceHonoursTheAttemptCap()
+    {
+        var handler = new ScriptHandler([HttpStatusCode.ServiceUnavailable]);
+        AuthzRestClient client = ClientFor(handler, Options(maxAttempts: 25));
+
+        await Assert.ThrowsAsync<NetworkError>(() => client.CheckAccessAsync("read", Resource));
+
+        // 3, not 25 and not 1: the clamp and the retry both reach this surface.
+        Assert.Equal(RetryPolicy.MaxAttempts, handler.Calls);
+    }
+
+    [Fact]
+    public async Task CanInheritsThePolicyFromCheckAccess()
+    {
+        // CanAsync is the convenience spelling. It must not be a second
+        // implementation — that is exactly how one path drifts out of policy.
+        var handler = new ScriptHandler([HttpStatusCode.ServiceUnavailable, HttpStatusCode.OK]);
+        AuthzRestClient client = ClientFor(handler, Options());
+
+        Assert.True(await client.CanAsync("read", Resource));
+        Assert.Equal(2, handler.Calls);
+    }
+
+    [Fact]
+    public async Task TheBoolSurfaceEmitsTheFullEventSequence()
+    {
+        var events = new List<TelemetryEvent>();
+        var handler = new ScriptHandler([HttpStatusCode.ServiceUnavailable, HttpStatusCode.OK]);
+        AuthzRestClient client = ClientFor(handler, Options(), events.Add);
+
+        await client.CheckAccessAsync("read", Resource);
+
+        Assert.Equal(
+            new[] { "start", "end", "retry", "start", "end" },
+            events.Select(e => e switch
+            {
+                RequestStartEvent => "start",
+                RequestEndEvent => "end",
+                RetryEvent => "retry",
+                _ => "other",
+            }).ToArray());
+    }
+
+    [Fact]
+    public async Task TheBoolSurfaceIsServedByTheMemoLikeTheDecisionSurface()
+    {
+        // §17 is keyed on the check, not on the return type, so the two surfaces
+        // must share one memo — otherwise a caller mixing them pays for a second
+        // wire call that the TTL says it already answered.
+        var handler = new ScriptHandler([HttpStatusCode.OK]);
+        AuthzRestClient client = ClientFor(handler, Options(memoTtl: TimeSpan.FromSeconds(5)));
+
+        Assert.True(await client.CheckAccessDecisionAsync("read", Resource).ContinueWith(t => t.Result.Allowed));
+        Assert.True(await client.CheckAccessAsync("read", Resource));
+
+        Assert.Equal(1, handler.Calls);
+    }
+
+    [Fact]
+    public async Task BatchCheckRetriesAndCarriesTheBatchPathTemplate()
+    {
+        var events = new List<TelemetryEvent>();
+        var handler = new ScriptHandler(
+            [HttpStatusCode.ServiceUnavailable, HttpStatusCode.OK], BatchAllowBody);
+        AuthzRestClient client = ClientFor(handler, Options(), events.Add);
+
+        IReadOnlyList<bool> results = await client.BatchCheckAsync(OneCheck);
+
+        Assert.Equal(new[] { true }, results);
+        Assert.Equal(2, handler.Calls);
+        // The batch path, not the single-check one — a copy-pasted template would
+        // silently merge two operations into one metric series.
+        Assert.All(
+            events.OfType<RequestStartEvent>(),
+            e => Assert.Equal("/api/v1/authz/check/batch", e.PathTemplate));
+    }
 }

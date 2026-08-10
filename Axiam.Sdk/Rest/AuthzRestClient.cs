@@ -16,11 +16,21 @@ namespace Axiam.Sdk.Rest;
 /// same shared session). Exposed as <c>AxiamClient.Authz</c>.
 /// </summary>
 /// <remarks>
-/// This class holds NO local cache of any authorization decision — every call hits the
-/// server fresh. AXIAM's RBAC engine is additive-only (allow-wins, default-deny,
-/// SEC-040; project constraint per CLAUDE.md); a client-side cache or short-circuit
-/// could silently diverge from the server's live decision, which this SDK must never
-/// risk.
+/// <para>
+/// By default this class holds NO local cache of any authorization decision — every call
+/// hits the server fresh, because a client-side cache can silently diverge from the
+/// server's live decision. CONTRACT.md &#167;11.2 rule 6 makes that the default and
+/// &#167;17 carves out the single opt-in exception: a TTL-bounded
+/// <see cref="DecisionMemo"/>, off unless <c>DecisionMemoTtl</c> is set, whose cost
+/// (read-your-own-writes is not guaranteed, in both directions) is documented on that
+/// option.
+/// </para>
+/// <para>
+/// AXIAM's RBAC engine is default-deny with <b>deny-override</b>: an explicit
+/// <c>effect: deny</c> grant refuses regardless of what else allows it, at any depth of
+/// the hierarchy. (This remark said "additive-only, allow-wins" until B1 shipped
+/// deny-override and closed SEC-040.)
+/// </para>
 /// </remarks>
 public sealed class AuthzRestClient
 {
@@ -99,32 +109,21 @@ public sealed class AuthzRestClient
     public async Task<bool> CheckAccessAsync(
         string action, Guid resourceId, string? scope = null, Guid? subjectId = null, CancellationToken cancellationToken = default)
     {
-        var wireRequest = new CheckAccessWireRequest(action, resourceId, scope, subjectId);
-        HttpResponseMessage response;
-        try
-        {
-            response = await _http.PostAsJsonAsync(CheckPath, wireRequest, cancellationToken).ConfigureAwait(false);
-        }
-        catch (HttpRequestException ex)
-        {
-            // Transport-level failure (connection refused, DNS, TLS) — map to the
-            // documented NetworkError taxonomy (CONTRACT.md §2), matching
-            // AxiamClient.PostJsonAsync rather than leaking a raw HttpRequestException.
-            throw NetworkError.FromException(ex, "checkAccess failed");
-        }
-
-        using (response)
-        {
-            if (!response.IsSuccessStatusCode)
-            {
-                throw ErrorMapper.FromHttpResponse(response, "checkAccess failed");
-            }
-
-            CheckAccessWireResponse? wire = await response.Content
-                .ReadFromJsonAsync<CheckAccessWireResponse>(cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return wire?.Allowed ?? false;
-        }
+        // Delegates to CheckAccessDecisionAsync rather than posting directly.
+        //
+        // It used to post directly, with no §16 retry budget, no §17 memo and no §19
+        // request pair — so the most-used method on this class was the one method that
+        // did none of D5, while the D5 conformance suite (which drives
+        // CheckAccessDecisionAsync) stayed green. That is precisely the failure §16.7
+        // was written about: "a tested surface nobody calls is worse than an absent one,
+        // because the passing tests are what stop anyone from looking." Here the surface
+        // was called and the tests looked elsewhere — the same hole from the other side.
+        //
+        // Delegating, rather than duplicating the instrumentation, is what stops it
+        // recurring: one instrumented path, and no second one to forget.
+        AccessDecision decision = await CheckAccessDecisionAsync(
+            action, resourceId, scope, subjectId, cancellationToken).ConfigureAwait(false);
+        return decision.Allowed;
     }
 
     /// <summary>
@@ -223,36 +222,11 @@ public sealed class AuthzRestClient
     /// </summary>
     public async Task<IReadOnlyList<bool>> BatchCheckAsync(IEnumerable<AccessCheck> checks, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(checks);
-        List<CheckAccessWireRequest> wireChecks = checks
-            .Select(c => new CheckAccessWireRequest(c.Action, c.ResourceId, c.Scope, c.SubjectId))
-            .ToList();
-        var wireRequest = new BatchCheckWireRequest(wireChecks);
-
-        HttpResponseMessage response;
-        try
-        {
-            response = await _http.PostAsJsonAsync(BatchCheckPath, wireRequest, cancellationToken).ConfigureAwait(false);
-        }
-        catch (HttpRequestException ex)
-        {
-            // Transport-level failure — map to NetworkError (CONTRACT.md §2), matching
-            // AxiamClient.PostJsonAsync rather than leaking a raw HttpRequestException.
-            throw NetworkError.FromException(ex, "batchCheck failed");
-        }
-
-        using (response)
-        {
-            if (!response.IsSuccessStatusCode)
-            {
-                throw ErrorMapper.FromHttpResponse(response, "batchCheck failed");
-            }
-
-            BatchCheckWireResponse? wire = await response.Content
-                .ReadFromJsonAsync<BatchCheckWireResponse>(cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-            return wire?.Results.Select(r => r.Allowed).ToList() ?? new List<bool>();
-        }
+        // Delegates for the same reason CheckAccessAsync does: one instrumented path,
+        // and no second one to forget.
+        IReadOnlyList<AccessDecision> decisions =
+            await BatchCheckDecisionsAsync(checks, cancellationToken).ConfigureAwait(false);
+        return decisions.Select(d => d.Allowed).ToList();
     }
 
     /// <summary>
@@ -269,7 +243,27 @@ public sealed class AuthzRestClient
         List<CheckAccessWireRequest> wireChecks = checks
             .Select(c => new CheckAccessWireRequest(c.Action, c.ResourceId, c.Scope, c.SubjectId))
             .ToList();
+
+        // §16.2 names batch_check as retry-eligible alongside check_access — the same
+        // side-effect-free POST, just plural. Deliberately NOT memoized: the §17 key is
+        // per-check, so a batch would split into n entries with n keys, which changes
+        // what a partial hit means. §17 says nothing about batch, so this takes the
+        // conservative reading rather than inventing semantics.
+        return await RetryPolicy.ExecuteAsync(
+            "BatchCheck",
+            _options,
+            _telemetry,
+            _jitter,
+            attempt => SendBatchAsync(wireChecks, attempt, cancellationToken),
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>One §16 attempt at the batch call, with its §19 request pair.</summary>
+    private async Task<IReadOnlyList<AccessDecision>> SendBatchAsync(
+        List<CheckAccessWireRequest> wireChecks, int attempt, CancellationToken cancellationToken)
+    {
         var wireRequest = new BatchCheckWireRequest(wireChecks);
+        TelemetryDispatcher.Span span = _telemetry.StartRequest("BatchCheck", "POST", BatchCheckPath, attempt);
 
         HttpResponseMessage response;
         try
@@ -278,6 +272,7 @@ public sealed class AuthzRestClient
         }
         catch (HttpRequestException ex)
         {
+            span.End(null, TelemetryOutcome.Failure);
             throw NetworkError.FromException(ex, "batchCheck failed");
         }
 
@@ -285,12 +280,14 @@ public sealed class AuthzRestClient
         {
             if (!response.IsSuccessStatusCode)
             {
+                span.End((int)response.StatusCode, TelemetryOutcome.Failure);
                 throw ErrorMapper.FromHttpResponse(response, "batchCheck failed");
             }
 
             BatchCheckWireResponse? wire = await response.Content
                 .ReadFromJsonAsync<BatchCheckWireResponse>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
+            span.End((int)response.StatusCode, TelemetryOutcome.Success);
             return wire?.Results
                 .Select(r => new AccessDecision(r.Allowed, r.Reason, r.ReasonCode))
                 .ToList() ?? new List<AccessDecision>();
