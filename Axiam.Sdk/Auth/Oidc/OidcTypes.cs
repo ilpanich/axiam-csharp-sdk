@@ -485,3 +485,174 @@ public sealed record VerifiedLogoutToken(
     string? Sid,
     string? Sub,
     string Jti);
+
+// ---------------------------------------------------------------------------
+// §20 UMA 2.0 — Protection API and ticket grant
+// ---------------------------------------------------------------------------
+
+/// <summary>
+/// A UMA resource set — an AXIAM resource seen through the Protection API
+/// (CONTRACT.md &#167;20.1).
+/// </summary>
+/// <remarks>
+/// <para><paramref name="Id"/> is <b>the AXIAM resource id</b>, not a parallel
+/// identifier: the same GUID is directly usable as the
+/// <see cref="RequestedPermission.ResourceId"/> of a later ticket request, and
+/// as the resource id anywhere else in this SDK.</para>
+/// </remarks>
+/// <param name="Name">Human-readable name, shown in the admin UI.</param>
+/// <param name="Id">Assigned by the server on registration; <c>null</c> on the way in.</param>
+/// <param name="Type">
+/// Free-form resource type. Defaults server-side to <c>uma_resource</c> when
+/// <c>null</c>, so a resource server that omits it does not produce a row that
+/// sorts oddly next to hand-made ones.
+/// </param>
+/// <param name="ResourceScopes">
+/// The scope names a resource server may ask for on this resource.
+/// <b>Replaced wholesale by an update, never merged</b> (&#167;20.2 rule 8) —
+/// this SDK does not read the current scopes and fold them into an update
+/// payload as a convenience, because that would make removing a scope
+/// impossible through it.
+/// </param>
+public sealed record ResourceSet(
+    string Name,
+    Guid? Id = null,
+    string? Type = null,
+    IReadOnlyList<string>? ResourceScopes = null);
+
+/// <summary>One <c>(resource, scopes)</c> pair a resource server requires (&#167;20.1).</summary>
+/// <param name="ResourceId">
+/// The AXIAM resource id — the same GUID the Protection API returned as <c>_id</c>.
+/// </param>
+/// <param name="ResourceScopes">
+/// Scope names, each of which the resource must already declare. Matched
+/// exactly: no prefix or wildcard semantics in either direction.
+/// </param>
+public sealed record RequestedPermission(Guid ResourceId, IReadOnlyList<string> ResourceScopes);
+
+/// <summary>One entry of an RPT's <c>permissions</c> claim (&#167;20.1).</summary>
+/// <remarks>
+/// <b>A record of a decision already made, not a live authorization answer</b>
+/// (&#167;20.2 rule 7). These are the pairs the engine allowed when the RPT was
+/// minted; a grant revoked afterwards does not empty a live RPT. Do not cache
+/// them beyond the token's own expiry — which is why that expiry is short.
+/// </remarks>
+/// <param name="ResourceId">The resource the engine allowed.</param>
+/// <param name="ResourceScopes">The scopes it allowed on that resource.</param>
+/// <param name="Exp">Absolute expiry, seconds since the epoch.</param>
+public sealed record RptPermission(Guid ResourceId, IReadOnlyList<string> ResourceScopes, long Exp);
+
+/// <summary>The result of the UMA ticket grant (&#167;20.1).</summary>
+/// <remarks>
+/// <b>There is no <c>RefreshToken</c> component, and that is deliberate</b>
+/// (&#167;20.2 rule 5). The grant issues none, so an RPT cannot outlive the
+/// ticket that authorised it; an application that wants a fresh one re-runs the
+/// grant. This result never enters the &#167;9 single-flight refresh guard —
+/// there is nothing to refresh.
+/// </remarks>
+/// <param name="AccessToken">The RPT itself (&#167;20.6 secret).</param>
+/// <param name="TokenType">Always <c>Bearer</c>.</param>
+/// <param name="ExpiresIn"><c>min(claimToken remaining, server ceiling, 300 s)</c>.</param>
+public sealed record RequestingPartyToken(
+    Sensitive<string> AccessToken,
+    string TokenType,
+    long ExpiresIn);
+
+/// <summary>Arguments to <see cref="AxiamClient.UmaExchangeTicketAsync"/> (&#167;20.1).</summary>
+/// <param name="Ticket">The permission ticket.</param>
+/// <param name="ClaimToken">
+/// The requesting party's access token. <b>Required</b>, though UMA 2.0
+/// &#167;3.3.1 marks it optional: v1 implements neither incremental
+/// authorization nor claims-gathering, so this is the only channel that names a
+/// requesting party (&#167;20.2 rule 2).
+/// </param>
+/// <param name="TenantId">Tenant GUID for the <c>tenant_id</c> query parameter.</param>
+/// <param name="Configuration">A pre-fetched discovery document.</param>
+public sealed record UmaExchangeTicketParams(
+    Sensitive<string> Ticket,
+    Sensitive<string> ClaimToken,
+    Guid? TenantId = null,
+    OidcConfiguration? Configuration = null);
+
+/// <summary>A parsed <c>WWW-Authenticate: UMA</c> challenge (UMA 2.0 &#167;3.2, &#167;20.3).</summary>
+/// <param name="Realm">The protection realm the resource server named.</param>
+/// <param name="AsUri">
+/// The authorization server the resource server nominates. <b>Not automatically
+/// trusted</b> — see <see cref="UmaChallenge.Parse"/>.
+/// </param>
+/// <param name="Ticket">
+/// The ticket to exchange — a bearer credential for its 60-second life.
+/// </param>
+public sealed record UmaChallenge(string? Realm, string? AsUri, Sensitive<string>? Ticket)
+{
+    /// <summary>Parses a <c>WWW-Authenticate: UMA …</c> header value (&#167;20.3).</summary>
+    /// <remarks>
+    /// <para><b>This deliberately does not exchange the ticket.</b> Parsing a
+    /// challenge and acting on it are separate decisions: the <c>as_uri</c>
+    /// names an authorization server the caller has not necessarily chosen to
+    /// trust, and auto-exchanging would send the requesting party's
+    /// <c>claim_token</c> to whatever host answered the 403. The caller
+    /// decides.</para>
+    /// </remarks>
+    /// <param name="header">The header value.</param>
+    /// <returns>The parsed challenge, or <c>null</c> when it is not a UMA challenge.</returns>
+    public static UmaChallenge? Parse(string header)
+    {
+        ArgumentNullException.ThrowIfNull(header);
+        string trimmed = header.Trim();
+        if (!trimmed.StartsWith("UMA", StringComparison.Ordinal))
+        {
+            return null;
+        }
+        string rest = trimmed[3..];
+        // "UMA" alone is a valid, if useless, challenge; anything else must be
+        // separated by whitespace so `UMAX realm="…"` is not read as UMA.
+        if (rest.Length > 0 && !char.IsWhiteSpace(rest[0]))
+        {
+            return null;
+        }
+
+        string? realm = null;
+        string? asUri = null;
+        Sensitive<string>? ticket = null;
+        foreach (string part in rest.Split(','))
+        {
+            int eq = part.IndexOf('=', StringComparison.Ordinal);
+            if (eq < 0)
+            {
+                continue;
+            }
+            string key = part[..eq].Trim();
+            string value = part[(eq + 1)..].Trim().Trim('"');
+            switch (key)
+            {
+                case "realm":
+                    realm = value;
+                    break;
+                case "as_uri":
+                    asUri = value;
+                    break;
+                case "ticket":
+                    ticket = Sensitive<string>.Wrap(value);
+                    break;
+                default:
+                    // Unknown parameters are ignored rather than rejected: UMA 2.0
+                    // permits a server to add its own, and refusing the whole
+                    // challenge over one would lose the ticket with it.
+                    break;
+            }
+        }
+        return new UmaChallenge(realm, asUri, ticket);
+    }
+
+    /// <summary>Formats a <c>WWW-Authenticate: UMA</c> header value (&#167;20.3, emit half).</summary>
+    /// <param name="realm">The protection realm.</param>
+    /// <param name="asUri">The authorization server.</param>
+    /// <param name="ticket">The permission ticket.</param>
+    /// <returns>The header value.</returns>
+    public static string Header(string realm, string asUri, Sensitive<string> ticket)
+    {
+        ArgumentNullException.ThrowIfNull(ticket);
+        return $"UMA realm=\"{realm}\", as_uri=\"{asUri}\", ticket=\"{ticket.Reveal()}\"";
+    }
+}
