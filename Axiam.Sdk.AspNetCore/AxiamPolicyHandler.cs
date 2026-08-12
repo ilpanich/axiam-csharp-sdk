@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Axiam.Sdk;
+using Axiam.Sdk.Auth.Oidc;
 using Axiam.Sdk.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
@@ -89,14 +90,32 @@ public sealed class AxiamPolicyHandler : AuthorizationHandler<AxiamRequirement>
     /// </remarks>
     internal static readonly object OutcomeItemKey = new();
 
+    /// <summary>
+    /// The <see cref="HttpContext.Items"/> key carrying a formatted
+    /// <c>WWW-Authenticate: UMA</c> value from this handler to
+    /// <see cref="AxiamAuthorizationMiddlewareResultHandler"/>, which owns the
+    /// response. Present only on a denial, and only when a <see cref="UmaChallenger"/>
+    /// is registered and minting succeeded (CONTRACT.md &#167;20.3).
+    /// </summary>
+    internal static readonly object ChallengeItemKey = new();
+
     private readonly AxiamClient _client;
+    private readonly UmaChallenger? _challenger;
 
     /// <summary>Constructs the handler over the shared <see cref="AxiamClient"/> registered by
     /// <see cref="ServiceCollectionExtensions.AddAxiamAspNetCore"/>.</summary>
     /// <param name="client">The shared client whose <c>Authz.CheckAccessAsync</c> this handler calls.</param>
-    public AxiamPolicyHandler(AxiamClient client)
+    /// <param name="challenger">
+    /// An optional &#167;20.3 challenge emitter, registered by
+    /// <see cref="ServiceCollectionExtensions.AddAxiamUmaChallenge"/>. When absent
+    /// (the default) a denial is the plain 403 it has always been; see
+    /// <see cref="UmaChallenger"/> for why this is opt-in and why a minting failure
+    /// still denies plainly.
+    /// </param>
+    public AxiamPolicyHandler(AxiamClient client, UmaChallenger? challenger = null)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
+        _challenger = challenger;
     }
 
     /// <summary>
@@ -190,6 +209,8 @@ public sealed class AxiamPolicyHandler : AuthorizationHandler<AxiamRequirement>
             // unsatisfied (exactly like the allowed=false branch below) so the result
             // handler writes the standardized 403 body — never let it escape as an
             // unhandled 500. The AuthzError carries no token material (Core redaction).
+            await PrepareUmaChallengeAsync(httpContext, requirement.PolicyName, resourceId, cancellationToken)
+                .ConfigureAwait(false);
             return;
         }
         catch (AuthError)
@@ -214,9 +235,70 @@ public sealed class AxiamPolicyHandler : AuthorizationHandler<AxiamRequirement>
         if (allowed)
         {
             context.Succeed(requirement);
+            return;
         }
-        // else: leave unsatisfied — AxiamAuthorizationMiddlewareResultHandler maps an
-        // unsatisfied/Forbidden requirement to a standardized 403 JSON body.
+
+        // Left unsatisfied — AxiamAuthorizationMiddlewareResultHandler maps an
+        // unsatisfied/Forbidden requirement to a standardized 403 JSON body. §20.3:
+        // with a challenger registered, that 403 additionally tells the caller where
+        // to obtain authority rather than only that they lack it.
+        await PrepareUmaChallengeAsync(httpContext, requirement.PolicyName, resourceId, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Mints one ticket for the pair that was just refused and stashes the formatted
+    /// challenge for the result handler to emit. A no-op without a registered
+    /// <see cref="UmaChallenger"/>.
+    /// </summary>
+    /// <remarks>
+    /// <para>The requested scope is the AXIAM <i>action</i> (&#167;20.2): asking for
+    /// anything else would offer the caller authority other than the one they were
+    /// denied, and would step outside the grants the engine just evaluated — deny
+    /// rules included.</para>
+    ///
+    /// <para>Every failure is swallowed deliberately. A PAT that expired, a Protection
+    /// API that is down, a resource that declares none of the requested scopes — none
+    /// of these change the answer to the request, which was already "no". Letting them
+    /// turn a deny into a 503 would give the outage a second consequence; letting them
+    /// turn it into an allow would be a security bug.</para>
+    /// </remarks>
+    private async Task PrepareUmaChallengeAsync(
+        HttpContext? httpContext,
+        string action,
+        Guid resourceId,
+        CancellationToken cancellationToken)
+    {
+        if (_challenger is null || httpContext is null)
+        {
+            return;
+        }
+
+        try
+        {
+            Sensitive<string> ticket = await _client
+                .UmaRequestTicketAsync(
+                    _challenger.Pat,
+                    new[] { new RequestedPermission(resourceId, new[] { action }) },
+                    cancellationToken)
+                .ConfigureAwait(false);
+            httpContext.Items[ChallengeItemKey] =
+                UmaChallenge.Header(_challenger.Realm, _challenger.AsUri, ticket);
+        }
+        catch (NetworkError)
+        {
+            // See the remarks above: the denial stands on its own; only the sugar is
+            // lost. The three catches are spelled out rather than collapsed into
+            // `catch (Exception)` because this SDK's errors share no common base — a
+            // blanket catch here would also swallow a programming error in this method.
+        }
+        catch (AuthError)
+        {
+            // Includes OAuthProtocolError, which derives from AuthError.
+        }
+        catch (AuthzError)
+        {
+        }
     }
 
     private static bool TryResolveResourceId(HttpContext? httpContext, string resourceRouteParam, out Guid resourceId)
@@ -310,9 +392,21 @@ public sealed class AxiamAuthorizationMiddlewareResultHandler : IAuthorizationMi
         }
 
         bool isAuthenticated = context.User.Identity?.IsAuthenticated == true;
-        return isAuthenticated
-            ? WriteJsonAsync(context, StatusCodes.Status403Forbidden, "authorization_denied", "insufficient permissions")
-            : WriteJsonAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "authentication required");
+        if (!isAuthenticated)
+        {
+            return WriteJsonAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "authentication required");
+        }
+
+        // §20.3: AxiamPolicyHandler minted a ticket for the refused pair and left the
+        // formatted challenge here. Set before writing — WriteJsonAsync commits the
+        // status line and starts the body.
+        if (context.Items.TryGetValue(AxiamPolicyHandler.ChallengeItemKey, out object? challenge) &&
+            challenge is string headerValue)
+        {
+            context.Response.Headers["WWW-Authenticate"] = headerValue;
+        }
+
+        return WriteJsonAsync(context, StatusCodes.Status403Forbidden, "authorization_denied", "insufficient permissions");
     }
 
     private static Task WriteJsonAsync(HttpContext context, int statusCode, string error, string message)
