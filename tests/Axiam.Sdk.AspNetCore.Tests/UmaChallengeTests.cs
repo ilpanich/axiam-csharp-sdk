@@ -149,6 +149,64 @@ public sealed class UmaChallengeTests
         Assert.Contains("invoices", rendered, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task AServerIssued403OnTheCheck_AlsoCarriesAChallenge()
+    {
+        // §11.2.5 maps a server-issued 403 on the check call itself to the same deny
+        // outcome as an allowed=false body. It is the same refusal, so it is answerable
+        // with the same ticket — the two deny paths must not disagree about that.
+        var fixture = new JwksFixture();
+        var server = new UmaServerHandler(fixture.BuildJwksDocument())
+        {
+            CheckStatusCode = HttpStatusCode.Forbidden,
+        };
+        using IHost host = await CreateHostAsync(server, WithChallenger).ConfigureAwait(false);
+
+        HttpResponseMessage response = await GetDocumentAsync(host, fixture).ConfigureAwait(false);
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal(1, server.PermCalls);
+        Assert.True(response.Headers.Contains("WWW-Authenticate"));
+    }
+
+    [Fact]
+    public async Task AnExpiredPat_DeniesWithoutAChallenge()
+    {
+        // 401 from the Protection API — the PAT itself is no longer good. The classic
+        // way this fails in production, and the one most tempting to surface as a 500.
+        var fixture = new JwksFixture();
+        var server = new UmaServerHandler(fixture.BuildJwksDocument())
+        {
+            AllowAccess = false,
+            PermStatusCode = HttpStatusCode.Unauthorized,
+        };
+        using IHost host = await CreateHostAsync(server, WithChallenger).ConfigureAwait(false);
+
+        HttpResponseMessage response = await GetDocumentAsync(host, fixture).ConfigureAwait(false);
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.False(response.Headers.Contains("WWW-Authenticate"));
+    }
+
+    [Fact]
+    public async Task APatWithoutTheProtectionScope_DeniesWithoutAChallenge()
+    {
+        // 403 from the Protection API — a token that authenticates but is not a PAT
+        // (wrong subject kind, or missing uma_protection). §20.2 rule 1's failure mode.
+        var fixture = new JwksFixture();
+        var server = new UmaServerHandler(fixture.BuildJwksDocument())
+        {
+            AllowAccess = false,
+            PermStatusCode = HttpStatusCode.Forbidden,
+        };
+        using IHost host = await CreateHostAsync(server, WithChallenger).ConfigureAwait(false);
+
+        HttpResponseMessage response = await GetDocumentAsync(host, fixture).ConfigureAwait(false);
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.False(response.Headers.Contains("WWW-Authenticate"));
+    }
+
     private static readonly Guid DocumentId = Guid.Parse("33333333-3333-3333-3333-333333333333");
 
     private static UmaChallenger Challenger() =>
@@ -221,6 +279,9 @@ public sealed class UmaChallengeTests
 
         public bool AllowAccess { get; set; } = true;
 
+        /// <summary>When set, <c>POST /api/v1/authz/check</c> answers with this instead of a verdict.</summary>
+        public HttpStatusCode? CheckStatusCode { get; set; }
+
         /// <summary>When set, <c>POST /uma2/perm</c> answers with this instead of minting.</summary>
         public HttpStatusCode? PermStatusCode { get; set; }
 
@@ -254,7 +315,9 @@ public sealed class UmaChallengeTests
 
             if (request.Method == HttpMethod.Post && path == "/api/v1/authz/check")
             {
-                return Json(HttpStatusCode.OK, "{\"allowed\":" + (AllowAccess ? "true" : "false") + "}");
+                return CheckStatusCode is HttpStatusCode checkFailure
+                    ? Json(checkFailure, "{\"error\":\"forbidden\",\"message\":\"simulated\"}")
+                    : Json(HttpStatusCode.OK, "{\"allowed\":" + (AllowAccess ? "true" : "false") + "}");
             }
 
             return new HttpResponseMessage(HttpStatusCode.NotFound);
