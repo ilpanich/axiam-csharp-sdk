@@ -1,6 +1,6 @@
 # Axiam.Sdk (C#) — Examples
 
-Three runnable example projects demonstrating the AXIAM C# SDK's public surface
+Five runnable example projects demonstrating the AXIAM C# SDK's public surface
 (`Axiam.Sdk` + `Axiam.Sdk.AspNetCore`). Both build under `<Nullable>enable</Nullable>`
 and reference the SDK's projects directly (not the published NuGet packages), so
 they always exercise the current source tree.
@@ -128,3 +128,43 @@ counting them is only possible because §19.2 rule 5 emits one request pair per
 
 The trailing comment in `Program.cs` maps each event onto its
 OpenTelemetry / prometheus-net equivalent.
+
+## UmaResourceServer/ and UmaClient/
+
+The two halves of UMA 2.0 (CONTRACT.md §20): a resource server that answers a
+denial with `WWW-Authenticate: UMA` carrying a fresh permission ticket, and a
+client that consumes that header.
+
+**Build:**
+
+```bash
+dotnet build examples/UmaResourceServer -c Release
+dotnet build examples/UmaClient -c Release
+```
+
+**Run (the server first — it prints the resource id the client needs):**
+
+```bash
+export Axiam__BaseUrl=https://your-axiam-instance
+export Axiam__OidcClientId=invoices-resource-server
+export Axiam__OidcClientSecret=…
+dotnet run --project examples/UmaResourceServer
+
+AXIAM_INVOICE_ID=<the id it printed> dotnet run --project examples/UmaClient
+```
+
+The server shows the three setup steps in order: mint a PAT (a
+client-credentials token carrying `uma_protection` — §20.2 rule 1 requires a
+*client* token, since a ticket binds to the `client_id` that minted it), register
+the resource (the returned id **is** the AXIAM resource id), and register a
+`UmaChallenger` so a denied `[Authorize(Policy=…)]` carries a ticket.
+
+The client shows the four request steps — refusal, parse, **trust decision**,
+exchange — and makes the third one explicitly: it compares the nominated `as_uri`
+against the issuer it already trusts and refuses to redeem when they differ.
+`UmaChallenge.Parse` deliberately does not exchange, because the `as_uri` was
+chosen by the server that just refused you.
+
+Neither example echoes the ticket, the challenge, or any client-derived value: a
+ticket is a live credential for its 60 seconds, and printing remote-chosen
+strings into a terminal or log is its own hazard.

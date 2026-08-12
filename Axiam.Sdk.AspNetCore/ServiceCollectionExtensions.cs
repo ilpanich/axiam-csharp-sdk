@@ -82,6 +82,33 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// Registers a <see cref="UmaChallenger"/> so an <c>[Authorize(Policy=…)]</c>
+    /// denial answers with <c>WWW-Authenticate: UMA</c> carrying a freshly minted
+    /// permission ticket (CONTRACT.md &#167;20.3) instead of a bare 403.
+    /// </summary>
+    /// <remarks>
+    /// Opt-in on purpose: emitting a challenge means minting a credential, and a
+    /// handler that did that on every denial by default would put a Protection API
+    /// call behind every unauthorized request. See <see cref="UmaChallenger"/> for
+    /// that reasoning and for why a minting failure still denies plainly.
+    /// </remarks>
+    /// <param name="services">The service collection.</param>
+    /// <param name="challenger">
+    /// The configured emitter. Build its <c>asUri</c> from the discovery document
+    /// rather than by hand (&#167;12.3 rule 6), and its PAT from a
+    /// client-credentials login carrying <c>uma_protection</c> (&#167;20.2 rule 1).
+    /// </param>
+    /// <returns>The same collection, for chaining.</returns>
+    public static IServiceCollection AddAxiamUmaChallenge(this IServiceCollection services, UmaChallenger challenger)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(challenger);
+
+        services.TryAddSingleton(challenger);
+        return services;
+    }
+
     private static AxiamClient BuildClient(IServiceProvider serviceProvider)
     {
         AxiamOptions options = serviceProvider.GetRequiredService<IOptions<AxiamOptions>>().Value;

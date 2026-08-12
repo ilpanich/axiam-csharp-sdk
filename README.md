@@ -354,6 +354,62 @@ Notes:
 - On `Axiam.Sdk.AspNetCore`, the same two properties exist on `AxiamOptions` and flow
   through to the shared `AxiamClient`.
 
+## UMA 2.0 — protecting resources whose owner isn't the caller (CONTRACT.md §20)
+
+For a resource server holding data that belongs to *users*: instead of answering an
+unauthorized request with a bare 403, tell the caller where to go and get authority.
+
+Registration and the ticket grant live on `AxiamClient` (`UmaRegisterResourceAsync` /
+`UmaReadResourceAsync` / `UmaUpdateResourceAsync` / `UmaDeleteResourceAsync` /
+`UmaListResourcesAsync`, `UmaRequestTicketAsync`, `UmaExchangeTicketAsync`). Every
+Protection API call takes the **PAT** as an explicit first argument — a client-credentials
+token carrying `uma_protection` (§20.2 rule 1) rather than the client's ambient session,
+because that session is usually a *user* session and a minted ticket binds to a `client_id`.
+
+The registered id **is** the AXIAM resource id, so UMA scopes are AXIAM actions: the same
+grants — deny rules included — govern an RPT-carrying request and an ordinary one.
+
+### Emitting the challenge from the §11 policy handler
+
+```csharp
+builder.Services.AddAxiamAspNetCore(options => { /* … */ });
+builder.Services.AddAxiamUmaChallenge(
+    new UmaChallenger("invoices", configuration.Issuer, pat));
+
+// A denied [Authorize(Policy="invoices:read")] now answers 403 with
+//   WWW-Authenticate: UMA realm="invoices", as_uri="…", ticket="…"
+```
+
+Opt-in, deliberately: minting on every denial by default would put a Protection API call —
+and a live credential — behind every unauthorized request, which is a denial-of-service
+amplifier pointed at your own authorization server. And a minting failure still denies
+plainly, never a 503 and never an allow. The requested scope is the AXIAM **action**, so
+the ticket asks for exactly the authority just refused.
+
+### Consuming it
+
+`UmaChallenge.Parse(header)` parses and *stops there*. It does not exchange the ticket,
+because the `as_uri` it names was chosen by the server that just refused you; auto-redeeming
+would send the requesting party's token wherever a 403 pointed. The trust decision is the
+caller's:
+
+```csharp
+UmaChallenge? challenge = UmaChallenge.Parse(header);
+if (challenge?.Ticket is { } ticket && Trustworthy(challenge.AsUri))
+{
+    RequestingPartyToken rpt = await client.UmaExchangeTicketAsync(
+        new UmaExchangeTicketParams(ticket, userToken));
+}
+```
+
+`UmaExchangeTicketAsync` sends **one** request and never retries — the documented exception
+to the §16 retry policy, because a ticket is consumed before the request is evaluated, so a
+retry cannot succeed and under concurrency is exactly the double redemption to avoid. On
+failure, obtain a *new* ticket.
+
+Both halves run in [`examples/UmaResourceServer`](examples/UmaResourceServer) and
+[`examples/UmaClient`](examples/UmaClient).
+
 ## Device authorization grant (CONTRACT.md §14)
 
 RFC 8628 — signing in a device that cannot show a browser: a TV, a CLI, a headless
