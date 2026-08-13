@@ -394,13 +394,13 @@ public sealed record DeviceLoginParams(
 /// </remarks>
 /// <param name="SubjectToken">The token being exchanged (&#167;15.5 secret).</param>
 /// <param name="SubjectTokenType">
-/// What kind of token <paramref name="SubjectToken"/> is. <see langword="null"/> sends
-/// <c>urn:ietf:params:oauth:token-type:access_token</c>, the same-domain exchange of
-/// &#167;15.1; to exchange a token from a <b>trusted external issuer</b> (&#167;15.7), set this
-/// explicitly — normally to <see cref="AxiamClient.JwtTokenType"/>. The SDK never reads
-/// <paramref name="SubjectToken"/> to decide it: which kind of token you hold is something only
-/// you know, AXIAM refuses refresh and ID token types by name, and the SDK will not retry a
-/// refusal as a different type.
+/// What kind of token <paramref name="SubjectToken"/> is. <b>Required</b> (&#167;15.1), with no
+/// default: a default would be this SDK choosing which kind of credential you hold, which is
+/// exactly what &#167;15.7 forbids. Pass <see cref="AxiamClient.AccessTokenType"/> for the
+/// same-domain exchange, or <see cref="AxiamClient.JwtTokenType"/> for a trusted external
+/// issuer's JWT (&#167;15.7). The SDK never reads <paramref name="SubjectToken"/> to decide it:
+/// which kind of token you hold is something only you know, AXIAM refuses refresh and ID token
+/// types by name, and the SDK will not retry a refusal as a different type.
 /// </param>
 /// <param name="ActorToken">
 /// The acting party, when this is a <b>delegation</b> (&#167;15.2 rule 1). Its absence selects
@@ -413,7 +413,7 @@ public sealed record DeviceLoginParams(
 /// <param name="Configuration">A pre-fetched discovery document, or <see langword="null"/>.</param>
 public sealed record TokenExchangeParams(
     Sensitive<string> SubjectToken,
-    string? SubjectTokenType = null,
+    string SubjectTokenType,
     Sensitive<string>? ActorToken = null,
     IReadOnlyList<string>? Scopes = null,
     string? Audience = null,

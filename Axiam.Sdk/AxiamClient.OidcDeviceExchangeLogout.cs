@@ -293,6 +293,18 @@ public sealed partial class AxiamClient
     public async Task<ExchangedToken> TokenExchangeAsync(TokenExchangeParams @params, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(@params);
+        // §15.1: SubjectTokenType is required and has no default. The record's
+        // positional parameter makes omitting it a compile error, but a caller
+        // can still pass null or blank through a nullable-oblivious call site —
+        // so refuse here, client-side with no wire call, rather than sending
+        // …:access_token on their behalf (§15.7).
+        if (string.IsNullOrWhiteSpace(@params.SubjectTokenType))
+        {
+            throw new AuthError(
+                "TokenExchangeAsync requires SubjectTokenType (§15.1): pass "
+                + "AxiamClient.AccessTokenType for an AXIAM access token, or "
+                + "AxiamClient.JwtTokenType for a trusted external issuer's JWT");
+        }
         OidcConfiguration configuration = await ResolveOidcConfigurationAsync(@params.Configuration, cancellationToken).ConfigureAwait(false);
         string clientSecret = RequireOidcClientSecret(nameof(TokenExchangeAsync));
         Guid tenantId = ResolveOidcTenantId(@params.TenantId);

@@ -454,6 +454,7 @@ calling the next service.
 ```csharp
 ExchangedToken exchanged = await client.TokenExchangeAsync(new TokenExchangeParams(
     Sensitive<string>.Wrap(userToken),
+    AxiamClient.AccessTokenType,        // required (§15.1), no default
     Scopes: new[] { "orders:read" },
     Audience: "orders-service"));
 ```
@@ -477,14 +478,14 @@ actually do. There is no separate operation:
 ```csharp
 ExchangedToken exchanged = await client.TokenExchangeAsync(new TokenExchangeParams(
     Sensitive<string>.Wrap(partnerToken),
-    SubjectTokenType: AxiamClient.JwtTokenType,   // named, never guessed
+    SubjectTokenType: AxiamClient.JwtTokenType,   // required; named, never guessed
     Scopes: new[] { "read:orders" },
     Audience: "https://orders.internal"));
 ```
 
-- **`SubjectTokenType` is yours to state.** The SDK never decodes the subject token to pick
-  it, and never overrides what you named. Leaving it `null` still means
-  `AxiamClient.AccessTokenType`, the same-domain exchange above.
+- **`SubjectTokenType` is yours to state, and is required** (§15.1). The SDK never decodes
+  the subject token to pick it, and never overrides what you named. There is no default:
+  omitting it does not compile, and `null`/blank is refused client-side with no wire call.
 - **No actor token.** Delegation across a trust boundary is unsupported in v1; sending one
   is `invalid_request`, which the SDK will not work around by dropping it and re-sending.
 - **One refusal is distinguishable.** `invalid_grant` whose `ErrorDescription` is `the
