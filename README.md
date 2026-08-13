@@ -468,6 +468,35 @@ Most of what this method does is refuse to be helpful:
 - **No adoption**, and no flag to enable it — a MUST NOT, where `LoginClientCredentialsAsync`
   adoption is a MAY.
 
+### External-IdP subject tokens (CONTRACT.md §15.7)
+
+The same method exchanges a token minted by a **trusted external IdP** — a partner's
+Entra, Okta or Keycloak — for an AXIAM token scoped to what the resolved AXIAM user may
+actually do. There is no separate operation:
+
+```csharp
+ExchangedToken exchanged = await client.TokenExchangeAsync(new TokenExchangeParams(
+    Sensitive<string>.Wrap(partnerToken),
+    SubjectTokenType: AxiamClient.JwtTokenType,   // named, never guessed
+    Scopes: new[] { "read:orders" },
+    Audience: "https://orders.internal"));
+```
+
+- **`SubjectTokenType` is yours to state.** The SDK never decodes the subject token to pick
+  it, and never overrides what you named. Leaving it `null` still means
+  `AxiamClient.AccessTokenType`, the same-domain exchange above.
+- **No actor token.** Delegation across a trust boundary is unsupported in v1; sending one
+  is `invalid_request`, which the SDK will not work around by dropping it and re-sending.
+- **One refusal is distinguishable.** `invalid_grant` whose `ErrorDescription` is `the
+  subject token's issuer is not configured for token exchange` means *fix the AXIAM trust
+  configuration*. Every other `invalid_grant` means *fix your token*, and is deliberately
+  generic.
+- **Forward the result as-is.** It carries an `ext_exchange` claim naming the partner
+  issuer; never strip it, and never read it as an authorization input. It also cannot be
+  exchanged again — exchanges do not compose.
+
+The operator guide is `docs/api/federated-token-exchange.md`.
+
 ## Logout — RP-initiated and back-channel (CONTRACT.md §12.7)
 
 `LogoutUrlAsync` builds the redirect; `VerifyLogoutTokenAsync` validates a token the OP

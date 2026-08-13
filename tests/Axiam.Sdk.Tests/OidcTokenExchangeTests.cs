@@ -238,4 +238,173 @@ public class OidcTokenExchangeTests
         // the SDK passes both through rather than choosing.
         Assert.Equal("https://orders.example.com", form()!["resource"]);
     }
+
+    // -----------------------------------------------------------------------------------
+    // §15.7 — external-IdP subject tokens (X4)
+    //
+    // No new operation: the same TokenExchangeAsync carries a partner IdP's token. What
+    // changes is which subject tokens the server accepts and what its refusals mean, so
+    // these tests are about not getting in the way of either.
+    // -----------------------------------------------------------------------------------
+
+    /// <summary>
+    /// A token minted by a partner's IdP. Opaque to the SDK — deliberately not a well-formed
+    /// JWT, because nothing here may decode it.
+    /// </summary>
+    private const string ExternalSubjectToken = "partner-idp-subject-token";
+
+    /// <summary>
+    /// The one normative <c>error_description</c> (&#167;15.7). It means "fix the AXIAM trust
+    /// configuration", not "fix your token".
+    /// </summary>
+    private const string IssuerNotConfigured =
+        "the subject token's issuer is not configured for token exchange";
+
+    [Fact]
+    public async Task TokenExchangeAsync_ExternalSubjectTokenType_IsSentVerbatim()
+    {
+        (RoutingHandler handler, AxiamClient client) = SetUp();
+        MapExchange(handler, out Func<Dictionary<string, string>?> form, scope: "read:orders");
+
+        ExchangedToken result = await client.TokenExchangeAsync(new TokenExchangeParams(
+            Sensitive<string>.Wrap(ExternalSubjectToken),
+            SubjectTokenType: AxiamClient.JwtTokenType,
+            Scopes: new[] { "read:orders" },
+            Audience: "https://orders.internal"));
+
+        Dictionary<string, string> sent = form()!;
+        // The caller named …:jwt, so …:jwt goes on the wire. §15.7: the SDK must not inspect
+        // the subject token to pick this, and must not override it.
+        Assert.Equal("urn:ietf:params:oauth:token-type:jwt", sent["subject_token_type"]);
+        Assert.Equal(ExternalSubjectToken, sent["subject_token"]);
+        // Delegation across a trust boundary is unsupported; nothing may add one.
+        Assert.False(sent.ContainsKey("actor_token"));
+
+        // The cross-domain path is not a different result shape, and §15.2 rules 6-7 hold.
+        Assert.Equal(OidcTestKit.IssuedToken, result.AccessToken.Reveal());
+        Assert.Equal("urn:ietf:params:oauth:token-type:access_token", result.IssuedTokenType);
+        Assert.Equal("read:orders", result.Scope);
+    }
+
+    [Fact]
+    public async Task TokenExchangeAsync_SubjectTokenType_IsNeverInferredFromTheToken()
+    {
+        (RoutingHandler handler, AxiamClient client) = SetUp();
+        MapExchange(handler, out Func<Dictionary<string, string>?> form);
+
+        // A subject token that *looks* exactly like a JWT. An SDK that sniffed the token would
+        // send …:jwt here; §15.7 says it must not look, so the caller's silence still means the
+        // §15.1 same-domain default.
+        const string jwtShaped =
+            "eyJhbGciOiJFZERTQSJ9.eyJpc3MiOiJodHRwczovL3BhcnRuZXIuZXhhbXBsZS8ifQ.sig";
+        await client.TokenExchangeAsync(new TokenExchangeParams(Sensitive<string>.Wrap(jwtShaped)));
+
+        Assert.Equal("urn:ietf:params:oauth:token-type:access_token", form()!["subject_token_type"]);
+    }
+
+    [Fact]
+    public async Task TokenExchangeAsync_ActorTokenWithExternalSubjectToken_IsRefusedWithoutRetry()
+    {
+        (RoutingHandler handler, AxiamClient client) = SetUp();
+        int calls = 0;
+        Dictionary<string, string>? captured = null;
+        handler.Map(TokenPath, request =>
+        {
+            calls++;
+            captured = OidcTestKit.ReadForm(request);
+            return OidcTestKit.JsonStatus(
+                HttpStatusCode.BadRequest,
+                OidcTestKit.OAuth2ErrorJson(
+                    "invalid_request",
+                    "actor_token is not supported for an external subject token"));
+        });
+
+        OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(
+            () => client.TokenExchangeAsync(new TokenExchangeParams(
+                Sensitive<string>.Wrap(ExternalSubjectToken),
+                SubjectTokenType: AxiamClient.JwtTokenType,
+                ActorToken: Sensitive<string>.Wrap(ActorToken))));
+
+        Assert.Equal("invalid_request", error.Error);
+        // §15.7: no retry, and no rewriting. Dropping the actor token and re-sending would turn
+        // a delegation the caller asked for into an impersonation they did not.
+        Assert.Equal(1, calls);
+        Assert.Equal(ActorToken, captured!["actor_token"]);
+        Assert.Equal("urn:ietf:params:oauth:token-type:jwt", captured!["subject_token_type"]);
+    }
+
+    [Theory]
+    [InlineData("urn:ietf:params:oauth:token-type:refresh_token")]
+    [InlineData("urn:ietf:params:oauth:token-type:id_token")]
+    public async Task TokenExchangeAsync_RefusedSubjectTokenType_IsNeverRetriedAsAnother(string refused)
+    {
+        // A refresh token is a re-authentication credential and an ID token is an assertion to a
+        // client about a login; neither is a bearer credential for an API, so both are refused BY
+        // NAME. Retrying as …:jwt would present one as if it were.
+        (RoutingHandler handler, AxiamClient client) = SetUp();
+        int calls = 0;
+        Dictionary<string, string>? captured = null;
+        handler.Map(TokenPath, request =>
+        {
+            calls++;
+            captured = OidcTestKit.ReadForm(request);
+            return OidcTestKit.JsonStatus(
+                HttpStatusCode.BadRequest,
+                OidcTestKit.OAuth2ErrorJson("invalid_request", "unsupported subject_token_type"));
+        });
+
+        await Assert.ThrowsAsync<OAuthProtocolError>(
+            () => client.TokenExchangeAsync(new TokenExchangeParams(
+                Sensitive<string>.Wrap(ExternalSubjectToken),
+                SubjectTokenType: refused)));
+
+        Assert.Equal(1, calls);
+        Assert.Equal(refused, captured!["subject_token_type"]);
+    }
+
+    [Fact]
+    public async Task TokenExchangeAsync_IssuerNotConfiguredDescription_ReachesTheCallerIntact()
+    {
+        (RoutingHandler handler, AxiamClient client) = SetUp();
+        handler.Map(TokenPath, _ => OidcTestKit.JsonStatus(
+            HttpStatusCode.BadRequest,
+            OidcTestKit.OAuth2ErrorJson("invalid_grant", IssuerNotConfigured)));
+
+        OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(
+            () => client.TokenExchangeAsync(new TokenExchangeParams(
+                Sensitive<string>.Wrap(ExternalSubjectToken),
+                SubjectTokenType: AxiamClient.JwtTokenType)));
+
+        Assert.Equal("invalid_grant", error.Error);
+        // This is the ONLY distinguishable external failure, and the whole point of it is that an
+        // integrator can tell "fix the AXIAM trust config" from "fix your token". Truncating or
+        // rewording it destroys that.
+        Assert.Equal(IssuerNotConfigured, error.ErrorDescription);
+    }
+
+    [Fact]
+    public async Task TokenExchangeAsync_NoHelperReExchanges_AnExternallyExchangedToken()
+    {
+        // Tokens minted from an external subject token carry ext_exchange, and BOTH exchange
+        // paths refuse a subject token bearing it: exchanges do not compose. The SDK's part is to
+        // never feed a result back in by itself.
+        (RoutingHandler handler, AxiamClient client) = SetUp();
+        int calls = 0;
+        handler.Map(TokenPath, _ =>
+        {
+            calls++;
+            return OidcTestKit.JsonOk(OidcTestKit.ExchangeResponseJson("read:orders", null));
+        });
+
+        ExchangedToken result = await client.TokenExchangeAsync(new TokenExchangeParams(
+            Sensitive<string>.Wrap(ExternalSubjectToken),
+            SubjectTokenType: AxiamClient.JwtTokenType));
+
+        Assert.Equal(OidcTestKit.IssuedToken, result.AccessToken.Reveal());
+        // Exactly one exchange happened: nothing looped the result back in. §15.2 rule 5 is what
+        // stops it — had the result been adopted, the next exchange would carry it as a *subject*
+        // token, which is exactly the re-exchange §15.7 forbids, arrived at by accident rather
+        // than by decision.
+        Assert.Equal(1, calls);
+    }
 }

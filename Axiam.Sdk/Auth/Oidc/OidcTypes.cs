@@ -393,6 +393,15 @@ public sealed record DeviceLoginParams(
 /// order is a bug waiting to be written (&#167;15.1).
 /// </remarks>
 /// <param name="SubjectToken">The token being exchanged (&#167;15.5 secret).</param>
+/// <param name="SubjectTokenType">
+/// What kind of token <paramref name="SubjectToken"/> is. <see langword="null"/> sends
+/// <c>urn:ietf:params:oauth:token-type:access_token</c>, the same-domain exchange of
+/// &#167;15.1; to exchange a token from a <b>trusted external issuer</b> (&#167;15.7), set this
+/// explicitly — normally to <see cref="AxiamClient.JwtTokenType"/>. The SDK never reads
+/// <paramref name="SubjectToken"/> to decide it: which kind of token you hold is something only
+/// you know, AXIAM refuses refresh and ID token types by name, and the SDK will not retry a
+/// refusal as a different type.
+/// </param>
 /// <param name="ActorToken">
 /// The acting party, when this is a <b>delegation</b> (&#167;15.2 rule 1). Its absence selects
 /// <b>impersonation</b> — a different operation with different risk. The SDK never fills this in.
@@ -404,6 +413,7 @@ public sealed record DeviceLoginParams(
 /// <param name="Configuration">A pre-fetched discovery document, or <see langword="null"/>.</param>
 public sealed record TokenExchangeParams(
     Sensitive<string> SubjectToken,
+    string? SubjectTokenType = null,
     Sensitive<string>? ActorToken = null,
     IReadOnlyList<string>? Scopes = null,
     string? Audience = null,

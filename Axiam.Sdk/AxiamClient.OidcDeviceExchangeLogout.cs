@@ -36,8 +36,21 @@ public sealed partial class AxiamClient
     /// <summary><c>grant_type</c> of an RFC 8693 exchange.</summary>
     private const string TokenExchangeGrantType = "urn:ietf:params:oauth:grant-type:token-exchange";
 
-    /// <summary>The only <c>subject_token_type</c>/<c>actor_token_type</c> AXIAM accepts.</summary>
-    private const string AccessTokenType = "urn:ietf:params:oauth:token-type:access_token";
+    /// <summary>
+    /// The <c>actor_token_type</c> this SDK sends, and the <c>subject_token_type</c> it sends when
+    /// the caller names none — an AXIAM-issued access token (&#167;15.1).
+    /// </summary>
+    public const string AccessTokenType = "urn:ietf:params:oauth:token-type:access_token";
+
+    /// <summary>
+    /// A JWT from a trusted external issuer — the cross-domain exchange of &#167;15.7.
+    /// </summary>
+    /// <remarks>
+    /// Pass it as <see cref="TokenExchangeParams.SubjectTokenType"/> to exchange a partner IdP's
+    /// token. AXIAM also accepts <see cref="AccessTokenType"/> for an external issuer, and refuses
+    /// refresh and ID token types <b>by name</b>.
+    /// </remarks>
+    public const string JwtTokenType = "urn:ietf:params:oauth:token-type:jwt";
 
     /// <summary>
     /// The <c>events</c> member that distinguishes a logout token from an ID token (OIDC
@@ -288,7 +301,11 @@ public sealed partial class AxiamClient
         {
             ["grant_type"] = TokenExchangeGrantType,
             ["subject_token"] = @params.SubjectToken.Reveal(),
-            ["subject_token_type"] = AccessTokenType,
+            // Whatever the caller named, verbatim. The subject token is NEVER decoded to pick
+            // this (§15.7): which kind of token the caller holds is the caller's to know, and a
+            // guess here is the difference between a request that is refused and one that is
+            // silently reinterpreted.
+            ["subject_token_type"] = @params.SubjectTokenType ?? AccessTokenType,
             ["client_id"] = RequireOidcClientId(),
             ["client_secret"] = clientSecret,
         };
