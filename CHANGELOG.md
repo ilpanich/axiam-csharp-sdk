@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **BREAKING (contract 1.13): `TokenExchangeParams.SubjectTokenType` is now required**, losing
+  its `= null` default and narrowing from `string?` to `string`.
+
+  It shipped optional, defaulting to `AccessTokenType` — which satisfied §15.7's "never inspect
+  the subject token" while leaving the rule it serves unenforced: an optional member with a
+  default *is* a default the SDK applies whenever the caller says nothing. §15.1 now makes it
+  required, so the positional record refuses the construction outright.
+
+  Because a caller can still push `null` or blank through a nullable-oblivious call site, the
+  SDK also refuses those **client-side with no wire call**, naming both constants. A `[Theory]`
+  covers `null`, `""` and `"   "` — a blank string is the shape a config-driven caller actually
+  produces.
+
+  **Migration** — one argument, naming what you were previously getting by silence:
+
+  ```csharp
+  ExchangedToken exchanged = await client.TokenExchangeAsync(new TokenExchangeParams(
+      Sensitive<string>.Wrap(userToken),
+      AxiamClient.AccessTokenType,        // <- add this
+      Scopes: new[] { "orders:read" }));
+  ```
+
+  This closes a gap rather than opening one: `subject_token_type` has always been required *on
+  the wire*, and the SDK was covering for that with a constant which stopped being the only
+  legal value when X4 landed.
+
 ### Added
 
 - **§15.7 external-IdP subject tokens (X4).** `TokenExchangeAsync` can now exchange a token
@@ -19,14 +47,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **The type is the caller's to name, never the SDK's to guess.** §15.7 forbids inspecting the
   subject token to pick it, because which kind of token you hold is something only you know and
   a wrong guess is the difference between a request that is refused and one that is silently
-  reinterpreted. Leaving `SubjectTokenType` null still sends `…:access_token`, so every existing
-  caller is unaffected; a JWT-shaped subject token does **not** change what is sent, which is
-  asserted by a test.
+  reinterpreted. A JWT-shaped subject token does **not** change what is sent, which is asserted
+  by a test. (This shipped as `string? = null` with an `…:access_token` default; contract 1.13
+  made it required — see *Changed* above.)
 
-  The new property sits second in the `TokenExchangeParams` record, next to the `SubjectToken`
-  it describes and matching the other SDKs. Every call site in this repo passes the optional
-  members by name, as the record's own documentation asks — a caller constructing it
-  *positionally* would need to adjust.
+  The property sits second in the `TokenExchangeParams` record, next to the `SubjectToken` it
+  describes and matching the other SDKs.
 
   Also asserted: an `ActorToken` alongside an external subject token surfaces `invalid_request`
   with no retry and no request rewriting; a refused refresh or ID token type is never retried as

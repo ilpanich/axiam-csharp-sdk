@@ -53,6 +53,7 @@ public class OidcTokenExchangeTests
 
         ExchangedToken result = await client.TokenExchangeAsync(new TokenExchangeParams(
             Sensitive<string>.Wrap(SubjectToken),
+            AxiamClient.AccessTokenType,
             Scopes: new[] { "orders:read", "orders:write" },
             Audience: "orders-service"));
 
@@ -83,7 +84,7 @@ public class OidcTokenExchangeTests
         });
 
         await Assert.ThrowsAsync<AuthError>(
-            () => client.TokenExchangeAsync(new TokenExchangeParams(Sensitive<string>.Wrap(SubjectToken))));
+            () => client.TokenExchangeAsync(new TokenExchangeParams(Sensitive<string>.Wrap(SubjectToken), AxiamClient.AccessTokenType)));
 
         Assert.Equal(0, calls);
     }
@@ -94,7 +95,7 @@ public class OidcTokenExchangeTests
         (RoutingHandler handler, AxiamClient client) = SetUp();
         MapExchange(handler, out Func<Dictionary<string, string>?> form);
 
-        await client.TokenExchangeAsync(new TokenExchangeParams(Sensitive<string>.Wrap(SubjectToken)));
+        await client.TokenExchangeAsync(new TokenExchangeParams(Sensitive<string>.Wrap(SubjectToken), AxiamClient.AccessTokenType));
 
         // §15.2 rule 1: passing none asks for IMPERSONATION. An SDK that helpfully substituted
         // its own session token would silently turn that into a delegation — a different
@@ -111,6 +112,7 @@ public class OidcTokenExchangeTests
 
         await client.TokenExchangeAsync(new TokenExchangeParams(
             Sensitive<string>.Wrap(SubjectToken),
+            AxiamClient.AccessTokenType,
             ActorToken: Sensitive<string>.Wrap(ActorToken)));
 
         Assert.Equal(ActorToken, form()!["actor_token"]);
@@ -139,6 +141,7 @@ public class OidcTokenExchangeTests
         OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(
             () => client.TokenExchangeAsync(new TokenExchangeParams(
                 Sensitive<string>.Wrap(SubjectToken),
+                AxiamClient.AccessTokenType,
                 Scopes: new[] { "orders:read", "orders:admin" })));
 
         Assert.Equal(code, error.Error);
@@ -156,7 +159,7 @@ public class OidcTokenExchangeTests
         MapExchange(handler, out _, refreshToken: "should-not-exist");
 
         ExchangedToken result = await client.TokenExchangeAsync(
-            new TokenExchangeParams(Sensitive<string>.Wrap(SubjectToken)));
+            new TokenExchangeParams(Sensitive<string>.Wrap(SubjectToken), AxiamClient.AccessTokenType));
 
         Assert.DoesNotContain("should-not-exist", result.ToString(), StringComparison.Ordinal);
         Assert.Equal(OidcTestKit.IssuedToken, result.AccessToken.Reveal());
@@ -170,6 +173,7 @@ public class OidcTokenExchangeTests
 
         ExchangedToken result = await client.TokenExchangeAsync(new TokenExchangeParams(
             Sensitive<string>.Wrap(SubjectToken),
+            AxiamClient.AccessTokenType,
             Scopes: new[] { "orders:read", "orders:write" }));
 
         // §15.2 rule 7: the response scope is the GRANTED set and may be narrower than requested
@@ -185,6 +189,7 @@ public class OidcTokenExchangeTests
 
         ExchangedToken result = await client.TokenExchangeAsync(new TokenExchangeParams(
             Sensitive<string>.Wrap(SubjectToken),
+            AxiamClient.AccessTokenType,
             Scopes: Array.Empty<string>()));
 
         // §12.1: an absent optional field is omitted, never sent empty.
@@ -199,7 +204,7 @@ public class OidcTokenExchangeTests
         MapExchange(handler, out _);
 
         ExchangedToken result = await client.TokenExchangeAsync(
-            new TokenExchangeParams(Sensitive<string>.Wrap(SubjectToken)));
+            new TokenExchangeParams(Sensitive<string>.Wrap(SubjectToken), AxiamClient.AccessTokenType));
 
         // §15.5: the issued token is a bearer credential and must not render.
         Assert.DoesNotContain(OidcTestKit.IssuedToken, result.ToString(), StringComparison.Ordinal);
@@ -218,6 +223,7 @@ public class OidcTokenExchangeTests
         OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(
             () => client.TokenExchangeAsync(new TokenExchangeParams(
                 Sensitive<string>.Wrap(SubjectToken),
+                AxiamClient.AccessTokenType,
                 ActorToken: Sensitive<string>.Wrap(ActorToken))));
 
         Assert.DoesNotContain(SubjectToken, error.Message, StringComparison.Ordinal);
@@ -232,6 +238,7 @@ public class OidcTokenExchangeTests
 
         await client.TokenExchangeAsync(new TokenExchangeParams(
             Sensitive<string>.Wrap(SubjectToken),
+            AxiamClient.AccessTokenType,
             Resource: "https://orders.example.com"));
 
         // RFC 8707's synonym for audience; the server refuses the pair when they disagree, so
@@ -292,14 +299,45 @@ public class OidcTokenExchangeTests
         (RoutingHandler handler, AxiamClient client) = SetUp();
         MapExchange(handler, out Func<Dictionary<string, string>?> form);
 
-        // A subject token that *looks* exactly like a JWT. An SDK that sniffed the token would
-        // send …:jwt here; §15.7 says it must not look, so the caller's silence still means the
-        // §15.1 same-domain default.
+        // A subject token that *looks* exactly like a JWT, presented as an access token. An SDK
+        // that sniffed the token would "correct" this to …:jwt; §15.7 says it must not look, so
+        // what the caller named is what goes out. Being able to hold this wrong is the point:
+        // only the caller knows.
         const string jwtShaped =
             "eyJhbGciOiJFZERTQSJ9.eyJpc3MiOiJodHRwczovL3BhcnRuZXIuZXhhbXBsZS8ifQ.sig";
-        await client.TokenExchangeAsync(new TokenExchangeParams(Sensitive<string>.Wrap(jwtShaped)));
+        await client.TokenExchangeAsync(new TokenExchangeParams(Sensitive<string>.Wrap(jwtShaped), AxiamClient.AccessTokenType));
 
         Assert.Equal("urn:ietf:params:oauth:token-type:access_token", form()!["subject_token_type"]);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task TokenExchangeAsync_OmittedSubjectTokenType_NeverReachesTheWire(string? omitted)
+    {
+        // §15.1: the type is REQUIRED and has no default. The positional record makes leaving it
+        // out a compile error, but a caller can still pass null or blank through a
+        // nullable-oblivious call site — so the SDK refuses client-side, with no wire call,
+        // rather than sending …:access_token on their behalf. For a caller who actually held a
+        // refresh token, that default would trade the invalid_request that NAMES the type for a
+        // generic invalid_grant.
+        (RoutingHandler handler, AxiamClient client) = SetUp();
+        int calls = 0;
+        handler.Map(TokenPath, _ =>
+        {
+            calls++;
+            return OidcTestKit.JsonOk(OidcTestKit.ExchangeResponseJson(null, null));
+        });
+
+        AuthError error = await Assert.ThrowsAsync<AuthError>(
+            () => client.TokenExchangeAsync(new TokenExchangeParams(
+                Sensitive<string>.Wrap(SubjectToken),
+                omitted!)));
+
+        Assert.Equal(0, calls);
+        // The message has to name the way out, or the caller has to go read §15.1 to find it.
+        Assert.Contains("SubjectTokenType", error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
