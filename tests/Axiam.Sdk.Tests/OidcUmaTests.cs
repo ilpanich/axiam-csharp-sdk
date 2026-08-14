@@ -75,6 +75,38 @@ public class OidcUmaTests
     }
 
     /// <summary>
+    /// A <b>timeout</b> must not be retried either.
+    /// </summary>
+    /// <remarks>
+    /// <para>&#167;20.7 names it alongside <c>5xx</c> and <c>invalid_grant</c>, and it is
+    /// the case most tempting to treat as "the request never happened" — a
+    /// &#167;16 retry runner normally re-sends a request that produced no
+    /// response at all.</para>
+    ///
+    /// <para>That instinct is wrong here. A timeout says nothing about whether
+    /// the server saw the exchange; it may well have arrived and spent the
+    /// ticket, and silence is not evidence that it did not. Re-sending is then
+    /// the second redemption.</para>
+    ///
+    /// <para>The responder throws what <see cref="System.Net.Http.HttpClient"/> itself
+    /// throws on a timeout — a <see cref="TaskCanceledException"/> wrapping a
+    /// <see cref="TimeoutException"/> — so the assertion is exact and instant rather than
+    /// a race against a real clock. <see cref="RoutingHandler"/> records the request before
+    /// invoking the responder, so a throwing responder still counts as one request.</para>
+    /// </remarks>
+    [Fact]
+    public async Task ATimeoutOnTheTicketGrant_IsNotRetried()
+    {
+        (RoutingHandler handler, AxiamClient client) = SetUp();
+        handler.Map(TokenPath, _ => throw new TaskCanceledException(
+            "the exchange never answered", new TimeoutException()));
+
+        await Assert.ThrowsAnyAsync<Exception>(() => client.UmaExchangeTicketAsync(ExchangeParams()));
+
+        Assert.Equal(1, handler.CountFor(TokenPath));
+    }
+
+    /// <summary>
     /// <c>invalid_grant</c> is what a replayed ticket gets, and it is not
     /// retried either.
     /// </summary>
