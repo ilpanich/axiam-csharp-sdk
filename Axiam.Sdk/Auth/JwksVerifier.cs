@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -438,6 +439,113 @@ public sealed class JwksVerifier
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// CONTRACT.md §10.1 <b>rule 9</b> — enforce a token's sender constraint against the
+    /// certificate the caller presented on <b>this</b> connection
+    /// (RFC 8705 §3 / RFC 7800, contract 1.15).
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// A token carrying <c>cnf</c> is <b>not</b> a bearer token. Accepting one without
+    /// proving the caller holds the named key converts it straight back into one,
+    /// discarding the whole protection the operator turned on — which is why this is a
+    /// rule and not a recommendation.
+    /// </para>
+    /// <para>The four cases:</para>
+    /// <list type="table">
+    ///   <item><term>cnf absent</term><description>anything → true (an ordinary bearer token)</description></item>
+    ///   <item><term>x5t#S256 equal</term><description>→ true</description></item>
+    ///   <item><term>x5t#S256 different, or no certificate</term><description>→ false</description></item>
+    ///   <item><term>cnf present with no x5t#S256</term><description>anything → false</description></item>
+    /// </list>
+    /// <para>
+    /// The first row is why adopting this rule breaks nothing: an <b>unbound</b> token is
+    /// still accepted whether or not a certificate is present. Rule 9 constrains tokens
+    /// that claim a constraint; it does not make certificates mandatory.
+    /// </para>
+    /// <para>
+    /// The last row is the one that is easy to get wrong. A <c>cnf</c> naming a
+    /// confirmation method this SDK cannot check — a DPoP <c>jkt</c>, say — is an
+    /// <i>unverifiable constraint</i>, never <i>no constraint</i>. Read the other way, a
+    /// sender-constrained token silently degrades to a bearer token the day a newer AXIAM
+    /// issues a confirmation this SDK predates.
+    /// </para>
+    /// <para>
+    /// <b>The thumbprint must come from the transport.</b> Under ASP.NET Core that is
+    /// <c>HttpContext.Connection.ClientCertificate</c> passed through
+    /// <see cref="CertificateThumbprintS256"/>, or a value a <i>trusted</i> terminating
+    /// proxy forwarded over a channel your application controls. Never from a
+    /// caller-settable request header: a forgeable input makes the whole mechanism
+    /// decorative.
+    /// </para>
+    /// <para>
+    /// <see cref="VerifyAsync"/> deliberately does <b>not</b> apply this rule — it has no
+    /// transport to ask. A resource server accepting bound tokens must call both.
+    /// </para>
+    /// </remarks>
+    /// <param name="claims">The verified claims returned by <see cref="VerifyAsync"/>.</param>
+    /// <param name="presentedThumbprint">
+    /// RFC 8705 §3.1 <c>x5t#S256</c> of the peer certificate on this connection, or
+    /// <c>null</c> when the connection carries none.
+    /// </param>
+    /// <returns><c>true</c> when the constraint is satisfied or absent; otherwise <c>false</c>.</returns>
+    public static bool VerifyCertificateBinding(JsonElement claims, string? presentedThumbprint)
+    {
+        if (!claims.TryGetProperty("cnf", out JsonElement cnf) || cnf.ValueKind == JsonValueKind.Null)
+        {
+            // An ordinary bearer token.
+            return true;
+        }
+
+        if (cnf.ValueKind != JsonValueKind.Object)
+        {
+            return false;
+        }
+
+        if (!cnf.TryGetProperty("x5t#S256", out JsonElement x5tEl) ||
+            x5tEl.ValueKind != JsonValueKind.String)
+        {
+            // A confirmation naming a method this SDK cannot check. Fail closed.
+            return false;
+        }
+
+        string? expected = x5tEl.GetString();
+        if (string.IsNullOrEmpty(expected) || string.IsNullOrEmpty(presentedThumbprint))
+        {
+            return false;
+        }
+
+        // Constant-time. The thumbprint is usually public — it derives from a certificate
+        // sent in the clear during the handshake — so this is defence in depth. It matters
+        // most for a self-signed client, where the registered thumbprint is the whole
+        // credential.
+        return CryptographicOperations.FixedTimeEquals(
+            Encoding.ASCII.GetBytes(expected),
+            Encoding.ASCII.GetBytes(presentedThumbprint));
+    }
+
+    /// <summary>
+    /// Compute the RFC 8705 §3.1 <c>x5t#S256</c> thumbprint of a DER client certificate:
+    /// base64url-encoded SHA-256, <b>without</b> padding.
+    /// </summary>
+    /// <remarks>
+    /// Unpadded is not a style choice — RFC 7515 §2 defines base64url in JOSE as omitting
+    /// <c>=</c>, and a padded value will not compare equal to what AXIAM put in the token.
+    /// A well-formed value is exactly 43 characters.
+    /// </remarks>
+    /// <param name="der">
+    /// The DER encoding of the peer's leaf certificate — under ASP.NET Core,
+    /// <c>HttpContext.Connection.ClientCertificate?.RawData</c>.
+    /// </param>
+    public static string CertificateThumbprintS256(byte[] der)
+    {
+        byte[] digest = SHA256.HashData(der);
+        return Convert.ToBase64String(digest)
+            .TrimEnd('=')
+            .Replace('+', '-')
+            .Replace('/', '_');
     }
 
     /// <summary>
