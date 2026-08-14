@@ -29,8 +29,17 @@ public class Rule9CertificateBindingTests
     private static JsonElement Unbound() =>
         Claims("""{"sub":"u","tenant_id":"t","exp":9999999999}""");
 
+    /// <remarks>
+    /// A raw literal plus <c>Replace</c> rather than an interpolated raw literal: the
+    /// JSON's own trailing <c>}}</c> collides with <c>$$</c>'s interpolation braces
+    /// (CS9007), and escalating to <c>$$$</c> would make the next brace in the fixture
+    /// the same trap again. There is no interpolation here to get wrong.
+    /// </remarks>
+    private const string BoundTemplate =
+        """{"sub":"u","tenant_id":"t","exp":9999999999,"cnf":{"x5t#S256":"THUMBPRINT"}}""";
+
     private static JsonElement Bound(string thumbprint) =>
-        Claims($$"""{"sub":"u","tenant_id":"t","exp":9999999999,"cnf":{"x5t#S256":"{{thumbprint}}"}}""");
+        Claims(BoundTemplate.Replace("THUMBPRINT", thumbprint, StringComparison.Ordinal));
 
     /// The regression test that keeps rule 9 from becoming a certificate mandate.
     [Fact]
