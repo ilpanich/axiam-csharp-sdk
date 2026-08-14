@@ -20,9 +20,10 @@ namespace Axiam.Sdk.Tests;
 /// <para>That rule is the one &#167;16 exception in the contract, and the only
 /// way to assert it is to count requests. A ticket is consumed <i>before</i> the
 /// request is evaluated, so a failed exchange has already spent it — and under
-/// concurrency a retry is precisely the second redemption that
-/// ilpanich/axiam#302's measured residual describes. "Exactly one request" is a
-/// security assertion here, not a performance one.</para>
+/// concurrency a retry is precisely the concurrent redemption a server whose
+/// storage engine this SDK cannot attest may admit twice
+/// (ilpanich/axiam#302). "Exactly one request" is a security assertion here,
+/// not a performance one.</para>
 ///
 /// <para>Every test is named after the thing it stops.</para>
 /// </remarks>
@@ -67,6 +68,38 @@ public class OidcUmaTests
     {
         (RoutingHandler handler, AxiamClient client) = SetUp();
         handler.Map(TokenPath, _ => new HttpResponseMessage(HttpStatusCode.InternalServerError));
+
+        await Assert.ThrowsAnyAsync<Exception>(() => client.UmaExchangeTicketAsync(ExchangeParams()));
+
+        Assert.Equal(1, handler.CountFor(TokenPath));
+    }
+
+    /// <summary>
+    /// A <b>timeout</b> must not be retried either.
+    /// </summary>
+    /// <remarks>
+    /// <para>&#167;20.7 names it alongside <c>5xx</c> and <c>invalid_grant</c>, and it is
+    /// the case most tempting to treat as "the request never happened" — a
+    /// &#167;16 retry runner normally re-sends a request that produced no
+    /// response at all.</para>
+    ///
+    /// <para>That instinct is wrong here. A timeout says nothing about whether
+    /// the server saw the exchange; it may well have arrived and spent the
+    /// ticket, and silence is not evidence that it did not. Re-sending is then
+    /// the second redemption.</para>
+    ///
+    /// <para>The responder throws what <see cref="System.Net.Http.HttpClient"/> itself
+    /// throws on a timeout — a <see cref="TaskCanceledException"/> wrapping a
+    /// <see cref="TimeoutException"/> — so the assertion is exact and instant rather than
+    /// a race against a real clock. <see cref="RoutingHandler"/> records the request before
+    /// invoking the responder, so a throwing responder still counts as one request.</para>
+    /// </remarks>
+    [Fact]
+    public async Task ATimeoutOnTheTicketGrant_IsNotRetried()
+    {
+        (RoutingHandler handler, AxiamClient client) = SetUp();
+        handler.Map(TokenPath, _ => throw new TaskCanceledException(
+            "the exchange never answered", new TimeoutException()));
 
         await Assert.ThrowsAnyAsync<Exception>(() => client.UmaExchangeTicketAsync(ExchangeParams()));
 

@@ -20,8 +20,8 @@ namespace Axiam.Sdk;
 /// ticket is single-use and is <b>not retryable</b> (&#167;20.2 rule 6). The
 /// ticket is consumed <i>before</i> the request is evaluated, so a failed
 /// exchange has already spent it — and under concurrency a retry is precisely
-/// the second redemption that ilpanich/axiam#302's measured residual
-/// describes.</para>
+/// the concurrent redemption a server whose storage engine this SDK cannot
+/// attest may admit twice (ilpanich/axiam#302).</para>
 /// </remarks>
 public sealed partial class AxiamClient
 {
@@ -180,8 +180,9 @@ public sealed partial class AxiamClient
     /// not on any transport failure (&#167;20.2 rule 6). The ticket is consumed
     /// <i>before</i> the request is evaluated, so a failed exchange has already
     /// spent it: a retry cannot succeed, and under concurrency it is precisely
-    /// the second redemption that ilpanich/axiam#302's measured residual
-    /// describes. On failure, request a <b>new</b> ticket.</para>
+    /// the concurrent redemption a server whose storage engine this SDK cannot
+    /// attest may admit twice (ilpanich/axiam#302). On failure, request a
+    /// <b>new</b> ticket.</para>
     ///
     /// <para>What this method deliberately does not do: no default
     /// <c>ClaimToken</c> (rule 2) — it is required; no auto-narrowing on
