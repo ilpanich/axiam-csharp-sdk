@@ -69,6 +69,140 @@ public class GrpcAuthzClientTests
         Assert.False(allowed);
     }
 
+    // ------------------------------------------------------------------
+    // Decision reason precedence (SDK-Q10, CONTRACT.md §11.2 rule 9, contract 1.19)
+    //
+    // `CheckAccessResponse` carries the reason under two names: the canonical
+    // `reason` (proto field 4, explicit presence) and the deprecated `deny_reason`
+    // (field 2, `[deprecated = true]`, removed at AXIAM 2.0). The rule: read
+    // `reason`; fall back to `deny_reason` ONLY when `reason` is absent on a
+    // refusal; expose exactly one reason accessor (`AccessDecision.Reason`).
+    // ------------------------------------------------------------------
+
+    [Fact]
+    public async Task CheckAccessDecisionAsync_ReadsReason_InPreferenceToDenyReason()
+    {
+        // A current server populates both fields with the identical string; `reason` is
+        // read and `deny_reason` is never consulted, even though it disagrees here.
+        var invoker = new FakeCallInvoker(handleCheck: (_, _) => new CheckAccessResponse
+        {
+            Allowed = false,
+            DenyReason = "stale duplicate",
+            ReasonCode = AxiamReasonCode.DeniedByRule,
+            Reason = "denied by rule",
+        });
+        using var refresh = new RefreshCounter();
+        string jwt = MintUnverifiedJwt("user-1", "tenant-1");
+        using AxiamGrpcAuthzClient client = BuildClient(invoker, refresh.Guard, "tenant-1", () => jwt);
+
+        AccessDecision decision = await client.CheckAccessDecisionAsync("documents:delete", "doc-42");
+
+        Assert.False(decision.Allowed);
+        Assert.Equal("denied by rule", decision.Reason);
+        Assert.Equal(AxiamReasonCode.DeniedByRule, decision.ReasonCode);
+    }
+
+    [Fact]
+    public async Task CheckAccessDecisionAsync_OnARefusal_FallsBackToDenyReason_WhenReasonIsAbsent()
+    {
+        // A pre-SDK-Q10 server never sets field 4. Because `reason` has explicit
+        // presence, its absence is distinguishable from an empty value, so the
+        // deprecated field is still read rather than the refusal losing its reason.
+        var invoker = new FakeCallInvoker(handleCheck: (_, _) => new CheckAccessResponse
+        {
+            Allowed = false,
+            DenyReason = "caller lacks permission",
+            ReasonCode = AxiamReasonCode.NoGrant,
+            // `Reason` deliberately left unset (HasReason == false).
+        });
+        using var refresh = new RefreshCounter();
+        string jwt = MintUnverifiedJwt("user-1", "tenant-1");
+        using AxiamGrpcAuthzClient client = BuildClient(invoker, refresh.Guard, "tenant-1", () => jwt);
+
+        AccessDecision decision = await client.CheckAccessDecisionAsync("documents:delete", "doc-42");
+
+        Assert.False(decision.Allowed);
+        Assert.Equal("caller lacks permission", decision.Reason);
+    }
+
+    [Fact]
+    public async Task CheckAccessDecisionAsync_OnAnAllow_ReasonIsAbsent_AndNeverFallsBackToDenyReason()
+    {
+        // Fallback is refusal-only: an allow must never surface `deny_reason`, even if a
+        // (malformed) server response sets it — REST omits `reason` on an allow and gRPC
+        // must behave identically. There is nothing to say.
+        var invoker = new FakeCallInvoker(handleCheck: (_, _) => new CheckAccessResponse
+        {
+            Allowed = true,
+            DenyReason = "should never surface",
+            // `Reason` deliberately left unset (HasReason == false) — exactly what a
+            // current server sends on an allow.
+        });
+        using var refresh = new RefreshCounter();
+        string jwt = MintUnverifiedJwt("user-1", "tenant-1");
+        using AxiamGrpcAuthzClient client = BuildClient(invoker, refresh.Guard, "tenant-1", () => jwt);
+
+        AccessDecision decision = await client.CheckAccessDecisionAsync("documents:read", "doc-42");
+
+        Assert.True(decision.Allowed);
+        Assert.Null(decision.Reason);
+    }
+
+    [Fact]
+    public async Task CheckAccessDecisionAsync_OnARefusal_AnExplicitlyEmptyReason_DoesNotFallBackToDenyReason()
+    {
+        // The case that motivates guarding on presence (HasReason) rather than
+        // truthiness: an explicitly-set-but-empty `reason` on a REFUSAL is not absent —
+        // it must not be misread as "no reason sent" and must not fall back to
+        // `deny_reason`, even though `deny_reason` is populated.
+        var invoker = new FakeCallInvoker(handleCheck: (_, _) => new CheckAccessResponse
+        {
+            Allowed = false,
+            Reason = string.Empty,
+            DenyReason = "caller lacks permission",
+            ReasonCode = AxiamReasonCode.NoGrant,
+        });
+        using var refresh = new RefreshCounter();
+        string jwt = MintUnverifiedJwt("user-1", "tenant-1");
+        using AxiamGrpcAuthzClient client = BuildClient(invoker, refresh.Guard, "tenant-1", () => jwt);
+
+        AccessDecision decision = await client.CheckAccessDecisionAsync("documents:delete", "doc-42");
+
+        Assert.False(decision.Allowed);
+        Assert.Null(decision.Reason);
+    }
+
+    [Fact]
+    public async Task BatchCheckDecisionsAsync_AppliesReasonPrecedence_PerResult()
+    {
+        var invoker = new FakeCallInvoker(handleBatch: req =>
+        {
+            var response = new BatchCheckAccessResponse();
+            response.Results.Add(new CheckAccessResponse { Allowed = true }); // no reason either way
+            response.Results.Add(new CheckAccessResponse { Allowed = false, Reason = "denied by rule", DenyReason = "stale duplicate" }); // reason wins
+            response.Results.Add(new CheckAccessResponse { Allowed = false, DenyReason = "no matching role" }); // falls back
+            response.Results.Add(new CheckAccessResponse { Allowed = false, Reason = string.Empty, DenyReason = "should not surface" }); // explicit empty, no fallback
+            return response;
+        });
+        using var refresh = new RefreshCounter();
+        string jwt = MintUnverifiedJwt("user-1", "tenant-1");
+        using AxiamGrpcAuthzClient client = BuildClient(invoker, refresh.Guard, "tenant-1", () => jwt);
+
+        IReadOnlyList<AccessDecision> decisions = await client.BatchCheckDecisionsAsync(new[]
+        {
+            new AxiamGrpcAuthzClient.AccessCheck("documents:read", "doc-1"),
+            new AxiamGrpcAuthzClient.AccessCheck("documents:delete", "doc-2"),
+            new AxiamGrpcAuthzClient.AccessCheck("documents:delete", "doc-3"),
+            new AxiamGrpcAuthzClient.AccessCheck("documents:delete", "doc-4"),
+        });
+
+        Assert.Equal(4, decisions.Count);
+        Assert.Null(decisions[0].Reason);
+        Assert.Equal("denied by rule", decisions[1].Reason);
+        Assert.Equal("no matching role", decisions[2].Reason);
+        Assert.Null(decisions[3].Reason);
+    }
+
     [Fact]
     public async Task CheckAccessAsync_PermissionDenied_MapsToAuthzError()
     {
