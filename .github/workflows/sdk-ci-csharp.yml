@@ -60,6 +60,12 @@ jobs:
       - name: dotnet build — UmaClient example
         run: dotnet build examples/UmaClient -c Release
 
+      # §22 reactor runtime: the sample is a compile-checked proof that the public
+      # reactor surface (ReactorServeAsync + ReactorDecision + the registry) is usable
+      # from outside the assembly. It talks to a broker at RUN time only.
+      - name: dotnet build — Reactor example (CONTRACT.md §22)
+        run: dotnet build examples/Reactor -c Release
+
       # Full solution test run: SC#2 single-flight (RefreshGuardSingleFlightTests),
       # the AMQP HMAC verify-before-handler matrix (HmacVerifyTests,
       # AmqpConsumerTests), JWKS Ed25519 verification (JwksVerifierTests), the

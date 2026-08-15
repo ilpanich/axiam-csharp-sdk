@@ -17,11 +17,12 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19 (including §6.1 mTLS client
-certificates, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, the §12 OIDC/SSO
-relying-party helpers, contract 1.4, and the §13 webhook signature verifier, T-145).
+This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §22 (including §6.1 mTLS
+client certificates, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, the §12 OIDC/SSO
+relying-party helpers, contract 1.4, the §13 webhook signature verifier, T-145, and the §22 reactor
+runtime, contract 1.19).
 
-§12.7, §14 and §15 are named rather than folded into the range because they landed
+§12.7, §14, §15 and §22 are named rather than folded into the range because they landed
 after this SDK already claimed §1–§13: widening the range silently would turn a
 statement that was true when written into a different claim without anyone editing it.
 
@@ -47,6 +48,7 @@ See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract
 | §11 | Declarative `[AxiamAccess(action, resource)]` authorization attribute with scope + route-param resolution; `require_auth`/`require_role` as framework-native `[Authorize]`/`[Authorize(Roles = ...)]` | `Axiam.Sdk.AspNetCore/AxiamAccessAttribute.cs`, `AxiamRequirement.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
 | §12 | OIDC/SSO relying-party helpers: `OidcDiscoverAsync`/`OidcBegin`/`OidcExchangeAsync`/`OidcRefreshAsync`/`LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync`/`SsoStartAsync`/`SsoCompleteAsync`; `MapAxiamOidcLogin` ASP.NET Core glue | `AxiamClient.Oidc.cs`, `Auth/Oidc/*.cs`, `Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs` |
 | §13 | Webhook signature verifier: HMAC-SHA256 over `<t>.<raw_body>`, `CryptographicOperations.FixedTimeEquals` constant-time compare on decoded bytes, two-sided 300s default freshness tolerance, `TimeProvider` injection seam, fail-closed on malformed/tampered input | `Webhooks/AxiamWebhooks.cs`, `Webhooks/WebhookEvent.cs`, `Webhooks/WebhookVerificationException.cs` |
+| §22 | Reactor runtime — AMQP extension actors: `ReactorServeAsync` consumes the **server-declared** queue, verifies each event under §8 v2 before the handler sees it, and signs the reply with the same tenant subkey. The reactor canonicalization differs from §8's in exactly one place (`hmac_signature` serialized as **`null`**, not omitted), proven byte-for-byte against the server-generated §22.13 vectors. §22.7's hot-path exclusion is asserted against the constant list. | `Reactor/ReactorProtocol.cs`, `Reactor/ReactorServer.cs`, `Reactor/ReactorEvents.cs`, `Reactor/ReactorDecision.cs`, `Reactor/ReactorEvent.cs`, `Reactor/ReactorServeOptions.cs` |
 
 ## Local token verification (CONTRACT.md §10.1)
 
@@ -599,6 +601,139 @@ Notes:
   when present in the body) is the at-least-once dedup key — retries replay a valid
   signature inside the freshness window.
 
+## Reactors — AMQP extension actors (CONTRACT.md §22)
+
+A **reactor** is your process, subscribed to named hook events on the AXIAM AMQP bus, answering
+allow / deny / mutate inside a timeout the server declared. It is AXIAM's answer to Zitadel Actions
+and Keycloak SPIs, and the difference is the whole design: those load third-party code *into* the
+authorization server, and this keeps it outside, reachable only through a signed reply schema the
+server validates before it believes a word of it.
+
+```csharp
+using Axiam.Sdk.Core;
+using Axiam.Sdk.Reactor;
+using RabbitMQ.Client;
+
+// §8b: amqps:// only — HMAC gives authenticity, not confidentiality.
+var factory = new ConnectionFactory { Uri = new Uri("amqps://broker.internal:5671") };
+await using IConnection connection = await factory.CreateConnectionAsync();
+await using IChannel channel = await connection.CreateChannelAsync();
+
+await using ReactorServer server = await ReactorServer.ReactorServeAsync(new ReactorServeOptions
+{
+    Channel = channel,
+    TenantId = tenantId,
+    SigningKey = Sensitive<byte[]>.Wrap(subkey),   // §22.12 — a credential, never logged
+    ReactorId = reactorId,                          // the queue is the server's; we only consume it
+    Handler = (e, ct) => Task.FromResult(e.Event switch
+    {
+        ReactorEvents.TokenPreIssue =>
+            ReactorDecision.Mutated(new Dictionary<string, string> { ["ext.department"] = "engineering" }),
+        ReactorEvents.LoginPostAuth =>
+            Embargoed(e) ? ReactorDecision.Denied("embargoed region") : ReactorDecision.Allowed(),
+        _ => ReactorDecision.Allowed(),
+    }),
+});
+```
+
+Register the reactor first — the queue it consumes is declared by the **server**, from a
+`POST /api/v1/reactors` registration. See [`examples/Reactor`](examples/Reactor) for a runnable one
+that enriches a token and screens a login.
+
+### Both directions are signed
+
+The server signs the event with the tenant's HKDF-derived AMQP subkey; this SDK signs the reply with
+**the same** subkey. An unsigned or stale reply is not a weak reply — the server discards it as
+though the reactor had never answered, and the registration's `failure_policy` takes over.
+
+Everything is §8 v2 verbatim (same key derivation — `ReactorProtocol.DeriveTenantKey` if you hold the
+master key rather than fetching the subkey from the management API — the same `ReplayGuard` this SDK
+already uses for `AuthzRequest`/`AuditEventMessage`, the same constant-time HMAC-SHA256, the same
+±300 s window applied in **both** directions, the same `key_version` floor of 2) with **one**
+difference, and it is the one that costs an implementer a day if it is not stated: a reactor body is
+signed with `hmac_signature` **present and set to `null`**, where `Amqp/Hmac.cs` *removes* it for
+§8's own two message types. `Reactor/ReactorProtocol.cs` is the only place that rule lives, and it is
+proven byte-for-byte against the server-generated §22.13 vectors — including the omission rules for
+`reason`, `patch` and `require_mfa` (a reply serializing `"require_mfa": false` rather than omitting
+it produces a different MAC).
+
+Before your handler runs, the runtime rejects `key_version < 2`, verifies the MAC, checks freshness
+in **both** directions, and checks the nonce. A runtime that hands an unverified payload to user code
+has already lost.
+
+### Five events, and what each may change
+
+| Event | Mutable fields (the complete allow-list) | Default failure policy |
+|---|---|---|
+| `token.pre_issue` | **`ext.` namespace only** | `fail_open` |
+| `login.post_auth` | — (veto, or `require_mfa`) | `fail_closed` |
+| `user.pre_create` | `username`, `email`, `metadata.` namespace | `fail_closed` |
+| `user.pre_update` | `username`, `email`, `metadata.` namespace | `fail_closed` |
+| `grant.pre_assign` | — (veto only) | `fail_closed` |
+
+An entry ending in `.` is a namespace prefix and needs at least one character after the dot:
+`ext.department` and `ext.a.b.c` are in, and `ext.`, `ext`, `extra`, `external_id` and
+`evil.ext.department` are not. No standard claim is reachable from `token.pre_issue`, because none of
+them begins with `ext.` — a **correctly signed** reply setting `sub` is refused exactly as a forged
+one is.
+
+A registration naming no `failure_policy` inherits the **strictest** default among its events, in
+either array order (`ReactorEvents.DefaultFailurePolicyFor`). A reactor registered for both
+`token.pre_issue` and `login.post_auth` can veto a login, so it gets `fail_closed`.
+
+### `authz.check` is not hookable, and never will be
+
+`authz.check`, `authz.check_batch` and `token.introspect` are **absent** from
+`ReactorEvents.Registry` and from every constant this SDK exposes — asserted by a test against the
+reflected list, not documented by a comment. The reason is arithmetic, not policy: a reactor round
+trip is milliseconds and the check path's budget is microseconds. Hooking it would not produce a
+slower check, it would produce a different product.
+
+This SDK also offers no interceptor, middleware hook or callback presenting itself as the reactor
+equivalent for those operations. An application that needs external input on an authorization
+decision writes a **deny grant**, which the engine evaluates in the hot path at hot-path cost.
+
+### What the runtime will not do for you
+
+- **It will not declare topology.** No `ExchangeDeclareAsync`, `QueueDeclareAsync` or
+  `QueueBindAsync`, anywhere — asserted against the AMQP client's own recorded invocations. A reactor
+  that can bind is a reactor that can bind itself to `*.token.pre_issue` and read another tenant's
+  issuance events. `ReactorId` names your own queue and no other.
+- **It will not synthesize an `Allowed()` for a handler that threw.** Throwing publishes *nothing*,
+  and the operator's `failure_policy` decides what that costs. Answering `allow` on your behalf would
+  defeat a `fail_closed` setting from inside the library.
+- **It will not filter your patch.** A forbidden key goes on the wire as written and the server
+  refuses the whole patch. Trimming it silently would leave you believing a field was set when it was
+  dropped. (`ReactorEventSpec.PatchFieldAllowed` is there so you can check a key *before* writing the
+  handler — never to filter one afterwards.)
+- **It will not reply late.** When your handler returns after `ReactorEvent.TimeoutMs` has elapsed,
+  the reply is abandoned — the server stopped listening, and publishing anyway only adds load.
+  Consult `ReactorEvent.Remaining(now)` and shed load rather than push on.
+- **It will not retry a reply (§16).** A correlation is single-use and a late reply is discarded; the
+  recovery mechanism for an unanswered dispatch is the server-side `failure_policy`, not a resend.
+  Connection recovery is `RabbitMQ.Client`'s, left on.
+
+`DisposeAsync` is §18-deterministic: it cancels the consumer so no new delivery starts, drains what
+is in flight up to `ShutdownGrace`, is idempotent, and leaves your channel and connection open — you
+own those. §19 telemetry emits one `RequestStartEvent`/`RequestEndEvent` pair per dispatch with the
+event name as the path template — a closed set of five values, so it cannot become a cardinality
+bomb.
+
+### Listeners
+
+`mode: "listen"` is fire-and-forget observation: the server never waits and never reads a reply. Set
+`Listener` instead of `Handler` — its delegate returns a plain `Task`, so a listener *cannot* publish
+a reply rather than merely being told not to. Write it idempotently: a redelivery after a broker
+hiccup is normal.
+
+### Logging
+
+The signing key is a credential and is wrapped in `Sensitive<byte[]>` — never logged at any level,
+never in a reconnect diagnostic. The `payload`, `patch`, `reason` and `decision` are **not** secrets
+and stay readable (a handler that cannot inspect the event cannot decide anything), but they are
+tenant business data: this SDK never logs the payload, and neither should you at `Information` level.
+The `nonce`, `correlation_id` and `hmac_signature` are not secrets and may be logged for correlation.
+
 ## Grpc.Tools exception
 
 The C# SDK is the **one documented exception** to the `buf` codegen pipeline every other
@@ -613,7 +748,7 @@ This exception is intentional and approved (D-01). The C# SDK still tracks the s
 
 ## Status
 
-`Axiam.Sdk` (REST + gRPC + AMQP + `Sensitive` + JWKS) and `Axiam.Sdk.AspNetCore`
+`Axiam.Sdk` (REST + gRPC + AMQP + the §22 reactor runtime + `Sensitive` + JWKS) and `Axiam.Sdk.AspNetCore`
 (middleware + DI + policy authorization) are both fully implemented and tested. See
 the Quickstart above and [`examples/`](examples/) for runnable code.
 

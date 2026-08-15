@@ -1,6 +1,6 @@
 # Axiam.Sdk (C#) — Examples
 
-Five runnable example projects demonstrating the AXIAM C# SDK's public surface
+Six runnable example projects demonstrating the AXIAM C# SDK's public surface
 (`Axiam.Sdk` + `Axiam.Sdk.AspNetCore`). Both build under `<Nullable>enable</Nullable>`
 and reference the SDK's projects directly (not the published NuGet packages), so
 they always exercise the current source tree.
@@ -168,3 +168,33 @@ chosen by the server that just refused you.
 Neither example echoes the ticket, the challenge, or any client-derived value: a
 ticket is a live credential for its 60 seconds, and printing remote-chosen
 strings into a terminal or log is its own hazard.
+
+## Reactor/
+
+A runnable §22 **reactor** — an AMQP extension actor. It subscribes to the hook events its
+registration named, enriches `token.pre_issue` with `ext.` claims, and screens `login.post_auth`
+(deny an embargoed region, demand step-up MFA for an admin sign-in). `ReactorServeAsync` verifies
+every event under §8 v2 before the handler sees it and signs the reply with the same tenant subkey.
+
+**Build:**
+
+```bash
+dotnet build examples/Reactor -c Release
+```
+
+**Run against a live broker (manual-only):**
+
+The queue this consumes is declared by the **server**, from a `POST /api/v1/reactors`
+registration — the reactor never declares or binds anything (§22.1), so register it first.
+
+```bash
+export AXIAM_AMQP_URI=amqps://broker.internal:5671   # §8b: amqps only, no plaintext fallback
+export AXIAM_TENANT_ID=<tenant-uuid>
+export AXIAM_REACTOR_ID=<reactor-uuid>               # this reactor's own registration id
+export AXIAM_AMQP_SUBKEY_HEX=<derived-subkey-hex>    # a credential (§22.12) — never commit it
+dotnet run --project examples/Reactor
+```
+
+What to observe: the handler is only ever reached by an event whose MAC verified, whose
+`issued_at` was fresh in both directions, and whose nonce had not been seen. Kill the process
+with Ctrl+C to watch the §18 drain.

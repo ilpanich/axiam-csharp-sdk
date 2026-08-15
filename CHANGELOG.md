@@ -9,6 +9,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **CONTRACT.md §22 — the reactor runtime (`Axiam.Sdk.Reactor`).** A reactor is an
+  external process subscribed to named hook events on the AMQP bus, answering
+  allow / deny / mutate inside a timeout the server declared.
+  `ReactorServer.ReactorServeAsync(options)` consumes the **server-declared** queue,
+  verifies each event under §8 v2 (key version, MAC, freshness, nonce, in that
+  order) before the handler sees it, and signs the reply with the same tenant
+  subkey.
+
+  The canonicalization difference that costs a day if it is not stated: a reactor
+  body is signed with `hmac_signature` **present and set to `null`**, where
+  `Amqp/Hmac.cs` *removes* the field for §8's own two message types.
+  `Reactor/ReactorProtocol.cs` is the only place that rule lives, and
+  `ReactorVectorTests` proves it byte-for-byte against the server-generated §22.13
+  vectors — canonical bytes, MAC, the omission of `reason`/`patch` when absent and
+  of `require_mfa` when false, the `nonce_binding` pair, the `correlation_replay`
+  refusal, the stale/future pair, and the topology strings. Both fixtures ship
+  side by side under the same master key, tenant and derived subkey, so one loader
+  serves both and the §8-vs-§22 difference is a test rather than a paragraph to
+  remember.
+
+  §8's replay gate is **reused, not reimplemented**: the runtime runs the same
+  `Amqp.ReplayGuard` the audit/authz consumer runs, because two implementations of
+  one security control is one too many. No public surface widened to do it — the
+  guard's clock seam was already `internal`.
+
+  Four rules are structural rather than documented. The runtime declares no
+  exchange, queue or binding (asserted against `Mock<IChannel>.Invocations`, so it
+  is a claim about behaviour rather than about source); a handler that throws
+  produces **no reply** rather than a synthesized `allow`, so the operator's
+  `failure_policy` still decides; a patch is sent **unfiltered**, because dropping a
+  forbidden key would leave the author believing it was set; and a reply is
+  abandoned rather than published after `timeout_ms` has elapsed.
+  `ReactorDecision` is a closed hierarchy in which `Allow` cannot carry a patch and
+  `Mutate` cannot be empty, and the listener delegate returns a plain `Task`, so a
+  listener cannot publish a reply at all.
+
+  §22.7 is honoured as the MUST NOT it is: `authz.check`, `authz.check_batch` and
+  `token.introspect` are absent from `ReactorEvents.Registry` and from every
+  constant this SDK exposes, asserted against the reflected list rather than a
+  comment, and no interceptor equivalent is offered for them anywhere.
+
+  Interacts with the existing surfaces as they already work: `DisposeAsync` is
+  §18-deterministic (cancel, drain, idempotent, and it leaves the caller's channel
+  and connection open), §19 emits one `RequestStartEvent`/`RequestEndEvent` pair per
+  dispatch with the event name as the path template, the signing key is wrapped in
+  `Sensitive<byte[]>` per §22.12 and asserted absent from every log line, and §16
+  retry deliberately does **not** apply to a reply — a correlation is single-use, so
+  a resend could only add load to a server that has already moved on.
+
+  Adds `examples/Reactor` (a token enricher plus a login screen, compile-gated in
+  CI) and a README chapter. No new package dependency: `RabbitMQ.Client` was
+  already referenced for §8.
+
 - **CONTRACT.md §10.1 rule 9 extended for DPoP, and §21.7.2 proof verification
   implemented (contract 1.16/1.17).**
 
