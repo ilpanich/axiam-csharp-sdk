@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Reactor</RootNamespace>
+    <!-- Example only — demonstrates the SDK's public surface; never packed or
+         published as a NuGet package. -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Core package only (Axiam.Sdk) — REST + gRPC + AMQP, including the §22
+         reactor runtime, are all part of the same package (D-03). RabbitMQ.Client
+         flows transitively; a reactor author adds no extra dependency. -->
+    <ProjectReference Include="../../Axiam.Sdk/Axiam.Sdk.csproj" />
+  </ItemGroup>
+
+</Project>
