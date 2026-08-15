@@ -221,19 +221,50 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
         request.RequestUri is { IsAbsoluteUri: true } uri
         && !string.Equals(uri.Host, _baseUri.Host, StringComparison.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// True for a request whose path is one of the &#167;12 OIDC endpoints
+    /// (<c>/oauth2/*</c>) built from the discovery document
+    /// (<see cref="AxiamClient"/>'s <c>PostOAuth2FormAsync</c>) — CONTRACT.md &#167;12.1
+    /// note 2 (F-15): a compliant deployment MAY advertise those endpoints on a host
+    /// other than <see cref="_baseUri"/> (e.g. a gateway/CDN fronting the token
+    /// endpoint separately), and the note calls <c>X-Tenant-Id</c> unconditional on
+    /// them regardless. This is narrower than "not foreign" — it does not extend the
+    /// host-isolation carve-out to <c>Authorization</c>/<c>X-CSRF-Token</c>, which stay
+    /// same-origin only (3A): neither header is meaningful to <c>/oauth2/*</c> (client
+    /// authentication there is <c>client_secret_post</c>, never bearer), so there is
+    /// nothing to gain by relaxing 3A for them and no reason to.
+    /// </summary>
+    private static bool IsOAuth2DiscoveryPath(HttpRequestMessage request) =>
+        request.RequestUri is { IsAbsoluteUri: true } uri
+        && uri.AbsolutePath.StartsWith("/oauth2/", StringComparison.Ordinal);
+
     private void ApplyHeaders(HttpRequestMessage request, string? overrideAccessToken = null)
     {
+        bool isForeignHost = IsForeignHost(request);
+
         // Host-isolation (3A, defense in depth): a request bound for a host
         // other than this handler's own origin (an absolute third-party URL)
-        // must never carry the tenant id, bearer token, or CSRF token. Mirrors
-        // the Python SDK's _prepare_request guard.
-        if (IsForeignHost(request))
+        // must never carry the bearer token or CSRF token. Mirrors the Python
+        // SDK's _prepare_request guard. X-Tenant-Id is the one exception
+        // (F-15, below): CONTRACT.md §12.1 note 2 calls it unconditional on
+        // /oauth2/* even when discovery advertises those endpoints on a
+        // foreign host, so a request that is BOTH foreign-host AND an
+        // /oauth2/* discovery-document URL still gets the tenant header, but
+        // returns before Authorization/CSRF are ever considered.
+        if (isForeignHost && !IsOAuth2DiscoveryPath(request))
         {
             return;
         }
 
         request.Headers.Remove(TenantHeaderName);
         request.Headers.TryAddWithoutValidation(TenantHeaderName, _tenantId);
+
+        if (isForeignHost)
+        {
+            // Reached only for a foreign-host /oauth2/* URL: tenant header is
+            // applied above; Authorization/CSRF stay same-origin only (3A).
+            return;
+        }
 
         string? access = overrideAccessToken ?? ReadAccessTokenFromCookieJar();
         if (access is not null)

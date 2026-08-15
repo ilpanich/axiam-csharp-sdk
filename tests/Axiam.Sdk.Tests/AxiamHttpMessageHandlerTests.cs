@@ -71,6 +71,48 @@ public class AxiamHttpMessageHandlerTests
     }
 
     [Fact]
+    public async Task ForeignHostOAuth2TokenRequest_StillInjectsTenantHeader_ButWithholdsAuthAndCsrf()
+    {
+        // F-15 / CONTRACT.md §12.1 note 2: X-Tenant-Id is unconditional on /oauth2/*
+        // endpoints even when discovery advertises them on a host other than the
+        // client's configured base URL (e.g. a gateway/CDN fronting the token endpoint
+        // separately). No prior test asserted the header on a /oauth2/token request.
+        var cookies = new CookieContainer();
+        cookies.Add(BaseUrl, new Cookie("axiam_access", "tok"));
+        cookies.Add(BaseUrl, new Cookie("axiam_csrf", "csrf-123"));
+        using RefreshGuard guard = SucceedingGuard();
+        (HttpClient client, RecordingHandler inner) = Build(guard, cookies);
+        inner.Responder = _ => new HttpResponseMessage(HttpStatusCode.OK);
+
+        await client.PostAsync(
+            "https://foreign-idp.example/oauth2/token",
+            new StringContent("grant_type=refresh_token", Encoding.UTF8, "application/x-www-form-urlencoded"));
+
+        Assert.Equal(TenantId, inner.LastRequestHeaders!.GetValues("X-Tenant-Id").Single());
+        // Authorization/CSRF stay same-origin only (3A) — the /oauth2/* carve-out is
+        // scoped to X-Tenant-Id alone; neither header is meaningful to /oauth2/* anyway
+        // (client authentication there is client_secret_post, never bearer).
+        Assert.False(inner.LastRequestHeaders.Contains("Authorization"));
+        Assert.False(inner.LastRequestHeaders.Contains("X-CSRF-Token"));
+    }
+
+    [Fact]
+    public async Task ForeignHostNonOAuth2Request_StillWithholdsTenantHeader()
+    {
+        // Confirms the F-15 carve-out is scoped to /oauth2/* only: an ordinary
+        // foreign-host request whose path merely starts with "oauth2" but is not under
+        // /oauth2/ must still withhold the tenant header, exactly like any other
+        // foreign-host request.
+        using RefreshGuard guard = SucceedingGuard();
+        (HttpClient client, RecordingHandler inner) = Build(guard);
+        inner.Responder = _ => new HttpResponseMessage(HttpStatusCode.OK);
+
+        await client.GetAsync("https://evil.example/oauth2-lookalike/not-actually-oauth2");
+
+        Assert.False(inner.LastRequestHeaders!.Contains("X-Tenant-Id"));
+    }
+
+    [Fact]
     public async Task AccessCookiePresent_InjectsBearerAuthorization()
     {
         var cookies = new CookieContainer();
