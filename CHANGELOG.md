@@ -57,6 +57,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **CONTRACT.md §21** — the FAPI 2.0 posture as an SDK sees it. Only rule 9 is normative
   for this SDK.
 
+### Fixed
+
+- **F-15: `X-Tenant-Id` was silently dropped on `/oauth2/*` requests whose absolute URL
+  (taken from the discovery document) targets a host other than the client's configured
+  base URL.** `AxiamHttpMessageHandler`'s host-isolation guard (3A) previously withheld
+  every header — tenant, bearer, and CSRF alike — from any foreign-host request.
+  CONTRACT.md §12.1 note 2 calls `X-Tenant-Id` unconditional on `/oauth2/*` regardless of
+  host, so a gateway/CDN-fronted deployment that advertises `token_endpoint` on a
+  different host than `BaseUrl` would silently lose the header. `Authorization`/
+  `X-CSRF-Token` still stay same-origin only (3A) — neither is meaningful to `/oauth2/*`,
+  which authenticates via `client_secret_post`, never bearer. Harmless in practice (the
+  server's `/oauth2/*` handlers read tenant context only from the `?tenant_id=` query
+  parameter, never the header), but no test asserted the header on a `/oauth2/token`
+  request until now.
+- **F-13: the §12.4 rule 7 (all-or-nothing discard) test only asserted that an exchange
+  throws, not that the same response's sentinel access/refresh token is absent from the
+  outcome or the exception.** Strengthened to match the five sibling SDKs.
+
 ### Changed
 
 - **Re-sync vendored `CONTRACT.md` / `openapi.json` to contract 1.15.**
