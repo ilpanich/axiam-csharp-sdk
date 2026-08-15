@@ -241,16 +241,56 @@ public sealed class AxiamGrpcAuthzClient : IDisposable
     /// Maps a wire <c>CheckAccessResponse</c> to the shared decision record.
     /// </summary>
     /// <remarks>
+    /// SDK-Q10 / CONTRACT.md &#167;11.2 rule 9 (contract 1.19): read <c>reason</c> (proto field 4),
+    /// falling back to the deprecated <c>deny_reason</c> (field 2) <b>only</b> when <c>reason</c>
+    /// is absent <i>on a refusal</i> — that combination means the server predates SDK-Q10 and
+    /// nothing else. Exactly <b>one</b> reason accessor (<see cref="AccessDecision.Reason"/>)
+    /// reaches the caller; <c>DenyReason</c> is never surfaced on the public type.
+    /// <para>
+    /// <c>reason</c> has explicit presence (<c>optional string reason = 4</c>), so
+    /// <see cref="CheckAccessResponse.HasReason"/> is what distinguishes "the server sent an
+    /// empty reason" from "the server did not send one" — a plain truthiness/empty check on
+    /// <see cref="CheckAccessResponse.Reason"/> would misread an explicitly-empty <c>reason</c>
+    /// as absent and wrongly fall back to the deprecated field.
+    /// </para>
+    /// <para>
+    /// The fallback is further guarded on <c>!response.Allowed</c>: <c>reason</c> is only ever
+    /// absent on an allow by design (there is nothing to say), so an allow must never surface
+    /// <c>deny_reason</c> even if some server sent it there by mistake — the fallback exists
+    /// solely to recover a refusal's reason from a pre-SDK-Q10 server.
+    /// </para>
+    /// <para>
     /// proto3 renders an unset <c>string</c> as <c>""</c>, so an older server that never set
     /// field 3 is indistinguishable from one that set it empty — both mean "no reason code", and
     /// both map to <see langword="null"/> rather than to <c>""</c>, which would be a value callers
-    /// could accidentally branch on.
+    /// could accidentally branch on. The same "empty becomes null" rule applies to the resolved
+    /// <c>reason</c>.
+    /// </para>
     /// </remarks>
-    private static AccessDecision ToDecision(CheckAccessResponse response) =>
-        new(
+    private static AccessDecision ToDecision(CheckAccessResponse response)
+    {
+        string? reason;
+        if (response.HasReason)
+        {
+            reason = response.Reason.Length == 0 ? null : response.Reason;
+        }
+        else if (!response.Allowed)
+        {
+#pragma warning disable CS0618 // DenyReason is [deprecated = true] on the wire (SDK-Q10) — this
+                               // is precisely the sanctioned fallback read, retained until AXIAM 2.0.
+            reason = response.DenyReason.Length == 0 ? null : response.DenyReason;
+#pragma warning restore CS0618
+        }
+        else
+        {
+            reason = null;
+        }
+
+        return new(
             response.Allowed,
-            string.IsNullOrEmpty(response.DenyReason) ? null : response.DenyReason,
+            reason,
             string.IsNullOrEmpty(response.ReasonCode) ? null : response.ReasonCode);
+    }
 
     /// <summary>
     /// <c>GetUserInfo</c> (CONTRACT.md &#167;1/&#167;1.1) — the gRPC-only, low-latency

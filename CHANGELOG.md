@@ -112,6 +112,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **SDK-Q10 (contract 1.19): the gRPC `AccessDecision` mapper never read `reason` and
+  always surfaced the deprecated `deny_reason`.** `proto/axiam/v1/authorization.proto`
+  already carried the CONTRACT.md §11.2 rule 9 amendment — `reason` (field 4, explicit
+  presence, absent on an allow and present on every refusal) as the canonical name, with
+  `deny_reason` (field 2) marked `[deprecated = true]` and removed at AXIAM 2.0 — but
+  because this SDK generates its gRPC stubs into a gitignored `obj/` directory at build
+  time, nothing forced the client mapper to catch up: `AxiamGrpcAuthzClient.ToDecision`
+  kept reading only `DenyReason`, unnoticed by any build. `ToDecision` now reads
+  `Reason` when `CheckAccessResponse.HasReason` is true, and falls back to the
+  deprecated `DenyReason` **only** when `Reason` is absent **and** the decision is a
+  refusal (`!Allowed`) — guarding on `HasReason` rather than truthiness so an
+  explicitly-empty `Reason` on a refusal is never misread as absent. `AccessDecision`
+  already exposed exactly one reason accessor (`Reason`); no public signature changes.
+  **Deliberately not taken:** relaxing gRPC `subject_id` to optional — contract 1.19
+  makes an empty wire value mean "the token's subject", but changing the SDK-facing
+  parameter's nullability is a breaking signature move every sibling SDK has likewise
+  deferred.
 - **F-15: `X-Tenant-Id` was silently dropped on `/oauth2/*` requests whose absolute URL
   (taken from the discovery document) targets a host other than the client's configured
   base URL.** `AxiamHttpMessageHandler`'s host-isolation guard (3A) previously withheld
