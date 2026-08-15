@@ -507,7 +507,18 @@ public sealed class JwksVerifier
         if (!cnf.TryGetProperty("x5t#S256", out JsonElement x5tEl) ||
             x5tEl.ValueKind != JsonValueKind.String)
         {
-            // A confirmation naming a method this SDK cannot check. Fail closed.
+            // A confirmation naming a method this entry point cannot check — including a
+            // DPoP jkt. Fail closed; use VerifyTokenBinding for DPoP.
+            return false;
+        }
+
+        // A cnf naming BOTH methods is a CONJUNCTION (contract 1.16): this method can
+        // establish one half and must not answer for the whole. Refusing here is what
+        // stops "check whichever we can".
+        if (cnf.TryGetProperty("jkt", out JsonElement jktEl) &&
+            jktEl.ValueKind == JsonValueKind.String &&
+            !string.IsNullOrEmpty(jktEl.GetString()))
+        {
             return false;
         }
 
@@ -524,6 +535,108 @@ public sealed class JwksVerifier
         return CryptographicOperations.FixedTimeEquals(
             Encoding.ASCII.GetBytes(expected),
             Encoding.ASCII.GetBytes(presentedThumbprint));
+    }
+
+    /// <summary>
+    /// CONTRACT.md &#167;10.1 <b>rule 9</b> in full — enforce a token's sender constraint
+    /// against <b>every</b> proof the caller presented (contract 1.16).
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This is the complete rule, and the one to use unless your transport genuinely cannot
+    /// produce a DPoP thumbprint. The ten cases:
+    /// </para>
+    /// <code>
+    /// token's cnf             certificate     DPoP        result
+    /// absent                  anything        anything    true
+    /// x5t#S256                equal           ignored     true
+    /// x5t#S256                different       ignored     false
+    /// x5t#S256                null            ignored     false
+    /// jkt                     ignored         equal       true
+    /// jkt                     ignored         different   false
+    /// jkt                     ignored         null        false
+    /// both                    equal           equal       true
+    /// both                    wrong/missing   —           false
+    /// present, names neither  anything        anything    false
+    /// </code>
+    /// <para>
+    /// Two rows carry the weight. <b>Both named is a conjunction</b>: an operator who turned
+    /// on two constraints asked for two, and satisfying the more convenient one is not
+    /// compliance. <b>Names neither is a refusal</b>: a confirmation this SDK cannot
+    /// interpret is an unverifiable constraint, and reading it as "unconstrained" is the
+    /// exact downgrade rule 9 exists to prevent. That includes an <i>empty</i> <c>cnf</c>,
+    /// which is also how proto3 delivers an empty <c>CnfClaim</c> over gRPC
+    /// (&#167;10.3 rule 3).
+    /// </para>
+    /// </remarks>
+    /// <param name="claims">The verified claims returned by <see cref="VerifyAsync"/>.</param>
+    /// <param name="proofs">What the caller proved on this connection and request.</param>
+    /// <returns><c>true</c> when the token may be accepted; otherwise <c>false</c>.</returns>
+    public static bool VerifyTokenBinding(JsonElement claims, PresentedProofs proofs)
+    {
+        // The fast path, and the common one. First on purpose: an unbound token is accepted
+        // with no proofs at all, which is what keeps existing deployments working when a
+        // guard adopts this rule.
+        if (!claims.TryGetProperty("cnf", out JsonElement cnf) || cnf.ValueKind == JsonValueKind.Null)
+        {
+            return true;
+        }
+
+        if (cnf.ValueKind != JsonValueKind.Object)
+        {
+            return false;
+        }
+
+        string? expectedCert = cnf.TryGetProperty("x5t#S256", out JsonElement certEl) &&
+                               certEl.ValueKind == JsonValueKind.String
+            ? certEl.GetString()
+            : null;
+        string? expectedJkt = cnf.TryGetProperty("jkt", out JsonElement jktEl) &&
+                              jktEl.ValueKind == JsonValueKind.String
+            ? jktEl.GetString()
+            : null;
+
+        if (string.IsNullOrEmpty(expectedCert))
+        {
+            expectedCert = null;
+        }
+
+        if (string.IsNullOrEmpty(expectedJkt))
+        {
+            expectedJkt = null;
+        }
+
+        if (expectedCert is null && expectedJkt is null)
+        {
+            return false;
+        }
+
+        // Each arm that applies must pass. Two independent checks rather than a switch on
+        // the pair, precisely so "both named" needs no case of its own — it is simply where
+        // both run.
+        if (expectedCert is not null)
+        {
+            if (string.IsNullOrEmpty(proofs.CertificateThumbprint) ||
+                !CryptographicOperations.FixedTimeEquals(
+                    Encoding.ASCII.GetBytes(expectedCert),
+                    Encoding.ASCII.GetBytes(proofs.CertificateThumbprint)))
+            {
+                return false;
+            }
+        }
+
+        if (expectedJkt is not null)
+        {
+            if (string.IsNullOrEmpty(proofs.DpopThumbprint) ||
+                !CryptographicOperations.FixedTimeEquals(
+                    Encoding.ASCII.GetBytes(expectedJkt),
+                    Encoding.ASCII.GetBytes(proofs.DpopThumbprint)))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /// <summary>
