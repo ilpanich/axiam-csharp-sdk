@@ -9,6 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **CONTRACT.md §10.1 rule 9 extended for DPoP, and §21.7.2 proof verification
+  implemented (contract 1.16/1.17).**
+
+  `JwksVerifier.VerifyTokenBinding()` applies the full ten-row rule against a
+  certificate thumbprint, a verified DPoP key thumbprint, or **both**. A `cnf`
+  naming both methods is a **conjunction** — satisfying only the more convenient
+  one is not compliance — and a `cnf` naming nothing this SDK can check (including
+  an *empty* one, which is how proto3 delivers an empty `CnfClaim`) is refused
+  rather than read as unbound. `VerifyCertificateBinding()` remains for
+  certificate-only transports and now **refuses** a DPoP-bound or both-bound token
+  rather than ignoring the half it cannot check.
+
+  New `DpopVerifier` implements all ten §21.7.2 checks and returns the proof key's
+  RFC 7638 thumbprint, so a value passed to `PresentedProofs` could only have come
+  from a proof that verified. `DpopVerifier.InMemoryJtiStore` covers check 8 for a
+  single process; the `IJtiStore` argument is required, not optional, because there
+  is no safe default that skips replay tracking.
+
+  Ed25519 goes through BouncyCastle for the same reason `JwksVerifier` does — .NET
+  still ships no EdDSA — while `ES256` and `PS256` use the platform's own `ECDsa`
+  and `RSA`. Two encoding details that silently break interop if missed: JWS ES256
+  signatures are raw `r||s` (IEEE P1363), **not** the DER form `VerifyData` assumes
+  by default, and PS256 is RSASSA-**PSS**, not PKCS#1 v1.5.
+
+  Not a breaking change: an unbound token is still accepted with no certificate and
+  no proof, asserted directly by the first test in the new group.
+
 - **CONTRACT.md §10.1 rule 9 — sender-constrained (certificate-bound) access tokens**
   (contract 1.15, RFC 8705 §3 / RFC 7800). A token carrying `cnf` is **not** a bearer
   token; accepting one without proving the caller holds the named key converts it back
