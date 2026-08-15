@@ -377,12 +377,21 @@ public class OidcExchangeTests
     {
         // §12.4 rule 7: on ANY id_token failure, access_token/refresh_token from the SAME
         // response must never reach the caller — the exception is the only observable
-        // outcome, there is no partial OidcTokenSet.
+        // outcome, there is no partial OidcTokenSet. F-13: mirror the five sibling SDKs
+        // (Go, Python, Rust, PHP, TS) by using a sentinel value for BOTH tokens and
+        // positively asserting it appears nowhere in the outcome or the error, not
+        // merely that *an* exception was thrown.
         (RoutingHandler handler, JwksFixture fixture, AxiamClient client) = SetUp();
         string idToken = fixture.SignIdToken(new { iss = "https://wrong-issuer.example", sub = Sub, aud = OidcTestKit.ClientId, exp = DateTimeOffset.UtcNow.AddMinutes(15).ToUnixTimeSeconds(), iat = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), nonce = Nonce });
-        MapToken(handler, idToken, accessToken: "should-never-be-returned");
+        MapToken(handler, idToken, accessToken: "should-never-be-returned", refreshToken: "should-never-be-returned-either");
 
-        await Assert.ThrowsAsync<AuthError>(() => client.OidcExchangeAsync(ExchangeParams()));
+        AuthError ex = await Assert.ThrowsAsync<AuthError>(() => client.OidcExchangeAsync(ExchangeParams()));
+
+        // OidcExchangeAsync threw rather than returning an OidcTokenSet, so there is no
+        // partial object a caller could read a token out of — the only observable
+        // surface is the exception itself. Assert the sentinel tokens are absent from it.
+        Assert.DoesNotContain("should-never-be-returned", ex.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("should-never-be-returned", ex.ToString(), StringComparison.Ordinal);
     }
 
     private static string PadBase64Url(string s)
