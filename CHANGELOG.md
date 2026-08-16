@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-alpha25] - 2026-08-16
+
+### Added
+
+- Adopt CONTRACT §11.2 rule 9 reason accessor (SDK-Q10)
+- Ship the §22 reactor runtime (R2.5) (#49)
+- Extend §10.1 rule 9 for DPoP and implement §21.7.2 (#46)
+- SubjectTokenType is required (contract 1.13)
+- §15.7 — external-IdP subject tokens at the exchange (X4)
+- §20.3 — emit a UMA challenge from the §11 policy handler (#40)
+- §20 — UMA 2.0 Protection API and ticket grant
+- Report clamped settings via §19 ConfigClampedEvent (contract 1.9)
+- Wire §16 retry (it never was), §17 memo, §18 dispose, §19 telemetry (D5)
+- Device grant, token exchange, logout helpers; re-vendor (D6)
+
+### Changed
+
+- Re-vendor CONTRACT.md 1.19, openapi.json and proto/ from main (R5.8) (#48)
+- Contract 1.15 — §10.1 rule 9, sender-constrained access tokens (#45)
+- Add the §20.7 required timeout assertion
+- Retire the "measured residual" justification (contract 1.14)
+- Re-sync to contract 1.14 (#302 closed)
+- Bump the minor-patch group with 1 update
+
+### Fixed
+
+- R5.7 remediation — F-13, F-15 (F-16 verified) (#47)
+- Route the bool surface through D5 + runnable §16–§19 example (F3) (#38)
+
 ## [Unreleased]
 
 ### Added
