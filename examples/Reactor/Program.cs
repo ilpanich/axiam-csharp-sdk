@@ -114,7 +114,11 @@ public static class Program
             // The queue belongs to THIS registration. The runtime derives it from our own
             // reactor id and consumes it; it declares nothing and binds nothing (§22.1).
             ReactorId = reactorId,
-            Handler = DecideAsync,
+            // One handler per event (§22.14) instead of a switch whose `_ =>` arm
+            // answers `Allowed()` on behalf of code that never ran. A misspelled
+            // name is refused HERE, at wiring time, rather than becoming an event
+            // that silently never fires.
+            Handler = ReactorHandlers.Of(new Decisions()).Handler(),
         });
 
         Console.WriteLine($"axiam reactor serving {server.Queue} — Ctrl+C to stop");
@@ -131,18 +135,34 @@ public static class Program
         }
     }
 
-    /// <summary>The decision function. One event in, one of three answers out.</summary>
-    private static Task<ReactorDecision> DecideAsync(ReactorEvent reactorEvent, CancellationToken cancellationToken) =>
-        Task.FromResult(reactorEvent.Event switch
-        {
-            ReactorEvents.TokenPreIssue => EnrichToken(reactorEvent),
-            ReactorEvents.LoginPostAuth => ScreenLogin(reactorEvent),
+    /// <summary>
+    /// The decision functions, one per event (CONTRACT.md &#167;22.14).
+    /// </summary>
+    /// <remarks>
+    /// Bound declaratively rather than through a <c>switch</c>: a misspelled event name is
+    /// refused when <see cref="ReactorHandlers.Of(object[])"/> reads the attribute, and an
+    /// event this reactor did not bind produces <em>no reply</em>, so the registration's
+    /// <c>failure_policy</c> decides rather than a <c>_ =&gt;</c> arm in this file deciding
+    /// on its behalf.
+    /// </remarks>
+    public sealed class Decisions
+    {
+        /// <summary>Enriches a token being issued.</summary>
+        /// <param name="reactorEvent">The verified event.</param>
+        /// <param name="cancellationToken">Cancelled when the dispatch window closes.</param>
+        /// <returns>The decision to sign and publish.</returns>
+        [OnReactorEvent(ReactorEvents.TokenPreIssue)]
+        public Task<ReactorDecision> EnrichAsync(ReactorEvent reactorEvent, CancellationToken cancellationToken)
+            => Task.FromResult(EnrichToken(reactorEvent));
 
-            // A reactor is only ever dispatched events it registered for, so this arm means
-            // the registration and the code have drifted. Allow rather than deny: refusing an
-            // operation because our own switch is stale would be an outage caused by a typo.
-            _ => ReactorDecision.Allowed(),
-        });
+        /// <summary>Vetoes or steps up an interactive sign-in.</summary>
+        /// <param name="reactorEvent">The verified event.</param>
+        /// <param name="cancellationToken">Cancelled when the dispatch window closes.</param>
+        /// <returns>The decision to sign and publish.</returns>
+        [OnReactorEvent(ReactorEvents.LoginPostAuth)]
+        public Task<ReactorDecision> ScreenAsync(ReactorEvent reactorEvent, CancellationToken cancellationToken)
+            => Task.FromResult(ScreenLogin(reactorEvent));
+    }
 
     private static ReactorDecision EnrichToken(ReactorEvent reactorEvent)
     {
