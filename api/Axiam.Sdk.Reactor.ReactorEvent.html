@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ReactorEvent | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ReactorEvent | AXIAM .NET SDK ">
+      
+      <meta name="description" content="One hook firing, delivered to a reactor (sdks/CONTRACT.md &#167;22.3).  An instance only ever reaches a handler after  has rejected key_version &amp;lt; 2, verified the MAC, checked freshness and checked the nonce, in that order. A runtime that hands an unverified payload to user code has already lost, so this type has no public constructor.   The  never carries a credential, a token or a signing key: a reactor is told what is being decided, not handed the means to act on it elsewhere. It is not sensitive in the &#167;7 sense and must remain readable — a handler that cannot inspect the event cannot decide anything — but it is tenant business data, so this SDK never logs it, and neither should you at Information level.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha25/apiSpec/new?filename=Axiam_Sdk_Reactor_ReactorEvent.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Reactor.ReactorEvent%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Reactor.ReactorEvent">
+
+
+
+  <h1 id="Axiam_Sdk_Reactor_ReactorEvent" data-uid="Axiam.Sdk.Reactor.ReactorEvent" class="text-break">
+Class ReactorEvent  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Reactor.html">Reactor</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>One hook firing, delivered to a reactor (<code>sdks/CONTRACT.md</code> §22.3).</p>
+<p>
+An instance only ever reaches a handler <em>after</em> <a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html">ReactorServer</a> has
+rejected <code>key_version &lt; 2</code>, verified the MAC, checked freshness and checked the
+nonce, in that order. A runtime that hands an unverified payload to user code has
+already lost, so this type has no public constructor.
+</p>
+<p>
+The <a class="xref" href="Axiam.Sdk.Reactor.ReactorEvent.html#Axiam_Sdk_Reactor_ReactorEvent_Payload">Payload</a> never carries a credential, a token or a signing key: a
+reactor is told what is being decided, not handed the means to act on it elsewhere. It
+is not sensitive in the §7 sense and must remain readable — a handler that cannot
+inspect the event cannot decide anything — but it is tenant business data, so this SDK
+never logs it, and neither should you at <code>Information</code> level.
+</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class ReactorEvent</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ReactorEvent</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_ReactorPatchKey" data-uid="Axiam.Sdk.Reactor.ReactorEvent.ReactorPatchKey">
+  ReactorPatchKey
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Payload key under which the server inserts the accumulated patch from earlier
+reactors in the chain (§22.3).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ReactorPatchKey = &quot;_reactor_patch&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_CorrelationId_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.CorrelationId*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_CorrelationId" data-uid="Axiam.Sdk.Reactor.ReactorEvent.CorrelationId">
+  CorrelationId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The single-use handle for this dispatch, copied into the reply body by the runtime.
+Copying it only into the AMQP property produces a reply the server discards.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Guid CorrelationId { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_Deadline_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.Deadline*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_Deadline" data-uid="Axiam.Sdk.Reactor.ReactorEvent.Deadline">
+  Deadline
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>When this dispatch's window closes.</p>
+<p>
+Measured from the moment the delivery arrived plus <a class="xref" href="Axiam.Sdk.Reactor.ReactorEvent.html#Axiam_Sdk_Reactor_ReactorEvent_TimeoutMs">TimeoutMs</a>,
+<em>not</em> from <a class="xref" href="Axiam.Sdk.Reactor.ReactorEvent.html#Axiam_Sdk_Reactor_ReactorEvent_IssuedAt">IssuedAt</a>: broker latency and clock skew both sit
+between the two, and a deadline derived from a remote clock would read as
+already-expired on a reactor whose clock runs slightly fast.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTimeOffset Deadline { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_Event_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.Event*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_Event" data-uid="Axiam.Sdk.Reactor.ReactorEvent.Event">
+  Event
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The registry event name, e.g. <code>token.pre_issue</code>. Also the second half of the
+routing key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Event { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_IssuedAt_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.IssuedAt*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_IssuedAt" data-uid="Axiam.Sdk.Reactor.ReactorEvent.IssuedAt">
+  IssuedAt
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>When the server signed this event, already checked to lie within the freshness
+window.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTimeOffset IssuedAt { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_KeyVersion_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.KeyVersion*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_KeyVersion" data-uid="Axiam.Sdk.Reactor.ReactorEvent.KeyVersion">
+  KeyVersion
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L86"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The §8 envelope version this event was signed under; always at least 2, because
+a lower one is refused before anything else about the message is considered.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int KeyVersion { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_Nonce_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.Nonce*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_Nonce" data-uid="Axiam.Sdk.Reactor.ReactorEvent.Nonce">
+  Nonce
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L92"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The per-message nonce, inside the signed bytes. Not a secret, and safe to log for
+correlation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Guid Nonce { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_Payload_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.Payload*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_Payload" data-uid="Axiam.Sdk.Reactor.ReactorEvent.Payload">
+  Payload
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The event-specific body. Never carries a credential, a token or a signing key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JsonObject Payload { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.nodes.jsonobject">JsonObject</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_TenantId_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.TenantId*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_TenantId" data-uid="Axiam.Sdk.Reactor.ReactorEvent.TenantId">
+  TenantId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The tenant this event belongs to; always the tenant this runtime serves.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Guid TenantId { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_TimeoutMs_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.TimeoutMs*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_TimeoutMs" data-uid="Axiam.Sdk.Reactor.ReactorEvent.TimeoutMs">
+  TimeoutMs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L80"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>How long the server will actually wait for <em>this</em> dispatch, in milliseconds.
+It is inside the signed body, so it cannot be widened in transit.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int TimeoutMs { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_PriorPatch_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.PriorPatch*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_PriorPatch" data-uid="Axiam.Sdk.Reactor.ReactorEvent.PriorPatch">
+  PriorPatch()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The accumulated patch from earlier reactors in the chain (§22.3).</p>
+<p>
+When an earlier reactor returned a mutation, the server inserts the merged patch
+into the payload under <a class="xref" href="Axiam.Sdk.Reactor.ReactorEvent.html#Axiam_Sdk_Reactor_ReactorEvent_ReactorPatchKey">ReactorPatchKey</a> before dispatching here, so this
+reactor decides against the state that will actually be committed.
+</p>
+<p>
+<b>Read-only context.</b> Echoing these keys back inside your own patch is not how a
+field is preserved — the server merges, with later priority winning a contested key.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyDictionary&lt;string, string&gt; PriorPatch()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2">IReadOnlyDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The prior patch, or an empty map when this is the first reactor in the chain (or the
+only one). Never <code>null</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_Remaining_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.Remaining*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_Remaining_System_DateTimeOffset_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.Remaining(System.DateTimeOffset)">
+  Remaining(DateTimeOffset)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>How much of the window is left.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan Remaining(DateTimeOffset now)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>now</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd><p>The current instant.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd><p>The remaining time, or <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan.zero">Zero</a> when the window has already
+closed. A handler doing expensive work SHOULD consult this and shed load rather than
+answer into a closed window.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_Spec_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.Spec*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_Spec" data-uid="Axiam.Sdk.Reactor.ReactorEvent.Spec">
+  Spec()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L117"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The registry spec for <a class="xref" href="Axiam.Sdk.Reactor.ReactorEvent.html#Axiam_Sdk_Reactor_ReactorEvent_Event">Event</a>, or <code>null</code> when unknown.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ReactorEventSpec? Spec()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorEventSpec.html">ReactorEventSpec</a></dt>
+    <dd><p>The spec. <code>null</code> cannot happen for a server-dispatched event, since an
+unregistered event dispatches to nothing.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorEvent_ToString_" data-uid="Axiam.Sdk.Reactor.ReactorEvent.ToString*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorEvent_ToString" data-uid="Axiam.Sdk.Reactor.ReactorEvent.ToString">
+  ToString()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorEvent.cs/#L175"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A short, secret-free description for logs.</p>
+<p>
+Deliberately omits <a class="xref" href="Axiam.Sdk.Reactor.ReactorEvent.html#Axiam_Sdk_Reactor_ReactorEvent_Payload">Payload</a>: the nonce and correlation id are not
+secrets and may be logged for correlation, but the payload is tenant business data.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A one-line summary carrying no payload and no key material.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

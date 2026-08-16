@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha24/apiSpec/new?filename=Axiam_Sdk_Grpc_AxiamGrpcAuthzClient.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Grpc.AxiamGrpcAuthzClient%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha25/apiSpec/new?filename=Axiam_Sdk_Grpc_AxiamGrpcAuthzClient.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Grpc.AxiamGrpcAuthzClient%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient" class="text-break">
-Class AxiamGrpcAuthzClient  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L32"><i class="bi bi-code-slash"></i></a>
+Class AxiamGrpcAuthzClient  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -98,7 +98,7 @@ Class AxiamGrpcAuthzClient  <a class="header-action link-secondary" title="View 
   </div>
 
   <div class="markdown summary"><p>gRPC authorization transport (CONTRACT.md §1/§2/§5/§9, D-10).
-Wraps ONE long-lived <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha24/src/Grpc.Net.Client/GrpcChannel.cs">GrpcChannel</a> (via <a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcChannel.html">AxiamGrpcChannel</a> —
+Wraps ONE long-lived <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha25/src/Grpc.Net.Client/GrpcChannel.cs">GrpcChannel</a> (via <a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcChannel.html">AxiamGrpcChannel</a> —
 strict TLS, §6) intercepted by an <a class="xref" href="Axiam.Sdk.Grpc.AuthInterceptor.html">AuthInterceptor</a> that shares
 the EXACT SAME <a class="xref" href="Axiam.Sdk.Auth.RefreshGuard.html">RefreshGuard</a>/session <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a>'s REST
 transport uses — never a second guard instance.</p>
@@ -178,7 +178,7 @@ denial — never an over-grant.
 
   <h3 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient__ctor_Axiam_Sdk_AxiamClient_System_Uri_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.#ctor(Axiam.Sdk.AxiamClient,System.Uri)">
   AxiamGrpcAuthzClient(AxiamClient, Uri?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L59"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L59"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs the gRPC authz transport from <code class="paramref">client</code>'s exposed
@@ -225,7 +225,7 @@ session (RefreshGuard/tenant/token) this gRPC transport shares.</p>
 
   <h3 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_BatchCheckAsync_System_Collections_Generic_IEnumerable_Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_AccessCheck__System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.BatchCheckAsync(System.Collections.Generic.IEnumerable{Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.AccessCheck},System.Threading.CancellationToken)">
   BatchCheckAsync(IEnumerable&lt;AccessCheck&gt;, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L147"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>BatchCheckAccess</code> (CONTRACT.md §1); results are returned in the same
@@ -263,11 +263,54 @@ shared <code>AuthInterceptor</code>).</p>
 
 
 
+  <a id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_BatchCheckDecisionsAsync_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.BatchCheckDecisionsAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_BatchCheckDecisionsAsync_System_Collections_Generic_IEnumerable_Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_AccessCheck__System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.BatchCheckDecisionsAsync(System.Collections.Generic.IEnumerable{Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.AccessCheck},System.Threading.CancellationToken)">
+  BatchCheckDecisionsAsync(IEnumerable&lt;AccessCheck&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L214"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>BatchCheckAccess</code> returning the <b>full</b> decisions, including each
+<code>reason_code</code> (CONTRACT.md §11 rule 9). Results preserve input order.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IReadOnlyList&lt;AccessDecision&gt;&gt; BatchCheckDecisionsAsync(IEnumerable&lt;AxiamGrpcAuthzClient.AccessCheck&gt; checks, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>checks</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.html">AxiamGrpcAuthzClient</a>.<a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.AccessCheck.html">AccessCheck</a>&gt;</dt>
+    <dd><p>The checks to evaluate.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the call.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Core.AccessDecision.html">AccessDecision</a>&gt;&gt;</dt>
+    <dd><p>One decision per input check, in order.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_CheckAccessAsync_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.CheckAccessAsync*"></a>
 
   <h3 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_CheckAccessAsync_System_String_System_String_System_String_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.CheckAccessAsync(System.String,System.String,System.String,System.String,System.Threading.CancellationToken)">
   CheckAccessAsync(string, string, string?, string?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L118"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>CheckAccess</code> (CONTRACT.md §1). On <code>UNAUTHENTICATED</code>, the shared
@@ -312,15 +355,72 @@ taxonomy the REST transport uses.</p>
 
 
 
+  <a id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_CheckAccessDecisionAsync_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.CheckAccessDecisionAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_CheckAccessDecisionAsync_System_String_System_String_System_String_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.CheckAccessDecisionAsync(System.String,System.String,System.String,System.String,System.Threading.CancellationToken)">
+  CheckAccessDecisionAsync(string, string, string?, string?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L187"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>CheckAccess</code> returning the <b>full</b> decision, including the CONTRACT.md
+§11 rule 9 <code>reason_code</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;AccessDecision&gt; CheckAccessDecisionAsync(string action, string resourceId, string? scope = null, string? subjectId = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>action</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The action to check.</p>
+</dd>
+    <dt><code>resourceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The resource to check it against.</p>
+</dd>
+    <dt><code>scope</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional sub-resource scope.</p>
+</dd>
+    <dt><code>subjectId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Optional &quot;check-as&quot; subject override.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the call.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Core.AccessDecision.html">AccessDecision</a>&gt;</dt>
+    <dd><p>The full decision.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_CheckAccessDecisionAsync_System_String_System_String_System_String_System_String_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Exists because <a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.html#Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_CheckAccessAsync_System_String_System_String_System_String_System_String_System_Threading_CancellationToken_">CheckAccessAsync(string, string, string?, string?, CancellationToken)</a> returns a bare <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a> that predates
+that field and cannot carry it without a breaking signature change. Same deadline and
+UNAUTHENTICATED single-flight-retry behaviour as that method.</p>
+</div>
+
+
+
+
   <a id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_Dispose_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.Dispose*"></a>
 
   <h3 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_Dispose" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.Dispose">
   Dispose()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L229"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L352"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The channel is shut down with the client — a no-op when this instance was
-built over a caller-owned <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha24/src/Grpc.Core.Api/CallInvoker.cs">CallInvoker</a> (the internal test seam).</p>
+built over a caller-owned <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-alpha25/src/Grpc.Core.Api/CallInvoker.cs">CallInvoker</a> (the internal test seam).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -344,7 +444,7 @@ built over a caller-owned <a class="xref" href="https://github.com/grpc/grpc-dot
 
   <h3 id="Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_GetUserInfoAsync_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.GetUserInfoAsync(System.Threading.CancellationToken)">
   GetUserInfoAsync(CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L197"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Grpc/AxiamGrpcAuthzClient.cs/#L320"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>GetUserInfo</code> (CONTRACT.md §1/§1.1) — the gRPC-only, low-latency

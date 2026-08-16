@@ -273,6 +273,68 @@ Class CheckAccessResponse
 
 
 
+
+  <h3 id="Axiam_V1_CheckAccessResponse_ReasonCodeFieldNumber" data-uid="Axiam.V1.CheckAccessResponse.ReasonCodeFieldNumber">
+  ReasonCodeFieldNumber
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field number for the &quot;reason_code&quot; field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int ReasonCodeFieldNumber = 3</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Axiam_V1_CheckAccessResponse_ReasonFieldNumber" data-uid="Axiam.V1.CheckAccessResponse.ReasonFieldNumber">
+  ReasonFieldNumber
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field number for the &quot;reason&quot; field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int ReasonFieldNumber = 4</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -317,11 +379,22 @@ Class CheckAccessResponse
   </h3>
 
   <div class="markdown level1 summary"><p>Reason for denial (empty when allowed).</p>
+<p>DEPRECATED (SDK-Q10, contract 1.19). Superseded by <code>reason</code> (field 4),
+which is what the REST decision body has always called this. Both fields
+ship with byte-identical content until AXIAM <strong>2.0</strong>, where this one is
+removed; new code MUST read <code>reason</code> and MUST NOT depend on this field
+surviving. Deprecating rather than renaming keeps every gRPC client built
+against the current schema working, which a rename would have broken on
+the wire for exactly no behavioural gain.</p>
+<p>When 2.0 removes it, field number 2 and the name <code>deny_reason</code> must be
+<code>reserved</code> rather than recycled — a future field reusing tag 2 would be
+silently misread as a deny reason by every 1.x client still on the wire.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string DenyReason { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete]
+public string DenyReason { get; set; }</code></pre>
   </div>
 
 
@@ -372,6 +445,38 @@ Class CheckAccessResponse
 
 
 
+  <a id="Axiam_V1_CheckAccessResponse_HasReason_" data-uid="Axiam.V1.CheckAccessResponse.HasReason*"></a>
+
+  <h3 id="Axiam_V1_CheckAccessResponse_HasReason" data-uid="Axiam.V1.CheckAccessResponse.HasReason">
+  HasReason
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets whether the &quot;reason&quot; field is set</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasReason { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_V1_CheckAccessResponse_Parser_" data-uid="Axiam.V1.CheckAccessResponse.Parser*"></a>
 
   <h3 id="Axiam_V1_CheckAccessResponse_Parser" data-uid="Axiam.V1.CheckAccessResponse.Parser">
@@ -393,6 +498,87 @@ Class CheckAccessResponse
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><span class="xref">MessageParser</span>&lt;<a class="xref" href="Axiam.V1.CheckAccessResponse.html">CheckAccessResponse</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_V1_CheckAccessResponse_Reason_" data-uid="Axiam.V1.CheckAccessResponse.Reason*"></a>
+
+  <h3 id="Axiam_V1_CheckAccessResponse_Reason" data-uid="Axiam.V1.CheckAccessResponse.Reason">
+  Reason
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>SDK-Q10: the human-readable reason, under the name REST already uses.</p>
+<p>This is the canonical field; <code>deny_reason</code> (field 2) is the deprecated
+spelling of the same string. Presence is explicit so the gRPC shape
+matches the REST one exactly: REST omits <code>reason</code> on an allow, and so does
+this — absent on <code>allowed = true</code>, present on every refusal. Explicit
+presence also lets a client tell &quot;this server does not send <code>reason</code> yet&quot;
+(absent on a refusal — a pre-SDK-Q10 server, fall back to <code>deny_reason</code>)
+apart from &quot;allowed, so there is nothing to say&quot;.</p>
+<p>Field 4 is additive, so clients built against the previous schema ignore it
+and keep reading <code>deny_reason</code> until 2.0.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Reason { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_V1_CheckAccessResponse_ReasonCode_" data-uid="Axiam.V1.CheckAccessResponse.ReasonCode*"></a>
+
+  <h3 id="Axiam_V1_CheckAccessResponse_ReasonCode" data-uid="Axiam.V1.CheckAccessResponse.ReasonCode">
+  ReasonCode
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>B1 (deny-override): machine-readable decision reason. One of:
+&quot;allowed&quot;        — an allow grant matched and no deny did
+&quot;no_grant&quot;       — nothing matched; default deny
+&quot;denied_by_rule&quot; — an explicit deny rule matched and overrode any allow</p>
+<p>Both refusals still set allowed=false, so a client reading only <code>allowed</code>
+is unaffected. The distinction matters to the person on the other end:
+&quot;no_grant&quot; means ask an admin for access, &quot;denied_by_rule&quot; means an admin
+has already decided. Field 3 is additive — proto3 clients built against
+the previous schema ignore it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ReasonCode { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 
@@ -430,6 +616,33 @@ Class CheckAccessResponse
 to a coded output stream.</p>
 </dd>
   </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_V1_CheckAccessResponse_ClearReason_" data-uid="Axiam.V1.CheckAccessResponse.ClearReason*"></a>
+
+  <h3 id="Axiam_V1_CheckAccessResponse_ClearReason" data-uid="Axiam.V1.CheckAccessResponse.ClearReason">
+  ClearReason()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Clears the value of the &quot;reason&quot; field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void ClearReason()</code></pre>
+  </div>
+
+
 
 
 

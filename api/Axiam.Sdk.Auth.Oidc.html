@@ -101,6 +101,32 @@ an authorization-code + PKCE login (CONTRACT.md §12.1).</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.DeviceAuthorization.html">DeviceAuthorization</a></dt>
+      <dd><p>The <code>DeviceAuthorizationResponse</code> — what the device shows its user, plus the
+<code>device_code</code> it polls with (CONTRACT.md §14.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.DeviceAuthorizeParams.html">DeviceAuthorizeParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_DeviceAuthorizeAsync_Axiam_Sdk_Auth_Oidc_DeviceAuthorizeParams_System_Threading_CancellationToken_">DeviceAuthorizeAsync(DeviceAuthorizeParams, CancellationToken)</a> (CONTRACT.md §14.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.DeviceLoginParams.html">DeviceLoginParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_DeviceLoginAsync_Axiam_Sdk_Auth_Oidc_DeviceLoginParams_System_Threading_CancellationToken_">DeviceLoginAsync(DeviceLoginParams, CancellationToken)</a> (CONTRACT.md §14.3).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.DevicePollParams.html">DevicePollParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_DevicePollAsync_Axiam_Sdk_Auth_Oidc_DevicePollParams_System_Threading_CancellationToken_">DevicePollAsync(DevicePollParams, CancellationToken)</a> (CONTRACT.md §14.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.ExchangedToken.html">ExchangedToken</a></dt>
+      <dd><p>The result of an RFC 8693 exchange (wire schema <code>TokenExchangeResponse</code>, §15.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.IdTokenClaims.html">IdTokenClaims</a></dt>
       <dd><p>The decoded, ALREADY-VALIDATED ID-token claim set carried by
 <a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcTokenSet.html#Axiam_Sdk_Auth_Oidc_OidcTokenSet_IdClaims">IdClaims</a> (CONTRACT.md §12.1).</p>
@@ -129,6 +155,11 @@ token (all <code>null</code>).</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams.html">LoginClientCredentialsParams</a></dt>
       <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LoginClientCredentialsAsync_Axiam_Sdk_Auth_Oidc_LoginClientCredentialsParams_System_Threading_CancellationToken_">LoginClientCredentialsAsync(LoginClientCredentialsParams, CancellationToken)</a> (<code>grant_type=client_credentials</code>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.LogoutUrlParams.html">LogoutUrlParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LogoutUrlAsync_Axiam_Sdk_Auth_Oidc_LogoutUrlParams_System_Threading_CancellationToken_">LogoutUrlAsync(LogoutUrlParams, CancellationToken)</a> (CONTRACT.md §12.7.2).</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -179,9 +210,30 @@ returned by <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClie
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.RequestedPermission.html">RequestedPermission</a></dt>
+      <dd><p>One <code>(resource, scopes)</code> pair a resource server requires (§20.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.RequestingPartyToken.html">RequestingPartyToken</a></dt>
+      <dd><p>The result of the UMA ticket grant (§20.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.ResourceSet.html">ResourceSet</a></dt>
+      <dd><p>A UMA resource set — an AXIAM resource seen through the Protection API
+(CONTRACT.md §20.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.RevokeParams.html">RevokeParams</a></dt>
       <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_RevokeAsync_Axiam_Sdk_Auth_Oidc_RevokeParams_System_Threading_CancellationToken_">RevokeAsync(RevokeParams, CancellationToken)</a> (RFC 7009). Requires
 confidential-client credentials (§12.1 note 4).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.RptPermission.html">RptPermission</a></dt>
+      <dd><p>One entry of an RPT's <code>permissions</code> claim (§20.1).</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -214,6 +266,26 @@ or from the client's own construction options (CONTRACT.md §5.1).</p>
 nonce never leaves the server (§12.1 note 7). Round-trip <a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoStartResult.html#Axiam_Sdk_Auth_Oidc_SsoStartResult_State">State</a> into
 <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteAsync_Axiam_Sdk_Auth_Oidc_SsoCompleteParams_System_Threading_CancellationToken_">SsoCompleteAsync(SsoCompleteParams, CancellationToken)</a> unmodified — the server stores it single-use
 with a 10-minute TTL and recovers the whole login context from it.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.TokenExchangeParams.html">TokenExchangeParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_TokenExchangeAsync_Axiam_Sdk_Auth_Oidc_TokenExchangeParams_System_Threading_CancellationToken_">TokenExchangeAsync(TokenExchangeParams, CancellationToken)</a> (CONTRACT.md §15.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.UmaChallenge.html">UmaChallenge</a></dt>
+      <dd><p>A parsed <code>WWW-Authenticate: UMA</code> challenge (UMA 2.0 §3.2, §20.3).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.UmaExchangeTicketParams.html">UmaExchangeTicketParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_UmaExchangeTicketAsync_Axiam_Sdk_Auth_Oidc_UmaExchangeTicketParams_System_Threading_CancellationToken_">UmaExchangeTicketAsync(UmaExchangeTicketParams, CancellationToken)</a> (§20.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.VerifiedLogoutToken.html">VerifiedLogoutToken</a></dt>
+      <dd><p>What a verified back-channel logout token names (CONTRACT.md §12.7.3).</p>
 </dd>
     </dl>
     <h3 id="interfaces">

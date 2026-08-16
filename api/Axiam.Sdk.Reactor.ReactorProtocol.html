@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ReactorProtocol | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ReactorProtocol | AXIAM .NET SDK ">
+      
+      <meta name="description" content="The reactor wire protocol (sdks/CONTRACT.md &#167;22.1–&#167;22.4): topology names, key derivation, canonicalization, signing and verification.   is built on this class, and this class is public so an integrator on a transport this SDK does not wrap (a different AMQP client, a test harness, a bridge) can satisfy &#167;22 without reimplementing the one rule that is easy to get wrong.   The canonicalization rule. A reactor body is signed with its hmac_signature field present and set to null, in declared field order. That differs from &#167;8&#39;s own two message types (AuthzRequest, AuditEventMessage), whose hmac_signature is absent from their canonical bytes — see , which implements that other rule — and it is the single most likely place for an implementation to produce a MAC that will not verify. Everything else is &#167;8 v2 verbatim: the same HKDF-derived per-tenant subkey, the same HMAC-SHA256 compared in constant time, the same &#177;300 s freshness window applied in both directions, the same key_version floor of 2.   Field order, event (server → reactor): tenant_id, event, correlation_id, payload, timeout_ms, key_version, nonce, issued_at, hmac_signature.   Field order, reply (reactor → server): correlation_id, tenant_id, event, decision, reason (omitted when absent), patch (omitted when absent), require_mfa (omitted when false), key_version, nonce, issued_at, hmac_signature.   The three conditionally-omitted fields are load-bearing: a reply that serializes &quot;require_mfa&quot;: false rather than omitting it produces different canonical bytes and therefore a different MAC.   Signing is symmetric in direction. The server signs the event with the tenant subkey; the reactor signs its reply with the same subkey. There is no second key and no asymmetric variant in v1. An unsigned reply is not a weak reply — it is not a reply at all, and the server discards it as though the reactor had never answered.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha25/apiSpec/new?filename=Axiam_Sdk_Reactor_ReactorProtocol.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Reactor.ReactorProtocol%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Reactor.ReactorProtocol">
+
+
+
+  <h1 id="Axiam_Sdk_Reactor_ReactorProtocol" data-uid="Axiam.Sdk.Reactor.ReactorProtocol" class="text-break">
+Class ReactorProtocol  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L59"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Reactor.html">Reactor</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>The reactor wire protocol (<code>sdks/CONTRACT.md</code> §22.1–§22.4): topology
+names, key derivation, canonicalization, signing and verification.</p>
+<p>
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html">ReactorServer</a> is built on this class, and this class is public so an
+integrator on a transport this SDK does not wrap (a different AMQP client, a test
+harness, a bridge) can satisfy §22 without reimplementing the one rule that is easy
+to get wrong.
+</p>
+<p>
+<b>The canonicalization rule.</b> A reactor body is signed with its
+<code>hmac_signature</code> field <b>present and set to <code>null</code></b>, in declared field
+order. That differs from §8's own two message types (<code>AuthzRequest</code>,
+<code>AuditEventMessage</code>), whose <code>hmac_signature</code> is <em>absent</em> from their
+canonical bytes — see <a class="xref" href="Axiam.Sdk.Amqp.Hmac.html">Hmac</a>, which implements that other
+rule — and it is the single most likely place for an implementation to produce a MAC
+that will not verify. Everything else is §8 v2 verbatim: the same HKDF-derived
+per-tenant subkey, the same <code>HMAC-SHA256</code> compared in constant time, the same
+±300 s freshness window applied in <b>both</b> directions, the same
+<code>key_version</code> floor of 2.
+</p>
+<p>
+Field order, event (server → reactor): <code>tenant_id</code>, <code>event</code>,
+<code>correlation_id</code>, <code>payload</code>, <code>timeout_ms</code>, <code>key_version</code>,
+<code>nonce</code>, <code>issued_at</code>, <code>hmac_signature</code>.
+</p>
+<p>
+Field order, reply (reactor → server): <code>correlation_id</code>, <code>tenant_id</code>,
+<code>event</code>, <code>decision</code>, <code>reason</code> (omitted when absent), <code>patch</code>
+(omitted when absent), <code>require_mfa</code> (<b>omitted when <code>false</code></b>),
+<code>key_version</code>, <code>nonce</code>, <code>issued_at</code>, <code>hmac_signature</code>.
+</p>
+<p>
+The three conditionally-omitted fields are load-bearing: a reply that serializes
+<code>"require_mfa": false</code> rather than omitting it produces different canonical bytes
+and therefore a different MAC.
+</p>
+<p>
+<b>Signing is symmetric in direction.</b> The server signs the event with the tenant
+subkey; the reactor signs its reply with the same subkey. There is no second key and no
+asymmetric variant in v1. An unsigned reply is not a weak reply — it is not a reply at
+all, and the server discards it as though the reactor had never answered.
+</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class ReactorProtocol</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ReactorProtocol</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_ChainCeilingMs" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.ChainCeilingMs">
+  ChainCeilingMs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The chain's wall-clock ceiling: past this the remaining reactors are not contacted.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int ChainCeilingMs = 5000</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_DefaultFreshnessSkew" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.DefaultFreshnessSkew">
+  DefaultFreshnessSkew
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L89"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The §8 v2 freshness window applied to <code>issued_at</code>, in both directions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TimeSpan DefaultFreshnessSkew</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_DefaultMaxInFlightPerTenant" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.DefaultMaxInFlightPerTenant">
+  DefaultMaxInFlightPerTenant
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The server's default per-tenant in-flight interception cap.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int DefaultMaxInFlightPerTenant = 64</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_DefaultTimeoutMs" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.DefaultTimeoutMs">
+  DefaultTimeoutMs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The <code>timeout_ms</code> a registration gets when it names none (§22.8).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int DefaultTimeoutMs = 500</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_Exchange" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.Exchange">
+  Exchange
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The topic exchange every reactor event is published to.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string Exchange = &quot;axiam.reactor.events&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_KeyVersion" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.KeyVersion">
+  KeyVersion
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L65"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The §8 envelope version reactor bodies are signed under.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int KeyVersion = 2</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_MaxTimeoutMs" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.MaxTimeoutMs">
+  MaxTimeoutMs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The largest <code>timeout_ms</code> a registration may name; above this it is refused.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int MaxTimeoutMs = 5000</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_MinAcceptedKeyVersion" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.MinAcceptedKeyVersion">
+  MinAcceptedKeyVersion
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The lowest <code>key_version</code> that is even considered. A body carrying less than
+this is refused before anything else about it is looked at — it predates the
+mandatory <code>nonce</code>/<code>issued_at</code> replay-protection fields.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int MinAcceptedKeyVersion = 2</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorProtocol_CanonicalEventBytes_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.CanonicalEventBytes*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_CanonicalEventBytes_System_Byte___" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.CanonicalEventBytes(System.Byte[])">
+  CanonicalEventBytes(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L178"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The exact bytes an event was signed over: the received body with
+<code>hmac_signature</code> set to <code>null</code> in place.</p>
+<p>
+Setting the value rather than removing the key is what makes these bytes a
+<em>reactor</em> body rather than a §8 one. The field keeps its position:
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.nodes.jsonobject">JsonObject</a> is backed by an ordered dictionary, and assigning through
+the indexer on an existing key replaces the value without moving it.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] CanonicalEventBytes(byte[] body)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>body</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The raw delivery body.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The canonical bytes.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>When <code class="paramref">body</code> is not a JSON object.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorProtocol_CanonicalReplyBytes_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.CanonicalReplyBytes*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_CanonicalReplyBytes_System_Guid_System_Guid_System_String_Axiam_Sdk_Reactor_ReactorDecision_System_Guid_System_DateTimeOffset_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.CanonicalReplyBytes(System.Guid,System.Guid,System.String,Axiam.Sdk.Reactor.ReactorDecision,System.Guid,System.DateTimeOffset)">
+  CanonicalReplyBytes(Guid, Guid, string, ReactorDecision, Guid, DateTimeOffset)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L241"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The exact bytes a reply is signed over: the reply fields in declared order, with the
+conditional omissions applied and <code>hmac_signature</code> present and <code>null</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] CanonicalReplyBytes(Guid correlationId, Guid tenantId, string eventName, ReactorDecision decision, Guid nonce, DateTimeOffset issuedAt)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>correlationId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The event's correlation id, copied verbatim.</p>
+</dd>
+    <dt><code>tenantId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The event's tenant.</p>
+</dd>
+    <dt><code>eventName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The event's registry name.</p>
+</dd>
+    <dt><code>decision</code> <a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.html">ReactorDecision</a></dt>
+    <dd><p>What the handler decided.</p>
+</dd>
+    <dt><code>nonce</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>A fresh UUIDv4, unique per reply.</p>
+</dd>
+    <dt><code>issuedAt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd><p>The reply's signing time; truncated to whole seconds so it round-trips through the
+server's RFC 3339 parser to byte-identical text.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The canonical bytes.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorProtocol_DeriveTenantKey_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.DeriveTenantKey*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_DeriveTenantKey_System_Byte___System_Guid_System_Int32_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.DeriveTenantKey(System.Byte[],System.Guid,System.Int32)">
+  DeriveTenantKey(byte[], Guid, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L151"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Derives a tenant's AMQP signing subkey from the deployment master key
+(<code>sdks/CONTRACT.md</code> §8 v2, restated by §22.2).</p>
+<p>
+<code>HKDF-SHA256(salt = "axiam-amqp-hkdf-salt-v1", ikm = masterKey, info =
+"axiam-amqp-v1" || key_version || tenant_id_16_raw_bytes)</code>, 32 bytes out. The
+<code>info</code> is domain-separated, versioned and tenant-scoped, so a signature made
+with tenant A's subkey never verifies under tenant B's even though both derive from
+one master key.
+</p>
+<p>
+Most deployments should fetch the derived subkey from the management API rather than
+hold the master key in the reactor process at all; this exists for the ones that
+derive locally, and because a derivation that cannot be checked against the
+reference vectors is a derivation nobody can trust.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] DeriveTenantKey(byte[] masterKey, Guid tenantId, int keyVersion = 2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>masterKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The deployment's AMQP master signing key.</p>
+</dd>
+    <dt><code>tenantId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The tenant to derive for.</p>
+</dd>
+    <dt><code>keyVersion</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The envelope key version, <a class="xref" href="Axiam.Sdk.Reactor.ReactorProtocol.html#Axiam_Sdk_Reactor_ReactorProtocol_KeyVersion">KeyVersion</a> today.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The 32-byte per-tenant subkey.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorProtocol_FormatInstant_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.FormatInstant*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_FormatInstant_System_DateTimeOffset_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.FormatInstant(System.DateTimeOffset)">
+  FormatInstant(DateTimeOffset)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L315"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Renders <code class="paramref">instant</code> the way the server's RFC 3339 codec does,
+truncated to whole seconds.</p>
+<p>
+The server verifies a reply by deserializing it and re-serializing the body, so the
+timestamp text has to survive that round trip unchanged. Whole seconds always do; a
+sub-second value whose digit count does not match the server's auto-selected
+precision would not.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string FormatInstant(DateTimeOffset instant)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>instant</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd><p>The moment to render.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>An RFC 3339 UTC timestamp with no fractional part.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorProtocol_IsFresh_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.IsFresh*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_IsFresh_System_DateTimeOffset_System_DateTimeOffset_System_TimeSpan_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.IsFresh(System.DateTimeOffset,System.DateTimeOffset,System.TimeSpan)">
+  IsFresh(DateTimeOffset, DateTimeOffset, TimeSpan)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L299"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether <code class="paramref">issuedAt</code> lies within <code class="paramref">skew</code> of
+<code class="paramref">now</code>, in both directions.</p>
+<p>
+A future timestamp is not "extra fresh"; it is the shape of a captured message held
+for later.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsFresh(DateTimeOffset issuedAt, DateTimeOffset now, TimeSpan skew)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>issuedAt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd><p>The timestamp inside the signed body.</p>
+</dd>
+    <dt><code>now</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd><p>The verifier's clock reading.</p>
+</dd>
+    <dt><code>skew</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd><p>The acceptance window, <a class="xref" href="Axiam.Sdk.Reactor.ReactorProtocol.html#Axiam_Sdk_Reactor_ReactorProtocol_DefaultFreshnessSkew">DefaultFreshnessSkew</a> by default.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> when the timestamp is inside the window.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorProtocol_QueueName_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.QueueName*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_QueueName_System_Guid_System_Guid_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.QueueName(System.Guid,System.Guid)">
+  QueueName(Guid, Guid)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L124"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The durable per-reactor queue the <b>server</b> declares.</p>
+<p>
+Actors consume; they never declare topology. This helper exists so a runtime can
+name the queue it was registered as — never another one. A reactor that can bind is
+a reactor that can bind itself to <code>*.token.pre_issue</code> and read another tenant's
+issuance events, so this SDK holds no declare or bind capability at all.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string QueueName(Guid tenantId, Guid reactorId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tenantId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The tenant the reactor is registered in.</p>
+</dd>
+    <dt><code>reactorId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>This reactor's own registration id.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p><code>axiam.reactor.q.&lt;tenant_id&gt;.&lt;reactor_id&gt;</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorProtocol_RoutingKey_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.RoutingKey*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_RoutingKey_System_Guid_System_String_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.RoutingKey(System.Guid,System.String)">
+  RoutingKey(Guid, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The routing key an event for <code class="paramref">eventName</code> in
+<code class="paramref">tenantId</code> is published under.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string RoutingKey(Guid tenantId, string eventName)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tenantId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The tenant.</p>
+</dd>
+    <dt><code>eventName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The registry event name.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p><code>&lt;tenant_id&gt;.&lt;event&gt;</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorProtocol_SignedReply_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.SignedReply*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_SignedReply_System_Byte___System_Guid_System_Guid_System_String_Axiam_Sdk_Reactor_ReactorDecision_System_Guid_System_DateTimeOffset_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.SignedReply(System.Byte[],System.Guid,System.Guid,System.String,Axiam.Sdk.Reactor.ReactorDecision,System.Guid,System.DateTimeOffset)">
+  SignedReply(byte[], Guid, Guid, string, ReactorDecision, Guid, DateTimeOffset)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L271"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds and signs a reply — the wire bytes a reactor publishes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] SignedReply(byte[] signingKey, Guid correlationId, Guid tenantId, string eventName, ReactorDecision decision, Guid nonce, DateTimeOffset issuedAt)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>signingKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The tenant's derived AMQP subkey, the same one the event was signed with.</p>
+</dd>
+    <dt><code>correlationId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The event's correlation id, copied verbatim. The server authenticates this field
+inside the signed body, not the AMQP property.</p>
+</dd>
+    <dt><code>tenantId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The event's tenant.</p>
+</dd>
+    <dt><code>eventName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The event's registry name.</p>
+</dd>
+    <dt><code>decision</code> <a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.html">ReactorDecision</a></dt>
+    <dd><p>What the handler decided.</p>
+</dd>
+    <dt><code>nonce</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>A fresh UUIDv4. It is inside the signed bytes, so a unique one is what keeps two
+replies from being byte-identical; a constant nonce removes the only uniqueness the
+reply body carries beyond its timestamp.</p>
+</dd>
+    <dt><code>issuedAt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd><p>The reply's signing time.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The signed reply body, ready to publish.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorProtocol_VerifyEvent_" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.VerifyEvent*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorProtocol_VerifyEvent_System_Byte___System_Byte___" data-uid="Axiam.Sdk.Reactor.ReactorProtocol.VerifyEvent(System.Byte[],System.Byte[])">
+  VerifyEvent(byte[], byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorProtocol.cs/#L202"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Verifies an event's MAC under <code class="paramref">signingKey</code>.</p>
+<p>
+This checks the signature and nothing else. <a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html">ReactorServer</a> applies the
+full §22.3 order around it — reject <code>key_version &lt; 2</code>, verify the MAC,
+check freshness, check the nonce — and only then decodes the payload.
+</p>
+<p>
+Never throws: a malformed body, a missing or null signature, non-hex signature text
+and a wrong-length signature all verify as <code>false</code>. There is no
+accept-when-absent path.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool VerifyEvent(byte[] signingKey, byte[] body)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>signingKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The tenant's derived AMQP subkey.</p>
+</dd>
+    <dt><code>body</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The raw delivery body.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> only when the MAC matches, compared in constant time.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

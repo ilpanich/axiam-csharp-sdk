@@ -126,6 +126,41 @@ Classes
       <dd></dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.CnfClaim.html">CnfClaim</a></dt>
+      <dd><p>RFC 7800 confirmation claim (X5.1). Either, both or neither member may be
+set; a claim with NEITHER set names a confirmation method this server
+version does not implement.</p>
+<p>The consumer rule is the same one SDK contract §10.1 rule 9 makes normative,
+and it is the whole reason this message exists: a confirmation the consumer
+cannot check MUST be refused, never read as &quot;unconstrained&quot;. Two members set
+is a CONJUNCTION — both must hold.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.CreateReactorRequest.html">CreateReactorRequest</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.CreateReactorResponse.html">CreateReactorResponse</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.DeleteReactorRequest.html">DeleteReactorRequest</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.DeleteReactorResponse.html">DeleteReactorResponse</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.GetReactorRequest.html">GetReactorRequest</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.GetReactorResponse.html">GetReactorResponse</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.V1.GetUserInfoRequest.html">GetUserInfoRequest</a></dt>
       <dd><p>Empty request — every parameter is read from the authorization bearer token,
 not from request fields.</p>
@@ -148,6 +183,66 @@ not from request fields.</p>
       <dd></dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.ListReactorEventsRequest.html">ListReactorEventsRequest</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.ListReactorEventsResponse.html">ListReactorEventsResponse</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.ListReactorsRequest.html">ListReactorsRequest</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.ListReactorsResponse.html">ListReactorsResponse</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.ReactorAdminService.html">ReactorAdminService</a></dt>
+      <dd><p>Reactor admin CRUD (X1 / R2.3), mirroring the REST DTOs in
+<code>crates/axiam-api-rest/src/handlers/reactors.rs</code> field-for-field so a
+caller sees the same shape on either transport. <code>mode</code> and <code>failure_policy</code>
+are wire strings rather than proto enums — the same choice <code>UserResponse</code>'s
+<code>status</code> field already made in <code>user.proto</code> — because the valid values are
+server data (<code>GET /api/v1/reactors/events</code>'s registry), not a fixed set a
+generated enum should freeze.</p>
+<p>This is CRUD only: the wire protocol reactors actually run over (topology,
+§8 v2 signing in both directions, the event registry, failure policy and
+budget composition) is CONTRACT.md §22, which this service does not
+restate — it only manages the registrations §22.9 describes.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.ReactorAdminService.ReactorAdminServiceClient.html">ReactorAdminService.ReactorAdminServiceClient</a></dt>
+      <dd><p>Client for ReactorAdminService</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.ReactorEventDescriptor.html">ReactorEventDescriptor</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.ReactorReflection.html">ReactorReflection</a></dt>
+      <dd><p>Holder for reflection information generated from axiam/v1/reactor.proto</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.ReactorResponse.html">ReactorResponse</a></dt>
+      <dd><p>The registered reactor, as returned by every RPC above except delete.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.RptPermission.html">RptPermission</a></dt>
+      <dd><p>A UMA 2.0 permission carried by an RPT (X2).</p>
+<p>Mirrors <code>axiam_core::models::uma::RptPermission</code> field for field, including
+the per-permission <code>exp</code>: UMA allows an RPT to accumulate permissions with
+different lifetimes, and AXIAM issues them uniformly in v1 only. Flattening
+that to a single token-level expiry here would foreclose a shape the
+specification permits and the domain model already carries.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.V1.TokenReflection.html">TokenReflection</a></dt>
       <dd><p>Holder for reflection information generated from axiam/v1/token.proto</p>
 </dd>
@@ -161,6 +256,14 @@ not from request fields.</p>
       <dt><a class="xref" href="Axiam.V1.TokenService.TokenServiceClient.html">TokenService.TokenServiceClient</a></dt>
       <dd><p>Client for TokenService</p>
 </dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.UpdateReactorRequest.html">UpdateReactorRequest</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.V1.UpdateReactorResponse.html">UpdateReactorResponse</a></dt>
+      <dd></dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.V1.UserInfoService.html">UserInfoService</a></dt>

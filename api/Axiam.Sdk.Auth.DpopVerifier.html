@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class DpopVerifier | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class DpopVerifier | AXIAM .NET SDK ">
+      
+      <meta name="description" content="DPoP proof verification — CONTRACT.md &#167;21.7.2 (RFC 9449), contract 1.16.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha25/apiSpec/new?filename=Axiam_Sdk_Auth_DpopVerifier.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.DpopVerifier%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Auth.DpopVerifier">
+
+
+
+  <h1 id="Axiam_Sdk_Auth_DpopVerifier" data-uid="Axiam.Sdk.Auth.DpopVerifier" class="text-break">
+Class DpopVerifier  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/DpopVerifier.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Auth.html">Auth</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>DPoP proof verification — CONTRACT.md §21.7.2 (RFC 9449), contract 1.16.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class DpopVerifier</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">DpopVerifier</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Auth_DpopVerifier_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+The resource-server half of DPoP: given the <code>DPoP</code> header a caller presented,
+decide whether it proves possession for <b>this</b> request and <b>this</b> access
+token, and return the key thumbprint that
+<a class="xref" href="Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier_VerifyTokenBinding_System_Text_Json_JsonElement_Axiam_Sdk_Auth_PresentedProofs_">VerifyTokenBinding(JsonElement, PresentedProofs)</a> then matches against the token's
+<code>cnf.jkt</code>.
+</p>
+<p>
+<b>Why this lives in the SDK.</b> §21.7.2 is a ten-check list, and the contract is
+blunt about partial implementations: <i>"Partial verification is worse than none,
+because it produces a guard that reports success."</i> Nine of the ten look optional
+until someone builds an attack out of the one that was skipped, so they belong in one
+audited place rather than in every application guarding an endpoint.
+</p>
+<p>
+The two most often missing: <code>typ</code> — without pinning it to <code>dpop+jwt</code>, any
+<i>other</i> JWT signed by the same key (an access token, an ID token) is replayable as
+a proof; and <code>ath</code> — without it, a proof captured on one request can be re-aimed at
+a different token held by the same key.
+</p>
+<p>
+<b>The algorithm comes from the key, never from the header.</b> <code>alg: none</code> and
+RSA-public-key-as-HMAC-secret are the same bug wearing different clothes: <i>the token
+told the verifier how to check the token</i>. This class dispatches on the embedded
+key's own <code>kty</code>/<code>crv</code>, so an HMAC path is never reachable no matter what the
+header says.
+</p>
+<p>
+Ed25519 uses BouncyCastle for the same reason <a class="xref" href="Axiam.Sdk.Auth.JwksVerifier.html">JwksVerifier</a> does — .NET
+still ships no EdDSA. <code>ES256</code> and <code>PS256</code> use the platform's own
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.security.cryptography.ecdsa">ECDsa</a> and <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.security.cryptography.rsa">RSA</a>.
+</p>
+</div>
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="Axiam_Sdk_Auth_DpopVerifier_IatLeeway" data-uid="Axiam.Sdk.Auth.DpopVerifier.IatLeeway">
+  IatLeeway
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/DpopVerifier.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>§21.7.2 check 7 — the <code>iat</code> acceptance window, applied in <b>both</b>
+directions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TimeSpan IatLeeway</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Auth_DpopVerifier_IatLeeway_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>RFC 9449 recommends a small window without fixing a number; 60 seconds is the
+contract's RECOMMENDED value. A named constant, because a bare <code>60</code> three call
+frames deep is a number nobody ever revisits.</p>
+</div>
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Auth_DpopVerifier_AccessTokenHash_" data-uid="Axiam.Sdk.Auth.DpopVerifier.AccessTokenHash*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_DpopVerifier_AccessTokenHash_System_String_" data-uid="Axiam.Sdk.Auth.DpopVerifier.AccessTokenHash(System.String)">
+  AccessTokenHash(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/DpopVerifier.cs/#L464"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Compute the <code>ath</code> claim value for an access token — RFC 9449 §4.2.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string AccessTokenHash(string accessToken)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>accessToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The token as it arrived.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The 43-character base64url hash.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Auth_DpopVerifier_AccessTokenHash_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>base64url-unpadded SHA-256 over the token's ASCII bytes, i.e. over the compact JWT
+string exactly as it travelled in the <code>Authorization</code> header, not over anything
+decoded out of it.</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Auth_DpopVerifier_CanonicalHtu_" data-uid="Axiam.Sdk.Auth.DpopVerifier.CanonicalHtu*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_DpopVerifier_CanonicalHtu_System_String_" data-uid="Axiam.Sdk.Auth.DpopVerifier.CanonicalHtu(System.String)">
+  CanonicalHtu(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/DpopVerifier.cs/#L481"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reduce a URI to its <code>htu</code> comparison form — §21.7.2 check 6.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string CanonicalHtu(string uri)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The URI to reduce.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The same URI without its query string or fragment.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Auth_DpopVerifier_CanonicalHtu_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Query and fragment removed, and <b>nothing else</b>. No case folding, no default-port
+elision, no percent-decoding, no trailing-slash fixing: a normalising comparison is
+precisely where two unequal URIs become equal, and an attacker who finds such a pair
+can aim a proof at an endpoint it was never minted for.</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Auth_DpopVerifier_ThumbprintS256_" data-uid="Axiam.Sdk.Auth.DpopVerifier.ThumbprintS256*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_DpopVerifier_ThumbprintS256_System_Text_Json_JsonElement_" data-uid="Axiam.Sdk.Auth.DpopVerifier.ThumbprintS256(System.Text.Json.JsonElement)">
+  ThumbprintS256(JsonElement)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/DpopVerifier.cs/#L432"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Compute the RFC 7638 SHA-256 thumbprint of a JWK — the <code>jkt</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string ThumbprintS256(JsonElement jwk)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>jwk</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonelement">JsonElement</a></dt>
+    <dd><p>The public key to fingerprint.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The 43-character base64url thumbprint.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Auth_DpopVerifier_ThumbprintS256_System_Text_Json_JsonElement__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Only the members RFC 7638 names for the key type take part, serialised as compact
+JSON with lexicographically ordered keys. Members outside that set (<code>kid</code>,
+<code>use</code>, <code>alg</code>, <code>x5c</code>) are excluded by the spec, which is what makes the
+thumbprint stable across two encodings of the same key.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
+    <dd><p>When the key type is unsupported or a member is missing.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_Auth_DpopVerifier_VerifyProof_" data-uid="Axiam.Sdk.Auth.DpopVerifier.VerifyProof*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_DpopVerifier_VerifyProof_System_String_Axiam_Sdk_Auth_DpopVerifier_DpopRequest_Axiam_Sdk_Auth_DpopVerifier_IJtiStore_" data-uid="Axiam.Sdk.Auth.DpopVerifier.VerifyProof(System.String,Axiam.Sdk.Auth.DpopVerifier.DpopRequest,Axiam.Sdk.Auth.DpopVerifier.IJtiStore)">
+  VerifyProof(string, DpopRequest, IJtiStore)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/DpopVerifier.cs/#L184"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Verify a DPoP proof against this request — all ten §21.7.2 checks.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string VerifyProof(string proof, DpopVerifier.DpopRequest request, DpopVerifier.IJtiStore jtiStore)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>proof</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The raw <code>DPoP</code> header value.</p>
+</dd>
+    <dt><code>request</code> <a class="xref" href="Axiam.Sdk.Auth.DpopVerifier.html">DpopVerifier</a>.<a class="xref" href="Axiam.Sdk.Auth.DpopVerifier.DpopRequest.html">DpopRequest</a></dt>
+    <dd><p>The method, URI and access token this proof must match.</p>
+</dd>
+    <dt><code>jtiStore</code> <a class="xref" href="Axiam.Sdk.Auth.DpopVerifier.html">DpopVerifier</a>.<a class="xref" href="Axiam.Sdk.Auth.DpopVerifier.IJtiStore.html">IJtiStore</a></dt>
+    <dd><p>The replay guard. Required — there is no default, because every default here is
+either a silent skip of replay protection or a per-process store masquerading as a
+global one.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The proof key's <code>jkt</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Auth_DpopVerifier_VerifyProof_System_String_Axiam_Sdk_Auth_DpopVerifier_DpopRequest_Axiam_Sdk_Auth_DpopVerifier_IJtiStore__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Returns the proof key's RFC 7638 thumbprint (<code>jkt</code>) on success. Feed it to
+<a class="xref" href="Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier_VerifyTokenBinding_System_Text_Json_JsonElement_Axiam_Sdk_Auth_PresentedProofs_">VerifyTokenBinding(JsonElement, PresentedProofs)</a> as the DPoP half of
+<a class="xref" href="Axiam.Sdk.Auth.PresentedProofs.html">PresentedProofs</a>; returning it rather than <code>true</code> is deliberate, so
+the value a guard passes onward could only have come from a proof that actually
+verified. There is no &quot;just check the signature&quot; mode, because that is exactly the
+partial verification the contract calls worse than none.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
+    <dd><p>On any failing check.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

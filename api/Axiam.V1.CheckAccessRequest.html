@@ -568,6 +568,17 @@ Class CheckAccessRequest
   </h3>
 
   <div class="markdown level1 summary"><p>Subject (user) UUID.</p>
+<p>SDK-Q10: optional in the same sense REST's <code>subject_id</code> is optional — an
+<strong>empty</strong> value means &quot;the subject carried by the verified token&quot;, exactly
+as an absent <code>subject_id</code> does on <code>POST /api/v1/authz/check</code>. A non-empty
+value MUST equal the token's subject; a mismatch is refused (SEC-003).
+gRPC has no <code>authz:check_as</code> cross-subject form: over this transport the
+field can only ever restate the caller, so omitting it is now allowed
+rather than an INVALID_ARGUMENT.</p>
+<p>It stays a plain <code>string</code> rather than becoming a proto3 <code>optional</code>:
+switching an existing field to explicit presence is a cardinality change
+<code>buf breaking</code> rejects (verified against main), so — as in CONTRACT §10.3 —
+the empty string carries the meaning proto3 cannot express as absence.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

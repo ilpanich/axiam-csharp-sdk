@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ReactorServeOptions | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ReactorServeOptions | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Configuration for .  Exactly one of  (intercept) or  (observe) must be supplied, and exactly one of  or  must name the queue to consume.   The queue is the server&#39;s, not yours. Whichever you use, the runtime only ever consumes it. It declares no exchange, no queue and no binding, and it cannot name a queue belonging to another reactor:  derives axiam.reactor.q.&amp;lt;tenant&amp;gt;.&amp;lt;id&amp;gt; from the tenant and reactor id this runtime is configured as, and nothing else.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha25/apiSpec/new?filename=Axiam_Sdk_Reactor_ReactorServeOptions.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Reactor.ReactorServeOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Reactor.ReactorServeOptions">
+
+
+
+  <h1 id="Axiam_Sdk_Reactor_ReactorServeOptions" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions" class="text-break">
+Class ReactorServeOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Reactor.html">Reactor</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Configuration for <a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html#Axiam_Sdk_Reactor_ReactorServer_ReactorServeAsync_Axiam_Sdk_Reactor_ReactorServeOptions_System_Threading_CancellationToken_">ReactorServeAsync(ReactorServeOptions, CancellationToken)</a>.</p>
+<p>
+Exactly one of <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_Handler">Handler</a> (intercept) or <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_Listener">Listener</a> (observe)
+must be supplied, and exactly one of <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_Queue">Queue</a> or <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_ReactorId">ReactorId</a> must
+name the queue to consume.
+</p>
+<p>
+<b>The queue is the server's, not yours.</b> Whichever you use, the runtime only ever
+<em>consumes</em> it. It declares no exchange, no queue and no binding, and it cannot
+name a queue belonging to another reactor: <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_ReactorId">ReactorId</a> derives
+<code>axiam.reactor.q.&lt;tenant&gt;.&lt;id&gt;</code> from the tenant and reactor id this
+runtime is configured as, and nothing else.
+</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class ReactorServeOptions</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ReactorServeOptions</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_Channel_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Channel*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_Channel" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Channel">
+  Channel
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>An open AMQP channel. Its connection MUST have been opened over <code>amqps://</code> with
+a trusted CA (§8b) — a reactor reply is an instruction to change a token, and
+HMAC gives authenticity, not confidentiality. The caller owns the channel's
+lifecycle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public required IChannel Channel { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IChannel</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_Clock_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Clock*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_Clock" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Clock">
+  Clock
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The clock used for freshness, deadlines and reply timestamps. Defaults to
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset.utcnow">UtcNow</a>; overridable so tests need no wall clock.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Func&lt;DateTimeOffset&gt;? Clock { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-1">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_FreshnessSkew_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.FreshnessSkew*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_FreshnessSkew" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.FreshnessSkew">
+  FreshnessSkew
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The §8 v2 acceptance window applied to <code>issued_at</code> in both directions.
+Defaults to <a class="xref" href="Axiam.Sdk.Reactor.ReactorProtocol.html#Axiam_Sdk_Reactor_ReactorProtocol_DefaultFreshnessSkew">DefaultFreshnessSkew</a> (300 s) when
+<code>null</code> or non-positive.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan? FreshnessSkew { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_Handler_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Handler*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_Handler" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Handler">
+  Handler
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The intercept decision function, or <code>null</code> for a listener.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ReactorHandler? Handler { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorHandler.html">ReactorHandler</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_Listener_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Listener*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_Listener" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Listener">
+  Listener
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The observe callback, or <code>null</code> for an interceptor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ReactorObserver? Listener { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorObserver.html">ReactorObserver</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_Logger_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Logger*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_Logger" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Logger">
+  Logger
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Where rejection diagnostics go. Defaults to a silent no-op logger.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ILogger? Logger { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger">ILogger</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_Prefetch_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Prefetch*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_Prefetch" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Prefetch">
+  Prefetch
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The channel QoS prefetch applied before consuming. Defaults to 16.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort Prefetch { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">ushort</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_Queue_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Queue*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_Queue" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.Queue">
+  Queue
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L109"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>An explicitly named server-declared queue — use this when the registration's queue
+name was handed to you rather than derived. Mutually exclusive with
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_ReactorId">ReactorId</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Queue { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_ReactorId_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.ReactorId*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_ReactorId" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.ReactorId">
+  ReactorId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L116"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>This reactor's own registration id. The runtime will not name a queue for any other
+reactor: a reactor that can pick its own queue is a reactor that can read another
+tenant's issuance events. Mutually exclusive with <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_Queue">Queue</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Guid? ReactorId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_ResolvedQueue_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.ResolvedQueue*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_ResolvedQueue" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.ResolvedQueue">
+  ResolvedQueue
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L153"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The server-declared queue this runtime will consume.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ResolvedQueue { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>When neither or both of <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_Queue">Queue</a> and <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_ReactorId">ReactorId</a> were given.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_ShutdownGrace_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.ShutdownGrace*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_ShutdownGrace" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.ShutdownGrace">
+  ShutdownGrace
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>How long <a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html#Axiam_Sdk_Reactor_ReactorServer_DisposeAsync">DisposeAsync()</a> waits for in-flight events to drain
+(§18). Defaults to 10 s when <code>null</code> or non-positive.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan? ShutdownGrace { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_SigningKey_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.SigningKey*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_SigningKey" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.SigningKey">
+  SigningKey
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The tenant's HKDF-derived AMQP subkey — the same key the server signed the event
+with. Wrapped in <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a> because it is a credential
+(§22.12): it is never logged at any level and never appears in a reconnect
+diagnostic. Derive it with <a class="xref" href="Axiam.Sdk.Reactor.ReactorProtocol.html#Axiam_Sdk_Reactor_ReactorProtocol_DeriveTenantKey_System_Byte___System_Guid_System_Int32_">DeriveTenantKey(byte[], Guid, int)</a> or fetch it
+from the management API.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public required Sensitive&lt;byte[]&gt; SigningKey { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_TelemetryHook_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.TelemetryHook*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_TelemetryHook" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.TelemetryHook">
+  TelemetryHook
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The §19 telemetry sink. Receives one <code>RequestStart</code>/<code>RequestEnd</code> pair
+per dispatched event. A hook that throws cannot fail the dispatch that fired it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TelemetryHook? TelemetryHook { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.TelemetryHook.html">TelemetryHook</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorServeOptions_TenantId_" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.TenantId*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorServeOptions_TenantId" data-uid="Axiam.Sdk.Reactor.ReactorServeOptions.TenantId">
+  TenantId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorServeOptions.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The tenant this reactor is registered in. An event naming any other tenant is
+discarded.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public required Guid TenantId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

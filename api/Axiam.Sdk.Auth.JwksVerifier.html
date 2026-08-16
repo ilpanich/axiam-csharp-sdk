@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha24/apiSpec/new?filename=Axiam_Sdk_Auth_JwksVerifier.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.JwksVerifier%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha25/apiSpec/new?filename=Axiam_Sdk_Auth_JwksVerifier.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.JwksVerifier%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Auth_JwksVerifier" data-uid="Axiam.Sdk.Auth.JwksVerifier" class="text-break">
-Class JwksVerifier  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/Auth/JwksVerifier.cs/#L75"><i class="bi bi-code-slash"></i></a>
+Class JwksVerifier  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/JwksVerifier.cs/#L76"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -206,7 +206,7 @@ fail-closed convention (<code>Amqp/Hmac.cs</code>).
 
   <h3 id="Axiam_Sdk_Auth_JwksVerifier__ctor_System_Net_Http_HttpClient_System_Uri_System_TimeSpan_System_String_System_String_" data-uid="Axiam.Sdk.Auth.JwksVerifier.#ctor(System.Net.Http.HttpClient,System.Uri,System.TimeSpan,System.String,System.String)">
   JwksVerifier(HttpClient, Uri, TimeSpan, string?, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/Auth/JwksVerifier.cs/#L125"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/JwksVerifier.cs/#L126"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -260,7 +260,7 @@ server should generally expect <code>axiam:user</code>.</p>
 
   <h3 id="Axiam_Sdk_Auth_JwksVerifier_ClockSkewLeeway" data-uid="Axiam.Sdk.Auth.JwksVerifier.ClockSkewLeeway">
   ClockSkewLeeway
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/Auth/JwksVerifier.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/JwksVerifier.cs/#L88"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The single, named, bounded clock-skew allowance applied to the <code>exp</code> and
@@ -299,11 +299,56 @@ failure mode the rule exists to prevent.</p>
 </h2>
 
 
+  <a id="Axiam_Sdk_Auth_JwksVerifier_CertificateThumbprintS256_" data-uid="Axiam.Sdk.Auth.JwksVerifier.CertificateThumbprintS256*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_JwksVerifier_CertificateThumbprintS256_System_Byte___" data-uid="Axiam.Sdk.Auth.JwksVerifier.CertificateThumbprintS256(System.Byte[])">
+  CertificateThumbprintS256(byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/JwksVerifier.cs/#L655"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Compute the RFC 8705 §3.1 <code>x5t#S256</code> thumbprint of a DER client certificate:
+base64url-encoded SHA-256, <b>without</b> padding.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string CertificateThumbprintS256(byte[] der)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>der</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The DER encoding of the peer's leaf certificate — under ASP.NET Core,
+<code>HttpContext.Connection.ClientCertificate?.RawData</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Auth_JwksVerifier_CertificateThumbprintS256_System_Byte____remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Unpadded is not a style choice — RFC 7515 §2 defines base64url in JOSE as omitting
+<code>=</code>, and a padded value will not compare equal to what AXIAM put in the token.
+A well-formed value is exactly 43 characters.</p>
+</div>
+
+
+
+
   <a id="Axiam_Sdk_Auth_JwksVerifier_VerifyAsync_" data-uid="Axiam.Sdk.Auth.JwksVerifier.VerifyAsync*"></a>
 
   <h3 id="Axiam_Sdk_Auth_JwksVerifier_VerifyAsync_System_String_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Auth.JwksVerifier.VerifyAsync(System.String,System.String,System.Threading.CancellationToken)">
   VerifyAsync(string, string, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/Auth/JwksVerifier.cs/#L184"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/JwksVerifier.cs/#L185"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Verifies <code class="paramref">jwt</code> against the COMPLETE CONTRACT.md §10.1 minimum
@@ -344,6 +389,154 @@ for the fail-closed contract.</p>
 
 
 
+
+
+
+
+  <a id="Axiam_Sdk_Auth_JwksVerifier_VerifyCertificateBinding_" data-uid="Axiam.Sdk.Auth.JwksVerifier.VerifyCertificateBinding*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_JwksVerifier_VerifyCertificateBinding_System_Text_Json_JsonElement_System_String_" data-uid="Axiam.Sdk.Auth.JwksVerifier.VerifyCertificateBinding(System.Text.Json.JsonElement,System.String)">
+  VerifyCertificateBinding(JsonElement, string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/JwksVerifier.cs/#L494"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>CONTRACT.md §10.1 <b>rule 9</b> — enforce a token's sender constraint against the
+certificate the caller presented on <b>this</b> connection
+(RFC 8705 §3 / RFC 7800, contract 1.15).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool VerifyCertificateBinding(JsonElement claims, string? presentedThumbprint)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>claims</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonelement">JsonElement</a></dt>
+    <dd><p>The verified claims returned by <a class="xref" href="Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier_VerifyAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyAsync(string, string, CancellationToken)</a>.</p>
+</dd>
+    <dt><code>presentedThumbprint</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>RFC 8705 §3.1 <code>x5t#S256</code> of the peer certificate on this connection, or
+<code>null</code> when the connection carries none.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> when the constraint is satisfied or absent; otherwise <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Auth_JwksVerifier_VerifyCertificateBinding_System_Text_Json_JsonElement_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+A token carrying <code>cnf</code> is <b>not</b> a bearer token. Accepting one without
+proving the caller holds the named key converts it straight back into one,
+discarding the whole protection the operator turned on — which is why this is a
+rule and not a recommendation.
+</p>
+<p>The four cases:</p>
+<table><tbody><tr><td class="term">cnf absent</td><td class="description">anything → true (an ordinary bearer token)</td></tr><tr><td class="term">x5t#S256 equal</td><td class="description">→ true</td></tr><tr><td class="term">x5t#S256 different, or no certificate</td><td class="description">→ false</td></tr><tr><td class="term">cnf present with no x5t#S256</td><td class="description">anything → false</td></tr></tbody></table>
+<p>
+The first row is why adopting this rule breaks nothing: an <b>unbound</b> token is
+still accepted whether or not a certificate is present. Rule 9 constrains tokens
+that claim a constraint; it does not make certificates mandatory.
+</p>
+<p>
+The last row is the one that is easy to get wrong. A <code>cnf</code> naming a
+confirmation method this SDK cannot check — a DPoP <code>jkt</code>, say — is an
+<i>unverifiable constraint</i>, never <i>no constraint</i>. Read the other way, a
+sender-constrained token silently degrades to a bearer token the day a newer AXIAM
+issues a confirmation this SDK predates.
+</p>
+<p>
+<b>The thumbprint must come from the transport.</b> Under ASP.NET Core that is
+<code>HttpContext.Connection.ClientCertificate</code> passed through
+<a class="xref" href="Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier_CertificateThumbprintS256_System_Byte___">CertificateThumbprintS256(byte[])</a>, or a value a <i>trusted</i> terminating
+proxy forwarded over a channel your application controls. Never from a
+caller-settable request header: a forgeable input makes the whole mechanism
+decorative.
+</p>
+<p>
+<a class="xref" href="Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier_VerifyAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyAsync(string, string, CancellationToken)</a> deliberately does <b>not</b> apply this rule — it has no
+transport to ask. A resource server accepting bound tokens must call both.
+</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Auth_JwksVerifier_VerifyTokenBinding_" data-uid="Axiam.Sdk.Auth.JwksVerifier.VerifyTokenBinding*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_JwksVerifier_VerifyTokenBinding_System_Text_Json_JsonElement_Axiam_Sdk_Auth_PresentedProofs_" data-uid="Axiam.Sdk.Auth.JwksVerifier.VerifyTokenBinding(System.Text.Json.JsonElement,Axiam.Sdk.Auth.PresentedProofs)">
+  VerifyTokenBinding(JsonElement, PresentedProofs)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Auth/JwksVerifier.cs/#L575"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>CONTRACT.md §10.1 <b>rule 9</b> in full — enforce a token's sender constraint
+against <b>every</b> proof the caller presented (contract 1.16).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool VerifyTokenBinding(JsonElement claims, PresentedProofs proofs)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>claims</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonelement">JsonElement</a></dt>
+    <dd><p>The verified claims returned by <a class="xref" href="Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier_VerifyAsync_System_String_System_String_System_Threading_CancellationToken_">VerifyAsync(string, string, CancellationToken)</a>.</p>
+</dd>
+    <dt><code>proofs</code> <a class="xref" href="Axiam.Sdk.Auth.PresentedProofs.html">PresentedProofs</a></dt>
+    <dd><p>What the caller proved on this connection and request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> when the token may be accepted; otherwise <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Auth_JwksVerifier_VerifyTokenBinding_System_Text_Json_JsonElement_Axiam_Sdk_Auth_PresentedProofs__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+This is the complete rule, and the one to use unless your transport genuinely cannot
+produce a DPoP thumbprint. The ten cases:
+</p>
+<pre><code class="lang-csharp">token's cnf             certificate     DPoP        result
+absent                  anything        anything    true
+x5t#S256                equal           ignored     true
+x5t#S256                different       ignored     false
+x5t#S256                null            ignored     false
+jkt                     ignored         equal       true
+jkt                     ignored         different   false
+jkt                     ignored         null        false
+both                    equal           equal       true
+both                    wrong/missing   —           false
+present, names neither  anything        anything    false</code></pre>
+<p>
+Two rows carry the weight. <b>Both named is a conjunction</b>: an operator who turned
+on two constraints asked for two, and satisfying the more convenient one is not
+compliance. <b>Names neither is a refusal</b>: a confirmation this SDK cannot
+interpret is an unverifiable constraint, and reading it as "unconstrained" is the
+exact downgrade rule 9 exists to prevent. That includes an <i>empty</i> <code>cnf</code>,
+which is also how proto3 delivers an empty <code>CnfClaim</code> over gRPC
+(§10.3 rule 3).
+</p>
+</div>
 
 
 

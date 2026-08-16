@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ReactorDecision | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ReactorDecision | AXIAM .NET SDK ">
+      
+      <meta name="description" content="What a handler decided about one event (sdks/CONTRACT.md &#167;22.4).  A closed hierarchy of three answers — the abstract base has a private protected constructor, so nothing outside this file can add a fourth. Three of &#167;22.4&#39;s rules are encoded here structurally rather than by documentation, because each is a rule an implementation gets wrong by being permissive:  allow and patch are mutually exclusive. There is no way to attach a patch to  — a mutation is a , which serializes decision: &quot;mutate&quot;. A patch on an allow is a reply whose author and whose reader disagree about what will happen; the server refuses it rather than resolving it.An empty mutation is malformed.  refuses to be constructed with an empty patch, so it cannot be put on the wire and rejected as malformed_mutation at the far end.require_mfa rides on allow. It is a flag on , not a fourth decision, and it is valid on login.post_auth only.  What is not encoded here is patch filtering. A patch containing a forbidden key is sent unfiltered and rejected by the server (&#167;22.4 rule 1): dropping the bad key would leave the reactor author believing a field was set when it was silently discarded.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha25/apiSpec/new?filename=Axiam_Sdk_Reactor_ReactorDecision.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Reactor.ReactorDecision%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Reactor.ReactorDecision">
+
+
+
+  <h1 id="Axiam_Sdk_Reactor_ReactorDecision" data-uid="Axiam.Sdk.Reactor.ReactorDecision" class="text-break">
+Class ReactorDecision  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorDecision.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Reactor.html">Reactor</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>What a handler decided about one event (<code>sdks/CONTRACT.md</code> §22.4).</p>
+<p>
+A closed hierarchy of three answers — the abstract base has a private
+protected constructor, so nothing outside this file can add a fourth.
+Three of §22.4's rules are encoded here <b>structurally</b> rather than by
+documentation, because each is a rule an implementation gets wrong by being
+permissive:
+</p>
+<ol><li><b><code>allow</code> and <code>patch</code> are mutually exclusive.</b>
+There is no way to attach a patch to <a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Allow.html">ReactorDecision.Allow</a> — a mutation is a
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Mutate.html">ReactorDecision.Mutate</a>, which serializes <code>decision: "mutate"</code>. A patch on an
+<code>allow</code> is a reply whose author and whose reader disagree about what will
+happen; the server refuses it rather than resolving it.</li><li><b>An empty mutation is malformed.</b> <a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Mutate.html">ReactorDecision.Mutate</a>
+refuses to be constructed with an empty patch, so it cannot be put on the wire and
+rejected as <code>malformed_mutation</code> at the far end.</li><li><b><code>require_mfa</code> rides on <code>allow</code>.</b> It is a flag on
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Allow.html">ReactorDecision.Allow</a>, not a fourth decision, and it is valid on
+<code>login.post_auth</code> only.</li></ol>
+<p>
+What is <em>not</em> encoded here is patch filtering. A patch containing a forbidden
+key is sent unfiltered and rejected by the server (§22.4 rule 1): dropping the bad
+key would leave the reactor author believing a field was set when it was silently
+discarded.
+</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class ReactorDecision</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ReactorDecision</span></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.html">ReactorDecision</a>.<a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Allow.html">Allow</a></div>
+      <div><a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.html">ReactorDecision</a>.<a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Deny.html">Deny</a></div>
+      <div><a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.html">ReactorDecision</a>.<a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Mutate.html">Mutate</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorDecision_Wire_" data-uid="Axiam.Sdk.Reactor.ReactorDecision.Wire*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorDecision_Wire" data-uid="Axiam.Sdk.Reactor.ReactorDecision.Wire">
+  Wire
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorDecision.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The lowercase <code>decision</code> value this answer serializes as.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Wire { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorDecision_AllowRequiringStepUp_" data-uid="Axiam.Sdk.Reactor.ReactorDecision.AllowRequiringStepUp*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorDecision_AllowRequiringStepUp" data-uid="Axiam.Sdk.Reactor.ReactorDecision.AllowRequiringStepUp">
+  AllowRequiringStepUp()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorDecision.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Proceed, but only after step-up authentication (<code>login.post_auth</code> only).</p>
+<p>
+Step-up is <b>sticky</b> across the chain: once any reactor demands it, no later
+reactor can clear it.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ReactorDecision AllowRequiringStepUp()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.html">ReactorDecision</a></dt>
+    <dd><p>An <a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Allow.html">ReactorDecision.Allow</a> carrying <code>require_mfa: true</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorDecision_Allowed_" data-uid="Axiam.Sdk.Reactor.ReactorDecision.Allowed*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorDecision_Allowed" data-uid="Axiam.Sdk.Reactor.ReactorDecision.Allowed">
+  Allowed()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorDecision.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Proceed unchanged.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ReactorDecision Allowed()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.html">ReactorDecision</a></dt>
+    <dd><p>An <a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Allow.html">ReactorDecision.Allow</a> with no step-up demand.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorDecision_Denied_" data-uid="Axiam.Sdk.Reactor.ReactorDecision.Denied*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorDecision_Denied_System_String_" data-uid="Axiam.Sdk.Reactor.ReactorDecision.Denied(System.String)">
+  Denied(string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorDecision.cs/#L65"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Refuse, with an audited reason.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ReactorDecision Denied(string? reason = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>reason</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Why, for the audit trail; may be <code>null</code>. A deny with no reason still denies —
+the server substitutes <code>&quot;denied by reactor&quot;</code> when it is absent.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.html">ReactorDecision</a></dt>
+    <dd><p>A <a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Deny.html">ReactorDecision.Deny</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorDecision_Mutated_" data-uid="Axiam.Sdk.Reactor.ReactorDecision.Mutated*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorDecision_Mutated_System_Collections_Generic_IReadOnlyDictionary_System_String_System_String__" data-uid="Axiam.Sdk.Reactor.ReactorDecision.Mutated(System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})">
+  Mutated(IReadOnlyDictionary&lt;string, string&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/Reactor/ReactorDecision.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Proceed with a mutation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ReactorDecision Mutated(IReadOnlyDictionary&lt;string, string&gt; patch)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>patch</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2">IReadOnlyDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>A non-empty flat map of field name to string value.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.html">ReactorDecision</a></dt>
+    <dd><p>A <a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Mutate.html">ReactorDecision.Mutate</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>When <code class="paramref">patch</code> is empty.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>When <code class="paramref">patch</code> is <code>null</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

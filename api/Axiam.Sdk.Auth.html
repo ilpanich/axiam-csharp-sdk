@@ -95,6 +95,16 @@
 Classes
 </h3>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.DpopVerifier.html">DpopVerifier</a></dt>
+      <dd><p>DPoP proof verification — CONTRACT.md §21.7.2 (RFC 9449), contract 1.16.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.DpopVerifier.InMemoryJtiStore.html">DpopVerifier.InMemoryJtiStore</a></dt>
+      <dd><p>An <a class="xref" href="Axiam.Sdk.Auth.DpopVerifier.IJtiStore.html">DpopVerifier.IJtiStore</a> for a single process.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Auth.Jwk.html">Jwk</a></dt>
       <dd><p>A single JSON Web Key from the AXIAM organization-wide JWKS document
 (<code>GET /oauth2/jwks</code>). Shape confirmed against
@@ -143,6 +153,28 @@ instance per transport.</p>
       <dd><p>An access/refresh token pair with an expiry timestamp. Both token values are wrapped
 in <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a> (CONTRACT.md §7, D-12) so neither can leak via
 <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">ToString()</a>, JSON serialization, or a log call.</p>
+</dd>
+    </dl>
+    <h3 id="structs">
+Structs
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.DpopVerifier.DpopRequest.html">DpopVerifier.DpopRequest</a></dt>
+      <dd><p>What <a class="xref" href="Axiam.Sdk.Auth.DpopVerifier.html#Axiam_Sdk_Auth_DpopVerifier_VerifyProof_System_String_Axiam_Sdk_Auth_DpopVerifier_DpopRequest_Axiam_Sdk_Auth_DpopVerifier_IJtiStore_">VerifyProof(string, DpopRequest, IJtiStore)</a> needs to know about the current request.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.PresentedProofs.html">PresentedProofs</a></dt>
+      <dd><p>What the caller proved about <b>this</b> connection and <b>this</b> request, for
+<a class="xref" href="Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier_VerifyTokenBinding_System_Text_Json_JsonElement_Axiam_Sdk_Auth_PresentedProofs_">VerifyTokenBinding(JsonElement, PresentedProofs)</a>.</p>
+</dd>
+    </dl>
+    <h3 id="interfaces">
+Interfaces
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.DpopVerifier.IJtiStore.html">DpopVerifier.IJtiStore</a></dt>
+      <dd><p>§21.7.2 check 8 — single-use <code>jti</code> tracking.</p>
 </dd>
     </dl>
 

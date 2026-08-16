@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace Axiam.Sdk.Reactor | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace Axiam.Sdk.Reactor | AXIAM .NET SDK ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Reactor">
+
+  <h1 id="Axiam_Sdk_Reactor" data-uid="Axiam.Sdk.Reactor" class="text-break">Namespace Axiam.Sdk.Reactor</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.FailurePolicyExtensions.html">FailurePolicyExtensions</a></dt>
+      <dd><p>Wire-form conversions for <a class="xref" href="Axiam.Sdk.Reactor.FailurePolicy.html">FailurePolicy</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.html">ReactorDecision</a></dt>
+      <dd><p>What a handler decided about one event (<code>sdks/CONTRACT.md</code> §22.4).</p>
+<p>
+A closed hierarchy of three answers — the abstract base has a private
+protected constructor, so nothing outside this file can add a fourth.
+Three of §22.4's rules are encoded here <b>structurally</b> rather than by
+documentation, because each is a rule an implementation gets wrong by being
+permissive:
+</p>
+<ol><li><b><code>allow</code> and <code>patch</code> are mutually exclusive.</b>
+There is no way to attach a patch to <a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Allow.html">ReactorDecision.Allow</a> — a mutation is a
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Mutate.html">ReactorDecision.Mutate</a>, which serializes <code>decision: "mutate"</code>. A patch on an
+<code>allow</code> is a reply whose author and whose reader disagree about what will
+happen; the server refuses it rather than resolving it.</li><li><b>An empty mutation is malformed.</b> <a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Mutate.html">ReactorDecision.Mutate</a>
+refuses to be constructed with an empty patch, so it cannot be put on the wire and
+rejected as <code>malformed_mutation</code> at the far end.</li><li><b><code>require_mfa</code> rides on <code>allow</code>.</b> It is a flag on
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Allow.html">ReactorDecision.Allow</a>, not a fourth decision, and it is valid on
+<code>login.post_auth</code> only.</li></ol>
+<p>
+What is <em>not</em> encoded here is patch filtering. A patch containing a forbidden
+key is sent unfiltered and rejected by the server (§22.4 rule 1): dropping the bad
+key would leave the reactor author believing a field was set when it was silently
+discarded.
+</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Allow.html">ReactorDecision.Allow</a></dt>
+      <dd><p>Proceed unchanged, optionally demanding step-up authentication.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Deny.html">ReactorDecision.Deny</a></dt>
+      <dd><p>Refuse the underlying operation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Mutate.html">ReactorDecision.Mutate</a></dt>
+      <dd><p>Proceed, applying <a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.Mutate.html#Axiam_Sdk_Reactor_ReactorDecision_Mutate_Patch">Patch</a>. Valid on a mutable event only; the server
+rejects it as <code>not_mutable</code> on a veto-only one.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorEvent.html">ReactorEvent</a></dt>
+      <dd><p>One hook firing, delivered to a reactor (<code>sdks/CONTRACT.md</code> §22.3).</p>
+<p>
+An instance only ever reaches a handler <em>after</em> <a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html">ReactorServer</a> has
+rejected <code>key_version &lt; 2</code>, verified the MAC, checked freshness and checked the
+nonce, in that order. A runtime that hands an unverified payload to user code has
+already lost, so this type has no public constructor.
+</p>
+<p>
+The <a class="xref" href="Axiam.Sdk.Reactor.ReactorEvent.html#Axiam_Sdk_Reactor_ReactorEvent_Payload">Payload</a> never carries a credential, a token or a signing key: a
+reactor is told what is being decided, not handed the means to act on it elsewhere. It
+is not sensitive in the §7 sense and must remain readable — a handler that cannot
+inspect the event cannot decide anything — but it is tenant business data, so this SDK
+never logs it, and neither should you at <code>Information</code> level.
+</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorEventSpec.html">ReactorEventSpec</a></dt>
+      <dd><p>One hookable event: its name, what a reactor may change, and what happens when the
+reactor does not answer (<code>sdks/CONTRACT.md</code> §22.5).</p>
+<p>
+Mirrors the server's <code>ReactorEventSpec</code> in
+<code>crates/axiam-core/src/models/reactor.rs</code>, which is the single source of truth.
+The live copy is served at <code>GET /api/v1/reactors/events</code>; this one is here so a
+wire contract does not require a network call to be understood.
+</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorEvents.html">ReactorEvents</a></dt>
+      <dd><p>The v1 reactor event registry (<code>sdks/CONTRACT.md</code> §22.5) — five interceptable
+events, their mutable-field allow-lists, and their default failure policies.</p>
+<p>
+The live copy is served at <code>GET /api/v1/reactors/events</code> and is the one an admin
+UI SHOULD read. This constant list is the same data, restated because a wire contract
+that requires a network call to be understood is not a contract.
+</p>
+<p>
+<b>§22.7 hot-path exclusion.</b> <code>authz.check</code>, <code>authz.check_batch</code> and
+<code>token.introspect</code> are not hookable and are absent from <a class="xref" href="Axiam.Sdk.Reactor.ReactorEvents.html#Axiam_Sdk_Reactor_ReactorEvents_Registry">Registry</a> and
+from every constant below. That absence is asserted by a test, not documented by a
+comment. This SDK also offers no client-side interceptor, middleware hook or callback
+presenting itself as the reactor equivalent for those operations. An application that
+needs external input on an authorization decision writes a <b>deny grant</b>, which the
+engine evaluates in the hot path at hot-path cost.
+</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorProtocol.html">ReactorProtocol</a></dt>
+      <dd><p>The reactor wire protocol (<code>sdks/CONTRACT.md</code> §22.1–§22.4): topology
+names, key derivation, canonicalization, signing and verification.</p>
+<p>
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html">ReactorServer</a> is built on this class, and this class is public so an
+integrator on a transport this SDK does not wrap (a different AMQP client, a test
+harness, a bridge) can satisfy §22 without reimplementing the one rule that is easy
+to get wrong.
+</p>
+<p>
+<b>The canonicalization rule.</b> A reactor body is signed with its
+<code>hmac_signature</code> field <b>present and set to <code>null</code></b>, in declared field
+order. That differs from §8's own two message types (<code>AuthzRequest</code>,
+<code>AuditEventMessage</code>), whose <code>hmac_signature</code> is <em>absent</em> from their
+canonical bytes — see <a class="xref" href="Axiam.Sdk.Amqp.Hmac.html">Hmac</a>, which implements that other
+rule — and it is the single most likely place for an implementation to produce a MAC
+that will not verify. Everything else is §8 v2 verbatim: the same HKDF-derived
+per-tenant subkey, the same <code>HMAC-SHA256</code> compared in constant time, the same
+±300 s freshness window applied in <b>both</b> directions, the same
+<code>key_version</code> floor of 2.
+</p>
+<p>
+Field order, event (server → reactor): <code>tenant_id</code>, <code>event</code>,
+<code>correlation_id</code>, <code>payload</code>, <code>timeout_ms</code>, <code>key_version</code>,
+<code>nonce</code>, <code>issued_at</code>, <code>hmac_signature</code>.
+</p>
+<p>
+Field order, reply (reactor → server): <code>correlation_id</code>, <code>tenant_id</code>,
+<code>event</code>, <code>decision</code>, <code>reason</code> (omitted when absent), <code>patch</code>
+(omitted when absent), <code>require_mfa</code> (<b>omitted when <code>false</code></b>),
+<code>key_version</code>, <code>nonce</code>, <code>issued_at</code>, <code>hmac_signature</code>.
+</p>
+<p>
+The three conditionally-omitted fields are load-bearing: a reply that serializes
+<code>"require_mfa": false</code> rather than omitting it produces different canonical bytes
+and therefore a different MAC.
+</p>
+<p>
+<b>Signing is symmetric in direction.</b> The server signs the event with the tenant
+subkey; the reactor signs its reply with the same subkey. There is no second key and no
+asymmetric variant in v1. An unsigned reply is not a weak reply — it is not a reply at
+all, and the server discards it as though the reactor had never answered.
+</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html">ReactorServeOptions</a></dt>
+      <dd><p>Configuration for <a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html#Axiam_Sdk_Reactor_ReactorServer_ReactorServeAsync_Axiam_Sdk_Reactor_ReactorServeOptions_System_Threading_CancellationToken_">ReactorServeAsync(ReactorServeOptions, CancellationToken)</a>.</p>
+<p>
+Exactly one of <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_Handler">Handler</a> (intercept) or <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_Listener">Listener</a> (observe)
+must be supplied, and exactly one of <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_Queue">Queue</a> or <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_ReactorId">ReactorId</a> must
+name the queue to consume.
+</p>
+<p>
+<b>The queue is the server's, not yours.</b> Whichever you use, the runtime only ever
+<em>consumes</em> it. It declares no exchange, no queue and no binding, and it cannot
+name a queue belonging to another reactor: <a class="xref" href="Axiam.Sdk.Reactor.ReactorServeOptions.html#Axiam_Sdk_Reactor_ReactorServeOptions_ReactorId">ReactorId</a> derives
+<code>axiam.reactor.q.&lt;tenant&gt;.&lt;id&gt;</code> from the tenant and reactor id this
+runtime is configured as, and nothing else.
+</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html">ReactorServer</a></dt>
+      <dd><p>The §22 reactor runtime: consume the server-declared queue, verify, decide, sign,
+reply.</p>
+<p>
+Start one with <a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html#Axiam_Sdk_Reactor_ReactorServer_ReactorServeAsync_Axiam_Sdk_Reactor_ReactorServeOptions_System_Threading_CancellationToken_">ReactorServeAsync(ReactorServeOptions, CancellationToken)</a>. Per delivery it:
+</p>
+<ol><li>rejects <code>key_version &lt; 2</code> — before the signature is even
+computed;</li><li>verifies the HMAC over the canonical bytes (§22.2:
+<code>hmac_signature</code> present and <code>null</code>);</li><li>checks <code>issued_at</code> against the freshness window, in both
+directions;</li><li>checks <code>nonce</code> against a seen-set;</li><li><em>then</em> decodes the payload and calls the handler;</li><li>signs the reply with the same tenant subkey and publishes it to the
+delivery's <code>reply_to</code> queue, echoing <code>correlation_id</code> both as an AMQP property
+and — the one the server authenticates — inside the signed body.</li></ol>
+<p>
+A runtime that hands an unverified payload to user code has already lost: the handler
+will act on it, and "we checked afterwards" is not a check. The handler call site here
+is structurally unreachable until every gate above has passed.
+</p>
+<p><b>Four rules this class holds to</b></p>
+<ol><li><b>It declares no topology.</b> No <code>ExchangeDeclareAsync</code>, no
+<code>QueueDeclareAsync</code>, no <code>QueueBindAsync</code>, anywhere — asserted by a test
+against the AMQP client's own recorded invocations. Actors consume; the server
+declares.</li><li><b>It fails closed on its own errors.</b> A handler that throws, or a
+body it cannot decode, produces <em>no reply</em> — never a synthesized <code>allow</code>.
+Answering <code>allow</code> on behalf of a handler that crashed would override the operator's
+<code>fail_closed</code> setting from inside the library.</li><li><b>It does not filter a patch.</b> A handler's patch goes on the wire
+exactly as returned, forbidden keys included.</li><li><b>It honours <code>timeout_ms</code>.</b> When the handler returns after
+the window closed, the reply is abandoned rather than published late — the server has
+already stopped listening.</li></ol>
+<p><b>Interaction with §16, §18 and §19</b></p>
+<p>
+<b>§16 does not apply to a reply.</b> A correlation is single-use and a late reply
+is discarded, so re-sending one could only add load to a server that has already moved
+on. The recovery mechanism for an unanswered dispatch is the registration's
+<code>failure_policy</code>, on the server, not a retry here. Connection recovery is the
+RabbitMQ client's, left on exactly as <a class="xref" href="Axiam.Sdk.Amqp.AxiamAmqpConsumer.html">AxiamAmqpConsumer</a> leaves it.
+</p>
+<p>
+<b>§18:</b> <a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html#Axiam_Sdk_Reactor_ReactorServer_DisposeAsync">DisposeAsync()</a> is idempotent, cancels the consumer so no new
+delivery starts, drains what is in flight up to the configured grace period, and does
+not close the caller's channel or connection.
+</p>
+<p>
+<b>§19:</b> one <code>RequestStart</code>/<code>RequestEnd</code> pair per dispatched event, with
+the event name as the path template — a closed set of five values, so it cannot become a
+cardinality bomb.
+</p>
+</dd>
+    </dl>
+    <h3 id="enums">
+Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.FailurePolicy.html">FailurePolicy</a></dt>
+      <dd><p>What the server does when an interceptor produces no usable reply
+(<code>sdks/CONTRACT.md</code> §22.8).</p>
+<p>
+"No usable reply" is one closed set and every member takes the same path: timeout,
+transport failure, budget exhausted before this reactor was reached, the per-tenant
+in-flight cap breached, and <em>every</em> §22.4 rejection — including a valid
+signature carrying a forbidden patch field.
+</p>
+</dd>
+    </dl>
+    <h3 id="delegates">
+Delegates
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorHandler.html">ReactorHandler</a></dt>
+      <dd><p>A reactor's decision function: one event in, one of three answers out
+(<code>sdks/CONTRACT.md</code> §22.10).</p>
+<p>
+Invoked only after the runtime has verified the event under §8 v2, so an
+implementation never sees an unauthenticated payload.
+</p>
+<p>
+<b>Throwing produces no reply.</b> The runtime will not synthesize an <code>allow</code> on
+your behalf — that would override the operator's <code>fail_closed</code> setting from inside
+the library. A handler that throws is a reactor that did not answer, and the
+registration's <code>failure_policy</code> decides what that costs.
+</p>
+<p>
+<b>Answer inside the window.</b> <a class="xref" href="Axiam.Sdk.Reactor.ReactorEvent.html#Axiam_Sdk_Reactor_ReactorEvent_TimeoutMs">TimeoutMs</a> is how long the
+server will actually wait. A late reply is discarded and the CPU spent producing it was
+spent for nothing, so a handler doing expensive work should consult
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorEvent.html#Axiam_Sdk_Reactor_ReactorEvent_Remaining_System_DateTimeOffset_">Remaining(DateTimeOffset)</a> and shed load rather than push on.
+</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorObserver.html">ReactorObserver</a></dt>
+      <dd><p>A fire-and-forget observer of reactor events (<code>mode: &quot;listen&quot;</code>,
+<code>sdks/CONTRACT.md</code> §22.5).</p>
+<p>
+The server never waits for a listener and never reads a reply, so a listener cannot
+affect any outcome. That is why this returns a plain <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a> rather than a
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.html">ReactorDecision</a>: an SDK listener handler MUST NOT publish a reply, and a
+type that cannot express one is a stronger guarantee than a paragraph saying so.
+</p>
+<p>
+<b>Write it idempotently.</b> A redelivery after a broker hiccup is normal. A listener
+that double-counts is a listener that was assuming exactly-once delivery it was never
+promised.
+</p>
+</dd>
+    </dl>
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha24/apiSpec/new?filename=Axiam_Sdk_AxiamClient.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AxiamClient%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha25/apiSpec/new?filename=Axiam_Sdk_AxiamClient.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AxiamClient%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_AxiamClient" data-uid="Axiam.Sdk.AxiamClient" class="text-break">
-Class AxiamClient  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.Oidc.cs/#L28"><i class="bi bi-code-slash"></i></a>
+Class AxiamClient  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Uma.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -171,7 +171,7 @@ accessors (<span class="xref">Axiam.Sdk.AxiamClient.RefreshGuard</span>, <span c
 
   <h3 id="Axiam_Sdk_AxiamClient__ctor_System_Uri_System_String_Axiam_Sdk_Options_AxiamClientOptions_" data-uid="Axiam.Sdk.AxiamClient.#ctor(System.Uri,System.String,Axiam.Sdk.Options.AxiamClientOptions)">
   AxiamClient(Uri, string, AxiamClientOptions?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.cs/#L68"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The ONLY construction path (SC#1) — <code class="paramref">tenantId</code> is required and
@@ -213,6 +213,78 @@ omitted, sane defaults are used and <a class="xref" href="Axiam.Sdk.Options.Axia
 
 
 
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="Axiam_Sdk_AxiamClient_AccessTokenType" data-uid="Axiam.Sdk.AxiamClient.AccessTokenType">
+  AccessTokenType
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.OidcDeviceExchangeLogout.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The <code>actor_token_type</code> this SDK sends, and the <code>subject_token_type</code> it sends when
+the caller names none — an AXIAM-issued access token (§15.1).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string AccessTokenType = &quot;urn:ietf:params:oauth:token-type:access_token&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Axiam_Sdk_AxiamClient_JwtTokenType" data-uid="Axiam.Sdk.AxiamClient.JwtTokenType">
+  JwtTokenType
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.OidcDeviceExchangeLogout.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A JWT from a trusted external issuer — the cross-domain exchange of §15.7.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string JwtTokenType = &quot;urn:ietf:params:oauth:token-type:jwt&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AxiamClient_JwtTokenType_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Pass it as <a class="xref" href="Axiam.Sdk.Auth.Oidc.TokenExchangeParams.html#Axiam_Sdk_Auth_Oidc_TokenExchangeParams_SubjectTokenType">SubjectTokenType</a> to exchange a partner IdP's
+token. AXIAM also accepts <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_AccessTokenType">AccessTokenType</a> for an external issuer, and refuses
+refresh and ID token types <b>by name</b>.</p>
+</div>
+
+
+
+
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -221,7 +293,7 @@ omitted, sane defaults are used and <a class="xref" href="Axiam.Sdk.Options.Axia
 
   <h3 id="Axiam_Sdk_AxiamClient_Authz" data-uid="Axiam.Sdk.AxiamClient.Authz">
   Authz
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.cs/#L142"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>REST authorization checks (CONTRACT.md §1, FND-04): <code>CheckAccessAsync</code>/<code>CanAsync</code>/<code>BatchCheckAsync</code>.</p>
@@ -253,11 +325,183 @@ omitted, sane defaults are used and <a class="xref" href="Axiam.Sdk.Options.Axia
 </h2>
 
 
+  <a id="Axiam_Sdk_AxiamClient_DeviceAuthorizeAsync_" data-uid="Axiam.Sdk.AxiamClient.DeviceAuthorizeAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_DeviceAuthorizeAsync_Axiam_Sdk_Auth_Oidc_DeviceAuthorizeParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.DeviceAuthorizeAsync(Axiam.Sdk.Auth.Oidc.DeviceAuthorizeParams,System.Threading.CancellationToken)">
+  DeviceAuthorizeAsync(DeviceAuthorizeParams, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.OidcDeviceExchangeLogout.cs/#L89"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>POST /oauth2/device_authorization</code> (CONTRACT.md §14.1) — starts the device grant
+and obtains the code pair.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;DeviceAuthorization&gt; DeviceAuthorizeAsync(DeviceAuthorizeParams @params, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>params</code> <a class="xref" href="Axiam.Sdk.Auth.Oidc.DeviceAuthorizeParams.html">DeviceAuthorizeParams</a></dt>
+    <dd><p>The request arguments.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.Oidc.DeviceAuthorization.html">DeviceAuthorization</a>&gt;</dt>
+    <dd><p>The code pair the device shows its user.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AxiamClient_DeviceAuthorizeAsync_Axiam_Sdk_Auth_Oidc_DeviceAuthorizeParams_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><b>Unauthenticated by design.</b> A device that cannot show a browser also cannot hold a
+client secret, so this never sends <code>client_secret</code> and never refuses a client built
+without one (§14.1).</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
+    <dd><p>When the discovery document advertises no <code>device_authorization_endpoint</code>. The URL is
+never built by concatenation onto the issuer: that works against AXIAM and breaks against
+every other OP the same code is pointed at.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_AxiamClient_DeviceLoginAsync_" data-uid="Axiam.Sdk.AxiamClient.DeviceLoginAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_DeviceLoginAsync_Axiam_Sdk_Auth_Oidc_DeviceLoginParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.DeviceLoginAsync(Axiam.Sdk.Auth.Oidc.DeviceLoginParams,System.Threading.CancellationToken)">
+  DeviceLoginAsync(DeviceLoginParams, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.OidcDeviceExchangeLogout.cs/#L196"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The composed §14.3 helper: starts the grant, hands the caller the user code, polls to
+completion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;OidcTokenSet&gt; DeviceLoginAsync(DeviceLoginParams @params, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>params</code> <a class="xref" href="Axiam.Sdk.Auth.Oidc.DeviceLoginParams.html">DeviceLoginParams</a></dt>
+    <dd><p>The login arguments, including the user-code callback.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the login; observed between polls.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcTokenSet.html">OidcTokenSet</a>&gt;</dt>
+    <dd><p>The issued token set.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AxiamClient_DeviceLoginAsync_Axiam_Sdk_Auth_Oidc_DeviceLoginParams_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+<a class="xref" href="Axiam.Sdk.Auth.Oidc.DeviceLoginParams.html#Axiam_Sdk_Auth_Oidc_DeviceLoginParams_OnUserCode">OnUserCode</a> is awaited <b>before the first poll</b> —
+§14.3 rule 2 requires the caller to have had the chance to display the code before
+polling begins, and a device rendering a QR code may need to await a paint. The SDK never
+prints it.
+</p>
+<p>
+Polling follows §14.2: the interval comes from the response; <code>slow_down</code> adds
+5 s <b>permanently</b>; <code>authorization_pending</code> loops; <code>access_denied</code> and
+<code>expired_token</code> raise distinct errors; polling stops at
+<a class="xref" href="Axiam.Sdk.Auth.Oidc.DeviceAuthorization.html#Axiam_Sdk_Auth_Oidc_DeviceAuthorization_ExpiresIn">ExpiresIn</a> even if the server has not yet said
+<code>expired_token</code>. A 5xx or transport failure mid-poll is <b>not</b> terminal (rule 6) —
+a server restart must not lose a grant the user has already approved.
+</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></dt>
+    <dd><p>When <a class="xref" href="Axiam.Sdk.Auth.Oidc.DeviceLoginParams.html#Axiam_Sdk_Auth_Oidc_DeviceLoginParams_AdoptAsCredential">AdoptAsCredential</a> is set — this port does not implement
+adoption, matching <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LoginClientCredentialsAsync_Axiam_Sdk_Auth_Oidc_LoginClientCredentialsParams_System_Threading_CancellationToken_">LoginClientCredentialsAsync(LoginClientCredentialsParams, CancellationToken)</a> (§14.3 rule 4 defers to the
+§12.1 MAY).</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_AxiamClient_DevicePollAsync_" data-uid="Axiam.Sdk.AxiamClient.DevicePollAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_DevicePollAsync_Axiam_Sdk_Auth_Oidc_DevicePollParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.DevicePollAsync(Axiam.Sdk.Auth.Oidc.DevicePollParams,System.Threading.CancellationToken)">
+  DevicePollAsync(DevicePollParams, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.OidcDeviceExchangeLogout.cs/#L148"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>POST /oauth2/token</code> with the device-code grant (CONTRACT.md §14.1) —
+<b>one</b> poll attempt.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;OidcTokenSet&gt; DevicePollAsync(DevicePollParams @params, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>params</code> <a class="xref" href="Axiam.Sdk.Auth.Oidc.DevicePollParams.html">DevicePollParams</a></dt>
+    <dd><p>The poll arguments.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcTokenSet.html">OidcTokenSet</a>&gt;</dt>
+    <dd><p>The issued token set.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AxiamClient_DevicePollAsync_Axiam_Sdk_Auth_Oidc_DevicePollParams_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The raw single call, so an application driving its own loop (a UI rendering a countdown,
+say) can. All five RFC 8628 §3.5 answers surface as <a class="xref" href="Axiam.Sdk.Core.OAuthProtocolError.html">OAuthProtocolError</a> —
+<code>authorization_pending</code> and <code>slow_down</code> included — so a hand-rolled loop sees
+exactly what <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_DeviceLoginAsync_Axiam_Sdk_Auth_Oidc_DeviceLoginParams_System_Threading_CancellationToken_">DeviceLoginAsync(DeviceLoginParams, CancellationToken)</a> sees. Most callers want that method.</p>
+</div>
+
+
+
+
   <a id="Axiam_Sdk_AxiamClient_Dispose_" data-uid="Axiam.Sdk.AxiamClient.Dispose*"></a>
 
   <h3 id="Axiam_Sdk_AxiamClient_Dispose" data-uid="Axiam.Sdk.AxiamClient.Dispose">
   Dispose()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.cs/#L176"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Disposes the owned <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> (and its handler chain) and the
@@ -287,7 +531,7 @@ server-side.</p>
 
   <h3 id="Axiam_Sdk_AxiamClient_IntrospectAsync_Axiam_Sdk_Auth_Oidc_IntrospectParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.IntrospectAsync(Axiam.Sdk.Auth.Oidc.IntrospectParams,System.Threading.CancellationToken)">
   IntrospectAsync(IntrospectParams, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.Oidc.cs/#L459"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Oidc.cs/#L459"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>POST /oauth2/introspect</code> (RFC 7662, CONTRACT.md §12.1) — asks the server
@@ -334,7 +578,7 @@ cannot fix a bad <code>client_secret</code> (§12.3 rule 3, enforced transport-w
 
   <h3 id="Axiam_Sdk_AxiamClient_LoginAsync_System_String_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.LoginAsync(System.String,System.String,System.Threading.CancellationToken)">
   LoginAsync(string, string, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.cs/#L179"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.cs/#L224"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>POST /api/v1/auth/login</code>. Returns a typed <a class="xref" href="Axiam.Sdk.Auth.LoginResult.html">LoginResult</a> — an
@@ -377,7 +621,7 @@ MFA challenge (HTTP 202) is an expected outcome, not an exception: check
 
   <h3 id="Axiam_Sdk_AxiamClient_LoginClientCredentialsAsync_Axiam_Sdk_Auth_Oidc_LoginClientCredentialsParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.LoginClientCredentialsAsync(Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams,System.Threading.CancellationToken)">
   LoginClientCredentialsAsync(LoginClientCredentialsParams, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.Oidc.cs/#L414"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Oidc.cs/#L414"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>POST /oauth2/token</code> with <code>grant_type=client_credentials</code> (CONTRACT.md
@@ -431,7 +675,7 @@ CHANGELOG).</p>
 
   <h3 id="Axiam_Sdk_AxiamClient_LogoutAsync_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.LogoutAsync(System.Threading.CancellationToken)">
   LogoutAsync(CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.cs/#L255"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.cs/#L306"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>POST /api/v1/auth/logout</code> (CONTRACT.md §1) and clears in-memory
@@ -467,11 +711,75 @@ decision).</p>
 
 
 
+  <a id="Axiam_Sdk_AxiamClient_LogoutUrlAsync_" data-uid="Axiam.Sdk.AxiamClient.LogoutUrlAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_LogoutUrlAsync_Axiam_Sdk_Auth_Oidc_LogoutUrlParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.LogoutUrlAsync(Axiam.Sdk.Auth.Oidc.LogoutUrlParams,System.Threading.CancellationToken)">
+  LogoutUrlAsync(LogoutUrlParams, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.OidcDeviceExchangeLogout.cs/#L388"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds the RP-initiated logout URL to redirect the user agent to (CONTRACT.md
+§12.7.2).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;string&gt; LogoutUrlAsync(LogoutUrlParams @params, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>params</code> <a class="xref" href="Axiam.Sdk.Auth.Oidc.LogoutUrlParams.html">LogoutUrlParams</a></dt>
+    <dd><p>The logout arguments.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the discovery fetch, if one is needed.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The absolute logout URL.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AxiamClient_LogoutUrlAsync_Axiam_Sdk_Auth_Oidc_LogoutUrlParams_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Performs <b>no network I/O</b> beyond the discovery fetch the SDK caches anyway, and does
+<b>not</b> clear this client's own session: whether the local session ends is the
+application's decision — a backend holding a service-account session must not lose it
+because a <i>user</i> logged out.
+</p>
+<p>
+<code>end_session_endpoint</code> is read from discovery and never synthesised from the issuer
+(rule 1). <a class="xref" href="Axiam.Sdk.Auth.Oidc.LogoutUrlParams.html#Axiam_Sdk_Auth_Oidc_LogoutUrlParams_PostLogoutRedirectUri">PostLogoutRedirectUri</a> is passed through
+<b>unvalidated against any local list</b> (rule 3): the allow-list lives in the client's
+server-side registration, and a client-side copy would drift and reject a URI an operator
+had just registered.
+</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
+    <dd><p>When the discovery document advertises no <code>end_session_endpoint</code>.</p>
+</dd>
+  </dl>
+
+
+
   <a id="Axiam_Sdk_AxiamClient_OidcBegin_" data-uid="Axiam.Sdk.AxiamClient.OidcBegin*"></a>
 
   <h3 id="Axiam_Sdk_AxiamClient_OidcBegin_Axiam_Sdk_Auth_Oidc_OidcConfiguration_Axiam_Sdk_Auth_Oidc_OidcBeginParams_" data-uid="Axiam.Sdk.AxiamClient.OidcBegin(Axiam.Sdk.Auth.Oidc.OidcConfiguration,Axiam.Sdk.Auth.Oidc.OidcBeginParams)">
   OidcBegin(OidcConfiguration, OidcBeginParams)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.Oidc.cs/#L176"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Oidc.cs/#L176"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds an authorization request (CONTRACT.md §12.1) — PURE LOCAL COMPUTATION,
@@ -533,7 +841,7 @@ caught at call time, deliberately NOT the AuthError/AuthzError/NetworkError taxo
 
   <h3 id="Axiam_Sdk_AxiamClient_OidcDiscoverAsync_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.OidcDiscoverAsync(System.Threading.CancellationToken)">
   OidcDiscoverAsync(CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.Oidc.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Oidc.cs/#L105"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>GET /.well-known/openid-configuration</code> (CONTRACT.md §12.1) — fetches and
@@ -577,7 +885,7 @@ a proxy, so a mismatch is never treated as an error.</p>
 
   <h3 id="Axiam_Sdk_AxiamClient_OidcExchangeAsync_Axiam_Sdk_Auth_Oidc_OidcExchangeParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.OidcExchangeAsync(Axiam.Sdk.Auth.Oidc.OidcExchangeParams,System.Threading.CancellationToken)">
   OidcExchangeAsync(OidcExchangeParams, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.Oidc.cs/#L261"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Oidc.cs/#L261"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>POST /oauth2/token</code> with <code>grant_type=authorization_code</code> (CONTRACT.md
@@ -626,7 +934,7 @@ code — the access and refresh tokens from the same response are never returned
 
   <h3 id="Axiam_Sdk_AxiamClient_OidcRefreshAsync_Axiam_Sdk_Auth_Oidc_OidcRefreshParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.OidcRefreshAsync(Axiam.Sdk.Auth.Oidc.OidcRefreshParams,System.Threading.CancellationToken)">
   OidcRefreshAsync(OidcRefreshParams, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.Oidc.cs/#L302"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Oidc.cs/#L302"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>POST /oauth2/token</code> with <code>grant_type=refresh_token</code> (CONTRACT.md
@@ -677,7 +985,7 @@ token.</p>
 
   <h3 id="Axiam_Sdk_AxiamClient_RefreshAsync_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.RefreshAsync(System.Threading.CancellationToken)">
   RefreshAsync(CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.cs/#L239"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.cs/#L288"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>POST /api/v1/auth/refresh</code> (CONTRACT.md §1), routed through the single-
@@ -716,7 +1024,7 @@ surfaces as <a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a> w
 
   <h3 id="Axiam_Sdk_AxiamClient_RevokeAsync_Axiam_Sdk_Auth_Oidc_RevokeParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.RevokeAsync(Axiam.Sdk.Auth.Oidc.RevokeParams,System.Threading.CancellationToken)">
   RevokeAsync(RevokeParams, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.Oidc.cs/#L504"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Oidc.cs/#L504"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>POST /oauth2/revoke</code> (RFC 7009, CONTRACT.md §12.1) — revokes an access or
@@ -765,7 +1073,7 @@ judgment call 20).</p>
 
   <h3 id="Axiam_Sdk_AxiamClient_SsoCompleteAsync_Axiam_Sdk_Auth_Oidc_SsoCompleteParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.SsoCompleteAsync(Axiam.Sdk.Auth.Oidc.SsoCompleteParams,System.Threading.CancellationToken)">
   SsoCompleteAsync(SsoCompleteParams, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.Oidc.cs/#L642"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Oidc.cs/#L642"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>POST /api/v1/auth/federation/oidc/callback</code> (CONTRACT.md §12.1) — step 2
@@ -813,7 +1121,7 @@ the SDK on the federation path.</p>
 
   <h3 id="Axiam_Sdk_AxiamClient_SsoStartAsync_Axiam_Sdk_Auth_Oidc_SsoStartParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.SsoStartAsync(Axiam.Sdk.Auth.Oidc.SsoStartParams,System.Threading.CancellationToken)">
   SsoStartAsync(SsoStartParams, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.Oidc.cs/#L551"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Oidc.cs/#L551"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>POST /api/v1/auth/federation/oidc/start</code> (CONTRACT.md §12.1) — step 1 of
@@ -866,11 +1174,495 @@ raised client-side with no wire call.</p>
 
 
 
+  <a id="Axiam_Sdk_AxiamClient_TokenExchangeAsync_" data-uid="Axiam.Sdk.AxiamClient.TokenExchangeAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_TokenExchangeAsync_Axiam_Sdk_Auth_Oidc_TokenExchangeParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.TokenExchangeAsync(Axiam.Sdk.Auth.Oidc.TokenExchangeParams,System.Threading.CancellationToken)">
+  TokenExchangeAsync(TokenExchangeParams, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.OidcDeviceExchangeLogout.cs/#L293"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>POST /oauth2/token</code> with the RFC 8693 grant (CONTRACT.md §15.1) — exchanges a
+token for a <b>narrower</b> one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;ExchangedToken&gt; TokenExchangeAsync(TokenExchangeParams @params, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>params</code> <a class="xref" href="Axiam.Sdk.Auth.Oidc.TokenExchangeParams.html">TokenExchangeParams</a></dt>
+    <dd><p>The exchange arguments.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.Oidc.ExchangedToken.html">ExchangedToken</a>&gt;</dt>
+    <dd><p>The issued, narrower token.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AxiamClient_TokenExchangeAsync_Axiam_Sdk_Auth_Oidc_TokenExchangeParams_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>What this method deliberately does <i>not</i> do:</p>
+<ul><li><b>No default <code>ActorToken</code></b> (§15.2 rule 1). Passing
+    <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> asks for <i>impersonation</i>; the SDK will not quietly reuse the
+    client's own session token as the actor and turn that into a delegation.</li><li><b>No retry or downgrade on <code>unauthorized_client</code></b> (rule 2) — a registration
+    fact an operator must fix.</li><li><b>No auto-narrowing on <code>invalid_scope</code></b> (rule 3). The server refuses
+    instead of silently narrowing precisely so the caller finds out here.</li><li><b>No adoption</b> (rule 5), and no flag to enable it — a MUST NOT, where
+    <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LoginClientCredentialsAsync_Axiam_Sdk_Auth_Oidc_LoginClientCredentialsParams_System_Threading_CancellationToken_">LoginClientCredentialsAsync(LoginClientCredentialsParams, CancellationToken)</a> adoption is a MAY.</li></ul>
+<p>
+A cross-tenant subject token answers <code>invalid_grant</code>, identically to an expired one.
+The SDK does not try to tell them apart (§15.3): the server collapses them because
+distinguishing them is a tenant-enumeration signal.
+</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
+    <dd><p>When no client secret is configured — client-side, with no wire call.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_AxiamClient_UmaDeleteResourceAsync_" data-uid="Axiam.Sdk.AxiamClient.UmaDeleteResourceAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_UmaDeleteResourceAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.UmaDeleteResourceAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Guid,System.Threading.CancellationToken)">
+  UmaDeleteResourceAsync(Sensitive&lt;string&gt;, Guid, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Uma.cs/#L111"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>DELETE /uma2/rreg/resource_set/{id}</code> — deregisters (§20.1).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task UmaDeleteResourceAsync(Sensitive&lt;string&gt; pat, Guid resourceId, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pat</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The Protection API Token.</p>
+</dd>
+    <dt><code>resourceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The resource set id.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd><p>A task that completes when the resource set is gone.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_AxiamClient_UmaExchangeTicketAsync_" data-uid="Axiam.Sdk.AxiamClient.UmaExchangeTicketAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_UmaExchangeTicketAsync_Axiam_Sdk_Auth_Oidc_UmaExchangeTicketParams_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.UmaExchangeTicketAsync(Axiam.Sdk.Auth.Oidc.UmaExchangeTicketParams,System.Threading.CancellationToken)">
+  UmaExchangeTicketAsync(UmaExchangeTicketParams, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Uma.cs/#L200"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>POST /oauth2/token</code> with the uma-ticket grant (§20.1) —
+exchanges a ticket for an RPT.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;RequestingPartyToken&gt; UmaExchangeTicketAsync(UmaExchangeTicketParams @params, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>params</code> <a class="xref" href="Axiam.Sdk.Auth.Oidc.UmaExchangeTicketParams.html">UmaExchangeTicketParams</a></dt>
+    <dd><p>The ticket and the requesting party's token.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.Oidc.RequestingPartyToken.html">RequestingPartyToken</a>&gt;</dt>
+    <dd><p>The requesting party token.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AxiamClient_UmaExchangeTicketAsync_Axiam_Sdk_Auth_Oidc_UmaExchangeTicketParams_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><b>This method never retries.</b> It issues exactly one request and
+is outside the §16 retry policy — not on <code>5xx</code>, not on timeout,
+not on any transport failure (§20.2 rule 6). The ticket is consumed
+<i>before</i> the request is evaluated, so a failed exchange has already
+spent it: a retry cannot succeed, and under concurrency it is precisely
+the concurrent redemption a server whose storage engine this SDK cannot
+attest may admit twice (ilpanich/axiam#302). On failure, request a
+<b>new</b> ticket.</p>
+<p>What this method deliberately does not do: no default
+<code>ClaimToken</code> (rule 2) — it is required; no auto-narrowing on
+<code>access_denied</code> (rule 3); and no adoption (rule 4) — the RPT is the
+<i>requesting party's</i> token.</p>
+<p>The four ticket refusals — unknown, expired, already used, wrong
+client — all answer <code>invalid_grant</code> with one message. This SDK does
+not try to tell them apart (§20.4): the server collapses them so a
+caller cannot probe for live ticket handles.</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_AxiamClient_UmaListResourcesAsync_" data-uid="Axiam.Sdk.AxiamClient.UmaListResourcesAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_UmaListResourcesAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.UmaListResourcesAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)">
+  UmaListResourcesAsync(Sensitive&lt;string&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Uma.cs/#L137"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>GET /uma2/rreg/resource_set</code> — lists the ids <b>this client</b>
+registered (§20.1).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IReadOnlyList&lt;Guid&gt;&gt; UmaListResourcesAsync(Sensitive&lt;string&gt; pat, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pat</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The Protection API Token.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>&gt;&gt;</dt>
+    <dd><p>The registered resource set ids.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AxiamClient_UmaListResourcesAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Not the tenant's whole resource tree: a protection scope does not entitle
+a caller to enumerate it.</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_AxiamClient_UmaReadResourceAsync_" data-uid="Axiam.Sdk.AxiamClient.UmaReadResourceAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_UmaReadResourceAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.UmaReadResourceAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Guid,System.Threading.CancellationToken)">
+  UmaReadResourceAsync(Sensitive&lt;string&gt;, Guid, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Uma.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>GET /uma2/rreg/resource_set/{id}</code> — reads a resource set (§20.1).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;ResourceSet&gt; UmaReadResourceAsync(Sensitive&lt;string&gt; pat, Guid resourceId, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pat</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The Protection API Token.</p>
+</dd>
+    <dt><code>resourceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The resource set id.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.Oidc.ResourceSet.html">ResourceSet</a>&gt;</dt>
+    <dd><p>The resource set.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_AxiamClient_UmaRegisterResourceAsync_" data-uid="Axiam.Sdk.AxiamClient.UmaRegisterResourceAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_UmaRegisterResourceAsync_Axiam_Sdk_Core_Sensitive_System_String__Axiam_Sdk_Auth_Oidc_ResourceSet_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.UmaRegisterResourceAsync(Axiam.Sdk.Core.Sensitive{System.String},Axiam.Sdk.Auth.Oidc.ResourceSet,System.Threading.CancellationToken)">
+  UmaRegisterResourceAsync(Sensitive&lt;string&gt;, ResourceSet, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Uma.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>POST /uma2/rreg/resource_set</code> — registers a resource set (§20.1).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;ResourceSet&gt; UmaRegisterResourceAsync(Sensitive&lt;string&gt; pat, ResourceSet resource, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pat</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The Protection API Token.</p>
+</dd>
+    <dt><code>resource</code> <a class="xref" href="Axiam.Sdk.Auth.Oidc.ResourceSet.html">ResourceSet</a></dt>
+    <dd><p>The resource set to register.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.Oidc.ResourceSet.html">ResourceSet</a>&gt;</dt>
+    <dd><p>The registered set, carrying the server-assigned id.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AxiamClient_UmaRegisterResourceAsync_Axiam_Sdk_Core_Sensitive_System_String__Axiam_Sdk_Auth_Oidc_ResourceSet_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The <code class="paramref">pat</code> is an explicit parameter, not this client's
+session. A Protection API Token must be a <b>client-credentials</b>
+token, because a ticket binds to the <code>client_id</code> that minted it —
+and this client's session is usually a <i>user</i> session, which names
+no client to bind to (§20.2 rule 1).</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_AxiamClient_UmaRequestTicketAsync_" data-uid="Axiam.Sdk.AxiamClient.UmaRequestTicketAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_UmaRequestTicketAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Collections_Generic_IReadOnlyList_Axiam_Sdk_Auth_Oidc_RequestedPermission__System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.UmaRequestTicketAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Auth.Oidc.RequestedPermission},System.Threading.CancellationToken)">
+  UmaRequestTicketAsync(Sensitive&lt;string&gt;, IReadOnlyList&lt;RequestedPermission&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Uma.cs/#L158"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>POST /uma2/perm</code> — mints a permission ticket (§20.1).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;Sensitive&lt;string&gt;&gt; UmaRequestTicketAsync(Sensitive&lt;string&gt; pat, IReadOnlyList&lt;RequestedPermission&gt; permissions, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pat</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The Protection API Token.</p>
+</dd>
+    <dt><code>permissions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.Oidc.RequestedPermission.html">RequestedPermission</a>&gt;</dt>
+    <dd><p>The pairs the resource server requires.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;&gt;</dt>
+    <dd><p>The opaque ticket.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AxiamClient_UmaRequestTicketAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Collections_Generic_IReadOnlyList_Axiam_Sdk_Auth_Oidc_RequestedPermission__System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Scope names are validated <b>here</b>, against each resource's declared
+set. Asking for an undeclared scope is a <code>400</code>, not a denial — the
+two are different failures, and this SDK surfaces the distinction the
+server draws rather than flattening it.</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_AxiamClient_UmaUpdateResourceAsync_" data-uid="Axiam.Sdk.AxiamClient.UmaUpdateResourceAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_UmaUpdateResourceAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Guid_Axiam_Sdk_Auth_Oidc_ResourceSet_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.UmaUpdateResourceAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Guid,Axiam.Sdk.Auth.Oidc.ResourceSet,System.Threading.CancellationToken)">
+  UmaUpdateResourceAsync(Sensitive&lt;string&gt;, Guid, ResourceSet, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.Uma.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>PUT /uma2/rreg/resource_set/{id}</code> — replaces a resource set (§20.1).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;ResourceSet&gt; UmaUpdateResourceAsync(Sensitive&lt;string&gt; pat, Guid resourceId, ResourceSet resource, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pat</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The Protection API Token.</p>
+</dd>
+    <dt><code>resourceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>The resource set id.</p>
+</dd>
+    <dt><code>resource</code> <a class="xref" href="Axiam.Sdk.Auth.Oidc.ResourceSet.html">ResourceSet</a></dt>
+    <dd><p>The new state.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancellation token.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.Oidc.ResourceSet.html">ResourceSet</a>&gt;</dt>
+    <dd><p>The updated resource set.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AxiamClient_UmaUpdateResourceAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Guid_Axiam_Sdk_Auth_Oidc_ResourceSet_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><b>The scope list is replaced, not merged</b> (§20.2 rule 8).
+Whatever <code>resource.ResourceScopes</code> holds becomes the complete
+declared set; omitting a scope removes it, which is how a resource server
+drops an authority. This method performs no read-before-write.</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_AxiamClient_VerifyLogoutTokenAsync_" data-uid="Axiam.Sdk.AxiamClient.VerifyLogoutTokenAsync*"></a>
+
+  <h3 id="Axiam_Sdk_AxiamClient_VerifyLogoutTokenAsync_System_String_Axiam_Sdk_Auth_Oidc_OidcConfiguration_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.VerifyLogoutTokenAsync(System.String,Axiam.Sdk.Auth.Oidc.OidcConfiguration,System.Threading.CancellationToken)">
+  VerifyLogoutTokenAsync(string, OidcConfiguration?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.OidcDeviceExchangeLogout.cs/#L447"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Verifies a back-channel logout token the OP POSTed to this application's
+<code>backchannel_logout_uri</code> (CONTRACT.md §12.7.3).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;VerifiedLogoutToken&gt; VerifyLogoutTokenAsync(string logoutToken, OidcConfiguration? configuration = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>logoutToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The compact JWS the OP posted.</p>
+</dd>
+    <dt><code>configuration</code> <a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcConfiguration.html">OidcConfiguration</a></dt>
+    <dd><p>A pre-fetched discovery document, or <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the discovery/JWKS fetches, if needed.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.Oidc.VerifiedLogoutToken.html">VerifiedLogoutToken</a>&gt;</dt>
+    <dd><p>The <code>sid</code>/<code>sub</code>/<code>jti</code> the token names — never a bare <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>,
+because the RP has to know <i>which</i> session to end. <b>Dedup on <code>jti</code> yourself</b>:
+delivery is at-least-once, and an SDK-side guard would have no durable store and would
+silently drop a real second logout after a restart.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_AxiamClient_VerifyLogoutTokenAsync_System_String_Axiam_Sdk_Auth_Oidc_OidcConfiguration_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Every check exists because skipping it has a name:</p>
+<ol><li><b>Signature</b>, through the same §12.4 JWKS verifier the ID-token path uses —
+    no second key-fetching path — which already pins EdDSA and requires a <code>kid</code>, so
+    rotation cannot be defeated by omitting it.</li><li><b><code>iss</code>/<code>aud</code></b>: a token minted for another RP is not accepted here.</li><li><b><code>events</code> carries the back-channel-logout key.</b> This is what distinguishes
+    a logout token from an ID token; skipping it means accepting a replayed ID token as a
+    logout instruction.</li><li><b><code>nonce</code> is absent.</b> Back-Channel Logout 1.0 §2.4 forbids it, and its
+    presence is the documented signature of an ID token being replayed. Rejected, not
+    ignored.</li><li><b>At least one of <code>sid</code>/<code>sub</code></b> — a token naming neither identifies
+    nothing.</li><li><b><code>exp</code> in the future, <code>iat</code> recent.</b></li></ol>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
+    <dd><p>On any failed check.</p>
+</dd>
+  </dl>
+
+
+
   <a id="Axiam_Sdk_AxiamClient_VerifyMfaAsync_" data-uid="Axiam.Sdk.AxiamClient.VerifyMfaAsync*"></a>
 
   <h3 id="Axiam_Sdk_AxiamClient_VerifyMfaAsync_Axiam_Sdk_Core_Sensitive_System_String__System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.AxiamClient.VerifyMfaAsync(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.Threading.CancellationToken)">
   VerifyMfaAsync(Sensitive&lt;string&gt;, string, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha24/Axiam.Sdk/AxiamClient.cs/#L215"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha25/Axiam.Sdk/AxiamClient.cs/#L262"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>POST /api/v1/auth/mfa/verify</code> (CONTRACT.md §1), completing the

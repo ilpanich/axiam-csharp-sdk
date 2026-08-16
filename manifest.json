@@ -236,6 +236,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.UmaChallenger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.UmaChallenger.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore.UmaChallenger",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.UmaChallenger.yml\" sourcestartlinenumber=\"1\">A configured <code>WWW-Authenticate: UMA</code> challenge emitter (CONTRACT.md\n§20.3, emit half).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.AspNetCore.yml",
       "output": {
         ".html": {
@@ -247,6 +261,62 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.AspNetCore",
       "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.DpopVerifier.DpopRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.DpopVerifier.DpopRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.DpopVerifier.DpopRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.DpopVerifier.DpopRequest.yml\" sourcestartlinenumber=\"1\">What <xref href=\"Axiam.Sdk.Auth.DpopVerifier.VerifyProof(System.String%2cAxiam.Sdk.Auth.DpopVerifier.DpopRequest%2cAxiam.Sdk.Auth.DpopVerifier.IJtiStore)\" data-throw-if-not-resolved=\"false\"></xref> needs to know about the current request.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.DpopVerifier.IJtiStore.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.DpopVerifier.IJtiStore.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.DpopVerifier.IJtiStore",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.DpopVerifier.IJtiStore.yml\" sourcestartlinenumber=\"1\">§21.7.2 check 8 — single-use <code>jti</code> tracking.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.DpopVerifier.InMemoryJtiStore.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.DpopVerifier.InMemoryJtiStore.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.DpopVerifier.InMemoryJtiStore",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.DpopVerifier.InMemoryJtiStore.yml\" sourcestartlinenumber=\"1\">An <xref href=\"Axiam.Sdk.Auth.DpopVerifier.IJtiStore\" data-throw-if-not-resolved=\"false\"></xref> for a single process.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.DpopVerifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.DpopVerifier.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.DpopVerifier",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.DpopVerifier.yml\" sourcestartlinenumber=\"1\">DPoP proof verification — CONTRACT.md §21.7.2 (RFC 9449), contract 1.16.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -317,6 +387,76 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Auth.Oidc.AuthorizationRequest",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.AuthorizationRequest.yml\" sourcestartlinenumber=\"1\">The result of <xref href=\"Axiam.Sdk.AxiamClient.OidcBegin(Axiam.Sdk.Auth.Oidc.OidcConfiguration%2cAxiam.Sdk.Auth.Oidc.OidcBeginParams)\" data-throw-if-not-resolved=\"false\"></xref> — everything the caller needs to start\nan authorization-code + PKCE login (CONTRACT.md §12.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.DeviceAuthorization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.DeviceAuthorization.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.DeviceAuthorization",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.DeviceAuthorization.yml\" sourcestartlinenumber=\"1\">The <code>DeviceAuthorizationResponse</code> — what the device shows its user, plus the\n<code>device_code</code> it polls with (CONTRACT.md §14.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.DeviceAuthorizeParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.DeviceAuthorizeParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.DeviceAuthorizeParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.DeviceAuthorizeParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.DeviceAuthorizeAsync(Axiam.Sdk.Auth.Oidc.DeviceAuthorizeParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md §14.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.DeviceLoginParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.DeviceLoginParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.DeviceLoginParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.DeviceLoginParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.DeviceLoginAsync(Axiam.Sdk.Auth.Oidc.DeviceLoginParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md §14.3).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.DevicePollParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.DevicePollParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.DevicePollParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.DevicePollParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.DevicePollAsync(Axiam.Sdk.Auth.Oidc.DevicePollParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md §14.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.ExchangedToken.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.ExchangedToken.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.ExchangedToken",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.ExchangedToken.yml\" sourcestartlinenumber=\"1\">The result of an RFC 8693 exchange (wire schema <code>TokenExchangeResponse</code>, §15.1).</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -401,6 +541,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.LoginClientCredentialsAsync(Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (<code>grant_type=client_credentials</code>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.LogoutUrlParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.LogoutUrlParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.LogoutUrlParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.LogoutUrlParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.LogoutUrlAsync(Axiam.Sdk.Auth.Oidc.LogoutUrlParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md §12.7.2).</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -502,6 +656,48 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.RequestedPermission.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.RequestedPermission.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.RequestedPermission",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.RequestedPermission.yml\" sourcestartlinenumber=\"1\">One <code>(resource, scopes)</code> pair a resource server requires (§20.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.RequestingPartyToken.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.RequestingPartyToken.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.RequestingPartyToken",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.RequestingPartyToken.yml\" sourcestartlinenumber=\"1\">The result of the UMA ticket grant (§20.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.ResourceSet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.ResourceSet.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.ResourceSet",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.ResourceSet.yml\" sourcestartlinenumber=\"1\">A UMA resource set — an AXIAM resource seen through the Protection API\n(CONTRACT.md §20.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.RevokeParams.yml",
       "output": {
         ".html": {
@@ -513,6 +709,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Auth.Oidc.RevokeParams",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.RevokeParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.RevokeAsync(Axiam.Sdk.Auth.Oidc.RevokeParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (RFC 7009). Requires\nconfidential-client credentials (§12.1 note 4).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.RptPermission.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.RptPermission.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.RptPermission",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.RptPermission.yml\" sourcestartlinenumber=\"1\">One entry of an RPT's <code>permissions</code> claim (§20.1).</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -572,6 +782,62 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.TokenExchangeParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.TokenExchangeParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.TokenExchangeParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.TokenExchangeParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.TokenExchangeAsync(Axiam.Sdk.Auth.Oidc.TokenExchangeParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md §15.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.UmaChallenge.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.UmaChallenge.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.UmaChallenge",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.UmaChallenge.yml\" sourcestartlinenumber=\"1\">A parsed <code>WWW-Authenticate: UMA</code> challenge (UMA 2.0 §3.2, §20.3).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.UmaExchangeTicketParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.UmaExchangeTicketParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.UmaExchangeTicketParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.UmaExchangeTicketParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.UmaExchangeTicketAsync(Axiam.Sdk.Auth.Oidc.UmaExchangeTicketParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (§20.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.VerifiedLogoutToken.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.VerifiedLogoutToken.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.VerifiedLogoutToken",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.VerifiedLogoutToken.yml\" sourcestartlinenumber=\"1\">What a verified back-channel logout token names (CONTRACT.md §12.7.3).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.yml",
       "output": {
         ".html": {
@@ -583,6 +849,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Auth.Oidc",
       "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.PresentedProofs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.PresentedProofs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.PresentedProofs",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.PresentedProofs.yml\" sourcestartlinenumber=\"1\">What the caller proved about <b>this</b> connection and <b>this</b> request, for\n<xref href=\"Axiam.Sdk.Auth.JwksVerifier.VerifyTokenBinding(System.Text.Json.JsonElement%2cAxiam.Sdk.Auth.PresentedProofs)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -642,6 +922,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.AccessDecision.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.AccessDecision.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.AccessDecision",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.AccessDecision.yml\" sourcestartlinenumber=\"1\">The full outcome of an access check, including the CONTRACT.md §11 rule 9\n<code>reason_code</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Core.AuthError.yml",
       "output": {
         ".html": {
@@ -667,6 +961,34 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Core.AuthzError",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.AuthzError.yml\" sourcestartlinenumber=\"1\">Authorization failure: the caller lacks permission for the requested operation\n(CONTRACT.md §2, D-12). Always constructed via <xref href=\"Axiam.Sdk.Core.ErrorMapper\" data-throw-if-not-resolved=\"false\"></xref> so REST\nand gRPC transports cannot drift on the error taxonomy.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.AxiamReasonCode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.AxiamReasonCode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.AxiamReasonCode",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.AxiamReasonCode.yml\" sourcestartlinenumber=\"1\">The three <code>reason_code</code> values CONTRACT.md §11 rule 9 defines.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.ConfigClampedEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.ConfigClampedEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.ConfigClampedEvent",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.ConfigClampedEvent.yml\" sourcestartlinenumber=\"1\">Emitted at construction, once per caller-supplied setting the SDK clamped\n(CONTRACT.md §19.1, §19.2 rule 6).</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -712,6 +1034,76 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.RefreshEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.RefreshEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.RefreshEvent",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.RefreshEvent.yml\" sourcestartlinenumber=\"1\">Emitted around a §9 single-flight refresh (§19).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.RefreshRole.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.RefreshRole.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.RefreshRole",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.RefreshRole.yml\" sourcestartlinenumber=\"1\">Whether this caller performed a §9 refresh or awaited another's.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.RequestEndEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.RequestEndEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.RequestEndEvent",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.RequestEndEvent.yml\" sourcestartlinenumber=\"1\">Emitted after a call completes, success or failure (§19).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.RequestStartEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.RequestStartEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.RequestStartEvent",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.RequestStartEvent.yml\" sourcestartlinenumber=\"1\">Emitted before an outbound call leaves the SDK (§19).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.RetryEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.RetryEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.RetryEvent",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.RetryEvent.yml\" sourcestartlinenumber=\"1\">Emitted before each §16 retry wait.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Core.Sensitive-1.yml",
       "output": {
         ".html": {
@@ -751,6 +1143,48 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Core.SensitiveJsonConverterFactory",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.SensitiveJsonConverterFactory.yml\" sourcestartlinenumber=\"1\">Factory that produces the closed <xref href=\"Axiam.Sdk.Core.SensitiveJsonConverter%601\" data-throw-if-not-resolved=\"false\"></xref> for a given\n<xref href=\"Axiam.Sdk.Core.Sensitive%601\" data-throw-if-not-resolved=\"false\"></xref>. An open-generic converter referenced from a\n<xref href=\"System.Text.Json.Serialization.JsonConverterAttribute\" data-throw-if-not-resolved=\"false\"></xref> MUST be a <xref href=\"System.Text.Json.Serialization.JsonConverterFactory\" data-throw-if-not-resolved=\"false\"></xref>:\n<code>System.Text.Json</code> cannot instantiate an open-generic <code>JsonConverter&lt;T&gt;</code>\ndirectly (it throws because the type still contains generic parameters).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.TelemetryEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.TelemetryEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.TelemetryEvent",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.TelemetryEvent.yml\" sourcestartlinenumber=\"1\">A telemetry event (CONTRACT.md §19).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.TelemetryHook.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.TelemetryHook.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.TelemetryHook",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.TelemetryHook.yml\" sourcestartlinenumber=\"1\">A caller-supplied telemetry sink (CONTRACT.md §19).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Core.TelemetryOutcome.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Core.TelemetryOutcome.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Core.TelemetryOutcome",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Core.TelemetryOutcome.yml\" sourcestartlinenumber=\"1\">Why a request finished (CONTRACT.md §19).</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -890,6 +1324,216 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.Options",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.FailurePolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.FailurePolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.FailurePolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.FailurePolicy.yml\" sourcestartlinenumber=\"1\">What the server does when an interceptor produces no usable reply\n(<code>sdks/CONTRACT.md</code> §22.8).</p>\n<p>\n\"No usable reply\" is one closed set and every member takes the same path: timeout,\ntransport failure, budget exhausted before this reactor was reached, the per-tenant\nin-flight cap breached, and <em>every</em> §22.4 rejection — including a valid\nsignature carrying a forbidden patch field.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.FailurePolicyExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.FailurePolicyExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.FailurePolicyExtensions",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.FailurePolicyExtensions.yml\" sourcestartlinenumber=\"1\">Wire-form conversions for <xref href=\"Axiam.Sdk.Reactor.FailurePolicy\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorDecision.Allow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorDecision.Allow.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorDecision.Allow",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorDecision.Allow.yml\" sourcestartlinenumber=\"1\">Proceed unchanged, optionally demanding step-up authentication.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorDecision.Deny.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorDecision.Deny.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorDecision.Deny",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorDecision.Deny.yml\" sourcestartlinenumber=\"1\">Refuse the underlying operation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorDecision.Mutate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorDecision.Mutate.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorDecision.Mutate",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorDecision.Mutate.yml\" sourcestartlinenumber=\"1\">Proceed, applying <xref href=\"Axiam.Sdk.Reactor.ReactorDecision.Mutate.Patch\" data-throw-if-not-resolved=\"false\"></xref>. Valid on a mutable event only; the server\nrejects it as <code>not_mutable</code> on a veto-only one.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorDecision.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorDecision.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorDecision",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorDecision.yml\" sourcestartlinenumber=\"1\">What a handler decided about one event (<code>sdks/CONTRACT.md</code> §22.4).</p>\n<p>\nA closed hierarchy of three answers — the abstract base has a private\nprotected constructor, so nothing outside this file can add a fourth.\nThree of §22.4's rules are encoded here <b>structurally</b> rather than by\ndocumentation, because each is a rule an implementation gets wrong by being\npermissive:\n</p>\n<ol><li><b><code>allow</code> and <code>patch</code> are mutually exclusive.</b>\nThere is no way to attach a patch to <xref href=\"Axiam.Sdk.Reactor.ReactorDecision.Allow\" data-throw-if-not-resolved=\"false\"></xref> — a mutation is a\n<xref href=\"Axiam.Sdk.Reactor.ReactorDecision.Mutate\" data-throw-if-not-resolved=\"false\"></xref>, which serializes <code>decision: \"mutate\"</code>. A patch on an\n<code>allow</code> is a reply whose author and whose reader disagree about what will\nhappen; the server refuses it rather than resolving it.</li><li><b>An empty mutation is malformed.</b> <xref href=\"Axiam.Sdk.Reactor.ReactorDecision.Mutate\" data-throw-if-not-resolved=\"false\"></xref>\nrefuses to be constructed with an empty patch, so it cannot be put on the wire and\nrejected as <code>malformed_mutation</code> at the far end.</li><li><b><code>require_mfa</code> rides on <code>allow</code>.</b> It is a flag on\n<xref href=\"Axiam.Sdk.Reactor.ReactorDecision.Allow\" data-throw-if-not-resolved=\"false\"></xref>, not a fourth decision, and it is valid on\n<code>login.post_auth</code> only.</li></ol>\n<p>\nWhat is <em>not</em> encoded here is patch filtering. A patch containing a forbidden\nkey is sent unfiltered and rejected by the server (§22.4 rule 1): dropping the bad\nkey would leave the reactor author believing a field was set when it was silently\ndiscarded.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorEvent",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorEvent.yml\" sourcestartlinenumber=\"1\">One hook firing, delivered to a reactor (<code>sdks/CONTRACT.md</code> §22.3).</p>\n<p>\nAn instance only ever reaches a handler <em>after</em> <xref href=\"Axiam.Sdk.Reactor.ReactorServer\" data-throw-if-not-resolved=\"false\"></xref> has\nrejected <code>key_version &lt; 2</code>, verified the MAC, checked freshness and checked the\nnonce, in that order. A runtime that hands an unverified payload to user code has\nalready lost, so this type has no public constructor.\n</p>\n<p>\nThe <xref href=\"Axiam.Sdk.Reactor.ReactorEvent.Payload\" data-throw-if-not-resolved=\"false\"></xref> never carries a credential, a token or a signing key: a\nreactor is told what is being decided, not handed the means to act on it elsewhere. It\nis not sensitive in the §7 sense and must remain readable — a handler that cannot\ninspect the event cannot decide anything — but it is tenant business data, so this SDK\nnever logs it, and neither should you at <code>Information</code> level.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorEventSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorEventSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorEventSpec",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorEventSpec.yml\" sourcestartlinenumber=\"1\">One hookable event: its name, what a reactor may change, and what happens when the\nreactor does not answer (<code>sdks/CONTRACT.md</code> §22.5).</p>\n<p>\nMirrors the server's <code>ReactorEventSpec</code> in\n<code>crates/axiam-core/src/models/reactor.rs</code>, which is the single source of truth.\nThe live copy is served at <code>GET /api/v1/reactors/events</code>; this one is here so a\nwire contract does not require a network call to be understood.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorEvents.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorEvents.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorEvents",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorEvents.yml\" sourcestartlinenumber=\"1\">The v1 reactor event registry (<code>sdks/CONTRACT.md</code> §22.5) — five interceptable\nevents, their mutable-field allow-lists, and their default failure policies.</p>\n<p>\nThe live copy is served at <code>GET /api/v1/reactors/events</code> and is the one an admin\nUI SHOULD read. This constant list is the same data, restated because a wire contract\nthat requires a network call to be understood is not a contract.\n</p>\n<p>\n<b>§22.7 hot-path exclusion.</b> <code>authz.check</code>, <code>authz.check_batch</code> and\n<code>token.introspect</code> are not hookable and are absent from <xref href=\"Axiam.Sdk.Reactor.ReactorEvents.Registry\" data-throw-if-not-resolved=\"false\"></xref> and\nfrom every constant below. That absence is asserted by a test, not documented by a\ncomment. This SDK also offers no client-side interceptor, middleware hook or callback\npresenting itself as the reactor equivalent for those operations. An application that\nneeds external input on an authorization decision writes a <b>deny grant</b>, which the\nengine evaluates in the hot path at hot-path cost.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorHandler.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorHandler",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorHandler.yml\" sourcestartlinenumber=\"1\">A reactor's decision function: one event in, one of three answers out\n(<code>sdks/CONTRACT.md</code> §22.10).</p>\n<p>\nInvoked only after the runtime has verified the event under §8 v2, so an\nimplementation never sees an unauthenticated payload.\n</p>\n<p>\n<b>Throwing produces no reply.</b> The runtime will not synthesize an <code>allow</code> on\nyour behalf — that would override the operator's <code>fail_closed</code> setting from inside\nthe library. A handler that throws is a reactor that did not answer, and the\nregistration's <code>failure_policy</code> decides what that costs.\n</p>\n<p>\n<b>Answer inside the window.</b> <xref href=\"Axiam.Sdk.Reactor.ReactorEvent.TimeoutMs\" data-throw-if-not-resolved=\"false\"></xref> is how long the\nserver will actually wait. A late reply is discarded and the CPU spent producing it was\nspent for nothing, so a handler doing expensive work should consult\n<xref href=\"Axiam.Sdk.Reactor.ReactorEvent.Remaining(System.DateTimeOffset)\" data-throw-if-not-resolved=\"false\"></xref> and shed load rather than push on.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorObserver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorObserver.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorObserver",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorObserver.yml\" sourcestartlinenumber=\"1\">A fire-and-forget observer of reactor events (<code>mode: &quot;listen&quot;</code>,\n<code>sdks/CONTRACT.md</code> §22.5).</p>\n<p>\nThe server never waits for a listener and never reads a reply, so a listener cannot\naffect any outcome. That is why this returns a plain <xref href=\"System.Threading.Tasks.Task\" data-throw-if-not-resolved=\"false\"></xref> rather than a\n<xref href=\"Axiam.Sdk.Reactor.ReactorDecision\" data-throw-if-not-resolved=\"false\"></xref>: an SDK listener handler MUST NOT publish a reply, and a\ntype that cannot express one is a stronger guarantee than a paragraph saying so.\n</p>\n<p>\n<b>Write it idempotently.</b> A redelivery after a broker hiccup is normal. A listener\nthat double-counts is a listener that was assuming exactly-once delivery it was never\npromised.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorProtocol.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorProtocol.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorProtocol",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorProtocol.yml\" sourcestartlinenumber=\"1\">The reactor wire protocol (<code>sdks/CONTRACT.md</code> §22.1–§22.4): topology\nnames, key derivation, canonicalization, signing and verification.</p>\n<p>\n<xref href=\"Axiam.Sdk.Reactor.ReactorServer\" data-throw-if-not-resolved=\"false\"></xref> is built on this class, and this class is public so an\nintegrator on a transport this SDK does not wrap (a different AMQP client, a test\nharness, a bridge) can satisfy §22 without reimplementing the one rule that is easy\nto get wrong.\n</p>\n<p>\n<b>The canonicalization rule.</b> A reactor body is signed with its\n<code>hmac_signature</code> field <b>present and set to <code>null</code></b>, in declared field\norder. That differs from §8's own two message types (<code>AuthzRequest</code>,\n<code>AuditEventMessage</code>), whose <code>hmac_signature</code> is <em>absent</em> from their\ncanonical bytes — see <xref href=\"Axiam.Sdk.Amqp.Hmac\" data-throw-if-not-resolved=\"false\"></xref>, which implements that other\nrule — and it is the single most likely place for an implementation to produce a MAC\nthat will not verify. Everything else is §8 v2 verbatim: the same HKDF-derived\nper-tenant subkey, the same <code>HMAC-SHA256</code> compared in constant time, the same\n±300 s freshness window applied in <b>both</b> directions, the same\n<code>key_version</code> floor of 2.\n</p>\n<p>\nField order, event (server → reactor): <code>tenant_id</code>, <code>event</code>,\n<code>correlation_id</code>, <code>payload</code>, <code>timeout_ms</code>, <code>key_version</code>,\n<code>nonce</code>, <code>issued_at</code>, <code>hmac_signature</code>.\n</p>\n<p>\nField order, reply (reactor → server): <code>correlation_id</code>, <code>tenant_id</code>,\n<code>event</code>, <code>decision</code>, <code>reason</code> (omitted when absent), <code>patch</code>\n(omitted when absent), <code>require_mfa</code> (<b>omitted when <code>false</code></b>),\n<code>key_version</code>, <code>nonce</code>, <code>issued_at</code>, <code>hmac_signature</code>.\n</p>\n<p>\nThe three conditionally-omitted fields are load-bearing: a reply that serializes\n<code>\"require_mfa\": false</code> rather than omitting it produces different canonical bytes\nand therefore a different MAC.\n</p>\n<p>\n<b>Signing is symmetric in direction.</b> The server signs the event with the tenant\nsubkey; the reactor signs its reply with the same subkey. There is no second key and no\nasymmetric variant in v1. An unsigned reply is not a weak reply — it is not a reply at\nall, and the server discards it as though the reactor had never answered.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorServeOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorServeOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorServeOptions",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorServeOptions.yml\" sourcestartlinenumber=\"1\">Configuration for <xref href=\"Axiam.Sdk.Reactor.ReactorServer.ReactorServeAsync(Axiam.Sdk.Reactor.ReactorServeOptions%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n<p>\nExactly one of <xref href=\"Axiam.Sdk.Reactor.ReactorServeOptions.Handler\" data-throw-if-not-resolved=\"false\"></xref> (intercept) or <xref href=\"Axiam.Sdk.Reactor.ReactorServeOptions.Listener\" data-throw-if-not-resolved=\"false\"></xref> (observe)\nmust be supplied, and exactly one of <xref href=\"Axiam.Sdk.Reactor.ReactorServeOptions.Queue\" data-throw-if-not-resolved=\"false\"></xref> or <xref href=\"Axiam.Sdk.Reactor.ReactorServeOptions.ReactorId\" data-throw-if-not-resolved=\"false\"></xref> must\nname the queue to consume.\n</p>\n<p>\n<b>The queue is the server's, not yours.</b> Whichever you use, the runtime only ever\n<em>consumes</em> it. It declares no exchange, no queue and no binding, and it cannot\nname a queue belonging to another reactor: <xref href=\"Axiam.Sdk.Reactor.ReactorServeOptions.ReactorId\" data-throw-if-not-resolved=\"false\"></xref> derives\n<code>axiam.reactor.q.&lt;tenant&gt;.&lt;id&gt;</code> from the tenant and reactor id this\nruntime is configured as, and nothing else.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorServer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorServer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorServer",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorServer.yml\" sourcestartlinenumber=\"1\">The §22 reactor runtime: consume the server-declared queue, verify, decide, sign,\nreply.</p>\n<p>\nStart one with <xref href=\"Axiam.Sdk.Reactor.ReactorServer.ReactorServeAsync(Axiam.Sdk.Reactor.ReactorServeOptions%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>. Per delivery it:\n</p>\n<ol><li>rejects <code>key_version &lt; 2</code> — before the signature is even\ncomputed;</li><li>verifies the HMAC over the canonical bytes (§22.2:\n<code>hmac_signature</code> present and <code>null</code>);</li><li>checks <code>issued_at</code> against the freshness window, in both\ndirections;</li><li>checks <code>nonce</code> against a seen-set;</li><li><em>then</em> decodes the payload and calls the handler;</li><li>signs the reply with the same tenant subkey and publishes it to the\ndelivery's <code>reply_to</code> queue, echoing <code>correlation_id</code> both as an AMQP property\nand — the one the server authenticates — inside the signed body.</li></ol>\n<p>\nA runtime that hands an unverified payload to user code has already lost: the handler\nwill act on it, and \"we checked afterwards\" is not a check. The handler call site here\nis structurally unreachable until every gate above has passed.\n</p>\n<p><b>Four rules this class holds to</b></p>\n<ol><li><b>It declares no topology.</b> No <code>ExchangeDeclareAsync</code>, no\n<code>QueueDeclareAsync</code>, no <code>QueueBindAsync</code>, anywhere — asserted by a test\nagainst the AMQP client's own recorded invocations. Actors consume; the server\ndeclares.</li><li><b>It fails closed on its own errors.</b> A handler that throws, or a\nbody it cannot decode, produces <em>no reply</em> — never a synthesized <code>allow</code>.\nAnswering <code>allow</code> on behalf of a handler that crashed would override the operator's\n<code>fail_closed</code> setting from inside the library.</li><li><b>It does not filter a patch.</b> A handler's patch goes on the wire\nexactly as returned, forbidden keys included.</li><li><b>It honours <code>timeout_ms</code>.</b> When the handler returns after\nthe window closed, the reply is abandoned rather than published late — the server has\nalready stopped listening.</li></ol>\n<p><b>Interaction with §16, §18 and §19</b></p>\n<p>\n<b>§16 does not apply to a reply.</b> A correlation is single-use and a late reply\nis discarded, so re-sending one could only add load to a server that has already moved\non. The recovery mechanism for an unanswered dispatch is the registration's\n<code>failure_policy</code>, on the server, not a retry here. Connection recovery is the\nRabbitMQ client's, left on exactly as <xref href=\"Axiam.Sdk.Amqp.AxiamAmqpConsumer\" data-throw-if-not-resolved=\"false\"></xref> leaves it.\n</p>\n<p>\n<b>§18:</b> <xref href=\"Axiam.Sdk.Reactor.ReactorServer.DisposeAsync\" data-throw-if-not-resolved=\"false\"></xref> is idempotent, cancels the consumer so no new\ndelivery starts, drains what is in flight up to the configured grace period, and does\nnot close the caller's channel or connection.\n</p>\n<p>\n<b>§19:</b> one <code>RequestStart</code>/<code>RequestEnd</code> pair per dispatched event, with\nthe event name as the path template — a closed set of five values, so it cannot become a\ncardinality bomb.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor",
       "Summary": null
     },
     {
@@ -1132,6 +1776,104 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.CnfClaim.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.CnfClaim.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.CnfClaim",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.CnfClaim.yml\" sourcestartlinenumber=\"1\">RFC 7800 confirmation claim (X5.1). Either, both or neither member may be\nset; a claim with NEITHER set names a confirmation method this server\nversion does not implement.</p>\n<p sourcefile=\"api/Axiam.V1.CnfClaim.yml\" sourcestartlinenumber=\"5\">The consumer rule is the same one SDK contract §10.1 rule 9 makes normative,\nand it is the whole reason this message exists: a confirmation the consumer\ncannot check MUST be refused, never read as &quot;unconstrained&quot;. Two members set\nis a CONJUNCTION — both must hold.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.CreateReactorRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.CreateReactorRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.CreateReactorRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.CreateReactorResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.CreateReactorResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.CreateReactorResponse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.DeleteReactorRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.DeleteReactorRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.DeleteReactorRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.DeleteReactorResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.DeleteReactorResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.DeleteReactorResponse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.GetReactorRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.GetReactorRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.GetReactorRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.GetReactorResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.GetReactorResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.GetReactorResponse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.V1.GetUserInfoRequest.yml",
       "output": {
         ".html": {
@@ -1202,6 +1944,146 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ListReactorEventsRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ListReactorEventsRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ListReactorEventsRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ListReactorEventsResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ListReactorEventsResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ListReactorEventsResponse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ListReactorsRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ListReactorsRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ListReactorsRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ListReactorsResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ListReactorsResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ListReactorsResponse",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ReactorAdminService.ReactorAdminServiceClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ReactorAdminService.ReactorAdminServiceClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ReactorAdminService.ReactorAdminServiceClient",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.ReactorAdminService.ReactorAdminServiceClient.yml\" sourcestartlinenumber=\"1\">Client for ReactorAdminService</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ReactorAdminService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ReactorAdminService.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ReactorAdminService",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.ReactorAdminService.yml\" sourcestartlinenumber=\"1\">Reactor admin CRUD (X1 / R2.3), mirroring the REST DTOs in\n<code sourcefile=\"api/Axiam.V1.ReactorAdminService.yml\" sourcestartlinenumber=\"2\">crates/axiam-api-rest/src/handlers/reactors.rs</code> field-for-field so a\ncaller sees the same shape on either transport. <code sourcefile=\"api/Axiam.V1.ReactorAdminService.yml\" sourcestartlinenumber=\"3\">mode</code> and <code sourcefile=\"api/Axiam.V1.ReactorAdminService.yml\" sourcestartlinenumber=\"3\">failure_policy</code>\nare wire strings rather than proto enums — the same choice <code sourcefile=\"api/Axiam.V1.ReactorAdminService.yml\" sourcestartlinenumber=\"4\">UserResponse</code>'s\n<code sourcefile=\"api/Axiam.V1.ReactorAdminService.yml\" sourcestartlinenumber=\"5\">status</code> field already made in <code sourcefile=\"api/Axiam.V1.ReactorAdminService.yml\" sourcestartlinenumber=\"5\">user.proto</code> — because the valid values are\nserver data (<code sourcefile=\"api/Axiam.V1.ReactorAdminService.yml\" sourcestartlinenumber=\"6\">GET /api/v1/reactors/events</code>'s registry), not a fixed set a\ngenerated enum should freeze.</p>\n<p sourcefile=\"api/Axiam.V1.ReactorAdminService.yml\" sourcestartlinenumber=\"9\">This is CRUD only: the wire protocol reactors actually run over (topology,\n§8 v2 signing in both directions, the event registry, failure policy and\nbudget composition) is CONTRACT.md §22, which this service does not\nrestate — it only manages the registrations §22.9 describes.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ReactorEventDescriptor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ReactorEventDescriptor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ReactorEventDescriptor",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ReactorReflection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ReactorReflection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ReactorReflection",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.ReactorReflection.yml\" sourcestartlinenumber=\"1\">Holder for reflection information generated from axiam/v1/reactor.proto</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.ReactorResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.ReactorResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.ReactorResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.ReactorResponse.yml\" sourcestartlinenumber=\"1\">The registered reactor, as returned by every RPC above except delete.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.RptPermission.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.RptPermission.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.RptPermission",
+      "Summary": "<p sourcefile=\"api/Axiam.V1.RptPermission.yml\" sourcestartlinenumber=\"1\">A UMA 2.0 permission carried by an RPT (X2).</p>\n<p sourcefile=\"api/Axiam.V1.RptPermission.yml\" sourcestartlinenumber=\"3\">Mirrors <code sourcefile=\"api/Axiam.V1.RptPermission.yml\" sourcestartlinenumber=\"3\">axiam_core::models::uma::RptPermission</code> field for field, including\nthe per-permission <code sourcefile=\"api/Axiam.V1.RptPermission.yml\" sourcestartlinenumber=\"4\">exp</code>: UMA allows an RPT to accumulate permissions with\ndifferent lifetimes, and AXIAM issues them uniformly in v1 only. Flattening\nthat to a single token-level expiry here would foreclose a shape the\nspecification permits and the domain model already carries.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.V1.TokenReflection.yml",
       "output": {
         ".html": {
@@ -1241,6 +2123,34 @@
       "IsMRef": true,
       "Title": "Axiam.V1.TokenService",
       "Summary": "<p sourcefile=\"api/Axiam.V1.TokenService.yml\" sourcestartlinenumber=\"1\">Token service for JWT validation and introspection.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.UpdateReactorRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.UpdateReactorRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.UpdateReactorRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.V1.UpdateReactorResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.V1.UpdateReactorResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.V1.UpdateReactorResponse",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -1414,11 +2324,11 @@
       "type": "Toc",
       "source_relative_path": "api/toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "api/toc.html"
-        },
         ".json": {
           "relative_path": "api/toc.json"
+        },
+        ".html": {
+          "relative_path": "api/toc.html"
         }
       },
       "version": ""
@@ -1437,11 +2347,11 @@
       "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "toc.html"
-        },
         ".json": {
           "relative_path": "toc.json"
+        },
+        ".html": {
+          "relative_path": "toc.html"
         }
       },
       "version": ""

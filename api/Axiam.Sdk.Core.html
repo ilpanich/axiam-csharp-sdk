@@ -95,6 +95,12 @@
 Classes
 </h3>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.AccessDecision.html">AccessDecision</a></dt>
+      <dd><p>The full outcome of an access check, including the CONTRACT.md §11 rule 9
+<code>reason_code</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
       <dd><p>Authentication failure: wrong credentials, expired session, MFA failure, a 401 on
 refresh, an RFC 6749 OAuth2 protocol error (CONTRACT.md §12.3 rule 3 — see
@@ -109,6 +115,17 @@ drifts from the error taxonomy.</p>
       <dd><p>Authorization failure: the caller lacks permission for the requested operation
 (CONTRACT.md §2, D-12). Always constructed via <a class="xref" href="Axiam.Sdk.Core.ErrorMapper.html">ErrorMapper</a> so REST
 and gRPC transports cannot drift on the error taxonomy.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.AxiamReasonCode.html">AxiamReasonCode</a></dt>
+      <dd><p>The three <code>reason_code</code> values CONTRACT.md §11 rule 9 defines.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.ConfigClampedEvent.html">ConfigClampedEvent</a></dt>
+      <dd><p>Emitted at construction, once per caller-supplied setting the SDK clamped
+(CONTRACT.md §19.1, §19.2 rule 6).</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -133,6 +150,26 @@ server-side 5xx (CONTRACT.md §2).</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.RefreshEvent.html">RefreshEvent</a></dt>
+      <dd><p>Emitted around a §9 single-flight refresh (§19).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.RequestEndEvent.html">RequestEndEvent</a></dt>
+      <dd><p>Emitted after a call completes, success or failure (§19).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.RequestStartEvent.html">RequestStartEvent</a></dt>
+      <dd><p>Emitted before an outbound call leaves the SDK (§19).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.RetryEvent.html">RetryEvent</a></dt>
+      <dd><p>Emitted before each §16 retry wait.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Core.SensitiveJsonConverterFactory.html">SensitiveJsonConverterFactory</a></dt>
       <dd><p>Factory that produces the closed <a class="xref" href="Axiam.Sdk.Core.SensitiveJsonConverter-1.html">SensitiveJsonConverter&lt;T&gt;</a> for a given
 <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a>. An open-generic converter referenced from a
@@ -147,6 +184,11 @@ directly (it throws because the type still contains generic parameters).</p>
 the redacted literal; Read is intentionally unsupported — a <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a>
 is a write-only-for-serialization type, so no wire format can ever deserialize a real
 value back into one.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.TelemetryEvent.html">TelemetryEvent</a></dt>
+      <dd><p>A telemetry event (CONTRACT.md §19).</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -169,6 +211,27 @@ Structs
 getter (CONTRACT.md §7, D-12). Only SDK-internal code may construct an instance
 or read the wrapped value, via <span class="xref">Axiam.Sdk.Core.Sensitive&lt;T&gt;.Reveal()</span> — there is intentionally no
 public accessor.</p>
+</dd>
+    </dl>
+    <h3 id="enums">
+Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.RefreshRole.html">RefreshRole</a></dt>
+      <dd><p>Whether this caller performed a §9 refresh or awaited another's.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.TelemetryOutcome.html">TelemetryOutcome</a></dt>
+      <dd><p>Why a request finished (CONTRACT.md §19).</p>
+</dd>
+    </dl>
+    <h3 id="delegates">
+Delegates
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Core.TelemetryHook.html">TelemetryHook</a></dt>
+      <dd><p>A caller-supplied telemetry sink (CONTRACT.md §19).</p>
 </dd>
     </dl>
 

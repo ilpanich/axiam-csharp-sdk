@@ -212,6 +212,37 @@ Class ValidateTokenResponse
 
 
 
+  <h3 id="Axiam_V1_ValidateTokenResponse_CnfFieldNumber" data-uid="Axiam.V1.ValidateTokenResponse.CnfFieldNumber">
+  CnfFieldNumber
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field number for the &quot;cnf&quot; field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int CnfFieldNumber = 6</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
   <h3 id="Axiam_V1_ValidateTokenResponse_ExpFieldNumber" data-uid="Axiam.V1.ValidateTokenResponse.ExpFieldNumber">
   ExpFieldNumber
   
@@ -336,6 +367,37 @@ Class ValidateTokenResponse
 
 
 
+  <h3 id="Axiam_V1_ValidateTokenResponse_TokenTypeFieldNumber" data-uid="Axiam.V1.ValidateTokenResponse.TokenTypeFieldNumber">
+  TokenTypeFieldNumber
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Field number for the &quot;token_type&quot; field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int TokenTypeFieldNumber = 7</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
   <h3 id="Axiam_V1_ValidateTokenResponse_ValidFieldNumber" data-uid="Axiam.V1.ValidateTokenResponse.ValidFieldNumber">
   ValidFieldNumber
   
@@ -368,6 +430,47 @@ Class ValidateTokenResponse
 
   <h2 class="section" id="properties">Properties
 </h2>
+
+
+  <a id="Axiam_V1_ValidateTokenResponse_Cnf_" data-uid="Axiam.V1.ValidateTokenResponse.Cnf*"></a>
+
+  <h3 id="Axiam_V1_ValidateTokenResponse_Cnf" data-uid="Axiam.V1.ValidateTokenResponse.Cnf">
+  Cnf
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>RFC 7800 confirmation (X5.1). Present ONLY when the token is
+sender-constrained.</p>
+<p><code>valid: true</code> means the SIGNATURE, EXPIRY and TENANT check out. It does
+NOT mean the token may be used by whoever presented it. When <code>cnf</code> is
+present the caller MUST additionally prove possession of the named key,
+or refuse the request — this service cannot do it for them, because the
+proof is against the caller's OWN connection and not against this one.</p>
+<p>A caller that ignores this field has converted a sender-constrained token
+back into a bearer token. See <code>token_type</code>, which says the same thing in
+a form that is harder to skip.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CnfClaim Cnf { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.V1.CnfClaim.html">CnfClaim</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="Axiam_V1_ValidateTokenResponse_Descriptor_" data-uid="Axiam.V1.ValidateTokenResponse.Descriptor*"></a>
@@ -541,6 +644,42 @@ Class ValidateTokenResponse
 
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public string TenantId { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_V1_ValidateTokenResponse_TokenType_" data-uid="Axiam.V1.ValidateTokenResponse.TokenType*"></a>
+
+  <h3 id="Axiam_V1_ValidateTokenResponse_TokenType" data-uid="Axiam.V1.ValidateTokenResponse.TokenType">
+  TokenType
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>RFC 6749 §7.1 / RFC 9449 §5: &quot;Bearer&quot; or &quot;DPoP&quot;.</p>
+<p>Deliberately redundant with <code>cnf</code>. A caller that only ever looked at
+<code>valid</code> will at least see the token type change, and &quot;DPoP&quot; is a value no
+pre-X5.1 client has any handling for — which is the point: it fails
+visibly rather than silently downgrading.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string TokenType { get; set; }</code></pre>
   </div>
 
 
