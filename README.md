@@ -636,6 +636,59 @@ await using ReactorServer server = await ReactorServer.ReactorServeAsync(new Rea
 });
 ```
 
+### Binding handlers per event (§22.14)
+
+The `switch` above is the shape every multi-event reactor grows, and its `_ =>` arm —
+`ReactorDecision.Allowed()` — answers on behalf of code that never ran. That is the defect §22.10
+rule 2 forbids the *runtime* from committing, relocated into your file where the rule does not reach
+it: an operator who set `fail_closed` on the registration has it defeated there.
+
+`ReactorHandlers` is §22.14's declarative form, and it uses the same attribute mechanism the §11
+`[AxiamAccess]` helper already uses:
+
+```csharp
+public sealed class ClaimsReactor
+{
+    [OnReactorEvent(ReactorEvents.TokenPreIssue)]
+    public Task<ReactorDecision> EnrichAsync(ReactorEvent e, CancellationToken ct) =>
+        Task.FromResult(ReactorDecision.Mutated(new Dictionary<string, string>
+        {
+            ["ext.department"] = "engineering",
+        }));
+
+    [OnReactorEvent(ReactorEvents.LoginPostAuth)]
+    public Task<ReactorDecision> ScreenAsync(ReactorEvent e, CancellationToken ct) =>
+        Task.FromResult(Embargoed(e) ? ReactorDecision.Denied("embargoed region") : ReactorDecision.Allowed());
+}
+
+ReactorHandlers handlers = ReactorHandlers.Of(new ClaimsReactor());
+
+await using ReactorServer server = await ReactorServer.ReactorServeAsync(new ReactorServeOptions
+{
+    Channel = channel,
+    TenantId = tenantId,
+    SigningKey = Sensitive<byte[]>.Wrap(subkey),
+    ReactorId = reactorId,
+    Handler = handlers.Handler(),
+});
+```
+
+- **A misspelled event is refused when the attribute is read** — `ReactorHandlers` accepts only
+  §22.5 registry names, which is also how it refuses the three hot-path operations §22.7 excludes:
+  they are in no registry row. The message names the registry, never the exclusions.
+- **An unbound event abstains** — the composed handler throws `UnboundReactorEventException`, and
+  `ReactorServer` publishes **nothing** for a handler that threw, so the registration's
+  `failure_policy` decides (§22.8) exactly as it decides a timeout. Never a synthesized `allow`.
+- Binding the same event twice throws rather than silently overwriting, and `handlers.Events()`
+  feeds `ReactorEvents.DefaultFailurePolicyFor` so you can see what an unreachable reactor costs
+  before you go live.
+
+Lambdas work too — `new ReactorHandlers().Bind(ReactorEvents.TokenPreIssue, fn)` — and both
+spellings are governed by the same rules. It is pure sugar: `Handler()` returns exactly the
+`ReactorHandler` `ReactorServer` already takes. It opens nothing, verifies nothing, signs nothing,
+does not filter a patch, and a handler's own exception — thrown synchronously or carried on the
+returned `Task` — reaches the runtime unchanged so nothing is published.
+
 Register the reactor first — the queue it consumes is declared by the **server**, from a
 `POST /api/v1/reactors` registration. See [`examples/Reactor`](examples/Reactor) for a runnable one
 that enriches a token and screens a login.
