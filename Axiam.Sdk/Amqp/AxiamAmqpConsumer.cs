@@ -85,6 +85,12 @@ public sealed class AxiamAmqpConsumer : IAsyncDisposable
     {
         logger ??= NullLogger.Instance;
 
+        // §8b rules 1 and 5: amqps:// or nothing, checked before a socket opens
+        // and with no fallback path to take. A signed AuthzRequest still names
+        // its subject, resource and action in cleartext — HMAC proves who wrote
+        // the message, it does not keep the message off the wire.
+        Reactor.ReactorConnections.RequireAmqps(amqpUri);
+
         var factory = new ConnectionFactory
         {
             Uri = new Uri(amqpUri),

@@ -65,7 +65,7 @@ export AXIAM_ORG_SLUG=your-org-slug        # org context for login/refresh (CONT
 export AXIAM_EMAIL=you@example.com
 export AXIAM_PASSWORD='your-password'
 export AXIAM_TOTP_CODE=123456          # only needed if MFA is enabled
-export AXIAM_AMQP_URI=amqp://guest:guest@localhost:5672
+export AXIAM_AMQP_URI=amqps://guest:guest@localhost:5671   # §8b: amqps:// only
 export AXIAM_AMQP_SIGNING_KEY_HEX=<hex-encoded per-tenant AMQP signing secret>
 dotnet run --project examples/Quickstart
 ```

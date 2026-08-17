@@ -102,7 +102,9 @@ catch (Exception ex)
 await using AxiamAmqpConsumer amqpConsumer = new();
 try
 {
-    string amqpUri = Environment.GetEnvironmentVariable("AXIAM_AMQP_URI") ?? "amqp://guest:guest@localhost:5672";
+    // §8b: amqps:// only. A plaintext URI is refused before a socket opens —
+    // HMAC proves who wrote a message, it does not keep it off the wire.
+    string amqpUri = Environment.GetEnvironmentVariable("AXIAM_AMQP_URI") ?? "amqps://guest:guest@localhost:5671";
     byte[] signingKey = Convert.FromHexString(Environment.GetEnvironmentVariable("AXIAM_AMQP_SIGNING_KEY_HEX") ?? "00");
 
     // The handler is invoked ONLY after Hmac.Verify succeeds — it never sees an
