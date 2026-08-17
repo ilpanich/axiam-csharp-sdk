@@ -614,8 +614,13 @@ using Axiam.Sdk.Core;
 using Axiam.Sdk.Reactor;
 using RabbitMQ.Client;
 
-// §8b: amqps:// only — HMAC gives authenticity, not confidentiality.
-var factory = new ConnectionFactory { Uri = new Uri("amqps://broker.internal:5671") };
+// §8b: build the factory through ReactorConnections and the transport rules hold by
+// construction — amqps:// only, TLS on, no policy error tolerated, and no argument
+// anywhere that turns any of that off. The second parameter is the broker's CA, for a
+// privately issued certificate; pass null for a publicly issued one.
+ConnectionFactory factory = ReactorConnections.CreateConnectionFactory(
+    "amqps://broker.internal:5671",
+    new X509Certificate2("/etc/axiam/broker-ca.pem"));
 await using IConnection connection = await factory.CreateConnectionAsync();
 await using IChannel channel = await connection.CreateChannelAsync();
 
@@ -635,6 +640,32 @@ await using ReactorServer server = await ReactorServer.ReactorServeAsync(new Rea
     }),
 });
 ```
+
+### Transport security (§8b)
+
+`ReactorServeOptions.Channel` takes an already-open channel, so the SDK cannot inspect how
+it was opened. §8b's requirements used to live only in that property's doc comment — "its
+connection MUST have been opened over `amqps://` with a trusted CA" — which meant a caller
+who built a `ConnectionFactory` from an `amqp://` URI got a working reactor, no warning,
+and signed-but-readable token decisions on the wire.
+
+`ReactorConnections.CreateConnectionFactory` is the enforcing path:
+
+| Parameter | Meaning |
+|---|---|
+| `amqpUri` | Must be `amqps://` (rules 1 and 5). Every other scheme is refused, and so is a URI that will not parse — a security check must fail closed on an input it cannot read. |
+| `brokerCaCertificate` | The CA behind a privately issued broker certificate (rule 2 — the common in-cluster case). Added as an extra trust anchor; the OS store still applies. |
+| `clientCertificate` | Mutual TLS (rule 3). A certificate without its private key is refused, rather than silently downgrading mTLS to ordinary TLS. |
+
+`Ssl.AcceptablePolicyErrors` is pinned to `None` and `Ssl.ServerName` is taken from the URI
+(a blank `ServerName` is how hostname verification quietly becomes nothing). There is no
+verification-skip parameter under any name (rule 4), and no loopback exception — §8b rules
+1 and 5 carry no host carve-out, and the AXIAM server is TLS-only.
+
+`AxiamAmqpConsumer.StartAsync` enforces the same scheme rule for §8 consumers.
+
+`ReactorServeOptions` still accepts any channel: enforcing at construction cannot
+retroactively constrain a channel someone else opened.
 
 ### Binding handlers per event (§22.14)
 

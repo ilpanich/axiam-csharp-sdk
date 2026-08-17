@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **`ReactorConnections` — CONTRACT.md §8b enforced rather than described.**
+  `ReactorServeOptions.Channel` takes an already-open channel, and §8b's
+  requirements travelled with it as a doc-comment sentence: "its connection MUST
+  have been opened over `amqps://` with a trusted CA". A doc-comment MUST is a
+  note to whoever reads the doc comment — a caller who built a
+  `ConnectionFactory` from an `amqp://` URI got a working reactor, no warning,
+  and signed-but-readable token decisions on the wire.
+
+  `ReactorConnections.CreateConnectionFactory(...)` refuses every scheme but
+  `amqps://` (rules 1 and 5, with no loopback exception and no pass-through for
+  an unparseable URI), accepts the broker's CA for a privately issued
+  certificate (rule 2), accepts a client certificate for mutual TLS and refuses
+  one that carries no private key (rule 3), pins `AcceptablePolicyErrors` to
+  `None`, and sets `Ssl.ServerName` from the URI — a blank `ServerName` is how
+  hostname verification quietly becomes nothing.
+
+  It is deliberately the counterpart of the Kotlin and Java helpers: SDKs should
+  not disagree about what a reactor may connect to. `ReactorServeOptions` still
+  accepts any channel, since enforcing at construction cannot retroactively
+  constrain one somebody else opened.
+
+### Changed
+
+- **BREAKING: `AxiamAmqpConsumer.StartAsync` refuses a non-`amqps://` URI.** It
+  previously accepted any scheme `ConnectionFactory` would take, including
+  plaintext `amqp://` — the same §8b gap, on the §8 consumer path. A signed
+  `AuthzRequest` still names its subject, resource and action in cleartext; HMAC
+  proves who wrote the message, it does not keep the message off the wire.
+
+  The quickstart example's default URI moves from
+  `amqp://guest:guest@localhost:5672` to `amqps://guest:guest@localhost:5671`.
+
 ## [1.0.0-alpha25] - 2026-08-16
 
 ### Added
