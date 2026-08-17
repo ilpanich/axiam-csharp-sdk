@@ -100,6 +100,17 @@ Classes
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.OnReactorEventAttribute.html">OnReactorEventAttribute</a></dt>
+      <dd><p>Declares that a method handles one reactor hook event (CONTRACT.md §22.14,
+canonical <code>reactor_handlers</code>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorConnections.html">ReactorConnections</a></dt>
+      <dd><p>Broker connections for a reactor, with CONTRACT.md §8b enforced rather than described.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorDecision.html">ReactorDecision</a></dt>
       <dd><p>What a handler decided about one event (<code>sdks/CONTRACT.md</code> §22.4).</p>
 <p>
@@ -190,6 +201,11 @@ presenting itself as the reactor equivalent for those operations. An application
 needs external input on an authorization decision writes a <b>deny grant</b>, which the
 engine evaluates in the hot path at hot-path cost.
 </p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorHandlers.html">ReactorHandlers</a></dt>
+      <dd><p>Declarative reactor handler binding — CONTRACT.md §22.14.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -302,6 +318,12 @@ not close the caller's channel or connection.
 the event name as the path template — a closed set of five values, so it cannot become a
 cardinality bomb.
 </p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Reactor.UnboundReactorEventException.html">UnboundReactorEventException</a></dt>
+      <dd><p>Thrown by a <a class="xref" href="Axiam.Sdk.Reactor.ReactorHandlers.html">ReactorHandlers</a>-composed handler for an event no handler
+was bound for (CONTRACT.md §22.14 rule 4).</p>
 </dd>
     </dl>
     <h3 id="enums">

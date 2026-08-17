@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class AuthzError | AXIAM .NET SDK </title>
+      <title>Class UnboundReactorEventException | AXIAM .NET SDK </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class AuthzError | AXIAM .NET SDK ">
+      <meta name="title" content="Class UnboundReactorEventException | AXIAM .NET SDK ">
       
-      <meta name="description" content="Authorization failure: the caller lacks permission for the requested operation (CONTRACT.md &#167;2, D-12). Always constructed via  so REST and gRPC transports cannot drift on the error taxonomy.">
+      <meta name="description" content="Thrown by a -composed handler for an event no handler was bound for (CONTRACT.md &#167;22.14 rule 4).">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha27/apiSpec/new?filename=Axiam_Sdk_Core_AuthzError.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Core.AuthzError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha27/apiSpec/new?filename=Axiam_Sdk_Reactor_UnboundReactorEventException.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Reactor.UnboundReactorEventException%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,27 +84,26 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Axiam.Sdk.Core.AuthzError">
+        <article data-uid="Axiam.Sdk.Reactor.UnboundReactorEventException">
 
 
 
-  <h1 id="Axiam_Sdk_Core_AuthzError" data-uid="Axiam.Sdk.Core.AuthzError" class="text-break">
-Class AuthzError  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Core/AuthzError.cs/#L8"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Axiam_Sdk_Reactor_UnboundReactorEventException" data-uid="Axiam.Sdk.Reactor.UnboundReactorEventException" class="text-break">
+Class UnboundReactorEventException  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Reactor/UnboundReactorEventException.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Core.html">Core</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Reactor.html">Reactor</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Authorization failure: the caller lacks permission for the requested operation
-(CONTRACT.md §2, D-12). Always constructed via <a class="xref" href="Axiam.Sdk.Core.ErrorMapper.html">ErrorMapper</a> so REST
-and gRPC transports cannot drift on the error taxonomy.</p>
+  <div class="markdown summary"><p>Thrown by a <a class="xref" href="Axiam.Sdk.Reactor.ReactorHandlers.html">ReactorHandlers</a>-composed handler for an event no handler
+was bound for (CONTRACT.md §22.14 rule 4).</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class AuthzError : Exception, ISerializable</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class UnboundReactorEventException : InvalidOperationException, ISerializable</code></pre>
   </div>
 
 
@@ -115,7 +114,9 @@ and gRPC transports cannot drift on the error taxonomy.</p>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></div>
-      <div><span class="xref">AuthzError</span></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.systemexception">SystemException</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></div>
+      <div><span class="xref">UnboundReactorEventException</span></div>
     </dd>
   </dl>
 
@@ -180,33 +181,72 @@ and gRPC transports cannot drift on the error taxonomy.</p>
 
 
 
+  <h2 id="Axiam_Sdk_Reactor_UnboundReactorEventException_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+Throwing is the point. <a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html">ReactorServer</a> publishes <em>no reply</em> for a
+handler that threw, so the registration's <code>failure_policy</code> resolves this exactly
+as §22.8 resolves a timeout. The alternative — answering <code>allow</code> — would
+answer on behalf of code that never ran, which is how an operator's
+<code>fail_closed</code> setting gets defeated from inside the library (§22.10 rule 2).
+</p>
+<p>
+An event a reactor did not register for should never arrive at all. When one does,
+the registration and the code have drifted, and letting the operator's policy resolve
+it is the answer that cannot silently weaken the operator's configuration.
+</p>
+</div>
 
 
   <h2 class="section" id="constructors">Constructors
 </h2>
 
 
-  <a id="Axiam_Sdk_Core_AuthzError__ctor_" data-uid="Axiam.Sdk.Core.AuthzError.#ctor*"></a>
+  <a id="Axiam_Sdk_Reactor_UnboundReactorEventException__ctor_" data-uid="Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor*"></a>
 
-  <h3 id="Axiam_Sdk_Core_AuthzError__ctor_System_String_" data-uid="Axiam.Sdk.Core.AuthzError.#ctor(System.String)">
-  AuthzError(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Core/AuthzError.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Reactor_UnboundReactorEventException__ctor" data-uid="Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor">
+  UnboundReactorEventException()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Reactor/UnboundReactorEventException.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Constructs a message-only <a class="xref" href="Axiam.Sdk.Core.AuthzError.html">AuthzError</a> — <a class="xref" href="Axiam.Sdk.Core.AuthzError.html#Axiam_Sdk_Core_AuthzError_Action">Action</a> and
-<a class="xref" href="Axiam.Sdk.Core.AuthzError.html#Axiam_Sdk_Core_AuthzError_ResourceId">ResourceId</a> are left null. Used when no structured 403 body was
-available to parse (e.g. gRPC <code>PERMISSION_DENIED</code>, which carries no body).</p>
+  <div class="markdown level1 summary"><p>Creates the exception with a default message.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AuthzError(string message)</code></pre>
+    <pre><code class="lang-csharp hljs">public UnboundReactorEventException()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_UnboundReactorEventException__ctor_" data-uid="Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_UnboundReactorEventException__ctor_System_String_" data-uid="Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor(System.String)">
+  UnboundReactorEventException(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Reactor/UnboundReactorEventException.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates the exception naming the unbound event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public UnboundReactorEventException(string @event)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>Describes the authorization failure (CONTRACT.md §2 MUST).</p>
+    <dt><code>event</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The wire event name no handler was bound for.</p>
 </dd>
   </dl>
 
@@ -221,32 +261,29 @@ available to parse (e.g. gRPC <code>PERMISSION_DENIED</code>, which carries no b
 
 
 
-  <a id="Axiam_Sdk_Core_AuthzError__ctor_" data-uid="Axiam.Sdk.Core.AuthzError.#ctor*"></a>
+  <a id="Axiam_Sdk_Reactor_UnboundReactorEventException__ctor_" data-uid="Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor*"></a>
 
-  <h3 id="Axiam_Sdk_Core_AuthzError__ctor_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Core.AuthzError.#ctor(System.String,System.String,System.String)">
-  AuthzError(string, string?, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Core/AuthzError.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Reactor_UnboundReactorEventException__ctor_System_String_System_Exception_" data-uid="Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor(System.String,System.Exception)">
+  UnboundReactorEventException(string, Exception)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Reactor/UnboundReactorEventException.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Constructs an <a class="xref" href="Axiam.Sdk.Core.AuthzError.html">AuthzError</a> carrying the structured <code>action</code>/
-<code>resource_id</code> fields parsed from the server's 403 <code>authorization_denied</code>
-body by <a class="xref" href="Axiam.Sdk.Core.ErrorMapper.html">ErrorMapper</a>. Either may be null — <code>action</code> when not
-known, <code>resourceId</code> when the denial was not resource-scoped.</p>
+  <div class="markdown level1 summary"><p>Creates the exception with a custom message.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AuthzError(string message, string? action, string? resourceId)</code></pre>
+    <pre><code class="lang-csharp hljs">public UnboundReactorEventException(string message, Exception innerException)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>action</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>resourceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The exception message.</p>
+</dd>
+    <dt><code>innerException</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></dt>
+    <dd><p>The cause, if any.</p>
+</dd>
   </dl>
 
 
@@ -264,57 +301,19 @@ known, <code>resourceId</code> when the denial was not resource-scoped.</p>
 </h2>
 
 
-  <a id="Axiam_Sdk_Core_AuthzError_Action_" data-uid="Axiam.Sdk.Core.AuthzError.Action*"></a>
+  <a id="Axiam_Sdk_Reactor_UnboundReactorEventException_Event_" data-uid="Axiam.Sdk.Reactor.UnboundReactorEventException.Event*"></a>
 
-  <h3 id="Axiam_Sdk_Core_AuthzError_Action" data-uid="Axiam.Sdk.Core.AuthzError.Action">
-  Action
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Core/AuthzError.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Reactor_UnboundReactorEventException_Event" data-uid="Axiam.Sdk.Reactor.UnboundReactorEventException.Event">
+  Event
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Reactor/UnboundReactorEventException.cs/#L50"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The denied action (e.g. <code>&quot;users:get&quot;</code>), when known. Populated from the
-server's structured 403 body's <code>action</code> field (CONTRACT.md §2: AuthzError
-SHOULD carry the denied action/resource_id if available). Null when the transport
-has no body to parse (gRPC <code>PERMISSION_DENIED</code>) or the field was absent.</p>
+  <div class="markdown level1 summary"><p>The event name no handler was bound for; empty when unknown.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string? Action { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="Axiam_Sdk_Core_AuthzError_ResourceId_" data-uid="Axiam.Sdk.Core.AuthzError.ResourceId*"></a>
-
-  <h3 id="Axiam_Sdk_Core_AuthzError_ResourceId" data-uid="Axiam.Sdk.Core.AuthzError.ResourceId">
-  ResourceId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Core/AuthzError.cs/#L24"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The resource UUID the denial was scoped to. Populated from the server's
-structured 403 body's <code>resource_id</code> field — present only for a
-resource-scoped denial. Null for a non-resource-scoped denial or when the
-transport has no body to parse (gRPC <code>PERMISSION_DENIED</code>).</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string? ResourceId { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Event { get; }</code></pre>
   </div>
 
 

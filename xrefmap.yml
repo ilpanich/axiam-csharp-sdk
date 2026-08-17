@@ -6609,6 +6609,82 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Reactor.FailurePolicyExtensions.ToWire
   nameWithType: FailurePolicyExtensions.ToWire
+- uid: Axiam.Sdk.Reactor.OnReactorEventAttribute
+  name: OnReactorEventAttribute
+  href: api/Axiam.Sdk.Reactor.OnReactorEventAttribute.html
+  commentId: T:Axiam.Sdk.Reactor.OnReactorEventAttribute
+  fullName: Axiam.Sdk.Reactor.OnReactorEventAttribute
+  nameWithType: OnReactorEventAttribute
+- uid: Axiam.Sdk.Reactor.OnReactorEventAttribute.#ctor(System.String)
+  name: OnReactorEventAttribute(string)
+  href: api/Axiam.Sdk.Reactor.OnReactorEventAttribute.html#Axiam_Sdk_Reactor_OnReactorEventAttribute__ctor_System_String_
+  commentId: M:Axiam.Sdk.Reactor.OnReactorEventAttribute.#ctor(System.String)
+  name.vb: New(String)
+  fullName: Axiam.Sdk.Reactor.OnReactorEventAttribute.OnReactorEventAttribute(string)
+  fullName.vb: Axiam.Sdk.Reactor.OnReactorEventAttribute.New(String)
+  nameWithType: OnReactorEventAttribute.OnReactorEventAttribute(string)
+  nameWithType.vb: OnReactorEventAttribute.New(String)
+- uid: Axiam.Sdk.Reactor.OnReactorEventAttribute.#ctor*
+  name: OnReactorEventAttribute
+  href: api/Axiam.Sdk.Reactor.OnReactorEventAttribute.html#Axiam_Sdk_Reactor_OnReactorEventAttribute__ctor_
+  commentId: Overload:Axiam.Sdk.Reactor.OnReactorEventAttribute.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Reactor.OnReactorEventAttribute.OnReactorEventAttribute
+  fullName.vb: Axiam.Sdk.Reactor.OnReactorEventAttribute.New
+  nameWithType: OnReactorEventAttribute.OnReactorEventAttribute
+  nameWithType.vb: OnReactorEventAttribute.New
+- uid: Axiam.Sdk.Reactor.OnReactorEventAttribute.Event
+  name: Event
+  href: api/Axiam.Sdk.Reactor.OnReactorEventAttribute.html#Axiam_Sdk_Reactor_OnReactorEventAttribute_Event
+  commentId: P:Axiam.Sdk.Reactor.OnReactorEventAttribute.Event
+  fullName: Axiam.Sdk.Reactor.OnReactorEventAttribute.Event
+  nameWithType: OnReactorEventAttribute.Event
+- uid: Axiam.Sdk.Reactor.OnReactorEventAttribute.Event*
+  name: Event
+  href: api/Axiam.Sdk.Reactor.OnReactorEventAttribute.html#Axiam_Sdk_Reactor_OnReactorEventAttribute_Event_
+  commentId: Overload:Axiam.Sdk.Reactor.OnReactorEventAttribute.Event
+  isSpec: "True"
+  fullName: Axiam.Sdk.Reactor.OnReactorEventAttribute.Event
+  nameWithType: OnReactorEventAttribute.Event
+- uid: Axiam.Sdk.Reactor.ReactorConnections
+  name: ReactorConnections
+  href: api/Axiam.Sdk.Reactor.ReactorConnections.html
+  commentId: T:Axiam.Sdk.Reactor.ReactorConnections
+  fullName: Axiam.Sdk.Reactor.ReactorConnections
+  nameWithType: ReactorConnections
+- uid: Axiam.Sdk.Reactor.ReactorConnections.CreateConnectionFactory(System.String,System.Security.Cryptography.X509Certificates.X509Certificate2,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  name: CreateConnectionFactory(string, X509Certificate2?, X509Certificate2?)
+  href: api/Axiam.Sdk.Reactor.ReactorConnections.html#Axiam_Sdk_Reactor_ReactorConnections_CreateConnectionFactory_System_String_System_Security_Cryptography_X509Certificates_X509Certificate2_System_Security_Cryptography_X509Certificates_X509Certificate2_
+  commentId: M:Axiam.Sdk.Reactor.ReactorConnections.CreateConnectionFactory(System.String,System.Security.Cryptography.X509Certificates.X509Certificate2,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  name.vb: CreateConnectionFactory(String, X509Certificate2, X509Certificate2)
+  fullName: Axiam.Sdk.Reactor.ReactorConnections.CreateConnectionFactory(string, System.Security.Cryptography.X509Certificates.X509Certificate2?, System.Security.Cryptography.X509Certificates.X509Certificate2?)
+  fullName.vb: Axiam.Sdk.Reactor.ReactorConnections.CreateConnectionFactory(String, System.Security.Cryptography.X509Certificates.X509Certificate2, System.Security.Cryptography.X509Certificates.X509Certificate2)
+  nameWithType: ReactorConnections.CreateConnectionFactory(string, X509Certificate2?, X509Certificate2?)
+  nameWithType.vb: ReactorConnections.CreateConnectionFactory(String, X509Certificate2, X509Certificate2)
+- uid: Axiam.Sdk.Reactor.ReactorConnections.CreateConnectionFactory*
+  name: CreateConnectionFactory
+  href: api/Axiam.Sdk.Reactor.ReactorConnections.html#Axiam_Sdk_Reactor_ReactorConnections_CreateConnectionFactory_
+  commentId: Overload:Axiam.Sdk.Reactor.ReactorConnections.CreateConnectionFactory
+  isSpec: "True"
+  fullName: Axiam.Sdk.Reactor.ReactorConnections.CreateConnectionFactory
+  nameWithType: ReactorConnections.CreateConnectionFactory
+- uid: Axiam.Sdk.Reactor.ReactorConnections.RequireAmqps(System.String)
+  name: RequireAmqps(string)
+  href: api/Axiam.Sdk.Reactor.ReactorConnections.html#Axiam_Sdk_Reactor_ReactorConnections_RequireAmqps_System_String_
+  commentId: M:Axiam.Sdk.Reactor.ReactorConnections.RequireAmqps(System.String)
+  name.vb: RequireAmqps(String)
+  fullName: Axiam.Sdk.Reactor.ReactorConnections.RequireAmqps(string)
+  fullName.vb: Axiam.Sdk.Reactor.ReactorConnections.RequireAmqps(String)
+  nameWithType: ReactorConnections.RequireAmqps(string)
+  nameWithType.vb: ReactorConnections.RequireAmqps(String)
+- uid: Axiam.Sdk.Reactor.ReactorConnections.RequireAmqps*
+  name: RequireAmqps
+  href: api/Axiam.Sdk.Reactor.ReactorConnections.html#Axiam_Sdk_Reactor_ReactorConnections_RequireAmqps_
+  commentId: Overload:Axiam.Sdk.Reactor.ReactorConnections.RequireAmqps
+  isSpec: "True"
+  fullName: Axiam.Sdk.Reactor.ReactorConnections.RequireAmqps
+  nameWithType: ReactorConnections.RequireAmqps
 - uid: Axiam.Sdk.Reactor.ReactorDecision
   name: ReactorDecision
   href: api/Axiam.Sdk.Reactor.ReactorDecision.html
@@ -7104,6 +7180,89 @@ references:
   commentId: T:Axiam.Sdk.Reactor.ReactorHandler
   fullName: Axiam.Sdk.Reactor.ReactorHandler
   nameWithType: ReactorHandler
+- uid: Axiam.Sdk.Reactor.ReactorHandlers
+  name: ReactorHandlers
+  href: api/Axiam.Sdk.Reactor.ReactorHandlers.html
+  commentId: T:Axiam.Sdk.Reactor.ReactorHandlers
+  fullName: Axiam.Sdk.Reactor.ReactorHandlers
+  nameWithType: ReactorHandlers
+- uid: Axiam.Sdk.Reactor.ReactorHandlers.#ctor
+  name: ReactorHandlers()
+  href: api/Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers__ctor
+  commentId: M:Axiam.Sdk.Reactor.ReactorHandlers.#ctor
+  name.vb: New()
+  fullName: Axiam.Sdk.Reactor.ReactorHandlers.ReactorHandlers()
+  fullName.vb: Axiam.Sdk.Reactor.ReactorHandlers.New()
+  nameWithType: ReactorHandlers.ReactorHandlers()
+  nameWithType.vb: ReactorHandlers.New()
+- uid: Axiam.Sdk.Reactor.ReactorHandlers.#ctor*
+  name: ReactorHandlers
+  href: api/Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers__ctor_
+  commentId: Overload:Axiam.Sdk.Reactor.ReactorHandlers.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Reactor.ReactorHandlers.ReactorHandlers
+  fullName.vb: Axiam.Sdk.Reactor.ReactorHandlers.New
+  nameWithType: ReactorHandlers.ReactorHandlers
+  nameWithType.vb: ReactorHandlers.New
+- uid: Axiam.Sdk.Reactor.ReactorHandlers.Bind(System.String,Axiam.Sdk.Reactor.ReactorHandler)
+  name: Bind(string, ReactorHandler)
+  href: api/Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Bind_System_String_Axiam_Sdk_Reactor_ReactorHandler_
+  commentId: M:Axiam.Sdk.Reactor.ReactorHandlers.Bind(System.String,Axiam.Sdk.Reactor.ReactorHandler)
+  name.vb: Bind(String, ReactorHandler)
+  fullName: Axiam.Sdk.Reactor.ReactorHandlers.Bind(string, Axiam.Sdk.Reactor.ReactorHandler)
+  fullName.vb: Axiam.Sdk.Reactor.ReactorHandlers.Bind(String, Axiam.Sdk.Reactor.ReactorHandler)
+  nameWithType: ReactorHandlers.Bind(string, ReactorHandler)
+  nameWithType.vb: ReactorHandlers.Bind(String, ReactorHandler)
+- uid: Axiam.Sdk.Reactor.ReactorHandlers.Bind*
+  name: Bind
+  href: api/Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Bind_
+  commentId: Overload:Axiam.Sdk.Reactor.ReactorHandlers.Bind
+  isSpec: "True"
+  fullName: Axiam.Sdk.Reactor.ReactorHandlers.Bind
+  nameWithType: ReactorHandlers.Bind
+- uid: Axiam.Sdk.Reactor.ReactorHandlers.Events
+  name: Events()
+  href: api/Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Events
+  commentId: M:Axiam.Sdk.Reactor.ReactorHandlers.Events
+  fullName: Axiam.Sdk.Reactor.ReactorHandlers.Events()
+  nameWithType: ReactorHandlers.Events()
+- uid: Axiam.Sdk.Reactor.ReactorHandlers.Events*
+  name: Events
+  href: api/Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Events_
+  commentId: Overload:Axiam.Sdk.Reactor.ReactorHandlers.Events
+  isSpec: "True"
+  fullName: Axiam.Sdk.Reactor.ReactorHandlers.Events
+  nameWithType: ReactorHandlers.Events
+- uid: Axiam.Sdk.Reactor.ReactorHandlers.Handler
+  name: Handler()
+  href: api/Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Handler
+  commentId: M:Axiam.Sdk.Reactor.ReactorHandlers.Handler
+  fullName: Axiam.Sdk.Reactor.ReactorHandlers.Handler()
+  nameWithType: ReactorHandlers.Handler()
+- uid: Axiam.Sdk.Reactor.ReactorHandlers.Handler*
+  name: Handler
+  href: api/Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Handler_
+  commentId: Overload:Axiam.Sdk.Reactor.ReactorHandlers.Handler
+  isSpec: "True"
+  fullName: Axiam.Sdk.Reactor.ReactorHandlers.Handler
+  nameWithType: ReactorHandlers.Handler
+- uid: Axiam.Sdk.Reactor.ReactorHandlers.Of(System.Object[])
+  name: Of(params object[])
+  href: api/Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Of_System_Object___
+  commentId: M:Axiam.Sdk.Reactor.ReactorHandlers.Of(System.Object[])
+  name.vb: Of(ParamArray Object())
+  fullName: Axiam.Sdk.Reactor.ReactorHandlers.Of(params object[])
+  fullName.vb: Axiam.Sdk.Reactor.ReactorHandlers.Of(ParamArray Object())
+  nameWithType: ReactorHandlers.Of(params object[])
+  nameWithType.vb: ReactorHandlers.Of(ParamArray Object())
+- uid: Axiam.Sdk.Reactor.ReactorHandlers.Of*
+  name: Of
+  href: api/Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Of_
+  commentId: Overload:Axiam.Sdk.Reactor.ReactorHandlers.Of
+  isSpec: "True"
+  fullName: Axiam.Sdk.Reactor.ReactorHandlers.Of
+  nameWithType: ReactorHandlers.Of
 - uid: Axiam.Sdk.Reactor.ReactorObserver
   name: ReactorObserver
   href: api/Axiam.Sdk.Reactor.ReactorObserver.html
@@ -7576,6 +7735,62 @@ references:
   commentId: F:Axiam.Sdk.Reactor.ReactorServer.TelemetryOperation
   fullName: Axiam.Sdk.Reactor.ReactorServer.TelemetryOperation
   nameWithType: ReactorServer.TelemetryOperation
+- uid: Axiam.Sdk.Reactor.UnboundReactorEventException
+  name: UnboundReactorEventException
+  href: api/Axiam.Sdk.Reactor.UnboundReactorEventException.html
+  commentId: T:Axiam.Sdk.Reactor.UnboundReactorEventException
+  fullName: Axiam.Sdk.Reactor.UnboundReactorEventException
+  nameWithType: UnboundReactorEventException
+- uid: Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor
+  name: UnboundReactorEventException()
+  href: api/Axiam.Sdk.Reactor.UnboundReactorEventException.html#Axiam_Sdk_Reactor_UnboundReactorEventException__ctor
+  commentId: M:Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor
+  name.vb: New()
+  fullName: Axiam.Sdk.Reactor.UnboundReactorEventException.UnboundReactorEventException()
+  fullName.vb: Axiam.Sdk.Reactor.UnboundReactorEventException.New()
+  nameWithType: UnboundReactorEventException.UnboundReactorEventException()
+  nameWithType.vb: UnboundReactorEventException.New()
+- uid: Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor(System.String)
+  name: UnboundReactorEventException(string)
+  href: api/Axiam.Sdk.Reactor.UnboundReactorEventException.html#Axiam_Sdk_Reactor_UnboundReactorEventException__ctor_System_String_
+  commentId: M:Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor(System.String)
+  name.vb: New(String)
+  fullName: Axiam.Sdk.Reactor.UnboundReactorEventException.UnboundReactorEventException(string)
+  fullName.vb: Axiam.Sdk.Reactor.UnboundReactorEventException.New(String)
+  nameWithType: UnboundReactorEventException.UnboundReactorEventException(string)
+  nameWithType.vb: UnboundReactorEventException.New(String)
+- uid: Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor(System.String,System.Exception)
+  name: UnboundReactorEventException(string, Exception)
+  href: api/Axiam.Sdk.Reactor.UnboundReactorEventException.html#Axiam_Sdk_Reactor_UnboundReactorEventException__ctor_System_String_System_Exception_
+  commentId: M:Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor(System.String,System.Exception)
+  name.vb: New(String, Exception)
+  fullName: Axiam.Sdk.Reactor.UnboundReactorEventException.UnboundReactorEventException(string, System.Exception)
+  fullName.vb: Axiam.Sdk.Reactor.UnboundReactorEventException.New(String, System.Exception)
+  nameWithType: UnboundReactorEventException.UnboundReactorEventException(string, Exception)
+  nameWithType.vb: UnboundReactorEventException.New(String, Exception)
+- uid: Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor*
+  name: UnboundReactorEventException
+  href: api/Axiam.Sdk.Reactor.UnboundReactorEventException.html#Axiam_Sdk_Reactor_UnboundReactorEventException__ctor_
+  commentId: Overload:Axiam.Sdk.Reactor.UnboundReactorEventException.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Reactor.UnboundReactorEventException.UnboundReactorEventException
+  fullName.vb: Axiam.Sdk.Reactor.UnboundReactorEventException.New
+  nameWithType: UnboundReactorEventException.UnboundReactorEventException
+  nameWithType.vb: UnboundReactorEventException.New
+- uid: Axiam.Sdk.Reactor.UnboundReactorEventException.Event
+  name: Event
+  href: api/Axiam.Sdk.Reactor.UnboundReactorEventException.html#Axiam_Sdk_Reactor_UnboundReactorEventException_Event
+  commentId: P:Axiam.Sdk.Reactor.UnboundReactorEventException.Event
+  fullName: Axiam.Sdk.Reactor.UnboundReactorEventException.Event
+  nameWithType: UnboundReactorEventException.Event
+- uid: Axiam.Sdk.Reactor.UnboundReactorEventException.Event*
+  name: Event
+  href: api/Axiam.Sdk.Reactor.UnboundReactorEventException.html#Axiam_Sdk_Reactor_UnboundReactorEventException_Event_
+  commentId: Overload:Axiam.Sdk.Reactor.UnboundReactorEventException.Event
+  isSpec: "True"
+  fullName: Axiam.Sdk.Reactor.UnboundReactorEventException.Event
+  nameWithType: UnboundReactorEventException.Event
 - uid: Axiam.Sdk.Rest
   name: Axiam.Sdk.Rest
   href: api/Axiam.Sdk.Rest.html

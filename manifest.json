@@ -1356,6 +1356,34 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.OnReactorEventAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.OnReactorEventAttribute.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.OnReactorEventAttribute",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.OnReactorEventAttribute.yml\" sourcestartlinenumber=\"1\">Declares that a method handles one reactor hook event (CONTRACT.md §22.14,\ncanonical <code>reactor_handlers</code>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorConnections.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorConnections.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorConnections",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorConnections.yml\" sourcestartlinenumber=\"1\">Broker connections for a reactor, with CONTRACT.md §8b enforced rather than described.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorDecision.Allow.yml",
       "output": {
         ".html": {
@@ -1468,6 +1496,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorHandlers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.ReactorHandlers.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.ReactorHandlers",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorHandlers.yml\" sourcestartlinenumber=\"1\">Declarative reactor handler binding — CONTRACT.md §22.14.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Reactor.ReactorObserver.yml",
       "output": {
         ".html": {
@@ -1521,6 +1563,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Reactor.ReactorServer",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.ReactorServer.yml\" sourcestartlinenumber=\"1\">The §22 reactor runtime: consume the server-declared queue, verify, decide, sign,\nreply.</p>\n<p>\nStart one with <xref href=\"Axiam.Sdk.Reactor.ReactorServer.ReactorServeAsync(Axiam.Sdk.Reactor.ReactorServeOptions%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>. Per delivery it:\n</p>\n<ol><li>rejects <code>key_version &lt; 2</code> — before the signature is even\ncomputed;</li><li>verifies the HMAC over the canonical bytes (§22.2:\n<code>hmac_signature</code> present and <code>null</code>);</li><li>checks <code>issued_at</code> against the freshness window, in both\ndirections;</li><li>checks <code>nonce</code> against a seen-set;</li><li><em>then</em> decodes the payload and calls the handler;</li><li>signs the reply with the same tenant subkey and publishes it to the\ndelivery's <code>reply_to</code> queue, echoing <code>correlation_id</code> both as an AMQP property\nand — the one the server authenticates — inside the signed body.</li></ol>\n<p>\nA runtime that hands an unverified payload to user code has already lost: the handler\nwill act on it, and \"we checked afterwards\" is not a check. The handler call site here\nis structurally unreachable until every gate above has passed.\n</p>\n<p><b>Four rules this class holds to</b></p>\n<ol><li><b>It declares no topology.</b> No <code>ExchangeDeclareAsync</code>, no\n<code>QueueDeclareAsync</code>, no <code>QueueBindAsync</code>, anywhere — asserted by a test\nagainst the AMQP client's own recorded invocations. Actors consume; the server\ndeclares.</li><li><b>It fails closed on its own errors.</b> A handler that throws, or a\nbody it cannot decode, produces <em>no reply</em> — never a synthesized <code>allow</code>.\nAnswering <code>allow</code> on behalf of a handler that crashed would override the operator's\n<code>fail_closed</code> setting from inside the library.</li><li><b>It does not filter a patch.</b> A handler's patch goes on the wire\nexactly as returned, forbidden keys included.</li><li><b>It honours <code>timeout_ms</code>.</b> When the handler returns after\nthe window closed, the reply is abandoned rather than published late — the server has\nalready stopped listening.</li></ol>\n<p><b>Interaction with §16, §18 and §19</b></p>\n<p>\n<b>§16 does not apply to a reply.</b> A correlation is single-use and a late reply\nis discarded, so re-sending one could only add load to a server that has already moved\non. The recovery mechanism for an unanswered dispatch is the registration's\n<code>failure_policy</code>, on the server, not a retry here. Connection recovery is the\nRabbitMQ client's, left on exactly as <xref href=\"Axiam.Sdk.Amqp.AxiamAmqpConsumer\" data-throw-if-not-resolved=\"false\"></xref> leaves it.\n</p>\n<p>\n<b>§18:</b> <xref href=\"Axiam.Sdk.Reactor.ReactorServer.DisposeAsync\" data-throw-if-not-resolved=\"false\"></xref> is idempotent, cancels the consumer so no new\ndelivery starts, drains what is in flight up to the configured grace period, and does\nnot close the caller's channel or connection.\n</p>\n<p>\n<b>§19:</b> one <code>RequestStart</code>/<code>RequestEnd</code> pair per dispatched event, with\nthe event name as the path template — a closed set of five values, so it cannot become a\ncardinality bomb.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Reactor.UnboundReactorEventException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Reactor.UnboundReactorEventException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Reactor.UnboundReactorEventException",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Reactor.UnboundReactorEventException.yml\" sourcestartlinenumber=\"1\">Thrown by a <xref href=\"Axiam.Sdk.Reactor.ReactorHandlers\" data-throw-if-not-resolved=\"false\"></xref>-composed handler for an event no handler\nwas bound for (CONTRACT.md §22.14 rule 4).</p>\n"
     },
     {
       "type": "ManagedReference",

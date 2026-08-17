@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ReactorHandlers | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ReactorHandlers | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Declarative reactor handler binding — CONTRACT.md &#167;22.14.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha27/apiSpec/new?filename=Axiam_Sdk_Reactor_ReactorHandlers.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Reactor.ReactorHandlers%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Reactor.ReactorHandlers">
+
+
+
+  <h1 id="Axiam_Sdk_Reactor_ReactorHandlers" data-uid="Axiam.Sdk.Reactor.ReactorHandlers" class="text-break">
+Class ReactorHandlers  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Reactor/ReactorHandlers.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Reactor.html">Reactor</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Declarative reactor handler binding — CONTRACT.md §22.14.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class ReactorHandlers</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ReactorHandlers</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Reactor_ReactorHandlers_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html">ReactorServer</a> takes <strong>one</strong> <a class="xref" href="Axiam.Sdk.Reactor.ReactorHandler.html">ReactorHandler</a>
+from an event to one answer, which is the right shape for the wire and the wrong
+shape for the code. A reactor registered for three events opens with a
+<code>switch (e.Event)</code>, and that switch carries two defects.
+</p>
+<p>
+The first is cheap: a misspelled event name is a valid string, matches no case, and
+is discovered as an event that never fires. The second is not. It is the
+<code>default</code> arm, which is almost always written <code>ReactorDecision.Allowed()</code>.
+That answers on behalf of code that never ran — the defect §22.10 rule 2 forbids
+the <em>runtime</em> from committing, relocated into user code where the rule does
+not reach it. An operator who set <code>fail_closed</code> on a registration has it
+defeated by a <code>default</code> arm in a file they never read.
+</p>
+<p>
+This class is the declarative form, in the spirit of §11's
+<code>[AxiamAccess]</code>: attribute the methods, collect them, hand the result to
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html">ReactorServer</a>. It is <strong>pure sugar</strong> (§22.14 rule 1):
+what <a class="xref" href="Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Handler">Handler()</a> returns is exactly the <a class="xref" href="Axiam.Sdk.Reactor.ReactorHandler.html">ReactorHandler</a>
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html">ReactorServer</a> already accepts. It opens nothing, verifies nothing,
+signs nothing, and does not filter a patch (§22.10 rule 3).
+</p>
+<p>
+Instances are built once at startup and are not thread-safe to mutate; the delegate
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Handler">Handler()</a> returns snapshots its bindings and is safe for concurrent
+dispatch.
+</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorHandlers__ctor_" data-uid="Axiam.Sdk.Reactor.ReactorHandlers.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorHandlers__ctor" data-uid="Axiam.Sdk.Reactor.ReactorHandlers.#ctor">
+  ReactorHandlers()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Reactor/ReactorHandlers.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates an empty binding table. Use <a class="xref" href="Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Bind_System_String_Axiam_Sdk_Reactor_ReactorHandler_">Bind(string, ReactorHandler)</a> or <a class="xref" href="Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Of_System_Object___">Of(params object[])</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ReactorHandlers()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorHandlers_Bind_" data-uid="Axiam.Sdk.Reactor.ReactorHandlers.Bind*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorHandlers_Bind_System_String_Axiam_Sdk_Reactor_ReactorHandler_" data-uid="Axiam.Sdk.Reactor.ReactorHandlers.Bind(System.String,Axiam.Sdk.Reactor.ReactorHandler)">
+  Bind(string, ReactorHandler)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Reactor/ReactorHandlers.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Binds <code class="paramref">handler</code> to <code class="paramref">event</code> without an attribute.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ReactorHandlers Bind(string @event, ReactorHandler handler)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>event</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A §22.5 registry event name.</p>
+</dd>
+    <dt><code>handler</code> <a class="xref" href="Axiam.Sdk.Reactor.ReactorHandler.html">ReactorHandler</a></dt>
+    <dd><p>The decision function for that event.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorHandlers.html">ReactorHandlers</a></dt>
+    <dd><p>This instance, for chaining.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Reactor_ReactorHandlers_Bind_System_String_Axiam_Sdk_Reactor_ReactorHandler__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The lambda-shaped half of the same thing. Governed by every §22.14 rule
+identically.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">handler</code> is
+<a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p><code class="paramref">event</code> is outside the
+§22.5 registry — which is how §22.7's hot-path operations are refused,
+since they are in no registry row — or is already bound. A second binding is a
+mistake, never a silent overwrite: which of the two runs is not visible from
+either one.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorHandlers_Events_" data-uid="Axiam.Sdk.Reactor.ReactorHandlers.Events*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorHandlers_Events" data-uid="Axiam.Sdk.Reactor.ReactorHandlers.Events">
+  Events()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Reactor/ReactorHandlers.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The bound event names, in binding order.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;string&gt; Events()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>A read-only list of wire event names.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Reactor_ReactorHandlers_Events_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Pass them to <a class="xref" href="Axiam.Sdk.Reactor.ReactorEvents.html#Axiam_Sdk_Reactor_ReactorEvents_DefaultFailurePolicyFor_System_Collections_Generic_IEnumerable_System_String__">DefaultFailurePolicyFor(IEnumerable&lt;string&gt;)</a> to see what an
+unreachable reactor costs — the strictest default among them (§22.8) —
+derived from the code that handles the events rather than from a restatement of
+the registration.</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorHandlers_Handler_" data-uid="Axiam.Sdk.Reactor.ReactorHandlers.Handler*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorHandlers_Handler" data-uid="Axiam.Sdk.Reactor.ReactorHandlers.Handler">
+  Handler()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Reactor/ReactorHandlers.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Composes the bindings into the <a class="xref" href="Axiam.Sdk.Reactor.ReactorHandler.html">ReactorHandler</a>
+<a class="xref" href="Axiam.Sdk.Reactor.ReactorServer.html">ReactorServer</a> accepts.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ReactorHandler Handler()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorHandler.html">ReactorHandler</a></dt>
+    <dd><p>The composed handler.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Nothing is bound. A reactor that
+handles nothing would consume its queue and abstain from every event, which looks
+exactly like an outage.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_Reactor_ReactorHandlers_Of_" data-uid="Axiam.Sdk.Reactor.ReactorHandlers.Of*"></a>
+
+  <h3 id="Axiam_Sdk_Reactor_ReactorHandlers_Of_System_Object___" data-uid="Axiam.Sdk.Reactor.ReactorHandlers.Of(System.Object[])">
+  Of(params object[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha27/Axiam.Sdk/Reactor/ReactorHandlers.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Collects every <a class="xref" href="Axiam.Sdk.Reactor.OnReactorEventAttribute.html">OnReactorEventAttribute</a>-decorated public method on
+<code class="paramref">sources</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ReactorHandlers Of(params object[] sources)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>sources</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>[]</dt>
+    <dd><p>Objects whose public methods carry the attribute.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Reactor.ReactorHandlers.html">ReactorHandlers</a></dt>
+    <dd><p>The collected bindings.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Reactor_ReactorHandlers_Of_System_Object____remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Methods are invoked against the instance they were found on, so a class-based
+reactor keeps its state and its constructor-injected collaborators. Reflection
+does not define an order for <code>GetMethods()</code>, so methods are bound in
+event-name order and <a class="xref" href="Axiam.Sdk.Reactor.ReactorHandlers.html#Axiam_Sdk_Reactor_ReactorHandlers_Events">Events()</a> is reproducible between runs.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">sources</code> or an element
+is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>An event name is outside the §22.5
+registry (which is also how §22.7's hot-path operations are refused), an
+event is already bound, or a decorated method's signature is not
+<code>Task&lt;ReactorDecision&gt;(ReactorEvent, CancellationToken)</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
