@@ -45,6 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Re-vendor `openapi.json` at 1.0.0-alpha27 — the copy was pinned at alpha26 and
+  failing the cross-repo artifact-drift gate
 - **BREAKING: `AxiamAmqpConsumer.StartAsync` refuses a non-`amqps://` URI.** It
   previously accepted any scheme `ConnectionFactory` would take, including
   plaintext `amqp://` — the same §8b gap, on the §8 consumer path. A signed
