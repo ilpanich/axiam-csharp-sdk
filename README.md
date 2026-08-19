@@ -17,12 +17,12 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §22 (including §6.1 mTLS
+This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §22, §23 (including §6.1 mTLS
 client certificates, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, the §12 OIDC/SSO
 relying-party helpers, contract 1.4, the §13 webhook signature verifier, T-145, and the §22 reactor
-runtime, contract 1.19).
+runtime, contract 1.19, and the §23 SRP-6a login path, contract 1.24).
 
-§12.7, §14, §15 and §22 are named rather than folded into the range because they landed
+§12.7, §14, §15, §22 and §23 are named rather than folded into the range because they landed
 after this SDK already claimed §1–§13: widening the range silently would turn a
 statement that was true when written into a different claim without anyone editing it.
 
@@ -817,6 +817,129 @@ never in a reconnect diagnostic. The `payload`, `patch`, `reason` and `decision`
 and stay readable (a handler that cannot inspect the event cannot decide anything), but they are
 tenant business data: this SDK never logs the payload, and neither should you at `Information` level.
 The `nonce`, `correlation_id` and `hmac_signature` are not secrets and may be logged for correlation.
+
+## Secure Remote Password (`Axiam.Sdk.Srp`, CONTRACT.md §23)
+
+`LoginSrpAsync` proves the password to the server without the password — or anything from
+which it can be cheaply recovered — ever crossing the wire. The server stores a **verifier**
+`v = g^x mod N` instead of a password hash, and what travels is `A` and a proof, neither of
+which is useful without that verifier.
+
+```csharp
+char[] password = ReadPassword();
+try
+{
+    LoginResult result = await client.LoginSrpAsync("alice", password);
+}
+finally
+{
+    Array.Clear(password);
+}
+```
+
+It takes the same arguments as `LoginAsync` and returns the same `LoginResult`, MFA branch
+included, so switching a tenant to SRP needs no change to how the result is handled. A
+runnable end-to-end example, including the fallback and the enrolment call, is in
+[`examples/SrpLogin`](examples/SrpLogin).
+
+### What this buys, and what it does not
+
+SRP closes holes TLS 1.3 does not:
+
+- a TLS-terminating reverse proxy, ingress controller, CDN or service mesh sees every
+  plaintext password today; under SRP it sees `A` and `M1`;
+- an accidental request-body log, a heap dump or a crash reporter can no longer capture a
+  plaintext password, because the server never has one;
+- a leaked verifier database still costs a full KDF evaluation per candidate password,
+  exactly as a leaked Argon2id database does.
+
+It does **not** protect against a compromised AXIAM server, and this SDK does not claim it
+does.
+
+### Tenant policy, and the two errors that are not credential failures
+
+`srp_mode` is an organization baseline a tenant may tighten:
+
+| mode | `LoginAsync` | `LoginSrpAsync` |
+|---|---|---|
+| `disabled` (default) | works | `NetworkError` — the endpoint answers `404` |
+| `optional` | works | works |
+| `required` | `AuthzError` (`srp_required`) | works |
+
+Both of those are deliberately **not** `AuthError`:
+
+- `NetworkError` from `LoginSrpAsync` means *this tenant does not offer SRP*, a property of
+  the tenant rather than of any user. Fall back to `LoginAsync`.
+- `AuthzError` from `LoginAsync` means *this tenant refuses password login*. The credentials
+  were never examined. Showing "invalid username or password" to a user whose password is
+  perfectly good is the failure this mapping exists to prevent.
+
+`required` refuses **every** principal in the tenant, not only the enrolled ones. Splitting
+the response on whether an account has a verifier would turn `/auth/login` into an enumeration
+oracle costing one junk password per name. It also means `required` locks out anyone not yet
+enrolled: a verifier needs the plaintext password, and a stored Argon2id hash is not
+invertible, so nobody can be enrolled retroactively. Operators turn it on last, after a
+password-reset campaign.
+
+### Enrolment
+
+The server cannot compute a verifier, so any request that **sets** a password has to carry
+one. `SrpEnrollment` produces the `srp` object for `POST /api/v1/users`,
+`/auth/password/change`, `/auth/reset/confirm` and `/admin/bootstrap`:
+
+```csharp
+SrpEnrollment enrolment = client.SrpEnrollment(
+    "alice",                                          // the USERNAME, not an email
+    newPassword,
+    parameters: new SrpKdfParams(SrpKdfParams.Argon2id, 0));  // 0 = AXIAM's own costs
+body["srp"] = enrolment.ToWire();
+```
+
+The identity must be the account's **username**: `x` is derived over `identity ":" password`
+using the identity the challenge endpoint hands back, so a verifier enrolled against an email
+address can never satisfy a login. For the same reason, **renaming a user invalidates their
+verifier** — the server clears it, and the user re-enrols at their next password change.
+
+The salt is 32 fresh bytes from `RandomNumberGenerator` on every call.
+
+### Cost
+
+`LoginSrpAsync` runs the tenant's KDF: Argon2id at 19 MiB and t=2 by default, which is tens to
+hundreds of milliseconds of CPU plus that memory, per login attempt. That cost is the point —
+it is what makes a leaked verifier no cheaper to attack than a leaked Argon2id hash. The KDF
+runs on the thread pool rather than the caller's thread, which is the difference between a
+slow login and a blocked UI or request pipeline; size the pool accordingly.
+
+### Cryptographic parameters
+
+RFC 5054 Appendix A groups `rfc5054_2048`, `rfc5054_3072` and `rfc5054_4096` (the AXIAM
+default), embedded as constants. A modulus is **never** accepted from the server — a
+server-supplied `N` is a server-supplied trapdoor — and a group this SDK does not recognise is
+refused rather than guessed.
+
+Two deliberate divergences from RFC 5054, both AXIAM-wide:
+
+- `H` is **SHA-256**, not SHA-1.
+- `x` is a **memory-hard KDF output**, not a bare hash. RFC 5054's bare-hash `x` would make a
+  leaked verifier *cheaper* to attack offline than the Argon2id hashes AXIAM already stores,
+  which would make adopting SRP a net regression at rest.
+
+PBKDF2-HMAC-SHA256 comes from `Rfc2898DeriveBytes`. Argon2id comes from
+**BouncyCastle.Cryptography**, already a dependency of this SDK — the BCL ships no Argon2 at
+all, and §23.3 rule 4 makes both KDFs mandatory for login.
+
+### Zeroization
+
+`LoginSrpAsync` and `SrpEnrollment` take the password as a `char[]` so the caller can clear
+it, and clear every copy they make of it along with the joined `identity ":" password` bytes,
+`x`, `S` and `K`. They cannot clear the caller's array — do that yourself, in a `finally`. If
+your password arrives as a `string` (from a JSON body, say), it is already immutable and
+already copied; the `char[]` signature is honest about where this SDK's reach ends rather than
+implying a guarantee it cannot keep.
+
+`SrpAvailable()` always reports `true` here. It is in the API because §23.1 puts it in every
+SDK's vocabulary, and in PHP — the one language with no native bignum — it genuinely answers
+`false`.
 
 ## Grpc.Tools exception
 

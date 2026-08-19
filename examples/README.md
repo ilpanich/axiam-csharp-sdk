@@ -75,6 +75,38 @@ the API shape even when run without a reachable server — the login/authz phase
 print a "skipped" message rather than crashing when no server is reachable, and
 the AMQP phase does the same when no broker is reachable.
 
+## SrpLogin/
+
+A console app demonstrating the SRP-6a login path (CONTRACT.md §23) via the public
+`Axiam.Sdk` surface:
+
+1. `LoginSrpAsync` — the password never crosses the wire, and the result is the SAME
+   `LoginResult` as `LoginAsync`, MFA branch included
+2. The fallback: a tenant with `srp_mode: disabled` answers `404`, which surfaces as
+   `NetworkError` and **not** as a credential failure
+3. `srp_required` — a `403` from `/auth/login`, which is an `AuthzError`, because the
+   credentials were never examined
+4. `SrpEnrollment` — the verifier the server cannot compute for itself
+
+**Build:**
+
+```bash
+dotnet build examples/SrpLogin -c Release
+```
+
+**Run against a live AXIAM server with SRP enabled (manual-only):**
+
+```bash
+export AXIAM_BASE_URL=https://your-axiam-instance
+export AXIAM_TENANT_ID=your-tenant-slug
+export AXIAM_ORG_SLUG=your-org-slug
+export AXIAM_USERNAME=alice                # the USERNAME, not an email — see the README
+export AXIAM_PASSWORD='your-password'
+export AXIAM_TOTP_CODE=123456              # only needed if MFA is enabled
+export AXIAM_NEW_PASSWORD='next-password'  # optional: exercises SrpEnrollment
+dotnet run --project examples/SrpLogin
+```
+
 ## CI
 
 Both examples are built by `.github/workflows/sdk-ci-csharp.yml` on every

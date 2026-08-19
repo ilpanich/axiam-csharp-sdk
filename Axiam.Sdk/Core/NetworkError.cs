@@ -139,6 +139,26 @@ public sealed class NetworkError : Exception
     }
 
     /// <summary>
+    /// Builds a <see cref="NetworkError"/> from a message this SDK authored, with no wire
+    /// response and no caught exception behind it.
+    /// </summary>
+    /// <remarks>
+    /// For client-side capability gaps — a group or KDF this build cannot perform
+    /// (CONTRACT.md &#167;23.3 rule 4, &#167;23.4), or a tenant whose SRP is switched off.
+    /// &#167;2 assigns those to <see cref="NetworkError"/> rather than
+    /// <see cref="AuthError"/>: they are facts about the client or the tenant, not about the
+    /// credentials, and reporting one as a credential failure would send a user off to reset
+    /// a password that works.
+    /// <para>
+    /// The message is this SDK's own literal text and never echoes a response or a header,
+    /// so the redaction discipline the rest of this class enforces has nothing to strip.
+    /// </para>
+    /// </remarks>
+    /// <param name="message">The SDK-authored explanation.</param>
+    /// <returns>The error, ready to throw.</returns>
+    public static NetworkError FromMessage(string message) => new(message, inner: null);
+
+    /// <summary>
     /// Builds a <see cref="NetworkError"/> from a caught exception (e.g. a socket/TLS/DNS
     /// failure). The exception's own <see cref="Exception.Message"/> is defensively
     /// regex-sanitized before being folded into the resulting message, in case a
