@@ -111,11 +111,19 @@ public sealed class RegistrationExchange : OpaqueExchange
         ArgumentNullException.ThrowIfNull(password);
         ArgumentNullException.ThrowIfNull(ksf);
 
-        nint state = Consume();
-        byte[] encoded = OpaqueProtocol.NulTerminatedUtf8(password);
+        // The key-stretching handle is built BEFORE the state is spent, and the
+        // order is load-bearing. Build() refuses an unrecognised function or an
+        // out-of-band cost, and if the state had already been taken out of its
+        // one-shot slot by then it could never be freed -- a leaked Rust
+        // allocation per refused attempt, which is once per login against a
+        // misconfigured tenant. Built first, a refusal leaves the exchange
+        // intact: Dispose() and the finalizer still release it, and a caller
+        // who fixes the parameters can retry.
         nint ksfHandle = ksf.Build(Library);
+        byte[] encoded = OpaqueProtocol.NulTerminatedUtf8(password);
         try
         {
+            nint state = Consume();
             nint record = Library.RegistrationFinish(
                 state, encoded, OpaqueProtocol.NulTerminatedAscii(registrationResponse), ksfHandle);
 
@@ -178,11 +186,19 @@ public sealed class LoginExchange : OpaqueExchange
         ArgumentNullException.ThrowIfNull(password);
         ArgumentNullException.ThrowIfNull(ksf);
 
-        nint state = Consume();
-        byte[] encoded = OpaqueProtocol.NulTerminatedUtf8(password);
+        // The key-stretching handle is built BEFORE the state is spent, and the
+        // order is load-bearing. Build() refuses an unrecognised function or an
+        // out-of-band cost, and if the state had already been taken out of its
+        // one-shot slot by then it could never be freed -- a leaked Rust
+        // allocation per refused attempt, which is once per login against a
+        // misconfigured tenant. Built first, a refusal leaves the exchange
+        // intact: Dispose() and the finalizer still release it, and a caller
+        // who fixes the parameters can retry.
         nint ksfHandle = ksf.Build(Library);
+        byte[] encoded = OpaqueProtocol.NulTerminatedUtf8(password);
         try
         {
+            nint state = Consume();
             nint ke3 = Library.LoginFinish(
                 state, encoded, OpaqueProtocol.NulTerminatedAscii(ke2), ksfHandle);
 
