@@ -312,16 +312,40 @@ public sealed class OpaqueBindingTests : IDisposable
     }
 
     [Fact]
-    public void ARefusedKsfSpendsTheHandleSoARetryFailsLoudly()
+    public void ARefusedKsfLeavesTheExchangeIntact()
     {
+        // The key-stretching handle is built before the state is spent, so a
+        // refusal is not a spent exchange. Built the other way round the state
+        // would be out of its one-shot slot and unreachable by Dispose() or the
+        // finalizer -- a leaked Rust allocation per refused attempt, which is
+        // once per login against a misconfigured tenant.
         using RegistrationExchange exchange = OpaqueProtocol.StartRegistration(Correct);
         KsfParams unknown = KsfParams.FromWire(JsonDocument.Parse("""{"ksf":"bcrypt"}""").RootElement);
+
         Assert.Throws<NetworkError>(() => exchange.Finish(Correct, RegistrationResponse, unknown));
-        // The handle was taken before the ksf was built, so it is spent. Retrying
-        // must fail rather than pass a dangling pointer across the ABI.
-        NetworkError second = Assert.Throws<NetworkError>(
-            () => exchange.Finish(Correct, RegistrationResponse, Argon2id()));
-        Assert.Contains("already been completed", second.Message, StringComparison.Ordinal);
+
+        Assert.Equal(1, _lib.StatesAlive);
+        Assert.Equal(0, _lib.KsfAlive);
+
+        // And a caller who fixes the parameters can simply carry on.
+        string record = exchange.Finish(Correct, RegistrationResponse, Argon2id());
+        Assert.StartsWith("record:", FakeOpaqueNative.Decode(record), StringComparison.Ordinal);
+        Assert.Equal(0, _lib.StatesAlive);
+    }
+
+    [Fact]
+    public void AnOutOfBandCostAlsoLeavesTheExchangeIntact()
+    {
+        using LoginExchange exchange = OpaqueProtocol.StartLogin(Correct);
+        KsfParams tooSmall = KsfParams.FromWire(JsonDocument.Parse(
+            """{"ksf":"argon2id","memory_kib":4096,"iterations":2,"parallelism":1}""").RootElement);
+
+        Assert.Throws<NetworkError>(() => exchange.Finish(Correct, Ke2, tooSmall));
+
+        Assert.Equal(1, _lib.StatesAlive);
+        // Nothing spent it, so the ordinary release path still works.
+        exchange.Dispose();
+        Assert.Equal(0, _lib.StatesAlive);
     }
 
     [Fact]
