@@ -5,7 +5,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>SrpLogin</RootNamespace>
+    <RootNamespace>OpaqueLogin</RootNamespace>
     <!-- Example only — demonstrates the SDK's public surface; never packed or
          published as a NuGet package. -->
     <IsPackable>false</IsPackable>

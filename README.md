@@ -20,7 +20,7 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §22, §23 (including §6.1 mTLS
 client certificates, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, the §12 OIDC/SSO
 relying-party helpers, contract 1.4, the §13 webhook signature verifier, T-145, and the §22 reactor
-runtime, contract 1.19, and the §23 SRP-6a login path, contract 1.24).
+runtime, contract 1.19, and the §23 OPAQUE (RFC 9807) login path, contract 1.26).
 
 §12.7, §14, §15, §22 and §23 are named rather than folded into the range because they landed
 after this SDK already claimed §1–§13: widening the range silently would turn a
@@ -818,18 +818,18 @@ and stay readable (a handler that cannot inspect the event cannot decide anythin
 tenant business data: this SDK never logs the payload, and neither should you at `Information` level.
 The `nonce`, `correlation_id` and `hmac_signature` are not secrets and may be logged for correlation.
 
-## Secure Remote Password (`Axiam.Sdk.Srp`, CONTRACT.md §23)
+## OPAQUE (`Axiam.Sdk.Opaque`, CONTRACT.md §23)
 
-`LoginSrpAsync` proves the password to the server without the password — or anything from
-which it can be cheaply recovered — ever crossing the wire. The server stores a **verifier**
-`v = g^x mod N` instead of a password hash, and what travels is `A` and a proof, neither of
-which is useful without that verifier.
+`LoginOpaqueAsync` proves the password to the server without the password — or anything from
+which it can be cheaply recovered — ever crossing the wire. The server stores a **registration
+record** sealed under a tenant-wide oblivious PRF seed, and what travels is a blinded group
+element and a MAC, neither useful without both.
 
 ```csharp
 char[] password = ReadPassword();
 try
 {
-    LoginResult result = await client.LoginSrpAsync("alice", password);
+    LoginResult result = await client.LoginOpaqueAsync("alice", password);
 }
 finally
 {
@@ -838,108 +838,163 @@ finally
 ```
 
 It takes the same arguments as `LoginAsync` and returns the same `LoginResult`, MFA branch
-included, so switching a tenant to SRP needs no change to how the result is handled. A
-runnable end-to-end example, including the fallback and the enrolment call, is in
-[`examples/SrpLogin`](examples/SrpLogin).
+included, so switching a tenant to OPAQUE needs no change to how the result is handled. A
+runnable example, including the fallback and the enrolment call, is in
+[`examples/OpaqueLogin`](examples/OpaqueLogin).
+
+Unlike the SRP-6a it replaces, there is no separate server-proof step and nothing has been
+dropped: RFC 9807's AKE authenticates the server during the handshake, so opening `KE2` **is**
+the proof that it holds the record. The old contract had to mandate an `M2` check in capitals
+because skipping it kept only half the protocol; there is now nothing to skip.
+
+### The protocol is not implemented here
+
+CONTRACT.md §23.1 forbids an SDK from writing its own OPAQUE. SRP-6a was arithmetic every
+language can express, which is why `Axiam.Sdk.Srp` existed at ~670 lines of modular
+exponentiation. OPAQUE is not: it needs an oblivious PRF, `hash_to_curve`,
+`expand_message_xmd`, an envelope construction and a three-message AKE, and eleven independent
+implementations of that is eleven chances to be subtly and silently wrong in a way that still
+interoperates until it does not.
+
+`Axiam.Sdk.Opaque` therefore contains **no cryptography**. It is a P/Invoke binding to
+`libaxiam_opaque_ffi`, the same implementation the AXIAM server links, plus the ownership
+bookkeeping a binding has to get right.
+
+### Installing
+
+Nothing to add to your `.csproj` — .NET's own P/Invoke needs no package. What you do need is
+the shared library: a Rust `cdylib` published as a per-platform asset on the
+[axiam release page](https://github.com/ilpanich/axiam/releases), not a NuGet package, because
+there is no cross-language registry to put it on.
+
+Put it where the runtime probes for native libraries (alongside the application assembly is the
+usual answer), or point at it:
+
+```bash
+export AXIAM_OPAQUE_LIBRARY=/opt/axiam/libaxiam_opaque_ffi.so
+```
+
+Ask before you need it:
+
+```csharp
+LoginResult result = client.OpaqueAvailable()
+    ? await client.LoginOpaqueAsync(user, password)
+    : await client.LoginAsync(user, new string(password));
+```
+
+Unlike the `SrpAvailable()` it replaces — hard-coded `true` on .NET because `BigInteger` and
+BouncyCastle are always there — this can genuinely answer `false`. It reports rather than
+throwing, so an application chooses the password path up front instead of discovering the gap
+mid-exchange. It also *calls into* the library rather than merely finding it: a .NET P/Invoke
+does not resolve until first use, so a probe that only located the file would report "present"
+and then throw at login.
 
 ### What this buys, and what it does not
 
-SRP closes holes TLS 1.3 does not:
+OPAQUE closes holes TLS 1.3 does not:
 
-- a TLS-terminating reverse proxy, ingress controller, CDN or service mesh sees every
-  plaintext password today; under SRP it sees `A` and `M1`;
+- a TLS-terminating reverse proxy, ingress controller, CDN or service mesh sees every plaintext
+  password today; under OPAQUE it sees `KE1` and `KE3`;
 - an accidental request-body log, a heap dump or a crash reporter can no longer capture a
   plaintext password, because the server never has one;
-- a leaked verifier database still costs a full KDF evaluation per candidate password,
-  exactly as a leaked Argon2id database does.
+- **a stolen record database is not offline-crackable on its own.** This is the substantive
+  gain over SRP: cracking a record also requires the tenant's OPRF seed, which is AES-256-GCM
+  encrypted at rest under a key the database does not hold.
 
 It does **not** protect against a compromised AXIAM server, and this SDK does not claim it
 does.
 
-### Tenant policy, and the two errors that are not credential failures
+### Tenant policy, and the errors that are not credential failures
 
-`srp_mode` is an organization baseline a tenant may tighten:
+`opaque_mode` is an organization baseline a tenant may tighten:
 
-| mode | `LoginAsync` | `LoginSrpAsync` |
+| mode | `LoginAsync` | `LoginOpaqueAsync` |
 |---|---|---|
 | `disabled` (default) | works | `NetworkError` — the endpoint answers `404` |
 | `optional` | works | works |
-| `required` | `AuthzError` (`srp_required`) | works |
+| `required` | `AuthzError` | works |
 
-Both of those are deliberately **not** `AuthError`:
+Which exception you get is most of what this SDK owns on this path:
 
-- `NetworkError` from `LoginSrpAsync` means *this tenant does not offer SRP*, a property of
-  the tenant rather than of any user. Fall back to `LoginAsync`.
-- `AuthzError` from `LoginAsync` means *this tenant refuses password login*. The credentials
-  were never examined. Showing "invalid username or password" to a user whose password is
-  perfectly good is the failure this mapping exists to prevent.
+| condition | exception | why |
+|---|---|---|
+| tenant has OPAQUE disabled | `NetworkError` | a property of the tenant, not of any user — fall back to `LoginAsync` |
+| shared library absent | `NetworkError` | a deployment fact, raised before any request is sent |
+| server named a KSF this build cannot perform | `NetworkError` | a configuration problem; substituting one would surface as a wrong password |
+| `/start` response missing `ke2` | `NetworkError` | malformed response |
+| envelope did not open / `KE2` did not verify | `AuthError` | the **whole** of the credential check |
+| tenant refuses password login (`LoginAsync`) | `AuthzError` | the credentials were never examined |
 
-`required` refuses **every** principal in the tenant, not only the enrolled ones. Splitting
-the response on whether an account has a verifier would turn `/auth/login` into an enumeration
-oracle costing one junk password per name. It also means `required` locks out anyone not yet
-enrolled: a verifier needs the plaintext password, and a stored Argon2id hash is not
-invertible, so nobody can be enrolled retroactively. Operators turn it on last, after a
-password-reset campaign.
+That `AuthError` covers both halves of the mutual authentication: a wrong password, an account
+that does not exist, and a server that does not hold the record are indistinguishable by
+design. **Nothing is sent to `login/finish` in that case** (§23.4 rule 7), and you must not
+retry over `LoginAsync` — that hands the plaintext to an endpoint that just failed to prove it
+holds the record.
+
+`required` refuses **every** principal in the tenant, not only the enrolled ones. Splitting the
+response on whether an account has a record would turn `/auth/login` into an enumeration oracle
+costing one junk password per name. It also means `required` locks out anyone not yet enrolled:
+a record needs the plaintext password, and a stored Argon2id hash is not invertible, so nobody
+can be enrolled retroactively. Operators turn it on last, after a password-reset campaign.
 
 ### Enrolment
 
-The server cannot compute a verifier, so any request that **sets** a password has to carry
-one. `SrpEnrollment` produces the `srp` object for `POST /api/v1/users`,
+The server cannot build a registration record, so any request that **sets** a password has to
+carry one. `OpaqueEnrollmentAsync` produces the `opaque` object for `POST /api/v1/users`,
 `/auth/password/change`, `/auth/reset/confirm` and `/admin/bootstrap`:
 
 ```csharp
-SrpEnrollment enrolment = client.SrpEnrollment(
-    "alice",                                          // the USERNAME, not an email
-    newPassword,
-    parameters: new SrpKdfParams(SrpKdfParams.Argon2id, 0));  // 0 = AXIAM's own costs
-body["srp"] = enrolment.ToWire();
+OpaqueEnrollment enrolment = await client.OpaqueEnrollmentAsync(newPassword);
+body["opaque"] = enrolment.ToWire();
 ```
 
-The identity must be the account's **username**: `x` is derived over `identity ":" password`
-using the identity the challenge endpoint hands back, so a verifier enrolled against an email
-address can never satisfy a login. For the same reason, **renaming a user invalidates their
-verifier** — the server clears it, and the user re-enrols at their next password change.
+Note the parameters that are gone. There is no `identity`: the SRP version required the
+account's **username**, an email there produced a verifier no login could ever satisfy — and
+renaming a user invalidated their verifier outright. A record binds to a credential identifier
+the server chooses, so neither is true any more. There is no `group` or `SrpKdfParams` either:
+those come from the `register/start` response, so a caller cannot pick a cost the server will
+not honour.
 
-The salt is 32 fresh bytes from `RandomNumberGenerator` on every call.
+Unlike `SrpEnrollment` this is asynchronous and performs network I/O — one `register/start`
+round trip. The envelope is sealed under the server's oblivious PRF, so there is no offline
+computation that produces a valid record.
 
 ### Cost
 
-`LoginSrpAsync` runs the tenant's KDF: Argon2id at 19 MiB and t=2 by default, which is tens to
-hundreds of milliseconds of CPU plus that memory, per login attempt. That cost is the point —
-it is what makes a leaked verifier no cheaper to attack than a leaked Argon2id hash. The KDF
-runs on the thread pool rather than the caller's thread, which is the difference between a
-slow login and a blocked UI or request pipeline; size the pool accordingly.
+`LoginOpaqueAsync` runs the tenant's key-stretching function: Argon2id at 19 MiB and t=2 by
+default, which is tens to hundreds of milliseconds of CPU plus that memory, per login attempt.
+That cost is the point — it is what makes a stolen record expensive to attack even by someone
+holding the OPRF seed. It runs on the thread pool rather than the caller's thread, but it is
+still CPU that has to come from somewhere: size your pool and request timeouts accordingly. It
+is not a cost `LoginAsync` has.
 
 ### Cryptographic parameters
 
-RFC 5054 Appendix A groups `rfc5054_2048`, `rfc5054_3072` and `rfc5054_4096` (the AXIAM
-default), embedded as constants. A modulus is **never** accepted from the server — a
-server-supplied `N` is a server-supplied trapdoor — and a group this SDK does not recognise is
-refused rather than guessed.
+The ciphersuite is `OPAQUE-3DH` over **ristretto255** with **SHA-512**, HKDF-SHA-512 and
+HMAC-SHA-512, fixed AXIAM-wide. It is not negotiated and not read from the server: a client
+that accepted a suite from the endpoint it is authenticating would be accepting a downgrade.
 
-Two deliberate divergences from RFC 5054, both AXIAM-wide:
-
-- `H` is **SHA-256**, not SHA-1.
-- `x` is a **memory-hard KDF output**, not a bare hash. RFC 5054's bare-hash `x` would make a
-  leaked verifier *cheaper* to attack offline than the Argon2id hashes AXIAM already stores,
-  which would make adopting SRP a net regression at rest.
-
-PBKDF2-HMAC-SHA256 comes from `Rfc2898DeriveBytes`. Argon2id comes from
-**BouncyCastle.Cryptography**, already a dependency of this SDK — the BCL ships no Argon2 at
-all, and §23.3 rule 4 makes both KDFs mandatory for login.
+The key-stretching function *is* the server's to name, per exchange, and is honoured as given
+rather than cached or defaulted — a credential enrolled under one cost keeps working after a
+tenant raises its policy. `argon2id` and `scrypt` are accepted; anything else is refused rather
+than substituted. Costs outside the bands this SDK will act on (`memory_kib` 8 MiB–1 GiB,
+`iterations` 1–10, `parallelism` 1–16, `log_n` 14–20, `r`/`p` 1–16) are refused too: a server
+is trusted to name its own policy, not to name a cost that would wedge every device an account
+owns.
 
 ### Zeroization
 
-`LoginSrpAsync` and `SrpEnrollment` take the password as a `char[]` so the caller can clear
-it, and clear every copy they make of it along with the joined `identity ":" password` bytes,
-`x`, `S` and `K`. They cannot clear the caller's array — do that yourself, in a `finally`. If
-your password arrives as a `string` (from a JSON body, say), it is already immutable and
-already copied; the `char[]` signature is honest about where this SDK's reach ends rather than
-implying a guarantee it cannot keep.
+`LoginOpaqueAsync` and `OpaqueEnrollmentAsync` take the password as a `char[]` so the caller
+can clear it, and clear every copy they make of it — including the UTF-8 bytes handed across
+the ABI. They cannot clear the caller's array; do that yourself, in a `finally`. If your
+password arrives as a `string` (from a JSON body, say), it is already immutable and already
+copied; the `char[]` signature is honest about where this SDK's reach ends rather than implying
+a guarantee it cannot keep.
 
-`SrpAvailable()` always reports `true` here. It is in the API because §23.1 puts it in every
-SDK's vocabulary, and in PHP — the one language with no native bignum — it genuinely answers
-`false`.
+The password crosses the ABI as **UTF-8**, explicitly, never through default string
+marshalling. A password that encoded differently under a different platform default would
+derive a randomized password no AXIAM server agrees with, and would surface as a wrong password
+on that machine only.
 
 ## Grpc.Tools exception
 
