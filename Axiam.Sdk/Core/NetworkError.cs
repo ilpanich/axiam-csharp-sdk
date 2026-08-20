@@ -143,8 +143,9 @@ public sealed class NetworkError : Exception
     /// response and no caught exception behind it.
     /// </summary>
     /// <remarks>
-    /// For client-side capability gaps — a group or KDF this build cannot perform
-    /// (CONTRACT.md &#167;23.3 rule 4, &#167;23.4), or a tenant whose SRP is switched off.
+    /// For client-side capability gaps — a key-stretching function this build cannot perform
+    /// (CONTRACT.md &#167;23.4), an absent <c>libaxiam_opaque_ffi</c>, or a tenant whose
+    /// OPAQUE is switched off.
     /// &#167;2 assigns those to <see cref="NetworkError"/> rather than
     /// <see cref="AuthError"/>: they are facts about the client or the tenant, not about the
     /// credentials, and reporting one as a credential failure would send a user off to reset

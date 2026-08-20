@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- OPAQUE (RFC 9807) login and enrolment (CONTRACT §23): `LoginOpaqueAsync`,
+  `OpaqueEnrollmentAsync` and `OpaqueAvailable` on `AxiamClient`, plus the new
+  `Axiam.Sdk.Opaque` namespace.
+- `examples/OpaqueLogin`.
+
+### Removed
+
+- **BREAKING** — SRP-6a. `LoginSrpAsync`, `SrpEnrollment`, `SrpAvailable`, the
+  whole `Axiam.Sdk.Srp` namespace, `srp-test-vectors.json` and
+  `examples/SrpLogin` are all gone. AXIAM's server-side SRP endpoints are removed
+  in the same release, so keeping the client would leave methods that only ever
+  return 404.
+
+### Changed
+
+- **BREAKING** — the OPAQUE protocol is NOT implemented in this SDK. CONTRACT
+  §23.1 forbids it, so the client half is a P/Invoke binding to
+  `libaxiam_opaque_ffi` — the same implementation the AXIAM server links,
+  published as a per-platform asset on the axiam release page rather than on
+  NuGet. There is nothing to add to your `.csproj`; put the library where the
+  runtime probes for native libraries, or set `AXIAM_OPAQUE_LIBRARY`.
+- **BREAKING** — `OpaqueAvailable()` can genuinely return `false`, where
+  `SrpAvailable()` was hard-coded `true` on .NET. Code that ignored
+  `SrpAvailable()` must not ignore this one. It calls into the library rather
+  than merely locating it: a .NET P/Invoke does not resolve until first use, so a
+  probe that only found the file would report "present" and then throw at login.
+- **BREAKING** — enrolment is now asynchronous and performs network I/O, where
+  `SrpEnrollment` was a pure computation: OPAQUE's envelope is sealed under the
+  server's oblivious PRF, so there is no offline computation that produces a
+  valid record. It also drops the `identity`, `group` and KDF parameters — a
+  record binds to a credential identifier the server chooses, and the
+  key-stretching parameters are the server's. As a consequence, **renaming a
+  user no longer invalidates their credential**.
+- Failure taxonomy for the OPAQUE path: a tenant with OPAQUE disabled, an absent
+  library, and a key-stretching function this build cannot perform are all
+  `NetworkError` (a caller can fall back, or an operator can act); everything
+  else is `AuthError` and must NOT be retried over `LoginAsync` (§23.4 rule 7).
+
 ## [1.0.0-alpha31] - 2026-08-20
 
 ### Changed

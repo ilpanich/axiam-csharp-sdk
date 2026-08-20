@@ -75,36 +75,48 @@ the API shape even when run without a reachable server — the login/authz phase
 print a "skipped" message rather than crashing when no server is reachable, and
 the AMQP phase does the same when no broker is reachable.
 
-## SrpLogin/
+## OpaqueLogin/
 
-A console app demonstrating the SRP-6a login path (CONTRACT.md §23) via the public
-`Axiam.Sdk` surface:
+A console app demonstrating the OPAQUE (RFC 9807) login path (CONTRACT.md §23) via
+the public `Axiam.Sdk` surface:
 
-1. `LoginSrpAsync` — the password never crosses the wire, and the result is the SAME
-   `LoginResult` as `LoginAsync`, MFA branch included
-2. The fallback: a tenant with `srp_mode: disabled` answers `404`, which surfaces as
-   `NetworkError` and **not** as a credential failure
-3. `srp_required` — a `403` from `/auth/login`, which is an `AuthzError`, because the
-   credentials were never examined
-4. `SrpEnrollment` — the verifier the server cannot compute for itself
+1. `OpaqueAvailable()` — asked **first**, and genuinely able to answer `false`: the
+   protocol comes from `libaxiam_opaque_ffi`, a per-platform release asset rather
+   than a NuGet package
+2. `LoginOpaqueAsync` — the password never crosses the wire, and the result is the
+   SAME `LoginResult` as `LoginAsync`, MFA branch included
+3. The fallback: a tenant with `opaque_mode: disabled` answers `404`, which surfaces
+   as `NetworkError` and **not** as a credential failure. Any *other* `NetworkError`
+   propagates — a key-stretching function this build cannot perform is a
+   configuration problem, and falling back would hide it while sending the plaintext
+   anyway
+4. `AuthError` — the envelope did not open. That is the whole of the credential
+   check, and it must **not** be retried over `LoginAsync`
+5. `opaque_mode: required` — a `403` from `/auth/login`, which is an `AuthzError`,
+   because the credentials were never examined
+6. `OpaqueEnrollmentAsync` — the record the server cannot build for itself. Note it
+   takes no identity, group or KDF: a record binds to a credential identifier the
+   server chooses, and the key-stretching parameters come from `register/start`
 
 **Build:**
 
 ```bash
-dotnet build examples/SrpLogin -c Release
+dotnet build examples/OpaqueLogin -c Release
 ```
 
-**Run against a live AXIAM server with SRP enabled (manual-only):**
+**Run against a live AXIAM server with OPAQUE enabled (manual-only):**
 
 ```bash
 export AXIAM_BASE_URL=https://your-axiam-instance
 export AXIAM_TENANT_ID=your-tenant-slug
 export AXIAM_ORG_SLUG=your-org-slug
-export AXIAM_USERNAME=alice                # the USERNAME, not an email — see the README
+export AXIAM_USERNAME=alice
 export AXIAM_PASSWORD='your-password'
 export AXIAM_TOTP_CODE=123456              # only needed if MFA is enabled
-export AXIAM_NEW_PASSWORD='next-password'  # optional: exercises SrpEnrollment
-dotnet run --project examples/SrpLogin
+export AXIAM_NEW_PASSWORD='next-password'  # optional: exercises OpaqueEnrollmentAsync
+# the shared library, unless it is already where the runtime probes:
+export AXIAM_OPAQUE_LIBRARY=/opt/axiam/libaxiam_opaque_ffi.so
+dotnet run --project examples/OpaqueLogin
 ```
 
 ## CI

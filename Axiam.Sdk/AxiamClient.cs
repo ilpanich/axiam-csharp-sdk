@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +8,7 @@ using Axiam.Sdk.Auth;
 using Axiam.Sdk.Core;
 using Axiam.Sdk.Options;
 using Axiam.Sdk.Rest;
-using Axiam.Sdk.Srp;
+using Axiam.Sdk.Opaque;
 
 namespace Axiam.Sdk;
 
@@ -31,8 +30,9 @@ public sealed partial class AxiamClient : IDisposable
 {
     private const string LoginPath = "/api/v1/auth/login";
     private const string MfaVerifyPath = "/api/v1/auth/mfa/verify";
-    private const string SrpChallengePath = "/api/v1/auth/srp/challenge";
-    private const string SrpVerifyPath = "/api/v1/auth/srp/verify";
+    private const string OpaqueRegisterStartPath = "/api/v1/auth/opaque/register/start";
+    private const string OpaqueLoginStartPath = "/api/v1/auth/opaque/login/start";
+    private const string OpaqueLoginFinishPath = "/api/v1/auth/opaque/login/finish";
     private const string RefreshPath = "/api/v1/auth/refresh";
     private const string LogoutPath = "/api/v1/auth/logout";
 
@@ -403,43 +403,43 @@ public sealed partial class AxiamClient : IDisposable
     // ------------------------------------------------------------------
 
     // ------------------------------------------------------------------
-    // Secure Remote Password (CONTRACT.md §23)
+    // OPAQUE, RFC 9807 (CONTRACT.md §23)
     // ------------------------------------------------------------------
 
     /// <summary>
-    /// The group an SRP exchange opens in before the server has named one.
-    /// </summary>
-    /// <remarks>
-    /// The challenge response names the group, but <c>A</c> has to be computed <i>before</i>
-    /// that response exists — so the first attempt guesses, and the exchange restarts if the
-    /// server names another. The guess is AXIAM's own default, so the restart is the
-    /// exceptional path rather than the normal one.
-    /// </remarks>
-    private static readonly SrpGroup SrpOpeningGroup = SrpGroup.FromWire(SrpGroup.DefaultWireName);
-
-    /// <summary>
-    /// <c>POST /api/v1/auth/srp/challenge</c> followed by <c>/verify</c> — SRP-6a login
-    /// (CONTRACT.md &#167;23).
+    /// <c>POST /api/v1/auth/opaque/login/start</c> followed by <c>/finish</c> — OPAQUE login,
+    /// RFC 9807 (CONTRACT.md &#167;23).
     /// </summary>
     /// <remarks>
     /// <para>
     /// A sibling of <see cref="LoginAsync"/>, not a replacement. It takes the same arguments
     /// and returns the same <see cref="LoginResult"/>, MFA branch included, so an application
-    /// can switch a tenant to SRP without touching its own code (&#167;23.1).
+    /// can switch a tenant to OPAQUE without touching its own code.
     /// </para>
     /// <para>
-    /// <b>What this does that <see cref="LoginAsync"/> does not.</b> The password never
-    /// leaves this process. What crosses the wire is <c>A</c> and a proof, neither of which is
-    /// useful without the account's verifier — so a TLS-terminating proxy, an accidentally
-    /// verbose request log, or a heap dump on the server cannot capture a plaintext password,
-    /// because the server never has one. It does <b>not</b> protect against a compromised
-    /// AXIAM server.
+    /// <b>What this does that <see cref="LoginAsync"/> does not.</b> The password never leaves
+    /// this process. What crosses the wire is a blinded group element and a MAC, neither useful
+    /// without the account's registration record <i>and</i> the tenant's OPRF seed — so a
+    /// TLS-terminating proxy, an accidentally verbose request log, or a heap dump on the server
+    /// cannot capture a plaintext password, because the server never has one. It also means a
+    /// stolen record database is not offline-crackable on its own, which is the pre-computation
+    /// resistance SRP could not offer. It does <b>not</b> protect against a compromised AXIAM
+    /// server.
     /// </para>
     /// <para>
-    /// <b>Cost.</b> Runs the tenant's KDF: Argon2id at 19 MiB and t=2 by default, which is
-    /// tens to hundreds of milliseconds of CPU plus that memory, per attempt. That cost is the
-    /// point — it is what makes a leaked verifier no cheaper to attack than a leaked Argon2id
-    /// hash. The KDF runs on the thread pool rather than the caller's thread.
+    /// <b>One round trip, and no server-proof step.</b> SRP had to guess a group before the
+    /// server named one and restart the exchange if it guessed wrong; <c>KE1</c> does not
+    /// depend on the key-stretching function. And where the old &#167;23.3 rule 6 had to
+    /// mandate an <c>M2</c> check in capitals — because skipping it kept only half the protocol
+    /// — RFC 9807's AKE authenticates the server during the handshake, so opening <c>KE2</c>
+    /// <i>is</i> the proof that it holds the record. There is nothing left to skip.
+    /// </para>
+    /// <para>
+    /// <b>Cost.</b> Runs the tenant's key-stretching function: Argon2id at 19 MiB and t=2 by
+    /// default, which is tens to hundreds of milliseconds of CPU plus that memory, per attempt.
+    /// That cost is the point — it is what makes a stolen record expensive to attack even by
+    /// someone holding the OPRF seed. It runs on the thread pool rather than the caller's
+    /// thread.
     /// </para>
     /// </remarks>
     /// <param name="usernameOrEmail">The username or email to authenticate with.</param>
@@ -450,17 +450,21 @@ public sealed partial class AxiamClient : IDisposable
     /// <param name="cancellationToken">Cancels the exchange.</param>
     /// <returns>The login outcome, exactly as <see cref="LoginAsync"/> returns it.</returns>
     /// <exception cref="NetworkError">
-    /// The tenant has SRP disabled (the endpoint answers <c>404</c> — a property of the
-    /// tenant, not of any user), or this SDK cannot perform the group or KDF the server named.
-    /// Deliberately not <see cref="AuthError"/>: reporting a client capability gap as a
-    /// credential failure would send a user off to reset a password that works.
+    /// The tenant has OPAQUE disabled (the endpoint answers <c>404</c> — a property of the
+    /// tenant, not of any user), <c>libaxiam_opaque_ffi</c> is not installed, or the server
+    /// names a key-stretching function this SDK cannot ask for. Deliberately not
+    /// <see cref="AuthError"/>: reporting a configuration gap as a credential failure would
+    /// send a user off to reset a password that works, and would stop a caller falling back to
+    /// <see cref="LoginAsync"/>.
     /// </exception>
     /// <exception cref="AuthError">
-    /// A wrong password, or a server whose <c>M2</c> does not verify — in the latter case no
-    /// session is returned and the response's cookies are discarded, because an endpoint that
-    /// cannot prove it holds the verifier is not the server it claims to be.
+    /// A wrong password, an account that does not exist, or a server that does not hold the
+    /// record — indistinguishable by design. <b>Nothing is sent to <c>login/finish</c> in that
+    /// case</b> (&#167;23.4 rule 7), and a caller must not retry over
+    /// <see cref="LoginAsync"/>: that hands the plaintext to an endpoint that just failed to
+    /// prove itself.
     /// </exception>
-    public async Task<LoginResult> LoginSrpAsync(
+    public async Task<LoginResult> LoginOpaqueAsync(
         string usernameOrEmail,
         char[] password,
         CancellationToken cancellationToken = default)
@@ -470,215 +474,158 @@ public sealed partial class AxiamClient : IDisposable
         ArgumentException.ThrowIfNullOrWhiteSpace(usernameOrEmail);
         ArgumentNullException.ThrowIfNull(password);
 
-        SrpClientSession session = SrpClientSession.Begin(SrpOpeningGroup);
-        JsonElement challenge = await SrpChallengeAsync(usernameOrEmail, session, cancellationToken)
-            .ConfigureAwait(false);
+        using LoginExchange exchange = OpaqueProtocol.StartLogin(password);
 
-        // The server named a group other than the one A was computed in, so the exchange has
-        // to restart. Rare — the opening guess is AXIAM's own default — but a tenant on a
-        // narrower group must work rather than fail.
-        SrpGroup named = SrpGroup.FromWire(ReadString(challenge, "group"));
-        if (named.WireName != session.Group.WireName)
+        var startBody = new Dictionary<string, object?>
         {
-            session = SrpClientSession.Begin(named);
-            challenge = await SrpChallengeAsync(usernameOrEmail, session, cancellationToken)
-                .ConfigureAwait(false);
+            ["username_or_email"] = usernameOrEmail,
+            ["ke1"] = exchange.Ke1,
+        };
+        ApplyTenantAndOrgFields(startBody);
+
+        JsonElement started = await OpaqueStartAsync(
+            OpaqueLoginStartPath, startBody, "login/start", cancellationToken).ConfigureAwait(false);
+
+        if (!started.TryGetProperty("ke2", out JsonElement ke2El) ||
+            ke2El.ValueKind != JsonValueKind.String)
+        {
+            throw NetworkError.FromMessage("OPAQUE: login/start returned no `ke2`");
         }
 
-        // challenge.identity, never usernameOrEmail (§23.3 rule 2).
-        string identity = ReadString(challenge, "identity");
-        string saltHex = ReadString(challenge, "salt");
-        string serverPublicHex = ReadString(challenge, "b_pub");
-        SrpKdfParams kdf = SrpKdfParams.FromChallenge(challenge);
-        SrpClientSession pinned = session;
+        string ke2 = ke2El.GetString() ?? string.Empty;
+        KsfParams ksf = KsfParams.FromWire(started);
 
-        // The KDF is deliberately CPU- and memory-bound; keeping it off the caller's thread is
-        // the difference between a slow login and a stalled UI or request pipeline.
-        SrpProofs proofs = await Task.Run(
-            () =>
-            {
-                byte[] x = SrpMath.DeriveX(identity, password, SrpMath.FromHex(saltHex, "salt"), kdf);
-                try
-                {
-                    return pinned.Finish(identity, saltHex, serverPublicHex, x);
-                }
-                finally
-                {
-                    CryptographicOperations.ZeroMemory(x);
-                }
-            },
-            cancellationToken).ConfigureAwait(false);
+        // The key-stretching function is deliberately CPU- and memory-bound; keeping it off the
+        // caller's thread is the difference between a slow login and a stalled UI or request
+        // pipeline.
+        string ke3 = await Task.Run(
+            () => exchange.Finish(password, ke2, ksf), cancellationToken).ConfigureAwait(false);
 
-        var body = new Dictionary<string, object?>
+        var finishBody = new Dictionary<string, object?>
         {
-            ["srp_session"] = ReadString(challenge, "srp_session"),
-            ["client_proof"] = proofs.ClientProof,
+            ["opaque_session"] = ReadString(started, "opaque_session"),
+            ["ke3"] = ke3,
         };
 
-        using HttpResponseMessage response = await PostJsonAsync(SrpVerifyPath, body, cancellationToken)
-            .ConfigureAwait(false);
+        using HttpResponseMessage response =
+            await PostJsonAsync(OpaqueLoginFinishPath, finishBody, cancellationToken)
+                .ConfigureAwait(false);
 
         if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Accepted)
         {
-            throw ErrorMapper.FromHttpResponse(response, "SRP login failed");
-        }
-
-        JsonElement wire = await ReadJsonAsync(response, cancellationToken).ConfigureAwait(false);
-        string? serverProof = wire.TryGetProperty("server_proof", out JsonElement proofEl)
-            ? proofEl.GetString()
-            : null;
-
-        // Mutual authentication (§23.3 rule 6), checked BEFORE anything from the response is
-        // reported. A rogue server that cannot prove itself must not get the chance to collect
-        // an MFA code either — and the cookies it set are discarded rather than left in the
-        // container, since there is no trustworthy Set-Cookie to expire them.
-        if (!SrpMath.VerifyServerProof(proofs.ExpectedServerProof, serverProof))
-        {
-            DiscardSessionCookies();
-            throw new AuthError("SRP: the server failed to prove it holds this account's verifier");
+            throw ErrorMapper.FromHttpResponse(response, "OPAQUE login/finish failed");
         }
 
         if (response.StatusCode == HttpStatusCode.Accepted)
         {
-            string challengeToken = wire.TryGetProperty("challenge_token", out JsonElement tokenEl)
-                ? tokenEl.GetString() ?? string.Empty
-                : string.Empty;
-            return new LoginResult(true, Sensitive.Of(challengeToken));
+            JsonElement wire = await ReadJsonAsync(response, cancellationToken).ConfigureAwait(false);
+            return new LoginResult(true, Sensitive.Of(ReadString(wire, "challenge_token")));
         }
 
         return new LoginResult(false);
     }
 
     /// <summary>
-    /// Opens an SRP exchange and returns the challenge that answers it.
+    /// Builds a registration record for <paramref name="password"/>, to send with any request
+    /// that sets one: <c>POST /api/v1/users</c>, <c>/auth/password/change</c>,
+    /// <c>/auth/reset/confirm</c> and <c>/admin/bootstrap</c>.
     /// </summary>
     /// <remarks>
-    /// Reuses <see cref="ApplyTenantAndOrgFields"/> so tenant/org resolution cannot drift
-    /// between the two login paths, and sends no <c>password</c> field — it has no business on
-    /// this request.
+    /// <para>
+    /// The server cannot build this — it never sees the plaintext — so it has to arrive with
+    /// the request or not at all.
+    /// </para>
+    /// <para>
+    /// Unlike the <c>SrpEnrollment</c> it replaces this performs network I/O: one
+    /// <c>register/start</c> round trip. OPAQUE's envelope is sealed under the server's
+    /// oblivious PRF, so there is no offline computation that produces a valid record.
+    /// </para>
+    /// <para>
+    /// Note the parameters that are gone. There is no <c>identity</c>: the SRP version required
+    /// the account's canonical <b>username</b>, and an email there produced a verifier no login
+    /// could ever satisfy, whereas a record binds to a credential identifier the server
+    /// chooses. And there is no group or KDF, because those come from the
+    /// <c>register/start</c> response — a caller cannot pick a cost the server will not honour.
+    /// </para>
     /// </remarks>
-    private async Task<JsonElement> SrpChallengeAsync(
-        string usernameOrEmail,
-        SrpClientSession session,
-        CancellationToken cancellationToken)
+    /// <param name="password">The plaintext being enrolled.</param>
+    /// <param name="cancellationToken">Cancels the exchange.</param>
+    /// <returns>The <c>opaque</c> object to attach to the request.</returns>
+    /// <exception cref="NetworkError">
+    /// The tenant has OPAQUE disabled, <c>libaxiam_opaque_ffi</c> is not installed, or the
+    /// server names a key-stretching function this SDK cannot ask for.
+    /// </exception>
+    public async Task<OpaqueEnrollment> OpaqueEnrollmentAsync(
+        char[] password,
+        CancellationToken cancellationToken = default)
     {
+        EnsureNotDisposed();
+        ArgumentNullException.ThrowIfNull(password);
+
+        using RegistrationExchange exchange = OpaqueProtocol.StartRegistration(password);
+
         var body = new Dictionary<string, object?>
         {
-            ["username_or_email"] = usernameOrEmail,
-            ["client_public"] = session.ClientPublic,
+            ["registration_request"] = exchange.Request,
         };
         ApplyTenantAndOrgFields(body);
 
-        using HttpResponseMessage response = await PostJsonAsync(SrpChallengePath, body, cancellationToken)
+        JsonElement started = await OpaqueStartAsync(
+            OpaqueRegisterStartPath, body, "register/start", cancellationToken).ConfigureAwait(false);
+
+        string registrationResponse = ReadString(started, "registration_response");
+        KsfParams ksf = KsfParams.FromWire(started);
+        string record = await Task.Run(
+            () => exchange.Finish(password, registrationResponse, ksf), cancellationToken)
+            .ConfigureAwait(false);
+
+        return new OpaqueEnrollment(ReadString(started, "opaque_session"), record);
+    }
+
+    /// <summary>Whether this installation can perform OPAQUE (&#167;23.2).</summary>
+    /// <remarks>
+    /// Genuinely able to answer <c>false</c>, unlike the <c>SrpAvailable</c> it replaces —
+    /// which was hard-coded <c>true</c> on .NET because <c>BigInteger</c> and BouncyCastle are
+    /// always there. The protocol now comes from <c>libaxiam_opaque_ffi</c>, a per-platform
+    /// release asset rather than a NuGet package. Ask before a login rather than discovering
+    /// the gap mid-exchange.
+    /// </remarks>
+    /// <returns><c>true</c> when the library is present and says it can.</returns>
+    public bool OpaqueAvailable() => OpaqueProtocol.Available();
+
+    /// <summary>
+    /// Sends one <c>/start</c> request and returns the parsed response.
+    /// </summary>
+    /// <remarks>
+    /// Shared by both OPAQUE paths so the meaning of a failure cannot drift between them, and
+    /// reusing <see cref="ApplyTenantAndOrgFields"/> keeps tenant/org resolution identical to
+    /// the password login. A <c>404</c> is a property of the tenant ("OPAQUE is off here"), not
+    /// of the user and not of the credentials — so it is a <see cref="NetworkError"/> a caller
+    /// can fall back on, never an <see cref="AuthError"/> that would be shown as "invalid
+    /// password".
+    /// </remarks>
+    private async Task<JsonElement> OpaqueStartAsync(
+        string path,
+        Dictionary<string, object?> body,
+        string what,
+        CancellationToken cancellationToken)
+    {
+        using HttpResponseMessage response = await PostJsonAsync(path, body, cancellationToken)
             .ConfigureAwait(false);
 
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
-            // 404 is a property of the tenant ("SRP is off here"), not of the user, and not a
-            // credential failure — so a caller can fall back to LoginAsync without mistaking
-            // it for a bad password.
             throw NetworkError.FromMessage(
-                "SRP: this tenant does not offer Secure Remote Password (srp_mode is disabled); " +
+                "OPAQUE: this tenant does not offer OPAQUE (opaque_mode is disabled); " +
                 "use LoginAsync instead");
         }
 
         if (response.StatusCode != HttpStatusCode.OK)
         {
-            throw ErrorMapper.FromHttpResponse(response, "SRP challenge failed");
+            throw ErrorMapper.FromHttpResponse(response, $"OPAQUE {what} failed");
         }
 
         return await ReadJsonAsync(response, cancellationToken).ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Computes a verifier for <paramref name="password"/>, to send with any request that
-    /// sets one: <c>POST /api/v1/users</c>, <c>/auth/password/change</c>,
-    /// <c>/auth/reset/confirm</c> and <c>/admin/bootstrap</c> (&#167;23.3 rule 11).
-    /// </summary>
-    /// <remarks>
-    /// The server cannot compute this — it never sees the plaintext — so it has to arrive with
-    /// the request or not at all. The salt is 32 fresh bytes from the platform CSPRNG on every
-    /// call. This performs no I/O; it is a method on the client only so it sits beside
-    /// <see cref="LoginSrpAsync"/> in the API.
-    /// </remarks>
-    /// <param name="identity">
-    /// The account's <b>username</b> — the canonical identity the challenge endpoint hands
-    /// back. An email here produces a verifier no login can ever satisfy.
-    /// </param>
-    /// <param name="password">The plaintext being enrolled.</param>
-    /// <param name="group">
-    /// The tenant's group, from <c>GET /api/v1/auth/me</c> or the reset context;
-    /// <c>null</c> means AXIAM's default.
-    /// </param>
-    /// <param name="parameters">
-    /// The tenant's KDF and costs; any zero cost is filled in with AXIAM's default for that
-    /// KDF. <c>null</c> means Argon2id at AXIAM's costs.
-    /// </param>
-    /// <returns>The <c>srp</c> object to attach to the request.</returns>
-    /// <exception cref="NetworkError">The named KDF is not one this SDK implements.</exception>
-    // The return type is fully qualified because §23.1 locks the METHOD name to
-    // `SrpEnrollment`, which then shadows the same-named type for simple-name lookup inside
-    // this class. Renaming either one to dodge that would break the contract's vocabulary or
-    // the record's own meaning; qualifying costs one line and nothing else.
-    public Axiam.Sdk.Srp.SrpEnrollment SrpEnrollment(
-        string identity,
-        char[] password,
-        SrpGroup? group = null,
-        SrpKdfParams? parameters = null)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(identity);
-        ArgumentNullException.ThrowIfNull(password);
-
-        SrpGroup resolvedGroup = group ?? SrpOpeningGroup;
-        SrpKdfParams resolved = (parameters ?? new SrpKdfParams(SrpKdfParams.Argon2id, 0)).WithDefaults();
-        byte[] salt = SrpMath.GenerateSalt();
-        byte[] x = SrpMath.DeriveX(identity, password, salt, resolved);
-        try
-        {
-            return new Axiam.Sdk.Srp.SrpEnrollment(
-                resolvedGroup.WireName,
-                resolved.Kdf,
-                resolved.MemoryKib,
-                resolved.Iterations,
-                resolved.Parallelism,
-                SrpMath.ToHex(salt),
-                SrpMath.ComputeVerifier(resolvedGroup, x));
-        }
-        finally
-        {
-            CryptographicOperations.ZeroMemory(x);
-        }
-    }
-
-    /// <summary>Whether this SDK build can perform SRP (&#167;23.1).</summary>
-    /// <remarks>
-    /// Always <c>true</c> on .NET: <see cref="System.Numerics.BigInteger"/> is in the base
-    /// class library, PBKDF2-HMAC-SHA256 comes from <c>Rfc2898DeriveBytes</c>, and Argon2id
-    /// from the BouncyCastle package this SDK already depends on. It exists because
-    /// &#167;23.1 puts it in the locked method vocabulary for every SDK, and in PHP — which
-    /// needs <c>ext-gmp</c> or <c>ext-bcmath</c> and is guaranteed neither — it genuinely
-    /// answers <c>false</c>.
-    /// </remarks>
-    /// <returns><c>true</c>.</returns>
-    public bool SrpAvailable() => true;
-
-    /// <summary>
-    /// Evicts the session cookies from the shared container.
-    /// </summary>
-    /// <remarks>
-    /// The ordinary way a cookie leaves the container is the server expiring it, which is
-    /// exactly what is unavailable to the one caller here: the <c>M2</c> mismatch in
-    /// <see cref="LoginSrpAsync"/>, where the response came from an endpoint that has just
-    /// failed to prove it holds the account's verifier. &#167;23.3 rule 6 requires the session
-    /// discarded "including any cookies the response set", so the client evicts them itself
-    /// rather than trusting the other side to.
-    /// </remarks>
-    private void DiscardSessionCookies()
-    {
-        foreach (Cookie cookie in _cookieContainer.GetCookies(_baseUrl))
-        {
-            cookie.Expired = true;
-        }
     }
 
     private static string ReadString(JsonElement element, string name) =>
