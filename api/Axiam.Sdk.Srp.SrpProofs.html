@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class RequestedPermission | AXIAM .NET SDK </title>
+      <title>Class SrpProofs | AXIAM .NET SDK </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class RequestedPermission | AXIAM .NET SDK ">
+      <meta name="title" content="Class SrpProofs | AXIAM .NET SDK ">
       
-      <meta name="description" content="One (resource, scopes) pair a resource server requires (&#167;20.1).">
+      <meta name="description" content="The two proofs an SRP exchange produces (CONTRACT.md &#167;23.2).">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha29/apiSpec/new?filename=Axiam_Sdk_Auth_Oidc_RequestedPermission.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.Oidc.RequestedPermission%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha29/apiSpec/new?filename=Axiam_Sdk_Srp_SrpProofs.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Srp.SrpProofs%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,25 +84,25 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Axiam.Sdk.Auth.Oidc.RequestedPermission">
+        <article data-uid="Axiam.Sdk.Srp.SrpProofs">
 
 
 
-  <h1 id="Axiam_Sdk_Auth_Oidc_RequestedPermission" data-uid="Axiam.Sdk.Auth.Oidc.RequestedPermission" class="text-break">
-Class RequestedPermission  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L541"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Axiam_Sdk_Srp_SrpProofs" data-uid="Axiam.Sdk.Srp.SrpProofs" class="text-break">
+Class SrpProofs  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Srp/SrpProofs.cs/#L12"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Auth.html">Auth</a>.<a class="xref" href="Axiam.Sdk.Auth.Oidc.html">Oidc</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Srp.html">Srp</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>One <code>(resource, scopes)</code> pair a resource server requires (§20.1).</p>
+  <div class="markdown summary"><p>The two proofs an SRP exchange produces (CONTRACT.md §23.2).</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed record RequestedPermission : IEquatable&lt;RequestedPermission&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed record SrpProofs : IEquatable&lt;SrpProofs&gt;</code></pre>
   </div>
 
 
@@ -112,14 +112,14 @@ Class RequestedPermission  <a class="header-action link-secondary" title="View s
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">RequestedPermission</span></div>
+      <div><span class="xref">SrpProofs</span></div>
     </dd>
   </dl>
 
   <dl class="typelist implements">
     <dt>Implements</dt>
     <dd>
-      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.Oidc.RequestedPermission.html">RequestedPermission</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Srp.SrpProofs.html">SrpProofs</a>&gt;</div>
     </dd>
   </dl>
 
@@ -150,35 +150,40 @@ Class RequestedPermission  <a class="header-action link-secondary" title="View s
 
 
 
+  <h2 id="Axiam_Sdk_Srp_SrpProofs_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p><a class="xref" href="Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs_ClientProof">ClientProof</a> goes on the verify request. <a class="xref" href="Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs_ExpectedServerProof">ExpectedServerProof</a>
+stays here and is compared against the response's <code>server_proof</code>: that comparison is
+the half of SRP that authenticates the <i>server</i>, and §23.3 rule 6 makes it
+mandatory.</p>
+</div>
 
 
   <h2 class="section" id="constructors">Constructors
 </h2>
 
 
-  <a id="Axiam_Sdk_Auth_Oidc_RequestedPermission__ctor_" data-uid="Axiam.Sdk.Auth.Oidc.RequestedPermission.#ctor*"></a>
+  <a id="Axiam_Sdk_Srp_SrpProofs__ctor_" data-uid="Axiam.Sdk.Srp.SrpProofs.#ctor*"></a>
 
-  <h3 id="Axiam_Sdk_Auth_Oidc_RequestedPermission__ctor_System_Guid_System_Collections_Generic_IReadOnlyList_System_String__" data-uid="Axiam.Sdk.Auth.Oidc.RequestedPermission.#ctor(System.Guid,System.Collections.Generic.IReadOnlyList{System.String})">
-  RequestedPermission(Guid, IReadOnlyList&lt;string&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L541"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Srp_SrpProofs__ctor_System_String_System_String_" data-uid="Axiam.Sdk.Srp.SrpProofs.#ctor(System.String,System.String)">
+  SrpProofs(string, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Srp/SrpProofs.cs/#L12"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>One <code>(resource, scopes)</code> pair a resource server requires (§20.1).</p>
+  <div class="markdown level1 summary"><p>The two proofs an SRP exchange produces (CONTRACT.md §23.2).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RequestedPermission(Guid ResourceId, IReadOnlyList&lt;string&gt; ResourceScopes)</code></pre>
+    <pre><code class="lang-csharp hljs">public SrpProofs(string ClientProof, string ExpectedServerProof)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>ResourceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
-    <dd><p>The AXIAM resource id — the same GUID the Protection API returned as <code>_id</code>.</p>
+    <dt><code>ClientProof</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p><code>M1</code>, lowercase hex.</p>
 </dd>
-    <dt><code>ResourceScopes</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
-    <dd><p>Scope names, each of which the resource must already declare. Matched
-exactly: no prefix or wildcard semantics in either direction.</p>
+    <dt><code>ExpectedServerProof</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <code>M2</code> the server must return.</p>
 </dd>
   </dl>
 
@@ -189,6 +194,12 @@ exactly: no prefix or wildcard semantics in either direction.</p>
 
 
 
+  <h4 class="section" id="Axiam_Sdk_Srp_SrpProofs__ctor_System_String_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><a class="xref" href="Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs_ClientProof">ClientProof</a> goes on the verify request. <a class="xref" href="Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs_ExpectedServerProof">ExpectedServerProof</a>
+stays here and is compared against the response's <code>server_proof</code>: that comparison is
+the half of SRP that authenticates the <i>server</i>, and §23.3 rule 6 makes it
+mandatory.</p>
+</div>
 
 
 
@@ -197,19 +208,19 @@ exactly: no prefix or wildcard semantics in either direction.</p>
 </h2>
 
 
-  <a id="Axiam_Sdk_Auth_Oidc_RequestedPermission_ResourceId_" data-uid="Axiam.Sdk.Auth.Oidc.RequestedPermission.ResourceId*"></a>
+  <a id="Axiam_Sdk_Srp_SrpProofs_ClientProof_" data-uid="Axiam.Sdk.Srp.SrpProofs.ClientProof*"></a>
 
-  <h3 id="Axiam_Sdk_Auth_Oidc_RequestedPermission_ResourceId" data-uid="Axiam.Sdk.Auth.Oidc.RequestedPermission.ResourceId">
-  ResourceId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L541"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Srp_SrpProofs_ClientProof" data-uid="Axiam.Sdk.Srp.SrpProofs.ClientProof">
+  ClientProof
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Srp/SrpProofs.cs/#L12"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The AXIAM resource id — the same GUID the Protection API returned as <code>_id</code>.</p>
+  <div class="markdown level1 summary"><p><code>M1</code>, lowercase hex.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Guid ResourceId { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string ClientProof { get; init; }</code></pre>
   </div>
 
 
@@ -218,7 +229,7 @@ exactly: no prefix or wildcard semantics in either direction.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 
@@ -229,20 +240,19 @@ exactly: no prefix or wildcard semantics in either direction.</p>
 
 
 
-  <a id="Axiam_Sdk_Auth_Oidc_RequestedPermission_ResourceScopes_" data-uid="Axiam.Sdk.Auth.Oidc.RequestedPermission.ResourceScopes*"></a>
+  <a id="Axiam_Sdk_Srp_SrpProofs_ExpectedServerProof_" data-uid="Axiam.Sdk.Srp.SrpProofs.ExpectedServerProof*"></a>
 
-  <h3 id="Axiam_Sdk_Auth_Oidc_RequestedPermission_ResourceScopes" data-uid="Axiam.Sdk.Auth.Oidc.RequestedPermission.ResourceScopes">
-  ResourceScopes
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L541"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Srp_SrpProofs_ExpectedServerProof" data-uid="Axiam.Sdk.Srp.SrpProofs.ExpectedServerProof">
+  ExpectedServerProof
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Srp/SrpProofs.cs/#L12"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Scope names, each of which the resource must already declare. Matched
-exactly: no prefix or wildcard semantics in either direction.</p>
+  <div class="markdown level1 summary"><p>The <code>M2</code> the server must return.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;string&gt; ResourceScopes { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string ExpectedServerProof { get; init; }</code></pre>
   </div>
 
 
@@ -251,7 +261,7 @@ exactly: no prefix or wildcard semantics in either direction.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 

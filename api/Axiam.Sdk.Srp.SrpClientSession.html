@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class SrpClientSession | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class SrpClientSession | AXIAM .NET SDK ">
+      
+      <meta name="description" content="One SRP exchange&#39;s client half: the ephemeral secret a held between the challenge request and the proof that answers it (CONTRACT.md &#167;23.2).">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha29/apiSpec/new?filename=Axiam_Sdk_Srp_SrpClientSession.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Srp.SrpClientSession%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Srp.SrpClientSession">
+
+
+
+  <h1 id="Axiam_Sdk_Srp_SrpClientSession" data-uid="Axiam.Sdk.Srp.SrpClientSession" class="text-break">
+Class SrpClientSession  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Srp/SrpClientSession.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Srp.html">Srp</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>One SRP exchange's client half: the ephemeral secret <code>a</code> held between the challenge
+request and the proof that answers it (CONTRACT.md §23.2).</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class SrpClientSession</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">SrpClientSession</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Srp_SrpClientSession_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>A session is single-use. <code>a</code> is drawn fresh per exchange by <a class="xref" href="Axiam.Sdk.Srp.SrpClientSession.html#Axiam_Sdk_Srp_SrpClientSession_Begin_Axiam_Sdk_Srp_SrpGroup_">Begin(SrpGroup)</a> and
+there is no way to supply one there, because reusing it across logins leaks the
+relationship between two session secrets (§23.3 rule 7).</p>
+</div>
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Srp_SrpClientSession_ClientPublic_" data-uid="Axiam.Sdk.Srp.SrpClientSession.ClientPublic*"></a>
+
+  <h3 id="Axiam_Sdk_Srp_SrpClientSession_ClientPublic" data-uid="Axiam.Sdk.Srp.SrpClientSession.ClientPublic">
+  ClientPublic
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Srp/SrpClientSession.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>A = g^a mod N</code>, lowercase hex — sent with the challenge request.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ClientPublic { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Srp_SrpClientSession_Group_" data-uid="Axiam.Sdk.Srp.SrpClientSession.Group*"></a>
+
+  <h3 id="Axiam_Sdk_Srp_SrpClientSession_Group" data-uid="Axiam.Sdk.Srp.SrpClientSession.Group">
+  Group
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Srp/SrpClientSession.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The group this exchange runs in.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SrpGroup Group { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Srp.SrpGroup.html">SrpGroup</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Srp_SrpClientSession_Begin_" data-uid="Axiam.Sdk.Srp.SrpClientSession.Begin*"></a>
+
+  <h3 id="Axiam_Sdk_Srp_SrpClientSession_Begin_Axiam_Sdk_Srp_SrpGroup_" data-uid="Axiam.Sdk.Srp.SrpClientSession.Begin(Axiam.Sdk.Srp.SrpGroup)">
+  Begin(SrpGroup)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Srp/SrpClientSession.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Starts an exchange in <code class="paramref">group</code>: draws a fresh <code>a</code> of at least
+256 bits from the platform CSPRNG and computes <code>A</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static SrpClientSession Begin(SrpGroup group)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>group</code> <a class="xref" href="Axiam.Sdk.Srp.SrpGroup.html">SrpGroup</a></dt>
+    <dd><p>The group to compute in.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Srp.SrpClientSession.html">SrpClientSession</a></dt>
+    <dd><p>The new session.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Srp_SrpClientSession_Finish_" data-uid="Axiam.Sdk.Srp.SrpClientSession.Finish*"></a>
+
+  <h3 id="Axiam_Sdk_Srp_SrpClientSession_Finish_System_String_System_String_System_String_System_Byte___" data-uid="Axiam.Sdk.Srp.SrpClientSession.Finish(System.String,System.String,System.String,System.Byte[])">
+  Finish(string, string, string, byte[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Srp/SrpClientSession.cs/#L80"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Completes the exchange: <code>S</code>, <code>K</code>, <code>M1</code> and the <code>M2</code> the server
+must return.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SrpProofs Finish(string identity, string saltHex, string serverPublicHex, byte[] x)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>identity</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The identity from the challenge response, never what the user typed
+(§23.3 rule 2).</p>
+</dd>
+    <dt><code>saltHex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <code>salt</code> field of the challenge response.</p>
+</dd>
+    <dt><code>serverPublicHex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <code>b_pub</code> field of the challenge response.</p>
+</dd>
+    <dt><code>x</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The KDF output from <a class="xref" href="Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_DeriveX_System_String_System_Char___System_Byte___Axiam_Sdk_Srp_SrpKdfParams_">DeriveX(string, char[], byte[], SrpKdfParams)</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Srp.SrpProofs.html">SrpProofs</a></dt>
+    <dd><p>The proof pair.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a></dt>
+    <dd><p><code>B mod N == 0</code>, <code>u</code> would be zero, or a hex field is malformed.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_Srp_SrpClientSession_WithFixedEphemeral_" data-uid="Axiam.Sdk.Srp.SrpClientSession.WithFixedEphemeral*"></a>
+
+  <h3 id="Axiam_Sdk_Srp_SrpClientSession_WithFixedEphemeral_Axiam_Sdk_Srp_SrpGroup_System_Numerics_BigInteger_" data-uid="Axiam.Sdk.Srp.SrpClientSession.WithFixedEphemeral(Axiam.Sdk.Srp.SrpGroup,System.Numerics.BigInteger)">
+  WithFixedEphemeral(SrpGroup, BigInteger)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha29/Axiam.Sdk/Srp/SrpClientSession.cs/#L59"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Starts an exchange with <code>a</code> pinned to a supplied value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static SrpClientSession WithFixedEphemeral(SrpGroup group, BigInteger ephemeral)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>group</code> <a class="xref" href="Axiam.Sdk.Srp.SrpGroup.html">SrpGroup</a></dt>
+    <dd><p>The group to compute in.</p>
+</dd>
+    <dt><code>ephemeral</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.biginteger">BigInteger</a></dt>
+    <dd><p>The pinned <code>a</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Srp.SrpClientSession.html">SrpClientSession</a></dt>
+    <dd><p>The new session.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Srp_SrpClientSession_WithFixedEphemeral_Axiam_Sdk_Srp_SrpGroup_System_Numerics_BigInteger__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>For the §23.7 cross-language vectors <b>only</b>: they fix <code>a</code> so every
+intermediate is reproducible. Never call this from application code — a predictable
+<code>a</code> defeats the protocol.</p>
+</div>
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
