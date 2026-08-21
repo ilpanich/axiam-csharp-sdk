@@ -7,25 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-
-- OPAQUE: a refused key-stretching function no longer strands the exchange's
-  native state handle. `Finish()` spent the handle before building the KSF, so
-  an unrecognised function or an out-of-band cost left it out of its one-shot
-  slot and unreachable by `Dispose()` or the finalizer — a leaked Rust
-  allocation once per login attempt against a misconfigured tenant. The KSF is
-  now built first, so a refusal leaves the exchange intact: it is released
-  normally, and a caller who fixes the parameters can retry.
-
-### Changed
-
-- Re-vendor `openapi.json` at **1.0.0-alpha32**, matching the server. The
-  content was already byte-identical in every path and schema; only
-  `info.version` differed, which is what the cross-repo artifact-drift gate
-  reports as `STALE`.
-
-## [Unreleased]
-
 ### Added
 
 - OPAQUE (RFC 9807) login and enrolment (CONTRACT §23): `LoginOpaqueAsync`,
@@ -33,16 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `Axiam.Sdk.Opaque` namespace.
 - `examples/OpaqueLogin`.
 
-### Removed
-
-- **BREAKING** — SRP-6a. `LoginSrpAsync`, `SrpEnrollment`, `SrpAvailable`, the
-  whole `Axiam.Sdk.Srp` namespace, `srp-test-vectors.json` and
-  `examples/SrpLogin` are all gone. AXIAM's server-side SRP endpoints are removed
-  in the same release, so keeping the client would leave methods that only ever
-  return 404.
-
 ### Changed
 
+- Re-vendor `openapi.json` at **1.0.0-alpha32**, matching the server. The
+  content was already byte-identical in every path and schema; only
+  `info.version` differed, which is what the cross-repo artifact-drift gate
+  reports as `STALE`.
 - **BREAKING** — the OPAQUE protocol is NOT implemented in this SDK. CONTRACT
   §23.1 forbids it, so the client half is a P/Invoke binding to
   `libaxiam_opaque_ffi` — the same implementation the AXIAM server links,
@@ -65,6 +42,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   library, and a key-stretching function this build cannot perform are all
   `NetworkError` (a caller can fall back, or an operator can act); everything
   else is `AuthError` and must NOT be retried over `LoginAsync` (§23.4 rule 7).
+
+### Removed
+
+- **BREAKING** — SRP-6a. `LoginSrpAsync`, `SrpEnrollment`, `SrpAvailable`, the
+  whole `Axiam.Sdk.Srp` namespace, `srp-test-vectors.json` and
+  `examples/SrpLogin` are all gone. AXIAM's server-side SRP endpoints are removed
+  in the same release, so keeping the client would leave methods that only ever
+  return 404.
+
+### Fixed
+
+- OPAQUE: a refused key-stretching function no longer strands the exchange's
+  native state handle. `Finish()` spent the handle before building the KSF, so
+  an unrecognised function or an out-of-band cost left it out of its one-shot
+  slot and unreachable by `Dispose()` or the finalizer — a leaked Rust
+  allocation once per login attempt against a misconfigured tenant. The KSF is
+  now built first, so a refusal leaves the exchange intact: it is released
+  normally, and a caller who fixes the parameters can retry.
 
 ## [1.0.0-alpha31] - 2026-08-20
 
@@ -98,17 +93,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - ReactorConnections — enforce §8b instead of documenting it
 - §22.14 declarative reactor handler binding — ReactorHandlers
-
-### Changed
-
-- Re-vendor CONTRACT.md 1.23 (§8b rules 7 and 8)
-- Re-vendor openapi.json for the SCIM provisioning-token endpoints
-- Re-vendor CONTRACT.md 1.22 from the server repo
-
-## [Unreleased]
-
-### Added
-
 - **`ReactorConnections` — CONTRACT.md §8b enforced rather than described.**
   `ReactorServeOptions.Channel` takes an already-open channel, and §8b's
   requirements travelled with it as a doc-comment sentence: "its connection MUST
@@ -132,6 +116,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Re-vendor CONTRACT.md 1.23 (§8b rules 7 and 8)
+- Re-vendor openapi.json for the SCIM provisioning-token endpoints
+- Re-vendor CONTRACT.md 1.22 from the server repo
 - Re-vendor `openapi.json` at 1.0.0-alpha27 — the copy was pinned at alpha26 and
   failing the cross-repo artifact-drift gate
 - **BREAKING: `AxiamAmqpConsumer.StartAsync` refuses a non-`amqps://` URI.** It
@@ -157,25 +144,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Report clamped settings via §19 ConfigClampedEvent (contract 1.9)
 - Wire §16 retry (it never was), §17 memo, §18 dispose, §19 telemetry (D5)
 - Device grant, token exchange, logout helpers; re-vendor (D6)
-
-### Changed
-
-- Re-vendor CONTRACT.md 1.19, openapi.json and proto/ from main (R5.8) (#48)
-- Contract 1.15 — §10.1 rule 9, sender-constrained access tokens (#45)
-- Add the §20.7 required timeout assertion
-- Retire the "measured residual" justification (contract 1.14)
-- Re-sync to contract 1.14 (#302 closed)
-- Bump the minor-patch group with 1 update
-
-### Fixed
-
-- R5.7 remediation — F-13, F-15 (F-16 verified) (#47)
-- Route the bool surface through D5 + runnable §16–§19 example (F3) (#38)
-
-## [Unreleased]
-
-### Added
-
 - **CONTRACT.md §22 — the reactor runtime (`Axiam.Sdk.Reactor`).** A reactor is an
   external process subscribed to named hook events on the AMQP bus, answering
   allow / deny / mutate inside a timeout the server declared.
@@ -276,87 +244,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **CONTRACT.md §21** — the FAPI 2.0 posture as an SDK sees it. Only rule 9 is normative
   for this SDK.
-
-### Fixed
-
-- **SDK-Q10 (contract 1.19): the gRPC `AccessDecision` mapper never read `reason` and
-  always surfaced the deprecated `deny_reason`.** `proto/axiam/v1/authorization.proto`
-  already carried the CONTRACT.md §11.2 rule 9 amendment — `reason` (field 4, explicit
-  presence, absent on an allow and present on every refusal) as the canonical name, with
-  `deny_reason` (field 2) marked `[deprecated = true]` and removed at AXIAM 2.0 — but
-  because this SDK generates its gRPC stubs into a gitignored `obj/` directory at build
-  time, nothing forced the client mapper to catch up: `AxiamGrpcAuthzClient.ToDecision`
-  kept reading only `DenyReason`, unnoticed by any build. `ToDecision` now reads
-  `Reason` when `CheckAccessResponse.HasReason` is true, and falls back to the
-  deprecated `DenyReason` **only** when `Reason` is absent **and** the decision is a
-  refusal (`!Allowed`) — guarding on `HasReason` rather than truthiness so an
-  explicitly-empty `Reason` on a refusal is never misread as absent. `AccessDecision`
-  already exposed exactly one reason accessor (`Reason`); no public signature changes.
-  **Deliberately not taken:** relaxing gRPC `subject_id` to optional — contract 1.19
-  makes an empty wire value mean "the token's subject", but changing the SDK-facing
-  parameter's nullability is a breaking signature move every sibling SDK has likewise
-  deferred.
-- **F-15: `X-Tenant-Id` was silently dropped on `/oauth2/*` requests whose absolute URL
-  (taken from the discovery document) targets a host other than the client's configured
-  base URL.** `AxiamHttpMessageHandler`'s host-isolation guard (3A) previously withheld
-  every header — tenant, bearer, and CSRF alike — from any foreign-host request.
-  CONTRACT.md §12.1 note 2 calls `X-Tenant-Id` unconditional on `/oauth2/*` regardless of
-  host, so a gateway/CDN-fronted deployment that advertises `token_endpoint` on a
-  different host than `BaseUrl` would silently lose the header. `Authorization`/
-  `X-CSRF-Token` still stay same-origin only (3A) — neither is meaningful to `/oauth2/*`,
-  which authenticates via `client_secret_post`, never bearer. Harmless in practice (the
-  server's `/oauth2/*` handlers read tenant context only from the `?tenant_id=` query
-  parameter, never the header), but no test asserted the header on a `/oauth2/token`
-  request until now.
-- **F-13: the §12.4 rule 7 (all-or-nothing discard) test only asserted that an exchange
-  throws, not that the same response's sentinel access/refresh token is absent from the
-  outcome or the exception.** Strengthened to match the five sibling SDKs.
-
-### Changed
-
-- **Re-sync vendored `CONTRACT.md` / `openapi.json` to contract 1.15.**
-
-
-### Changed
-
-- **Re-sync vendored `CONTRACT.md` to contract 1.14** — documentation only, no code change.
-  §20.2 rule 6 (a permission ticket MUST NOT be retried) cited a "measured residual
-  (ilpanich/axiam#302) … roughly 1 in 640" as its second reason. That residual is closed: the
-  server now decides the ticket race with a transaction its storage engine arbitrates plus a
-  redemption nonce read back after the commit. **The rule is unchanged, and this SDK's
-  behaviour is unchanged** — `uma_exchange_ticket` stays excluded from every automatic retry
-  path. What changed is the reasoning: the first reason (a spent ticket makes the retry
-  useless) always stood alone, and the second now rests on what an SDK can actually know —
-  it is talking to a server whose storage engine it cannot attest, and the guarantee is
-  conditional on that engine being persistent.
-- **BREAKING (contract 1.13): `TokenExchangeParams.SubjectTokenType` is now required**, losing
-  its `= null` default and narrowing from `string?` to `string`.
-
-  It shipped optional, defaulting to `AccessTokenType` — which satisfied §15.7's "never inspect
-  the subject token" while leaving the rule it serves unenforced: an optional member with a
-  default *is* a default the SDK applies whenever the caller says nothing. §15.1 now makes it
-  required, so the positional record refuses the construction outright.
-
-  Because a caller can still push `null` or blank through a nullable-oblivious call site, the
-  SDK also refuses those **client-side with no wire call**, naming both constants. A `[Theory]`
-  covers `null`, `""` and `"   "` — a blank string is the shape a config-driven caller actually
-  produces.
-
-  **Migration** — one argument, naming what you were previously getting by silence:
-
-  ```csharp
-  ExchangedToken exchanged = await client.TokenExchangeAsync(new TokenExchangeParams(
-      Sensitive<string>.Wrap(userToken),
-      AxiamClient.AccessTokenType,        // <- add this
-      Scopes: new[] { "orders:read" }));
-  ```
-
-  This closes a gap rather than opening one: `subject_token_type` has always been required *on
-  the wire*, and the SDK was covering for that with a constant which stopped being the only
-  legal value when X4 landed.
-
-### Added
-
 - **§15.7 external-IdP subject tokens (X4).** `TokenExchangeAsync` can now exchange a token
   minted by a trusted external IdP — a partner's Entra, Okta or Keycloak — for an AXIAM token
   scoped to what the resolved AXIAM user may actually do. No new operation: the same method, plus
@@ -438,24 +325,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   reasoning is off by a factor of twelve with nothing anywhere to say so. Nothing is emitted
   for a value already within its limit, or for a value that was lowered — an event that fires
   when nothing happened trains its reader to ignore it.
-
-### Fixed
-
-- **The §16 retry configuration was never wired.** `MaxRetryAttempts`, `RetryBaseDelay` and
-  `RetryMaxDelay` were defaulted, documented, and asserted in `CoreValueTypesTests` — and read
-  by no production code; their own doc comment said "not yet wired into any call path". The SDK
-  therefore performed **no read-only retries at all** while presenting three knobs that looked
-  like it did, leaving §11.2 rule 5's requirement silently unmet. They are wired now, and the
-  conformance tests assert the policy through the public `CheckAccessAsync` surface by counting
-  requests on the wire.
-- **§16.1: the caller can no longer raise the policy above the contract.** All three settings
-  are now clamped *down* to the contract's values. §16.1 permits lowering the attempt cap or
-  disabling retry, never raising either — a caller who could raise them turns one client into
-  the thundering herd the policy exists to prevent. Lowering still works; the clamp is
-  one-directional.
-
-### Added
-
 - **§16 bounded read-only retry policy** (`Core/RetryPolicy.cs`): 3 attempts, 200 ms base, 5 s
   cap, **full jitter** over `[0, backoff]`, `Retry-After` honored as a floor.
 - **§18 `Dispose()` semantics** — idempotent via `Interlocked`, clears the memo, and
@@ -475,15 +344,126 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Re-vendor CONTRACT.md 1.19, openapi.json and proto/ from main (R5.8) (#48)
+- Contract 1.15 — §10.1 rule 9, sender-constrained access tokens (#45)
+- Add the §20.7 required timeout assertion
+- Retire the "measured residual" justification (contract 1.14)
+- Re-sync to contract 1.14 (#302 closed)
+- Bump the minor-patch group with 1 update
+- **Re-sync vendored `CONTRACT.md` / `openapi.json` to contract 1.15.**
+- **Re-sync vendored `CONTRACT.md` to contract 1.14** — documentation only, no code change.
+  §20.2 rule 6 (a permission ticket MUST NOT be retried) cited a "measured residual
+  (ilpanich/axiam#302) … roughly 1 in 640" as its second reason. That residual is closed: the
+  server now decides the ticket race with a transaction its storage engine arbitrates plus a
+  redemption nonce read back after the commit. **The rule is unchanged, and this SDK's
+  behaviour is unchanged** — `uma_exchange_ticket` stays excluded from every automatic retry
+  path. What changed is the reasoning: the first reason (a spent ticket makes the retry
+  useless) always stood alone, and the second now rests on what an SDK can actually know —
+  it is talking to a server whose storage engine it cannot attest, and the guarantee is
+  conditional on that engine being persistent.
+- **BREAKING (contract 1.13): `TokenExchangeParams.SubjectTokenType` is now required**, losing
+  its `= null` default and narrowing from `string?` to `string`.
+
+  It shipped optional, defaulting to `AccessTokenType` — which satisfied §15.7's "never inspect
+  the subject token" while leaving the rule it serves unenforced: an optional member with a
+  default *is* a default the SDK applies whenever the caller says nothing. §15.1 now makes it
+  required, so the positional record refuses the construction outright.
+
+  Because a caller can still push `null` or blank through a nullable-oblivious call site, the
+  SDK also refuses those **client-side with no wire call**, naming both constants. A `[Theory]`
+  covers `null`, `""` and `"   "` — a blank string is the shape a config-driven caller actually
+  produces.
+
+  **Migration** — one argument, naming what you were previously getting by silence:
+
+  ```csharp
+  ExchangedToken exchanged = await client.TokenExchangeAsync(new TokenExchangeParams(
+      Sensitive<string>.Wrap(userToken),
+      AxiamClient.AccessTokenType,        // <- add this
+      Scopes: new[] { "orders:read" }));
+  ```
+
+  This closes a gap rather than opening one: `subject_token_type` has always been required *on
+  the wire*, and the SDK was covering for that with a constant which stopped being the only
+  legal value when X4 landed.
 - Re-vendored `CONTRACT.md` at **1.8.2**. `openapi.json` unchanged — docs-only contract revs.
 - `LoginAsync`, `VerifyMfaAsync`, `RefreshAsync` and `LogoutAsync` clear the decision memo
   (§17.1 rule 9) and reject after dispose (§18.1 rule 4).
+
+### Fixed
+
+- R5.7 remediation — F-13, F-15 (F-16 verified) (#47)
+- Route the bool surface through D5 + runnable §16–§19 example (F3) (#38)
+- **SDK-Q10 (contract 1.19): the gRPC `AccessDecision` mapper never read `reason` and
+  always surfaced the deprecated `deny_reason`.** `proto/axiam/v1/authorization.proto`
+  already carried the CONTRACT.md §11.2 rule 9 amendment — `reason` (field 4, explicit
+  presence, absent on an allow and present on every refusal) as the canonical name, with
+  `deny_reason` (field 2) marked `[deprecated = true]` and removed at AXIAM 2.0 — but
+  because this SDK generates its gRPC stubs into a gitignored `obj/` directory at build
+  time, nothing forced the client mapper to catch up: `AxiamGrpcAuthzClient.ToDecision`
+  kept reading only `DenyReason`, unnoticed by any build. `ToDecision` now reads
+  `Reason` when `CheckAccessResponse.HasReason` is true, and falls back to the
+  deprecated `DenyReason` **only** when `Reason` is absent **and** the decision is a
+  refusal (`!Allowed`) — guarding on `HasReason` rather than truthiness so an
+  explicitly-empty `Reason` on a refusal is never misread as absent. `AccessDecision`
+  already exposed exactly one reason accessor (`Reason`); no public signature changes.
+  **Deliberately not taken:** relaxing gRPC `subject_id` to optional — contract 1.19
+  makes an empty wire value mean "the token's subject", but changing the SDK-facing
+  parameter's nullability is a breaking signature move every sibling SDK has likewise
+  deferred.
+- **F-15: `X-Tenant-Id` was silently dropped on `/oauth2/*` requests whose absolute URL
+  (taken from the discovery document) targets a host other than the client's configured
+  base URL.** `AxiamHttpMessageHandler`'s host-isolation guard (3A) previously withheld
+  every header — tenant, bearer, and CSRF alike — from any foreign-host request.
+  CONTRACT.md §12.1 note 2 calls `X-Tenant-Id` unconditional on `/oauth2/*` regardless of
+  host, so a gateway/CDN-fronted deployment that advertises `token_endpoint` on a
+  different host than `BaseUrl` would silently lose the header. `Authorization`/
+  `X-CSRF-Token` still stay same-origin only (3A) — neither is meaningful to `/oauth2/*`,
+  which authenticates via `client_secret_post`, never bearer. Harmless in practice (the
+  server's `/oauth2/*` handlers read tenant context only from the `?tenant_id=` query
+  parameter, never the header), but no test asserted the header on a `/oauth2/token`
+  request until now.
+- **F-13: the §12.4 rule 7 (all-or-nothing discard) test only asserted that an exchange
+  throws, not that the same response's sentinel access/refresh token is absent from the
+  outcome or the exception.** Strengthened to match the five sibling SDKs.
+- **The §16 retry configuration was never wired.** `MaxRetryAttempts`, `RetryBaseDelay` and
+  `RetryMaxDelay` were defaulted, documented, and asserted in `CoreValueTypesTests` — and read
+  by no production code; their own doc comment said "not yet wired into any call path". The SDK
+  therefore performed **no read-only retries at all** while presenting three knobs that looked
+  like it did, leaving §11.2 rule 5's requirement silently unmet. They are wired now, and the
+  conformance tests assert the policy through the public `CheckAccessAsync` surface by counting
+  requests on the wire.
+- **§16.1: the caller can no longer raise the policy above the contract.** All three settings
+  are now clamped *down* to the contract's values. §16.1 permits lowering the attempt cap or
+  disabling retry, never raising either — a caller who could raise them turns one client into
+  the thundering herd the policy exists to prevent. Lowering still works; the clamp is
+  one-directional.
 
 ## [1.0.0-alpha24] - 2026-08-04
 
 ### Added
 
 - Add AxiamWebhooks.Verify signature verifier (CONTRACT.md §13, T-145)
+- Add `AxiamOptions.ExpectedIssuer` / `AxiamOptions.ExpectedAudience` (and the
+  corresponding `AxiamClientOptions` properties, plus optional `JwksVerifier`
+  constructor parameters) — the CONTRACT.md §10.1 rule 5/rule 6 checks. Both are
+  **conditional and default to unset**: with no expectation configured no check is
+  performed, and once configured a mismatching — or absent — claim is rejected. No
+  issuer or audience is hardcoded anywhere in this SDK; an app guarding a user-facing
+  resource server should generally expect `axiam:user`. `aud` accepts both the
+  single-string and array forms RFC 7519 permits.
+- Add `JwksVerifier.ClockSkewLeeway` — the named, bounded 60-second clock-skew constant
+  applied to the `exp`/`nbf` checks (§10.1 rule 7). It is a `static readonly` constant
+  and is deliberately not operator-configurable.
+- Add the complete §10.1 required negative-test set
+  (`tests/Axiam.Sdk.Tests/Contract101LocalVerificationTests.cs`, 26 cases): expired; no
+  `exp`; non-numeric `exp`; numeric-*string* `exp`; null `exp`; future `nbf`; malformed
+  `nbf`; different tenant; no `tenant_id`; no configured tenant; `alg: none`; a real
+  HS256-signed token bearing an EdDSA key id; and issuer/audience mismatch and
+  absent-claim cases. Two of them are additionally asserted end to end through the real
+  ASP.NET Core pipeline in `AspNetCoreMiddlewareTests`, proving the guard routes through
+  the full set rather than a subset of its own.
+- Add webhook signature verifier `Axiam.Sdk.Webhooks.AxiamWebhooks.Verify` (CONTRACT.md §13, T-145)
 
 ### Changed
 
@@ -493,13 +473,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sync CONTRACT.md §10.1 rule 8 — subject of the decision (#30)
 - Bump coverallsapp/github-action from 2.3.7 to 2.3.8
 - Bump the minor-patch group with 2 updates
+- Re-sync the vendored `CONTRACT.md` with the new normative §10.1.
 
 ### Fixed
 
 - Assert tenant_id against the configured tenant, not a header
 - Enforce the full CONTRACT §10.1 local-verification set
-
-## [Unreleased]
 
 ### Security
 
@@ -532,33 +511,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   future `nbf`. A guard fed tokens from **another signer sharing the organization-wide
   JWKS** — or an application relying on `X-Tenant-ID` to serve multiple tenants from one
   configured client — may start rejecting what it previously accepted. That is the intent.
-
-### Added
-
-- Add `AxiamOptions.ExpectedIssuer` / `AxiamOptions.ExpectedAudience` (and the
-  corresponding `AxiamClientOptions` properties, plus optional `JwksVerifier`
-  constructor parameters) — the CONTRACT.md §10.1 rule 5/rule 6 checks. Both are
-  **conditional and default to unset**: with no expectation configured no check is
-  performed, and once configured a mismatching — or absent — claim is rejected. No
-  issuer or audience is hardcoded anywhere in this SDK; an app guarding a user-facing
-  resource server should generally expect `axiam:user`. `aud` accepts both the
-  single-string and array forms RFC 7519 permits.
-- Add `JwksVerifier.ClockSkewLeeway` — the named, bounded 60-second clock-skew constant
-  applied to the `exp`/`nbf` checks (§10.1 rule 7). It is a `static readonly` constant
-  and is deliberately not operator-configurable.
-- Add the complete §10.1 required negative-test set
-  (`tests/Axiam.Sdk.Tests/Contract101LocalVerificationTests.cs`, 26 cases): expired; no
-  `exp`; non-numeric `exp`; numeric-*string* `exp`; null `exp`; future `nbf`; malformed
-  `nbf`; different tenant; no `tenant_id`; no configured tenant; `alg: none`; a real
-  HS256-signed token bearing an EdDSA key id; and issuer/audience mismatch and
-  absent-claim cases. Two of them are additionally asserted end to end through the real
-  ASP.NET Core pipeline in `AspNetCoreMiddlewareTests`, proving the guard routes through
-  the full set rather than a subset of its own.
-- Add webhook signature verifier `Axiam.Sdk.Webhooks.AxiamWebhooks.Verify` (CONTRACT.md §13, T-145)
-
-### Changed
-
-- Re-sync the vendored `CONTRACT.md` with the new normative §10.1.
 
 ### Notes
 
@@ -624,12 +576,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-alpha10] - 2026-07-18
 
-### Changed
-
-- Maintenance release — no notable changes since v1.0.0-alpha9.
-
-## [Unreleased]
-
 ### Added
 
 - gRPC `GetUserInfoAsync` (CONTRACT.md §1.1, contract 1.3). New
@@ -653,9 +599,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   cert/key pair throws `ArgumentException` at construction. Strict server verification
   is unchanged — the client-cert path is separate from §6's server-trust handling and
   adds no TLS-bypass surface. The private key is treated as secret material (§7).
-
-### Added
-
 - `Axiam.Sdk.AspNetCore`: `AxiamAccessAttribute` (`[AxiamAccess(action, resource)]`) —
   the CONTRACT.md §11 declarative authorization helper. Sugar over the existing
   `[Authorize(Policy = "resource:action")]` mechanism, with `Scope` and
@@ -709,6 +652,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `MapAxiamOidcLogin` wiring and `examples/Quickstart`
   `LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync` walkthrough.
 - SDK now conforms to CONTRACT.md §1–§12 (previously §1–§11).
+
+### Changed
+
+- Maintenance release — no notable changes since v1.0.0-alpha9.
 
 ## [1.0.0-alpha] - 2026-07-15
 
