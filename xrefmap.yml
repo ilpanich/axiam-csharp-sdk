@@ -4531,22 +4531,22 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.LoginClientCredentialsAsync
   nameWithType: AxiamClient.LoginClientCredentialsAsync
-- uid: Axiam.Sdk.AxiamClient.LoginSrpAsync(System.String,System.Char[],System.Threading.CancellationToken)
-  name: LoginSrpAsync(string, char[], CancellationToken)
-  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LoginSrpAsync_System_String_System_Char___System_Threading_CancellationToken_
-  commentId: M:Axiam.Sdk.AxiamClient.LoginSrpAsync(System.String,System.Char[],System.Threading.CancellationToken)
-  name.vb: LoginSrpAsync(String, Char(), CancellationToken)
-  fullName: Axiam.Sdk.AxiamClient.LoginSrpAsync(string, char[], System.Threading.CancellationToken)
-  fullName.vb: Axiam.Sdk.AxiamClient.LoginSrpAsync(String, Char(), System.Threading.CancellationToken)
-  nameWithType: AxiamClient.LoginSrpAsync(string, char[], CancellationToken)
-  nameWithType.vb: AxiamClient.LoginSrpAsync(String, Char(), CancellationToken)
-- uid: Axiam.Sdk.AxiamClient.LoginSrpAsync*
-  name: LoginSrpAsync
-  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LoginSrpAsync_
-  commentId: Overload:Axiam.Sdk.AxiamClient.LoginSrpAsync
+- uid: Axiam.Sdk.AxiamClient.LoginOpaqueAsync(System.String,System.Char[],System.Threading.CancellationToken)
+  name: LoginOpaqueAsync(string, char[], CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LoginOpaqueAsync_System_String_System_Char___System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.LoginOpaqueAsync(System.String,System.Char[],System.Threading.CancellationToken)
+  name.vb: LoginOpaqueAsync(String, Char(), CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.LoginOpaqueAsync(string, char[], System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.LoginOpaqueAsync(String, Char(), System.Threading.CancellationToken)
+  nameWithType: AxiamClient.LoginOpaqueAsync(string, char[], CancellationToken)
+  nameWithType.vb: AxiamClient.LoginOpaqueAsync(String, Char(), CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.LoginOpaqueAsync*
+  name: LoginOpaqueAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LoginOpaqueAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.LoginOpaqueAsync
   isSpec: "True"
-  fullName: Axiam.Sdk.AxiamClient.LoginSrpAsync
-  nameWithType: AxiamClient.LoginSrpAsync
+  fullName: Axiam.Sdk.AxiamClient.LoginOpaqueAsync
+  nameWithType: AxiamClient.LoginOpaqueAsync
 - uid: Axiam.Sdk.AxiamClient.LogoutAsync(System.Threading.CancellationToken)
   name: LogoutAsync(CancellationToken)
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LogoutAsync_System_Threading_CancellationToken_
@@ -4625,6 +4625,35 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.OidcRefreshAsync
   nameWithType: AxiamClient.OidcRefreshAsync
+- uid: Axiam.Sdk.AxiamClient.OpaqueAvailable
+  name: OpaqueAvailable()
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OpaqueAvailable
+  commentId: M:Axiam.Sdk.AxiamClient.OpaqueAvailable
+  fullName: Axiam.Sdk.AxiamClient.OpaqueAvailable()
+  nameWithType: AxiamClient.OpaqueAvailable()
+- uid: Axiam.Sdk.AxiamClient.OpaqueAvailable*
+  name: OpaqueAvailable
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OpaqueAvailable_
+  commentId: Overload:Axiam.Sdk.AxiamClient.OpaqueAvailable
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.OpaqueAvailable
+  nameWithType: AxiamClient.OpaqueAvailable
+- uid: Axiam.Sdk.AxiamClient.OpaqueEnrollmentAsync(System.Char[],System.Threading.CancellationToken)
+  name: OpaqueEnrollmentAsync(char[], CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OpaqueEnrollmentAsync_System_Char___System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.OpaqueEnrollmentAsync(System.Char[],System.Threading.CancellationToken)
+  name.vb: OpaqueEnrollmentAsync(Char(), CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.OpaqueEnrollmentAsync(char[], System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.OpaqueEnrollmentAsync(Char(), System.Threading.CancellationToken)
+  nameWithType: AxiamClient.OpaqueEnrollmentAsync(char[], CancellationToken)
+  nameWithType.vb: AxiamClient.OpaqueEnrollmentAsync(Char(), CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.OpaqueEnrollmentAsync*
+  name: OpaqueEnrollmentAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OpaqueEnrollmentAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.OpaqueEnrollmentAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.OpaqueEnrollmentAsync
+  nameWithType: AxiamClient.OpaqueEnrollmentAsync
 - uid: Axiam.Sdk.AxiamClient.RefreshAsync(System.Threading.CancellationToken)
   name: RefreshAsync(CancellationToken)
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_RefreshAsync_System_Threading_CancellationToken_
@@ -4651,35 +4680,6 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.RevokeAsync
   nameWithType: AxiamClient.RevokeAsync
-- uid: Axiam.Sdk.AxiamClient.SrpAvailable
-  name: SrpAvailable()
-  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SrpAvailable
-  commentId: M:Axiam.Sdk.AxiamClient.SrpAvailable
-  fullName: Axiam.Sdk.AxiamClient.SrpAvailable()
-  nameWithType: AxiamClient.SrpAvailable()
-- uid: Axiam.Sdk.AxiamClient.SrpAvailable*
-  name: SrpAvailable
-  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SrpAvailable_
-  commentId: Overload:Axiam.Sdk.AxiamClient.SrpAvailable
-  isSpec: "True"
-  fullName: Axiam.Sdk.AxiamClient.SrpAvailable
-  nameWithType: AxiamClient.SrpAvailable
-- uid: Axiam.Sdk.AxiamClient.SrpEnrollment(System.String,System.Char[],Axiam.Sdk.Srp.SrpGroup,Axiam.Sdk.Srp.SrpKdfParams)
-  name: SrpEnrollment(string, char[], SrpGroup?, SrpKdfParams?)
-  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SrpEnrollment_System_String_System_Char___Axiam_Sdk_Srp_SrpGroup_Axiam_Sdk_Srp_SrpKdfParams_
-  commentId: M:Axiam.Sdk.AxiamClient.SrpEnrollment(System.String,System.Char[],Axiam.Sdk.Srp.SrpGroup,Axiam.Sdk.Srp.SrpKdfParams)
-  name.vb: SrpEnrollment(String, Char(), SrpGroup, SrpKdfParams)
-  fullName: Axiam.Sdk.AxiamClient.SrpEnrollment(string, char[], Axiam.Sdk.Srp.SrpGroup?, Axiam.Sdk.Srp.SrpKdfParams?)
-  fullName.vb: Axiam.Sdk.AxiamClient.SrpEnrollment(String, Char(), Axiam.Sdk.Srp.SrpGroup, Axiam.Sdk.Srp.SrpKdfParams)
-  nameWithType: AxiamClient.SrpEnrollment(string, char[], SrpGroup?, SrpKdfParams?)
-  nameWithType.vb: AxiamClient.SrpEnrollment(String, Char(), SrpGroup, SrpKdfParams)
-- uid: Axiam.Sdk.AxiamClient.SrpEnrollment*
-  name: SrpEnrollment
-  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SrpEnrollment_
-  commentId: Overload:Axiam.Sdk.AxiamClient.SrpEnrollment
-  isSpec: "True"
-  fullName: Axiam.Sdk.AxiamClient.SrpEnrollment
-  nameWithType: AxiamClient.SrpEnrollment
 - uid: Axiam.Sdk.AxiamClient.SsoCompleteAsync(Axiam.Sdk.Auth.Oidc.SsoCompleteParams,System.Threading.CancellationToken)
   name: SsoCompleteAsync(SsoCompleteParams, CancellationToken)
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteAsync_Axiam_Sdk_Auth_Oidc_SsoCompleteParams_System_Threading_CancellationToken_
@@ -6313,6 +6313,373 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Grpc.UserInfo.TenantId
   nameWithType: UserInfo.TenantId
+- uid: Axiam.Sdk.Opaque
+  name: Axiam.Sdk.Opaque
+  href: api/Axiam.Sdk.Opaque.html
+  commentId: N:Axiam.Sdk.Opaque
+  fullName: Axiam.Sdk.Opaque
+  nameWithType: Axiam.Sdk.Opaque
+- uid: Axiam.Sdk.Opaque.KsfParams
+  name: KsfParams
+  href: api/Axiam.Sdk.Opaque.KsfParams.html
+  commentId: T:Axiam.Sdk.Opaque.KsfParams
+  fullName: Axiam.Sdk.Opaque.KsfParams
+  nameWithType: KsfParams
+- uid: Axiam.Sdk.Opaque.KsfParams.#ctor(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})
+  name: KsfParams(string, int?, int?, int?, int?, int?, int?)
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams__ctor_System_String_System_Nullable_System_Int32__System_Nullable_System_Int32__System_Nullable_System_Int32__System_Nullable_System_Int32__System_Nullable_System_Int32__System_Nullable_System_Int32__
+  commentId: M:Axiam.Sdk.Opaque.KsfParams.#ctor(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})
+  name.vb: New(String, Integer?, Integer?, Integer?, Integer?, Integer?, Integer?)
+  fullName: Axiam.Sdk.Opaque.KsfParams.KsfParams(string, int?, int?, int?, int?, int?, int?)
+  fullName.vb: Axiam.Sdk.Opaque.KsfParams.New(String, Integer?, Integer?, Integer?, Integer?, Integer?, Integer?)
+  nameWithType: KsfParams.KsfParams(string, int?, int?, int?, int?, int?, int?)
+  nameWithType.vb: KsfParams.New(String, Integer?, Integer?, Integer?, Integer?, Integer?, Integer?)
+- uid: Axiam.Sdk.Opaque.KsfParams.#ctor*
+  name: KsfParams
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams__ctor_
+  commentId: Overload:Axiam.Sdk.Opaque.KsfParams.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Opaque.KsfParams.KsfParams
+  fullName.vb: Axiam.Sdk.Opaque.KsfParams.New
+  nameWithType: KsfParams.KsfParams
+  nameWithType.vb: KsfParams.New
+- uid: Axiam.Sdk.Opaque.KsfParams.Argon2id
+  name: Argon2id
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_Argon2id
+  commentId: F:Axiam.Sdk.Opaque.KsfParams.Argon2id
+  fullName: Axiam.Sdk.Opaque.KsfParams.Argon2id
+  nameWithType: KsfParams.Argon2id
+- uid: Axiam.Sdk.Opaque.KsfParams.FromWire(System.Text.Json.JsonElement)
+  name: FromWire(JsonElement)
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_FromWire_System_Text_Json_JsonElement_
+  commentId: M:Axiam.Sdk.Opaque.KsfParams.FromWire(System.Text.Json.JsonElement)
+  fullName: Axiam.Sdk.Opaque.KsfParams.FromWire(System.Text.Json.JsonElement)
+  nameWithType: KsfParams.FromWire(JsonElement)
+- uid: Axiam.Sdk.Opaque.KsfParams.FromWire*
+  name: FromWire
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_FromWire_
+  commentId: Overload:Axiam.Sdk.Opaque.KsfParams.FromWire
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.KsfParams.FromWire
+  nameWithType: KsfParams.FromWire
+- uid: Axiam.Sdk.Opaque.KsfParams.Iterations
+  name: Iterations
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_Iterations
+  commentId: P:Axiam.Sdk.Opaque.KsfParams.Iterations
+  fullName: Axiam.Sdk.Opaque.KsfParams.Iterations
+  nameWithType: KsfParams.Iterations
+- uid: Axiam.Sdk.Opaque.KsfParams.Iterations*
+  name: Iterations
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_Iterations_
+  commentId: Overload:Axiam.Sdk.Opaque.KsfParams.Iterations
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.KsfParams.Iterations
+  nameWithType: KsfParams.Iterations
+- uid: Axiam.Sdk.Opaque.KsfParams.Ksf
+  name: Ksf
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_Ksf
+  commentId: P:Axiam.Sdk.Opaque.KsfParams.Ksf
+  fullName: Axiam.Sdk.Opaque.KsfParams.Ksf
+  nameWithType: KsfParams.Ksf
+- uid: Axiam.Sdk.Opaque.KsfParams.Ksf*
+  name: Ksf
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_Ksf_
+  commentId: Overload:Axiam.Sdk.Opaque.KsfParams.Ksf
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.KsfParams.Ksf
+  nameWithType: KsfParams.Ksf
+- uid: Axiam.Sdk.Opaque.KsfParams.LogN
+  name: LogN
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_LogN
+  commentId: P:Axiam.Sdk.Opaque.KsfParams.LogN
+  fullName: Axiam.Sdk.Opaque.KsfParams.LogN
+  nameWithType: KsfParams.LogN
+- uid: Axiam.Sdk.Opaque.KsfParams.LogN*
+  name: LogN
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_LogN_
+  commentId: Overload:Axiam.Sdk.Opaque.KsfParams.LogN
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.KsfParams.LogN
+  nameWithType: KsfParams.LogN
+- uid: Axiam.Sdk.Opaque.KsfParams.MemoryKib
+  name: MemoryKib
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_MemoryKib
+  commentId: P:Axiam.Sdk.Opaque.KsfParams.MemoryKib
+  fullName: Axiam.Sdk.Opaque.KsfParams.MemoryKib
+  nameWithType: KsfParams.MemoryKib
+- uid: Axiam.Sdk.Opaque.KsfParams.MemoryKib*
+  name: MemoryKib
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_MemoryKib_
+  commentId: Overload:Axiam.Sdk.Opaque.KsfParams.MemoryKib
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.KsfParams.MemoryKib
+  nameWithType: KsfParams.MemoryKib
+- uid: Axiam.Sdk.Opaque.KsfParams.P
+  name: P
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_P
+  commentId: P:Axiam.Sdk.Opaque.KsfParams.P
+  fullName: Axiam.Sdk.Opaque.KsfParams.P
+  nameWithType: KsfParams.P
+- uid: Axiam.Sdk.Opaque.KsfParams.P*
+  name: P
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_P_
+  commentId: Overload:Axiam.Sdk.Opaque.KsfParams.P
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.KsfParams.P
+  nameWithType: KsfParams.P
+- uid: Axiam.Sdk.Opaque.KsfParams.Parallelism
+  name: Parallelism
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_Parallelism
+  commentId: P:Axiam.Sdk.Opaque.KsfParams.Parallelism
+  fullName: Axiam.Sdk.Opaque.KsfParams.Parallelism
+  nameWithType: KsfParams.Parallelism
+- uid: Axiam.Sdk.Opaque.KsfParams.Parallelism*
+  name: Parallelism
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_Parallelism_
+  commentId: Overload:Axiam.Sdk.Opaque.KsfParams.Parallelism
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.KsfParams.Parallelism
+  nameWithType: KsfParams.Parallelism
+- uid: Axiam.Sdk.Opaque.KsfParams.R
+  name: R
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_R
+  commentId: P:Axiam.Sdk.Opaque.KsfParams.R
+  fullName: Axiam.Sdk.Opaque.KsfParams.R
+  nameWithType: KsfParams.R
+- uid: Axiam.Sdk.Opaque.KsfParams.R*
+  name: R
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_R_
+  commentId: Overload:Axiam.Sdk.Opaque.KsfParams.R
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.KsfParams.R
+  nameWithType: KsfParams.R
+- uid: Axiam.Sdk.Opaque.KsfParams.Scrypt
+  name: Scrypt
+  href: api/Axiam.Sdk.Opaque.KsfParams.html#Axiam_Sdk_Opaque_KsfParams_Scrypt
+  commentId: F:Axiam.Sdk.Opaque.KsfParams.Scrypt
+  fullName: Axiam.Sdk.Opaque.KsfParams.Scrypt
+  nameWithType: KsfParams.Scrypt
+- uid: Axiam.Sdk.Opaque.LoginExchange
+  name: LoginExchange
+  href: api/Axiam.Sdk.Opaque.LoginExchange.html
+  commentId: T:Axiam.Sdk.Opaque.LoginExchange
+  fullName: Axiam.Sdk.Opaque.LoginExchange
+  nameWithType: LoginExchange
+- uid: Axiam.Sdk.Opaque.LoginExchange.Finish(System.Char[],System.String,Axiam.Sdk.Opaque.KsfParams)
+  name: Finish(char[], string, KsfParams)
+  href: api/Axiam.Sdk.Opaque.LoginExchange.html#Axiam_Sdk_Opaque_LoginExchange_Finish_System_Char___System_String_Axiam_Sdk_Opaque_KsfParams_
+  commentId: M:Axiam.Sdk.Opaque.LoginExchange.Finish(System.Char[],System.String,Axiam.Sdk.Opaque.KsfParams)
+  name.vb: Finish(Char(), String, KsfParams)
+  fullName: Axiam.Sdk.Opaque.LoginExchange.Finish(char[], string, Axiam.Sdk.Opaque.KsfParams)
+  fullName.vb: Axiam.Sdk.Opaque.LoginExchange.Finish(Char(), String, Axiam.Sdk.Opaque.KsfParams)
+  nameWithType: LoginExchange.Finish(char[], string, KsfParams)
+  nameWithType.vb: LoginExchange.Finish(Char(), String, KsfParams)
+- uid: Axiam.Sdk.Opaque.LoginExchange.Finish*
+  name: Finish
+  href: api/Axiam.Sdk.Opaque.LoginExchange.html#Axiam_Sdk_Opaque_LoginExchange_Finish_
+  commentId: Overload:Axiam.Sdk.Opaque.LoginExchange.Finish
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.LoginExchange.Finish
+  nameWithType: LoginExchange.Finish
+- uid: Axiam.Sdk.Opaque.LoginExchange.Ke1
+  name: Ke1
+  href: api/Axiam.Sdk.Opaque.LoginExchange.html#Axiam_Sdk_Opaque_LoginExchange_Ke1
+  commentId: P:Axiam.Sdk.Opaque.LoginExchange.Ke1
+  fullName: Axiam.Sdk.Opaque.LoginExchange.Ke1
+  nameWithType: LoginExchange.Ke1
+- uid: Axiam.Sdk.Opaque.LoginExchange.Ke1*
+  name: Ke1
+  href: api/Axiam.Sdk.Opaque.LoginExchange.html#Axiam_Sdk_Opaque_LoginExchange_Ke1_
+  commentId: Overload:Axiam.Sdk.Opaque.LoginExchange.Ke1
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.LoginExchange.Ke1
+  nameWithType: LoginExchange.Ke1
+- uid: Axiam.Sdk.Opaque.OpaqueEnrollment
+  name: OpaqueEnrollment
+  href: api/Axiam.Sdk.Opaque.OpaqueEnrollment.html
+  commentId: T:Axiam.Sdk.Opaque.OpaqueEnrollment
+  fullName: Axiam.Sdk.Opaque.OpaqueEnrollment
+  nameWithType: OpaqueEnrollment
+- uid: Axiam.Sdk.Opaque.OpaqueEnrollment.#ctor(System.String,System.String)
+  name: OpaqueEnrollment(string, string)
+  href: api/Axiam.Sdk.Opaque.OpaqueEnrollment.html#Axiam_Sdk_Opaque_OpaqueEnrollment__ctor_System_String_System_String_
+  commentId: M:Axiam.Sdk.Opaque.OpaqueEnrollment.#ctor(System.String,System.String)
+  name.vb: New(String, String)
+  fullName: Axiam.Sdk.Opaque.OpaqueEnrollment.OpaqueEnrollment(string, string)
+  fullName.vb: Axiam.Sdk.Opaque.OpaqueEnrollment.New(String, String)
+  nameWithType: OpaqueEnrollment.OpaqueEnrollment(string, string)
+  nameWithType.vb: OpaqueEnrollment.New(String, String)
+- uid: Axiam.Sdk.Opaque.OpaqueEnrollment.#ctor*
+  name: OpaqueEnrollment
+  href: api/Axiam.Sdk.Opaque.OpaqueEnrollment.html#Axiam_Sdk_Opaque_OpaqueEnrollment__ctor_
+  commentId: Overload:Axiam.Sdk.Opaque.OpaqueEnrollment.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Opaque.OpaqueEnrollment.OpaqueEnrollment
+  fullName.vb: Axiam.Sdk.Opaque.OpaqueEnrollment.New
+  nameWithType: OpaqueEnrollment.OpaqueEnrollment
+  nameWithType.vb: OpaqueEnrollment.New
+- uid: Axiam.Sdk.Opaque.OpaqueEnrollment.OpaqueSession
+  name: OpaqueSession
+  href: api/Axiam.Sdk.Opaque.OpaqueEnrollment.html#Axiam_Sdk_Opaque_OpaqueEnrollment_OpaqueSession
+  commentId: P:Axiam.Sdk.Opaque.OpaqueEnrollment.OpaqueSession
+  fullName: Axiam.Sdk.Opaque.OpaqueEnrollment.OpaqueSession
+  nameWithType: OpaqueEnrollment.OpaqueSession
+- uid: Axiam.Sdk.Opaque.OpaqueEnrollment.OpaqueSession*
+  name: OpaqueSession
+  href: api/Axiam.Sdk.Opaque.OpaqueEnrollment.html#Axiam_Sdk_Opaque_OpaqueEnrollment_OpaqueSession_
+  commentId: Overload:Axiam.Sdk.Opaque.OpaqueEnrollment.OpaqueSession
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.OpaqueEnrollment.OpaqueSession
+  nameWithType: OpaqueEnrollment.OpaqueSession
+- uid: Axiam.Sdk.Opaque.OpaqueEnrollment.RegistrationRecord
+  name: RegistrationRecord
+  href: api/Axiam.Sdk.Opaque.OpaqueEnrollment.html#Axiam_Sdk_Opaque_OpaqueEnrollment_RegistrationRecord
+  commentId: P:Axiam.Sdk.Opaque.OpaqueEnrollment.RegistrationRecord
+  fullName: Axiam.Sdk.Opaque.OpaqueEnrollment.RegistrationRecord
+  nameWithType: OpaqueEnrollment.RegistrationRecord
+- uid: Axiam.Sdk.Opaque.OpaqueEnrollment.RegistrationRecord*
+  name: RegistrationRecord
+  href: api/Axiam.Sdk.Opaque.OpaqueEnrollment.html#Axiam_Sdk_Opaque_OpaqueEnrollment_RegistrationRecord_
+  commentId: Overload:Axiam.Sdk.Opaque.OpaqueEnrollment.RegistrationRecord
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.OpaqueEnrollment.RegistrationRecord
+  nameWithType: OpaqueEnrollment.RegistrationRecord
+- uid: Axiam.Sdk.Opaque.OpaqueEnrollment.ToWire
+  name: ToWire()
+  href: api/Axiam.Sdk.Opaque.OpaqueEnrollment.html#Axiam_Sdk_Opaque_OpaqueEnrollment_ToWire
+  commentId: M:Axiam.Sdk.Opaque.OpaqueEnrollment.ToWire
+  fullName: Axiam.Sdk.Opaque.OpaqueEnrollment.ToWire()
+  nameWithType: OpaqueEnrollment.ToWire()
+- uid: Axiam.Sdk.Opaque.OpaqueEnrollment.ToWire*
+  name: ToWire
+  href: api/Axiam.Sdk.Opaque.OpaqueEnrollment.html#Axiam_Sdk_Opaque_OpaqueEnrollment_ToWire_
+  commentId: Overload:Axiam.Sdk.Opaque.OpaqueEnrollment.ToWire
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.OpaqueEnrollment.ToWire
+  nameWithType: OpaqueEnrollment.ToWire
+- uid: Axiam.Sdk.Opaque.OpaqueExchange
+  name: OpaqueExchange
+  href: api/Axiam.Sdk.Opaque.OpaqueExchange.html
+  commentId: T:Axiam.Sdk.Opaque.OpaqueExchange
+  fullName: Axiam.Sdk.Opaque.OpaqueExchange
+  nameWithType: OpaqueExchange
+- uid: Axiam.Sdk.Opaque.OpaqueExchange.Dispose
+  name: Dispose()
+  href: api/Axiam.Sdk.Opaque.OpaqueExchange.html#Axiam_Sdk_Opaque_OpaqueExchange_Dispose
+  commentId: M:Axiam.Sdk.Opaque.OpaqueExchange.Dispose
+  fullName: Axiam.Sdk.Opaque.OpaqueExchange.Dispose()
+  nameWithType: OpaqueExchange.Dispose()
+- uid: Axiam.Sdk.Opaque.OpaqueExchange.Dispose*
+  name: Dispose
+  href: api/Axiam.Sdk.Opaque.OpaqueExchange.html#Axiam_Sdk_Opaque_OpaqueExchange_Dispose_
+  commentId: Overload:Axiam.Sdk.Opaque.OpaqueExchange.Dispose
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.OpaqueExchange.Dispose
+  nameWithType: OpaqueExchange.Dispose
+- uid: Axiam.Sdk.Opaque.OpaqueExchange.Finalize
+  name: ~OpaqueExchange()
+  href: api/Axiam.Sdk.Opaque.OpaqueExchange.html#Axiam_Sdk_Opaque_OpaqueExchange_Finalize
+  commentId: M:Axiam.Sdk.Opaque.OpaqueExchange.Finalize
+  name.vb: ''
+  fullName: Axiam.Sdk.Opaque.OpaqueExchange.~OpaqueExchange()
+  fullName.vb: ''
+  nameWithType: OpaqueExchange.~OpaqueExchange()
+  nameWithType.vb: ''
+- uid: Axiam.Sdk.Opaque.OpaqueExchange.Finalize*
+  name: ~OpaqueExchange
+  href: api/Axiam.Sdk.Opaque.OpaqueExchange.html#Axiam_Sdk_Opaque_OpaqueExchange_Finalize_
+  commentId: Overload:Axiam.Sdk.Opaque.OpaqueExchange.Finalize
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.OpaqueExchange.~OpaqueExchange
+  nameWithType: OpaqueExchange.~OpaqueExchange
+- uid: Axiam.Sdk.Opaque.OpaqueProtocol
+  name: OpaqueProtocol
+  href: api/Axiam.Sdk.Opaque.OpaqueProtocol.html
+  commentId: T:Axiam.Sdk.Opaque.OpaqueProtocol
+  fullName: Axiam.Sdk.Opaque.OpaqueProtocol
+  nameWithType: OpaqueProtocol
+- uid: Axiam.Sdk.Opaque.OpaqueProtocol.Available
+  name: Available()
+  href: api/Axiam.Sdk.Opaque.OpaqueProtocol.html#Axiam_Sdk_Opaque_OpaqueProtocol_Available
+  commentId: M:Axiam.Sdk.Opaque.OpaqueProtocol.Available
+  fullName: Axiam.Sdk.Opaque.OpaqueProtocol.Available()
+  nameWithType: OpaqueProtocol.Available()
+- uid: Axiam.Sdk.Opaque.OpaqueProtocol.Available*
+  name: Available
+  href: api/Axiam.Sdk.Opaque.OpaqueProtocol.html#Axiam_Sdk_Opaque_OpaqueProtocol_Available_
+  commentId: Overload:Axiam.Sdk.Opaque.OpaqueProtocol.Available
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.OpaqueProtocol.Available
+  nameWithType: OpaqueProtocol.Available
+- uid: Axiam.Sdk.Opaque.OpaqueProtocol.StartLogin(System.Char[])
+  name: StartLogin(char[])
+  href: api/Axiam.Sdk.Opaque.OpaqueProtocol.html#Axiam_Sdk_Opaque_OpaqueProtocol_StartLogin_System_Char___
+  commentId: M:Axiam.Sdk.Opaque.OpaqueProtocol.StartLogin(System.Char[])
+  name.vb: StartLogin(Char())
+  fullName: Axiam.Sdk.Opaque.OpaqueProtocol.StartLogin(char[])
+  fullName.vb: Axiam.Sdk.Opaque.OpaqueProtocol.StartLogin(Char())
+  nameWithType: OpaqueProtocol.StartLogin(char[])
+  nameWithType.vb: OpaqueProtocol.StartLogin(Char())
+- uid: Axiam.Sdk.Opaque.OpaqueProtocol.StartLogin*
+  name: StartLogin
+  href: api/Axiam.Sdk.Opaque.OpaqueProtocol.html#Axiam_Sdk_Opaque_OpaqueProtocol_StartLogin_
+  commentId: Overload:Axiam.Sdk.Opaque.OpaqueProtocol.StartLogin
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.OpaqueProtocol.StartLogin
+  nameWithType: OpaqueProtocol.StartLogin
+- uid: Axiam.Sdk.Opaque.OpaqueProtocol.StartRegistration(System.Char[])
+  name: StartRegistration(char[])
+  href: api/Axiam.Sdk.Opaque.OpaqueProtocol.html#Axiam_Sdk_Opaque_OpaqueProtocol_StartRegistration_System_Char___
+  commentId: M:Axiam.Sdk.Opaque.OpaqueProtocol.StartRegistration(System.Char[])
+  name.vb: StartRegistration(Char())
+  fullName: Axiam.Sdk.Opaque.OpaqueProtocol.StartRegistration(char[])
+  fullName.vb: Axiam.Sdk.Opaque.OpaqueProtocol.StartRegistration(Char())
+  nameWithType: OpaqueProtocol.StartRegistration(char[])
+  nameWithType.vb: OpaqueProtocol.StartRegistration(Char())
+- uid: Axiam.Sdk.Opaque.OpaqueProtocol.StartRegistration*
+  name: StartRegistration
+  href: api/Axiam.Sdk.Opaque.OpaqueProtocol.html#Axiam_Sdk_Opaque_OpaqueProtocol_StartRegistration_
+  commentId: Overload:Axiam.Sdk.Opaque.OpaqueProtocol.StartRegistration
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.OpaqueProtocol.StartRegistration
+  nameWithType: OpaqueProtocol.StartRegistration
+- uid: Axiam.Sdk.Opaque.RegistrationExchange
+  name: RegistrationExchange
+  href: api/Axiam.Sdk.Opaque.RegistrationExchange.html
+  commentId: T:Axiam.Sdk.Opaque.RegistrationExchange
+  fullName: Axiam.Sdk.Opaque.RegistrationExchange
+  nameWithType: RegistrationExchange
+- uid: Axiam.Sdk.Opaque.RegistrationExchange.Finish(System.Char[],System.String,Axiam.Sdk.Opaque.KsfParams)
+  name: Finish(char[], string, KsfParams)
+  href: api/Axiam.Sdk.Opaque.RegistrationExchange.html#Axiam_Sdk_Opaque_RegistrationExchange_Finish_System_Char___System_String_Axiam_Sdk_Opaque_KsfParams_
+  commentId: M:Axiam.Sdk.Opaque.RegistrationExchange.Finish(System.Char[],System.String,Axiam.Sdk.Opaque.KsfParams)
+  name.vb: Finish(Char(), String, KsfParams)
+  fullName: Axiam.Sdk.Opaque.RegistrationExchange.Finish(char[], string, Axiam.Sdk.Opaque.KsfParams)
+  fullName.vb: Axiam.Sdk.Opaque.RegistrationExchange.Finish(Char(), String, Axiam.Sdk.Opaque.KsfParams)
+  nameWithType: RegistrationExchange.Finish(char[], string, KsfParams)
+  nameWithType.vb: RegistrationExchange.Finish(Char(), String, KsfParams)
+- uid: Axiam.Sdk.Opaque.RegistrationExchange.Finish*
+  name: Finish
+  href: api/Axiam.Sdk.Opaque.RegistrationExchange.html#Axiam_Sdk_Opaque_RegistrationExchange_Finish_
+  commentId: Overload:Axiam.Sdk.Opaque.RegistrationExchange.Finish
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.RegistrationExchange.Finish
+  nameWithType: RegistrationExchange.Finish
+- uid: Axiam.Sdk.Opaque.RegistrationExchange.Request
+  name: Request
+  href: api/Axiam.Sdk.Opaque.RegistrationExchange.html#Axiam_Sdk_Opaque_RegistrationExchange_Request
+  commentId: P:Axiam.Sdk.Opaque.RegistrationExchange.Request
+  fullName: Axiam.Sdk.Opaque.RegistrationExchange.Request
+  nameWithType: RegistrationExchange.Request
+- uid: Axiam.Sdk.Opaque.RegistrationExchange.Request*
+  name: Request
+  href: api/Axiam.Sdk.Opaque.RegistrationExchange.html#Axiam_Sdk_Opaque_RegistrationExchange_Request_
+  commentId: Overload:Axiam.Sdk.Opaque.RegistrationExchange.Request
+  isSpec: "True"
+  fullName: Axiam.Sdk.Opaque.RegistrationExchange.Request
+  nameWithType: RegistrationExchange.Request
 - uid: Axiam.Sdk.Options
   name: Axiam.Sdk.Options
   href: api/Axiam.Sdk.Options.html
@@ -8128,650 +8495,6 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Rest.AxiamHttpMessageHandler.SendAsync
   nameWithType: AxiamHttpMessageHandler.SendAsync
-- uid: Axiam.Sdk.Srp
-  name: Axiam.Sdk.Srp
-  href: api/Axiam.Sdk.Srp.html
-  commentId: N:Axiam.Sdk.Srp
-  fullName: Axiam.Sdk.Srp
-  nameWithType: Axiam.Sdk.Srp
-- uid: Axiam.Sdk.Srp.SrpClientSession
-  name: SrpClientSession
-  href: api/Axiam.Sdk.Srp.SrpClientSession.html
-  commentId: T:Axiam.Sdk.Srp.SrpClientSession
-  fullName: Axiam.Sdk.Srp.SrpClientSession
-  nameWithType: SrpClientSession
-- uid: Axiam.Sdk.Srp.SrpClientSession.Begin(Axiam.Sdk.Srp.SrpGroup)
-  name: Begin(SrpGroup)
-  href: api/Axiam.Sdk.Srp.SrpClientSession.html#Axiam_Sdk_Srp_SrpClientSession_Begin_Axiam_Sdk_Srp_SrpGroup_
-  commentId: M:Axiam.Sdk.Srp.SrpClientSession.Begin(Axiam.Sdk.Srp.SrpGroup)
-  fullName: Axiam.Sdk.Srp.SrpClientSession.Begin(Axiam.Sdk.Srp.SrpGroup)
-  nameWithType: SrpClientSession.Begin(SrpGroup)
-- uid: Axiam.Sdk.Srp.SrpClientSession.Begin*
-  name: Begin
-  href: api/Axiam.Sdk.Srp.SrpClientSession.html#Axiam_Sdk_Srp_SrpClientSession_Begin_
-  commentId: Overload:Axiam.Sdk.Srp.SrpClientSession.Begin
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpClientSession.Begin
-  nameWithType: SrpClientSession.Begin
-- uid: Axiam.Sdk.Srp.SrpClientSession.ClientPublic
-  name: ClientPublic
-  href: api/Axiam.Sdk.Srp.SrpClientSession.html#Axiam_Sdk_Srp_SrpClientSession_ClientPublic
-  commentId: P:Axiam.Sdk.Srp.SrpClientSession.ClientPublic
-  fullName: Axiam.Sdk.Srp.SrpClientSession.ClientPublic
-  nameWithType: SrpClientSession.ClientPublic
-- uid: Axiam.Sdk.Srp.SrpClientSession.ClientPublic*
-  name: ClientPublic
-  href: api/Axiam.Sdk.Srp.SrpClientSession.html#Axiam_Sdk_Srp_SrpClientSession_ClientPublic_
-  commentId: Overload:Axiam.Sdk.Srp.SrpClientSession.ClientPublic
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpClientSession.ClientPublic
-  nameWithType: SrpClientSession.ClientPublic
-- uid: Axiam.Sdk.Srp.SrpClientSession.Finish(System.String,System.String,System.String,System.Byte[])
-  name: Finish(string, string, string, byte[])
-  href: api/Axiam.Sdk.Srp.SrpClientSession.html#Axiam_Sdk_Srp_SrpClientSession_Finish_System_String_System_String_System_String_System_Byte___
-  commentId: M:Axiam.Sdk.Srp.SrpClientSession.Finish(System.String,System.String,System.String,System.Byte[])
-  name.vb: Finish(String, String, String, Byte())
-  fullName: Axiam.Sdk.Srp.SrpClientSession.Finish(string, string, string, byte[])
-  fullName.vb: Axiam.Sdk.Srp.SrpClientSession.Finish(String, String, String, Byte())
-  nameWithType: SrpClientSession.Finish(string, string, string, byte[])
-  nameWithType.vb: SrpClientSession.Finish(String, String, String, Byte())
-- uid: Axiam.Sdk.Srp.SrpClientSession.Finish*
-  name: Finish
-  href: api/Axiam.Sdk.Srp.SrpClientSession.html#Axiam_Sdk_Srp_SrpClientSession_Finish_
-  commentId: Overload:Axiam.Sdk.Srp.SrpClientSession.Finish
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpClientSession.Finish
-  nameWithType: SrpClientSession.Finish
-- uid: Axiam.Sdk.Srp.SrpClientSession.Group
-  name: Group
-  href: api/Axiam.Sdk.Srp.SrpClientSession.html#Axiam_Sdk_Srp_SrpClientSession_Group
-  commentId: P:Axiam.Sdk.Srp.SrpClientSession.Group
-  fullName: Axiam.Sdk.Srp.SrpClientSession.Group
-  nameWithType: SrpClientSession.Group
-- uid: Axiam.Sdk.Srp.SrpClientSession.Group*
-  name: Group
-  href: api/Axiam.Sdk.Srp.SrpClientSession.html#Axiam_Sdk_Srp_SrpClientSession_Group_
-  commentId: Overload:Axiam.Sdk.Srp.SrpClientSession.Group
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpClientSession.Group
-  nameWithType: SrpClientSession.Group
-- uid: Axiam.Sdk.Srp.SrpClientSession.WithFixedEphemeral(Axiam.Sdk.Srp.SrpGroup,System.Numerics.BigInteger)
-  name: WithFixedEphemeral(SrpGroup, BigInteger)
-  href: api/Axiam.Sdk.Srp.SrpClientSession.html#Axiam_Sdk_Srp_SrpClientSession_WithFixedEphemeral_Axiam_Sdk_Srp_SrpGroup_System_Numerics_BigInteger_
-  commentId: M:Axiam.Sdk.Srp.SrpClientSession.WithFixedEphemeral(Axiam.Sdk.Srp.SrpGroup,System.Numerics.BigInteger)
-  fullName: Axiam.Sdk.Srp.SrpClientSession.WithFixedEphemeral(Axiam.Sdk.Srp.SrpGroup, System.Numerics.BigInteger)
-  nameWithType: SrpClientSession.WithFixedEphemeral(SrpGroup, BigInteger)
-- uid: Axiam.Sdk.Srp.SrpClientSession.WithFixedEphemeral*
-  name: WithFixedEphemeral
-  href: api/Axiam.Sdk.Srp.SrpClientSession.html#Axiam_Sdk_Srp_SrpClientSession_WithFixedEphemeral_
-  commentId: Overload:Axiam.Sdk.Srp.SrpClientSession.WithFixedEphemeral
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpClientSession.WithFixedEphemeral
-  nameWithType: SrpClientSession.WithFixedEphemeral
-- uid: Axiam.Sdk.Srp.SrpEnrollment
-  name: SrpEnrollment
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html
-  commentId: T:Axiam.Sdk.Srp.SrpEnrollment
-  fullName: Axiam.Sdk.Srp.SrpEnrollment
-  nameWithType: SrpEnrollment
-- uid: Axiam.Sdk.Srp.SrpEnrollment.#ctor(System.String,System.String,System.Int32,System.Int32,System.Int32,System.String,System.String)
-  name: SrpEnrollment(string, string, int, int, int, string, string)
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment__ctor_System_String_System_String_System_Int32_System_Int32_System_Int32_System_String_System_String_
-  commentId: M:Axiam.Sdk.Srp.SrpEnrollment.#ctor(System.String,System.String,System.Int32,System.Int32,System.Int32,System.String,System.String)
-  name.vb: New(String, String, Integer, Integer, Integer, String, String)
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.SrpEnrollment(string, string, int, int, int, string, string)
-  fullName.vb: Axiam.Sdk.Srp.SrpEnrollment.New(String, String, Integer, Integer, Integer, String, String)
-  nameWithType: SrpEnrollment.SrpEnrollment(string, string, int, int, int, string, string)
-  nameWithType.vb: SrpEnrollment.New(String, String, Integer, Integer, Integer, String, String)
-- uid: Axiam.Sdk.Srp.SrpEnrollment.#ctor*
-  name: SrpEnrollment
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment__ctor_
-  commentId: Overload:Axiam.Sdk.Srp.SrpEnrollment.#ctor
-  isSpec: "True"
-  name.vb: New
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.SrpEnrollment
-  fullName.vb: Axiam.Sdk.Srp.SrpEnrollment.New
-  nameWithType: SrpEnrollment.SrpEnrollment
-  nameWithType.vb: SrpEnrollment.New
-- uid: Axiam.Sdk.Srp.SrpEnrollment.Group
-  name: Group
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_Group
-  commentId: P:Axiam.Sdk.Srp.SrpEnrollment.Group
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.Group
-  nameWithType: SrpEnrollment.Group
-- uid: Axiam.Sdk.Srp.SrpEnrollment.Group*
-  name: Group
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_Group_
-  commentId: Overload:Axiam.Sdk.Srp.SrpEnrollment.Group
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.Group
-  nameWithType: SrpEnrollment.Group
-- uid: Axiam.Sdk.Srp.SrpEnrollment.Iterations
-  name: Iterations
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_Iterations
-  commentId: P:Axiam.Sdk.Srp.SrpEnrollment.Iterations
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.Iterations
-  nameWithType: SrpEnrollment.Iterations
-- uid: Axiam.Sdk.Srp.SrpEnrollment.Iterations*
-  name: Iterations
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_Iterations_
-  commentId: Overload:Axiam.Sdk.Srp.SrpEnrollment.Iterations
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.Iterations
-  nameWithType: SrpEnrollment.Iterations
-- uid: Axiam.Sdk.Srp.SrpEnrollment.Kdf
-  name: Kdf
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_Kdf
-  commentId: P:Axiam.Sdk.Srp.SrpEnrollment.Kdf
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.Kdf
-  nameWithType: SrpEnrollment.Kdf
-- uid: Axiam.Sdk.Srp.SrpEnrollment.Kdf*
-  name: Kdf
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_Kdf_
-  commentId: Overload:Axiam.Sdk.Srp.SrpEnrollment.Kdf
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.Kdf
-  nameWithType: SrpEnrollment.Kdf
-- uid: Axiam.Sdk.Srp.SrpEnrollment.MemoryKib
-  name: MemoryKib
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_MemoryKib
-  commentId: P:Axiam.Sdk.Srp.SrpEnrollment.MemoryKib
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.MemoryKib
-  nameWithType: SrpEnrollment.MemoryKib
-- uid: Axiam.Sdk.Srp.SrpEnrollment.MemoryKib*
-  name: MemoryKib
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_MemoryKib_
-  commentId: Overload:Axiam.Sdk.Srp.SrpEnrollment.MemoryKib
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.MemoryKib
-  nameWithType: SrpEnrollment.MemoryKib
-- uid: Axiam.Sdk.Srp.SrpEnrollment.Parallelism
-  name: Parallelism
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_Parallelism
-  commentId: P:Axiam.Sdk.Srp.SrpEnrollment.Parallelism
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.Parallelism
-  nameWithType: SrpEnrollment.Parallelism
-- uid: Axiam.Sdk.Srp.SrpEnrollment.Parallelism*
-  name: Parallelism
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_Parallelism_
-  commentId: Overload:Axiam.Sdk.Srp.SrpEnrollment.Parallelism
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.Parallelism
-  nameWithType: SrpEnrollment.Parallelism
-- uid: Axiam.Sdk.Srp.SrpEnrollment.Salt
-  name: Salt
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_Salt
-  commentId: P:Axiam.Sdk.Srp.SrpEnrollment.Salt
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.Salt
-  nameWithType: SrpEnrollment.Salt
-- uid: Axiam.Sdk.Srp.SrpEnrollment.Salt*
-  name: Salt
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_Salt_
-  commentId: Overload:Axiam.Sdk.Srp.SrpEnrollment.Salt
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.Salt
-  nameWithType: SrpEnrollment.Salt
-- uid: Axiam.Sdk.Srp.SrpEnrollment.ToWire
-  name: ToWire()
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_ToWire
-  commentId: M:Axiam.Sdk.Srp.SrpEnrollment.ToWire
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.ToWire()
-  nameWithType: SrpEnrollment.ToWire()
-- uid: Axiam.Sdk.Srp.SrpEnrollment.ToWire*
-  name: ToWire
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_ToWire_
-  commentId: Overload:Axiam.Sdk.Srp.SrpEnrollment.ToWire
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.ToWire
-  nameWithType: SrpEnrollment.ToWire
-- uid: Axiam.Sdk.Srp.SrpEnrollment.Verifier
-  name: Verifier
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_Verifier
-  commentId: P:Axiam.Sdk.Srp.SrpEnrollment.Verifier
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.Verifier
-  nameWithType: SrpEnrollment.Verifier
-- uid: Axiam.Sdk.Srp.SrpEnrollment.Verifier*
-  name: Verifier
-  href: api/Axiam.Sdk.Srp.SrpEnrollment.html#Axiam_Sdk_Srp_SrpEnrollment_Verifier_
-  commentId: Overload:Axiam.Sdk.Srp.SrpEnrollment.Verifier
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpEnrollment.Verifier
-  nameWithType: SrpEnrollment.Verifier
-- uid: Axiam.Sdk.Srp.SrpGroup
-  name: SrpGroup
-  href: api/Axiam.Sdk.Srp.SrpGroup.html
-  commentId: T:Axiam.Sdk.Srp.SrpGroup
-  fullName: Axiam.Sdk.Srp.SrpGroup
-  nameWithType: SrpGroup
-- uid: Axiam.Sdk.Srp.SrpGroup.All
-  name: All
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_All
-  commentId: P:Axiam.Sdk.Srp.SrpGroup.All
-  fullName: Axiam.Sdk.Srp.SrpGroup.All
-  nameWithType: SrpGroup.All
-- uid: Axiam.Sdk.Srp.SrpGroup.All*
-  name: All
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_All_
-  commentId: Overload:Axiam.Sdk.Srp.SrpGroup.All
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpGroup.All
-  nameWithType: SrpGroup.All
-- uid: Axiam.Sdk.Srp.SrpGroup.ByteLength
-  name: ByteLength
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_ByteLength
-  commentId: P:Axiam.Sdk.Srp.SrpGroup.ByteLength
-  fullName: Axiam.Sdk.Srp.SrpGroup.ByteLength
-  nameWithType: SrpGroup.ByteLength
-- uid: Axiam.Sdk.Srp.SrpGroup.ByteLength*
-  name: ByteLength
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_ByteLength_
-  commentId: Overload:Axiam.Sdk.Srp.SrpGroup.ByteLength
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpGroup.ByteLength
-  nameWithType: SrpGroup.ByteLength
-- uid: Axiam.Sdk.Srp.SrpGroup.DefaultWireName
-  name: DefaultWireName
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_DefaultWireName
-  commentId: F:Axiam.Sdk.Srp.SrpGroup.DefaultWireName
-  fullName: Axiam.Sdk.Srp.SrpGroup.DefaultWireName
-  nameWithType: SrpGroup.DefaultWireName
-- uid: Axiam.Sdk.Srp.SrpGroup.FromWire(System.String)
-  name: FromWire(string)
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_FromWire_System_String_
-  commentId: M:Axiam.Sdk.Srp.SrpGroup.FromWire(System.String)
-  name.vb: FromWire(String)
-  fullName: Axiam.Sdk.Srp.SrpGroup.FromWire(string)
-  fullName.vb: Axiam.Sdk.Srp.SrpGroup.FromWire(String)
-  nameWithType: SrpGroup.FromWire(string)
-  nameWithType.vb: SrpGroup.FromWire(String)
-- uid: Axiam.Sdk.Srp.SrpGroup.FromWire*
-  name: FromWire
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_FromWire_
-  commentId: Overload:Axiam.Sdk.Srp.SrpGroup.FromWire
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpGroup.FromWire
-  nameWithType: SrpGroup.FromWire
-- uid: Axiam.Sdk.Srp.SrpGroup.Generator
-  name: Generator
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_Generator
-  commentId: P:Axiam.Sdk.Srp.SrpGroup.Generator
-  fullName: Axiam.Sdk.Srp.SrpGroup.Generator
-  nameWithType: SrpGroup.Generator
-- uid: Axiam.Sdk.Srp.SrpGroup.Generator*
-  name: Generator
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_Generator_
-  commentId: Overload:Axiam.Sdk.Srp.SrpGroup.Generator
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpGroup.Generator
-  nameWithType: SrpGroup.Generator
-- uid: Axiam.Sdk.Srp.SrpGroup.Modulus
-  name: Modulus
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_Modulus
-  commentId: P:Axiam.Sdk.Srp.SrpGroup.Modulus
-  fullName: Axiam.Sdk.Srp.SrpGroup.Modulus
-  nameWithType: SrpGroup.Modulus
-- uid: Axiam.Sdk.Srp.SrpGroup.Modulus*
-  name: Modulus
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_Modulus_
-  commentId: Overload:Axiam.Sdk.Srp.SrpGroup.Modulus
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpGroup.Modulus
-  nameWithType: SrpGroup.Modulus
-- uid: Axiam.Sdk.Srp.SrpGroup.WireName
-  name: WireName
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_WireName
-  commentId: P:Axiam.Sdk.Srp.SrpGroup.WireName
-  fullName: Axiam.Sdk.Srp.SrpGroup.WireName
-  nameWithType: SrpGroup.WireName
-- uid: Axiam.Sdk.Srp.SrpGroup.WireName*
-  name: WireName
-  href: api/Axiam.Sdk.Srp.SrpGroup.html#Axiam_Sdk_Srp_SrpGroup_WireName_
-  commentId: Overload:Axiam.Sdk.Srp.SrpGroup.WireName
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpGroup.WireName
-  nameWithType: SrpGroup.WireName
-- uid: Axiam.Sdk.Srp.SrpKdfParams
-  name: SrpKdfParams
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html
-  commentId: T:Axiam.Sdk.Srp.SrpKdfParams
-  fullName: Axiam.Sdk.Srp.SrpKdfParams
-  nameWithType: SrpKdfParams
-- uid: Axiam.Sdk.Srp.SrpKdfParams.#ctor(System.String,System.Int32,System.Int32,System.Int32)
-  name: SrpKdfParams(string, int, int, int)
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams__ctor_System_String_System_Int32_System_Int32_System_Int32_
-  commentId: M:Axiam.Sdk.Srp.SrpKdfParams.#ctor(System.String,System.Int32,System.Int32,System.Int32)
-  name.vb: New(String, Integer, Integer, Integer)
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.SrpKdfParams(string, int, int, int)
-  fullName.vb: Axiam.Sdk.Srp.SrpKdfParams.New(String, Integer, Integer, Integer)
-  nameWithType: SrpKdfParams.SrpKdfParams(string, int, int, int)
-  nameWithType.vb: SrpKdfParams.New(String, Integer, Integer, Integer)
-- uid: Axiam.Sdk.Srp.SrpKdfParams.#ctor*
-  name: SrpKdfParams
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams__ctor_
-  commentId: Overload:Axiam.Sdk.Srp.SrpKdfParams.#ctor
-  isSpec: "True"
-  name.vb: New
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.SrpKdfParams
-  fullName.vb: Axiam.Sdk.Srp.SrpKdfParams.New
-  nameWithType: SrpKdfParams.SrpKdfParams
-  nameWithType.vb: SrpKdfParams.New
-- uid: Axiam.Sdk.Srp.SrpKdfParams.Argon2id
-  name: Argon2id
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_Argon2id
-  commentId: F:Axiam.Sdk.Srp.SrpKdfParams.Argon2id
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.Argon2id
-  nameWithType: SrpKdfParams.Argon2id
-- uid: Axiam.Sdk.Srp.SrpKdfParams.FromChallenge(System.Text.Json.JsonElement)
-  name: FromChallenge(JsonElement)
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_FromChallenge_System_Text_Json_JsonElement_
-  commentId: M:Axiam.Sdk.Srp.SrpKdfParams.FromChallenge(System.Text.Json.JsonElement)
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.FromChallenge(System.Text.Json.JsonElement)
-  nameWithType: SrpKdfParams.FromChallenge(JsonElement)
-- uid: Axiam.Sdk.Srp.SrpKdfParams.FromChallenge*
-  name: FromChallenge
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_FromChallenge_
-  commentId: Overload:Axiam.Sdk.Srp.SrpKdfParams.FromChallenge
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.FromChallenge
-  nameWithType: SrpKdfParams.FromChallenge
-- uid: Axiam.Sdk.Srp.SrpKdfParams.Iterations
-  name: Iterations
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_Iterations
-  commentId: P:Axiam.Sdk.Srp.SrpKdfParams.Iterations
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.Iterations
-  nameWithType: SrpKdfParams.Iterations
-- uid: Axiam.Sdk.Srp.SrpKdfParams.Iterations*
-  name: Iterations
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_Iterations_
-  commentId: Overload:Axiam.Sdk.Srp.SrpKdfParams.Iterations
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.Iterations
-  nameWithType: SrpKdfParams.Iterations
-- uid: Axiam.Sdk.Srp.SrpKdfParams.Kdf
-  name: Kdf
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_Kdf
-  commentId: P:Axiam.Sdk.Srp.SrpKdfParams.Kdf
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.Kdf
-  nameWithType: SrpKdfParams.Kdf
-- uid: Axiam.Sdk.Srp.SrpKdfParams.Kdf*
-  name: Kdf
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_Kdf_
-  commentId: Overload:Axiam.Sdk.Srp.SrpKdfParams.Kdf
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.Kdf
-  nameWithType: SrpKdfParams.Kdf
-- uid: Axiam.Sdk.Srp.SrpKdfParams.MemoryKib
-  name: MemoryKib
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_MemoryKib
-  commentId: P:Axiam.Sdk.Srp.SrpKdfParams.MemoryKib
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.MemoryKib
-  nameWithType: SrpKdfParams.MemoryKib
-- uid: Axiam.Sdk.Srp.SrpKdfParams.MemoryKib*
-  name: MemoryKib
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_MemoryKib_
-  commentId: Overload:Axiam.Sdk.Srp.SrpKdfParams.MemoryKib
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.MemoryKib
-  nameWithType: SrpKdfParams.MemoryKib
-- uid: Axiam.Sdk.Srp.SrpKdfParams.Parallelism
-  name: Parallelism
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_Parallelism
-  commentId: P:Axiam.Sdk.Srp.SrpKdfParams.Parallelism
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.Parallelism
-  nameWithType: SrpKdfParams.Parallelism
-- uid: Axiam.Sdk.Srp.SrpKdfParams.Parallelism*
-  name: Parallelism
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_Parallelism_
-  commentId: Overload:Axiam.Sdk.Srp.SrpKdfParams.Parallelism
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.Parallelism
-  nameWithType: SrpKdfParams.Parallelism
-- uid: Axiam.Sdk.Srp.SrpKdfParams.Pbkdf2Sha256
-  name: Pbkdf2Sha256
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_Pbkdf2Sha256
-  commentId: F:Axiam.Sdk.Srp.SrpKdfParams.Pbkdf2Sha256
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.Pbkdf2Sha256
-  nameWithType: SrpKdfParams.Pbkdf2Sha256
-- uid: Axiam.Sdk.Srp.SrpKdfParams.WithDefaults
-  name: WithDefaults()
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_WithDefaults
-  commentId: M:Axiam.Sdk.Srp.SrpKdfParams.WithDefaults
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.WithDefaults()
-  nameWithType: SrpKdfParams.WithDefaults()
-- uid: Axiam.Sdk.Srp.SrpKdfParams.WithDefaults*
-  name: WithDefaults
-  href: api/Axiam.Sdk.Srp.SrpKdfParams.html#Axiam_Sdk_Srp_SrpKdfParams_WithDefaults_
-  commentId: Overload:Axiam.Sdk.Srp.SrpKdfParams.WithDefaults
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpKdfParams.WithDefaults
-  nameWithType: SrpKdfParams.WithDefaults
-- uid: Axiam.Sdk.Srp.SrpMath
-  name: SrpMath
-  href: api/Axiam.Sdk.Srp.SrpMath.html
-  commentId: T:Axiam.Sdk.Srp.SrpMath
-  fullName: Axiam.Sdk.Srp.SrpMath
-  nameWithType: SrpMath
-- uid: Axiam.Sdk.Srp.SrpMath.ComputeVerifier(Axiam.Sdk.Srp.SrpGroup,System.Byte[])
-  name: ComputeVerifier(SrpGroup, byte[])
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_ComputeVerifier_Axiam_Sdk_Srp_SrpGroup_System_Byte___
-  commentId: M:Axiam.Sdk.Srp.SrpMath.ComputeVerifier(Axiam.Sdk.Srp.SrpGroup,System.Byte[])
-  name.vb: ComputeVerifier(SrpGroup, Byte())
-  fullName: Axiam.Sdk.Srp.SrpMath.ComputeVerifier(Axiam.Sdk.Srp.SrpGroup, byte[])
-  fullName.vb: Axiam.Sdk.Srp.SrpMath.ComputeVerifier(Axiam.Sdk.Srp.SrpGroup, Byte())
-  nameWithType: SrpMath.ComputeVerifier(SrpGroup, byte[])
-  nameWithType.vb: SrpMath.ComputeVerifier(SrpGroup, Byte())
-- uid: Axiam.Sdk.Srp.SrpMath.ComputeVerifier*
-  name: ComputeVerifier
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_ComputeVerifier_
-  commentId: Overload:Axiam.Sdk.Srp.SrpMath.ComputeVerifier
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpMath.ComputeVerifier
-  nameWithType: SrpMath.ComputeVerifier
-- uid: Axiam.Sdk.Srp.SrpMath.DeriveX(System.String,System.Char[],System.Byte[],Axiam.Sdk.Srp.SrpKdfParams)
-  name: DeriveX(string, char[], byte[], SrpKdfParams)
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_DeriveX_System_String_System_Char___System_Byte___Axiam_Sdk_Srp_SrpKdfParams_
-  commentId: M:Axiam.Sdk.Srp.SrpMath.DeriveX(System.String,System.Char[],System.Byte[],Axiam.Sdk.Srp.SrpKdfParams)
-  name.vb: DeriveX(String, Char(), Byte(), SrpKdfParams)
-  fullName: Axiam.Sdk.Srp.SrpMath.DeriveX(string, char[], byte[], Axiam.Sdk.Srp.SrpKdfParams)
-  fullName.vb: Axiam.Sdk.Srp.SrpMath.DeriveX(String, Char(), Byte(), Axiam.Sdk.Srp.SrpKdfParams)
-  nameWithType: SrpMath.DeriveX(string, char[], byte[], SrpKdfParams)
-  nameWithType.vb: SrpMath.DeriveX(String, Char(), Byte(), SrpKdfParams)
-- uid: Axiam.Sdk.Srp.SrpMath.DeriveX*
-  name: DeriveX
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_DeriveX_
-  commentId: Overload:Axiam.Sdk.Srp.SrpMath.DeriveX
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpMath.DeriveX
-  nameWithType: SrpMath.DeriveX
-- uid: Axiam.Sdk.Srp.SrpMath.FromHex(System.String,System.String)
-  name: FromHex(string, string)
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_FromHex_System_String_System_String_
-  commentId: M:Axiam.Sdk.Srp.SrpMath.FromHex(System.String,System.String)
-  name.vb: FromHex(String, String)
-  fullName: Axiam.Sdk.Srp.SrpMath.FromHex(string, string)
-  fullName.vb: Axiam.Sdk.Srp.SrpMath.FromHex(String, String)
-  nameWithType: SrpMath.FromHex(string, string)
-  nameWithType.vb: SrpMath.FromHex(String, String)
-- uid: Axiam.Sdk.Srp.SrpMath.FromHex*
-  name: FromHex
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_FromHex_
-  commentId: Overload:Axiam.Sdk.Srp.SrpMath.FromHex
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpMath.FromHex
-  nameWithType: SrpMath.FromHex
-- uid: Axiam.Sdk.Srp.SrpMath.GenerateSalt
-  name: GenerateSalt()
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_GenerateSalt
-  commentId: M:Axiam.Sdk.Srp.SrpMath.GenerateSalt
-  fullName: Axiam.Sdk.Srp.SrpMath.GenerateSalt()
-  nameWithType: SrpMath.GenerateSalt()
-- uid: Axiam.Sdk.Srp.SrpMath.GenerateSalt*
-  name: GenerateSalt
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_GenerateSalt_
-  commentId: Overload:Axiam.Sdk.Srp.SrpMath.GenerateSalt
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpMath.GenerateSalt
-  nameWithType: SrpMath.GenerateSalt
-- uid: Axiam.Sdk.Srp.SrpMath.Hash(System.Byte[][])
-  name: Hash(params byte[][])
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_Hash_System_Byte_____
-  commentId: M:Axiam.Sdk.Srp.SrpMath.Hash(System.Byte[][])
-  name.vb: Hash(ParamArray Byte()())
-  fullName: Axiam.Sdk.Srp.SrpMath.Hash(params byte[][])
-  fullName.vb: Axiam.Sdk.Srp.SrpMath.Hash(ParamArray Byte()())
-  nameWithType: SrpMath.Hash(params byte[][])
-  nameWithType.vb: SrpMath.Hash(ParamArray Byte()())
-- uid: Axiam.Sdk.Srp.SrpMath.Hash*
-  name: Hash
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_Hash_
-  commentId: Overload:Axiam.Sdk.Srp.SrpMath.Hash
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpMath.Hash
-  nameWithType: SrpMath.Hash
-- uid: Axiam.Sdk.Srp.SrpMath.HashToInt(System.Byte[][])
-  name: HashToInt(params byte[][])
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_HashToInt_System_Byte_____
-  commentId: M:Axiam.Sdk.Srp.SrpMath.HashToInt(System.Byte[][])
-  name.vb: HashToInt(ParamArray Byte()())
-  fullName: Axiam.Sdk.Srp.SrpMath.HashToInt(params byte[][])
-  fullName.vb: Axiam.Sdk.Srp.SrpMath.HashToInt(ParamArray Byte()())
-  nameWithType: SrpMath.HashToInt(params byte[][])
-  nameWithType.vb: SrpMath.HashToInt(ParamArray Byte()())
-- uid: Axiam.Sdk.Srp.SrpMath.HashToInt*
-  name: HashToInt
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_HashToInt_
-  commentId: Overload:Axiam.Sdk.Srp.SrpMath.HashToInt
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpMath.HashToInt
-  nameWithType: SrpMath.HashToInt
-- uid: Axiam.Sdk.Srp.SrpMath.Multiplier(Axiam.Sdk.Srp.SrpGroup)
-  name: Multiplier(SrpGroup)
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_Multiplier_Axiam_Sdk_Srp_SrpGroup_
-  commentId: M:Axiam.Sdk.Srp.SrpMath.Multiplier(Axiam.Sdk.Srp.SrpGroup)
-  fullName: Axiam.Sdk.Srp.SrpMath.Multiplier(Axiam.Sdk.Srp.SrpGroup)
-  nameWithType: SrpMath.Multiplier(SrpGroup)
-- uid: Axiam.Sdk.Srp.SrpMath.Multiplier*
-  name: Multiplier
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_Multiplier_
-  commentId: Overload:Axiam.Sdk.Srp.SrpMath.Multiplier
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpMath.Multiplier
-  nameWithType: SrpMath.Multiplier
-- uid: Axiam.Sdk.Srp.SrpMath.Pad(System.Numerics.BigInteger,System.Int32)
-  name: Pad(BigInteger, int)
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_Pad_System_Numerics_BigInteger_System_Int32_
-  commentId: M:Axiam.Sdk.Srp.SrpMath.Pad(System.Numerics.BigInteger,System.Int32)
-  name.vb: Pad(BigInteger, Integer)
-  fullName: Axiam.Sdk.Srp.SrpMath.Pad(System.Numerics.BigInteger, int)
-  fullName.vb: Axiam.Sdk.Srp.SrpMath.Pad(System.Numerics.BigInteger, Integer)
-  nameWithType: SrpMath.Pad(BigInteger, int)
-  nameWithType.vb: SrpMath.Pad(BigInteger, Integer)
-- uid: Axiam.Sdk.Srp.SrpMath.Pad*
-  name: Pad
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_Pad_
-  commentId: Overload:Axiam.Sdk.Srp.SrpMath.Pad
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpMath.Pad
-  nameWithType: SrpMath.Pad
-- uid: Axiam.Sdk.Srp.SrpMath.ToHex(System.Byte[])
-  name: ToHex(byte[])
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_ToHex_System_Byte___
-  commentId: M:Axiam.Sdk.Srp.SrpMath.ToHex(System.Byte[])
-  name.vb: ToHex(Byte())
-  fullName: Axiam.Sdk.Srp.SrpMath.ToHex(byte[])
-  fullName.vb: Axiam.Sdk.Srp.SrpMath.ToHex(Byte())
-  nameWithType: SrpMath.ToHex(byte[])
-  nameWithType.vb: SrpMath.ToHex(Byte())
-- uid: Axiam.Sdk.Srp.SrpMath.ToHex*
-  name: ToHex
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_ToHex_
-  commentId: Overload:Axiam.Sdk.Srp.SrpMath.ToHex
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpMath.ToHex
-  nameWithType: SrpMath.ToHex
-- uid: Axiam.Sdk.Srp.SrpMath.ToPositive(System.Byte[])
-  name: ToPositive(byte[])
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_ToPositive_System_Byte___
-  commentId: M:Axiam.Sdk.Srp.SrpMath.ToPositive(System.Byte[])
-  name.vb: ToPositive(Byte())
-  fullName: Axiam.Sdk.Srp.SrpMath.ToPositive(byte[])
-  fullName.vb: Axiam.Sdk.Srp.SrpMath.ToPositive(Byte())
-  nameWithType: SrpMath.ToPositive(byte[])
-  nameWithType.vb: SrpMath.ToPositive(Byte())
-- uid: Axiam.Sdk.Srp.SrpMath.ToPositive*
-  name: ToPositive
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_ToPositive_
-  commentId: Overload:Axiam.Sdk.Srp.SrpMath.ToPositive
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpMath.ToPositive
-  nameWithType: SrpMath.ToPositive
-- uid: Axiam.Sdk.Srp.SrpMath.VerifyServerProof(System.String,System.String)
-  name: VerifyServerProof(string, string?)
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_VerifyServerProof_System_String_System_String_
-  commentId: M:Axiam.Sdk.Srp.SrpMath.VerifyServerProof(System.String,System.String)
-  name.vb: VerifyServerProof(String, String)
-  fullName: Axiam.Sdk.Srp.SrpMath.VerifyServerProof(string, string?)
-  fullName.vb: Axiam.Sdk.Srp.SrpMath.VerifyServerProof(String, String)
-  nameWithType: SrpMath.VerifyServerProof(string, string?)
-  nameWithType.vb: SrpMath.VerifyServerProof(String, String)
-- uid: Axiam.Sdk.Srp.SrpMath.VerifyServerProof*
-  name: VerifyServerProof
-  href: api/Axiam.Sdk.Srp.SrpMath.html#Axiam_Sdk_Srp_SrpMath_VerifyServerProof_
-  commentId: Overload:Axiam.Sdk.Srp.SrpMath.VerifyServerProof
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpMath.VerifyServerProof
-  nameWithType: SrpMath.VerifyServerProof
-- uid: Axiam.Sdk.Srp.SrpProofs
-  name: SrpProofs
-  href: api/Axiam.Sdk.Srp.SrpProofs.html
-  commentId: T:Axiam.Sdk.Srp.SrpProofs
-  fullName: Axiam.Sdk.Srp.SrpProofs
-  nameWithType: SrpProofs
-- uid: Axiam.Sdk.Srp.SrpProofs.#ctor(System.String,System.String)
-  name: SrpProofs(string, string)
-  href: api/Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs__ctor_System_String_System_String_
-  commentId: M:Axiam.Sdk.Srp.SrpProofs.#ctor(System.String,System.String)
-  name.vb: New(String, String)
-  fullName: Axiam.Sdk.Srp.SrpProofs.SrpProofs(string, string)
-  fullName.vb: Axiam.Sdk.Srp.SrpProofs.New(String, String)
-  nameWithType: SrpProofs.SrpProofs(string, string)
-  nameWithType.vb: SrpProofs.New(String, String)
-- uid: Axiam.Sdk.Srp.SrpProofs.#ctor*
-  name: SrpProofs
-  href: api/Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs__ctor_
-  commentId: Overload:Axiam.Sdk.Srp.SrpProofs.#ctor
-  isSpec: "True"
-  name.vb: New
-  fullName: Axiam.Sdk.Srp.SrpProofs.SrpProofs
-  fullName.vb: Axiam.Sdk.Srp.SrpProofs.New
-  nameWithType: SrpProofs.SrpProofs
-  nameWithType.vb: SrpProofs.New
-- uid: Axiam.Sdk.Srp.SrpProofs.ClientProof
-  name: ClientProof
-  href: api/Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs_ClientProof
-  commentId: P:Axiam.Sdk.Srp.SrpProofs.ClientProof
-  fullName: Axiam.Sdk.Srp.SrpProofs.ClientProof
-  nameWithType: SrpProofs.ClientProof
-- uid: Axiam.Sdk.Srp.SrpProofs.ClientProof*
-  name: ClientProof
-  href: api/Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs_ClientProof_
-  commentId: Overload:Axiam.Sdk.Srp.SrpProofs.ClientProof
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpProofs.ClientProof
-  nameWithType: SrpProofs.ClientProof
-- uid: Axiam.Sdk.Srp.SrpProofs.ExpectedServerProof
-  name: ExpectedServerProof
-  href: api/Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs_ExpectedServerProof
-  commentId: P:Axiam.Sdk.Srp.SrpProofs.ExpectedServerProof
-  fullName: Axiam.Sdk.Srp.SrpProofs.ExpectedServerProof
-  nameWithType: SrpProofs.ExpectedServerProof
-- uid: Axiam.Sdk.Srp.SrpProofs.ExpectedServerProof*
-  name: ExpectedServerProof
-  href: api/Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs_ExpectedServerProof_
-  commentId: Overload:Axiam.Sdk.Srp.SrpProofs.ExpectedServerProof
-  isSpec: "True"
-  fullName: Axiam.Sdk.Srp.SrpProofs.ExpectedServerProof
-  nameWithType: SrpProofs.ExpectedServerProof
 - uid: Axiam.Sdk.Webhooks
   name: Axiam.Sdk.Webhooks
   href: api/Axiam.Sdk.Webhooks.html

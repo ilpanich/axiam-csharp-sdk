@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class SsoCompleteParams | AXIAM .NET SDK </title>
+      <title>Class OpaqueExchange | AXIAM .NET SDK </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class SsoCompleteParams | AXIAM .NET SDK ">
+      <meta name="title" content="Class OpaqueExchange | AXIAM .NET SDK ">
       
-      <meta name="description" content="Arguments to  (POST /api/v1/auth/federation/oidc/callback).">
+      <meta name="description" content="One in-flight OPAQUE exchange, owning a native state handle.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha34/apiSpec/new?filename=Axiam_Sdk_Auth_Oidc_SsoCompleteParams.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.Oidc.SsoCompleteParams%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha34/apiSpec/new?filename=Axiam_Sdk_Opaque_OpaqueExchange.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Opaque.OpaqueExchange%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,26 +84,25 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Axiam.Sdk.Auth.Oidc.SsoCompleteParams">
+        <article data-uid="Axiam.Sdk.Opaque.OpaqueExchange">
 
 
 
-  <h1 id="Axiam_Sdk_Auth_Oidc_SsoCompleteParams" data-uid="Axiam.Sdk.Auth.Oidc.SsoCompleteParams" class="text-break">
-Class SsoCompleteParams  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha34/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L291"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Axiam_Sdk_Opaque_OpaqueExchange" data-uid="Axiam.Sdk.Opaque.OpaqueExchange" class="text-break">
+Class OpaqueExchange  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha34/Axiam.Sdk/Opaque/OpaqueExchange.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Auth.html">Auth</a>.<a class="xref" href="Axiam.Sdk.Auth.Oidc.html">Oidc</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Opaque.html">Opaque</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteAsync_Axiam_Sdk_Auth_Oidc_SsoCompleteParams_System_Threading_CancellationToken_">SsoCompleteAsync(SsoCompleteParams, CancellationToken)</a>
-(<code>POST /api/v1/auth/federation/oidc/callback</code>).</p>
+  <div class="markdown summary"><p>One in-flight OPAQUE exchange, owning a native state handle.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class SsoCompleteParams</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class OpaqueExchange : IDisposable</code></pre>
   </div>
 
 
@@ -113,11 +112,24 @@ Class SsoCompleteParams  <a class="header-action link-secondary" title="View sou
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">SsoCompleteParams</span></div>
+      <div><span class="xref">OpaqueExchange</span></div>
     </dd>
   </dl>
 
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    </dd>
+  </dl>
 
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="Axiam.Sdk.Opaque.LoginExchange.html">LoginExchange</a></div>
+      <div><a class="xref" href="Axiam.Sdk.Opaque.RegistrationExchange.html">RegistrationExchange</a></div>
+    </dd>
+  </dl>
 
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
@@ -135,6 +147,9 @@ Class SsoCompleteParams  <a class="header-action link-secondary" title="View sou
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
@@ -145,36 +160,45 @@ Class SsoCompleteParams  <a class="header-action link-secondary" title="View sou
 
 
 
+  <h2 id="Axiam_Sdk_Opaque_OpaqueExchange_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+The handle is <b>single-use</b>: the library consumes it in <code>Finish</code> whether that
+succeeds or fails. This class takes it out of a one-shot slot, so a second <code>Finish</code>
+raises a .NET exception rather than handing a dangling pointer across the ABI.
+</p>
+<p>
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a> and a finalizer, in that order of preference: <code>using</code>
+releases an abandoned exchange deterministically, and the finalizer catches a caller who
+started a login and never completed it. Both go through the same one-shot slot, so neither
+can double-free.
+</p>
+</div>
 
 
-  <h2 class="section" id="properties">Properties
+  <h2 class="section" id="methods">Methods
 </h2>
 
 
-  <a id="Axiam_Sdk_Auth_Oidc_SsoCompleteParams_Code_" data-uid="Axiam.Sdk.Auth.Oidc.SsoCompleteParams.Code*"></a>
+  <a id="Axiam_Sdk_Opaque_OpaqueExchange_Dispose_" data-uid="Axiam.Sdk.Opaque.OpaqueExchange.Dispose*"></a>
 
-  <h3 id="Axiam_Sdk_Auth_Oidc_SsoCompleteParams_Code" data-uid="Axiam.Sdk.Auth.Oidc.SsoCompleteParams.Code">
-  Code
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha34/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L298"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Opaque_OpaqueExchange_Dispose" data-uid="Axiam.Sdk.Opaque.OpaqueExchange.Dispose">
+  Dispose()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha34/Axiam.Sdk/Opaque/OpaqueExchange.cs/#L55"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The authorization code the IdP redirected back with.</p>
+  <div class="markdown level1 summary"><p>Releases the exchange if it was never finished. Idempotent, and a no-op once
+<code>Finish</code> has spent the handle.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public required string Code { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
   </div>
 
 
 
 
 
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
 
 
 
@@ -183,31 +207,25 @@ Class SsoCompleteParams  <a class="header-action link-secondary" title="View sou
 
 
 
-  <a id="Axiam_Sdk_Auth_Oidc_SsoCompleteParams_State_" data-uid="Axiam.Sdk.Auth.Oidc.SsoCompleteParams.State*"></a>
+  <a id="Axiam_Sdk_Opaque_OpaqueExchange_Finalize_" data-uid="Axiam.Sdk.Opaque.OpaqueExchange.Finalize*"></a>
 
-  <h3 id="Axiam_Sdk_Auth_Oidc_SsoCompleteParams_State" data-uid="Axiam.Sdk.Auth.Oidc.SsoCompleteParams.State">
-  State
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha34/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L295"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Opaque_OpaqueExchange_Finalize" data-uid="Axiam.Sdk.Opaque.OpaqueExchange.Finalize">
+  ~OpaqueExchange()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha34/Axiam.Sdk/Opaque/OpaqueExchange.cs/#L62"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The <code>state</code> value the IdP redirected back with — must be the one
-<a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoStartAsync_Axiam_Sdk_Auth_Oidc_SsoStartParams_System_Threading_CancellationToken_">SsoStartAsync(SsoStartParams, CancellationToken)</a> returned.</p>
+  <div class="markdown level1 summary"><p>Releases an exchange the caller abandoned without disposing it.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public required string State { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">protected ~OpaqueExchange()</code></pre>
   </div>
 
 
 
 
 
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
 
 
 

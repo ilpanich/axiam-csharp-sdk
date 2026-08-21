@@ -1300,6 +1300,104 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Opaque.KsfParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Opaque.KsfParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Opaque.KsfParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Opaque.KsfParams.yml\" sourcestartlinenumber=\"1\">The key-stretching function and cost a <code>/start</code> response names (CONTRACT.md\n§23.4).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Opaque.LoginExchange.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Opaque.LoginExchange.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Opaque.LoginExchange",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Opaque.LoginExchange.yml\" sourcestartlinenumber=\"1\">One in-flight login (CONTRACT.md §23).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Opaque.OpaqueEnrollment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Opaque.OpaqueEnrollment.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Opaque.OpaqueEnrollment",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Opaque.OpaqueEnrollment.yml\" sourcestartlinenumber=\"1\">The <code>opaque</code> object CONTRACT.md §23 defines: a registration record and the\nserver-issued session handle that identifies the exchange it came from.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Opaque.OpaqueExchange.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Opaque.OpaqueExchange.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Opaque.OpaqueExchange",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Opaque.OpaqueExchange.yml\" sourcestartlinenumber=\"1\">One in-flight OPAQUE exchange, owning a native state handle.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Opaque.OpaqueProtocol.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Opaque.OpaqueProtocol.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Opaque.OpaqueProtocol",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Opaque.OpaqueProtocol.yml\" sourcestartlinenumber=\"1\">Entry points into <code>libaxiam_opaque_ffi</code> (CONTRACT.md §23).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Opaque.RegistrationExchange.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Opaque.RegistrationExchange.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Opaque.RegistrationExchange",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Opaque.RegistrationExchange.yml\" sourcestartlinenumber=\"1\">One in-flight enrolment (CONTRACT.md §23).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Opaque.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Opaque.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Opaque",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Options.AxiamClientOptions.yml",
       "output": {
         ".html": {
@@ -1660,104 +1758,6 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.Rest",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Axiam.Sdk.Srp.SrpClientSession.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Axiam.Sdk.Srp.SrpClientSession.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Axiam.Sdk.Srp.SrpClientSession",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Srp.SrpClientSession.yml\" sourcestartlinenumber=\"1\">One SRP exchange's client half: the ephemeral secret <code>a</code> held between the challenge\nrequest and the proof that answers it (CONTRACT.md §23.2).</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Axiam.Sdk.Srp.SrpEnrollment.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Axiam.Sdk.Srp.SrpEnrollment.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Axiam.Sdk.Srp.SrpEnrollment",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Srp.SrpEnrollment.yml\" sourcestartlinenumber=\"1\">The <code>srp</code> object CONTRACT.md §23.5 defines: a verifier and the parameters it was\ncomputed under.</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Axiam.Sdk.Srp.SrpGroup.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Axiam.Sdk.Srp.SrpGroup.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Axiam.Sdk.Srp.SrpGroup",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Srp.SrpGroup.yml\" sourcestartlinenumber=\"1\">The RFC 5054 Appendix A groups AXIAM speaks (CONTRACT.md §23.4).</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Axiam.Sdk.Srp.SrpKdfParams.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Axiam.Sdk.Srp.SrpKdfParams.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Axiam.Sdk.Srp.SrpKdfParams",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Srp.SrpKdfParams.yml\" sourcestartlinenumber=\"1\">The KDF and cost the server dictates for one SRP exchange (CONTRACT.md §23.5).</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Axiam.Sdk.Srp.SrpMath.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Axiam.Sdk.Srp.SrpMath.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Axiam.Sdk.Srp.SrpMath",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Srp.SrpMath.yml\" sourcestartlinenumber=\"1\">SRP-6a protocol arithmetic (CONTRACT.md §23).</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Axiam.Sdk.Srp.SrpProofs.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Axiam.Sdk.Srp.SrpProofs.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Axiam.Sdk.Srp.SrpProofs",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Srp.SrpProofs.yml\" sourcestartlinenumber=\"1\">The two proofs an SRP exchange produces (CONTRACT.md §23.2).</p>\n"
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Axiam.Sdk.Srp.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Axiam.Sdk.Srp.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Axiam.Sdk.Srp",
       "Summary": null
     },
     {

@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class SrpProofs | AXIAM .NET SDK </title>
+      <title>Class LoginExchange | AXIAM .NET SDK </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class SrpProofs | AXIAM .NET SDK ">
+      <meta name="title" content="Class LoginExchange | AXIAM .NET SDK ">
       
-      <meta name="description" content="The two proofs an SRP exchange produces (CONTRACT.md &#167;23.2).">
+      <meta name="description" content="One in-flight login (CONTRACT.md &#167;23).">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha31/apiSpec/new?filename=Axiam_Sdk_Srp_SrpProofs.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Srp.SrpProofs%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha34/apiSpec/new?filename=Axiam_Sdk_Opaque_LoginExchange.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Opaque.LoginExchange%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,25 +84,25 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Axiam.Sdk.Srp.SrpProofs">
+        <article data-uid="Axiam.Sdk.Opaque.LoginExchange">
 
 
 
-  <h1 id="Axiam_Sdk_Srp_SrpProofs" data-uid="Axiam.Sdk.Srp.SrpProofs" class="text-break">
-Class SrpProofs  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha31/Axiam.Sdk/Srp/SrpProofs.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Axiam_Sdk_Opaque_LoginExchange" data-uid="Axiam.Sdk.Opaque.LoginExchange" class="text-break">
+Class LoginExchange  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha34/Axiam.Sdk/Opaque/OpaqueExchange.cs/#L144"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Srp.html">Srp</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Opaque.html">Opaque</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>The two proofs an SRP exchange produces (CONTRACT.md §23.2).</p>
+  <div class="markdown summary"><p>One in-flight login (CONTRACT.md §23).</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed record SrpProofs : IEquatable&lt;SrpProofs&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class LoginExchange : OpaqueExchange, IDisposable</code></pre>
   </div>
 
 
@@ -112,14 +112,15 @@ Class SrpProofs  <a class="header-action link-secondary" title="View source" hre
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">SrpProofs</span></div>
+      <div><a class="xref" href="Axiam.Sdk.Opaque.OpaqueExchange.html">OpaqueExchange</a></div>
+      <div><span class="xref">LoginExchange</span></div>
     </dd>
   </dl>
 
   <dl class="typelist implements">
     <dt>Implements</dt>
     <dd>
-      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Srp.SrpProofs.html">SrpProofs</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
     </dd>
   </dl>
 
@@ -127,6 +128,9 @@ Class SrpProofs  <a class="header-action link-secondary" title="View source" hre
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
+    <div>
+      <a class="xref" href="Axiam.Sdk.Opaque.OpaqueExchange.html#Axiam_Sdk_Opaque_OpaqueExchange_Dispose">OpaqueExchange.Dispose()</a>
+    </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
     </div>
@@ -150,77 +154,25 @@ Class SrpProofs  <a class="header-action link-secondary" title="View source" hre
 
 
 
-  <h2 id="Axiam_Sdk_Srp_SrpProofs_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p><a class="xref" href="Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs_ClientProof">ClientProof</a> goes on the verify request. <a class="xref" href="Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs_ExpectedServerProof">ExpectedServerProof</a>
-stays here and is compared against the response's <code>server_proof</code>: that comparison is
-the half of SRP that authenticates the <i>server</i>, and §23.3 rule 6 makes it
-mandatory.</p>
-</div>
-
-
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="Axiam_Sdk_Srp_SrpProofs__ctor_" data-uid="Axiam.Sdk.Srp.SrpProofs.#ctor*"></a>
-
-  <h3 id="Axiam_Sdk_Srp_SrpProofs__ctor_System_String_System_String_" data-uid="Axiam.Sdk.Srp.SrpProofs.#ctor(System.String,System.String)">
-  SrpProofs(string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha31/Axiam.Sdk/Srp/SrpProofs.cs/#L12"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The two proofs an SRP exchange produces (CONTRACT.md §23.2).</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SrpProofs(string ClientProof, string ExpectedServerProof)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>ClientProof</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p><code>M1</code>, lowercase hex.</p>
-</dd>
-    <dt><code>ExpectedServerProof</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The <code>M2</code> the server must return.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <h4 class="section" id="Axiam_Sdk_Srp_SrpProofs__ctor_System_String_System_String__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p><a class="xref" href="Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs_ClientProof">ClientProof</a> goes on the verify request. <a class="xref" href="Axiam.Sdk.Srp.SrpProofs.html#Axiam_Sdk_Srp_SrpProofs_ExpectedServerProof">ExpectedServerProof</a>
-stays here and is compared against the response's <code>server_proof</code>: that comparison is
-the half of SRP that authenticates the <i>server</i>, and §23.3 rule 6 makes it
-mandatory.</p>
-</div>
-
-
 
 
   <h2 class="section" id="properties">Properties
 </h2>
 
 
-  <a id="Axiam_Sdk_Srp_SrpProofs_ClientProof_" data-uid="Axiam.Sdk.Srp.SrpProofs.ClientProof*"></a>
+  <a id="Axiam_Sdk_Opaque_LoginExchange_Ke1_" data-uid="Axiam.Sdk.Opaque.LoginExchange.Ke1*"></a>
 
-  <h3 id="Axiam_Sdk_Srp_SrpProofs_ClientProof" data-uid="Axiam.Sdk.Srp.SrpProofs.ClientProof">
-  ClientProof
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha31/Axiam.Sdk/Srp/SrpProofs.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Opaque_LoginExchange_Ke1" data-uid="Axiam.Sdk.Opaque.LoginExchange.Ke1">
+  Ke1
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha34/Axiam.Sdk/Opaque/OpaqueExchange.cs/#L152"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p><code>M1</code>, lowercase hex.</p>
+  <div class="markdown level1 summary"><p>The hex <code>KE1</code> to send to <code>login/start</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string ClientProof { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Ke1 { get; }</code></pre>
   </div>
 
 
@@ -240,35 +192,78 @@ mandatory.</p>
 
 
 
-  <a id="Axiam_Sdk_Srp_SrpProofs_ExpectedServerProof_" data-uid="Axiam.Sdk.Srp.SrpProofs.ExpectedServerProof*"></a>
+  <h2 class="section" id="methods">Methods
+</h2>
 
-  <h3 id="Axiam_Sdk_Srp_SrpProofs_ExpectedServerProof" data-uid="Axiam.Sdk.Srp.SrpProofs.ExpectedServerProof">
-  ExpectedServerProof
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha31/Axiam.Sdk/Srp/SrpProofs.cs/#L12"><i class="bi bi-code-slash"></i></a>
+
+  <a id="Axiam_Sdk_Opaque_LoginExchange_Finish_" data-uid="Axiam.Sdk.Opaque.LoginExchange.Finish*"></a>
+
+  <h3 id="Axiam_Sdk_Opaque_LoginExchange_Finish_System_Char___System_String_Axiam_Sdk_Opaque_KsfParams_" data-uid="Axiam.Sdk.Opaque.LoginExchange.Finish(System.Char[],System.String,Axiam.Sdk.Opaque.KsfParams)">
+  Finish(char[], string, KsfParams)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha34/Axiam.Sdk/Opaque/OpaqueExchange.cs/#L184"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The <code>M2</code> the server must return.</p>
+  <div class="markdown level1 summary"><p>Opens the envelope, producing <code>KE3</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string ExpectedServerProof { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Finish(char[] password, string ke2, KsfParams ksf)</code></pre>
   </div>
 
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>password</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">char</a>[]</dt>
+    <dd><p>The account password; every copy this SDK makes is cleared, but not the caller's.</p>
+</dd>
+    <dt><code>ke2</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The server's hex <code>KE2</code>.</p>
+</dd>
+    <dt><code>ksf</code> <a class="xref" href="Axiam.Sdk.Opaque.KsfParams.html">KsfParams</a></dt>
+    <dd><p>The key-stretching function the server named.</p>
+</dd>
+  </dl>
 
-
-
-
-  <h4 class="section">Property Value</h4>
+  <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The hex <code>KE3</code> to send to <code>login/finish</code>.</p>
+</dd>
   </dl>
 
 
 
 
 
+
+
+  <h4 class="section" id="Axiam_Sdk_Opaque_LoginExchange_Finish_System_Char___System_String_Axiam_Sdk_Opaque_KsfParams__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+A failure here is the <b>whole</b> of the client's authentication check, and covers both
+halves of the mutual authentication: the envelope only opens under the right password,
+and <code>KE2</code>'s MAC only verifies if the server actually holds the record. Nothing may
+be sent afterwards (§23.4 rule 7).
+</p>
+<p>
+That case is an <a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a>, unlike every other null return in this
+namespace. The distinction is the point: a wrong password, an account that does not
+exist and a server that does not hold the record are indistinguishable by design and are
+all authentication failures, whereas a key-stretching function this build cannot perform
+is a configuration problem, and reporting it as "invalid password" would send an
+operator looking in the wrong place.
+</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
+    <dd><p>The envelope did not open, or <code>KE2</code> did not verify.</p>
+</dd>
+    <dt><a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a></dt>
+    <dd><p>The exchange is already spent, or the key-stretching function is one this SDK cannot ask
+for.</p>
+</dd>
+  </dl>
 
 
 

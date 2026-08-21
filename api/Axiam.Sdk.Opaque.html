@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Namespace Axiam.Sdk.Srp | AXIAM .NET SDK </title>
+      <title>Namespace Axiam.Sdk.Opaque | AXIAM .NET SDK </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Namespace Axiam.Sdk.Srp | AXIAM .NET SDK ">
+      <meta name="title" content="Namespace Axiam.Sdk.Opaque | AXIAM .NET SDK ">
       
       
       <link rel="icon" href="../favicon.ico">
@@ -84,9 +84,9 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Axiam.Sdk.Srp">
+        <article data-uid="Axiam.Sdk.Opaque">
 
-  <h1 id="Axiam_Sdk_Srp" data-uid="Axiam.Sdk.Srp" class="text-break">Namespace Axiam.Sdk.Srp</h1>
+  <h1 id="Axiam_Sdk_Opaque" data-uid="Axiam.Sdk.Opaque" class="text-break">Namespace Axiam.Sdk.Opaque</h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
@@ -95,35 +95,35 @@
 Classes
 </h3>
     <dl class="jumplist">
-      <dt><a class="xref" href="Axiam.Sdk.Srp.SrpClientSession.html">SrpClientSession</a></dt>
-      <dd><p>One SRP exchange's client half: the ephemeral secret <code>a</code> held between the challenge
-request and the proof that answers it (CONTRACT.md §23.2).</p>
+      <dt><a class="xref" href="Axiam.Sdk.Opaque.KsfParams.html">KsfParams</a></dt>
+      <dd><p>The key-stretching function and cost a <code>/start</code> response names (CONTRACT.md
+§23.4).</p>
 </dd>
     </dl>
     <dl class="jumplist">
-      <dt><a class="xref" href="Axiam.Sdk.Srp.SrpEnrollment.html">SrpEnrollment</a></dt>
-      <dd><p>The <code>srp</code> object CONTRACT.md §23.5 defines: a verifier and the parameters it was
-computed under.</p>
+      <dt><a class="xref" href="Axiam.Sdk.Opaque.LoginExchange.html">LoginExchange</a></dt>
+      <dd><p>One in-flight login (CONTRACT.md §23).</p>
 </dd>
     </dl>
     <dl class="jumplist">
-      <dt><a class="xref" href="Axiam.Sdk.Srp.SrpGroup.html">SrpGroup</a></dt>
-      <dd><p>The RFC 5054 Appendix A groups AXIAM speaks (CONTRACT.md §23.4).</p>
+      <dt><a class="xref" href="Axiam.Sdk.Opaque.OpaqueEnrollment.html">OpaqueEnrollment</a></dt>
+      <dd><p>The <code>opaque</code> object CONTRACT.md §23 defines: a registration record and the
+server-issued session handle that identifies the exchange it came from.</p>
 </dd>
     </dl>
     <dl class="jumplist">
-      <dt><a class="xref" href="Axiam.Sdk.Srp.SrpKdfParams.html">SrpKdfParams</a></dt>
-      <dd><p>The KDF and cost the server dictates for one SRP exchange (CONTRACT.md §23.5).</p>
+      <dt><a class="xref" href="Axiam.Sdk.Opaque.OpaqueExchange.html">OpaqueExchange</a></dt>
+      <dd><p>One in-flight OPAQUE exchange, owning a native state handle.</p>
 </dd>
     </dl>
     <dl class="jumplist">
-      <dt><a class="xref" href="Axiam.Sdk.Srp.SrpMath.html">SrpMath</a></dt>
-      <dd><p>SRP-6a protocol arithmetic (CONTRACT.md §23).</p>
+      <dt><a class="xref" href="Axiam.Sdk.Opaque.OpaqueProtocol.html">OpaqueProtocol</a></dt>
+      <dd><p>Entry points into <code>libaxiam_opaque_ffi</code> (CONTRACT.md §23).</p>
 </dd>
     </dl>
     <dl class="jumplist">
-      <dt><a class="xref" href="Axiam.Sdk.Srp.SrpProofs.html">SrpProofs</a></dt>
-      <dd><p>The two proofs an SRP exchange produces (CONTRACT.md §23.2).</p>
+      <dt><a class="xref" href="Axiam.Sdk.Opaque.RegistrationExchange.html">RegistrationExchange</a></dt>
+      <dd><p>One in-flight enrolment (CONTRACT.md §23).</p>
 </dd>
     </dl>
 
