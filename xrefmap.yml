@@ -7,6 +7,217 @@ references:
   commentId: N:Axiam.Sdk
   fullName: Axiam.Sdk
   nameWithType: Axiam.Sdk
+- uid: Axiam.Sdk.Account
+  name: Axiam.Sdk.Account
+  href: api/Axiam.Sdk.Account.html
+  commentId: N:Axiam.Sdk.Account
+  fullName: Axiam.Sdk.Account
+  nameWithType: Axiam.Sdk.Account
+- uid: Axiam.Sdk.Account.MfaEnrollment
+  name: MfaEnrollment
+  href: api/Axiam.Sdk.Account.MfaEnrollment.html
+  commentId: T:Axiam.Sdk.Account.MfaEnrollment
+  fullName: Axiam.Sdk.Account.MfaEnrollment
+  nameWithType: MfaEnrollment
+- uid: Axiam.Sdk.Account.MfaEnrollment.#ctor(Axiam.Sdk.Core.Sensitive{System.String},Axiam.Sdk.Core.Sensitive{System.String})
+  name: MfaEnrollment(Sensitive<string>, Sensitive<string>)
+  href: api/Axiam.Sdk.Account.MfaEnrollment.html#Axiam_Sdk_Account_MfaEnrollment__ctor_Axiam_Sdk_Core_Sensitive_System_String__Axiam_Sdk_Core_Sensitive_System_String__
+  commentId: M:Axiam.Sdk.Account.MfaEnrollment.#ctor(Axiam.Sdk.Core.Sensitive{System.String},Axiam.Sdk.Core.Sensitive{System.String})
+  name.vb: New(Sensitive(Of String), Sensitive(Of String))
+  fullName: Axiam.Sdk.Account.MfaEnrollment.MfaEnrollment(Axiam.Sdk.Core.Sensitive<string>, Axiam.Sdk.Core.Sensitive<string>)
+  fullName.vb: Axiam.Sdk.Account.MfaEnrollment.New(Axiam.Sdk.Core.Sensitive(Of String), Axiam.Sdk.Core.Sensitive(Of String))
+  nameWithType: MfaEnrollment.MfaEnrollment(Sensitive<string>, Sensitive<string>)
+  nameWithType.vb: MfaEnrollment.New(Sensitive(Of String), Sensitive(Of String))
+- uid: Axiam.Sdk.Account.MfaEnrollment.#ctor*
+  name: MfaEnrollment
+  href: api/Axiam.Sdk.Account.MfaEnrollment.html#Axiam_Sdk_Account_MfaEnrollment__ctor_
+  commentId: Overload:Axiam.Sdk.Account.MfaEnrollment.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Account.MfaEnrollment.MfaEnrollment
+  fullName.vb: Axiam.Sdk.Account.MfaEnrollment.New
+  nameWithType: MfaEnrollment.MfaEnrollment
+  nameWithType.vb: MfaEnrollment.New
+- uid: Axiam.Sdk.Account.MfaEnrollment.SecretBase32
+  name: SecretBase32
+  href: api/Axiam.Sdk.Account.MfaEnrollment.html#Axiam_Sdk_Account_MfaEnrollment_SecretBase32
+  commentId: P:Axiam.Sdk.Account.MfaEnrollment.SecretBase32
+  fullName: Axiam.Sdk.Account.MfaEnrollment.SecretBase32
+  nameWithType: MfaEnrollment.SecretBase32
+- uid: Axiam.Sdk.Account.MfaEnrollment.SecretBase32*
+  name: SecretBase32
+  href: api/Axiam.Sdk.Account.MfaEnrollment.html#Axiam_Sdk_Account_MfaEnrollment_SecretBase32_
+  commentId: Overload:Axiam.Sdk.Account.MfaEnrollment.SecretBase32
+  isSpec: "True"
+  fullName: Axiam.Sdk.Account.MfaEnrollment.SecretBase32
+  nameWithType: MfaEnrollment.SecretBase32
+- uid: Axiam.Sdk.Account.MfaEnrollment.TotpUri
+  name: TotpUri
+  href: api/Axiam.Sdk.Account.MfaEnrollment.html#Axiam_Sdk_Account_MfaEnrollment_TotpUri
+  commentId: P:Axiam.Sdk.Account.MfaEnrollment.TotpUri
+  fullName: Axiam.Sdk.Account.MfaEnrollment.TotpUri
+  nameWithType: MfaEnrollment.TotpUri
+- uid: Axiam.Sdk.Account.MfaEnrollment.TotpUri*
+  name: TotpUri
+  href: api/Axiam.Sdk.Account.MfaEnrollment.html#Axiam_Sdk_Account_MfaEnrollment_TotpUri_
+  commentId: Overload:Axiam.Sdk.Account.MfaEnrollment.TotpUri
+  isSpec: "True"
+  fullName: Axiam.Sdk.Account.MfaEnrollment.TotpUri
+  nameWithType: MfaEnrollment.TotpUri
+- uid: Axiam.Sdk.Account.PasswordResetConfirmation
+  name: PasswordResetConfirmation
+  href: api/Axiam.Sdk.Account.PasswordResetConfirmation.html
+  commentId: T:Axiam.Sdk.Account.PasswordResetConfirmation
+  fullName: Axiam.Sdk.Account.PasswordResetConfirmation
+  nameWithType: PasswordResetConfirmation
+- uid: Axiam.Sdk.Account.PasswordResetConfirmation.NewPassword
+  name: NewPassword
+  href: api/Axiam.Sdk.Account.PasswordResetConfirmation.html#Axiam_Sdk_Account_PasswordResetConfirmation_NewPassword
+  commentId: P:Axiam.Sdk.Account.PasswordResetConfirmation.NewPassword
+  fullName: Axiam.Sdk.Account.PasswordResetConfirmation.NewPassword
+  nameWithType: PasswordResetConfirmation.NewPassword
+- uid: Axiam.Sdk.Account.PasswordResetConfirmation.NewPassword*
+  name: NewPassword
+  href: api/Axiam.Sdk.Account.PasswordResetConfirmation.html#Axiam_Sdk_Account_PasswordResetConfirmation_NewPassword_
+  commentId: Overload:Axiam.Sdk.Account.PasswordResetConfirmation.NewPassword
+  isSpec: "True"
+  fullName: Axiam.Sdk.Account.PasswordResetConfirmation.NewPassword
+  nameWithType: PasswordResetConfirmation.NewPassword
+- uid: Axiam.Sdk.Account.PasswordResetConfirmation.Opaque
+  name: Opaque
+  href: api/Axiam.Sdk.Account.PasswordResetConfirmation.html#Axiam_Sdk_Account_PasswordResetConfirmation_Opaque
+  commentId: P:Axiam.Sdk.Account.PasswordResetConfirmation.Opaque
+  fullName: Axiam.Sdk.Account.PasswordResetConfirmation.Opaque
+  nameWithType: PasswordResetConfirmation.Opaque
+- uid: Axiam.Sdk.Account.PasswordResetConfirmation.Opaque*
+  name: Opaque
+  href: api/Axiam.Sdk.Account.PasswordResetConfirmation.html#Axiam_Sdk_Account_PasswordResetConfirmation_Opaque_
+  commentId: Overload:Axiam.Sdk.Account.PasswordResetConfirmation.Opaque
+  isSpec: "True"
+  fullName: Axiam.Sdk.Account.PasswordResetConfirmation.Opaque
+  nameWithType: PasswordResetConfirmation.Opaque
+- uid: Axiam.Sdk.Account.PasswordResetConfirmation.TenantId
+  name: TenantId
+  href: api/Axiam.Sdk.Account.PasswordResetConfirmation.html#Axiam_Sdk_Account_PasswordResetConfirmation_TenantId
+  commentId: P:Axiam.Sdk.Account.PasswordResetConfirmation.TenantId
+  fullName: Axiam.Sdk.Account.PasswordResetConfirmation.TenantId
+  nameWithType: PasswordResetConfirmation.TenantId
+- uid: Axiam.Sdk.Account.PasswordResetConfirmation.TenantId*
+  name: TenantId
+  href: api/Axiam.Sdk.Account.PasswordResetConfirmation.html#Axiam_Sdk_Account_PasswordResetConfirmation_TenantId_
+  commentId: Overload:Axiam.Sdk.Account.PasswordResetConfirmation.TenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Account.PasswordResetConfirmation.TenantId
+  nameWithType: PasswordResetConfirmation.TenantId
+- uid: Axiam.Sdk.Account.PasswordResetConfirmation.Token
+  name: Token
+  href: api/Axiam.Sdk.Account.PasswordResetConfirmation.html#Axiam_Sdk_Account_PasswordResetConfirmation_Token
+  commentId: P:Axiam.Sdk.Account.PasswordResetConfirmation.Token
+  fullName: Axiam.Sdk.Account.PasswordResetConfirmation.Token
+  nameWithType: PasswordResetConfirmation.Token
+- uid: Axiam.Sdk.Account.PasswordResetConfirmation.Token*
+  name: Token
+  href: api/Axiam.Sdk.Account.PasswordResetConfirmation.html#Axiam_Sdk_Account_PasswordResetConfirmation_Token_
+  commentId: Overload:Axiam.Sdk.Account.PasswordResetConfirmation.Token
+  isSpec: "True"
+  fullName: Axiam.Sdk.Account.PasswordResetConfirmation.Token
+  nameWithType: PasswordResetConfirmation.Token
+- uid: Axiam.Sdk.Account.PasswordResetContext
+  name: PasswordResetContext
+  href: api/Axiam.Sdk.Account.PasswordResetContext.html
+  commentId: T:Axiam.Sdk.Account.PasswordResetContext
+  fullName: Axiam.Sdk.Account.PasswordResetContext
+  nameWithType: PasswordResetContext
+- uid: Axiam.Sdk.Account.PasswordResetContext.#ctor(System.Nullable{System.Text.Json.JsonElement})
+  name: PasswordResetContext(JsonElement?)
+  href: api/Axiam.Sdk.Account.PasswordResetContext.html#Axiam_Sdk_Account_PasswordResetContext__ctor_System_Nullable_System_Text_Json_JsonElement__
+  commentId: M:Axiam.Sdk.Account.PasswordResetContext.#ctor(System.Nullable{System.Text.Json.JsonElement})
+  name.vb: New(JsonElement?)
+  fullName: Axiam.Sdk.Account.PasswordResetContext.PasswordResetContext(System.Text.Json.JsonElement?)
+  fullName.vb: Axiam.Sdk.Account.PasswordResetContext.New(System.Text.Json.JsonElement?)
+  nameWithType: PasswordResetContext.PasswordResetContext(JsonElement?)
+  nameWithType.vb: PasswordResetContext.New(JsonElement?)
+- uid: Axiam.Sdk.Account.PasswordResetContext.#ctor*
+  name: PasswordResetContext
+  href: api/Axiam.Sdk.Account.PasswordResetContext.html#Axiam_Sdk_Account_PasswordResetContext__ctor_
+  commentId: Overload:Axiam.Sdk.Account.PasswordResetContext.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Account.PasswordResetContext.PasswordResetContext
+  fullName.vb: Axiam.Sdk.Account.PasswordResetContext.New
+  nameWithType: PasswordResetContext.PasswordResetContext
+  nameWithType.vb: PasswordResetContext.New
+- uid: Axiam.Sdk.Account.PasswordResetContext.Opaque
+  name: Opaque
+  href: api/Axiam.Sdk.Account.PasswordResetContext.html#Axiam_Sdk_Account_PasswordResetContext_Opaque
+  commentId: P:Axiam.Sdk.Account.PasswordResetContext.Opaque
+  fullName: Axiam.Sdk.Account.PasswordResetContext.Opaque
+  nameWithType: PasswordResetContext.Opaque
+- uid: Axiam.Sdk.Account.PasswordResetContext.Opaque*
+  name: Opaque
+  href: api/Axiam.Sdk.Account.PasswordResetContext.html#Axiam_Sdk_Account_PasswordResetContext_Opaque_
+  commentId: Overload:Axiam.Sdk.Account.PasswordResetContext.Opaque
+  isSpec: "True"
+  fullName: Axiam.Sdk.Account.PasswordResetContext.Opaque
+  nameWithType: PasswordResetContext.Opaque
+- uid: Axiam.Sdk.Account.PasswordResetRequest
+  name: PasswordResetRequest
+  href: api/Axiam.Sdk.Account.PasswordResetRequest.html
+  commentId: T:Axiam.Sdk.Account.PasswordResetRequest
+  fullName: Axiam.Sdk.Account.PasswordResetRequest
+  nameWithType: PasswordResetRequest
+- uid: Axiam.Sdk.Account.PasswordResetRequest.Email
+  name: Email
+  href: api/Axiam.Sdk.Account.PasswordResetRequest.html#Axiam_Sdk_Account_PasswordResetRequest_Email
+  commentId: P:Axiam.Sdk.Account.PasswordResetRequest.Email
+  fullName: Axiam.Sdk.Account.PasswordResetRequest.Email
+  nameWithType: PasswordResetRequest.Email
+- uid: Axiam.Sdk.Account.PasswordResetRequest.Email*
+  name: Email
+  href: api/Axiam.Sdk.Account.PasswordResetRequest.html#Axiam_Sdk_Account_PasswordResetRequest_Email_
+  commentId: Overload:Axiam.Sdk.Account.PasswordResetRequest.Email
+  isSpec: "True"
+  fullName: Axiam.Sdk.Account.PasswordResetRequest.Email
+  nameWithType: PasswordResetRequest.Email
+- uid: Axiam.Sdk.Account.PasswordResetRequest.OrgSlug
+  name: OrgSlug
+  href: api/Axiam.Sdk.Account.PasswordResetRequest.html#Axiam_Sdk_Account_PasswordResetRequest_OrgSlug
+  commentId: P:Axiam.Sdk.Account.PasswordResetRequest.OrgSlug
+  fullName: Axiam.Sdk.Account.PasswordResetRequest.OrgSlug
+  nameWithType: PasswordResetRequest.OrgSlug
+- uid: Axiam.Sdk.Account.PasswordResetRequest.OrgSlug*
+  name: OrgSlug
+  href: api/Axiam.Sdk.Account.PasswordResetRequest.html#Axiam_Sdk_Account_PasswordResetRequest_OrgSlug_
+  commentId: Overload:Axiam.Sdk.Account.PasswordResetRequest.OrgSlug
+  isSpec: "True"
+  fullName: Axiam.Sdk.Account.PasswordResetRequest.OrgSlug
+  nameWithType: PasswordResetRequest.OrgSlug
+- uid: Axiam.Sdk.Account.PasswordResetRequest.TenantId
+  name: TenantId
+  href: api/Axiam.Sdk.Account.PasswordResetRequest.html#Axiam_Sdk_Account_PasswordResetRequest_TenantId
+  commentId: P:Axiam.Sdk.Account.PasswordResetRequest.TenantId
+  fullName: Axiam.Sdk.Account.PasswordResetRequest.TenantId
+  nameWithType: PasswordResetRequest.TenantId
+- uid: Axiam.Sdk.Account.PasswordResetRequest.TenantId*
+  name: TenantId
+  href: api/Axiam.Sdk.Account.PasswordResetRequest.html#Axiam_Sdk_Account_PasswordResetRequest_TenantId_
+  commentId: Overload:Axiam.Sdk.Account.PasswordResetRequest.TenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Account.PasswordResetRequest.TenantId
+  nameWithType: PasswordResetRequest.TenantId
+- uid: Axiam.Sdk.Account.PasswordResetRequest.TenantSlug
+  name: TenantSlug
+  href: api/Axiam.Sdk.Account.PasswordResetRequest.html#Axiam_Sdk_Account_PasswordResetRequest_TenantSlug
+  commentId: P:Axiam.Sdk.Account.PasswordResetRequest.TenantSlug
+  fullName: Axiam.Sdk.Account.PasswordResetRequest.TenantSlug
+  nameWithType: PasswordResetRequest.TenantSlug
+- uid: Axiam.Sdk.Account.PasswordResetRequest.TenantSlug*
+  name: TenantSlug
+  href: api/Axiam.Sdk.Account.PasswordResetRequest.html#Axiam_Sdk_Account_PasswordResetRequest_TenantSlug_
+  commentId: Overload:Axiam.Sdk.Account.PasswordResetRequest.TenantSlug
+  isSpec: "True"
+  fullName: Axiam.Sdk.Account.PasswordResetRequest.TenantSlug
+  nameWithType: PasswordResetRequest.TenantSlug
 - uid: Axiam.Sdk.Amqp
   name: Axiam.Sdk.Amqp
   href: api/Axiam.Sdk.Amqp.html
@@ -1460,15 +1671,15 @@ references:
   commentId: T:Axiam.Sdk.Auth.LoginResult
   fullName: Axiam.Sdk.Auth.LoginResult
   nameWithType: LoginResult
-- uid: Axiam.Sdk.Auth.LoginResult.#ctor(System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}})
-  name: LoginResult(bool, Sensitive<string>?)
-  href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult__ctor_System_Boolean_System_Nullable_Axiam_Sdk_Core_Sensitive_System_String___
-  commentId: M:Axiam.Sdk.Auth.LoginResult.#ctor(System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}})
-  name.vb: New(Boolean, Sensitive(Of String)?)
-  fullName: Axiam.Sdk.Auth.LoginResult.LoginResult(bool, Axiam.Sdk.Core.Sensitive<string>?)
-  fullName.vb: Axiam.Sdk.Auth.LoginResult.New(Boolean, Axiam.Sdk.Core.Sensitive(Of String)?)
-  nameWithType: LoginResult.LoginResult(bool, Sensitive<string>?)
-  nameWithType.vb: LoginResult.New(Boolean, Sensitive(Of String)?)
+- uid: Axiam.Sdk.Auth.LoginResult.#ctor(System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}})
+  name: LoginResult(bool, Sensitive<string>?, bool, Sensitive<string>?)
+  href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult__ctor_System_Boolean_System_Nullable_Axiam_Sdk_Core_Sensitive_System_String___System_Boolean_System_Nullable_Axiam_Sdk_Core_Sensitive_System_String___
+  commentId: M:Axiam.Sdk.Auth.LoginResult.#ctor(System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}})
+  name.vb: New(Boolean, Sensitive(Of String)?, Boolean, Sensitive(Of String)?)
+  fullName: Axiam.Sdk.Auth.LoginResult.LoginResult(bool, Axiam.Sdk.Core.Sensitive<string>?, bool, Axiam.Sdk.Core.Sensitive<string>?)
+  fullName.vb: Axiam.Sdk.Auth.LoginResult.New(Boolean, Axiam.Sdk.Core.Sensitive(Of String)?, Boolean, Axiam.Sdk.Core.Sensitive(Of String)?)
+  nameWithType: LoginResult.LoginResult(bool, Sensitive<string>?, bool, Sensitive<string>?)
+  nameWithType.vb: LoginResult.New(Boolean, Sensitive(Of String)?, Boolean, Sensitive(Of String)?)
 - uid: Axiam.Sdk.Auth.LoginResult.#ctor*
   name: LoginResult
   href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult__ctor_
@@ -1505,6 +1716,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.LoginResult.MfaRequired
   nameWithType: LoginResult.MfaRequired
+- uid: Axiam.Sdk.Auth.LoginResult.MfaSetupRequired
+  name: MfaSetupRequired
+  href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult_MfaSetupRequired
+  commentId: P:Axiam.Sdk.Auth.LoginResult.MfaSetupRequired
+  fullName: Axiam.Sdk.Auth.LoginResult.MfaSetupRequired
+  nameWithType: LoginResult.MfaSetupRequired
+- uid: Axiam.Sdk.Auth.LoginResult.MfaSetupRequired*
+  name: MfaSetupRequired
+  href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult_MfaSetupRequired_
+  commentId: Overload:Axiam.Sdk.Auth.LoginResult.MfaSetupRequired
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.LoginResult.MfaSetupRequired
+  nameWithType: LoginResult.MfaSetupRequired
+- uid: Axiam.Sdk.Auth.LoginResult.SetupToken
+  name: SetupToken
+  href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult_SetupToken
+  commentId: P:Axiam.Sdk.Auth.LoginResult.SetupToken
+  fullName: Axiam.Sdk.Auth.LoginResult.SetupToken
+  nameWithType: LoginResult.SetupToken
+- uid: Axiam.Sdk.Auth.LoginResult.SetupToken*
+  name: SetupToken
+  href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult_SetupToken_
+  commentId: Overload:Axiam.Sdk.Auth.LoginResult.SetupToken
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.LoginResult.SetupToken
+  nameWithType: LoginResult.SetupToken
 - uid: Axiam.Sdk.Auth.Oidc
   name: Axiam.Sdk.Auth.Oidc
   href: api/Axiam.Sdk.Auth.Oidc.html
@@ -2638,15 +2875,15 @@ references:
   commentId: T:Axiam.Sdk.Auth.Oidc.OidcConfiguration
   fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration
   nameWithType: OidcConfiguration
-- uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String,System.Boolean,System.Boolean)
-  name: OidcConfiguration(string, string, string, string, string, string, string, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, string?, string?, bool, bool)
-  href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration__ctor_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_String_System_String_System_Boolean_System_Boolean_
-  commentId: M:Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String,System.Boolean,System.Boolean)
-  name.vb: New(String, String, String, String, String, String, String, IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), String, String, Boolean, Boolean)
-  fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.OidcConfiguration(string, string, string, string, string, string, string, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, string?, string?, bool, bool)
-  fullName.vb: Axiam.Sdk.Auth.Oidc.OidcConfiguration.New(String, String, String, String, String, String, String, System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), String, String, Boolean, Boolean)
-  nameWithType: OidcConfiguration.OidcConfiguration(string, string, string, string, string, string, string, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, string?, string?, bool, bool)
-  nameWithType.vb: OidcConfiguration.New(String, String, String, String, String, String, String, IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), String, String, Boolean, Boolean)
+- uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String,System.String,System.Boolean,System.Boolean)
+  name: OidcConfiguration(string, string, string, string, string, string, string, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, string?, string?, string?, bool, bool)
+  href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration__ctor_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_String_System_String_System_String_System_Boolean_System_Boolean_
+  commentId: M:Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String,System.String,System.Boolean,System.Boolean)
+  name.vb: New(String, String, String, String, String, String, String, IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), String, String, String, Boolean, Boolean)
+  fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.OidcConfiguration(string, string, string, string, string, string, string, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, string?, string?, string?, bool, bool)
+  fullName.vb: Axiam.Sdk.Auth.Oidc.OidcConfiguration.New(String, String, String, String, String, String, String, System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), String, String, String, Boolean, Boolean)
+  nameWithType: OidcConfiguration.OidcConfiguration(string, string, string, string, string, string, string, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, string?, string?, string?, bool, bool)
+  nameWithType.vb: OidcConfiguration.New(String, String, String, String, String, String, String, IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), String, String, String, Boolean, Boolean)
 - uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor*
   name: OidcConfiguration
   href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration__ctor_
@@ -2800,6 +3037,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.JwksUri
   nameWithType: OidcConfiguration.JwksUri
+- uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.PushedAuthorizationRequestEndpoint
+  name: PushedAuthorizationRequestEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_PushedAuthorizationRequestEndpoint
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcConfiguration.PushedAuthorizationRequestEndpoint
+  fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.PushedAuthorizationRequestEndpoint
+  nameWithType: OidcConfiguration.PushedAuthorizationRequestEndpoint
+- uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.PushedAuthorizationRequestEndpoint*
+  name: PushedAuthorizationRequestEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_PushedAuthorizationRequestEndpoint_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcConfiguration.PushedAuthorizationRequestEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.PushedAuthorizationRequestEndpoint
+  nameWithType: OidcConfiguration.PushedAuthorizationRequestEndpoint
 - uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.ResponseTypesSupported
   name: ResponseTypesSupported
   href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_ResponseTypesSupported
@@ -2975,6 +3225,77 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.OidcExchangeParams.TenantId
   nameWithType: OidcExchangeParams.TenantId
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams
+  name: OidcParParams
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html
+  commentId: T:Axiam.Sdk.Auth.Oidc.OidcParParams
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams
+  nameWithType: OidcParParams
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.Configuration
+  name: Configuration
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_Configuration
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcParParams.Configuration
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.Configuration
+  nameWithType: OidcParParams.Configuration
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.Configuration*
+  name: Configuration
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_Configuration_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcParParams.Configuration
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.Configuration
+  nameWithType: OidcParParams.Configuration
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.RedirectUri
+  name: RedirectUri
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_RedirectUri
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcParParams.RedirectUri
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.RedirectUri
+  nameWithType: OidcParParams.RedirectUri
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.RedirectUri*
+  name: RedirectUri
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_RedirectUri_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcParParams.RedirectUri
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.RedirectUri
+  nameWithType: OidcParParams.RedirectUri
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.Request
+  name: Request
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_Request
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcParParams.Request
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.Request
+  nameWithType: OidcParParams.Request
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.Request*
+  name: Request
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_Request_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcParParams.Request
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.Request
+  nameWithType: OidcParParams.Request
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.Scope
+  name: Scope
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_Scope
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcParParams.Scope
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.Scope
+  nameWithType: OidcParParams.Scope
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.Scope*
+  name: Scope
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_Scope_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcParParams.Scope
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.Scope
+  nameWithType: OidcParParams.Scope
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.TenantId
+  name: TenantId
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_TenantId
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcParParams.TenantId
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.TenantId
+  nameWithType: OidcParParams.TenantId
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.TenantId*
+  name: TenantId
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_TenantId_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcParParams.TenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.TenantId
+  nameWithType: OidcParParams.TenantId
 - uid: Axiam.Sdk.Auth.Oidc.OidcRefreshParams
   name: OidcRefreshParams
   href: api/Axiam.Sdk.Auth.Oidc.OidcRefreshParams.html
@@ -3239,6 +3560,109 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.OidcTokenSet.TokenType
   nameWithType: OidcTokenSet.TokenType
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest
+  name: PushedAuthorizationRequest
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html
+  commentId: T:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest
+  nameWithType: PushedAuthorizationRequest
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.#ctor(System.String,Axiam.Sdk.Core.Sensitive{System.String},System.Int64,System.String,System.String,Axiam.Sdk.Core.Sensitive{System.String})
+  name: PushedAuthorizationRequest(string, Sensitive<string>, long, string, string, Sensitive<string>)
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest__ctor_System_String_Axiam_Sdk_Core_Sensitive_System_String__System_Int64_System_String_System_String_Axiam_Sdk_Core_Sensitive_System_String__
+  commentId: M:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.#ctor(System.String,Axiam.Sdk.Core.Sensitive{System.String},System.Int64,System.String,System.String,Axiam.Sdk.Core.Sensitive{System.String})
+  name.vb: New(String, Sensitive(Of String), Long, String, String, Sensitive(Of String))
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.PushedAuthorizationRequest(string, Axiam.Sdk.Core.Sensitive<string>, long, string, string, Axiam.Sdk.Core.Sensitive<string>)
+  fullName.vb: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.New(String, Axiam.Sdk.Core.Sensitive(Of String), Long, String, String, Axiam.Sdk.Core.Sensitive(Of String))
+  nameWithType: PushedAuthorizationRequest.PushedAuthorizationRequest(string, Sensitive<string>, long, string, string, Sensitive<string>)
+  nameWithType.vb: PushedAuthorizationRequest.New(String, Sensitive(Of String), Long, String, String, Sensitive(Of String))
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.#ctor*
+  name: PushedAuthorizationRequest
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest__ctor_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.PushedAuthorizationRequest
+  fullName.vb: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.New
+  nameWithType: PushedAuthorizationRequest.PushedAuthorizationRequest
+  nameWithType.vb: PushedAuthorizationRequest.New
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.CodeVerifier
+  name: CodeVerifier
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest_CodeVerifier
+  commentId: P:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.CodeVerifier
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.CodeVerifier
+  nameWithType: PushedAuthorizationRequest.CodeVerifier
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.CodeVerifier*
+  name: CodeVerifier
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest_CodeVerifier_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.CodeVerifier
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.CodeVerifier
+  nameWithType: PushedAuthorizationRequest.CodeVerifier
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.ExpiresIn
+  name: ExpiresIn
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest_ExpiresIn
+  commentId: P:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.ExpiresIn
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.ExpiresIn
+  nameWithType: PushedAuthorizationRequest.ExpiresIn
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.ExpiresIn*
+  name: ExpiresIn
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest_ExpiresIn_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.ExpiresIn
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.ExpiresIn
+  nameWithType: PushedAuthorizationRequest.ExpiresIn
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.Nonce
+  name: Nonce
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest_Nonce
+  commentId: P:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.Nonce
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.Nonce
+  nameWithType: PushedAuthorizationRequest.Nonce
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.Nonce*
+  name: Nonce
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest_Nonce_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.Nonce
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.Nonce
+  nameWithType: PushedAuthorizationRequest.Nonce
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.RequestUri
+  name: RequestUri
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest_RequestUri
+  commentId: P:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.RequestUri
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.RequestUri
+  nameWithType: PushedAuthorizationRequest.RequestUri
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.RequestUri*
+  name: RequestUri
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest_RequestUri_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.RequestUri
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.RequestUri
+  nameWithType: PushedAuthorizationRequest.RequestUri
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.State
+  name: State
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest_State
+  commentId: P:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.State
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.State
+  nameWithType: PushedAuthorizationRequest.State
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.State*
+  name: State
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest_State_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.State
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.State
+  nameWithType: PushedAuthorizationRequest.State
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.Url
+  name: Url
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest_Url
+  commentId: P:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.Url
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.Url
+  nameWithType: PushedAuthorizationRequest.Url
+- uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.Url*
+  name: Url
+  href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html#Axiam_Sdk_Auth_Oidc_PushedAuthorizationRequest_Url_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.Url
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.Url
+  nameWithType: PushedAuthorizationRequest.Url
 - uid: Axiam.Sdk.Auth.Oidc.RequestedPermission
   name: RequestedPermission
   href: api/Axiam.Sdk.Auth.Oidc.RequestedPermission.html
@@ -4431,6 +4855,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.Authz
   nameWithType: AxiamClient.Authz
+- uid: Axiam.Sdk.AxiamClient.ConfirmPasswordResetAsync(Axiam.Sdk.Account.PasswordResetConfirmation,System.Threading.CancellationToken)
+  name: ConfirmPasswordResetAsync(PasswordResetConfirmation, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_ConfirmPasswordResetAsync_Axiam_Sdk_Account_PasswordResetConfirmation_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.ConfirmPasswordResetAsync(Axiam.Sdk.Account.PasswordResetConfirmation,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.ConfirmPasswordResetAsync(Axiam.Sdk.Account.PasswordResetConfirmation, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.ConfirmPasswordResetAsync(PasswordResetConfirmation, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.ConfirmPasswordResetAsync*
+  name: ConfirmPasswordResetAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_ConfirmPasswordResetAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.ConfirmPasswordResetAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.ConfirmPasswordResetAsync
+  nameWithType: AxiamClient.ConfirmPasswordResetAsync
 - uid: Axiam.Sdk.AxiamClient.DeviceAuthorizeAsync(Axiam.Sdk.Auth.Oidc.DeviceAuthorizeParams,System.Threading.CancellationToken)
   name: DeviceAuthorizeAsync(DeviceAuthorizeParams, CancellationToken)
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_DeviceAuthorizeAsync_Axiam_Sdk_Auth_Oidc_DeviceAuthorizeParams_System_Threading_CancellationToken_
@@ -4573,6 +5010,67 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.LogoutUrlAsync
   nameWithType: AxiamClient.LogoutUrlAsync
+- uid: Axiam.Sdk.AxiamClient.MfaConfirmAsync(System.String,System.Threading.CancellationToken)
+  name: MfaConfirmAsync(string, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_MfaConfirmAsync_System_String_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.MfaConfirmAsync(System.String,System.Threading.CancellationToken)
+  name.vb: MfaConfirmAsync(String, CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.MfaConfirmAsync(string, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.MfaConfirmAsync(String, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.MfaConfirmAsync(string, CancellationToken)
+  nameWithType.vb: AxiamClient.MfaConfirmAsync(String, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.MfaConfirmAsync*
+  name: MfaConfirmAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_MfaConfirmAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.MfaConfirmAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.MfaConfirmAsync
+  nameWithType: AxiamClient.MfaConfirmAsync
+- uid: Axiam.Sdk.AxiamClient.MfaEnrollAsync(System.Threading.CancellationToken)
+  name: MfaEnrollAsync(CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_MfaEnrollAsync_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.MfaEnrollAsync(System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.MfaEnrollAsync(System.Threading.CancellationToken)
+  nameWithType: AxiamClient.MfaEnrollAsync(CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.MfaEnrollAsync*
+  name: MfaEnrollAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_MfaEnrollAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.MfaEnrollAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.MfaEnrollAsync
+  nameWithType: AxiamClient.MfaEnrollAsync
+- uid: Axiam.Sdk.AxiamClient.MfaSetupConfirmAsync(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.Threading.CancellationToken)
+  name: MfaSetupConfirmAsync(Sensitive<string>, string, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_MfaSetupConfirmAsync_Axiam_Sdk_Core_Sensitive_System_String__System_String_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.MfaSetupConfirmAsync(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.Threading.CancellationToken)
+  name.vb: MfaSetupConfirmAsync(Sensitive(Of String), String, CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.MfaSetupConfirmAsync(Axiam.Sdk.Core.Sensitive<string>, string, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.MfaSetupConfirmAsync(Axiam.Sdk.Core.Sensitive(Of String), String, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.MfaSetupConfirmAsync(Sensitive<string>, string, CancellationToken)
+  nameWithType.vb: AxiamClient.MfaSetupConfirmAsync(Sensitive(Of String), String, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.MfaSetupConfirmAsync*
+  name: MfaSetupConfirmAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_MfaSetupConfirmAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.MfaSetupConfirmAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.MfaSetupConfirmAsync
+  nameWithType: AxiamClient.MfaSetupConfirmAsync
+- uid: Axiam.Sdk.AxiamClient.MfaSetupEnrollAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)
+  name: MfaSetupEnrollAsync(Sensitive<string>, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_MfaSetupEnrollAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.MfaSetupEnrollAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)
+  name.vb: MfaSetupEnrollAsync(Sensitive(Of String), CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.MfaSetupEnrollAsync(Axiam.Sdk.Core.Sensitive<string>, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.MfaSetupEnrollAsync(Axiam.Sdk.Core.Sensitive(Of String), System.Threading.CancellationToken)
+  nameWithType: AxiamClient.MfaSetupEnrollAsync(Sensitive<string>, CancellationToken)
+  nameWithType.vb: AxiamClient.MfaSetupEnrollAsync(Sensitive(Of String), CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.MfaSetupEnrollAsync*
+  name: MfaSetupEnrollAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_MfaSetupEnrollAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.MfaSetupEnrollAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.MfaSetupEnrollAsync
+  nameWithType: AxiamClient.MfaSetupEnrollAsync
 - uid: Axiam.Sdk.AxiamClient.OidcBegin(Axiam.Sdk.Auth.Oidc.OidcConfiguration,Axiam.Sdk.Auth.Oidc.OidcBeginParams)
   name: OidcBegin(OidcConfiguration, OidcBeginParams)
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OidcBegin_Axiam_Sdk_Auth_Oidc_OidcConfiguration_Axiam_Sdk_Auth_Oidc_OidcBeginParams_
@@ -4612,6 +5110,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.OidcExchangeAsync
   nameWithType: AxiamClient.OidcExchangeAsync
+- uid: Axiam.Sdk.AxiamClient.OidcParAsync(Axiam.Sdk.Auth.Oidc.OidcParParams,System.Threading.CancellationToken)
+  name: OidcParAsync(OidcParParams, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OidcParAsync_Axiam_Sdk_Auth_Oidc_OidcParParams_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.OidcParAsync(Axiam.Sdk.Auth.Oidc.OidcParParams,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.OidcParAsync(Axiam.Sdk.Auth.Oidc.OidcParParams, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.OidcParAsync(OidcParParams, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.OidcParAsync*
+  name: OidcParAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OidcParAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.OidcParAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.OidcParAsync
+  nameWithType: AxiamClient.OidcParAsync
 - uid: Axiam.Sdk.AxiamClient.OidcRefreshAsync(Axiam.Sdk.Auth.Oidc.OidcRefreshParams,System.Threading.CancellationToken)
   name: OidcRefreshAsync(OidcRefreshParams, CancellationToken)
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OidcRefreshAsync_Axiam_Sdk_Auth_Oidc_OidcRefreshParams_System_Threading_CancellationToken_
@@ -4654,6 +5165,22 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.OpaqueEnrollmentAsync
   nameWithType: AxiamClient.OpaqueEnrollmentAsync
+- uid: Axiam.Sdk.AxiamClient.PasswordResetContextAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)
+  name: PasswordResetContextAsync(Sensitive<string>, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_PasswordResetContextAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.PasswordResetContextAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)
+  name.vb: PasswordResetContextAsync(Sensitive(Of String), CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.PasswordResetContextAsync(Axiam.Sdk.Core.Sensitive<string>, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.PasswordResetContextAsync(Axiam.Sdk.Core.Sensitive(Of String), System.Threading.CancellationToken)
+  nameWithType: AxiamClient.PasswordResetContextAsync(Sensitive<string>, CancellationToken)
+  nameWithType.vb: AxiamClient.PasswordResetContextAsync(Sensitive(Of String), CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.PasswordResetContextAsync*
+  name: PasswordResetContextAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_PasswordResetContextAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.PasswordResetContextAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.PasswordResetContextAsync
+  nameWithType: AxiamClient.PasswordResetContextAsync
 - uid: Axiam.Sdk.AxiamClient.RefreshAsync(System.Threading.CancellationToken)
   name: RefreshAsync(CancellationToken)
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_RefreshAsync_System_Threading_CancellationToken_
@@ -4667,6 +5194,35 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.RefreshAsync
   nameWithType: AxiamClient.RefreshAsync
+- uid: Axiam.Sdk.AxiamClient.RequestPasswordResetAsync(Axiam.Sdk.Account.PasswordResetRequest,System.Threading.CancellationToken)
+  name: RequestPasswordResetAsync(PasswordResetRequest, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_RequestPasswordResetAsync_Axiam_Sdk_Account_PasswordResetRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.RequestPasswordResetAsync(Axiam.Sdk.Account.PasswordResetRequest,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.RequestPasswordResetAsync(Axiam.Sdk.Account.PasswordResetRequest, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.RequestPasswordResetAsync(PasswordResetRequest, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.RequestPasswordResetAsync*
+  name: RequestPasswordResetAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_RequestPasswordResetAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.RequestPasswordResetAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.RequestPasswordResetAsync
+  nameWithType: AxiamClient.RequestPasswordResetAsync
+- uid: Axiam.Sdk.AxiamClient.ResendVerificationAsync(System.String,System.Guid,System.Threading.CancellationToken)
+  name: ResendVerificationAsync(string, Guid, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_ResendVerificationAsync_System_String_System_Guid_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.ResendVerificationAsync(System.String,System.Guid,System.Threading.CancellationToken)
+  name.vb: ResendVerificationAsync(String, Guid, CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.ResendVerificationAsync(string, System.Guid, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.ResendVerificationAsync(String, System.Guid, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.ResendVerificationAsync(string, Guid, CancellationToken)
+  nameWithType.vb: AxiamClient.ResendVerificationAsync(String, Guid, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.ResendVerificationAsync*
+  name: ResendVerificationAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_ResendVerificationAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.ResendVerificationAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.ResendVerificationAsync
+  nameWithType: AxiamClient.ResendVerificationAsync
 - uid: Axiam.Sdk.AxiamClient.RevokeAsync(Axiam.Sdk.Auth.Oidc.RevokeParams,System.Threading.CancellationToken)
   name: RevokeAsync(RevokeParams, CancellationToken)
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_RevokeAsync_Axiam_Sdk_Auth_Oidc_RevokeParams_System_Threading_CancellationToken_
@@ -4828,6 +5384,22 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.UmaUpdateResourceAsync
   nameWithType: AxiamClient.UmaUpdateResourceAsync
+- uid: Axiam.Sdk.AxiamClient.VerifyEmailAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Guid,System.Threading.CancellationToken)
+  name: VerifyEmailAsync(Sensitive<string>, Guid, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_VerifyEmailAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Guid_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.VerifyEmailAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Guid,System.Threading.CancellationToken)
+  name.vb: VerifyEmailAsync(Sensitive(Of String), Guid, CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.VerifyEmailAsync(Axiam.Sdk.Core.Sensitive<string>, System.Guid, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.VerifyEmailAsync(Axiam.Sdk.Core.Sensitive(Of String), System.Guid, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.VerifyEmailAsync(Sensitive<string>, Guid, CancellationToken)
+  nameWithType.vb: AxiamClient.VerifyEmailAsync(Sensitive(Of String), Guid, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.VerifyEmailAsync*
+  name: VerifyEmailAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_VerifyEmailAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.VerifyEmailAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.VerifyEmailAsync
+  nameWithType: AxiamClient.VerifyEmailAsync
 - uid: Axiam.Sdk.AxiamClient.VerifyLogoutTokenAsync(System.String,Axiam.Sdk.Auth.Oidc.OidcConfiguration,System.Threading.CancellationToken)
   name: VerifyLogoutTokenAsync(string, OidcConfiguration?, CancellationToken)
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_VerifyLogoutTokenAsync_System_String_Axiam_Sdk_Auth_Oidc_OidcConfiguration_System_Threading_CancellationToken_
@@ -4860,6 +5432,99 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.VerifyMfaAsync
   nameWithType: AxiamClient.VerifyMfaAsync
+- uid: Axiam.Sdk.AxiamClient.WebauthnAuthenticateFinishAsync(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.Threading.CancellationToken)
+  name: WebauthnAuthenticateFinishAsync(Sensitive<string>, string, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnAuthenticateFinishAsync_Axiam_Sdk_Core_Sensitive_System_String__System_String_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.WebauthnAuthenticateFinishAsync(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.Threading.CancellationToken)
+  name.vb: WebauthnAuthenticateFinishAsync(Sensitive(Of String), String, CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.WebauthnAuthenticateFinishAsync(Axiam.Sdk.Core.Sensitive<string>, string, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.WebauthnAuthenticateFinishAsync(Axiam.Sdk.Core.Sensitive(Of String), String, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.WebauthnAuthenticateFinishAsync(Sensitive<string>, string, CancellationToken)
+  nameWithType.vb: AxiamClient.WebauthnAuthenticateFinishAsync(Sensitive(Of String), String, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.WebauthnAuthenticateFinishAsync*
+  name: WebauthnAuthenticateFinishAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnAuthenticateFinishAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.WebauthnAuthenticateFinishAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.WebauthnAuthenticateFinishAsync
+  nameWithType: AxiamClient.WebauthnAuthenticateFinishAsync
+- uid: Axiam.Sdk.AxiamClient.WebauthnAuthenticateStartAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)
+  name: WebauthnAuthenticateStartAsync(Sensitive<string>, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnAuthenticateStartAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.WebauthnAuthenticateStartAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)
+  name.vb: WebauthnAuthenticateStartAsync(Sensitive(Of String), CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.WebauthnAuthenticateStartAsync(Axiam.Sdk.Core.Sensitive<string>, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.WebauthnAuthenticateStartAsync(Axiam.Sdk.Core.Sensitive(Of String), System.Threading.CancellationToken)
+  nameWithType: AxiamClient.WebauthnAuthenticateStartAsync(Sensitive<string>, CancellationToken)
+  nameWithType.vb: AxiamClient.WebauthnAuthenticateStartAsync(Sensitive(Of String), CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.WebauthnAuthenticateStartAsync*
+  name: WebauthnAuthenticateStartAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnAuthenticateStartAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.WebauthnAuthenticateStartAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.WebauthnAuthenticateStartAsync
+  nameWithType: AxiamClient.WebauthnAuthenticateStartAsync
+- uid: Axiam.Sdk.AxiamClient.WebauthnDiscoverableFinishAsync(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.Threading.CancellationToken)
+  name: WebauthnDiscoverableFinishAsync(Sensitive<string>, string, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnDiscoverableFinishAsync_Axiam_Sdk_Core_Sensitive_System_String__System_String_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.WebauthnDiscoverableFinishAsync(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.Threading.CancellationToken)
+  name.vb: WebauthnDiscoverableFinishAsync(Sensitive(Of String), String, CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.WebauthnDiscoverableFinishAsync(Axiam.Sdk.Core.Sensitive<string>, string, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.WebauthnDiscoverableFinishAsync(Axiam.Sdk.Core.Sensitive(Of String), String, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.WebauthnDiscoverableFinishAsync(Sensitive<string>, string, CancellationToken)
+  nameWithType.vb: AxiamClient.WebauthnDiscoverableFinishAsync(Sensitive(Of String), String, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.WebauthnDiscoverableFinishAsync*
+  name: WebauthnDiscoverableFinishAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnDiscoverableFinishAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.WebauthnDiscoverableFinishAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.WebauthnDiscoverableFinishAsync
+  nameWithType: AxiamClient.WebauthnDiscoverableFinishAsync
+- uid: Axiam.Sdk.AxiamClient.WebauthnDiscoverableStartAsync(Axiam.Sdk.Webauthn.WebauthnWorkspace,System.Threading.CancellationToken)
+  name: WebauthnDiscoverableStartAsync(WebauthnWorkspace?, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnDiscoverableStartAsync_Axiam_Sdk_Webauthn_WebauthnWorkspace_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.WebauthnDiscoverableStartAsync(Axiam.Sdk.Webauthn.WebauthnWorkspace,System.Threading.CancellationToken)
+  name.vb: WebauthnDiscoverableStartAsync(WebauthnWorkspace, CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.WebauthnDiscoverableStartAsync(Axiam.Sdk.Webauthn.WebauthnWorkspace?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.WebauthnDiscoverableStartAsync(Axiam.Sdk.Webauthn.WebauthnWorkspace, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.WebauthnDiscoverableStartAsync(WebauthnWorkspace?, CancellationToken)
+  nameWithType.vb: AxiamClient.WebauthnDiscoverableStartAsync(WebauthnWorkspace, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.WebauthnDiscoverableStartAsync*
+  name: WebauthnDiscoverableStartAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnDiscoverableStartAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.WebauthnDiscoverableStartAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.WebauthnDiscoverableStartAsync
+  nameWithType: AxiamClient.WebauthnDiscoverableStartAsync
+- uid: Axiam.Sdk.AxiamClient.WebauthnRegisterFinishAsync(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.String,System.Threading.CancellationToken)
+  name: WebauthnRegisterFinishAsync(Sensitive<string>, string, string, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnRegisterFinishAsync_Axiam_Sdk_Core_Sensitive_System_String__System_String_System_String_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.WebauthnRegisterFinishAsync(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.String,System.Threading.CancellationToken)
+  name.vb: WebauthnRegisterFinishAsync(Sensitive(Of String), String, String, CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.WebauthnRegisterFinishAsync(Axiam.Sdk.Core.Sensitive<string>, string, string, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.WebauthnRegisterFinishAsync(Axiam.Sdk.Core.Sensitive(Of String), String, String, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.WebauthnRegisterFinishAsync(Sensitive<string>, string, string, CancellationToken)
+  nameWithType.vb: AxiamClient.WebauthnRegisterFinishAsync(Sensitive(Of String), String, String, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.WebauthnRegisterFinishAsync*
+  name: WebauthnRegisterFinishAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnRegisterFinishAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.WebauthnRegisterFinishAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.WebauthnRegisterFinishAsync
+  nameWithType: AxiamClient.WebauthnRegisterFinishAsync
+- uid: Axiam.Sdk.AxiamClient.WebauthnRegisterStartAsync(System.Threading.CancellationToken)
+  name: WebauthnRegisterStartAsync(CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnRegisterStartAsync_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.WebauthnRegisterStartAsync(System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.WebauthnRegisterStartAsync(System.Threading.CancellationToken)
+  nameWithType: AxiamClient.WebauthnRegisterStartAsync(CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.WebauthnRegisterStartAsync*
+  name: WebauthnRegisterStartAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnRegisterStartAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.WebauthnRegisterStartAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.WebauthnRegisterStartAsync
+  nameWithType: AxiamClient.WebauthnRegisterStartAsync
 - uid: Axiam.Sdk.Core
   name: Axiam.Sdk.Core
   href: api/Axiam.Sdk.Core.html
@@ -8495,6 +9160,385 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Rest.AxiamHttpMessageHandler.SendAsync
   nameWithType: AxiamHttpMessageHandler.SendAsync
+- uid: Axiam.Sdk.Webauthn
+  name: Axiam.Sdk.Webauthn
+  href: api/Axiam.Sdk.Webauthn.html
+  commentId: N:Axiam.Sdk.Webauthn
+  fullName: Axiam.Sdk.Webauthn
+  nameWithType: Axiam.Sdk.Webauthn
+- uid: Axiam.Sdk.Webauthn.WebauthnChallenge
+  name: WebauthnChallenge
+  href: api/Axiam.Sdk.Webauthn.WebauthnChallenge.html
+  commentId: T:Axiam.Sdk.Webauthn.WebauthnChallenge
+  fullName: Axiam.Sdk.Webauthn.WebauthnChallenge
+  nameWithType: WebauthnChallenge
+- uid: Axiam.Sdk.Webauthn.WebauthnChallenge.#ctor(System.Text.Json.JsonElement,Axiam.Sdk.Core.Sensitive{System.String})
+  name: WebauthnChallenge(JsonElement, Sensitive<string>)
+  href: api/Axiam.Sdk.Webauthn.WebauthnChallenge.html#Axiam_Sdk_Webauthn_WebauthnChallenge__ctor_System_Text_Json_JsonElement_Axiam_Sdk_Core_Sensitive_System_String__
+  commentId: M:Axiam.Sdk.Webauthn.WebauthnChallenge.#ctor(System.Text.Json.JsonElement,Axiam.Sdk.Core.Sensitive{System.String})
+  name.vb: New(JsonElement, Sensitive(Of String))
+  fullName: Axiam.Sdk.Webauthn.WebauthnChallenge.WebauthnChallenge(System.Text.Json.JsonElement, Axiam.Sdk.Core.Sensitive<string>)
+  fullName.vb: Axiam.Sdk.Webauthn.WebauthnChallenge.New(System.Text.Json.JsonElement, Axiam.Sdk.Core.Sensitive(Of String))
+  nameWithType: WebauthnChallenge.WebauthnChallenge(JsonElement, Sensitive<string>)
+  nameWithType.vb: WebauthnChallenge.New(JsonElement, Sensitive(Of String))
+- uid: Axiam.Sdk.Webauthn.WebauthnChallenge.#ctor*
+  name: WebauthnChallenge
+  href: api/Axiam.Sdk.Webauthn.WebauthnChallenge.html#Axiam_Sdk_Webauthn_WebauthnChallenge__ctor_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnChallenge.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Webauthn.WebauthnChallenge.WebauthnChallenge
+  fullName.vb: Axiam.Sdk.Webauthn.WebauthnChallenge.New
+  nameWithType: WebauthnChallenge.WebauthnChallenge
+  nameWithType.vb: WebauthnChallenge.New
+- uid: Axiam.Sdk.Webauthn.WebauthnChallenge.Challenge
+  name: Challenge
+  href: api/Axiam.Sdk.Webauthn.WebauthnChallenge.html#Axiam_Sdk_Webauthn_WebauthnChallenge_Challenge
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnChallenge.Challenge
+  fullName: Axiam.Sdk.Webauthn.WebauthnChallenge.Challenge
+  nameWithType: WebauthnChallenge.Challenge
+- uid: Axiam.Sdk.Webauthn.WebauthnChallenge.Challenge*
+  name: Challenge
+  href: api/Axiam.Sdk.Webauthn.WebauthnChallenge.html#Axiam_Sdk_Webauthn_WebauthnChallenge_Challenge_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnChallenge.Challenge
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnChallenge.Challenge
+  nameWithType: WebauthnChallenge.Challenge
+- uid: Axiam.Sdk.Webauthn.WebauthnChallenge.RequestJson
+  name: RequestJson
+  href: api/Axiam.Sdk.Webauthn.WebauthnChallenge.html#Axiam_Sdk_Webauthn_WebauthnChallenge_RequestJson
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnChallenge.RequestJson
+  fullName: Axiam.Sdk.Webauthn.WebauthnChallenge.RequestJson
+  nameWithType: WebauthnChallenge.RequestJson
+- uid: Axiam.Sdk.Webauthn.WebauthnChallenge.RequestJson*
+  name: RequestJson
+  href: api/Axiam.Sdk.Webauthn.WebauthnChallenge.html#Axiam_Sdk_Webauthn_WebauthnChallenge_RequestJson_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnChallenge.RequestJson
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnChallenge.RequestJson
+  nameWithType: WebauthnChallenge.RequestJson
+- uid: Axiam.Sdk.Webauthn.WebauthnChallenge.StateToken
+  name: StateToken
+  href: api/Axiam.Sdk.Webauthn.WebauthnChallenge.html#Axiam_Sdk_Webauthn_WebauthnChallenge_StateToken
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnChallenge.StateToken
+  fullName: Axiam.Sdk.Webauthn.WebauthnChallenge.StateToken
+  nameWithType: WebauthnChallenge.StateToken
+- uid: Axiam.Sdk.Webauthn.WebauthnChallenge.StateToken*
+  name: StateToken
+  href: api/Axiam.Sdk.Webauthn.WebauthnChallenge.html#Axiam_Sdk_Webauthn_WebauthnChallenge_StateToken_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnChallenge.StateToken
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnChallenge.StateToken
+  nameWithType: WebauthnChallenge.StateToken
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential
+  name: WebauthnCredential
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html
+  commentId: T:Axiam.Sdk.Webauthn.WebauthnCredential
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential
+  nameWithType: WebauthnCredential
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.#ctor(System.Guid,System.String,System.String,System.String,System.String,System.String)
+  name: WebauthnCredential(Guid, string, string, string, string, string?)
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential__ctor_System_Guid_System_String_System_String_System_String_System_String_System_String_
+  commentId: M:Axiam.Sdk.Webauthn.WebauthnCredential.#ctor(System.Guid,System.String,System.String,System.String,System.String,System.String)
+  name.vb: New(Guid, String, String, String, String, String)
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.WebauthnCredential(System.Guid, string, string, string, string, string?)
+  fullName.vb: Axiam.Sdk.Webauthn.WebauthnCredential.New(System.Guid, String, String, String, String, String)
+  nameWithType: WebauthnCredential.WebauthnCredential(Guid, string, string, string, string, string?)
+  nameWithType.vb: WebauthnCredential.New(Guid, String, String, String, String, String)
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.#ctor*
+  name: WebauthnCredential
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential__ctor_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnCredential.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.WebauthnCredential
+  fullName.vb: Axiam.Sdk.Webauthn.WebauthnCredential.New
+  nameWithType: WebauthnCredential.WebauthnCredential
+  nameWithType.vb: WebauthnCredential.New
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.CreatedAt
+  name: CreatedAt
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential_CreatedAt
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnCredential.CreatedAt
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.CreatedAt
+  nameWithType: WebauthnCredential.CreatedAt
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.CreatedAt*
+  name: CreatedAt
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential_CreatedAt_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnCredential.CreatedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.CreatedAt
+  nameWithType: WebauthnCredential.CreatedAt
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.CredentialId
+  name: CredentialId
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential_CredentialId
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnCredential.CredentialId
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.CredentialId
+  nameWithType: WebauthnCredential.CredentialId
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.CredentialId*
+  name: CredentialId
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential_CredentialId_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnCredential.CredentialId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.CredentialId
+  nameWithType: WebauthnCredential.CredentialId
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.CredentialType
+  name: CredentialType
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential_CredentialType
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnCredential.CredentialType
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.CredentialType
+  nameWithType: WebauthnCredential.CredentialType
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.CredentialType*
+  name: CredentialType
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential_CredentialType_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnCredential.CredentialType
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.CredentialType
+  nameWithType: WebauthnCredential.CredentialType
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.Id
+  name: Id
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential_Id
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnCredential.Id
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.Id
+  nameWithType: WebauthnCredential.Id
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.Id*
+  name: Id
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential_Id_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnCredential.Id
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.Id
+  nameWithType: WebauthnCredential.Id
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.LastUsedAt
+  name: LastUsedAt
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential_LastUsedAt
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnCredential.LastUsedAt
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.LastUsedAt
+  nameWithType: WebauthnCredential.LastUsedAt
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.LastUsedAt*
+  name: LastUsedAt
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential_LastUsedAt_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnCredential.LastUsedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.LastUsedAt
+  nameWithType: WebauthnCredential.LastUsedAt
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.Name
+  name: Name
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential_Name
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnCredential.Name
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.Name
+  nameWithType: WebauthnCredential.Name
+- uid: Axiam.Sdk.Webauthn.WebauthnCredential.Name*
+  name: Name
+  href: api/Axiam.Sdk.Webauthn.WebauthnCredential.html#Axiam_Sdk_Webauthn_WebauthnCredential_Name_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnCredential.Name
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnCredential.Name
+  nameWithType: WebauthnCredential.Name
+- uid: Axiam.Sdk.Webauthn.WebauthnFailure
+  name: WebauthnFailure
+  href: api/Axiam.Sdk.Webauthn.WebauthnFailure.html
+  commentId: T:Axiam.Sdk.Webauthn.WebauthnFailure
+  fullName: Axiam.Sdk.Webauthn.WebauthnFailure
+  nameWithType: WebauthnFailure
+- uid: Axiam.Sdk.Webauthn.WebauthnFailure.AlreadyRegistered
+  name: AlreadyRegistered
+  href: api/Axiam.Sdk.Webauthn.WebauthnFailure.html#Axiam_Sdk_Webauthn_WebauthnFailure_AlreadyRegistered
+  commentId: F:Axiam.Sdk.Webauthn.WebauthnFailure.AlreadyRegistered
+  fullName: Axiam.Sdk.Webauthn.WebauthnFailure.AlreadyRegistered
+  nameWithType: WebauthnFailure.AlreadyRegistered
+- uid: Axiam.Sdk.Webauthn.WebauthnFailure.Cancelled
+  name: Cancelled
+  href: api/Axiam.Sdk.Webauthn.WebauthnFailure.html#Axiam_Sdk_Webauthn_WebauthnFailure_Cancelled
+  commentId: F:Axiam.Sdk.Webauthn.WebauthnFailure.Cancelled
+  fullName: Axiam.Sdk.Webauthn.WebauthnFailure.Cancelled
+  nameWithType: WebauthnFailure.Cancelled
+- uid: Axiam.Sdk.Webauthn.WebauthnFailure.Timeout
+  name: Timeout
+  href: api/Axiam.Sdk.Webauthn.WebauthnFailure.html#Axiam_Sdk_Webauthn_WebauthnFailure_Timeout
+  commentId: F:Axiam.Sdk.Webauthn.WebauthnFailure.Timeout
+  fullName: Axiam.Sdk.Webauthn.WebauthnFailure.Timeout
+  nameWithType: WebauthnFailure.Timeout
+- uid: Axiam.Sdk.Webauthn.WebauthnFailure.Unknown
+  name: Unknown
+  href: api/Axiam.Sdk.Webauthn.WebauthnFailure.html#Axiam_Sdk_Webauthn_WebauthnFailure_Unknown
+  commentId: F:Axiam.Sdk.Webauthn.WebauthnFailure.Unknown
+  fullName: Axiam.Sdk.Webauthn.WebauthnFailure.Unknown
+  nameWithType: WebauthnFailure.Unknown
+- uid: Axiam.Sdk.Webauthn.WebauthnFailure.Unsupported
+  name: Unsupported
+  href: api/Axiam.Sdk.Webauthn.WebauthnFailure.html#Axiam_Sdk_Webauthn_WebauthnFailure_Unsupported
+  commentId: F:Axiam.Sdk.Webauthn.WebauthnFailure.Unsupported
+  fullName: Axiam.Sdk.Webauthn.WebauthnFailure.Unsupported
+  nameWithType: WebauthnFailure.Unsupported
+- uid: Axiam.Sdk.Webauthn.WebauthnFailures
+  name: WebauthnFailures
+  href: api/Axiam.Sdk.Webauthn.WebauthnFailures.html
+  commentId: T:Axiam.Sdk.Webauthn.WebauthnFailures
+  fullName: Axiam.Sdk.Webauthn.WebauthnFailures
+  nameWithType: WebauthnFailures
+- uid: Axiam.Sdk.Webauthn.WebauthnFailures.Classify(System.String)
+  name: Classify(string?)
+  href: api/Axiam.Sdk.Webauthn.WebauthnFailures.html#Axiam_Sdk_Webauthn_WebauthnFailures_Classify_System_String_
+  commentId: M:Axiam.Sdk.Webauthn.WebauthnFailures.Classify(System.String)
+  name.vb: Classify(String)
+  fullName: Axiam.Sdk.Webauthn.WebauthnFailures.Classify(string?)
+  fullName.vb: Axiam.Sdk.Webauthn.WebauthnFailures.Classify(String)
+  nameWithType: WebauthnFailures.Classify(string?)
+  nameWithType.vb: WebauthnFailures.Classify(String)
+- uid: Axiam.Sdk.Webauthn.WebauthnFailures.Classify*
+  name: Classify
+  href: api/Axiam.Sdk.Webauthn.WebauthnFailures.html#Axiam_Sdk_Webauthn_WebauthnFailures_Classify_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnFailures.Classify
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnFailures.Classify
+  nameWithType: WebauthnFailures.Classify
+- uid: Axiam.Sdk.Webauthn.WebauthnFailures.Message(Axiam.Sdk.Webauthn.WebauthnFailure)
+  name: Message(WebauthnFailure)
+  href: api/Axiam.Sdk.Webauthn.WebauthnFailures.html#Axiam_Sdk_Webauthn_WebauthnFailures_Message_Axiam_Sdk_Webauthn_WebauthnFailure_
+  commentId: M:Axiam.Sdk.Webauthn.WebauthnFailures.Message(Axiam.Sdk.Webauthn.WebauthnFailure)
+  fullName: Axiam.Sdk.Webauthn.WebauthnFailures.Message(Axiam.Sdk.Webauthn.WebauthnFailure)
+  nameWithType: WebauthnFailures.Message(WebauthnFailure)
+- uid: Axiam.Sdk.Webauthn.WebauthnFailures.Message*
+  name: Message
+  href: api/Axiam.Sdk.Webauthn.WebauthnFailures.html#Axiam_Sdk_Webauthn_WebauthnFailures_Message_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnFailures.Message
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnFailures.Message
+  nameWithType: WebauthnFailures.Message
+- uid: Axiam.Sdk.Webauthn.WebauthnLoginResult
+  name: WebauthnLoginResult
+  href: api/Axiam.Sdk.Webauthn.WebauthnLoginResult.html
+  commentId: T:Axiam.Sdk.Webauthn.WebauthnLoginResult
+  fullName: Axiam.Sdk.Webauthn.WebauthnLoginResult
+  nameWithType: WebauthnLoginResult
+- uid: Axiam.Sdk.Webauthn.WebauthnLoginResult.#ctor(Axiam.Sdk.Core.Sensitive{System.String},Axiam.Sdk.Core.Sensitive{System.String},System.Guid,System.Int64)
+  name: WebauthnLoginResult(Sensitive<string>, Sensitive<string>, Guid, long)
+  href: api/Axiam.Sdk.Webauthn.WebauthnLoginResult.html#Axiam_Sdk_Webauthn_WebauthnLoginResult__ctor_Axiam_Sdk_Core_Sensitive_System_String__Axiam_Sdk_Core_Sensitive_System_String__System_Guid_System_Int64_
+  commentId: M:Axiam.Sdk.Webauthn.WebauthnLoginResult.#ctor(Axiam.Sdk.Core.Sensitive{System.String},Axiam.Sdk.Core.Sensitive{System.String},System.Guid,System.Int64)
+  name.vb: New(Sensitive(Of String), Sensitive(Of String), Guid, Long)
+  fullName: Axiam.Sdk.Webauthn.WebauthnLoginResult.WebauthnLoginResult(Axiam.Sdk.Core.Sensitive<string>, Axiam.Sdk.Core.Sensitive<string>, System.Guid, long)
+  fullName.vb: Axiam.Sdk.Webauthn.WebauthnLoginResult.New(Axiam.Sdk.Core.Sensitive(Of String), Axiam.Sdk.Core.Sensitive(Of String), System.Guid, Long)
+  nameWithType: WebauthnLoginResult.WebauthnLoginResult(Sensitive<string>, Sensitive<string>, Guid, long)
+  nameWithType.vb: WebauthnLoginResult.New(Sensitive(Of String), Sensitive(Of String), Guid, Long)
+- uid: Axiam.Sdk.Webauthn.WebauthnLoginResult.#ctor*
+  name: WebauthnLoginResult
+  href: api/Axiam.Sdk.Webauthn.WebauthnLoginResult.html#Axiam_Sdk_Webauthn_WebauthnLoginResult__ctor_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnLoginResult.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Webauthn.WebauthnLoginResult.WebauthnLoginResult
+  fullName.vb: Axiam.Sdk.Webauthn.WebauthnLoginResult.New
+  nameWithType: WebauthnLoginResult.WebauthnLoginResult
+  nameWithType.vb: WebauthnLoginResult.New
+- uid: Axiam.Sdk.Webauthn.WebauthnLoginResult.AccessToken
+  name: AccessToken
+  href: api/Axiam.Sdk.Webauthn.WebauthnLoginResult.html#Axiam_Sdk_Webauthn_WebauthnLoginResult_AccessToken
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnLoginResult.AccessToken
+  fullName: Axiam.Sdk.Webauthn.WebauthnLoginResult.AccessToken
+  nameWithType: WebauthnLoginResult.AccessToken
+- uid: Axiam.Sdk.Webauthn.WebauthnLoginResult.AccessToken*
+  name: AccessToken
+  href: api/Axiam.Sdk.Webauthn.WebauthnLoginResult.html#Axiam_Sdk_Webauthn_WebauthnLoginResult_AccessToken_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnLoginResult.AccessToken
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnLoginResult.AccessToken
+  nameWithType: WebauthnLoginResult.AccessToken
+- uid: Axiam.Sdk.Webauthn.WebauthnLoginResult.ExpiresIn
+  name: ExpiresIn
+  href: api/Axiam.Sdk.Webauthn.WebauthnLoginResult.html#Axiam_Sdk_Webauthn_WebauthnLoginResult_ExpiresIn
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnLoginResult.ExpiresIn
+  fullName: Axiam.Sdk.Webauthn.WebauthnLoginResult.ExpiresIn
+  nameWithType: WebauthnLoginResult.ExpiresIn
+- uid: Axiam.Sdk.Webauthn.WebauthnLoginResult.ExpiresIn*
+  name: ExpiresIn
+  href: api/Axiam.Sdk.Webauthn.WebauthnLoginResult.html#Axiam_Sdk_Webauthn_WebauthnLoginResult_ExpiresIn_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnLoginResult.ExpiresIn
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnLoginResult.ExpiresIn
+  nameWithType: WebauthnLoginResult.ExpiresIn
+- uid: Axiam.Sdk.Webauthn.WebauthnLoginResult.RefreshToken
+  name: RefreshToken
+  href: api/Axiam.Sdk.Webauthn.WebauthnLoginResult.html#Axiam_Sdk_Webauthn_WebauthnLoginResult_RefreshToken
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnLoginResult.RefreshToken
+  fullName: Axiam.Sdk.Webauthn.WebauthnLoginResult.RefreshToken
+  nameWithType: WebauthnLoginResult.RefreshToken
+- uid: Axiam.Sdk.Webauthn.WebauthnLoginResult.RefreshToken*
+  name: RefreshToken
+  href: api/Axiam.Sdk.Webauthn.WebauthnLoginResult.html#Axiam_Sdk_Webauthn_WebauthnLoginResult_RefreshToken_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnLoginResult.RefreshToken
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnLoginResult.RefreshToken
+  nameWithType: WebauthnLoginResult.RefreshToken
+- uid: Axiam.Sdk.Webauthn.WebauthnLoginResult.SessionId
+  name: SessionId
+  href: api/Axiam.Sdk.Webauthn.WebauthnLoginResult.html#Axiam_Sdk_Webauthn_WebauthnLoginResult_SessionId
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnLoginResult.SessionId
+  fullName: Axiam.Sdk.Webauthn.WebauthnLoginResult.SessionId
+  nameWithType: WebauthnLoginResult.SessionId
+- uid: Axiam.Sdk.Webauthn.WebauthnLoginResult.SessionId*
+  name: SessionId
+  href: api/Axiam.Sdk.Webauthn.WebauthnLoginResult.html#Axiam_Sdk_Webauthn_WebauthnLoginResult_SessionId_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnLoginResult.SessionId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnLoginResult.SessionId
+  nameWithType: WebauthnLoginResult.SessionId
+- uid: Axiam.Sdk.Webauthn.WebauthnWorkspace
+  name: WebauthnWorkspace
+  href: api/Axiam.Sdk.Webauthn.WebauthnWorkspace.html
+  commentId: T:Axiam.Sdk.Webauthn.WebauthnWorkspace
+  fullName: Axiam.Sdk.Webauthn.WebauthnWorkspace
+  nameWithType: WebauthnWorkspace
+- uid: Axiam.Sdk.Webauthn.WebauthnWorkspace.OrgId
+  name: OrgId
+  href: api/Axiam.Sdk.Webauthn.WebauthnWorkspace.html#Axiam_Sdk_Webauthn_WebauthnWorkspace_OrgId
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnWorkspace.OrgId
+  fullName: Axiam.Sdk.Webauthn.WebauthnWorkspace.OrgId
+  nameWithType: WebauthnWorkspace.OrgId
+- uid: Axiam.Sdk.Webauthn.WebauthnWorkspace.OrgId*
+  name: OrgId
+  href: api/Axiam.Sdk.Webauthn.WebauthnWorkspace.html#Axiam_Sdk_Webauthn_WebauthnWorkspace_OrgId_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnWorkspace.OrgId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnWorkspace.OrgId
+  nameWithType: WebauthnWorkspace.OrgId
+- uid: Axiam.Sdk.Webauthn.WebauthnWorkspace.OrgSlug
+  name: OrgSlug
+  href: api/Axiam.Sdk.Webauthn.WebauthnWorkspace.html#Axiam_Sdk_Webauthn_WebauthnWorkspace_OrgSlug
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnWorkspace.OrgSlug
+  fullName: Axiam.Sdk.Webauthn.WebauthnWorkspace.OrgSlug
+  nameWithType: WebauthnWorkspace.OrgSlug
+- uid: Axiam.Sdk.Webauthn.WebauthnWorkspace.OrgSlug*
+  name: OrgSlug
+  href: api/Axiam.Sdk.Webauthn.WebauthnWorkspace.html#Axiam_Sdk_Webauthn_WebauthnWorkspace_OrgSlug_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnWorkspace.OrgSlug
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnWorkspace.OrgSlug
+  nameWithType: WebauthnWorkspace.OrgSlug
+- uid: Axiam.Sdk.Webauthn.WebauthnWorkspace.TenantId
+  name: TenantId
+  href: api/Axiam.Sdk.Webauthn.WebauthnWorkspace.html#Axiam_Sdk_Webauthn_WebauthnWorkspace_TenantId
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnWorkspace.TenantId
+  fullName: Axiam.Sdk.Webauthn.WebauthnWorkspace.TenantId
+  nameWithType: WebauthnWorkspace.TenantId
+- uid: Axiam.Sdk.Webauthn.WebauthnWorkspace.TenantId*
+  name: TenantId
+  href: api/Axiam.Sdk.Webauthn.WebauthnWorkspace.html#Axiam_Sdk_Webauthn_WebauthnWorkspace_TenantId_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnWorkspace.TenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnWorkspace.TenantId
+  nameWithType: WebauthnWorkspace.TenantId
+- uid: Axiam.Sdk.Webauthn.WebauthnWorkspace.TenantSlug
+  name: TenantSlug
+  href: api/Axiam.Sdk.Webauthn.WebauthnWorkspace.html#Axiam_Sdk_Webauthn_WebauthnWorkspace_TenantSlug
+  commentId: P:Axiam.Sdk.Webauthn.WebauthnWorkspace.TenantSlug
+  fullName: Axiam.Sdk.Webauthn.WebauthnWorkspace.TenantSlug
+  nameWithType: WebauthnWorkspace.TenantSlug
+- uid: Axiam.Sdk.Webauthn.WebauthnWorkspace.TenantSlug*
+  name: TenantSlug
+  href: api/Axiam.Sdk.Webauthn.WebauthnWorkspace.html#Axiam_Sdk_Webauthn_WebauthnWorkspace_TenantSlug_
+  commentId: Overload:Axiam.Sdk.Webauthn.WebauthnWorkspace.TenantSlug
+  isSpec: "True"
+  fullName: Axiam.Sdk.Webauthn.WebauthnWorkspace.TenantSlug
+  nameWithType: WebauthnWorkspace.TenantSlug
 - uid: Axiam.Sdk.Webhooks
   name: Axiam.Sdk.Webhooks
   href: api/Axiam.Sdk.Webhooks.html

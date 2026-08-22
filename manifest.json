@@ -12,6 +12,76 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Account.MfaEnrollment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Account.MfaEnrollment.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Account.MfaEnrollment",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Account.MfaEnrollment.yml\" sourcestartlinenumber=\"1\">A TOTP factor offered but not yet active (CONTRACT.md §25.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Account.PasswordResetConfirmation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Account.PasswordResetConfirmation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Account.PasswordResetConfirmation",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Account.PasswordResetConfirmation.yml\" sourcestartlinenumber=\"1\">Arguments to <code>ConfirmPasswordResetAsync</code> (CONTRACT.md §25.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Account.PasswordResetContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Account.PasswordResetContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Account.PasswordResetContext",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Account.PasswordResetContext.yml\" sourcestartlinenumber=\"1\">The OPAQUE policy for the account a reset token belongs to (CONTRACT.md §25.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Account.PasswordResetRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Account.PasswordResetRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Account.PasswordResetRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Account.PasswordResetRequest.yml\" sourcestartlinenumber=\"1\">Arguments to <code>RequestPasswordResetAsync</code> (CONTRACT.md §25.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Account.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Account.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Account",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Amqp.AxiamAmqpConsumer.yml",
       "output": {
         ".html": {
@@ -614,6 +684,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcParParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcParParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.OidcParParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.OidcParParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.OidcParAsync(Axiam.Sdk.Auth.Oidc.OidcParParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md §26.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcRefreshParams.yml",
       "output": {
         ".html": {
@@ -653,6 +737,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Auth.Oidc.OidcTokenSet",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.OidcTokenSet.yml\" sourcestartlinenumber=\"1\">A token set returned by the OAuth2 token endpoint (wire schema <code>TokenResponse</code>),\nreturned by <xref href=\"Axiam.Sdk.AxiamClient.OidcExchangeAsync(Axiam.Sdk.Auth.Oidc.OidcExchangeParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>,\n<xref href=\"Axiam.Sdk.AxiamClient.OidcRefreshAsync(Axiam.Sdk.Auth.Oidc.OidcRefreshParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> and\n<xref href=\"Axiam.Sdk.AxiamClient.LoginClientCredentialsAsync(Axiam.Sdk.Auth.Oidc.LoginClientCredentialsParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.yml\" sourcestartlinenumber=\"1\">The result of <xref href=\"Axiam.Sdk.AxiamClient.OidcParAsync(Axiam.Sdk.Auth.Oidc.OidcParParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md §26.1).</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1758,6 +1856,104 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.Rest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Webauthn.WebauthnChallenge.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Webauthn.WebauthnChallenge.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Webauthn.WebauthnChallenge",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Webauthn.WebauthnChallenge.yml\" sourcestartlinenumber=\"1\">A started ceremony: the server's options plus the token binding a response to them\n(CONTRACT.md §24.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Webauthn.WebauthnCredential.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Webauthn.WebauthnCredential.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Webauthn.WebauthnCredential",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Webauthn.WebauthnCredential.yml\" sourcestartlinenumber=\"1\">A credential the user just enrolled — the <code>201</code> body of <code>register/finish</code>\n(CONTRACT.md §24.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Webauthn.WebauthnFailure.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Webauthn.WebauthnFailure.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Webauthn.WebauthnFailure",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Webauthn.WebauthnFailure.yml\" sourcestartlinenumber=\"1\">A ceremony failure a caller can say something useful about (CONTRACT.md §24.6b\nrule 5).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Webauthn.WebauthnFailures.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Webauthn.WebauthnFailures.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Webauthn.WebauthnFailures",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Webauthn.WebauthnFailures.yml\" sourcestartlinenumber=\"1\">Classification and user-facing copy for <xref href=\"Axiam.Sdk.Webauthn.WebauthnFailure\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Webauthn.WebauthnLoginResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Webauthn.WebauthnLoginResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Webauthn.WebauthnLoginResult",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Webauthn.WebauthnLoginResult.yml\" sourcestartlinenumber=\"1\">A completed authentication ceremony (CONTRACT.md §24.3).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Webauthn.WebauthnWorkspace.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Webauthn.WebauthnWorkspace.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Webauthn.WebauthnWorkspace",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Webauthn.WebauthnWorkspace.yml\" sourcestartlinenumber=\"1\">The workspace a usernameless ceremony runs in (CONTRACT.md §24.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Webauthn.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Webauthn.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Webauthn",
       "Summary": null
     },
     {
