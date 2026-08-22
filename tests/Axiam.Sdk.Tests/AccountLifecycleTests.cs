@@ -74,7 +74,7 @@ public class AccountLifecycleTests
         Assert.True(result.MfaSetupRequired, "a tenant that requires MFA on an account without it is not a failure");
         Assert.False(result.MfaRequired, "the account has no factor to challenge yet");
         Assert.NotNull(result.SetupToken);
-        Assert.Equal(SetupToken, result.SetupToken!.Reveal());
+        Assert.Equal(SetupToken, result.SetupToken!.Value.Reveal());
         Assert.DoesNotContain(SetupToken, result.SetupToken.ToString());
     }
 
