@@ -1,6 +1,6 @@
 # Axiam.Sdk (C#) — Examples
 
-Six runnable example projects demonstrating the AXIAM C# SDK's public surface
+Nine runnable example projects demonstrating the AXIAM C# SDK's public surface
 (`Axiam.Sdk` + `Axiam.Sdk.AspNetCore`). Both build under `<Nullable>enable</Nullable>`
 and reference the SDK's projects directly (not the published NuGet packages), so
 they always exercise the current source tree.
@@ -242,3 +242,40 @@ dotnet run --project examples/Reactor
 What to observe: the handler is only ever reached by an event whose MAC verified, whose
 `issued_at` was fresh in both directions, and whose nonce had not been seen. Kill the process
 with Ctrl+C to watch the §18 drain.
+
+## WebauthnPasskeys/
+
+CONTRACT.md §24 — the WebAuthn relying-party layer, both ceremonies, the §24.6a JSON
+bridge that carries the challenge out to a browser (or a MAUI/Uno host) and the response
+back, and the §24.6b rule 5 failure classification. No §24.6b linked-API helper: .NET has
+no authenticator, and rule 2 forbids emulating one.
+
+**Build:**
+
+```bash
+dotnet build examples/WebauthnPasskeys -c Release
+```
+
+## AccountLifecycle/
+
+CONTRACT.md §25 — the third `LoginAsync` outcome (`MfaSetupRequired`), voluntary and forced
+TOTP enrolment, email verification, and the password-reset triple including the
+`reset/context` call a tenant with §23 enabled requires.
+
+**Build:**
+
+```bash
+dotnet build examples/AccountLifecycle -c Release
+```
+
+## ParLogin/
+
+CONTRACT.md §26 — Pushed Authorization Requests (RFC 9126): the 201 answer, the two-parameter
+redirect URL, and the exchange that follows. Required for a FAPI 2.0 client, which cannot
+authorize any other way (§21.1).
+
+**Build:**
+
+```bash
+dotnet build examples/ParLogin -c Release
+```

@@ -30,6 +30,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- CONTRACT.md §24 — WebAuthn / passkeys relying-party layer (`Axiam.Sdk.Webauthn`):
+  the six wire operations, the two distinct authentication ceremonies, and
+  §24.6a's JSON bridge. `WebauthnChallenge.RequestJson` is the string an
+  ASP.NET Core relying party hands to a browser (or a MAUI/Uno host), and the
+  platform's response JSON goes straight back into the matching `*FinishAsync`
+  — spliced into the request body as text so the authenticator's signed bytes
+  reach the wire unmodified. `WebauthnFailures.Classify` maps a relayed
+  platform error name to the five §24.6b rule 5 outcomes.
+
+  §24.6b's linked-API helper is deliberately absent: a server or CLI runtime
+  has no authenticator, and rule 2 forbids emulating one in software.
+- CONTRACT.md §25 — account lifecycle and MFA enrolment (`Axiam.Sdk.Account`):
+  voluntary and forced TOTP enrolment, email verification, and the
+  password-reset triple including the `reset/context` call a tenant with §23
+  enabled requires before a new password can be built.
+- CONTRACT.md §26 — Pushed Authorization Requests, RFC 9126 (`OidcParAsync`,
+  `OidcParParams`, `PushedAuthorizationRequest`). Required for a FAPI 2.0
+  client, which cannot authorize any other way (§21.1).
+- `examples/WebauthnPasskeys`, `examples/AccountLifecycle` and
+  `examples/ParLogin`, each built by CI.
+
+### Changed
+
+- `LoginResult` gained `MfaSetupRequired` and `SetupToken` for §25.2 rule 1's
+  third login outcome. Both default, so every existing construction still
+  compiles and reads `false`. Callers that branch only on `MfaRequired` should
+  still add the new branch — a tenant that turns on required MFA will start
+  returning it, and ignoring it reports a successful login that has no session.
+- `OidcConfiguration` gained `PushedAuthorizationRequestEndpoint`, defaulted to
+  `null` and parsed from discovery.
+- Re-vendored `CONTRACT.md` and `openapi.json` at contract 1.28.
+
+### Added
+
 - OPAQUE (RFC 9807) login and enrolment (CONTRACT §23): `LoginOpaqueAsync`,
   `OpaqueEnrollmentAsync` and `OpaqueAvailable` on `AxiamClient`, plus the new
   `Axiam.Sdk.Opaque` namespace.

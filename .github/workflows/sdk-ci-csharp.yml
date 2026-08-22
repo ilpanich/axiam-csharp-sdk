@@ -69,6 +69,18 @@ jobs:
       - name: dotnet build — Reactor example (CONTRACT.md §22)
         run: dotnet build examples/Reactor -c Release
 
+      # §24/§25/§26: the three contract-1.28 groups. Each is a compile-checked proof that
+      # the public surface is usable from outside the assembly; all three talk to a server
+      # at RUN time only.
+      - name: dotnet build — WebauthnPasskeys example (CONTRACT.md §24)
+        run: dotnet build examples/WebauthnPasskeys -c Release
+
+      - name: dotnet build — AccountLifecycle example (CONTRACT.md §25)
+        run: dotnet build examples/AccountLifecycle -c Release
+
+      - name: dotnet build — ParLogin example (CONTRACT.md §26)
+        run: dotnet build examples/ParLogin -c Release
+
       # Full solution test run: SC#2 single-flight (RefreshGuardSingleFlightTests),
       # the AMQP HMAC verify-before-handler matrix (HmacVerifyTests,
       # AmqpConsumerTests), JWKS Ed25519 verification (JwksVerifierTests), the

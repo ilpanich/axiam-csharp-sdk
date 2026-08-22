@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>WebauthnPasskeys</RootNamespace>
+    <!-- Example only — demonstrates the SDK's public surface; never packed or
+         published as a NuGet package. -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Core package only (Axiam.Sdk); no ASP.NET Core dependency needed for a
+         console example. -->
+    <ProjectReference Include="../../Axiam.Sdk/Axiam.Sdk.csproj" />
+  </ItemGroup>
+
+</Project>

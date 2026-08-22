@@ -255,7 +255,56 @@ public sealed partial class AxiamClient : IDisposable
             return new LoginResult(true, Sensitive.Of(challengeToken));
         }
 
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            // CONTRACT.md §25.2 rule 1: a 403 carrying mfa_setup_required is an OUTCOME,
+            // not a refusal. The tenant requires MFA, this account has none, and the
+            // server handed back the token to finish with.
+            //
+            // Matched on the body's own discriminant rather than the status alone: a
+            // genuine authorization refusal is also a 403, and only one of the two
+            // carries a setup_token. A non-matching 403 falls through to ErrorMapper,
+            // which re-reads the buffered content for its own action/resource_id peek.
+            Sensitive<string>? setupToken = await ReadSetupTokenAsync(response, cancellationToken).ConfigureAwait(false);
+            if (setupToken is not null)
+            {
+                return new LoginResult(false, null, true, setupToken);
+            }
+        }
+
         throw ErrorMapper.FromHttpResponse(response, "login failed");
+    }
+
+    /// <summary>
+    /// The <c>setup_token</c> from a &#167;25.2 rule 1 <c>403</c>, or <c>null</c> when this
+    /// 403 is an ordinary authorization refusal. Never throws: a non-JSON body is simply
+    /// not this outcome.
+    /// </summary>
+    private static async Task<Sensitive<string>?> ReadSetupTokenAsync(HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+        try
+        {
+            string raw = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                return null;
+            }
+
+            using JsonDocument doc = JsonDocument.Parse(raw);
+            bool flagged = doc.RootElement.TryGetProperty("mfa_setup_required", out JsonElement flag) &&
+                           flag.ValueKind == JsonValueKind.True;
+            if (flagged &&
+                doc.RootElement.TryGetProperty("setup_token", out JsonElement tokenEl) &&
+                tokenEl.GetString() is { Length: > 0 } token)
+            {
+                return Sensitive.Of(token);
+            }
+        }
+        catch (JsonException)
+        {
+            // Not this outcome.
+        }
+        return null;
     }
 
     /// <summary>

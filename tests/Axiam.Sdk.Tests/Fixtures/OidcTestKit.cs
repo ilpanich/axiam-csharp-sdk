@@ -74,6 +74,7 @@ public static class OidcTestKit
                 "urn:ietf:params:oauth:grant-type:token-exchange",
             },
             device_authorization_endpoint = $"{origin}/oauth2/device_authorization",
+            pushed_authorization_request_endpoint = $"{origin}/oauth2/par",
             end_session_endpoint = $"{origin}/oauth2/end_session",
             backchannel_logout_supported = true,
             backchannel_logout_session_supported = true,
@@ -184,6 +185,20 @@ public static class OidcTestKit
 
     public static string OAuth2ErrorJson(string error, string description) =>
         JsonSerializer.Serialize(new { error, error_description = description });
+
+    /// <summary>Reads a JSON request body into a <see cref="JsonElement"/>, for asserting
+    /// the exact object an SDK operation sent.</summary>
+    public static JsonElement ReadJsonBody(HttpRequestMessage request)
+    {
+        string body = ReadRawBody(request);
+        using JsonDocument doc = JsonDocument.Parse(body);
+        return doc.RootElement.Clone();
+    }
+
+    /// <summary>Reads a request body as raw text — the only way to assert that a
+    /// &#167;24.0 byte-preserving splice really did preserve the bytes.</summary>
+    public static string ReadRawBody(HttpRequestMessage request) =>
+        request.Content!.ReadAsStringAsync().GetAwaiter().GetResult();
 
     /// <summary>Reads a form-urlencoded request body into a dictionary, for asserting the
     /// exact fields an SDK operation sent.</summary>

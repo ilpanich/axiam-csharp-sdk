@@ -19,14 +19,21 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §22, §23 (including §6.1 mTLS
-client certificates, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, the §12 OIDC/SSO
-relying-party helpers, contract 1.4, the §13 webhook signature verifier, T-145, and the §22 reactor
-runtime, contract 1.19, and the §23 OPAQUE (RFC 9807) login path, contract 1.26).
+This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §22, §23, §24, §25, §26
+(including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation, contract 1.3,
+the §12 OIDC/SSO relying-party helpers, contract 1.4, the §13 webhook signature verifier, T-145, the
+§22 reactor runtime, contract 1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, and the §24
+WebAuthn relying-party layer, the §25 account-lifecycle operations and §26 Pushed Authorization
+Requests, contract 1.28).
 
-§12.7, §14, §15, §22 and §23 are named rather than folded into the range because they landed
-after this SDK already claimed §1–§13: widening the range silently would turn a
+§12.7, §14, §15, §22, §23, §24, §25 and §26 are named rather than folded into the range because they
+landed after this SDK already claimed §1–§13: widening the range silently would turn a
 statement that was true when written into a different claim without anyone editing it.
+
+§24.6b — the linked-API ceremony helper — is **deliberately absent**. A server or CLI runtime has no
+authenticator, and §24.6b rule 2 forbids emulating one in software: a "credential" held in process
+memory is not a second factor. §24.6a's JSON bridge is what a Blazor, MAUI or Uno front end uses
+instead — see [WebAuthn / passkeys](#webauthn--passkeys-axiamsdkwebauthn-contractmd-24).
 
 See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract.
 
@@ -997,6 +1004,218 @@ The password crosses the ABI as **UTF-8**, explicitly, never through default str
 marshalling. A password that encoded differently under a different platform default would
 derive a randomized password no AXIAM server agrees with, and would surface as a wrong password
 on that machine only.
+
+## WebAuthn / passkeys (`Axiam.Sdk.Webauthn`, CONTRACT.md §24)
+
+Six wire operations, two ceremonies, and one thing this SDK deliberately does not do.
+
+```csharp
+// Enrolment — requires a session (§24.1), refused client-side without one.
+WebauthnChallenge challenge = await client.WebauthnRegisterStartAsync();
+WebauthnCredential credential = await client.WebauthnRegisterFinishAsync(
+    challenge.StateToken, "Alice's laptop", platformResponseJson);   // verbatim
+
+// Sign-in with no username at all — the authenticator picks the account.
+WebauthnChallenge signIn = await client.WebauthnDiscoverableStartAsync();
+WebauthnLoginResult result = await client.WebauthnDiscoverableFinishAsync(
+    signIn.StateToken, assertionJson);
+```
+
+**The server chooses every option and verifies every response; this SDK passes both through
+byte-for-byte** (§24.0). `WebauthnChallenge.Challenge` is a raw `JsonElement`, not a modelled type:
+no defaulting, no validation-that-rejects, no re-encoding. On the way back the `*Finish` body is
+assembled as **text**, splicing the caller's response string in unmodified — deserializing and
+re-serializing it would hand the server a byte sequence the authenticator never signed.
+
+### The browser half, via the §24.6a JSON bridge
+
+.NET has no authenticator, so the ceremony runs wherever the user is. `RequestJson` is the string
+that half needs:
+
+```csharp
+// ASP.NET Core relying party
+app.MapPost("/passkeys/start", async (AxiamClient client) =>
+{
+    WebauthnChallenge challenge = await client.WebauthnRegisterStartAsync();
+    // §24.6a rule 1: the wire JSON, unparsed and unreassembled.
+    return Results.Ok(new { challenge.RequestJson, stateToken = challenge.StateToken.Expose() });
+});
+```
+
+```javascript
+// Browser
+const options = PublicKeyCredential.parseCreationOptionsFromJSON(requestJson);
+const credential = await navigator.credentials.create({ publicKey: options });
+await fetch('/passkeys/finish', {
+  method: 'POST',
+  headers: { 'content-type': 'application/json' },
+  body: JSON.stringify({ stateToken, response: credential.toJSON() }),  // verbatim
+});
+```
+
+`RequestJson` is the inner options object — the `publicKey` wrapper belongs to the DOM's
+`CredentialCreationOptions`, and the platform JSON APIs do not want it. A MAUI app relaying Android's
+`registrationResponseJson`, or an Uno app relaying a `DOMException` name, uses the same two seams.
+
+Passing something that is not JSON, or is not a JSON object, raises `AuthError` client-side with no
+wire call: the SDK will not POST a body it already knows the server cannot verify.
+
+### The two authentication ceremonies are different flows (§24.2)
+
+`WebauthnAuthenticateStartAsync`/`FinishAsync` is a **second factor** — it continues a `LoginAsync`
+that answered `MfaRequired` with `"webauthn"` among its methods, and the challenge token names the
+user so the server can send an `allowCredentials` list. `WebauthnDiscoverableStartAsync`/`FinishAsync`
+is a **primary factor**: nothing precedes it, `allowCredentials` is empty, and the assertion itself
+identifies the user. They are not one operation with an optional token — merging them reproduces a
+bug the server already fixed, which is why the token is a required argument on one and absent from
+the other.
+
+One difference a reactor author will ask about: `discoverable/finish` fires the `login.post_auth`
+hook event (§22.5) and `authenticate/finish` does not. The latter continues a login already gated at
+its password step; the former has no such step to have been gated at.
+
+### Saying something useful when a ceremony fails (§24.6b rule 5)
+
+```csharp
+WebauthnFailure outcome = WebauthnFailures.Classify(domExceptionName);
+string copy = outcome.Message();
+```
+
+`AlreadyRegistered` is the exclusion list doing its job, and the only classification whose remedy is
+"use a different device" rather than "try again". `Cancelled` covers **both** an explicit refusal and
+a silent timeout — the spec deliberately refuses to distinguish them, because telling a website which
+one happened leaks whether an authenticator was present — so its copy does not accuse anyone of
+cancelling.
+
+### Two error rows that are not the §2 defaults (§24.4)
+
+- A **403 from `register/finish`** is the tenant's *attestation policy* rejecting this particular
+  authenticator. The server's message is the only place that says which one would be accepted, so it
+  is lifted into the `AuthzError`'s message rather than discarded. Show it.
+- A **503 from `register/start`** means the policy needs FIDO metadata the server cannot reach. That
+  is a configuration state, not a transient one, and it is **not retried** — the second documented
+  exception to §16 after §20's.
+
+Session cookies: as of contract 1.28 both `*FinishAsync` authentication calls set the `axiam_access`
+/ `axiam_refresh` / `axiam_csrf` triple alongside the token body, so a completed ceremony leaves the
+client signed in for every cookie-driven call that follows (§24.3).
+
+Worked end to end in [`examples/WebauthnPasskeys`](examples/WebauthnPasskeys).
+
+## Account lifecycle and MFA enrolment (`Axiam.Sdk.Account`, CONTRACT.md §25)
+
+Nine operations covering the things a user does to their own account — none of which is
+administration, and all of which were previously reachable only by hand-rolling HTTP.
+
+```csharp
+LoginResult result = await client.LoginAsync("alice@example.com", password);
+
+if (result.MfaSetupRequired)
+{
+    // The third outcome. The tenant requires MFA, this account has none, and the
+    // server handed back a setup token to finish with. There is no session yet —
+    // the token IS the credential.
+    Sensitive<string> setupToken = result.SetupToken!;
+    MfaEnrollment enrollment = await client.MfaSetupEnrollAsync(setupToken);
+    RenderQr(enrollment.TotpUri.Expose());
+    await client.MfaSetupConfirmAsync(setupToken, code);    // completes the LOGIN
+}
+```
+
+`LoginResult` gained two components with defaults rather than changing shape, so every pre-1.28
+construction still compiles and still reads `false`. **Handle the new outcome anyway.** A tenant that
+turns on required MFA will start returning it, and a client that only branches on `MfaRequired`
+reports a successful login that has no session.
+
+`MfaSetupConfirmAsync` adopts credentials exactly as `LoginAsync` does, because it *is* the
+completion of a login (§25.2 rule 2). `MfaEnrollAsync`/`MfaConfirmAsync` are the voluntary pair, from
+inside an existing session, and they do **not** clear the §17 decision memo — the subject has not
+changed, and discarding a warm memo on an unrelated profile action costs a round trip on every check
+that follows.
+
+Both halves of an `MfaEnrollment` are `Sensitive<string>`, and the second one matters: the
+`otpauth://` URI *contains* the secret (§25.3). Wrapping the bare secret and then logging the URI
+leaks the same bytes.
+
+### Password reset, and the two things it will not tell you
+
+```csharp
+await client.RequestPasswordResetAsync(new PasswordResetRequest { Email = "alice@example.com" });
+// returns a bare Task, whether or not that address has an account
+
+PasswordResetContext context = await client.PasswordResetContextAsync(Sensitive<string>.Wrap(token));
+if (context.Opaque is not null)
+{
+    // This tenant runs §23. Build a registration record from these parameters;
+    // a plaintext password would be refused, and refused late (§25.4 rule 1).
+}
+await client.ConfirmPasswordResetAsync(new PasswordResetConfirmation
+{
+    // Sensitive<T>.Wrap is public for exactly this: the token arrives from a mail link as
+    // a bare string, and wrapping a value can never leak it — only Expose() can.
+    Token = Sensitive<string>.Wrap(token), NewPassword = Sensitive<string>.Wrap(newPassword),
+    TenantId = tenantId,
+});
+```
+
+`RequestPasswordResetAsync` returns nothing and throws nothing on an unknown address, and this SDK
+exposes no way to tell the two cases apart. That is not an omission to improve on: a client that
+surfaced a "no such user" state — even one inferred from timing — would turn the endpoint into the
+account-enumeration oracle its uniform response exists to prevent. Likewise a `404` from
+`PasswordResetContextAsync` means unknown, expired **or** already-consumed, and the SDK does not
+distinguish them either (§25.4 rule 3).
+
+`VerifyEmailAsync` and `ResendVerificationAsync` are unauthenticated — a user whose address is
+unverified may have no session at all — and carry the tenant as a **body** field, since §12.1 rule 2's
+`?tenant_id=` convention is scoped to the `/oauth2` endpoints.
+
+Worked end to end in [`examples/AccountLifecycle`](examples/AccountLifecycle).
+
+## Pushed Authorization Requests (CONTRACT.md §26, RFC 9126)
+
+PAR moves the authorization request off the browser. Instead of putting `scope`, `redirect_uri`,
+`state` and the PKCE challenge into a URL the user agent carries, the client POSTs them straight to
+AXIAM over an authenticated back channel and puts an opaque `request_uri` in the redirect.
+
+```csharp
+OidcConfiguration config = await client.OidcDiscoverAsync();
+if (string.IsNullOrEmpty(config.PushedAuthorizationRequestEndpoint))
+{
+    // §26 is optional; fall back to the plain OidcBegin redirect.
+}
+
+AuthorizationRequest begun = client.OidcBegin(
+    config, new OidcBeginParams { RedirectUri = redirectUri, Scope = "openid profile" });
+
+PushedAuthorizationRequest pushed = await client.OidcParAsync(new OidcParParams
+{
+    Request = begun, RedirectUri = redirectUri, Configuration = config, Scope = "openid profile",
+});
+
+return Results.Redirect(pushed.Url);   // exactly ?client_id=…&request_uri=…
+```
+
+Three things worth knowing:
+
+- **The server answers `201`,** not `200` — RFC 9126 §2.2 specifies *Created*. A success predicate
+  written `== 200` treats every successful push as a failure.
+- **The redirect URL carries exactly two parameters.** The server refuses a request that mixes a
+  `request_uri` with inline authorization parameters rather than merging them; merging is where
+  parameter confusion lives (§26.2 rule 2). Any query the discovered `AuthorizationEndpoint` already
+  carried is dropped.
+- **`OidcBegin` still owns `State`, `Nonce` and the PKCE pair.** There is no second generator (§26.2
+  rule 1), and `PushedAuthorizationRequest` carries all three straight through to the exchange.
+
+The push is **not retried** on a 5xx or a transport failure: it is a POST that creates server state,
+so it falls outside §16.2's read-only eligibility exactly as `OidcExchangeAsync` does. The safe
+recovery is a fresh push, which costs one round trip and cannot double-consume anything. The
+`RequestUri` is `Sensitive<string>` because between the push and the redirect it is a bearer handle to
+a fully-formed authorization request (§26.5).
+
+A **FAPI 2.0 client has no alternative**: `profile: "fapi2"` refuses a registration that does not set
+`require_par`, so such a client cannot authorize any other way (§21.1).
+
+Worked end to end in [`examples/ParLogin`](examples/ParLogin).
 
 ## Grpc.Tools exception
 
