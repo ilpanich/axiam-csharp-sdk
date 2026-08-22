@@ -46,6 +46,7 @@ public sealed record OidcConfiguration(
     [property: JsonPropertyName("claims_supported")] IReadOnlyList<string> ClaimsSupported,
     [property: JsonPropertyName("grant_types_supported")] IReadOnlyList<string> GrantTypesSupported,
     [property: JsonPropertyName("device_authorization_endpoint")] string? DeviceAuthorizationEndpoint = null,
+    [property: JsonPropertyName("pushed_authorization_request_endpoint")] string? PushedAuthorizationRequestEndpoint = null,
     [property: JsonPropertyName("end_session_endpoint")] string? EndSessionEndpoint = null,
     [property: JsonPropertyName("backchannel_logout_supported")] bool BackchannelLogoutSupported = false,
     [property: JsonPropertyName("backchannel_logout_session_supported")] bool BackchannelLogoutSessionSupported = false);
@@ -666,3 +667,72 @@ public sealed record UmaChallenge(string? Realm, string? AsUri, Sensitive<string
         return $"UMA realm=\"{realm}\", as_uri=\"{asUri}\", ticket=\"{ticket.Reveal()}\"";
     }
 }
+
+/// <summary>
+/// Arguments to <see cref="AxiamClient.OidcParAsync"/> (CONTRACT.md &#167;26.1).
+/// </summary>
+public sealed class OidcParParams
+{
+    /// <summary>
+    /// The <see cref="AuthorizationRequest"/> <see cref="AxiamClient.OidcBegin"/> returned.
+    /// Its <c>state</c>, <c>nonce</c> and PKCE verifier are pushed as-is: &#167;26.2 rule 1
+    /// forbids a second generator.
+    /// </summary>
+    public required AuthorizationRequest Request { get; init; }
+
+    /// <summary>The redirect URI that will also be sent at exchange time.</summary>
+    public required string RedirectUri { get; init; }
+
+    /// <summary>
+    /// The discovery document, or <c>null</c> to discover (reusing the per-origin cache).
+    /// </summary>
+    public OidcConfiguration? Configuration { get; init; }
+
+    /// <summary>
+    /// The requested scope, space-separated. <c>"openid"</c> is added automatically when
+    /// absent (&#167;12.1 rule 4).
+    /// </summary>
+    public string? Scope { get; init; }
+
+    /// <summary>A tenant override for the <c>?tenant_id=</c> query parameter.</summary>
+    public Guid? TenantId { get; init; }
+}
+
+/// <summary>
+/// The result of <see cref="AxiamClient.OidcParAsync"/> (CONTRACT.md &#167;26.1).
+/// </summary>
+/// <remarks>
+/// The server answered <b>201</b> — RFC 9126 &#167;2.2 specifies Created, and a success
+/// predicate written <c>== 200</c> would treat every successful push as a failure.
+/// <para>
+/// <see cref="State"/>, <see cref="Nonce"/> and <see cref="CodeVerifier"/> are carried
+/// straight through from the <see cref="AuthorizationRequest"/> that was pushed:
+/// &#167;26.2 rule 1 forbids a second generator, and rule 6 wants exactly one verifier so
+/// there is no second place for the two to disagree.
+/// </para>
+/// </remarks>
+/// <param name="Url">
+/// Where to redirect the user agent. Carries <b>exactly</b> <c>client_id</c> and
+/// <c>request_uri</c> — the server refuses a request that mixes a <c>request_uri</c> with
+/// inline authorization parameters rather than merging them, because merging is where
+/// parameter confusion lives (&#167;26.2 rule 2).
+/// </param>
+/// <param name="RequestUri">
+/// The opaque, single-use handle. <see cref="Sensitive{T}"/> per &#167;26.5: between the
+/// push and the redirect it is a bearer handle to a fully-formed authorization request,
+/// and a log line is the wrong place for it to sit for the length of that window.
+/// </param>
+/// <param name="ExpiresIn">The handle's lifetime in seconds; not advisory (&#167;26.2 rule 3).</param>
+/// <param name="State">The value to compare against the <c>state</c> the IdP returns.</param>
+/// <param name="Nonce">The value that must equal the ID token's <c>nonce</c> claim.</param>
+/// <param name="CodeVerifier">
+/// The PKCE verifier to pass into <see cref="AxiamClient.OidcExchangeAsync"/> — the same
+/// one <see cref="AxiamClient.OidcBegin"/> produced.
+/// </param>
+public sealed record PushedAuthorizationRequest(
+    string Url,
+    Sensitive<string> RequestUri,
+    long ExpiresIn,
+    string State,
+    string Nonce,
+    Sensitive<string> CodeVerifier);

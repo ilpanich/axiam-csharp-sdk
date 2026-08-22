@@ -64,3 +64,9 @@ internal sealed record TokenExchangeResponseWire(
     [property: JsonPropertyName("token_type")] string TokenType,
     [property: JsonPropertyName("expires_in")] long ExpiresIn,
     [property: JsonPropertyName("scope")] string? Scope = null);
+
+/// <summary>The <c>201</c> body of <c>POST /oauth2/par</c> (RFC 9126 &#167;2.2 — Created,
+/// not OK).</summary>
+internal sealed record PushedAuthorizationResponseWire(
+    [property: JsonPropertyName("request_uri")] string RequestUri,
+    [property: JsonPropertyName("expires_in")] long ExpiresIn);
