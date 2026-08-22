@@ -56,7 +56,7 @@ static async Task LoginWithForcedEnrolmentAsync(AxiamClient client)
             // Not a failure. The tenant requires MFA, this account has none, and the
             // server handed back a setup token to finish with. There is no session yet —
             // the token IS the credential for the next two calls.
-            Sensitive<string> setupToken = result.SetupToken!;
+            Sensitive<string> setupToken = result.SetupToken!.Value;
 
             MfaEnrollment enrollment = await client.MfaSetupEnrollAsync(setupToken);
             Console.WriteLine($"  scan this: {enrollment.TotpUri.Expose()}");
@@ -70,7 +70,7 @@ static async Task LoginWithForcedEnrolmentAsync(AxiamClient client)
         else if (result.MfaRequired)
         {
             // The account already HAS a factor — challenge it, don't enrol.
-            await client.VerifyMfaAsync(result.ChallengeToken!, PromptForCode());
+            await client.VerifyMfaAsync(result.ChallengeToken!.Value, PromptForCode());
             Console.WriteLine("  signed in after an MFA challenge");
         }
         else
