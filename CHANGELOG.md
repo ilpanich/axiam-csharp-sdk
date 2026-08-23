@@ -62,6 +62,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Re-vendor `CONTRACT.md`. Repairs §14.1's link to the `device_login` heading,
+  which dropped a hyphen the em dash leaves behind and so rendered as a link
+  that went nowhere; the same heading's other two links were already correct.
+  Link target only — no normative change and no contract-version bump.
+
 - **Conformance statement now names §20.** The UMA 2.0 Protection API and ticket
   grant — all seven §20.1 canonical operations — have been on `AxiamClient` since
   contract 1.10 and are documented in the README body; the headline statement had
