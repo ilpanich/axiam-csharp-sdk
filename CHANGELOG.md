@@ -62,6 +62,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Conformance statement now names §20.** The UMA 2.0 Protection API and ticket
+  grant — all seven §20.1 canonical operations — have been on `AxiamClient` since
+  contract 1.10 and are documented in the README body; the headline statement had
+  never been widened to say so.
+
 - Re-vendor `openapi.json` at **1.0.0-alpha38**. The server registered the four
   GDPR data-subject endpoints (`POST /api/v1/account/export`,
   `GET /api/v1/account/export/{token}`, `POST /api/v1/account/delete`,
