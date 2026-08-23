@@ -19,15 +19,15 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §22, §23, §24, §25, §26
-(including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation, contract 1.3,
-the §12 OIDC/SSO relying-party helpers, contract 1.4, the §13 webhook signature verifier, T-145, the
-§22 reactor runtime, contract 1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, and the §24
-WebAuthn relying-party layer, the §25 account-lifecycle operations and §26 Pushed Authorization
-Requests, contract 1.28).
+This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20, §22, §23, §24, §25,
+§26 (including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation, contract
+1.3, the §12 OIDC/SSO relying-party helpers, contract 1.4, the §13 webhook signature verifier, T-145,
+the §20 UMA 2.0 Protection API and ticket grant, contract 1.10, the §22 reactor runtime, contract
+1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, and the §24 WebAuthn relying-party layer,
+the §25 account-lifecycle operations and §26 Pushed Authorization Requests, contract 1.28).
 
-§12.7, §14, §15, §22, §23, §24, §25 and §26 are named rather than folded into the range because they
-landed after this SDK already claimed §1–§13: widening the range silently would turn a
+§12.7, §14, §15, §20, §22, §23, §24, §25 and §26 are named rather than folded into the range because
+they landed after this SDK already claimed §1–§13: widening the range silently would turn a
 statement that was true when written into a different claim without anyone editing it.
 
 §24.6b — the linked-API ceremony helper — is **deliberately absent**. A server or CLI runtime has no
