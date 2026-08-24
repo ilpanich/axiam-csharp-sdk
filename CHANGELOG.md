@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-alpha43] - 2026-08-24
+
 ### Added
+
+- Multi-target net8.0;net10.0 before .NET 8 goes out of support (#67)
 
 - **Both packages now multi-target `net8.0;net10.0`.** `Axiam.Sdk` and
   `Axiam.Sdk.AspNetCore` each ship a `lib/` folder per framework, so a .NET 10
@@ -39,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **A "Supported .NET versions" section in the README.**
 
 ### Changed
+
+- Bump the minor-patch group with 1 update
 
 - **Test projects and all examples multi-target too.** `dotnet test` therefore
   runs the entire suite once per target framework, and each example is a
