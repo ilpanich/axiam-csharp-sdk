@@ -105,18 +105,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Replace SRP-6a with OPAQUE (RFC 9807), CONTRACT §23
 
+- CONTRACT.md §24 — WebAuthn / passkeys relying-party layer (`Axiam.Sdk.Webauthn`):
+  the six wire operations, the two distinct authentication ceremonies, and
+  §24.6a's JSON bridge. `WebauthnChallenge.RequestJson` is the string an
+  ASP.NET Core relying party hands to a browser (or a MAUI/Uno host), and the
+  platform's response JSON goes straight back into the matching `*FinishAsync`
+  — spliced into the request body as text so the authenticator's signed bytes
+  reach the wire unmodified. `WebauthnFailures.Classify` maps a relayed
+  platform error name to the five §24.6b rule 5 outcomes.
+
+  §24.6b's linked-API helper is deliberately absent: a server or CLI runtime
+  has no authenticator, and rule 2 forbids emulating one in software.
+
+- CONTRACT.md §25 — account lifecycle and MFA enrolment (`Axiam.Sdk.Account`):
+  voluntary and forced TOTP enrolment, email verification, and the
+  password-reset triple including the `reset/context` call a tenant with §23
+  enabled requires before a new password can be built.
+
+- CONTRACT.md §26 — Pushed Authorization Requests, RFC 9126 (`OidcParAsync`,
+  `OidcParParams`, `PushedAuthorizationRequest`). Required for a FAPI 2.0
+  client, which cannot authorize any other way (§21.1).
+
+- `examples/WebauthnPasskeys`, `examples/AccountLifecycle` and
+  `examples/ParLogin`, each built by CI.
+
+- OPAQUE (RFC 9807) login and enrolment (CONTRACT §23): `LoginOpaqueAsync`,
+  `OpaqueEnrollmentAsync` and `OpaqueAvailable` on `AxiamClient`, plus the new
+  `Axiam.Sdk.Opaque` namespace.
+
+- `examples/OpaqueLogin`.
+
 ### Changed
 
 - Link to the AXIAM platform documentation site
+
 - Re-vendor openapi.json at alpha32 (#59)
-
-### Fixed
-
-- Build the KSF before spending the exchange's state handle
-
-## [Unreleased]
-
-### Changed
 
 - **Re-vendor `openapi.json`** for AXIAM server PR #368, which adds a third CA
   key custodian, `vault_pki`, having HashiCorp Vault's PKI secrets engine
@@ -180,33 +203,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   whatever it puts there. Only a `NetworkError` path (a `404`, an absent
   library, an unusable key-stretching function) is unchanged — those are not
   credential checks and never trigger the fallback.
+
 - Re-vendored `CONTRACT.md` at contract **1.29** and `openapi.json` at
   **1.0.0-alpha40**.
-
-### Added
-
-- CONTRACT.md §24 — WebAuthn / passkeys relying-party layer (`Axiam.Sdk.Webauthn`):
-  the six wire operations, the two distinct authentication ceremonies, and
-  §24.6a's JSON bridge. `WebauthnChallenge.RequestJson` is the string an
-  ASP.NET Core relying party hands to a browser (or a MAUI/Uno host), and the
-  platform's response JSON goes straight back into the matching `*FinishAsync`
-  — spliced into the request body as text so the authenticator's signed bytes
-  reach the wire unmodified. `WebauthnFailures.Classify` maps a relayed
-  platform error name to the five §24.6b rule 5 outcomes.
-
-  §24.6b's linked-API helper is deliberately absent: a server or CLI runtime
-  has no authenticator, and rule 2 forbids emulating one in software.
-- CONTRACT.md §25 — account lifecycle and MFA enrolment (`Axiam.Sdk.Account`):
-  voluntary and forced TOTP enrolment, email verification, and the
-  password-reset triple including the `reset/context` call a tenant with §23
-  enabled requires before a new password can be built.
-- CONTRACT.md §26 — Pushed Authorization Requests, RFC 9126 (`OidcParAsync`,
-  `OidcParParams`, `PushedAuthorizationRequest`). Required for a FAPI 2.0
-  client, which cannot authorize any other way (§21.1).
-- `examples/WebauthnPasskeys`, `examples/AccountLifecycle` and
-  `examples/ParLogin`, each built by CI.
-
-### Changed
 
 - Re-vendor `CONTRACT.md`. Repairs §14.1's link to the `device_login` heading,
   which dropped a hyphen the em dash leaves behind and so rendered as a link
@@ -231,34 +230,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   compiles and reads `false`. Callers that branch only on `MfaRequired` should
   still add the new branch — a tenant that turns on required MFA will start
   returning it, and ignoring it reports a successful login that has no session.
+
 - `OidcConfiguration` gained `PushedAuthorizationRequestEndpoint`, defaulted to
   `null` and parsed from discovery.
+
 - Re-vendored `CONTRACT.md` and `openapi.json` at contract 1.28.
-
-### Added
-
-- OPAQUE (RFC 9807) login and enrolment (CONTRACT §23): `LoginOpaqueAsync`,
-  `OpaqueEnrollmentAsync` and `OpaqueAvailable` on `AxiamClient`, plus the new
-  `Axiam.Sdk.Opaque` namespace.
-- `examples/OpaqueLogin`.
-
-### Changed
 
 - Re-vendor `openapi.json` at **1.0.0-alpha32**, matching the server. The
   content was already byte-identical in every path and schema; only
   `info.version` differed, which is what the cross-repo artifact-drift gate
   reports as `STALE`.
+
 - **BREAKING** — the OPAQUE protocol is NOT implemented in this SDK. CONTRACT
   §23.1 forbids it, so the client half is a P/Invoke binding to
   `libaxiam_opaque_ffi` — the same implementation the AXIAM server links,
   published as a per-platform asset on the axiam release page rather than on
   NuGet. There is nothing to add to your `.csproj`; put the library where the
   runtime probes for native libraries, or set `AXIAM_OPAQUE_LIBRARY`.
+
 - **BREAKING** — `OpaqueAvailable()` can genuinely return `false`, where
   `SrpAvailable()` was hard-coded `true` on .NET. Code that ignored
   `SrpAvailable()` must not ignore this one. It calls into the library rather
   than merely locating it: a .NET P/Invoke does not resolve until first use, so a
   probe that only found the file would report "present" and then throw at login.
+
 - **BREAKING** — enrolment is now asynchronous and performs network I/O, where
   `SrpEnrollment` was a pure computation: OPAQUE's envelope is sealed under the
   server's oblivious PRF, so there is no offline computation that produces a
@@ -266,6 +261,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   record binds to a credential identifier the server chooses, and the
   key-stretching parameters are the server's. As a consequence, **renaming a
   user no longer invalidates their credential**.
+
 - Failure taxonomy for the OPAQUE path: a tenant with OPAQUE disabled, an absent
   library, and a key-stretching function this build cannot perform are all
   `NetworkError` (a caller can fall back, or an operator can act); everything
@@ -281,6 +277,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   return 404.
 
 ### Fixed
+
+- Build the KSF before spending the exchange's state handle
 
 - OPAQUE: a refused key-stretching function no longer strands the exchange's
   native state handle. `Finish()` spent the handle before building the KSF, so
