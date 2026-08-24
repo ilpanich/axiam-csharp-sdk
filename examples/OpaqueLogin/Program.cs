@@ -26,7 +26,8 @@ using Axiam.Sdk.Options;
 //   3. A tenant with opaque_mode: disabled answers the start endpoint with 404, which reaches
 //      the caller as NetworkError and NOT as a credential failure — so falling back to
 //      LoginAsync is correct and safe. An AuthError is the opposite case and must NOT be
-//      retried that way.
+//      retried that way: under opaque_mode: optional the SDK has already done the one retry
+//      §23.4 rule 7 allows, and under required there is nothing to retry into.
 //   4. A tenant with opaque_mode: required answers /auth/login with 403, which is an
 //      AuthzError. A user whose password is perfectly good must never be shown "invalid
 //      username or password".
@@ -93,8 +94,12 @@ try
         {
             // This covers BOTH halves of the mutual authentication: the envelope only opens
             // under the right password, and KE2's MAC only verifies if the server actually
-            // holds the record. Do NOT retry over LoginAsync, which would hand the plaintext
-            // to an endpoint that just failed to prove it holds the record (§23.4 rule 7).
+            // holds the record. Reaching here means the tenant is opaque_mode: required (or
+            // is a server older than contract 1.29, which sends no `mode` at all): under
+            // optional the SDK has ALREADY retried over LoginAsync for you and this is that
+            // call's verdict. Either way, do not retry over LoginAsync yourself — that hands
+            // the plaintext to an endpoint that just failed to prove it holds the record, and
+            // required refuses it with 403 anyway (§23.4 rule 7).
             Console.Error.WriteLine($"login failed: {ex.Message}");
             Console.Error.WriteLine("Not retrying with a password.");
             return;

@@ -51,6 +51,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **BEHAVIOUR** — CONTRACT.md §23.4 rule 7, contract 1.29. The
+  `POST /api/v1/auth/opaque/login/start` response now carries an optional `mode`
+  field holding the tenant's `opaque_mode`, and it alone decides what a failed
+  `KE2` means. `LoginOpaqueAsync` still sends nothing to `login/finish` when the
+  envelope does not open, but under `mode: "optional"` it now **retries over
+  `POST /api/v1/auth/login`** with the same credentials and returns that call's
+  outcome — its success on success, its error on failure — instead of raising
+  immediately. Under `mode: "required"`, under an **absent** `mode` (a server
+  older than the field) and under any value this SDK does not recognise, the
+  failure stays an `AuthError`, the exchange is over, and nothing is retried.
+
+  This is not belt-and-braces: `optional` is the mid-migration state, every
+  account starts with no registration record and acquires one only when its
+  password is next set, so treating the failed exchange as final locked out
+  every user of a tenant that had just enabled OPAQUE. A caller that already
+  wrapped `LoginOpaqueAsync` in its own fallback should remove it — under
+  `required` a retry is refused with `403 opaque_required` anyway, and it puts a
+  plaintext password on the wire for nothing.
+
+  `mode` is **not** downgrade protection and is not documented as such: a
+  hostile server that wanted the plaintext could answer `404` and get a fallback
+  whatever it puts there. Only a `NetworkError` path (a `404`, an absent
+  library, an unusable key-stretching function) is unchanged — those are not
+  credential checks and never trigger the fallback.
+- Re-vendored `CONTRACT.md` at contract **1.29** and `openapi.json` at
+  **1.0.0-alpha40**.
+
 ### Added
 
 - CONTRACT.md §24 — WebAuthn / passkeys relying-party layer (`Axiam.Sdk.Webauthn`):
@@ -138,6 +167,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   library, and a key-stretching function this build cannot perform are all
   `NetworkError` (a caller can fall back, or an operator can act); everything
   else is `AuthError` and must NOT be retried over `LoginAsync` (§23.4 rule 7).
+  Amended by contract 1.29 — see the `mode` entry at the top of this section.
 
 ### Removed
 

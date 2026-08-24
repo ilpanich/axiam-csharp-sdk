@@ -490,6 +490,30 @@ public sealed partial class AxiamClient : IDisposable
     /// someone holding the OPRF seed. It runs on the thread pool rather than the caller's
     /// thread.
     /// </para>
+    /// <para>
+    /// <b>When the credential check fails</b> (&#167;23.4 rule 7). Nothing is sent to
+    /// <c>login/finish</c> — a <c>KE2</c> that does not open <i>is</i> the authentication
+    /// result — and what happens next depends only on the <c>mode</c> the <c>login/start</c>
+    /// response carried, the tenant's <c>opaque_mode</c>:
+    /// </para>
+    /// <para>
+    /// Under <c>optional</c> this method retries over <see cref="LoginAsync"/> with the same
+    /// credentials before reporting anything, and returns that call's outcome. That is not
+    /// belt-and-braces: <c>optional</c> is the mid-migration state, every account starts with no
+    /// registration record and acquires one only when its password is next set, so treating the
+    /// failed exchange as final would lock out every user of the tenant.
+    /// </para>
+    /// <para>
+    /// Under <c>required</c> — and under an absent <c>mode</c>, which is a server older than the
+    /// field, and any value this SDK does not recognise — the failure is an
+    /// <see cref="AuthError"/>, the exchange is over, and nothing is retried.
+    /// </para>
+    /// <para>
+    /// <c>mode</c> is <b>not</b> downgrade protection and this SDK does not present it as such:
+    /// a hostile server that wanted the plaintext could answer <c>404</c> and get a fallback
+    /// whatever it puts there. What closes that is the server refusing <c>/auth/login</c> under
+    /// <c>required</c>, before it examines any credential.
+    /// </para>
     /// </remarks>
     /// <param name="usernameOrEmail">The username or email to authenticate with.</param>
     /// <param name="password">
@@ -509,9 +533,12 @@ public sealed partial class AxiamClient : IDisposable
     /// <exception cref="AuthError">
     /// A wrong password, an account that does not exist, or a server that does not hold the
     /// record — indistinguishable by design. <b>Nothing is sent to <c>login/finish</c> in that
-    /// case</b> (&#167;23.4 rule 7), and a caller must not retry over
-    /// <see cref="LoginAsync"/>: that hands the plaintext to an endpoint that just failed to
-    /// prove itself.
+    /// case</b> (&#167;23.4 rule 7), and under a <c>required</c> tenant the exchange is over:
+    /// a caller must not retry over <see cref="LoginAsync"/>, which would hand the plaintext to
+    /// an endpoint that just failed to prove itself and answers <c>403 opaque_required</c>
+    /// anyway. Under an <c>optional</c> tenant this method has already retried for you — see
+    /// the remarks — so an <see cref="AuthError"/> from here is the <i>password</i> login's
+    /// verdict.
     /// </exception>
     public async Task<LoginResult> LoginOpaqueAsync(
         string usernameOrEmail,
@@ -544,11 +571,39 @@ public sealed partial class AxiamClient : IDisposable
         string ke2 = ke2El.GetString() ?? string.Empty;
         KsfParams ksf = KsfParams.FromWire(started);
 
-        // The key-stretching function is deliberately CPU- and memory-bound; keeping it off the
-        // caller's thread is the difference between a slow login and a stalled UI or request
-        // pipeline.
-        string ke3 = await Task.Run(
-            () => exchange.Finish(password, ke2, ksf), cancellationToken).ConfigureAwait(false);
+        // The tenant's opaque_mode, read BEFORE the credential check because it is the only
+        // thing that decides what a failed check means (§23.4 rule 7). Absent = a server older
+        // than contract 1.29, which fails closed.
+        string? mode = OpaqueMode.FromWire(started);
+
+        string ke3;
+        try
+        {
+            // The key-stretching function is deliberately CPU- and memory-bound; keeping it off
+            // the caller's thread is the difference between a slow login and a stalled UI or
+            // request pipeline.
+            ke3 = await Task.Run(
+                () => exchange.Finish(password, ke2, ksf), cancellationToken).ConfigureAwait(false);
+        }
+        catch (AuthError) when (OpaqueMode.AllowsPasswordFallback(mode) && !IsBlank(password))
+        {
+            // §23.4 rule 7, the `optional` clause. Under `optional` an account with no
+            // registration record is the ordinary case rather than an error — every account has
+            // none the moment an operator enables OPAQUE, and acquires one only as it next sets
+            // a password — and a wrong password, an unknown identity and a missing record are
+            // indistinguishable here by design. Reporting this as final would lock out every
+            // user of a tenant mid-migration, which is the state `optional` exists to serve.
+            //
+            // Nothing has been sent to login/finish and nothing will be: this abandons the
+            // exchange (its `using` releases the native state) and re-runs the ordinary password
+            // login, whose outcome — success or failure — is the one the caller gets.
+            //
+            // Only AuthError falls through here. A NetworkError from Finish() is a configuration
+            // fault (an unknown KSF, an out-of-range cost), not a credential check, and must not
+            // put a plaintext password on the wire.
+            return await LoginAsync(usernameOrEmail, new string(password), cancellationToken)
+                .ConfigureAwait(false);
+        }
 
         var finishBody = new Dictionary<string, object?>
         {
@@ -679,6 +734,15 @@ public sealed partial class AxiamClient : IDisposable
 
     private static string ReadString(JsonElement element, string name) =>
         element.TryGetProperty(name, out JsonElement value) ? value.GetString() ?? string.Empty : string.Empty;
+
+    /// <summary>
+    /// A password <see cref="LoginAsync"/> would reject outright, so there is nothing to fall
+    /// back with: &#167;23.4 rule 7's `optional` retry keeps reporting the OPAQUE
+    /// <see cref="AuthError"/> rather than swapping it for an <see cref="ArgumentException"/>
+    /// about an empty argument.
+    /// </summary>
+    private static bool IsBlank(char[] password) =>
+        password.Length == 0 || Array.TrueForAll(password, char.IsWhiteSpace);
 
     private void ApplyTenantAndOrgFields(IDictionary<string, object?> body)
     {
