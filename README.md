@@ -16,6 +16,7 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
   [`Axiam.Sdk.AspNetCore`](https://www.nuget.org/packages/Axiam.Sdk.AspNetCore) (ASP.NET Core middleware)
 - **Source:** [github.com/ilpanich/axiam-csharp-sdk](https://github.com/ilpanich/axiam-csharp-sdk)
 - **License:** Apache-2.0
+- **Target frameworks:** `net8.0` and `net10.0` — see [Supported .NET versions](#supported-net-versions)
 
 ## Contract conformance
 
@@ -290,6 +291,35 @@ Notes:
 See [`examples/AspNetCoreSample`](examples/AspNetCoreSample) for a runnable
 `MapAxiamOidcLogin` wiring and [`examples/Quickstart`](examples/Quickstart) for the
 `LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync` machine-to-machine flow.
+
+## Supported .NET versions
+
+Both published packages multi-target, so the `.nupkg` ships a `lib/` folder for each:
+
+| | Framework | Why this one |
+|---|---|---|
+| **Floor** | `net8.0` | LTS, **but out of support on 10 November 2026.** Kept so existing consumers are not forced to retarget in the same release that adds .NET 10. |
+| **Newest** | `net10.0` | LTS, supported through November 2028. The recommended target. |
+
+**The SDK is built against both, and tested against both.** In .NET that is
+expressed by multi-targeting rather than a CI matrix: one `dotnet build`
+produces both `lib/` folders, and `dotnet test` runs the entire suite once per
+target framework. Every example builds for both too, which is what proves the
+SDK is consumable from an application on either end rather than only the older
+one.
+
+> **`net8.0` goes out of support on 10 November 2026.** When it does, that leg
+> is dropped and `net10.0` becomes the floor. `VersionPolicyTests` checks the
+> declared floor against a table of .NET end-of-support dates and turns red on
+> the day it lapses, so this is a build failure rather than something to
+> remember.
+
+Nothing needs doing to consume the SDK from a newer runtime than you target:
+NuGet enforces the *lower* bound at restore time and is silent about the upper
+one, and a `lib/net8.0` assembly runs on .NET 10 under roll-forward regardless.
+That silence is the reason `Axiam.Sdk.SupportedFrameworks` exists — it names
+both ends so a preflight can report which you are actually on. See
+[`examples/VersionCompatibility`](./examples/VersionCompatibility).
 
 ## Quickstart
 

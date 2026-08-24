@@ -5,6 +5,60 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Both packages now multi-target `net8.0;net10.0`.** `Axiam.Sdk` and
+  `Axiam.Sdk.AspNetCore` each ship a `lib/` folder per framework, so a .NET 10
+  project binds against an assembly actually built and tested for .NET 10
+  rather than rolling forward onto the `net8.0` one.
+
+  **.NET 8 reaches end of support on 10 November 2026.** Targeting it alone was
+  a cliff with nothing in the build to mark it: a `lib/net8.0` package installs
+  into a `net10.0` project and runs there quite happily, so the gap is
+  invisible from both sides right up until the security updates stop.
+
+- **`Axiam.Sdk.SupportedFrameworks`** — `Floor`, `Newest` and `All`. NuGet
+  enforces the lower bound at restore time and says nothing about the upper
+  end; these name both, so a preflight can report which one the running process
+  is actually on.
+
+- **`VersionPolicyTests`** — a conformance test for the support policy. It
+  asserts every project in the repository (both packages, both test projects
+  and all twelve examples) targets exactly the supported set, that CI installs
+  an SDK for each, that `docfx.json` extracts from one of them, and that the
+  framework the running test assembly was compiled for is declared. The floor
+  is checked against a table of .NET end-of-support dates, so `net8.0` lapsing
+  fails the build on 11 November 2026 rather than whenever somebody looks.
+
+- **`examples/VersionCompatibility`** — a runnable preflight reporting the
+  compiled-against framework, the executing runtime, and whether the two differ
+  by roll-forward.
+
+- **A "Supported .NET versions" section in the README.**
+
+### Changed
+
+- **Test projects and all examples multi-target too.** `dotnet test` therefore
+  runs the entire suite once per target framework, and each example is a
+  compile-checked proof of consumability on both ends of the range rather than
+  only the older one.
+
+- **`Microsoft.AspNetCore.Mvc.Testing` is now conditioned per target
+  framework** — 8.0.30 for `net8.0`, 10.0.11 for `net10.0`. It is the one
+  package here that ships a build per ASP.NET Core major and carries the
+  matching shared framework with it; every other dependency is TFM-agnostic and
+  needs no condition.
+
+- **All three workflows install both the 8.0.x and 10.0.x SDKs.** Each target
+  framework needs its own targeting pack; the .NET 10 SDK drives the build and
+  the .NET 8 entry supplies that leg's reference assemblies.
+
+- **`docfx.json` extracts API metadata from `net10.0`** rather than `net8.0`.
+  With the projects multi-targeted, docfx must name one; the public surface is
+  identical across both.
+
 ## [1.0.0-alpha41] - 2026-08-24
 
 ### Added

@@ -13,7 +13,7 @@
       "dest": "api",
       "properties": {
         "Configuration": "Release",
-        "TargetFramework": "net8.0"
+        "TargetFramework": "net10.0"
       }
     }
   ],
