@@ -23,8 +23,9 @@ This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, 
 §26 (including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation, contract
 1.3, the §12 OIDC/SSO relying-party helpers, contract 1.4, the §13 webhook signature verifier, T-145,
 the §20 UMA 2.0 Protection API and ticket grant, contract 1.10, the §22 reactor runtime, contract
-1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, and the §24 WebAuthn relying-party layer,
-the §25 account-lifecycle operations and §26 Pushed Authorization Requests, contract 1.28).
+1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, the §24 WebAuthn relying-party layer,
+the §25 account-lifecycle operations and §26 Pushed Authorization Requests, contract 1.28, and
+§23.4 rule 7's `mode`-driven password-login fallback, contract 1.29).
 
 §12.7, §14, §15, §20, §22, §23, §24, §25 and §26 are named rather than folded into the range because
 they landed after this SDK already claimed §1–§13: widening the range silently would turn a
@@ -931,14 +932,31 @@ Which exception you get is most of what this SDK owns on this path:
 | shared library absent | `NetworkError` | a deployment fact, raised before any request is sent |
 | server named a KSF this build cannot perform | `NetworkError` | a configuration problem; substituting one would surface as a wrong password |
 | `/start` response missing `ke2` | `NetworkError` | malformed response |
-| envelope did not open / `KE2` did not verify | `AuthError` | the **whole** of the credential check |
+| envelope did not open / `KE2` did not verify | `AuthError`, or whatever the password login returns under `optional` | the **whole** of the credential check — see below |
 | tenant refuses password login (`LoginAsync`) | `AuthzError` | the credentials were never examined |
 
 That `AuthError` covers both halves of the mutual authentication: a wrong password, an account
-that does not exist, and a server that does not hold the record are indistinguishable by
-design. **Nothing is sent to `login/finish` in that case** (§23.4 rule 7), and you must not
-retry over `LoginAsync` — that hands the plaintext to an endpoint that just failed to prove it
-holds the record.
+that does not exist, an account with no registration record, and a server that does not hold
+the record are indistinguishable by design. **Nothing is sent to `login/finish` in that case**
+(§23.4 rule 7), and what happens next depends only on the `mode` the `login/start` response
+carried — the tenant's `opaque_mode`:
+
+- `optional` — `LoginOpaqueAsync` retries over `LoginAsync` with the same credentials before
+  reporting anything, and hands you that call's outcome: its success on success, its error on
+  failure. Under `optional` an account with no record is the ordinary case rather than an
+  error — every account has none the moment an operator enables OPAQUE, and acquires one only
+  as it next sets a password — so treating the failed exchange as final would lock out every
+  user of a tenant mid-migration, the state `optional` exists to serve.
+- `required`, an absent `mode` (a server older than contract 1.29) and any value this SDK does
+  not recognise — the failure is `AuthError`, the exchange is over, and nothing is retried. Do
+  not retry over `LoginAsync` yourself: that hands the plaintext to an endpoint that just
+  failed to prove it holds the record, and `required` answers `403 opaque_required` for every
+  principal anyway.
+
+`mode` is **not** downgrade protection and this SDK does not present it as such: a hostile
+server that wanted the plaintext could answer `404` and get a fallback whatever it puts there.
+What closes that is the server refusing `/auth/login` under `required`, before it examines any
+credential.
 
 `required` refuses **every** principal in the tenant, not only the enrolled ones. Splitting the
 response on whether an account has a record would turn `/auth/login` into an enumeration oracle

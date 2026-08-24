@@ -32,6 +32,7 @@ public sealed class OpaqueLoginTests : IDisposable
     private const string LoginStartPath = "/api/v1/auth/opaque/login/start";
     private const string LoginFinishPath = "/api/v1/auth/opaque/login/finish";
     private const string RegisterStartPath = "/api/v1/auth/opaque/register/start";
+    private const string PasswordLoginPath = "/api/v1/auth/login";
 
     /// <summary>
     /// The hex KE2 and RegistrationResponse the fake server answers with. Hex because that is
@@ -76,11 +77,22 @@ public sealed class OpaqueLoginTests : IDisposable
 
         public List<string> RegisterStartBodies { get; } = [];
 
+        /// <summary>Bodies seen at the ordinary password login (&#167;23.4 rule 7 fallback).</summary>
+        public List<string> PasswordLoginBodies { get; } = [];
+
         public HttpStatusCode LoginStartStatus { get; set; } = HttpStatusCode.OK;
 
         public HttpStatusCode LoginFinishStatus { get; set; } = HttpStatusCode.OK;
 
         public HttpStatusCode RegisterStartStatus { get; set; } = HttpStatusCode.OK;
+
+        public HttpStatusCode PasswordLoginStatus { get; set; } = HttpStatusCode.OK;
+
+        /// <summary>
+        /// The tenant's <c>opaque_mode</c>, echoed as <c>mode</c> by <c>login/start</c>.
+        /// <c>null</c> omits the field entirely — a server older than contract 1.29.
+        /// </summary>
+        public string? Mode { get; set; }
 
         public bool MfaRequired { get; set; }
 
@@ -93,6 +105,7 @@ public sealed class OpaqueLoginTests : IDisposable
             handler.Map(LoginStartPath, LoginStart);
             handler.Map(LoginFinishPath, LoginFinish);
             handler.Map(RegisterStartPath, RegisterStart);
+            handler.Map(PasswordLoginPath, PasswordLogin);
         }
 
         private string KsfFields() => Ksf == "scrypt"
@@ -117,9 +130,30 @@ public sealed class OpaqueLoginTests : IDisposable
             }
 
             string ke2 = OmitKe2 ? string.Empty : "\"ke2\":\"" + WireKe2 + "\",";
+            string mode = Mode is null ? string.Empty : "\"mode\":\"" + Mode + "\",";
             return Json(
                 HttpStatusCode.OK,
-                "{\"opaque_session\":\"handle-42\"," + ke2 + KsfFields() + "}");
+                "{\"opaque_session\":\"handle-42\"," + mode + ke2 + KsfFields() + "}");
+        }
+
+        /// <summary>
+        /// <c>POST /api/v1/auth/login</c> — reached only by &#167;23.4 rule 7's `optional`
+        /// fallback. Answers exactly what the password login answers, so the result the caller
+        /// sees is indistinguishable from an ordinary <c>LoginAsync</c>.
+        /// </summary>
+        private HttpResponseMessage PasswordLogin(HttpRequestMessage request)
+        {
+            PasswordLoginBodies.Add(Read(request));
+            if (PasswordLoginStatus != HttpStatusCode.OK)
+            {
+                return new HttpResponseMessage(PasswordLoginStatus);
+            }
+
+            HttpResponseMessage response = Json(
+                HttpStatusCode.OK,
+                "{\"session_id\":\"66666666-6666-6666-6666-666666666666\",\"expires_in\":900}");
+            response.Headers.Add("Set-Cookie", "axiam_access=fallback-token; Path=/");
+            return response;
         }
 
         private HttpResponseMessage LoginFinish(HttpRequestMessage request)
@@ -341,6 +375,131 @@ public sealed class OpaqueLoginTests : IDisposable
 
         await Assert.ThrowsAsync<AuthError>(
             () => client.LoginOpaqueAsync(User, (char[])Password.Clone()));
+        Assert.Empty(fake.LoginFinishBodies);
+    }
+
+    // -----------------------------------------------------------------
+    // §23.4 rule 7 -- what a failed KE2 means depends only on `mode`
+    // -----------------------------------------------------------------
+
+    [Fact]
+    public async Task OptionalModeRetriesOverThePasswordLoginAndReturnsItsSuccess()
+    {
+        // Under `optional` an account with no registration record is the ordinary
+        // case, not an error: every account has none the moment an operator enables
+        // OPAQUE, and acquires one only as it next sets a password. Reporting the
+        // failed exchange as final would lock out every user of a tenant
+        // mid-migration -- the exact state `optional` exists to serve.
+        _lib.Fail("login_finish");
+        var fake = new FakeOpaqueServer { Mode = "optional" };
+        using var handler = new RoutingHandler();
+        fake.Map(handler);
+        using AxiamClient client = Client(handler);
+
+        LoginResult result = await client.LoginOpaqueAsync(User, (char[])Password.Clone());
+
+        Assert.False(result.MfaRequired);
+        // The exchange still stopped dead: rule 7 forbids KE3 either way.
+        Assert.Empty(fake.LoginFinishBodies);
+        Assert.Equal(1, handler.CountFor(PasswordLoginPath));
+        JsonElement body = Parse(fake.PasswordLoginBodies[0]);
+        Assert.Equal(User, body.GetProperty("username_or_email").GetString());
+        Assert.Equal(new string(Password), body.GetProperty("password").GetString());
+    }
+
+    [Fact]
+    public async Task OptionalModeReportsThePasswordLoginsOwnFailure()
+    {
+        // The fallback's verdict is the caller's verdict. Credentials that are wrong
+        // for both paths are still an AuthError -- just one the server decided.
+        _lib.Fail("login_finish");
+        var fake = new FakeOpaqueServer
+        {
+            Mode = "optional",
+            PasswordLoginStatus = HttpStatusCode.Unauthorized,
+        };
+        using var handler = new RoutingHandler();
+        fake.Map(handler);
+        using AxiamClient client = Client(handler);
+
+        await Assert.ThrowsAsync<AuthError>(
+            () => client.LoginOpaqueAsync(User, (char[])Password.Clone()));
+
+        Assert.Equal(1, handler.CountFor(PasswordLoginPath));
+        Assert.Empty(fake.LoginFinishBodies);
+    }
+
+    [Fact]
+    public async Task RequiredModeNeverPutsThePlaintextOnTheWire()
+    {
+        // `required` answers 403 opaque_required for every principal, so a retry
+        // would hand a plaintext password to an endpoint that cannot accept it --
+        // and to a server that just failed to prove it holds the record.
+        _lib.Fail("login_finish");
+        var fake = new FakeOpaqueServer { Mode = "required" };
+        using var handler = new RoutingHandler();
+        fake.Map(handler);
+        using AxiamClient client = Client(handler);
+
+        await Assert.ThrowsAsync<AuthError>(
+            () => client.LoginOpaqueAsync(User, (char[])Password.Clone()));
+
+        Assert.Equal(0, handler.CountFor(PasswordLoginPath));
+        Assert.Empty(fake.PasswordLoginBodies);
+        Assert.Empty(fake.LoginFinishBodies);
+    }
+
+    [Fact]
+    public async Task AnAbsentModeIsTreatedExactlyLikeRequired()
+    {
+        // A server older than contract 1.29 sends no `mode` at all. Fail closed:
+        // guessing `optional` would leak a password to a tenant that never offered
+        // the fallback.
+        _lib.Fail("login_finish");
+        var fake = new FakeOpaqueServer { Mode = null };
+        using var handler = new RoutingHandler();
+        fake.Map(handler);
+        using AxiamClient client = Client(handler);
+
+        await Assert.ThrowsAsync<AuthError>(
+            () => client.LoginOpaqueAsync(User, (char[])Password.Clone()));
+
+        Assert.Equal(0, handler.CountFor(PasswordLoginPath));
+        Assert.Empty(fake.LoginFinishBodies);
+    }
+
+    [Fact]
+    public async Task AnUnrecognisedModeFailsClosed()
+    {
+        // Anything that is not exactly `optional` is `required`. A value this SDK
+        // does not know is not a reason to widen what it will send.
+        _lib.Fail("login_finish");
+        var fake = new FakeOpaqueServer { Mode = "sometimes" };
+        using var handler = new RoutingHandler();
+        fake.Map(handler);
+        using AxiamClient client = Client(handler);
+
+        await Assert.ThrowsAsync<AuthError>(
+            () => client.LoginOpaqueAsync(User, (char[])Password.Clone()));
+
+        Assert.Equal(0, handler.CountFor(PasswordLoginPath));
+        Assert.Empty(fake.LoginFinishBodies);
+    }
+
+    [Fact]
+    public async Task OptionalModeDoesNotFallBackFromAConfigurationFailure()
+    {
+        // An unusable KSF is a NetworkError, not a credential check -- there is no
+        // verdict to second-guess, and rule 7's fallback is for AuthError only.
+        var fake = new FakeOpaqueServer { Mode = "optional", Ksf = "bcrypt" };
+        using var handler = new RoutingHandler();
+        fake.Map(handler);
+        using AxiamClient client = Client(handler);
+
+        await Assert.ThrowsAsync<NetworkError>(
+            () => client.LoginOpaqueAsync(User, (char[])Password.Clone()));
+
+        Assert.Equal(0, handler.CountFor(PasswordLoginPath));
         Assert.Empty(fake.LoginFinishBodies);
     }
 
