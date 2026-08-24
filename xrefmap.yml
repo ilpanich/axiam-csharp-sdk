@@ -9160,6 +9160,37 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Rest.AxiamHttpMessageHandler.SendAsync
   nameWithType: AxiamHttpMessageHandler.SendAsync
+- uid: Axiam.Sdk.SupportedFrameworks
+  name: SupportedFrameworks
+  href: api/Axiam.Sdk.SupportedFrameworks.html
+  commentId: T:Axiam.Sdk.SupportedFrameworks
+  fullName: Axiam.Sdk.SupportedFrameworks
+  nameWithType: SupportedFrameworks
+- uid: Axiam.Sdk.SupportedFrameworks.All
+  name: All
+  href: api/Axiam.Sdk.SupportedFrameworks.html#Axiam_Sdk_SupportedFrameworks_All
+  commentId: P:Axiam.Sdk.SupportedFrameworks.All
+  fullName: Axiam.Sdk.SupportedFrameworks.All
+  nameWithType: SupportedFrameworks.All
+- uid: Axiam.Sdk.SupportedFrameworks.All*
+  name: All
+  href: api/Axiam.Sdk.SupportedFrameworks.html#Axiam_Sdk_SupportedFrameworks_All_
+  commentId: Overload:Axiam.Sdk.SupportedFrameworks.All
+  isSpec: "True"
+  fullName: Axiam.Sdk.SupportedFrameworks.All
+  nameWithType: SupportedFrameworks.All
+- uid: Axiam.Sdk.SupportedFrameworks.Floor
+  name: Floor
+  href: api/Axiam.Sdk.SupportedFrameworks.html#Axiam_Sdk_SupportedFrameworks_Floor
+  commentId: F:Axiam.Sdk.SupportedFrameworks.Floor
+  fullName: Axiam.Sdk.SupportedFrameworks.Floor
+  nameWithType: SupportedFrameworks.Floor
+- uid: Axiam.Sdk.SupportedFrameworks.Newest
+  name: Newest
+  href: api/Axiam.Sdk.SupportedFrameworks.html#Axiam_Sdk_SupportedFrameworks_Newest
+  commentId: F:Axiam.Sdk.SupportedFrameworks.Newest
+  fullName: Axiam.Sdk.SupportedFrameworks.Newest
+  nameWithType: SupportedFrameworks.Newest
 - uid: Axiam.Sdk.Webauthn
   name: Axiam.Sdk.Webauthn
   href: api/Axiam.Sdk.Webauthn.html

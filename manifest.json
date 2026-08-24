@@ -1860,6 +1860,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.SupportedFrameworks.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.SupportedFrameworks.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.SupportedFrameworks",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.SupportedFrameworks.yml\" sourcestartlinenumber=\"1\">The target frameworks this SDK is built and tested against.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Webauthn.WebauthnChallenge.yml",
       "output": {
         ".html": {
