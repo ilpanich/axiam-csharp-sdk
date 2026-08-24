@@ -48,9 +48,14 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      # Both SDKs: the projects multi-target net8.0;net10.0, and `docfx
+      # metadata` restores the whole project (every target framework) before
+      # extracting the API surface from the one docfx.json names.
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68  # v6.0.0
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: |
+            8.0.x
+            10.0.x
       - name: Build API docs
         run: |
           set -euo pipefail

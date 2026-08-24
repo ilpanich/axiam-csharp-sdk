@@ -24,10 +24,16 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
 
-      - name: Set up .NET 8 SDK
+      # Both SDKs, because the projects multi-target net8.0;net10.0 and each
+      # target framework needs its own targeting pack. The .NET 10 SDK drives
+      # the build (it is backward compatible and compiles the net8.0 leg too);
+      # the .NET 8 entry is what supplies that leg's reference assemblies.
+      - name: Set up .NET SDKs (floor + newest)
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68  # v6.0.0
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: |
+            8.0.x
+            10.0.x
 
       - name: dotnet restore
         run: dotnet restore Axiam.Sdk.sln

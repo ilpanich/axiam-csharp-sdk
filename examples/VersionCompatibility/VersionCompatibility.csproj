@@ -5,14 +5,15 @@
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>UmaClient</RootNamespace>
+    <RootNamespace>VersionCompatibility</RootNamespace>
     <!-- Example only — demonstrates the SDK's public surface; never packed or
          published as a NuGet package. -->
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Core package only: consuming a challenge needs no ASP.NET Core. -->
+    <!-- Core package only (Axiam.Sdk) — the supported-framework surface needs no
+         ASP.NET Core dependency. -->
     <ProjectReference Include="../../Axiam.Sdk/Axiam.Sdk.csproj" />
   </ItemGroup>
 
