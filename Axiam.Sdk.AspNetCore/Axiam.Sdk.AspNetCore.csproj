@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <PackageId>Axiam.Sdk.AspNetCore</PackageId>
-    <Version>1.0.0-alpha43</Version>
+    <Version>1.0.0-alpha44</Version>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Description>ASP.NET Core middleware, DI extensions, and policy-based authorization for the AXIAM C# SDK (Axiam.Sdk).</Description>
     <RepositoryUrl>https://github.com/ilpanich/axiam-csharp-sdk</RepositoryUrl>
