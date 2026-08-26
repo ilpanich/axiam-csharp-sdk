@@ -5,7 +5,15 @@ namespace Axiam.Sdk.Core;
 /// (CONTRACT.md &#167;2, D-12). Always constructed via <see cref="ErrorMapper"/> so REST
 /// and gRPC transports cannot drift on the error taxonomy.
 /// </summary>
-public sealed class AuthzError : Exception
+/// <remarks>
+/// Unsealed so CONTRACT.md &#167;27.4 rule 7 can classify a 404 as
+/// <see cref="Management.NotFoundError"/> and a 409 as
+/// <see cref="Management.ConflictError"/> <em>inside</em> this type rather than beside
+/// it. <c>catch (AuthzError)</c> written before &#167;27 existed still catches both,
+/// which is exactly the property the rule asks for. The &#167;2 taxonomy is still three
+/// top-level types; these are sub-types of one of them, not a fourth peer.
+/// </remarks>
+public class AuthzError : Exception
 {
     /// <summary>
     /// The denied action (e.g. <c>"users:get"</c>), when known. Populated from the

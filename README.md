@@ -21,15 +21,16 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 ## Contract conformance
 
 This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20, §22, §23, §24, §25,
-§26 (including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation, contract
-1.3, the §12 OIDC/SSO relying-party helpers, contract 1.4, the §13 webhook signature verifier, T-145,
-the §20 UMA 2.0 Protection API and ticket grant, contract 1.10, the §22 reactor runtime, contract
-1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, the §24 WebAuthn relying-party layer,
-the §25 account-lifecycle operations and §26 Pushed Authorization Requests, contract 1.28, and
-§23.4 rule 7's `mode`-driven password-login fallback, contract 1.29).
+§26, §27 (including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation,
+contract 1.3, the §12 OIDC/SSO relying-party helpers, contract 1.4, the §13 webhook signature
+verifier, T-145, the §20 UMA 2.0 Protection API and ticket grant, contract 1.10, the §22 reactor
+runtime, contract 1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, the §24 WebAuthn
+relying-party layer, the §25 account-lifecycle operations and §26 Pushed Authorization Requests,
+contract 1.28, §23.4 rule 7's `mode`-driven password-login fallback, contract 1.29, and the §27
+Management API — all 146 operations across 24 namespaces with the §27.6 declarative layer).
 
-§12.7, §14, §15, §20, §22, §23, §24, §25 and §26 are named rather than folded into the range because
-they landed after this SDK already claimed §1–§13: widening the range silently would turn a
+§12.7, §14, §15, §20, §22, §23, §24, §25, §26 and §27 are named rather than folded into the range
+because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
 statement that was true when written into a different claim without anyone editing it.
 
 §24.6b — the linked-API ceremony helper — is **deliberately absent**. A server or CLI runtime has no
@@ -1264,6 +1265,107 @@ A **FAPI 2.0 client has no alternative**: `profile: "fapi2"` refuses a registrat
 `require_par`, so such a client cannot authorize any other way (§21.1).
 
 Worked end to end in [`examples/ParLogin`](examples/ParLogin).
+
+## Management API (CONTRACT.md §27)
+
+`client.Management` is the administrative surface: 146 operations across 24 namespaces — users,
+groups, roles, permissions, resources, scopes, service accounts, certificates, CA certificates, PGP
+keys, webhooks, OAuth2 clients, federation, notification rules, e-mail config, settings, SCIM
+tokens, reactors, WebAuthn policy, audit, privacy, organizations, tenants and platform.
+
+It is **generated** from the vendored `management-registry.json` and `openapi.json` by
+`scripts/gen_management.py`, and the generated output is committed. A CI job re-runs the generator
+with `--check` on every pull request, so the committed surface and the vendored contract cannot
+drift apart.
+
+```csharp
+using var client = new AxiamClient(baseUrl, "acme", options);
+await client.LoginAsync(admin, password);
+
+// A namespace handle is a view over this client's session, not a connection.
+// Reaching for one performs no I/O (§27.2).
+Page<UserResponse> page = await client.Management.Users.ListAsync(PageRequest.Of(25));
+
+// page.Total is the size of the WHOLE set, not of this page (§27.4 rule 4).
+Console.WriteLine($"{page.Items.Count} of {page.Total}");
+
+// ListAllAsync walks to exhaustion, stopping on an empty page even if the
+// server's total disagrees.
+IReadOnlyList<Role> roles = await client.Management.Roles.ListAllAsync();
+```
+
+Six things worth knowing:
+
+- **The client's org and tenant are implicit.** A route with `{org_id}` or `{tenant_id}` in it takes
+  them from the client (§27.4 rule 3). The handles that carry such routes — and only those — expose
+  `.InOrg(id)` / `.ForTenant(id)` to name a different one for a single call; each returns a new
+  handle and leaves the original alone. Where `{tenant_id}` names the tenant being *administered*
+  rather than the calling context — `Tenants`, and the signing CAs under `CaCertificates` — it is an
+  ordinary argument instead, and `client.ResolvedTenantId` is what you pass it.
+- **A sparse update sends only what you name.** Bodies whose properties are all optional are
+  nullable with `= null` defaults, and the request writer is configured with
+  `JsonIgnoreCondition.WhenWritingNull`, so a property you never named is absent from the JSON
+  rather than sent as `null` — which the server reads as "clear this" (§27.4 rule 5). There is no
+  builder because a C# object initializer already is one. Replacement bodies use `required`
+  properties: forgetting one is a compile error.
+- **Three statuses are classified, and each keeps the parent §2 gave it.** `NotFoundError` (404) and
+  `ConflictError` (409) are `AuthzError`s; `ValidationError` (400/422) is a `NetworkError`. Existing
+  `catch` blocks keep working; code that wants the distinction can ask for it (§27.4 rule 7).
+  `ValidationError.Fields` carries the server's per-field detail when it sent any.
+
+  404 sorts under `AuthzError` because on a multi-tenant surface "does not exist" and "is not yours"
+  are *deliberately* the same answer — a server that distinguished them would let a probing caller
+  enumerate another tenant's objects. 409 stays there because §2 already put it there.
+- **Only GETs are retried.** A create that times out is reported, never repeated — one retried
+  `POST` is two roles (§27.4 rule 8).
+- **One-time secrets are `Sensitive<string>`.** A generated private key, a fresh client secret, a
+  SCIM provisioning token: returned by exactly one call and never again, redacted from `ToString()`
+  and from ordinary JSON serialization, and reachable only through the explicit `Expose()` (§27.5).
+  Construct one with `Sensitive<string>.Wrap(...)`. Write a returned secret down before doing
+  anything else that could fail.
+- **A management call with no session never reaches the network.** It fails locally with an
+  `AuthError` naming the missing session (§27.4 rule 1).
+
+Worked end to end in [`examples/ManagementBasics`](examples/ManagementBasics).
+
+### Declarative manifests (CONTRACT.md §27.6)
+
+`client.Management.Manifest` takes a description of the tenant you want and reconciles toward it.
+
+```csharp
+ManagementManifest manifest = ManagementManifest.Builder()
+    .Resource("docs", "documents", "collection")
+    .Scope("docs", "draft", "draft", "Unpublished work")
+    .Permission("read", "document:read", "Read a document")
+    .Role("editor", "Editor", "Edits documents")
+    .Grant("editor", "read", null, "draft")
+    .Group("staff", "Staff", "Everyone", "editor")
+    .Build();
+
+ManagementPlan plan = await client.Management.Manifest.PlanAsync(manifest);   // reads only
+if (!plan.IsConverged)
+{
+    ApplyReport report = await client.Management.Manifest.ApplyAsync(manifest);
+}
+```
+
+- **`PlanAsync` writes nothing.** Every request it makes is a read, so it is safe to run against
+  production to find out what an apply would do.
+- **Ordering is derived, not declared.** Resources before their scopes, permissions before the
+  grants that name them, roles before the assignments; the builder checks back-references as they
+  are made, so a grant naming a role that no `Role(...)` call has declared is refused at `Build()` —
+  before any request, and reporting every problem at once rather than the first.
+- **Omission is never deletion.** A manifest states what should exist. A role it does not mention is
+  a role it has no opinion about (§27.6 rule 4).
+- **`ApplyAsync` stops at the first failure and does not roll back** (§27.6 rule 7). Everything
+  before the failure stands; everything after it is reported as `NotAttempted`. An automatic
+  rollback would be a second unreviewed batch of writes issued at exactly the moment the tenant is
+  in an unknown state.
+- **Applying twice is applying once.** A converged tenant plans nothing and takes no writes.
+
+Worked end to end in [`examples/ManagementManifest`](examples/ManagementManifest), and combined with
+§6.1 mTLS for a full device provisioning lifecycle in
+[`examples/DeviceMtlsProvisioning`](examples/DeviceMtlsProvisioning).
 
 ## Grpc.Tools exception
 

@@ -8,6 +8,13 @@ namespace Axiam.Sdk.Core;
 /// </summary>
 /// <remarks>
 /// <para>
+/// Unsealed so CONTRACT.md &#167;27.4 rule 7 can classify a 400/422 as
+/// <see cref="Management.ValidationError"/> inside this type — the parent &#167;2 already
+/// gives a 400. <c>catch (NetworkError)</c> still catches it.
+/// </para>
+/// </remarks>
+/// <remarks>
+/// <para>
 /// <b>Redact-before-wrap (D-12, CR-04 carry-forward):</b> this is the ONLY error class
 /// that may be constructed from an HTTP response, and there is exactly ONE construction
 /// path that accepts a live <see cref="HttpResponseMessage"/> — the static
@@ -20,7 +27,7 @@ namespace Axiam.Sdk.Core;
 /// <c>sanitizeAxiosError</c>) and mirrored across every later sibling SDK.
 /// </para>
 /// </remarks>
-public sealed class NetworkError : Exception
+public class NetworkError : Exception
 {
     /// <summary>
     /// X-3: ALLOWLIST of response headers whose <em>values</em> are known to be safe to
@@ -42,7 +49,22 @@ public sealed class NetworkError : Exception
             "X-Request-Id", "X-Correlation-Id",
         };
 
-    private NetworkError(string message, Exception? inner) : base(message, inner)
+    /// <summary>
+    /// The single construction path a subclass may use — a message this SDK authored
+    /// plus an optional already-sanitized cause.
+    /// </summary>
+    /// <remarks>
+    /// <c>protected</c> rather than <c>private</c> so CONTRACT.md &#167;27.4 rule 7 can
+    /// classify a 400/422 as <see cref="Management.ValidationError"/> inside this type.
+    /// The redact-before-wrap invariant this class exists to enforce is untouched: this
+    /// constructor takes a <see cref="string"/> and an <see cref="Exception"/>, never an
+    /// <see cref="HttpResponseMessage"/>, so a subclass has no more access to a live
+    /// response than any other caller does. <see cref="FromResponse"/> remains the only
+    /// path from a response into this type.
+    /// </remarks>
+    /// <param name="message">An already-sanitized description of the failure.</param>
+    /// <param name="inner">An already-sanitized cause, or <c>null</c>.</param>
+    protected NetworkError(string message, Exception? inner) : base(message, inner)
     {
     }
 

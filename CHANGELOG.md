@@ -7,6 +7,82 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **CONTRACT.md §27 Management API** — `client.Management`, 146 operations across 24
+  namespaces (users, groups, roles, permissions, resources, scopes, service accounts,
+  certificates, CA certificates, PGP keys, webhooks, OAuth2 clients, federation,
+  notification rules, e-mail config, settings, SCIM tokens, reactors, WebAuthn policy,
+  audit, privacy, organizations, tenants, platform).
+
+  The models and namespace handles are **generated** by `scripts/gen_management.py` from
+  the vendored `management-registry.json` and `openapi.json`, and the generated output is
+  committed. A new CI job runs the generator with `--check` on every pull request, so the
+  committed surface and the vendored contract cannot drift apart. §27.8 requires the
+  generated layer to sit on the SDK's existing request path, and it does: all 146
+  operations funnel through one `ManagementTransport`, inheriting §3 CSRF, the §4 cookie
+  jar, the §5 tenant header, §6 TLS, §16 retry and §19 telemetry by construction rather
+  than by 146 opportunities to forget one.
+
+  **No builders.** §27.4 rule 5 ("an unset field is *absent*, not null") is satisfied by
+  nullable properties with `= null` defaults plus `JsonIgnoreCondition.WhenWritingNull` on
+  the request writer, rather than by a generated builder per sparse body. Replacement
+  bodies use `required` properties, so omitting one is a compile error.
+
+  **Secrets on the wire.** `Sensitive<T>` carries a redacting `[JsonConverter]`, and the
+  one writer that must send a secret in the clear overrides it by registering an exposing
+  converter in `JsonSerializerOptions.Converters` — which `System.Text.Json` resolves
+  *ahead of* a type-level attribute. That precedence is the opposite of Jackson's, where a
+  class-level annotation beats a module-registered serializer; a test pins it rather than
+  trusting the documented order.
+
+- **The §27.6 declarative layer** — `client.Management.Manifest`, with `PlanAsync` (reads
+  only), `ApplyAsync` (stops at the first failure, does not roll back), derived ordering,
+  and back-reference checking at `Build()` that reports every problem at once.
+
+- **`AxiamClient.ResolvedOrgId` / `ResolvedTenantId`** — the organization and tenant UUIDs
+  §27.4 rule 3 interpolates into implicit paths. Public because §27 also has routes where
+  `{org_id}` / `{tenant_id}` name the entity being administered rather than the calling
+  context (`Tenants`, and the signing CAs under `CaCertificates`); those take the
+  identifier as an ordinary argument, and without these a caller had no way to pass the
+  same one the implicit routes use.
+
+- **`WireNameAttribute` and `WireEnumConverter<TEnum>`** — an enum's wire spelling, and the
+  converter that reads it. `System.Text.Json` grew `JsonStringEnumMemberNameAttribute` in
+  .NET 9, but this SDK's floor is `net8.0`; using it would raise the floor for every
+  consumer to buy nothing a four-line attribute does not already give. An unknown value
+  throws rather than silently becoming the zero member — on this surface those values gate
+  access, and guessing would turn a new server state into a wrong one.
+
+- Three runnable examples, each compiled by CI like every other example:
+  `examples/ManagementBasics`, `examples/ManagementManifest` and
+  `examples/DeviceMtlsProvisioning` — the last a full operator/device split, minting a
+  Device certificate from the tenant's signing CA and then authenticating with it over
+  §6.1 mutual TLS.
+
+### Changed
+
+- **`AuthzError` and `NetworkError` are no longer `sealed`.** §27.4 rule 7 classifies three
+  statuses *inside* the existing §2 taxonomy rather than beside it: `NotFoundError` (404)
+  and `ConflictError` (409) extend `AuthzError`; `ValidationError` (400/422) extends
+  `NetworkError`. Each keeps the parent §2 already gave its status, and every existing
+  `catch` for the base types keeps catching the new ones.
+
+  `NetworkError`'s private constructor becomes `protected`. The redact-before-wrap
+  invariant is untouched: that constructor takes a `string` and an `Exception`, never an
+  `HttpResponseMessage`, so a subclass has no more access to a live response than any
+  other caller — `FromResponse` remains the only path from a response into the type.
+
+- **`RetryPolicy.ExecuteAsync` takes an optional `retryable` predicate**, defaulting to the
+  previous behaviour. §27.4 rule 7 puts `ValidationError` under `NetworkError`, which would
+  otherwise make a rejected request body retry-eligible; the bytes are wrong, and sending
+  them again earns the same refusal three times as slowly.
+
+- **Coverage floor raised from 94% to 96%.** Measured 2026-08-26: 96.62% overall. The §27
+  surface is 98.93% of its own 3380 lines and pulled everything else (94.58%) up with it,
+  so the floor moves with it rather than staying where a two-point regression would go
+  unnoticed.
+
 ## [1.0.0-alpha44] - 2026-08-25
 
 ### Changed
