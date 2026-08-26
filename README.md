@@ -1268,10 +1268,18 @@ Worked end to end in [`examples/ParLogin`](examples/ParLogin).
 
 ## Management API (CONTRACT.md §27)
 
-`client.Management` is the administrative surface: 146 operations across 24 namespaces — users,
-groups, roles, permissions, resources, scopes, service accounts, certificates, CA certificates, PGP
-keys, webhooks, OAuth2 clients, federation, notification rules, e-mail config, settings, SCIM
-tokens, reactors, WebAuthn policy, audit, privacy, organizations, tenants and platform.
+The administrative surface: 146 operations across 24 namespaces — users, groups, roles,
+permissions, resources, scopes, service accounts, certificates, CA certificates, PGP keys, webhooks,
+OAuth2 clients, federation, notification rules, e-mail config, settings, SCIM tokens, reactors,
+WebAuthn policy, audit, privacy, organizations, tenants and platform.
+
+The namespace handles sit **directly on the client** — `client.ServiceAccounts.RotateSecretAsync(id)`,
+the form §27.3's C# row shows — and the same 24 handles are also reachable behind one accessor,
+`client.Management` (§27.2 rule 4), which reads better where a call site is already dense with §1
+methods. The two forms are **equivalent**: the direct properties forward to `Management`, so rule 4's
+"where an SDK offers both, the two MUST return equivalent handles" holds structurally rather than by
+two code paths agreeing, and the suite asserts it by comparing the method and path each actually puts
+on the wire.
 
 It is **generated** from the vendored `management-registry.json` and `openapi.json` by
 `scripts/gen_management.py`, and the generated output is committed. A CI job re-runs the generator
@@ -1284,7 +1292,10 @@ await client.LoginAsync(admin, password);
 
 // A namespace handle is a view over this client's session, not a connection.
 // Reaching for one performs no I/O (§27.2).
-Page<UserResponse> page = await client.Management.Users.ListAsync(PageRequest.Of(25));
+Page<UserResponse> page = await client.Users.ListAsync(PageRequest.Of(25));
+
+// Or reach the same handles behind one accessor.
+Page<UserResponse> same = await client.Management.Users.ListAsync(PageRequest.Of(25));
 
 // page.Total is the size of the WHOLE set, not of this page (§27.4 rule 4).
 Console.WriteLine($"{page.Items.Count} of {page.Total}");

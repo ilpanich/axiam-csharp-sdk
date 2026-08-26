@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The §27 namespace handles now sit directly on the client** — `client.Roles`,
+  `client.ServiceAccounts.RotateSecretAsync(id)` — which is the form §27.3's C# row
+  specifies. `client.Management` still reaches the same 24 handles behind one accessor;
+  §27.2 rule 4 makes that the *additional* form ("SHOULD **additionally** be reachable
+  behind one accessor"), so shipping only it had the two the wrong way round: the optional
+  form present and the one the naming map specifies absent.
+
+  Each direct property forwards to `Management`, so rule 4's "where an SDK offers both, the
+  two MUST return equivalent handles" holds structurally rather than by two code paths
+  agreeing to stay in step. `ManagementClientAccessorsTests` asserts it by comparing the
+  method and path each form actually puts on the wire — a forwarding property that built
+  its own handle with a default scope would return the right type and address the wrong
+  organization, which is the failure the rule exists to prevent.
+
+
+### Added
+
 - **CONTRACT.md §27 Management API** — `client.Management`, 146 operations across 24
   namespaces (users, groups, roles, permissions, resources, scopes, service accounts,
   certificates, CA certificates, PGP keys, webhooks, OAuth2 clients, federation,

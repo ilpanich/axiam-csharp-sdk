@@ -38,6 +38,282 @@ public sealed partial class AxiamClient
             EnsureNotDisposed,
             Random.Shared.NextDouble));
 
+    // ---- CONTRACT.md §27.2/§27.3: the namespace handles, on the client ----
+    //
+    // `client.ServiceAccounts.RotateSecretAsync(id)` -- the form §27.3's C# row
+    // shows. `Management` above reaches the same handles behind one accessor, which
+    // §27.2 rule 4 makes the ADDITIONAL one ("SHOULD additionally be reachable
+    // behind one accessor"); shipping only that had the two the wrong way round,
+    // with the optional form present and the one the naming map specifies absent.
+    //
+    // Each forwards to Management, so rule 4's "where an SDK offers both, the two
+    // MUST return equivalent handles" holds structurally rather than by two code
+    // paths agreeing to stay in step.
+
+    /// <summary>
+    /// The organizations operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Organizations</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public OrganizationsApi Organizations => Management.Organizations;
+
+    /// <summary>
+    /// The tenants operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Tenants</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public TenantsApi Tenants => Management.Tenants;
+
+    /// <summary>
+    /// The users operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Users</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public UsersApi Users => Management.Users;
+
+    /// <summary>
+    /// The groups operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Groups</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public GroupsApi Groups => Management.Groups;
+
+    /// <summary>
+    /// The roles operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Roles</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public RolesApi Roles => Management.Roles;
+
+    /// <summary>
+    /// The permissions operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Permissions</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public PermissionsApi Permissions => Management.Permissions;
+
+    /// <summary>
+    /// The resources operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Resources</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public ResourcesApi Resources => Management.Resources;
+
+    /// <summary>
+    /// The scopes operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Scopes</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public ScopesApi Scopes => Management.Scopes;
+
+    /// <summary>
+    /// The service_accounts operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.ServiceAccounts</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public ServiceAccountsApi ServiceAccounts => Management.ServiceAccounts;
+
+    /// <summary>
+    /// The certificates operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Certificates</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public CertificatesApi Certificates => Management.Certificates;
+
+    /// <summary>
+    /// The ca_certificates operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.CaCertificates</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public CaCertificatesApi CaCertificates => Management.CaCertificates;
+
+    /// <summary>
+    /// The pgp_keys operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.PgpKeys</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public PgpKeysApi PgpKeys => Management.PgpKeys;
+
+    /// <summary>
+    /// The webhooks operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Webhooks</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public WebhooksApi Webhooks => Management.Webhooks;
+
+    /// <summary>
+    /// The oauth2_clients operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Oauth2Clients</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public Oauth2ClientsApi Oauth2Clients => Management.Oauth2Clients;
+
+    /// <summary>
+    /// The federation operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Federation</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public FederationApi Federation => Management.Federation;
+
+    /// <summary>
+    /// The notification_rules operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.NotificationRules</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public NotificationRulesApi NotificationRules => Management.NotificationRules;
+
+    /// <summary>
+    /// The email_config operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.EmailConfig</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public EmailConfigApi EmailConfig => Management.EmailConfig;
+
+    /// <summary>
+    /// The settings operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Settings</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public SettingsApi Settings => Management.Settings;
+
+    /// <summary>
+    /// The scim_tokens operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.ScimTokens</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public ScimTokensApi ScimTokens => Management.ScimTokens;
+
+    /// <summary>
+    /// The reactors operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Reactors</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public ReactorsApi Reactors => Management.Reactors;
+
+    /// <summary>
+    /// The webauthn_policy operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.WebauthnPolicy</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public WebauthnPolicyApi WebauthnPolicy => Management.WebauthnPolicy;
+
+    /// <summary>
+    /// The audit operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Audit</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public AuditApi Audit => Management.Audit;
+
+    /// <summary>
+    /// The privacy operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Privacy</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public PrivacyApi Privacy => Management.Privacy;
+
+    /// <summary>
+    /// The platform operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Platform</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public PlatformApi Platform => Management.Platform;
+
     /// <summary>
     /// The organization UUID this client can address, if one has resolved.
     /// </summary>
