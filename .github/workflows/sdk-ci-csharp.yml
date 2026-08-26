@@ -93,6 +93,20 @@ jobs:
       - name: dotnet build — VersionCompatibility example
         run: dotnet build examples/VersionCompatibility -c Release
 
+      # CONTRACT.md §27 — the management API and its declarative layer. Compiled,
+      # not merely present: an example that stops compiling against the surface it
+      # documents is worse than no example, because it reads as current.
+      - name: dotnet build — ManagementBasics example (CONTRACT.md §27)
+        run: dotnet build examples/ManagementBasics -c Release
+
+      - name: dotnet build — ManagementManifest example (CONTRACT.md §27.6)
+        run: dotnet build examples/ManagementManifest -c Release
+
+      # The §27 + §6.1 combination: mint a Device certificate from the tenant's
+      # signing CA, then authenticate as the device over mutual TLS.
+      - name: dotnet build — DeviceMtlsProvisioning example (CONTRACT.md §27, §6.1)
+        run: dotnet build examples/DeviceMtlsProvisioning -c Release
+
       # Full solution test run: SC#2 single-flight (RefreshGuardSingleFlightTests),
       # the AMQP HMAC verify-before-handler matrix (HmacVerifyTests,
       # AmqpConsumerTests), JWKS Ed25519 verification (JwksVerifierTests), the
@@ -154,6 +168,26 @@ jobs:
   # version number. Git tags are NOT branch-scoped, so without this gate a release
   # tag cut on a feature branch would ship unreviewed code to the world under a
   # version that can never be reclaimed. The publish job below `needs:` this.
+  management-drift-check:
+    name: "§27 management surface drift-check"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # CONTRACT.md §27: the management surface is GENERATED from the vendored
+      # management-registry.json and openapi.json, and the generated output is
+      # committed. Committing it is what makes the API reviewable in a diff and
+      # navigable in an IDE; this job is what stops the committed copy and the
+      # vendored contract drifting apart. It fails if a re-vendored registry was
+      # not regenerated against, or if a generated file was hand-edited.
+      - name: python3 scripts/gen_management.py --check
+        run: python3 scripts/gen_management.py --check
+
   verify-tag-on-main:
     name: Verify tag is on main
     if: github.event_name == 'push'

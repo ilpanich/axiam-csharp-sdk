@@ -190,7 +190,8 @@ internal static class RetryPolicy
         TelemetryDispatcher telemetry,
         Func<double> jitter,
         Func<int, Task<T>> operation,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        Func<NetworkError, bool>? retryable = null)
     {
         int attempts = options.RetryEnabled ? EffectiveMaxAttempts(options) : 1;
 
@@ -200,7 +201,11 @@ internal static class RetryPolicy
             {
                 return await operation(attempt).ConfigureAwait(false);
             }
-            catch (NetworkError ex) when (attempt < attempts)
+            // CONTRACT.md §27.4 rule 7 puts ValidationError under NetworkError, which
+            // would otherwise make a rejected request body retry-eligible. The bytes
+            // are wrong; sending them again earns the same refusal three times as
+            // slowly. Callers that need that distinction pass `retryable`.
+            catch (NetworkError ex) when (attempt < attempts && (retryable?.Invoke(ex) ?? true))
             {
                 TimeSpan wait = DelayFor(
                     attempt,
