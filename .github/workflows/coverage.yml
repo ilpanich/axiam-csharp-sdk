@@ -89,10 +89,10 @@ jobs:
       # a line covered by EITHER run counts as covered (union) — the same fold
       # Coveralls applies. Ratcheted upward as coverage rises.
       #
-      # Measured 2026-08-26: 96.62% overall. The CONTRACT.md §27 management
-      # surface is 98.93% of its own 3380 lines and pulled everything else
-      # (94.58%) up with it, so the floor moves 94 -> 96 rather than staying
-      # where a two-point regression would go unnoticed.
+      # Measured 2026-08-26 across both target frameworks: 96.69% overall. The
+      # CONTRACT.md §27 management surface is 98.93% of its own 3380 lines and
+      # pulled everything else (94.58%) up with it, so the floor moves 94 -> 96
+      # rather than staying where a two-point regression would go unnoticed.
       - name: Enforce coverage floor
         run: |
           total=$(awk -F: '
