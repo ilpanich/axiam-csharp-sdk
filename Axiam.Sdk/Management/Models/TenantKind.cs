@@ -13,8 +13,11 @@ using System.Text.Json.Serialization;
 namespace Axiam.Sdk.Management.Models;
 
 /// <summary>
-/// What to do with an AAGUID that has no MDS entry (i.e. FIDO Alliance has no metadata for it —
-/// not necessarily malicious, MDS coverage is incomplete for some legitimate authenticators).
+/// What a tenant *is*, as distinct from what state it is in. Reserved rather than inferred: an
+/// organization has exactly one tenant of kind [<c>Self::Organization</c>], enforced by a
+/// unique index rather than by convention. Deriving it from a magic slug or from "the oldest
+/// tenant" would make the organization scope something an operator could rename or delete by
+/// accident, and it is the scope the super-admin lives in.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -23,22 +26,22 @@ namespace Axiam.Sdk.Management.Models;
 /// </para>
 /// <para>
 /// An <b>open</b> enum. A value this SDK’s copy of the spec does not list decodes to
-/// <c>UnknownAaguidAction.Unknown</c> rather than failing the response it arrived in
-/// (&#167;27.11 rule 1) — a closed enum turns the next value the server adds into a parse error
-/// on the whole list, taking down every record on the page over one field of one of them. A
-/// <c>switch</c> over these members needs an <c>Unknown</c> arm.
+/// <c>TenantKind.Unknown</c> rather than failing the response it arrived in (&#167;27.11 rule
+/// 1) — a closed enum turns the next value the server adds into a parse error on the whole
+/// list, taking down every record on the page over one field of one of them. A <c>switch</c>
+/// over these members needs an <c>Unknown</c> arm.
 /// </para>
 /// </remarks>
-[JsonConverter(typeof(WireEnumConverter<UnknownAaguidAction>))]
-public enum UnknownAaguidAction
+[JsonConverter(typeof(WireEnumConverter<TenantKind>))]
+public enum TenantKind
 {
-    /// <summary>The server's <c>allow</c> value.</summary>
-    [WireName("allow")]
-    Allow,
+    /// <summary>The server's <c>standard</c> value.</summary>
+    [WireName("standard")]
+    Standard,
 
-    /// <summary>The server's <c>deny</c> value.</summary>
-    [WireName("deny")]
-    Deny,
+    /// <summary>The server's <c>organization</c> value.</summary>
+    [WireName("organization")]
+    Organization,
 
     /// <summary>
     /// A value this SDK’s copy of the spec does not list.

@@ -28,16 +28,31 @@ public sealed class WireNameAttribute(string value) : Attribute
 /// </summary>
 /// <typeparam name="TEnum">The enum being converted.</typeparam>
 /// <remarks>
-/// An unknown value throws rather than silently mapping to the zero member. A server
-/// that grew a new status is a fact the caller needs to see: quietly reading
-/// <c>"suspended"</c> as whatever happens to be declared first would turn a new state
-/// into a wrong one, and on this surface those states gate access.
+/// <para>
+/// An unknown value decodes to the enum's <c>Unknown</c> member rather than throwing
+/// (CONTRACT.md &#167;27.11 rule 1). Throwing fails the <b>whole</b> response, so one
+/// field of one record the caller did not ask about would take down an entire page —
+/// including the records it did ask for.
+/// </para>
+/// <para>
+/// It never silently maps to the <i>zero</i> member, which is the trap this used to
+/// avoid by throwing: reading <c>"suspended"</c> as whatever happens to be declared
+/// first would turn a new state into a wrong one, and on this surface those states gate
+/// access. <c>Unknown</c> is a state of its own, and its wire spelling is the empty
+/// string — which no server value is, so carrying an unrecognised value back into an
+/// update is refused by the server rather than written as a spelling it never used.
+/// </para>
+/// <para>
+/// An enum with no <c>Unknown</c> member still throws, so this cannot quietly change
+/// behaviour for a hand-written enum that never opted in.
+/// </para>
 /// </remarks>
 public sealed class WireEnumConverter<TEnum> : JsonConverter<TEnum>
     where TEnum : struct, Enum
 {
     private static readonly Dictionary<string, TEnum> FromWire = BuildFromWire();
     private static readonly Dictionary<TEnum, string> ToWire = BuildToWire();
+    private static readonly TEnum? UnknownMember = FindUnknown();
 
     /// <inheritdoc />
     public override TEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -48,12 +63,22 @@ public sealed class WireEnumConverter<TEnum> : JsonConverter<TEnum>
             return value;
         }
 
+        // §27.11 rule 1: decode, do not fail the response this arrived in.
+        if (UnknownMember is { } unknown)
+        {
+            return unknown;
+        }
+
         throw NetworkError.FromMessage(
             $"the server sent '{raw}' for {typeof(TEnum).Name}, which this SDK does not know. " +
             $"Known values: {string.Join(", ", FromWire.Keys)}. A newer server may have added " +
             "one; upgrading the SDK is the fix, and guessing would turn a new state into a " +
             "wrong one.");
     }
+
+    /// <summary>The enum's <c>Unknown</c> member, when it declares one.</summary>
+    private static TEnum? FindUnknown()
+        => Enum.TryParse("Unknown", out TEnum unknown) ? unknown : null;
 
     /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)

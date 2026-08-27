@@ -133,15 +133,27 @@ public sealed class ManagementCoreTests : ManagementTestBase
     // ---- Enum wire spellings --------------------------------------------
 
     /// <summary>
-    /// An enum round-trips through its wire spelling, and an unknown value throws.
+    /// An enum round-trips through its wire spelling, and an unknown value decodes to
+    /// <c>Unknown</c> instead of throwing.
     /// </summary>
     /// <remarks>
-    /// Quietly reading an unrecognised status as whatever happens to be declared first
-    /// would turn a new server state into a wrong one — and on this surface those states
-    /// gate access.
+    /// <para>
+    /// <b>This assertion inverted at contract 1.31</b> (§27.11 rule 1). It used to require
+    /// a throw, on the reasoning that quietly reading an unrecognised status as whatever
+    /// happens to be declared first would turn a new server state into a wrong one — and
+    /// on this surface those states gate access. That reasoning still holds; what it did
+    /// not weigh is that throwing fails the <i>whole</i> response, so one field of one
+    /// record the caller did not ask about takes down an entire page.
+    /// </para>
+    /// <para>
+    /// <c>Unknown</c> keeps the original guarantee while dropping the collateral: it is a
+    /// state of its own, deliberately <b>not</b> the zero member, so the wrong-state
+    /// reading the throw prevented is still impossible. The last two assertions are what
+    /// pin that.
+    /// </para>
     /// </remarks>
     [Fact]
-    public void AnEnumRoundTripsItsWireSpellingAndRefusesAnUnknownOne()
+    public void AnEnumRoundTripsItsWireSpellingAndDecodesAnUnknownOne()
     {
         var converter = new WireEnumConverter<ScimTokenStatus>();
         var options = new JsonSerializerOptions();
@@ -152,9 +164,17 @@ public sealed class ManagementCoreTests : ManagementTestBase
             ScimTokenStatus.Revoked,
             JsonSerializer.Deserialize<ScimTokenStatus>("\"revoked\"", options));
 
-        NetworkError thrown = Assert.Throws<NetworkError>(
-            () => JsonSerializer.Deserialize<ScimTokenStatus>("\"suspended\"", options));
-        Assert.Contains("does not know", thrown.Message, StringComparison.Ordinal);
+        Assert.Equal(
+            ScimTokenStatus.Unknown,
+            JsonSerializer.Deserialize<ScimTokenStatus>("\"suspended\"", options));
+
+        // Not the zero member: defaulting to Unknown would make "the server said nothing"
+        // and "the server said something new" the same value.
+        Assert.NotEqual(ScimTokenStatus.Unknown, default(ScimTokenStatus));
+
+        // And it does not round-trip as a real spelling, so carrying it back into an
+        // update is refused by the server rather than written as a value it never used.
+        Assert.Equal("\"\"", JsonSerializer.Serialize(ScimTokenStatus.Unknown, options));
     }
 
     // ---- §27.6 rule 1: what validation refuses --------------------------

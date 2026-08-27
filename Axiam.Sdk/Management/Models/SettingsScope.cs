@@ -18,8 +18,14 @@ namespace Axiam.Sdk.Management.Models;
 /// <remarks>
 /// <para>
 /// Each member carries the spelling the server uses on the wire via WireName, so the C# name
-/// can follow C# conventions without changing what is sent. An unknown value throws rather than
-/// silently becoming the zero member.
+/// can follow C# conventions without changing what is sent.
+/// </para>
+/// <para>
+/// An <b>open</b> enum. A value this SDK’s copy of the spec does not list decodes to
+/// <c>SettingsScope.Unknown</c> rather than failing the response it arrived in (&#167;27.11
+/// rule 1) — a closed enum turns the next value the server adds into a parse error on the whole
+/// list, taking down every record on the page over one field of one of them. A <c>switch</c>
+/// over these members needs an <c>Unknown</c> arm.
 /// </para>
 /// </remarks>
 [JsonConverter(typeof(WireEnumConverter<SettingsScope>))]
@@ -32,4 +38,22 @@ public enum SettingsScope
     /// <summary>The server's <c>Tenant</c> value.</summary>
     [WireName("Tenant")]
     Tenant,
+
+    /// <summary>
+    /// A value this SDK’s copy of the spec does not list.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Its wire spelling is the empty string, which no server value is: carrying an
+    /// unrecognised value back into an update is refused by the server rather than silently
+    /// written as a spelling it never used. Fifteen of these enums appear in request bodies,
+    /// which is what makes that distinction worth having.
+    /// </para>
+    /// <para>
+    /// It is deliberately <b>not</b> the zero member — defaulting to it would make “the server
+    /// said nothing” and “the server said something new” the same value.
+    /// </para>
+    /// </remarks>
+    [WireName("")]
+    Unknown,
 }

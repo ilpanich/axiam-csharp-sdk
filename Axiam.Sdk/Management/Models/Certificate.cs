@@ -19,6 +19,15 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record Certificate
 {
     /// <summary>
+    /// resolved by the list projection only. The server resolves this for a whole page in one
+    /// query, so it is populated by the list operation and is null on get (CONTRACT §27.11 rule
+    /// 4). Null there means "this read does not carry it", not "there is nothing bound" — the
+    /// SDK does not issue a second request to fill it in
+    /// </summary>
+    [JsonPropertyName("bound_service_account_id")]
+    public Guid? BoundServiceAccountId { get; init; }
+
+    /// <summary>
     /// the server's cert_type field
     /// </summary>
     [JsonPropertyName("cert_type")]

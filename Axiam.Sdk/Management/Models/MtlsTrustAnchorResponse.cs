@@ -35,9 +35,18 @@ public sealed record MtlsTrustAnchorResponse
     public required bool MtlsTrustAnchor { get; init; }
 
     /// <summary>
-    /// Always <c>true</c>: rustls builds its client trust store once, when the listener is
-    /// constructed, so this takes effect at the next start.
+    /// Whether the change still needs a restart to take effect. <c>false</c> when the live
+    /// listener accepted the new anchor set — the ordinary case on a TLS deployment.
+    /// <c>true</c> only when there was no listener to reload into (plaintext, or <c>client_auth
+    /// = off</c>), where the flag is stored and applies at the next start.
     /// </summary>
     [JsonPropertyName("restart_required")]
     public required bool RestartRequired { get; init; }
+
+    /// <summary>
+    /// How many CAs the listener now trusts for client authentication, when it was reloaded.
+    /// <c>None</c> when nothing was reloaded.
+    /// </summary>
+    [JsonPropertyName("trusted_anchors")]
+    public int? TrustedAnchors { get; init; }
 }

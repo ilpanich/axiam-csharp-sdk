@@ -9,6 +9,102 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **CONTRACT 1.31 — the AXIAM server PR #383 surface.** `CONTRACT.md`,
+  `openapi.json` and `management-registry.json` re-vendored, and the six things
+  they describe implemented.
+
+  - **`Search` on all twenty paginated management operations** (§27.4 rule 4).
+    A third property on `PageRequest`, not a third argument on twenty generated
+    `ListAsync` methods, reached through a new `PageRequest.Matching(limit, term)`
+    factory beside `Of(limit)`:
+
+    ```csharp
+    Page<UserResponse> page = await client.Users.ListAsync(PageRequest.Matching(50, "ada"));
+    IReadOnlyList<UserResponse> all = await client.Users.ListAllAsync(PageRequest.Matching(200, "ada"));
+    ```
+
+    Putting it on the page request is what makes `Page.NextPage` — and so
+    `ListAllAsync` — carry the term across the whole walk. A walk that filtered
+    its first request and not the rest returns the matches followed by the
+    unfiltered tail, which from the caller's side looks like a server bug.
+
+    The server applies it **before** `Offset`/`Limit`, so `Page.Total` counts
+    matches rather than rows. A blank or whitespace-only term is treated as
+    unset and sends no `search` parameter. The server's length cap is
+    deliberately **not** copied here: a client-side truncation the server would
+    not have made is a silently different query.
+
+    The `PageRequest` constructor gained an optional third parameter, so every
+    existing call site still compiles.
+
+  - **`AxiamClient.ResendOwnVerificationAsync()`** (§25.1, §25.7) —
+    `POST /api/v1/users/me/resend-verification`, for a caller signed in to the
+    account it is asking about. It takes no address, and reports what happened:
+    returns for enqueued, `AuthzError` for already-verified-or-ineligible,
+    `NetworkError` for the daily limit.
+
+    `ResendVerificationAsync` still exists and still returns normally whatever
+    happens, because it takes an address from an anonymous caller and a truthful
+    answer there is an enumeration oracle. Use the new one whenever there is a
+    session — a profile page wired to the old one reports success while doing
+    nothing, which is the defect the pair exists to separate. This SDK does not
+    fall back from one to the other in either direction (§25.7 rule 2).
+
+  - **`LoginResult.OrganizationLevel`** (§5.2) — whether the account holds
+    grants that apply in every tenant of its organization. Check it before
+    offering a tenant switch: an ordinary tenant principal changing
+    `X-Tenant-ID` gets a `403`. `false` against a server older than contract
+    1.31. It is a defaulted positional parameter, so existing construction sites
+    still compile.
+
+  - **`Tenant.Kind` and `TenantKind`** (§27.11) — ordinary tenant or the
+    organization's own scope. `null` on a row written before that scope existed.
+    Read-only: it is not on `CreateTenantRequest` or `UpdateTenantRequest`.
+
+  - **`MtlsTrustAnchorResponse.TrustedAnchors`** (§27.11) — how many CAs the
+    live listener now trusts, when it was reloaded. `null` is **not** zero: it
+    means there was no listener to ask, which is the case
+    `RestartRequired == true` already reports.
+
+  - **`Certificate.BoundServiceAccountId`** (§27.11) — the service account a
+    certificate authenticates, resolved for a whole page in one query by
+    `Certificates.ListAsync` and `null` on `Certificates.GetAsync`. The SDK does
+    not issue a second request to fill it in there.
+
+### Changed
+
+- **`WireEnumConverter<T>` decodes an unrecognised value to the enum's
+  `Unknown` member instead of throwing** (§27.11 rule 1), and every generated
+  enum gained that member. Throwing failed the **whole** response, so one field
+  of one record the caller did not ask about would take down an entire page —
+  including the records it did ask for.
+
+  The reasoning behind the old throw is preserved, not discarded: `Unknown` is
+  deliberately **not** the zero member, so the trap the throw existed to
+  avoid — reading `"suspended"` as whatever happens to be declared first — is
+  still impossible. Its wire spelling is the empty string, which no server value
+  is, so carrying an unrecognised value back into an update is refused by the
+  server rather than written as a spelling it never used. An enum with no
+  `Unknown` member still throws, so a hand-written one that never opted in is
+  unaffected.
+
+  `ManagementCoreTests.AnEnumRoundTripsItsWireSpelling…` was rewritten rather
+  than removed: it now asserts the decode, *and* the two properties that keep
+  the original guarantee.
+
+### Fixed
+
+- **`scripts/gen_management.py` no longer drops a projected list element.** The
+  server answers `GET /api/v1/certificates` with `Certificate` plus one resolved
+  graph edge, expressed as an `allOf` of the `$ref` and an anonymous object.
+  Read as a whole, that composition has no name, so the registry carried a page
+  with no element type and the added field reached no record. The generator now
+  takes the base name through the `allOf` and folds the projection's added
+  fields onto the base record as optional properties. (The registry-side half of
+  this is AXIAM PR #386.)
+
+### Added
+
 - **The §27 namespace handles now sit directly on the client** — `client.Roles`,
   `client.ServiceAccounts.RotateSecretAsync(id)` — which is the form §27.3's C# row
   specifies. `client.Management` still reaches the same 24 handles behind one accessor;

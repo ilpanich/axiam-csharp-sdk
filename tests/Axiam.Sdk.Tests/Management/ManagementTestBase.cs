@@ -73,11 +73,27 @@ public abstract class ManagementTestBase : IDisposable
     {
         private readonly int _status;
         private readonly string _body;
+        private readonly Func<Recorded, string>? _responder;
 
         internal Route(int status, string body)
         {
             _status = status;
             _body = body;
+        }
+
+        /// <summary>
+        /// A route whose body depends on the request that reached it.
+        /// </summary>
+        /// <remarks>
+        /// Needed by the §27.4 rule 4 walk assertions: a queue of fixed responses passes
+        /// even when the walk asks for offset 0 three times, so the fixture has to answer
+        /// <em>from</em> the offset it was asked for.
+        /// </remarks>
+        internal Route(int status, Func<Recorded, string> responder)
+        {
+            _status = status;
+            _body = string.Empty;
+            _responder = responder;
         }
 
         /// <summary>Every request that reached this route, in order.</summary>
@@ -94,9 +110,10 @@ public abstract class ManagementTestBase : IDisposable
         internal HttpResponseMessage Respond()
         {
             var response = new HttpResponseMessage((HttpStatusCode)_status);
-            if (_body.Length > 0)
+            string body = _responder is null ? _body : _responder(Last);
+            if (body.Length > 0)
             {
-                response.Content = new StringContent(_body, Encoding.UTF8, "application/json");
+                response.Content = new StringContent(body, Encoding.UTF8, "application/json");
             }
 
             return response;
@@ -140,6 +157,18 @@ public abstract class ManagementTestBase : IDisposable
     /// <returns>The mounted route, for assertions.</returns>
     protected Route Mount(string method, string path, int status, string body)
         => _handler.Mount(method, path, status, body);
+
+    /// <summary>
+    /// Mounts one route whose body is computed from the request that reached it.
+    /// </summary>
+    /// <param name="method">The HTTP method to match.</param>
+    /// <param name="path">The path to match, without a query string.</param>
+    /// <param name="status">The status to answer with.</param>
+    /// <param name="responder">Produces the body from the recorded request.</param>
+    /// <returns>The mounted route, for asserting on what it saw.</returns>
+    protected Route MountDynamic(
+        string method, string path, int status, Func<Recorded, string> responder)
+        => _handler.MountDynamic(method, path, status, responder);
 
     /// <summary>The route mounted at <c>method path</c>, for assertions.</summary>
     /// <param name="method">The mounted method.</param>
@@ -339,6 +368,14 @@ public abstract class ManagementTestBase : IDisposable
         internal Route Mount(string method, string path, int status, string body)
         {
             var route = new Route(status, body);
+            _routes[$"{method} {path}"] = route;
+            return route;
+        }
+
+        internal Route MountDynamic(
+            string method, string path, int status, Func<Recorded, string> responder)
+        {
+            var route = new Route(status, responder);
             _routes[$"{method} {path}"] = route;
             return route;
         }

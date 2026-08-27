@@ -40,6 +40,7 @@ public class AccountLifecycleTests
     private const string MfaSetupConfirmPath = "/api/v1/auth/mfa/setup/confirm";
     private const string VerifyEmailPath = "/api/v1/auth/verify-email";
     private const string ResendVerificationPath = "/api/v1/auth/resend-verification";
+    private const string ResendOwnVerificationPath = "/api/v1/users/me/resend-verification";
     private const string ResetPath = "/api/v1/auth/reset";
     private const string ResetContextPath = "/api/v1/auth/reset/context";
     private const string ResetConfirmPath = "/api/v1/auth/reset/confirm";
@@ -285,6 +286,122 @@ public class AccountLifecycleTests
         await client.ResendVerificationAsync("alice@example.com", Guid.Parse(TenantGuid));
 
         Assert.Equal(1, handler.CountFor(ResendVerificationPath));
+    }
+
+    // -----------------------------------------------------------------------
+    // §25.7 — the two resends are two operations
+    // -----------------------------------------------------------------------
+
+    /// <summary>The authenticated resend carries no address, and hits its own path.</summary>
+    /// <remarks>
+    /// The body assertion is the one that matters: a signature with no address parameter
+    /// proves nothing about what the SDK serializes, and an address on this endpoint
+    /// would let an authenticated session mail an arbitrary one.
+    /// </remarks>
+    [Fact]
+    public async Task ResendOwnVerification_SendsNoAddress()
+    {
+        JsonElement body = default;
+        using var handler = new RoutingHandler();
+        handler.Map(ResendOwnVerificationPath, request =>
+        {
+            body = OidcTestKit.ReadJsonBody(request);
+            return OidcTestKit.JsonOk("""{"sent":true}""");
+        });
+        using AxiamClient client = Client(handler);
+
+        await client.ResendOwnVerificationAsync();
+
+        Assert.Equal(1, handler.CountFor(ResendOwnVerificationPath));
+        Assert.Empty(body.EnumerateObject());
+    }
+
+    /// <summary>The two resends are distinct operations against distinct paths.</summary>
+    /// <remarks>
+    /// An SDK that aliased one to the other would reintroduce the exact defect §25.7
+    /// exists to describe, and every other test here would still pass — so this asserts
+    /// on the path each one actually reached.
+    /// </remarks>
+    [Fact]
+    public async Task TheTwoResends_ReachDifferentEndpoints()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map(ResendVerificationPath, _ => OidcTestKit.Empty(HttpStatusCode.OK));
+        handler.Map(ResendOwnVerificationPath, _ => OidcTestKit.JsonOk("""{"sent":true}"""));
+        using AxiamClient client = Client(handler);
+
+        await client.ResendVerificationAsync("alice@example.com", Guid.Parse(TenantGuid));
+        await client.ResendOwnVerificationAsync();
+
+        Assert.Equal(1, handler.CountFor(ResendVerificationPath));
+        Assert.Equal(1, handler.CountFor(ResendOwnVerificationPath));
+    }
+
+    /// <summary>A 409 surfaces, and is not retried through the public endpoint.</summary>
+    /// <remarks>
+    /// The bug this operation exists to fix was a success return on a request that
+    /// achieved nothing, so "throws" is the assertion — and the public endpoint's zero
+    /// calls is what rules out the §25.7 rule 2 fallback, which would turn both failures
+    /// back into a normal return with an extra round-trip.
+    /// </remarks>
+    [Fact]
+    public async Task ResendOwnVerification_Surfaces409_WithoutFallingBack()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map(ResendVerificationPath, _ => OidcTestKit.Empty(HttpStatusCode.OK));
+        handler.Map(ResendOwnVerificationPath, _ => OidcTestKit.Empty(HttpStatusCode.Conflict));
+        using AxiamClient client = Client(handler);
+
+        await Assert.ThrowsAsync<AuthzError>(() => client.ResendOwnVerificationAsync());
+
+        Assert.Equal(1, handler.CountFor(ResendOwnVerificationPath));
+        Assert.Equal(0, handler.CountFor(ResendVerificationPath));
+    }
+
+    /// <summary>A 429 surfaces too, as the §2 mapping of a rate limit.</summary>
+    [Fact]
+    public async Task ResendOwnVerification_SurfacesTheDailyLimit()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map(ResendVerificationPath, _ => OidcTestKit.Empty(HttpStatusCode.OK));
+        handler.Map(ResendOwnVerificationPath, _ => OidcTestKit.Empty(HttpStatusCode.TooManyRequests));
+        using AxiamClient client = Client(handler);
+
+        await Assert.ThrowsAsync<NetworkError>(() => client.ResendOwnVerificationAsync());
+
+        Assert.Equal(0, handler.CountFor(ResendVerificationPath));
+    }
+
+    // -----------------------------------------------------------------------
+    // §5.2 — organization-level principals
+    // -----------------------------------------------------------------------
+
+    /// <summary><c>OrganizationLevel</c> is carried through from the login response.</summary>
+    /// <remarks>
+    /// It is what an application checks <i>before</i> offering a tenant switch: such a
+    /// principal changes the tenant it acts on with a header on the next request, and an
+    /// ordinary one cannot, so offering the switch to both turns a distinction the server
+    /// made into a 403 the user discovers.
+    /// <para>
+    /// The absent case is the one that matters: a server older than contract 1.31 omits
+    /// the field, and <c>false</c> is the safe reading — the client then offers no
+    /// cross-tenant action rather than one that would fail.
+    /// </para>
+    /// </remarks>
+    [Theory]
+    [InlineData("""{"id":"u1","organization_level":true}""", true)]
+    [InlineData("""{"id":"u1","organization_level":false}""", false)]
+    [InlineData("""{"id":"u1"}""", false)]
+    public async Task Login_ReportsAnOrganizationLevelPrincipal(string userJson, bool expected)
+    {
+        using var handler = new RoutingHandler();
+        handler.Map(LoginPath, _ => OidcTestKit.JsonOk(
+            $$"""{"user":{{userJson}},"session_id":"s1","expires_in":900}"""));
+        using AxiamClient client = Client(handler);
+
+        LoginResult result = await client.LoginAsync("alice@example.com", "correct horse");
+
+        Assert.Equal(expected, result.OrganizationLevel);
     }
 
     [Fact]
