@@ -31,6 +31,14 @@ public sealed record Tenant
     public required Guid Id { get; init; }
 
     /// <summary>
+    /// Whether this is an ordinary tenant or the organization's own scope.
+    /// <c>#[serde(default)]</c> so every row written before organization scope existed reads
+    /// back as [<c>TenantKind::Standard</c>], which is what it is.
+    /// </summary>
+    [JsonPropertyName("kind")]
+    public TenantKind? Kind { get; init; }
+
+    /// <summary>
     /// Arbitrary key-value metadata.
     /// </summary>
     [JsonPropertyName("metadata")]

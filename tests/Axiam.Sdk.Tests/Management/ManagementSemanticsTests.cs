@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using Axiam.Sdk;
@@ -74,6 +76,202 @@ public sealed class ManagementSemanticsTests : ManagementTestBase
         Assert.Single(page.Items);
         Assert.Equal(97, page.Total);
         Assert.False(page.IsLast);
+    }
+
+    // ---------------------------------------------------------------------
+    // §27.4 rule 4 — search
+    // ---------------------------------------------------------------------
+
+    /// <summary>
+    /// &#167;27.4 rule 4: a term on the page request reaches the query string.
+    /// </summary>
+    /// <remarks>
+    /// Asserted on the recorded query rather than on the arguments: a term the SDK
+    /// accepts, stores and never sends is invisible from the call site, and it is the
+    /// failure this test exists for.
+    /// </remarks>
+    [Fact]
+    public async Task ASearchTermReachesTheQueryString()
+    {
+        Route route = Mount("GET", "/api/v1/users", 200, PageOf(null));
+
+        await Client.Management.Users.ListAsync(PageRequest.Matching(50, "ada"));
+
+        Assert.Equal("ada", route.Last.Query["search"]);
+    }
+
+    /// <summary>
+    /// &#167;27.4 rule 4: no term, and a blank one, send no <c>search</c> key.
+    /// </summary>
+    /// <remarks>
+    /// Asserted on the query key set. A UI that fires on every keystroke sends
+    /// <c>?search=</c> the moment the box is cleared, and "rows containing the empty
+    /// string" is a different question — different enough that the server normalizes it
+    /// away too.
+    /// </remarks>
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task AnAbsentOrBlankTermSendsNoSearchKey(string? term)
+    {
+        Route route = Mount("GET", "/api/v1/users", 200, PageOf(null));
+
+        await Client.Management.Users.ListAsync(PageRequest.Matching(50, term));
+
+        Assert.DoesNotContain("search", route.Last.Query.Keys);
+    }
+
+    /// <summary>
+    /// &#167;27.4 rule 4: the walk carries the term on every request, not only the first.
+    /// </summary>
+    /// <remarks>
+    /// A ListAllAsync that filtered page one and not page two would concatenate the
+    /// matches with the unfiltered remainder — which reads as a server bug from the
+    /// caller's side, and which a test counting requests rather than inspecting them
+    /// would pass.
+    /// </remarks>
+    [Fact]
+    public async Task ListAllCarriesTheSearchTermAcrossTheWholeWalk()
+    {
+        Route route = MountDynamic("GET", "/api/v1/users", 200, recorded =>
+        {
+            int offset = int.Parse(recorded.Query["offset"], CultureInfo.InvariantCulture);
+            return $$"""{"items":[{{UserBody(offset)}}],"total":2,"offset":{{offset}},"limit":1}""";
+        });
+
+        IReadOnlyList<UserResponse> all =
+            await Client.Management.Users.ListAllAsync(PageRequest.Matching(1, "ad"));
+
+        Assert.Equal(2, all.Count);
+        Assert.Equal(new[] { "ad", "ad" }, route.Requests.Select(r => r.Query["search"]));
+    }
+
+    /// <summary>
+    /// &#167;27.4 rule 4: the term is trimmed, and a long one is not truncated.
+    /// </summary>
+    /// <remarks>
+    /// The server's length cap is the server's. A client-side truncation the server
+    /// would not have made is a silently different query — the caller asked one question
+    /// and the wire carried another, with nothing to say so.
+    /// </remarks>
+    [Fact]
+    public async Task ASearchTermIsTrimmedButNeverTruncated()
+    {
+        Route trimmed = Mount("GET", "/api/v1/users", 200, PageOf(null));
+        await Client.Management.Users.ListAsync(PageRequest.Matching(50, "  ada  "));
+        Assert.Equal("ada", trimmed.Last.Query["search"]);
+
+        string long400 = new('x', 400);
+        Route whole = Mount("GET", "/api/v1/users", 200, PageOf(null));
+        await Client.Management.Users.ListAsync(PageRequest.Matching(50, long400));
+        Assert.Equal(long400, whole.Last.Query["search"]);
+    }
+
+    // ---------------------------------------------------------------------
+    // §27.11 — model additions
+    // ---------------------------------------------------------------------
+
+    /// <summary>
+    /// &#167;27.11 rule 1: an unrecognised enum value decodes, rather than failing the page.
+    /// </summary>
+    /// <remarks>
+    /// A closed enum turns the next <c>kind</c> the server adds into a parse error on the
+    /// whole list, taking down every tenant on the page over one field of one of them —
+    /// including the ones the caller was after.
+    /// </remarks>
+    [Fact]
+    public async Task AnUnknownTenantKindDecodesInsteadOfFailingThePage()
+    {
+        Mount("GET", $"/api/v1/organizations/{OrgId}/tenants", 200,
+            $$"""
+              {"items":[{{TenantBody("prod", "standard")}},
+                        {{TenantBody("future", "some-kind-from-a-newer-server")}}],
+               "total":2,"offset":0,"limit":50}
+              """);
+
+        Page<Tenant> page = await Client.Management.Tenants.ListAsync(PageRequest.Of(50));
+
+        Assert.Equal(TenantKind.Standard, page.Items[0].Kind);
+        Assert.Equal(TenantKind.Unknown, page.Items[1].Kind);
+    }
+
+    /// <summary>
+    /// &#167;27.11 rule 1: <c>Unknown</c> does not round-trip as a real value.
+    /// </summary>
+    /// <remarks>
+    /// Fifteen of these enums appear in request bodies, so what happens when an
+    /// unrecognised value is carried back into an update matters. Its wire spelling is
+    /// the empty string, which no server value is — so the server refuses it rather than
+    /// accepting a spelling it never used. It is deliberately not the zero member either:
+    /// defaulting to it would make "the server said nothing" and "the server said
+    /// something new" the same value.
+    /// </remarks>
+    [Fact]
+    public void AnUnknownEnumValueHasNoRealWireSpelling()
+    {
+        Assert.Equal("\"\"", JsonSerializer.Serialize(TenantKind.Unknown, ManagementJson.Wire));
+        Assert.NotEqual(TenantKind.Unknown, default(TenantKind));
+        Assert.Equal("\"standard\"", JsonSerializer.Serialize(TenantKind.Standard, ManagementJson.Wire));
+    }
+
+    /// <summary>&#167;27.11: a tenant written before organization scope has no kind.</summary>
+    [Fact]
+    public async Task ATenantWithoutAKindDecodesAsAbsent()
+    {
+        Mount("GET", $"/api/v1/organizations/{OrgId}/tenants/{ExampleId}", 200,
+            TenantBody("prod", null));
+
+        Tenant tenant = await Client.Management.Tenants.GetAsync(ExampleId);
+
+        Assert.Null(tenant.Kind);
+    }
+
+    /// <summary>
+    /// &#167;27.11 rule 3: <c>TrustedAnchors</c> is null, and null is not zero.
+    /// </summary>
+    /// <remarks>
+    /// "The listener trusts no CAs" and "there was no listener to ask" are different
+    /// operational states, and only one of them is a problem.
+    /// </remarks>
+    [Fact]
+    public async Task TrustedAnchorsIsAbsentRatherThanZeroWhenNothingReloaded()
+    {
+        Mount("PUT",
+            $"/api/v1/organizations/{OrgId}/ca-certificates/{ExampleId}/mtls-trust-anchor",
+            200,
+            $$"""
+              {"ca_certificate_id":"{{ExampleId}}","mtls_trust_anchor":true,
+               "restart_required":true,"message":"stored; applies at next start"}
+              """);
+
+        MtlsTrustAnchorResponse out_ = await Client.Management.CaCertificates
+            .SetMtlsTrustAnchorAsync(ExampleId, new SetMtlsTrustAnchor { Enabled = true });
+
+        Assert.True(out_.RestartRequired);
+        Assert.Null(out_.TrustedAnchors);
+    }
+
+    /// <summary>
+    /// &#167;27.11 rule 4: the projection is on the list and absent from the get.
+    /// </summary>
+    /// <remarks>
+    /// The get assertion is the load-bearing one: an SDK that filled the field in there
+    /// would be issuing a second request nobody asked for.
+    /// </remarks>
+    [Fact]
+    public async Task BoundServiceAccountIdIsOnTheListProjectionOnly()
+    {
+        string bare = CertificateBody(null);
+        Mount("GET", "/api/v1/certificates", 200,
+            $$"""{"items":[{{CertificateBody(TenantId)}}],"total":1,"offset":0,"limit":50}""");
+        Mount("GET", $"/api/v1/certificates/{ExampleId}", 200, bare);
+
+        Page<Certificate> page = await Client.Management.Certificates.ListAsync(PageRequest.Of(50));
+        Assert.Equal(TenantId, page.Items[0].BoundServiceAccountId);
+
+        Certificate one = await Client.Management.Certificates.GetAsync(ExampleId);
+        Assert.Null(one.BoundServiceAccountId);
     }
 
     /// <summary>&#167;27.4 rule 4: a bare-array read is a list, not a page.</summary>
@@ -406,6 +604,30 @@ public sealed class ManagementSemanticsTests : ManagementTestBase
         using AxiamClient anonymous = AnonymousClient();
         Assert.Null(anonymous.ResolvedTenantId);
         Assert.Null(anonymous.ResolvedOrgId);
+    }
+
+    private static string TenantBody(string slug, string? kind)
+    {
+        string kindField = kind is null ? string.Empty : $"\"kind\":\"{kind}\",";
+        return $$"""
+                 {"id":"{{ExampleId}}","organization_id":"{{OrgId}}","name":"{{slug}}",
+                  "slug":"{{slug}}",{{kindField}}"status":"Active","metadata":{},
+                  "created_at":"2026-08-27T00:00:00Z","updated_at":"2026-08-27T00:00:00Z"}
+                 """;
+    }
+
+    private static string CertificateBody(Guid? bound)
+    {
+        string boundField = bound is null
+            ? string.Empty
+            : $",\"bound_service_account_id\":\"{bound}\"";
+        return $$"""
+                 {"id":"{{ExampleId}}","tenant_id":"{{TenantId}}","issuer_ca_id":"{{OrgId}}",
+                  "subject":"CN=device-1","public_cert_pem":"-----BEGIN CERTIFICATE-----",
+                  "fingerprint":"ab:cd","cert_type":"Device","key_algorithm":"Ed25519",
+                  "not_before":"2026-08-27T00:00:00Z","not_after":"2027-08-27T00:00:00Z",
+                  "status":"Active","metadata":{},"created_at":"2026-08-27T00:00:00Z"{{boundField}}}
+                 """;
     }
 
     private static string UserBody(int index) =>

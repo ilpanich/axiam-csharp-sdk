@@ -17,6 +17,7 @@ public sealed partial class AxiamClient
     private const string MfaSetupConfirmPath = "/api/v1/auth/mfa/setup/confirm";
     private const string VerifyEmailPath = "/api/v1/auth/verify-email";
     private const string ResendVerificationPath = "/api/v1/auth/resend-verification";
+    private const string ResendOwnVerificationPath = "/api/v1/users/me/resend-verification";
     private const string ResetPath = "/api/v1/auth/reset";
     private const string ResetContextPath = "/api/v1/auth/reset/context";
     private const string ResetConfirmPath = "/api/v1/auth/reset/confirm";
@@ -104,7 +105,10 @@ public sealed partial class AxiamClient
         {
             throw ErrorMapper.FromHttpResponse(http, "MfaSetupConfirmAsync failed");
         }
-        return new LoginResult(false);
+        return new LoginResult(
+            false,
+            OrganizationLevel: await OrganizationLevelOfAsync(http, cancellationToken)
+                .ConfigureAwait(false));
     }
 
     /// <summary>
@@ -134,7 +138,26 @@ public sealed partial class AxiamClient
         await PostExpectingNoContentAsync(VerifyEmailPath, body, nameof(VerifyEmailAsync), cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary><c>POST /api/v1/auth/resend-verification</c> (CONTRACT.md &#167;25.1).</summary>
+    /// <summary>
+    /// <c>POST /api/v1/auth/resend-verification</c> (CONTRACT.md &#167;25.1) — the
+    /// <b>unauthenticated</b> resend, for a caller with no session.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <b>Returns normally whatever the outcome.</b> The address may not exist, may already
+    /// be verified, or may be over the daily limit, and this answers identically in all of
+    /// them, because it takes an address from an anonymous caller and anything else is an
+    /// oracle for which addresses have accounts (&#167;25.7).
+    /// </para>
+    /// <para>
+    /// A caller that <i>is</i> signed in wants <see cref="ResendOwnVerificationAsync"/>,
+    /// which says which of those happened. Do not reach for this one because it is the name
+    /// you already knew.
+    /// </para>
+    /// </remarks>
+    /// <param name="email">The address to resend to.</param>
+    /// <param name="tenantId">The tenant the account belongs to.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
     public async Task ResendVerificationAsync(string email, Guid tenantId, CancellationToken cancellationToken = default)
     {
         EnsureNotDisposed();
@@ -146,6 +169,45 @@ public sealed partial class AxiamClient
             ["tenant_id"] = tenantId.ToString(),
         };
         await PostExpectingNoContentAsync(ResendVerificationPath, body, nameof(ResendVerificationAsync), cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// <c>POST /api/v1/users/me/resend-verification</c> (CONTRACT.md &#167;25.1,
+    /// &#167;25.7) — resends the <b>signed-in caller's own</b> verification mail, and says
+    /// what happened.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Takes no address. The server reads it off the caller's own record, and this
+    /// signature deliberately offers no way to name a different one: a parameter here would
+    /// let an authenticated session mail an arbitrary address.
+    /// </para>
+    /// <para>
+    /// Unlike <see cref="ResendVerificationAsync"/> this reports the outcome, because the
+    /// caller is signed in to the account it is asking about and none of the outcomes tells
+    /// it anything it did not already know: it returns when a token was minted and the mail
+    /// <b>enqueued</b>; throws <c>AuthzError</c> on <c>409</c> (already verified, or the
+    /// account is in a state that must not be sent a live token); and throws
+    /// <c>NetworkError</c> on <c>429</c> (the daily resend limit). Delivery is asynchronous
+    /// and can still fail at the provider — a queue that accepts everything in front of one
+    /// that rejects it looks exactly like this succeeding.
+    /// </para>
+    /// <para>
+    /// &#167;25.7 rule 2 forbids falling back to the unauthenticated endpoint on either of
+    /// those, and this SDK does not: the fallback would turn both failures back into a
+    /// normal return and restore the bug this operation exists to fix, with an extra
+    /// round-trip.
+    /// </para>
+    /// </remarks>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    public async Task ResendOwnVerificationAsync(CancellationToken cancellationToken = default)
+    {
+        EnsureNotDisposed();
+        await PostExpectingNoContentAsync(
+            ResendOwnVerificationPath,
+            new Dictionary<string, object?>(),
+            nameof(ResendOwnVerificationAsync),
+            cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>

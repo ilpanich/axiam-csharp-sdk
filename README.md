@@ -1218,6 +1218,64 @@ distinguish them either (§25.4 rule 3).
 unverified may have no session at all — and carry the tenant as a **body** field, since §12.1 rule 2's
 `?tenant_id=` convention is scoped to the `/oauth2` endpoints.
 
+### Two resends, and picking the wrong one is silent (§25.7)
+
+```csharp
+await client.ResendVerificationAsync(email, tenantId);   // anonymous caller
+await client.ResendOwnVerificationAsync();               // signed-in caller
+```
+
+Use the second whenever you have a session.
+
+`ResendVerificationAsync` takes an address from an *unauthenticated* caller, so it returns normally
+whatever happens — unknown address, already verified, over the daily limit. That constancy is the
+point: anything else is an oracle for which addresses have accounts.
+
+`ResendOwnVerificationAsync` is for a caller signed in to the account it is asking about. It takes
+**no address at all** (the server reads it off your own record, and a parameter would let a session
+mail an arbitrary one) and it says what happened:
+
+```csharp
+try
+{
+    await client.ResendOwnVerificationAsync();   // minted and enqueued
+}
+catch (ConflictError)
+{
+    // 409 — already verified, or this account may not be sent one
+}
+catch (NetworkError)
+{
+    // 429 — the daily resend limit
+}
+```
+
+A profile page that called the *first* one reports success while doing nothing, which is the bug
+this pair exists to separate. This SDK does not fall back from the second to the first on either
+failure — that would turn both back into a normal return with an extra round-trip. And returning
+means *enqueued*: delivery is asynchronous and can still fail at the provider.
+
+### Organization-level principals (§5.2)
+
+A completed `LoginResult` also reports whether the account is an **organization-level** principal —
+one whose record lives in its organization's reserved tenant, so its global grants apply in every
+tenant of that organization:
+
+```csharp
+LoginResult result = await client.LoginAsync(email, password);
+if (result.OrganizationLevel)
+{
+    // Acts on any tenant of its organization by sending a different
+    // X-Tenant-ID on the next request. No re-login: it already is a
+    // principal of every tenant there.
+}
+```
+
+Check it *before* offering a tenant switch. An ordinary tenant principal is a principal of exactly
+one tenant, and changing the header for one of those produces a `403` — so a UI that offers the
+switch to everyone has turned a distinction the server made into a failure the user discovers.
+`false` against a server older than contract 1.31, which is the safe reading of absent.
+
 Worked end to end in [`examples/AccountLifecycle`](examples/AccountLifecycle).
 
 ## Pushed Authorization Requests (CONTRACT.md §26, RFC 9126)
@@ -1303,9 +1361,12 @@ Console.WriteLine($"{page.Items.Count} of {page.Total}");
 // ListAllAsync walks to exhaustion, stopping on an empty page even if the
 // server's total disagrees.
 IReadOnlyList<Role> roles = await client.Management.Roles.ListAllAsync();
+
+// The server filters, before offset/limit, so Total counts MATCHES.
+Page<UserResponse> found = await client.Users.ListAsync(PageRequest.Matching(25, "ada"));
 ```
 
-Six things worth knowing:
+Eight things worth knowing:
 
 - **The client's org and tenant are implicit.** A route with `{org_id}` or `{tenant_id}` in it takes
   them from the client (§27.4 rule 3). The handles that carry such routes — and only those — expose
@@ -1336,6 +1397,31 @@ Six things worth knowing:
   anything else that could fail.
 - **A management call with no session never reaches the network.** It fails locally with an
   `AuthError` naming the missing session (§27.4 rule 1).
+- **`Search` is on the page request, and the server does the filtering** (§27.4 rule 4).
+  `PageRequest.Matching(25, "ada")` puts the term where `Offset` and `Limit` already live, and that
+  is what makes `ListAllAsync` carry it across the whole walk — a walk that filtered its first
+  request and not the rest would return the matches followed by the unfiltered tail. `Total` counts
+  matches rather than rows, because the server applies the term before paging. A blank or
+  whitespace-only term is the same request as none, so a box that fires on every keystroke does not
+  ask a different question once it has been cleared; and the server's length cap is deliberately not
+  copied here, because a client-side truncation the server would not have made is a silently
+  different query.
+- **Three properties arrived with contract 1.31, and each `null` means something specific**
+  (§27.11). `Tenant.Kind` is `null` on a row written before organization scope existed — read it as
+  `Standard`. `MtlsTrustAnchorResponse.TrustedAnchors` is `null` when nothing was reloaded, which is
+  *not* zero: "the listener trusts no CAs" and "there was no listener to ask" are different states,
+  and only one is a problem. `Certificate.BoundServiceAccountId` is resolved by
+  `Certificates.ListAsync` and `null` on `GetAsync`; the SDK does not issue a second request to fill
+  it in.
+
+  Generated enums also gained an `Unknown` member, and `WireEnumConverter<T>` now decodes an
+  unrecognised value to it rather than throwing. Throwing failed the **whole** response — one field
+  of one record the caller did not ask about would take down an entire page. It is deliberately not
+  the *zero* member, which is the trap the old behaviour avoided by throwing: reading `"suspended"`
+  as whatever happens to be declared first would turn a new state into a wrong one. `Unknown`'s wire
+  spelling is the empty string, which no server value is, so carrying an unrecognised value back
+  into an update is refused by the server rather than written as a spelling it never used. A
+  `switch` over these members needs an `Unknown` arm.
 
 Worked end to end in [`examples/ManagementBasics`](examples/ManagementBasics).
 

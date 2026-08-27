@@ -31,8 +31,20 @@ namespace Axiam.Sdk.Auth;
 /// populated only when <paramref name="MfaSetupRequired"/> is <c>true</c>. There is no
 /// session yet — this token IS the credential for those two calls.
 /// </param>
+/// <param name="OrganizationLevel">
+/// <c>true</c> when the account that just signed in is an <b>organization-level</b>
+/// principal (CONTRACT.md &#167;5.2) — one whose record lives in its organization's
+/// reserved tenant, so its global grants apply in every tenant of that organization, and
+/// which can act on a different one by sending a different <c>X-Tenant-ID</c> on the next
+/// request. An ordinary tenant principal is a principal of exactly one tenant and gets a
+/// <c>403</c> for the same header change, so check this <i>before</i> offering a tenant
+/// switch rather than discovering the answer from a failed request.
+/// <c>false</c> against a server older than contract 1.31, and <c>false</c> on the two
+/// pending outcomes, where no principal has been established yet.
+/// </param>
 public sealed record LoginResult(
     bool MfaRequired,
     Sensitive<string>? ChallengeToken = null,
     bool MfaSetupRequired = false,
-    Sensitive<string>? SetupToken = null);
+    Sensitive<string>? SetupToken = null,
+    bool OrganizationLevel = false);

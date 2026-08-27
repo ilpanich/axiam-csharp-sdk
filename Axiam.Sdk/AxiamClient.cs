@@ -243,7 +243,10 @@ public sealed partial class AxiamClient : IDisposable
 
         if (response.StatusCode == HttpStatusCode.OK)
         {
-            return new LoginResult(false);
+            return new LoginResult(
+                false,
+                OrganizationLevel: await OrganizationLevelOfAsync(response, cancellationToken)
+                    .ConfigureAwait(false));
         }
 
         if (response.StatusCode == HttpStatusCode.Accepted)
@@ -330,7 +333,10 @@ public sealed partial class AxiamClient : IDisposable
             throw ErrorMapper.FromHttpResponse(response, "MFA verification failed");
         }
 
-        return new LoginResult(false);
+        return new LoginResult(
+            false,
+            OrganizationLevel: await OrganizationLevelOfAsync(response, cancellationToken)
+                .ConfigureAwait(false));
     }
 
     /// <summary>
@@ -626,7 +632,10 @@ public sealed partial class AxiamClient : IDisposable
             return new LoginResult(true, Sensitive.Of(ReadString(wire, "challenge_token")));
         }
 
-        return new LoginResult(false);
+        return new LoginResult(
+            false,
+            OrganizationLevel: await OrganizationLevelOfAsync(response, cancellationToken)
+                .ConfigureAwait(false));
     }
 
     /// <summary>
@@ -730,6 +739,35 @@ public sealed partial class AxiamClient : IDisposable
         }
 
         return await ReadJsonAsync(response, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Reads the &#167;5.2 <c>user.organization_level</c> flag off a completed login
+    /// response.
+    /// </summary>
+    /// <remarks>
+    /// Absent means <c>false</c>, which is what a server older than contract 1.31 answers
+    /// and the safe direction in both cases: the client then offers no cross-tenant action
+    /// rather than one that would <c>403</c>. Derived server-side and response-only — this
+    /// SDK never sends it. A body that is not JSON at all is also <c>false</c>: the login
+    /// already succeeded, and the scope flag is not worth failing it over.
+    /// </remarks>
+    private static async Task<bool> OrganizationLevelOfAsync(
+        HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+        try
+        {
+            JsonElement wire = await ReadJsonAsync(response, cancellationToken).ConfigureAwait(false);
+            return wire.ValueKind == JsonValueKind.Object
+                && wire.TryGetProperty("user", out JsonElement user)
+                && user.ValueKind == JsonValueKind.Object
+                && user.TryGetProperty("organization_level", out JsonElement flag)
+                && flag.ValueKind == JsonValueKind.True;
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
     }
 
     private static string ReadString(JsonElement element, string name) =>

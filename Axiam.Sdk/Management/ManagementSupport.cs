@@ -63,7 +63,28 @@ internal static class ManagementSupport
             : new Dictionary<string, string?>(query, StringComparer.Ordinal);
         merged["offset"] = request.Offset.ToString(System.Globalization.CultureInfo.InvariantCulture);
         merged["limit"] = request.Limit?.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        merged["search"] = NormalizeSearch(request.Search);
         return merged;
+    }
+
+    /// <summary>
+    /// The trimmed term, or <c>null</c> when there is nothing to filter on.
+    /// </summary>
+    /// <remarks>
+    /// Mirrors the server's own normalisation minus the length cap, which is the server's
+    /// to apply. A <c>null</c> value here is dropped before the request is built, so an
+    /// unfiltered read and a read whose search box was cleared are the same request on the
+    /// wire (&#167;27.4 rule 4).
+    /// </remarks>
+    internal static string? NormalizeSearch(string? term)
+    {
+        if (term is null)
+        {
+            return null;
+        }
+
+        string trimmed = term.Trim();
+        return trimmed.Length == 0 ? null : trimmed;
     }
 
     /// <summary>
@@ -174,7 +195,10 @@ internal static class ManagementSupport
         {
             Page<T> page = await fetch(request).ConfigureAwait(false);
             all.AddRange(page.Items);
-            PageRequest? next = page.NextPage();
+            // The term is carried, not dropped (§27.4 rule 4): a walk that
+            // filtered only its first request would concatenate the matches
+            // with the unfiltered remainder.
+            PageRequest? next = page.NextPage(request.Search);
             if (next is null)
             {
                 return all;

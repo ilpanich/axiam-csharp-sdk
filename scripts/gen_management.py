@@ -487,9 +487,49 @@ def replacement_schemas() -> set[str]:
     return out
 
 
+def projection_map() -> dict[str, list[dict[str, Any]]]:
+    """Schema name -> the fields a list projection adds on top of it.
+
+    ``certificates.list`` answers ``Certificate`` plus ``bound_service_account_id``,
+    a graph edge the server resolves for the whole page in one query. CONTRACT
+    §27.11 rule 4 lets an SDK carry that as an optional property on the base
+    type, which is what this does: the field is ``null`` on ``get``, and the SDK
+    never synthesizes it there with a second request.
+    """
+    out: dict[str, list[dict[str, Any]]] = {}
+    for nsdef in REGISTRY["namespaces"].values():
+        for op in nsdef["operations"].values():
+            adds = op["response"].get("projected_fields")
+            if not adds or not op["response"].get("schema"):
+                continue
+            base = op["response"]["schema"].lstrip("[]")
+            out.setdefault(base, []).extend(adds)
+    return out
+
+
+PROJECTIONS: dict[str, list[dict[str, Any]]] = {}
+"""Filled in from :func:`projection_map` at start-up; see §27.11 rule 4."""
+
+
 def field_list(schema_name: str, secrets: set[str]) -> tuple[list[dict[str, Any]], set[str], str | None]:
     """The fields of a schema, in a stable order, with C# names and types."""
     props, required, description = flatten(schema_name)
+    props = dict(props)
+    for add in PROJECTIONS.get(schema_name, []):
+        if add["name"] in props:
+            continue
+        required.discard(add["name"])
+        props[add["name"]] = {
+            "type": add.get("type"),
+            "format": add.get("format"),
+            "description": (
+                "resolved by the list projection only. The server resolves this for a "
+                "whole page in one query, so it is populated by the list operation and "
+                "is null on get (CONTRACT §27.11 rule 4). Null there means \"this "
+                "read does not carry it\", not \"there is nothing bound\" — the SDK does "
+                "not issue a second request to fill it in"
+            ),
+        }
     fields = []
     for wire in sorted(props):
         fields.append({
@@ -509,18 +549,32 @@ def emit_enum(name: str, schema: Any) -> str:
     text = escape(schema.get("description") or f"The {type_name} values the server uses.")
     body = xmldoc(text + "\n\nEach member carries the spelling the server uses on the wire "
                   "via WireName, so the C# name can follow C# conventions without changing "
-                  "what is sent. An unknown value throws rather than silently becoming the "
-                  "zero member.")
+                  "what is sent.\n\nAn <b>open</b> enum. A value this SDK\u2019s copy of the "
+                  f"spec does not list decodes to <c>{type_name}.Unknown</c> rather than "
+                  "failing the response it arrived in (&#167;27.11 rule 1) \u2014 a closed "
+                  "enum turns the next value the server adds into a parse error on the whole "
+                  "list, taking down every record on the page over one field of one of them. "
+                  "A <c>switch</c> over these members needs an <c>Unknown</c> arm.")
     body.append(f"[JsonConverter(typeof(WireEnumConverter<{type_name}>))]")
     body.append(f"public enum {type_name}")
     body.append("{")
-    values = schema["enum"]
-    for i, value in enumerate(values):
+    values = [v for v in schema["enum"] if isinstance(v, str)]
+    for value in values:
         body.extend(inline_xmldoc(f"The server's <c>{escape(value)}</c> value.", "    "))
         body.append(f'    [WireName("{value}")]')
         body.append(f"    {enum_member(value)},")
-        if i < len(values) - 1:
-            body.append("")
+        body.append("")
+    body.extend(xmldoc(
+        "A value this SDK\u2019s copy of the spec does not list.\n\n"
+        "Its wire spelling is the empty string, which no server value is: carrying an "
+        "unrecognised value back into an update is refused by the server rather than "
+        "silently written as a spelling it never used. Fifteen of these enums appear in "
+        "request bodies, which is what makes that distinction worth having.\n\n"
+        "It is deliberately <b>not</b> the zero member \u2014 defaulting to it would make "
+        "\u201cthe server said nothing\u201d and \u201cthe server said something new\u201d "
+        "the same value.", "    "))
+    body.append('    [WireName("")]')
+    body.append("    Unknown,")
     body.append("}")
     return header("\n".join(body), MODELS_NAMESPACE)
 
@@ -663,8 +717,19 @@ def implicit_params(namespace: str, op: dict[str, Any]) -> set[str]:
 def split_query(op: dict[str, Any]) -> tuple[list[str], list[str]]:
     """This operation's query parameter NAMES, split into paging and the rest."""
     names = [q["name"] for q in op["query_params"]]
-    paging = [n for n in names if n in ("offset", "limit")]
-    other = [n for n in names if n not in ("offset", "limit")]
+    # ``search`` joins them on a paginated operation (CONTRACT §27.4 rule 4): the
+    # term is part of which page this is, and putting it on the page request
+    # rather than on each of the twenty generated ``ListAsync`` methods is what
+    # makes ``CollectPagesAsync`` carry it across the whole walk instead of
+    # filtering only the first request.
+    #
+    # The ``paginated`` guard matters. A *non*-paginated operation that grew a
+    # ``search`` parameter would have no ``PageRequest`` to carry it, so it keeps
+    # its own argument -- none exists in the registry today, and this is what
+    # keeps that from silently dropping the parameter if one ever does.
+    owned = ("offset", "limit", "search") if op["paginated"] else ("offset", "limit")
+    paging = [n for n in names if n in owned]
+    other = [n for n in names if n not in owned]
     return paging, other
 
 
@@ -1388,6 +1453,7 @@ def prune(files: dict[Path, str]) -> list[Path]:
 
 def main() -> int:
     """Write the generated surface, or verify the committed copy is current."""
+    PROJECTIONS.update(projection_map())
     check = "--check" in sys.argv
     files = build()
     stale = prune(files)

@@ -2,6 +2,7 @@ using Axiam.Sdk;
 using Axiam.Sdk.Account;
 using Axiam.Sdk.Auth;
 using Axiam.Sdk.Core;
+using Axiam.Sdk.Management;
 using Axiam.Sdk.Options;
 
 // CONTRACT.md §25 — account lifecycle and MFA enrolment: the calls a user makes about
@@ -77,11 +78,57 @@ static async Task LoginWithForcedEnrolmentAsync(AxiamClient client)
         {
             Console.WriteLine("  signed in");
         }
+
+        // §5.2: whether this principal lives in the organization's reserved tenant.
+        // Check it BEFORE offering a tenant switch — an ordinary tenant principal is a
+        // principal of exactly one tenant, and changing X-Tenant-ID for one of those is
+        // a 403 the user discovers.
+        if (result.OrganizationLevel)
+        {
+            Console.WriteLine("  organization-level: can act on any tenant of its organization");
+        }
     }
     catch (NetworkError e)
     {
         Console.WriteLine($"  no reachable server: {e.Message}");
     }
+}
+
+// ---------------------------------------------------------------------------
+// 3b. The AUTHENTICATED resend — and the one a profile page wants (§25.7)
+// ---------------------------------------------------------------------------
+
+// Wiring that button to ResendVerificationAsync below is the defect §25.7 exists to
+// separate: it reports success while doing nothing, because the address was already
+// verified, or the account was locked, or the daily limit was reached, and the response
+// looks identical in every case.
+//
+// Here the caller is signed in to the account it is asking about, so this one is both
+// available and truthful. It takes no address: the server reads it off the caller's own
+// record, and a parameter would let a session mail an arbitrary one.
+static async Task ResendMyVerificationMailAsync(AxiamClient client)
+{
+    Console.WriteLine("== resending my own verification mail ==");
+    try
+    {
+        await client.ResendOwnVerificationAsync();
+        // "Sent" means ENQUEUED. Delivery is asynchronous and can still fail at the
+        // provider — a queue that accepts everything in front of one that rejects it
+        // looks exactly like this succeeding.
+        Console.WriteLine("  verification mail enqueued");
+    }
+    catch (ConflictError)
+    {
+        Console.WriteLine("  already verified, or this account may not be sent one");
+    }
+    catch (NetworkError)
+    {
+        // Also the 429 case: §2 maps a rate limit to NetworkError.
+        Console.WriteLine("  daily resend limit reached, or no reachable server");
+    }
+    // Note what is NOT here: a fallback to ResendVerificationAsync on either of those.
+    // It would turn both back into a normal return and rebuild the bug, with an extra
+    // round-trip (§25.7 rule 2).
 }
 
 // ---------------------------------------------------------------------------
@@ -136,6 +183,10 @@ static async Task VerifyAnEmailAddressAsync(AxiamClient client, Guid tenantId)
     }
     catch (Exception e) when (e is NetworkError or AuthError or AuthzError)
     {
+        // The UNAUTHENTICATED resend: this caller followed a link and has no session.
+        // It returns normally whatever happens — unknown address, already verified, over
+        // the daily limit — because it takes an address from an anonymous caller and a
+        // truthful answer there is an oracle for which addresses have accounts (§25.7).
         Console.WriteLine("  that link has expired — sending another");
         try
         {
