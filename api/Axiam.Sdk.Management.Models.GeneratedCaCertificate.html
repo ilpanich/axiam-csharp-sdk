@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class GeneratedCaCertificate | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class GeneratedCaCertificate | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Response returned when a CA certificate is generated. Includes the private key PEM, which is returned once and never stored or retrievable again — when the custodian produced one at all. Under vault_pki custody the key was born inside Vault and there is nothing to return, which is the point of that custodian rather than a shortcoming of this response.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta02/apiSpec/new?filename=Axiam_Sdk_Management_Models_GeneratedCaCertificate.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.GeneratedCaCertificate%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate">
+
+
+
+  <h1 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate" class="text-break">
+Class GeneratedCaCertificate  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a>.<a class="xref" href="Axiam.Sdk.Management.Models.html">Models</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Response returned when a CA certificate is generated. Includes the private key PEM, which is
+returned <strong>once</strong> and never stored or retrievable again — when the custodian produced one at
+all. Under <code>vault_pki</code> custody the key was born inside Vault and there is nothing to
+return, which is the point of that custodian rather than a shortcoming of this response.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record GeneratedCaCertificate : IEquatable&lt;GeneratedCaCertificate&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">GeneratedCaCertificate</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.GeneratedCaCertificate.html">GeneratedCaCertificate</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_ChainPem_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.ChainPem*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_ChainPem" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.ChainPem">
+  ChainPem
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The issuers above [<code>Self::public_cert_pem</code>], concatenated PEM, nearest issuer first
+and the root last. <code>None</code> for a CA that is its own root, which is every CA AXIAM
+generated before Vault's PKI engine was an option. Present for a <code>vault_pki</code> CA,
+where it is the only copy of the root certificate anything outside Vault will ever see —
+a relying party cannot validate an AXIAM-issued leaf without it, and
+<code>root/generate/internal</code> returns it exactly once.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;chain_pem&quot;)]
+public string? ChainPem { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_CreatedAt_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.CreatedAt*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_CreatedAt" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.CreatedAt">
+  CreatedAt
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's created_at field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;created_at&quot;)]
+public required DateTimeOffset CreatedAt { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_Fingerprint_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.Fingerprint*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_Fingerprint" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.Fingerprint">
+  Fingerprint
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>SHA-256 fingerprint of the certificate.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;fingerprint&quot;)]
+public required string Fingerprint { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_Id_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.Id*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_Id" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.Id">
+  Id
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's id field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;id&quot;)]
+public required Guid Id { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_KeyAlgorithm_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.KeyAlgorithm*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_KeyAlgorithm" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.KeyAlgorithm">
+  KeyAlgorithm
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's key_algorithm field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;key_algorithm&quot;)]
+public required KeyAlgorithm KeyAlgorithm { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.KeyAlgorithm.html">KeyAlgorithm</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_KeyCustody_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.KeyCustody*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_KeyCustody" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.KeyCustody">
+  KeyCustody
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Which custodian holds this CA's signing key. Recorded per CA rather than read from
+configuration, so adopting a new custodian does not strand the CAs that already exist.
+Not secret — an operator needs to see it, and it discloses only where a key is kept.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;key_custody&quot;)]
+public string? KeyCustody { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_KeyLocator_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.KeyLocator*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_KeyLocator" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.KeyLocator">
+  KeyLocator
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Where the custodian put the key. A Vault path under its mount; <code>None</code> for database
+custody, whose locator is the row itself.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;key_locator&quot;)]
+public string? KeyLocator { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_MtlsTrustAnchor_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.MtlsTrustAnchor*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_MtlsTrustAnchor" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.MtlsTrustAnchor">
+  MtlsTrustAnchor
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether this CA is offered as a trust anchor for mutual TLS. When set, the server
+exports this CA's <strong>public</strong> certificate to the bundle named by
+<code>AXIAM__SERVER__TLS__CLIENT_CA_BUNDLE_PATH</code> at startup and turns client-certificate
+authentication on (<code>optional</code>) if the operator has not configured it explicitly. A
+client presenting a certificate that chains to this CA is then verified by the TLS layer
+itself, which is what <code>axiam_pki::mtls</code> needs to authenticate an IoT device or a
+service account by certificate rather than by secret. # What is and is not copied Only
+<code>public_cert_pem</code> — the certificate. The <strong>private key stays where its custodian
+put it</strong> (Vault, or sealed into the row) and is never written to the server volume. A
+trust anchor is public by construction: it is what the server hands every client during
+the TLS handshake, and every device that has to validate the chain already holds a copy.</p>
+<h1 id="why-a-restart-rustls-builds-its-rootcertstore-once-when-the-listener-is">Why a restart rustls builds its <code>RootCertStore</code> once, when the listener is</h1>
+<p>constructed, and actix-web binds that config for the process's life. Toggling this
+changes what the <em>next</em> boot trusts, and the API says so in its response rather than
+pretending the change took effect. Defaults to <code>false</code>, so a deployment that never
+touches this keeps exactly the TLS posture it has today.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;mtls_trust_anchor&quot;)]
+public bool? MtlsTrustAnchor { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_NotAfter_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.NotAfter*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_NotAfter" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.NotAfter">
+  NotAfter
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Validity end.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;not_after&quot;)]
+public required DateTimeOffset NotAfter { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_NotBefore_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.NotBefore*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_NotBefore" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.NotBefore">
+  NotBefore
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Validity start.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;not_before&quot;)]
+public required DateTimeOffset NotBefore { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_OrganizationId_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.OrganizationId*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_OrganizationId" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.OrganizationId">
+  OrganizationId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L109"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The organization this CA belongs to.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;organization_id&quot;)]
+public required Guid OrganizationId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_ParentCaId_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.ParentCaId*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_ParentCaId" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.ParentCaId">
+  ParentCaId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L116"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The CA in this organization that signed this one. <code>None</code> for an organization-level
+CA, which is either self-signed or imported and has no parent inside AXIAM.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;parent_ca_id&quot;)]
+public Guid? ParentCaId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_PrivateKeyPem_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.PrivateKeyPem*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_PrivateKeyPem" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.PrivateKeyPem">
+  PrivateKeyPem
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L127"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>PEM-encoded private key — returned only on generation, and only when there is one to
+return. Absent under <code>vault_pki</code> custody, where the key was generated inside Vault
+and no API exports it. The field is omitted rather than sent as <code>null</code> so a client
+that has always read it keeps working unchanged for every custodian that does produce a
+key. -- SECRET: redacted from ToString and from every rendering except the one request
+body it is sent in.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;private_key_pem&quot;)]
+public Sensitive&lt;string&gt;? PrivateKeyPem { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_PublicCertPem_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.PublicCertPem*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_PublicCertPem" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.PublicCertPem">
+  PublicCertPem
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>PEM-encoded public certificate. The certificate that <em>signs</em>, which under
+<code>vault_pki</code> custody is the intermediate rather than the root beneath which it was
+created.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;public_cert_pem&quot;)]
+public required string PublicCertPem { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_Status_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.Status*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_Status" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.Status">
+  Status
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's status field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;status&quot;)]
+public required CertificateStatus Status { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.CertificateStatus.html">CertificateStatus</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_Subject_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.Subject*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_Subject" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.Subject">
+  Subject
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The certificate subject (e.g., <code>CN=ACME Corp Root CA</code>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;subject&quot;)]
+public required string Subject { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_TenantId_" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.TenantId*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_GeneratedCaCertificate_TenantId" data-uid="Axiam.Sdk.Management.Models.GeneratedCaCertificate.TenantId">
+  TenantId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/GeneratedCaCertificate.cs/#L157"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The tenant this CA signs for, when it is a tenant signing CA. <code>None</code> for an
+organization-level CA — the trust anchor, and the only kind that existed before tenant
+signing CAs. <code>Some</code> for an intermediate created under one, which exists so a
+tenant's user, service and device certificates chain through a CA that can be revoked
+and replaced without touching the anchor the rest of the estate trusts.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;tenant_id&quot;)]
+public Guid? TenantId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class UsersApi | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class UsersApi | AXIAM .NET SDK ">
+      
+      <meta name="description" content="The users management operations.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta02/apiSpec/new?filename=Axiam_Sdk_Management_UsersApi.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.UsersApi%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Management.UsersApi">
+
+
+
+  <h1 id="Axiam_Sdk_Management_UsersApi" data-uid="Axiam.Sdk.Management.UsersApi" class="text-break">
+Class UsersApi  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/UsersApi.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>The users management operations.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class UsersApi</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">UsersApi</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Management_UsersApi_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+A view over the client that created it, not a connection: constructing one performs no I/O
+(§27.2 rule 1), so there is nothing to cache and nothing to close.
+</p>
+</div>
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_UsersApi_CreateAsync_" data-uid="Axiam.Sdk.Management.UsersApi.CreateAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_UsersApi_CreateAsync_Axiam_Sdk_Management_Models_CreateUserRequest_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.UsersApi.CreateAsync(Axiam.Sdk.Management.Models.CreateUserRequest,System.Threading.CancellationToken)">
+  CreateAsync(CreateUserRequest, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/UsersApi.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a user and atomically records a <code>terms_of_service</code> consent row (REQ-8 /
+Art. 7 proof of consent). IP address and User-Agent are captured for the consent record.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;UserResponse&gt; CreateAsync(CreateUserRequest body, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>body</code> <a class="xref" href="Axiam.Sdk.Management.Models.CreateUserRequest.html">CreateUserRequest</a></dt>
+    <dd><p>the request body.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.UserResponse.html">UserResponse</a>&gt;</dt>
+    <dd><p>the server response</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_UsersApi_CreateAsync_Axiam_Sdk_Management_Models_CreateUserRequest_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Issues <code>POST /api/v1/users</code>.
+</p>
+<p>
+Not retried: §27.4 rule 8 makes every write on this surface single-shot, including
+the ones that look idempotent.
+</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Management_UsersApi_DeleteAsync_" data-uid="Axiam.Sdk.Management.UsersApi.DeleteAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_UsersApi_DeleteAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.UsersApi.DeleteAsync(System.Guid,System.Threading.CancellationToken)">
+  DeleteAsync(Guid, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/UsersApi.cs/#L176"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Issues <code>DELETE /api/v1/users/{user_id}</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task DeleteAsync(Guid userId, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>userId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the user id to address.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd><p>a task that completes when the server has answered</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_UsersApi_DeleteAsync_System_Guid_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Not retried: §27.4 rule 8 makes every write on this surface single-shot, including
+the ones that look idempotent.
+</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Management_UsersApi_DeleteMfaMethodAsync_" data-uid="Axiam.Sdk.Management.UsersApi.DeleteMfaMethodAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_UsersApi_DeleteMfaMethodAsync_System_Guid_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.UsersApi.DeleteMfaMethodAsync(System.Guid,System.Guid,System.Threading.CancellationToken)">
+  DeleteMfaMethodAsync(Guid, Guid, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/UsersApi.cs/#L230"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Remove a specific MFA method. Returns 400 if it is the last method and MFA is enabled.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task DeleteMfaMethodAsync(Guid userId, Guid methodId, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>userId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the user id to address.</p>
+</dd>
+    <dt><code>methodId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the method id to address.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd><p>a task that completes when the server has answered</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_UsersApi_DeleteMfaMethodAsync_System_Guid_System_Guid_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Issues <code>DELETE /api/v1/users/{user_id}/mfa-methods/{method_id}</code>.
+</p>
+<p>
+Not retried: §27.4 rule 8 makes every write on this surface single-shot, including
+the ones that look idempotent.
+</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Management_UsersApi_GetAsync_" data-uid="Axiam.Sdk.Management.UsersApi.GetAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_UsersApi_GetAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.UsersApi.GetAsync(System.Guid,System.Threading.CancellationToken)">
+  GetAsync(Guid, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/UsersApi.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Issues <code>GET /api/v1/users/{user_id}</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;UserResponse&gt; GetAsync(Guid userId, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>userId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the user id to address.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.UserResponse.html">UserResponse</a>&gt;</dt>
+    <dd><p>the server response</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_UsersApi_ListAllAsync_" data-uid="Axiam.Sdk.Management.UsersApi.ListAllAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_UsersApi_ListAllAsync_Axiam_Sdk_Management_PageRequest_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.UsersApi.ListAllAsync(Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)">
+  ListAllAsync(PageRequest?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/UsersApi.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Walks ListAsync to exhaustion and returns every item (§27.4 rule 4).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IReadOnlyList&lt;UserResponse&gt;&gt; ListAllAsync(PageRequest? start = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>start</code> <a class="xref" href="Axiam.Sdk.Management.PageRequest.html">PageRequest</a></dt>
+    <dd><p>the first window to request, or <code>null</code> for the server's
+default.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the walk.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.UserResponse.html">UserResponse</a>&gt;&gt;</dt>
+    <dd><p>every item, in the server's order</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_UsersApi_ListAllAsync_Axiam_Sdk_Management_PageRequest_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Stops on an empty page even when the server's Total disagrees, so a misreporting server
+costs one wasted request rather than an unbounded loop.
+</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Management_UsersApi_ListAsync_" data-uid="Axiam.Sdk.Management.UsersApi.ListAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_UsersApi_ListAsync_Axiam_Sdk_Management_PageRequest_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.UsersApi.ListAsync(Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)">
+  ListAsync(PageRequest?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/UsersApi.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Issues <code>GET /api/v1/users</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;Page&lt;UserResponse&gt;&gt; ListAsync(PageRequest? page = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>page</code> <a class="xref" href="Axiam.Sdk.Management.PageRequest.html">PageRequest</a></dt>
+    <dd><p>where to start and how many to ask for, or <code>null</code> for the
+server's default.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Page-1.html">Page</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.UserResponse.html">UserResponse</a>&gt;&gt;</dt>
+    <dd><p>the page of results</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_UsersApi_ListAsync_Axiam_Sdk_Management_PageRequest_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Paginated: Total on the returned page is the size of the WHOLE set, not of this page
+(§27.4 rule 4). Use ListAllAsync(...) to walk every page.
+</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Management_UsersApi_ListMfaMethodsAsync_" data-uid="Axiam.Sdk.Management.UsersApi.ListMfaMethodsAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_UsersApi_ListMfaMethodsAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.UsersApi.ListMfaMethodsAsync(System.Guid,System.Threading.CancellationToken)">
+  ListMfaMethodsAsync(Guid, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/UsersApi.cs/#L200"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>List all MFA methods registered for a user.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IReadOnlyList&lt;MfaMethodResponse&gt;&gt; ListMfaMethodsAsync(Guid userId, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>userId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the user id to address.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.MfaMethodResponse.html">MfaMethodResponse</a>&gt;&gt;</dt>
+    <dd><p>the server response</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_UsersApi_ListMfaMethodsAsync_System_Guid_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Issues <code>GET /api/v1/users/{user_id}/mfa-methods</code>.
+</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Management_UsersApi_ListRolesAsync_" data-uid="Axiam.Sdk.Management.UsersApi.ListRolesAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_UsersApi_ListRolesAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.UsersApi.ListRolesAsync(System.Guid,System.Threading.CancellationToken)">
+  ListRolesAsync(Guid, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/UsersApi.cs/#L318"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Lists a user's role assignments with the resource each is scoped to. Includes roles
+reaching the user <strong>through group membership</strong>, not only the ones assigned to them
+directly — that is what a user's effective role list is, and splitting the two would
+give a caller a list that disagrees with the authorization decision. Anything the role
+detail page's members panel shows as a group assignment therefore also appears here for
+each member.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IReadOnlyList&lt;RoleAssignment&gt;&gt; ListRolesAsync(Guid userId, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>userId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the user id to address.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.RoleAssignment.html">RoleAssignment</a>&gt;&gt;</dt>
+    <dd><p>the server response</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_UsersApi_ListRolesAsync_System_Guid_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Issues <code>GET /api/v1/users/{user_id}/roles</code>.
+</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Management_UsersApi_ResetMfaAsync_" data-uid="Axiam.Sdk.Management.UsersApi.ResetMfaAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_UsersApi_ResetMfaAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.UsersApi.ResetMfaAsync(System.Guid,System.Threading.CancellationToken)">
+  ResetMfaAsync(Guid, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/UsersApi.cs/#L259"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reset MFA for a user — disables MFA, clears the secret, and revokes all existing
+sessions. Requires admin access (caller must be in the same tenant).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ResetMfaAsync(Guid userId, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>userId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the user id to address.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd><p>a task that completes when the server has answered</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_UsersApi_ResetMfaAsync_System_Guid_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Issues <code>POST /api/v1/users/{user_id}/reset-mfa</code>.
+</p>
+<p>
+Not retried: §27.4 rule 8 makes every write on this surface single-shot, including
+the ones that look idempotent.
+</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Management_UsersApi_UnlockAsync_" data-uid="Axiam.Sdk.Management.UsersApi.UnlockAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_UsersApi_UnlockAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.UsersApi.UnlockAsync(System.Guid,System.Threading.CancellationToken)">
+  UnlockAsync(Guid, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/UsersApi.cs/#L288"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Resets a locked user account: clears <code>locked_until</code>, resets
+<code>failed_login_attempts</code> to 0, and sets status back to <code>Active</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;UserResponse&gt; UnlockAsync(Guid userId, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>userId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the user id to address.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.UserResponse.html">UserResponse</a>&gt;</dt>
+    <dd><p>the server response</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_UsersApi_UnlockAsync_System_Guid_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Issues <code>POST /api/v1/users/{user_id}/unlock</code>.
+</p>
+<p>
+Not retried: §27.4 rule 8 makes every write on this surface single-shot, including
+the ones that look idempotent.
+</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Management_UsersApi_UpdateAsync_" data-uid="Axiam.Sdk.Management.UsersApi.UpdateAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_UsersApi_UpdateAsync_System_Guid_Axiam_Sdk_Management_Models_UpdateUserRequest_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.UsersApi.UpdateAsync(System.Guid,Axiam.Sdk.Management.Models.UpdateUserRequest,System.Threading.CancellationToken)">
+  UpdateAsync(Guid, UpdateUserRequest, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/UsersApi.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Issues <code>PUT /api/v1/users/{user_id}</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;UserResponse&gt; UpdateAsync(Guid userId, UpdateUserRequest body, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>userId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the user id to address.</p>
+</dd>
+    <dt><code>body</code> <a class="xref" href="Axiam.Sdk.Management.Models.UpdateUserRequest.html">UpdateUserRequest</a></dt>
+    <dd><p>the request body.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.UserResponse.html">UserResponse</a>&gt;</dt>
+    <dd><p>the server response</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_UsersApi_UpdateAsync_System_Guid_Axiam_Sdk_Management_Models_UpdateUserRequest_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+A SPARSE update: the properties you leave unset are omitted from the wire body entirely
+and left unchanged (§27.4 rule 5).
+</p>
+<p>
+Not retried: §27.4 rule 8 makes every write on this surface single-shot, including
+the ones that look idempotent.
+</p>
+</div>
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

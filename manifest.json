@@ -1398,6 +1398,2806 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.AppliedStep.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.AppliedStep.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.AppliedStep",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.AppliedStep.yml\" sourcestartlinenumber=\"1\">One planned step, paired with what became of it.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ApplyReport.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ApplyReport.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ApplyReport",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ApplyReport.yml\" sourcestartlinenumber=\"1\">What reconciling a <xref href=\"Axiam.Sdk.Management.ManagementManifest\" data-throw-if-not-resolved=\"false\"></xref> actually did\n(CONTRACT.md §27.6).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ApplyStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ApplyStatus.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ApplyStatus",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ApplyStatus.yml\" sourcestartlinenumber=\"1\">What became of one applied step.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.AuditApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.AuditApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.AuditApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.AuditApi.yml\" sourcestartlinenumber=\"1\">The audit management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.CaCertificatesApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.CaCertificatesApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.CaCertificatesApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.CaCertificatesApi.yml\" sourcestartlinenumber=\"1\">The ca_certificates management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.CertificatesApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.CertificatesApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.CertificatesApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.CertificatesApi.yml\" sourcestartlinenumber=\"1\">The certificates management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ConflictError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ConflictError.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ConflictError",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ConflictError.yml\" sourcestartlinenumber=\"1\">A §27 management operation collided with the state already there (HTTP 409):\na name already taken, a certificate already revoked, a role that already holds the\ngrant.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.EmailConfigApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.EmailConfigApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.EmailConfigApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.EmailConfigApi.yml\" sourcestartlinenumber=\"1\">The email_config management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.FederationApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.FederationApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.FederationApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.FederationApi.yml\" sourcestartlinenumber=\"1\">The federation management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.FieldError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.FieldError.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.FieldError",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.FieldError.yml\" sourcestartlinenumber=\"1\">One field-level complaint from a server that rejected a request body\n(CONTRACT.md §27.4 rule 7).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.GroupsApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.GroupsApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.GroupsApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.GroupsApi.yml\" sourcestartlinenumber=\"1\">The groups management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementApi.yml\" sourcestartlinenumber=\"1\">The CONTRACT.md §27 management API: 146 operations across 24 namespaces.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.GrantSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.GrantSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest.GrantSpec",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.GrantSpec.yml\" sourcestartlinenumber=\"1\">One grant of a permission to a role.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.GroupSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.GroupSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest.GroupSpec",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.GroupSpec.yml\" sourcestartlinenumber=\"1\">One group, and the roles it holds.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.PermissionSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.PermissionSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest.PermissionSpec",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.PermissionSpec.yml\" sourcestartlinenumber=\"1\">One permission.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.ResourceSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.ResourceSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest.ResourceSpec",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.ResourceSpec.yml\" sourcestartlinenumber=\"1\">One resource, and the scopes beneath it.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.RoleSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.RoleSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest.RoleSpec",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.RoleSpec.yml\" sourcestartlinenumber=\"1\">One role, and what it grants.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.ScopeSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.ScopeSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest.ScopeSpec",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.ScopeSpec.yml\" sourcestartlinenumber=\"1\">One scope beneath a resource.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.UserSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.UserSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest.UserSpec",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.UserSpec.yml\" sourcestartlinenumber=\"1\">One user, with their roles and group memberships.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.yml\" sourcestartlinenumber=\"1\">A description of the tenant you want (CONTRACT.md §27.6).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementPlan.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementPlan.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementPlan",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementPlan.yml\" sourcestartlinenumber=\"1\">What reconciling a <xref href=\"Axiam.Sdk.Management.ManagementManifest\" data-throw-if-not-resolved=\"false\"></xref> would do (CONTRACT.md §27.6).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManifestApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManifestApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManifestApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManifestApi.yml\" sourcestartlinenumber=\"1\">The CONTRACT.md §27.6 declarative layer: describe the tenant you want, then\nreconcile toward it.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManifestBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManifestBuilder.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManifestBuilder",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManifestBuilder.yml\" sourcestartlinenumber=\"1\">Builds a <xref href=\"Axiam.Sdk.Management.ManagementManifest\" data-throw-if-not-resolved=\"false\"></xref>, checking back-references as they are made.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ActorType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ActorType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ActorType",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ActorType.yml\" sourcestartlinenumber=\"1\">The ActorType values the server uses.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.AddMemberRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.AddMemberRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.AddMemberRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.AddMemberRequest.yml\" sourcestartlinenumber=\"1\">The AddMemberRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ApiProviderConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ApiProviderConfig.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ApiProviderConfig",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ApiProviderConfig.yml\" sourcestartlinenumber=\"1\">API-based provider configuration (SendGrid, Postmark, Resend, Brevo). <code>api_key</code> follows\nthe same write-only + omit-preserving contract as [<code>SmtpConfig::password</code>] (D-01/D-02).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.AssignRoleToGroupRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.yml\" sourcestartlinenumber=\"1\">The AssignRoleToGroupRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.AssignRoleToUserRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.AssignRoleToUserRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.AssignRoleToUserRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.AssignRoleToUserRequest.yml\" sourcestartlinenumber=\"1\">The AssignRoleToUserRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.AttestationMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.AttestationMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.AttestationMode",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.AttestationMode.yml\" sourcestartlinenumber=\"1\">What attestation conveyance a registration ceremony requests, and whether the policy is\nenforced at all. <code>None</code> is the default and reproduces today's behavior byte-for-byte:\n<code>evaluate</code> allows every registration unconditionally, with no MDS lookup (D8 step 1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.AuditLogEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.AuditLogEntry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.AuditLogEntry",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.AuditLogEntry.yml\" sourcestartlinenumber=\"1\">The AuditLogEntry schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.AuditOutcome.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.AuditOutcome.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.AuditOutcome",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.AuditOutcome.yml\" sourcestartlinenumber=\"1\">The AuditOutcome values the server uses.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.BindCertificate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.BindCertificate.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.BindCertificate",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.BindCertificate.yml\" sourcestartlinenumber=\"1\">Request to bind a certificate to a service account.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CaCertificate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CaCertificate.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CaCertificate",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CaCertificate.yml\" sourcestartlinenumber=\"1\">A CA (Certificate Authority) certificate at the organization level. CA certificates are the\nroot of trust for all tenant certificates within the organization. Private keys for signing\nCAs are encrypted with AES-256-GCM and stored separately; non-signing CAs only store the\npublic certificate.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.Certificate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.Certificate.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.Certificate",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.Certificate.yml\" sourcestartlinenumber=\"1\">A tenant-level certificate for users, services, or IoT devices. Certificates are signed by\nthe organization's CA. The private key is returned once on generation and never stored by\nAXIAM.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CertificatePolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CertificatePolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CertificatePolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CertificatePolicy.yml\" sourcestartlinenumber=\"1\">Certificate issuance constraints.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CertificateStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CertificateStatus.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CertificateStatus",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CertificateStatus.yml\" sourcestartlinenumber=\"1\">Status of a certificate in its lifecycle.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CertificateType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CertificateType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CertificateType",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CertificateType.yml\" sourcestartlinenumber=\"1\">The purpose for which a certificate was issued.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CertificationLevel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CertificationLevel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CertificationLevel",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CertificationLevel.yml\" sourcestartlinenumber=\"1\">FIDO certification level, as recorded in an MDS <code>statusReports</code> entry's\n<code>FIDO_CERTIFIED*</code> status. Variant order is significant: <code>derive(PartialOrd, Ord)</code>\ngives <code>L1 &lt; L1Plus &lt; L2 &lt; L2Plus &lt; L3 &lt; L3Plus</code>, which\n<code>WebauthnAttestationPolicy::evaluate</code> (D8 step 9) relies on directly for the\n<code>min_certification</code> boundary check (<code>entry_level &gt;= policy_min</code>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ClientAuthMethod.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ClientAuthMethod.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ClientAuthMethod",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ClientAuthMethod.yml\" sourcestartlinenumber=\"1\">How a client proves its identity at the token endpoint (RFC 8705 §2, OIDC Core §9 naming).\nOnly the methods AXIAM actually implements are representable. There is deliberately no\n<code>none</code> variant: every AXIAM client is confidential today (see\n<code>handle_authorization_code</code>), and adding a public-client value here before the rest of\nthe server understands one would let an operator register a client whose authentication is\nsilently skipped.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ClientProfile.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ClientProfile.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ClientProfile",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ClientProfile.yml\" sourcestartlinenumber=\"1\">Which security posture a client is registered under (X5.1). This is the FAPI &quot;one switch&quot;.\nFAPI 2.0 is not a single feature but a bundle of constraints — mandatory PAR, mandatory PKCE\nwith <code>S256</code>, mandatory strong client authentication, mandatory sender-constrained\ntokens, and a refusal of every relaxation the base specs permit. Encoding them as one\nprofile rather than a dozen independent booleans means an operator cannot register a client\nthat is <em sourcefile=\"api/Axiam.Sdk.Management.Models.ClientProfile.yml\" sourcestartlinenumber=\"6\">nearly</em> FAPI, and a reviewer can answer &quot;is this client financial-grade?&quot; by\nreading one field. The same philosophy as the rate-limit postures: ordinary clients see no\nbehaviour change at all, because <a href=\"Self::Standard\" sourcefile=\"api/Axiam.Sdk.Management.Models.ClientProfile.yml\" sourcestartlinenumber=\"8\"><code>Standard</code></a> is the serde default and\nevery row written before schema v38 decodes to it.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ComplianceReportEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ComplianceReportEntry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ComplianceReportEntry",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ComplianceReportEntry.yml\" sourcestartlinenumber=\"1\">One credential's compliance outcome (D9).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateCaCertificateRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateCaCertificateRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateCaCertificateRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateCaCertificateRequest.yml\" sourcestartlinenumber=\"1\">The CreateCaCertificateRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateCertificateRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateCertificateRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateCertificateRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateCertificateRequest.yml\" sourcestartlinenumber=\"1\">The CreateCertificateRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateFederationConfigRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.yml\" sourcestartlinenumber=\"1\">The CreateFederationConfigRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateGroupRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateGroupRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateGroupRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateGroupRequest.yml\" sourcestartlinenumber=\"1\">The CreateGroupRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateIntermediateCaRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateIntermediateCaRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateIntermediateCaRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateIntermediateCaRequest.yml\" sourcestartlinenumber=\"1\">Body of <code>POST .../tenants/{tenant_id}/signing-cas</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateNotificationRuleRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateNotificationRuleRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateNotificationRuleRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateNotificationRuleRequest.yml\" sourcestartlinenumber=\"1\">The CreateNotificationRuleRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.yml\" sourcestartlinenumber=\"1\">The CreateOAuth2ClientRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreatePermissionRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreatePermissionRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreatePermissionRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreatePermissionRequest.yml\" sourcestartlinenumber=\"1\">The CreatePermissionRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreatePgpKeyRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreatePgpKeyRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreatePgpKeyRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreatePgpKeyRequest.yml\" sourcestartlinenumber=\"1\">The CreatePgpKeyRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateReactorRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateReactorRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateReactorRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateReactorRequest.yml\" sourcestartlinenumber=\"1\">The CreateReactorRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateResourceRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateResourceRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateResourceRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateResourceRequest.yml\" sourcestartlinenumber=\"1\">The CreateResourceRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateRoleRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateRoleRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateRoleRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateRoleRequest.yml\" sourcestartlinenumber=\"1\">The CreateRoleRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateScimTokenRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateScimTokenRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateScimTokenRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateScimTokenRequest.yml\" sourcestartlinenumber=\"1\">The CreateScimTokenRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateScimTokenResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateScimTokenResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateScimTokenResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateScimTokenResponse.yml\" sourcestartlinenumber=\"1\">The one-time reveal. Same shape as service-account creation: the secret is returned once and\nonly its hash is kept.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateScopeRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateScopeRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateScopeRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateScopeRequest.yml\" sourcestartlinenumber=\"1\">The CreateScopeRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateServiceAccountRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateServiceAccountRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateServiceAccountRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateServiceAccountRequest.yml\" sourcestartlinenumber=\"1\">The CreateServiceAccountRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateTenantRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateTenantRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateTenantRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateTenantRequest.yml\" sourcestartlinenumber=\"1\">Request body for tenant creation (organization_id comes from the URL path).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateUserRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateUserRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateUserRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateUserRequest.yml\" sourcestartlinenumber=\"1\">The CreateUserRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateWebhookRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateWebhookRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateWebhookRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateWebhookRequest.yml\" sourcestartlinenumber=\"1\">The CreateWebhookRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.EmailConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.EmailConfig.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.EmailConfig",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.EmailConfig.yml\" sourcestartlinenumber=\"1\">Fully resolved email configuration (all fields present).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.EmailConfigOverride.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.EmailConfigOverride.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.EmailConfigOverride",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.EmailConfigOverride.yml\" sourcestartlinenumber=\"1\">Partial tenant overrides for email configuration. <code>None</code> = inherit from org baseline.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.EmailTestResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.EmailTestResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.EmailTestResult",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.EmailTestResult.yml\" sourcestartlinenumber=\"1\">What a test send did.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.EmailVerificationPolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.EmailVerificationPolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.EmailVerificationPolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.EmailVerificationPolicy.yml\" sourcestartlinenumber=\"1\">Email verification requirements.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.EncryptRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.EncryptRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.EncryptRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.EncryptRequest.yml\" sourcestartlinenumber=\"1\">Request body for encrypting data.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.EncryptedExport.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.EncryptedExport.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.EncryptedExport",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.EncryptedExport.yml\" sourcestartlinenumber=\"1\">Result of encrypting data with a PGP public key.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.FailurePolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.FailurePolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.FailurePolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.FailurePolicy.yml\" sourcestartlinenumber=\"1\">What the server does when an interceptor does not produce a usable reply — timeout,\ntransport failure, bad signature, stale nonce, or a patch the allow-list rejects.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.FederationConfigResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.FederationConfigResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.FederationConfigResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.FederationConfigResponse.yml\" sourcestartlinenumber=\"1\">Federation config response -- omits client_secret.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.FederationLinkResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.FederationLinkResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.FederationLinkResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.FederationLinkResponse.yml\" sourcestartlinenumber=\"1\">The FederationLinkResponse schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.GeneratedCaCertificate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.GeneratedCaCertificate.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.GeneratedCaCertificate",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.GeneratedCaCertificate.yml\" sourcestartlinenumber=\"1\">Response returned when a CA certificate is generated. Includes the private key PEM, which is\nreturned <strong sourcefile=\"api/Axiam.Sdk.Management.Models.GeneratedCaCertificate.yml\" sourcestartlinenumber=\"2\">once</strong> and never stored or retrievable again — when the custodian produced one at\nall. Under <code>vault_pki</code> custody the key was born inside Vault and there is nothing to\nreturn, which is the point of that custodian rather than a shortcoming of this response.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.GeneratedCertificate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.GeneratedCertificate.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.GeneratedCertificate",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.GeneratedCertificate.yml\" sourcestartlinenumber=\"1\">Response returned when a tenant certificate is generated. Includes the private key PEM,\nreturned <strong sourcefile=\"api/Axiam.Sdk.Management.Models.GeneratedCertificate.yml\" sourcestartlinenumber=\"2\">once</strong> and never stored.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.GeneratedPgpKey.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.GeneratedPgpKey.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.GeneratedPgpKey",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.GeneratedPgpKey.yml\" sourcestartlinenumber=\"1\">Response returned when a PGP key is generated.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.GrantPermissionRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.GrantPermissionRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.GrantPermissionRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.GrantPermissionRequest.yml\" sourcestartlinenumber=\"1\">The GrantPermissionRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.GrantedScope.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.GrantedScope.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.GrantedScope",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.GrantedScope.yml\" sourcestartlinenumber=\"1\">A scope named by a grant, resolved to something a human can read.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.Group.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.Group.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.Group",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.Group.yml\" sourcestartlinenumber=\"1\">A group of users that can access resources based on their roles and permissions. Groups\nsimplify role management by allowing roles to be assigned to a group rather than individual\nusers.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.HealthResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.HealthResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.HealthResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.HealthResponse.yml\" sourcestartlinenumber=\"1\">The HealthResponse schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ImportCaCertificateRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ImportCaCertificateRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ImportCaCertificateRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ImportCaCertificateRequest.yml\" sourcestartlinenumber=\"1\">Body of <code>POST /api/v1/organizations/{org_id}/ca-certificates/import</code>. Deliberately\ncarries no subject, validity window or key algorithm: all three are read out of the\ncertificate itself. A caller that could name them separately could name a subject the\ncertificate does not have, and AXIAM would enforce the claim while every relying party read\nthe certificate.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.KeyAlgorithm.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.KeyAlgorithm.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.KeyAlgorithm",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.KeyAlgorithm.yml\" sourcestartlinenumber=\"1\">The type of key algorithm used for a certificate.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.LockoutPolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.LockoutPolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.LockoutPolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.LockoutPolicy.yml\" sourcestartlinenumber=\"1\">Account lockout rules.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.MdsRefreshOutcome.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.MdsRefreshOutcome.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.MdsRefreshOutcome",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.MdsRefreshOutcome.yml\" sourcestartlinenumber=\"1\"><code>POST /api/v1/mds/refresh</code> response — the outcome of one ingestion attempt (mirrors\n<code>axiam_db::mds_ingest::MdsIngestOutcome</code>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.MdsRefreshOutcomeInitial.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.MdsRefreshOutcomeInitial.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.MdsRefreshOutcomeInitial",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.MdsRefreshOutcomeInitial.yml\" sourcestartlinenumber=\"1\">The 'initial' arm of MdsRefreshOutcome.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.MdsRefreshOutcomeNoOpRefresh.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.MdsRefreshOutcomeNoOpRefresh.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.MdsRefreshOutcomeNoOpRefresh",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.MdsRefreshOutcomeNoOpRefresh.yml\" sourcestartlinenumber=\"1\">The 'no_op_refresh' arm of MdsRefreshOutcome.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.MdsRefreshOutcomeReplaced.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.MdsRefreshOutcomeReplaced.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.MdsRefreshOutcomeReplaced",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.MdsRefreshOutcomeReplaced.yml\" sourcestartlinenumber=\"1\">The 'replaced' arm of MdsRefreshOutcome.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.MdsRefreshOutcomeRollbackRejected.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.MdsRefreshOutcomeRollbackRejected.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.MdsRefreshOutcomeRollbackRejected",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.MdsRefreshOutcomeRollbackRejected.yml\" sourcestartlinenumber=\"1\">The 'rollback_rejected' arm of MdsRefreshOutcome.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.MdsStatusResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.MdsStatusResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.MdsStatusResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.MdsStatusResponse.yml\" sourcestartlinenumber=\"1\"><code>GET /api/v1/mds/status</code> response.\n<code>no</code>/<code>next_update</code>/<code>last_refreshed_at</code> are <code>None</code> and <code>stale</code> is\n<code>false</code> when MDS has never been ingested — a meaningful, valid answer (&quot;nothing\ningested yet&quot;), not an error.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.MfaMethodResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.MfaMethodResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.MfaMethodResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.MfaMethodResponse.yml\" sourcestartlinenumber=\"1\">The MfaMethodResponse schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.MfaMethodType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.MfaMethodType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.MfaMethodType",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.MfaMethodType.yml\" sourcestartlinenumber=\"1\">Type of MFA method.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.MfaPolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.MfaPolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.MfaPolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.MfaPolicy.yml\" sourcestartlinenumber=\"1\">Multi-factor authentication policy.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.MigrateCustodyResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.MigrateCustodyResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.MigrateCustodyResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.MigrateCustodyResponse.yml\" sourcestartlinenumber=\"1\">What a custody migration did.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.MtlsTrustAnchorResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.MtlsTrustAnchorResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.MtlsTrustAnchorResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.MtlsTrustAnchorResponse.yml\" sourcestartlinenumber=\"1\">The acknowledgement, which is mostly about the restart.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.NotificationEventType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.NotificationEventType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.NotificationEventType",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.NotificationEventType.yml\" sourcestartlinenumber=\"1\">Events that can trigger an admin notification.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.NotificationPolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.NotificationPolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.NotificationPolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.NotificationPolicy.yml\" sourcestartlinenumber=\"1\">Admin notification preferences.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.NotificationRuleResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.NotificationRuleResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.NotificationRuleResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.NotificationRuleResponse.yml\" sourcestartlinenumber=\"1\">Notification rule response.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.OAuth2ClientCreatedResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.OAuth2ClientCreatedResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.OAuth2ClientCreatedResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OAuth2ClientCreatedResponse.yml\" sourcestartlinenumber=\"1\">Response for client creation -- includes the one-time plaintext secret.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.OAuth2ClientResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.yml\" sourcestartlinenumber=\"1\">OAuth2 client response -- omits client_secret_hash.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.OidcAuthorizeRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.OidcAuthorizeRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.OidcAuthorizeRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OidcAuthorizeRequest.yml\" sourcestartlinenumber=\"1\">The OidcAuthorizeRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.OidcAuthorizeResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.OidcAuthorizeResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.OidcAuthorizeResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OidcAuthorizeResponse.yml\" sourcestartlinenumber=\"1\">The OidcAuthorizeResponse schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.OidcCallbackRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.OidcCallbackRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.OidcCallbackRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OidcCallbackRequest.yml\" sourcestartlinenumber=\"1\">The OidcCallbackRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.OidcCallbackResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.OidcCallbackResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.OidcCallbackResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OidcCallbackResponse.yml\" sourcestartlinenumber=\"1\">The OidcCallbackResponse schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.OpaqueEnrollment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.OpaqueEnrollment.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.OpaqueEnrollment",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OpaqueEnrollment.yml\" sourcestartlinenumber=\"1\">The client-supplied half of an OPAQUE enrolment, as it appears inside registration /\nchange-password / reset-completion / bootstrap request bodies. There is no standalone\n<code>register/finish</code> endpoint, deliberately. A record can only be created at a moment when\nthe plaintext password legitimately exists on the client, and every one of those moments is\nalready an endpoint that takes a password. A free-standing finish would be an endpoint whose\nonly job is to attach a credential to an account, which is a thing worth not having. Kept\nseparate from [<code>CreateOpaqueCredential</code>] because the tenant, the user and the\ncredential identifier are all decided by the server — a client that could name them could\nenrol a record against somebody else's account.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.OpaquePolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.OpaquePolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.OpaquePolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OpaquePolicy.yml\" sourcestartlinenumber=\"1\">Secure Remote Password policy. <code>suite</code> and <code>ksf</code> are the parameters a <em sourcefile=\"api/Axiam.Sdk.Management.Models.OpaquePolicy.yml\" sourcestartlinenumber=\"1\">new</em>\nregistration record is enrolled with. They deliberately do not apply retroactively: an\nexisting record is only valid under the suite and KSF it was created with, so tightening\nthese takes effect as users next set a password rather than invalidating everybody at once.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.Organization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.Organization.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.Organization",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.Organization.yml\" sourcestartlinenumber=\"1\">An organization groups multiple tenants under a single administrative entity. Organizations\nrepresent companies, departments, or business units. CA certificates are registered at the\norganization level, enabling a hierarchical trust model across all tenants.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.PasswordPolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.PasswordPolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.PasswordPolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.PasswordPolicy.yml\" sourcestartlinenumber=\"1\">Password complexity and history requirements.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.Permission.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.Permission.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.Permission",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.Permission.yml\" sourcestartlinenumber=\"1\">The Permission schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.PermissionEffect.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.PermissionEffect.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.PermissionEffect",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.PermissionEffect.yml\" sourcestartlinenumber=\"1\">Whether a grant permits an action or refuses it (B1, deny-override). # Precedence Default\ndeny -&gt; an [<code>PermissionEffect::Allow</code>] grant permits -&gt; a\n[<code>PermissionEffect::Deny</code>] grant refuses, <strong sourcefile=\"api/Axiam.Sdk.Management.Models.PermissionEffect.yml\" sourcestartlinenumber=\"3\">and beats every allow</strong>, wherever either\nsits in the resource hierarchy. Deny wins; there is no most-specific-wins tie-break. That\nchoice is deliberate and is argued in full in <code>claude_dev/deny-override-design.md</code>\n§2.1. The short version: deny-override buys one checkable property — <strong sourcefile=\"api/Axiam.Sdk.Management.Models.PermissionEffect.yml\" sourcestartlinenumber=\"6\">adding a deny rule\ncan never widen access, and can never be undone by adding allows</strong> — and most-specific-wins\nbuys expressiveness at the cost of making &quot;is X denied?&quot; unanswerable without enumerating\nevery other rule that might out-specify it. [<code>PermissionEffect::Allow</code>] is the default,\nso data written before this existed, and clients that send no <code>effect</code>, both mean\n&quot;allow&quot;. No migration.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.PgpKey.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.PgpKey.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.PgpKey",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.PgpKey.yml\" sourcestartlinenumber=\"1\">An OpenPGP key stored by AXIAM.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.PgpKeyAlgorithm.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.PgpKeyAlgorithm.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.PgpKeyAlgorithm",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.PgpKeyAlgorithm.yml\" sourcestartlinenumber=\"1\">Key algorithm for OpenPGP keys.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.PgpKeyPurpose.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.PgpKeyPurpose.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.PgpKeyPurpose",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.PgpKeyPurpose.yml\" sourcestartlinenumber=\"1\">The purpose of an OpenPGP key.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.PgpKeyStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.PgpKeyStatus.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.PgpKeyStatus",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.PgpKeyStatus.yml\" sourcestartlinenumber=\"1\">Status of an OpenPGP key.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.PolicyResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.PolicyResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.PolicyResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.PolicyResponse.yml\" sourcestartlinenumber=\"1\"><code>GET</code> response: the stored policy plus the unknown-AAGUID action it currently <em sourcefile=\"api/Axiam.Sdk.Management.Models.PolicyResponse.yml\" sourcestartlinenumber=\"1\">resolves\nto</em>. <code>unknown_aaguid</code> is nullable, where <code>null</code> means &quot;use this mode's default&quot;\n(deny under <code>direct_required</code>, allow otherwise). A client that only saw the stored\n<code>null</code> would have to re-derive that rule itself to display what the policy actually\ndoes — and a security rule implemented twice is a security rule that will eventually\ndisagree with itself. So the server resolves it once, here, and reports both: the admin's\nstored intent and its effect.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.PrivacyPolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.PrivacyPolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.PrivacyPolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.PrivacyPolicy.yml\" sourcestartlinenumber=\"1\">Data-retention rules that apply after a subject asks to be erased.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ProviderConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ProviderConfig.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ProviderConfig",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ProviderConfig.yml\" sourcestartlinenumber=\"1\">Provider-specific connection details.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ProviderConfigBrevo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ProviderConfigBrevo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ProviderConfigBrevo",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ProviderConfigBrevo.yml\" sourcestartlinenumber=\"1\">API-based provider configuration (SendGrid, Postmark, Resend, Brevo). <code>api_key</code> follows\nthe same write-only + omit-preserving contract as [<code>SmtpConfig::password</code>] (D-01/D-02).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ProviderConfigPostmark.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ProviderConfigPostmark.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ProviderConfigPostmark",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ProviderConfigPostmark.yml\" sourcestartlinenumber=\"1\">API-based provider configuration (SendGrid, Postmark, Resend, Brevo). <code>api_key</code> follows\nthe same write-only + omit-preserving contract as [<code>SmtpConfig::password</code>] (D-01/D-02).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ProviderConfigResend.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ProviderConfigResend.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ProviderConfigResend",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ProviderConfigResend.yml\" sourcestartlinenumber=\"1\">API-based provider configuration (SendGrid, Postmark, Resend, Brevo). <code>api_key</code> follows\nthe same write-only + omit-preserving contract as [<code>SmtpConfig::password</code>] (D-01/D-02).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ProviderConfigSendGrid.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ProviderConfigSendGrid.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ProviderConfigSendGrid",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ProviderConfigSendGrid.yml\" sourcestartlinenumber=\"1\">API-based provider configuration (SendGrid, Postmark, Resend, Brevo). <code>api_key</code> follows\nthe same write-only + omit-preserving contract as [<code>SmtpConfig::password</code>] (D-01/D-02).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ProviderConfigSmtp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ProviderConfigSmtp.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ProviderConfigSmtp",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ProviderConfigSmtp.yml\" sourcestartlinenumber=\"1\">SMTP-specific configuration. <code>password</code> is write-only (D-01):\n<code>#[serde(skip_serializing)]</code> means it is never emitted in a GET/serialized response. On\nthe write path (D-02), <code>#[serde(default)]</code> lets a caller omit the field entirely\n(deserializing to <code>&quot;&quot;</code>); an empty string is the sentinel for &quot;no new secret supplied —\npreserve whatever is already stored&quot; (see <code>SurrealEmailConfigRepository::\nset_org_config</code>). A non-empty value is a real secret to encrypt+replace.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ReactorEventDescriptor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ReactorEventDescriptor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ReactorEventDescriptor",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ReactorEventDescriptor.yml\" sourcestartlinenumber=\"1\">One hookable event, as the registry describes it.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ReactorMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ReactorMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ReactorMode",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ReactorMode.yml\" sourcestartlinenumber=\"1\">How a reactor participates in an event.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ReactorResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ReactorResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ReactorResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ReactorResponse.yml\" sourcestartlinenumber=\"1\">The ReactorResponse schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ReadyResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ReadyResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ReadyResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ReadyResponse.yml\" sourcestartlinenumber=\"1\">The ReadyResponse schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ResolvedPermissionGrant.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ResolvedPermissionGrant.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ResolvedPermissionGrant",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ResolvedPermissionGrant.yml\" sourcestartlinenumber=\"1\">A permission grant with its scopes resolved. A superset of [<code>PermissionGrant</code>]:\n<code>scope_ids</code> is still present and still authoritative, so a client written before\n<code>scopes</code> existed is unaffected.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.Resource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.Resource.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.Resource",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.Resource.yml\" sourcestartlinenumber=\"1\">The Resource schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.RetryPolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.RetryPolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.RetryPolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.RetryPolicy.yml\" sourcestartlinenumber=\"1\">Retry policy for failed webhook deliveries.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.Role.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.Role.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.Role",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.Role.yml\" sourcestartlinenumber=\"1\">The Role schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.RoleAssignment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.RoleAssignment.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.RoleAssignment",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.RoleAssignment.yml\" sourcestartlinenumber=\"1\">A role together with its assignment context (the resource it is scoped to).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.RoleGroupAssignment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.RoleGroupAssignment.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.RoleGroupAssignment",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.RoleGroupAssignment.yml\" sourcestartlinenumber=\"1\">A group together with the resource scope of its assignment of this role.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.RoleUserAssignment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.RoleUserAssignment.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.RoleUserAssignment",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.RoleUserAssignment.yml\" sourcestartlinenumber=\"1\">A user together with the resource scope of their assignment of this role.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.RotateSecretResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.RotateSecretResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.RotateSecretResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.RotateSecretResponse.yml\" sourcestartlinenumber=\"1\">Response for secret rotation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ScimTokenResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ScimTokenResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ScimTokenResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ScimTokenResponse.yml\" sourcestartlinenumber=\"1\">Metadata only. The handle is never in a list response — it exists in plaintext exactly once,\nin [<code>CreateScimTokenResponse</code>].</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ScimTokenStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ScimTokenStatus.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ScimTokenStatus",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ScimTokenStatus.yml\" sourcestartlinenumber=\"1\">Why a token is or is not currently usable — for display only. The authentication path never\nsurfaces this distinction on the wire.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.Scope.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.Scope.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.Scope",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.Scope.yml\" sourcestartlinenumber=\"1\">The Scope schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SecuritySettings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SecuritySettings.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SecuritySettings",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SecuritySettings.yml\" sourcestartlinenumber=\"1\">Fully resolved security settings (all fields present).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse.yml\" sourcestartlinenumber=\"1\">Response for service account creation — includes the one-time plaintext secret.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ServiceAccountResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ServiceAccountResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ServiceAccountResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ServiceAccountResponse.yml\" sourcestartlinenumber=\"1\">Public-safe service account representation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SetMtlsTrustAnchor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SetMtlsTrustAnchor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SetMtlsTrustAnchor",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SetMtlsTrustAnchor.yml\" sourcestartlinenumber=\"1\">Body for <code>PUT .../ca-certificates/{id}/mtls-trust-anchor</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SetOrgEmailConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SetOrgEmailConfig.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SetOrgEmailConfig",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SetOrgEmailConfig.yml\" sourcestartlinenumber=\"1\">Input for setting organization-level email config.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SetOrgSettings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SetOrgSettings.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SetOrgSettings",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SetOrgSettings.yml\" sourcestartlinenumber=\"1\">Input for setting organization-level security settings.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SettingsScope.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SettingsScope.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SettingsScope",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SettingsScope.yml\" sourcestartlinenumber=\"1\">Whether a settings row belongs to an organization or a tenant.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SignAuditBatchRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SignAuditBatchRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SignAuditBatchRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SignAuditBatchRequest.yml\" sourcestartlinenumber=\"1\">Request body for signing an audit batch.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SignIntermediateCsrRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SignIntermediateCsrRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SignIntermediateCsrRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SignIntermediateCsrRequest.yml\" sourcestartlinenumber=\"1\">Body of <code>POST .../tenants/{tenant_id}/signing-cas/sign-csr</code>. Deliberately carries no\nkey algorithm: it is the CSR's, read out of the request, because a caller who could state it\nseparately could state one the key does not have.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SignedAuditBatch.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SignedAuditBatch.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SignedAuditBatch",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SignedAuditBatch.yml\" sourcestartlinenumber=\"1\">A signed batch of audit log entries.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SmtpConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SmtpConfig.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SmtpConfig",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SmtpConfig.yml\" sourcestartlinenumber=\"1\">SMTP-specific configuration. <code>password</code> is write-only (D-01):\n<code>#[serde(skip_serializing)]</code> means it is never emitted in a GET/serialized response. On\nthe write path (D-02), <code>#[serde(default)]</code> lets a caller omit the field entirely\n(deserializing to <code>&quot;&quot;</code>); an empty string is the sentinel for &quot;no new secret supplied —\npreserve whatever is already stored&quot; (see <code>SurrealEmailConfigRepository::\nset_org_config</code>). A non-empty value is a real secret to encrypt+replace.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.Tenant.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.Tenant.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.Tenant",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.Tenant.yml\" sourcestartlinenumber=\"1\">A tenant is an isolated context within an organization. Each tenant has its own set of\nusers, roles, permissions, resources, certificates, and configuration. Tenants can represent\nenvironments (dev/staging/prod) or separate business contexts.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.TenantKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.TenantKind.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.TenantKind",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.TenantKind.yml\" sourcestartlinenumber=\"1\">What a tenant <em sourcefile=\"api/Axiam.Sdk.Management.Models.TenantKind.yml\" sourcestartlinenumber=\"1\">is</em>, as distinct from what state it is in. Reserved rather than inferred: an\norganization has exactly one tenant of kind [<code>Self::Organization</code>], enforced by a\nunique index rather than by convention. Deriving it from a magic slug or from &quot;the oldest\ntenant&quot; would make the organization scope something an operator could rename or delete by\naccident, and it is the scope the super-admin lives in.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.TenantSettingsOverride.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.TenantSettingsOverride",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.TenantSettingsOverride.yml\" sourcestartlinenumber=\"1\">Partial tenant overrides. <code>None</code> = inherit from org baseline.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.TenantStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.TenantStatus.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.TenantStatus",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.TenantStatus.yml\" sourcestartlinenumber=\"1\">Lifecycle status of a tenant. A <code>Suspended</code> tenant remains stored and its data\nisolated, but is treated as administratively disabled. New tenants are <code>Active</code> by\ndefault.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.TokenExchangeTrustRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.TokenExchangeTrustRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.TokenExchangeTrustRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.TokenExchangeTrustRequest.yml\" sourcestartlinenumber=\"1\">X4 trust for exchanging this provider's tokens (RFC 8693, external issuer). Mirrors\n[<code>TokenExchangeTrust</code>] on the wire rather than reusing it directly so the API surface\ncan carry its own defaults: an admin PUTting a partial block gets the documented default for\nanything they omitted, instead of a deserialization error listing fields they have never\nheard of.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.TokenExchangeTrustResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.TokenExchangeTrustResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.TokenExchangeTrustResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.TokenExchangeTrustResponse.yml\" sourcestartlinenumber=\"1\">X4 trust as returned. Same shape as the request; nothing here is secret — an operator\nreading a provider needs to see exactly what it trusts.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.TokenPolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.TokenPolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.TokenPolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.TokenPolicy.yml\" sourcestartlinenumber=\"1\">Token lifetime configuration.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UnknownAaguidAction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UnknownAaguidAction.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UnknownAaguidAction",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UnknownAaguidAction.yml\" sourcestartlinenumber=\"1\">What to do with an AAGUID that has no MDS entry (i.e. FIDO Alliance has no metadata for it —\nnot necessarily malicious, MDS coverage is incomplete for some legitimate authenticators).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateFederationConfigRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.yml\" sourcestartlinenumber=\"1\">The UpdateFederationConfigRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateGroup.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateGroup.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateGroup",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateGroup.yml\" sourcestartlinenumber=\"1\">The UpdateGroup schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateNotificationRuleRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateNotificationRuleRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateNotificationRuleRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateNotificationRuleRequest.yml\" sourcestartlinenumber=\"1\">The UpdateNotificationRuleRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.yml\" sourcestartlinenumber=\"1\">The UpdateOAuth2ClientRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateOrganizationRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateOrganizationRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateOrganizationRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateOrganizationRequest.yml\" sourcestartlinenumber=\"1\">The UpdateOrganizationRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdatePermissionRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdatePermissionRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdatePermissionRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdatePermissionRequest.yml\" sourcestartlinenumber=\"1\">The UpdatePermissionRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateReactorRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateReactorRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateReactorRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateReactorRequest.yml\" sourcestartlinenumber=\"1\">The UpdateReactorRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateResourceRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateResourceRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateResourceRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateResourceRequest.yml\" sourcestartlinenumber=\"1\">The UpdateResourceRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateRole.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateRole.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateRole",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateRole.yml\" sourcestartlinenumber=\"1\">The UpdateRole schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateScopeRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateScopeRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateScopeRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateScopeRequest.yml\" sourcestartlinenumber=\"1\">The UpdateScopeRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateServiceAccount.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateServiceAccount.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateServiceAccount",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateServiceAccount.yml\" sourcestartlinenumber=\"1\">The UpdateServiceAccount schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateTenant.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateTenant.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateTenant",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateTenant.yml\" sourcestartlinenumber=\"1\">Fields that can be updated on an existing tenant.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateUserRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateUserRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateUserRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateUserRequest.yml\" sourcestartlinenumber=\"1\">The UpdateUserRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UpdateWebhookRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UpdateWebhookRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UpdateWebhookRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UpdateWebhookRequest.yml\" sourcestartlinenumber=\"1\">The UpdateWebhookRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UserResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UserResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UserResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UserResponse.yml\" sourcestartlinenumber=\"1\">Public-safe user representation (no password_hash, no mfa_secret).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.UserStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.UserStatus.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.UserStatus",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.UserStatus.yml\" sourcestartlinenumber=\"1\">The UserStatus values the server uses.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.WebauthnAttestationPolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.WebauthnAttestationPolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.WebauthnAttestationPolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.WebauthnAttestationPolicy.yml\" sourcestartlinenumber=\"1\">Per-tenant WebAuthn attestation policy (D5). One row per tenant; an absent row means\n[<code>WebauthnAttestationPolicy::default</code>], which is today's behavior unchanged.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.WebhookResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.WebhookResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.WebhookResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.WebhookResponse.yml\" sourcestartlinenumber=\"1\">Webhook response — omits the shared secret.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.NamespaceScope.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.NamespaceScope.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.NamespaceScope",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.NamespaceScope.yml\" sourcestartlinenumber=\"1\">A per-handle override of the organization or tenant a route interpolates\n(CONTRACT.md §27.4 rule 3).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.NotFoundError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.NotFoundError.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.NotFoundError",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.NotFoundError.yml\" sourcestartlinenumber=\"1\">A §27 management operation addressed something that does not exist (HTTP 404).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.NotificationRulesApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.NotificationRulesApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.NotificationRulesApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.NotificationRulesApi.yml\" sourcestartlinenumber=\"1\">The notification_rules management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Oauth2ClientsApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Oauth2ClientsApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Oauth2ClientsApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Oauth2ClientsApi.yml\" sourcestartlinenumber=\"1\">The oauth2_clients management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.OrganizationsApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.OrganizationsApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.OrganizationsApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.OrganizationsApi.yml\" sourcestartlinenumber=\"1\">The organizations management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Page-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Page-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Page<T>",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Page-1.yml\" sourcestartlinenumber=\"1\">One page of a paginated read (CONTRACT.md §27.4 rule 4).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.PageRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.PageRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.PageRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.PageRequest.yml\" sourcestartlinenumber=\"1\">Where to start a paginated read and how much to ask for\n(CONTRACT.md §27.4 rule 4).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.PermissionsApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.PermissionsApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.PermissionsApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.PermissionsApi.yml\" sourcestartlinenumber=\"1\">The permissions management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.PgpKeysApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.PgpKeysApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.PgpKeysApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.PgpKeysApi.yml\" sourcestartlinenumber=\"1\">The pgp_keys management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.PlanChange.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.PlanChange.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.PlanChange",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.PlanChange.yml\" sourcestartlinenumber=\"1\">What a planned step would do to the thing it names.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.PlanTarget.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.PlanTarget.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.PlanTarget",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.PlanTarget.yml\" sourcestartlinenumber=\"1\">What kind of thing a planned step is about.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.PlannedAction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.PlannedAction.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.PlannedAction",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.PlannedAction.yml\" sourcestartlinenumber=\"1\">One step of a plan.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.PlatformApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.PlatformApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.PlatformApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.PlatformApi.yml\" sourcestartlinenumber=\"1\">The platform management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.PrivacyApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.PrivacyApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.PrivacyApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.PrivacyApi.yml\" sourcestartlinenumber=\"1\">The privacy management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ReactorsApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ReactorsApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ReactorsApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ReactorsApi.yml\" sourcestartlinenumber=\"1\">The reactors management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ResourcesApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ResourcesApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ResourcesApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ResourcesApi.yml\" sourcestartlinenumber=\"1\">The resources management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.RolesApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.RolesApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.RolesApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.RolesApi.yml\" sourcestartlinenumber=\"1\">The roles management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ScimTokensApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ScimTokensApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ScimTokensApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ScimTokensApi.yml\" sourcestartlinenumber=\"1\">The scim_tokens management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ScopesApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ScopesApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ScopesApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ScopesApi.yml\" sourcestartlinenumber=\"1\">The scopes management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ServiceAccountsApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ServiceAccountsApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ServiceAccountsApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ServiceAccountsApi.yml\" sourcestartlinenumber=\"1\">The service_accounts management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.SettingsApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.SettingsApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.SettingsApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.SettingsApi.yml\" sourcestartlinenumber=\"1\">The settings management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.StepOutcome.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.StepOutcome.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.StepOutcome",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.StepOutcome.yml\" sourcestartlinenumber=\"1\">What became of one step, and why.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.TenantsApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.TenantsApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.TenantsApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.TenantsApi.yml\" sourcestartlinenumber=\"1\">The tenants management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.UsersApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.UsersApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.UsersApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.UsersApi.yml\" sourcestartlinenumber=\"1\">The users management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ValidationError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ValidationError.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ValidationError",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ValidationError.yml\" sourcestartlinenumber=\"1\">A §27 management request body the server refused (HTTP 400 or 422).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.WebauthnPolicyApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.WebauthnPolicyApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.WebauthnPolicyApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.WebauthnPolicyApi.yml\" sourcestartlinenumber=\"1\">The webauthn_policy management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.WebhooksApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.WebhooksApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.WebhooksApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.WebhooksApi.yml\" sourcestartlinenumber=\"1\">The webhooks management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.WireEnumConverter-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.WireEnumConverter-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.WireEnumConverter<TEnum>",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.WireEnumConverter-1.yml\" sourcestartlinenumber=\"1\">Converts an enum to and from the wire spellings its members carry via\n<xref href=\"Axiam.Sdk.Management.WireNameAttribute\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.WireNameAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.WireNameAttribute.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.WireNameAttribute",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.WireNameAttribute.yml\" sourcestartlinenumber=\"1\">The spelling an enum member has on the wire, when it differs from the C# name.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Opaque.KsfParams.yml",
       "output": {
         ".html": {

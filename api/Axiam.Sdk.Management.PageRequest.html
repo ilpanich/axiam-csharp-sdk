@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class PageRequest | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class PageRequest | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Where to start a paginated read and how much to ask for (CONTRACT.md &#167;27.4 rule 4).">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta02/apiSpec/new?filename=Axiam_Sdk_Management_PageRequest.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.PageRequest%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Management.PageRequest">
+
+
+
+  <h1 id="Axiam_Sdk_Management_PageRequest" data-uid="Axiam.Sdk.Management.PageRequest" class="text-break">
+Class PageRequest  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Paging.cs/#L13"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Where to start a paginated read and how much to ask for
+(CONTRACT.md §27.4 rule 4).</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class PageRequest</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">PageRequest</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Management_PageRequest_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>A <a class="xref" href="Axiam.Sdk.Management.PageRequest.html#Axiam_Sdk_Management_PageRequest_Limit">Limit</a> of <code>null</code> means &quot;do not send one&quot;, which is not the same
+as sending zero: the server reads <code>limit=0</code> as none and answers with an empty
+page. Leaving it out lets the server apply its own default, and
+<a class="xref" href="Axiam.Sdk.Management.Page-1.html#Axiam_Sdk_Management_Page_1_Total">Total</a> still tells the caller the rest exists.</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_PageRequest__ctor_" data-uid="Axiam.Sdk.Management.PageRequest.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Management_PageRequest__ctor_System_Int32_System_Nullable_System_Int32__System_String_" data-uid="Axiam.Sdk.Management.PageRequest.#ctor(System.Int32,System.Nullable{System.Int32},System.String)">
+  PageRequest(int, int?, string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Paging.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Constructs a window.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PageRequest(int offset = 0, int? limit = null, string? search = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>offset</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>How many items to skip; never negative.</p>
+</dd>
+    <dt><code>limit</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd><p>How many to ask for, or <code>null</code> to let the server decide.</p>
+</dd>
+    <dt><code>search</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A free-text filter applied by the <b>server</b>, before <code>offset</code>/<code>limit</code>,
+or <code>null</code> for none.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>If <code class="paramref">offset</code> is negative, or <code class="paramref">limit</code> is present
+and not positive.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_PageRequest_Limit_" data-uid="Axiam.Sdk.Management.PageRequest.Limit*"></a>
+
+  <h3 id="Axiam_Sdk_Management_PageRequest_Limit" data-uid="Axiam.Sdk.Management.PageRequest.Limit">
+  Limit
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Paging.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>How many to ask for, or <code>null</code> for the server's own default.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int? Limit { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_PageRequest_Offset_" data-uid="Axiam.Sdk.Management.PageRequest.Offset*"></a>
+
+  <h3 id="Axiam_Sdk_Management_PageRequest_Offset" data-uid="Axiam.Sdk.Management.PageRequest.Offset">
+  Offset
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Paging.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>How many items to skip.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Offset { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_PageRequest_Search_" data-uid="Axiam.Sdk.Management.PageRequest.Search*"></a>
+
+  <h3 id="Axiam_Sdk_Management_PageRequest_Search" data-uid="Axiam.Sdk.Management.PageRequest.Search">
+  Search
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Paging.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A free-text filter applied by the <b>server</b>, before <code>Offset</code>/<code>Limit</code>
+(§27.4 rule 4).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Search { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_PageRequest_Search_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Matched case-insensitively against the identifying fields of whatever is being
+listed — a name or username, plus the record id, so a UUID out of a log line can be
+pasted in as-is. <a class="xref" href="Axiam.Sdk.Management.Page-1.html#Axiam_Sdk_Management_Page_1_Total">Total</a> then counts <i>matches</i>, not rows,
+which is what lets a pager built on it show a page count belonging to the result
+set it is paging.
+</p>
+<p>
+It lives here rather than as a third argument on each of the twenty generated
+<code>ListAsync</code> methods, and that is what makes <a class="xref" href="Axiam.Sdk.Management.Page-1.html#Axiam_Sdk_Management_Page_1_NextPage_System_String_">NextPage(string?)</a> —
+and so <code>ListAllAsync</code> — carry it across the whole walk. A walk that filtered
+its first request and not the rest would return the matches followed by the
+unfiltered tail, which reads as a server bug from the caller's side.
+</p>
+<p>
+<code>null</code> sends no <code>search</code> parameter. A term that is empty or all
+whitespace is treated the same way: a search box that fires on every keystroke
+sends one the moment it is cleared, and "rows containing the empty string" is a
+different question from "all rows". The server caps the term's length; this SDK
+deliberately does not re-implement that cap, because a client-side truncation the
+server would not have made is a silently different query.
+</p>
+</div>
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_PageRequest_First_" data-uid="Axiam.Sdk.Management.PageRequest.First*"></a>
+
+  <h3 id="Axiam_Sdk_Management_PageRequest_First" data-uid="Axiam.Sdk.Management.PageRequest.First">
+  First()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Paging.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The first page, with the server's own default size.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static PageRequest First()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.PageRequest.html">PageRequest</a></dt>
+    <dd><p>A window starting at zero with no limit.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_PageRequest_Matching_" data-uid="Axiam.Sdk.Management.PageRequest.Matching*"></a>
+
+  <h3 id="Axiam_Sdk_Management_PageRequest_Matching_System_Int32_System_String_" data-uid="Axiam.Sdk.Management.PageRequest.Matching(System.Int32,System.String)">
+  Matching(int, string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Paging.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The first page of <code class="paramref">limit</code> items matching <code class="paramref">term</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static PageRequest Matching(int limit, string? term)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>limit</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The page size to request.</p>
+</dd>
+    <dt><code>term</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The free-text filter; see <a class="xref" href="Axiam.Sdk.Management.PageRequest.html#Axiam_Sdk_Management_PageRequest_Search">Search</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.PageRequest.html">PageRequest</a></dt>
+    <dd><p>A window starting at zero, filtered by <code class="paramref">term</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_PageRequest_Next_" data-uid="Axiam.Sdk.Management.PageRequest.Next*"></a>
+
+  <h3 id="Axiam_Sdk_Management_PageRequest_Next_System_Int32_" data-uid="Axiam.Sdk.Management.PageRequest.Next(System.Int32)">
+  Next(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Paging.cs/#L95"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The next window of the same size and term, for a manual walk.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PageRequest Next(int consumed)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>consumed</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>How many items the previous page returned.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.PageRequest.html">PageRequest</a></dt>
+    <dd><p>A window advanced past what was consumed.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_PageRequest_Of_" data-uid="Axiam.Sdk.Management.PageRequest.Of*"></a>
+
+  <h3 id="Axiam_Sdk_Management_PageRequest_Of_System_Int32_" data-uid="Axiam.Sdk.Management.PageRequest.Of(System.Int32)">
+  Of(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Paging.cs/#L82"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The first page of <code class="paramref">limit</code> items.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static PageRequest Of(int limit)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>limit</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The page size to request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.PageRequest.html">PageRequest</a></dt>
+    <dd><p>A window starting at zero.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ManifestBuilder | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ManifestBuilder | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Builds a , checking back-references as they are made.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta02/apiSpec/new?filename=Axiam_Sdk_Management_ManifestBuilder.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.ManifestBuilder%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Management.ManifestBuilder">
+
+
+
+  <h1 id="Axiam_Sdk_Management_ManifestBuilder" data-uid="Axiam.Sdk.Management.ManifestBuilder" class="text-break">
+Class ManifestBuilder  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L146"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Builds a <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.html">ManagementManifest</a>, checking back-references as they are made.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class ManifestBuilder</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ManifestBuilder</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Management_ManifestBuilder_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>The record form accepts a grant naming a role that does not exist; this does not. A
+forward reference the builder lets through becomes a null dereference deep inside
+<code>ApplyAsync</code>, <b>after</b> part of the tenant has already been written — so
+every call that names an earlier key checks it, and <a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_Build">Build()</a> reports every
+problem at once rather than the first (§27.6 rule 1).</p>
+</div>
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_AddToGroup_" data-uid="Axiam.Sdk.Management.ManifestBuilder.AddToGroup*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_AddToGroup_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.AddToGroup(System.String,System.String)">
+  AddToGroup(string, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L313"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Puts a user into the group named by <code class="paramref">groupKey</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder AddToGroup(string userKey, string groupKey)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>userKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The user joining the group.</p>
+</dd>
+    <dt><code>groupKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The group being joined.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_AssignRole_" data-uid="Axiam.Sdk.Management.ManifestBuilder.AssignRole*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_AssignRole_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.AssignRole(System.String,System.String)">
+  AssignRole(string, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L296"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Assigns a role to the user named by <code class="paramref">userKey</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder AssignRole(string userKey, string roleKey)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>userKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The user receiving the role.</p>
+</dd>
+    <dt><code>roleKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The role being assigned.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_Build_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Build*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_Build" data-uid="Axiam.Sdk.Management.ManifestBuilder.Build">
+  Build()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L331"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Assembles the manifest, or throws if any back-reference is dangling.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManagementManifest Build()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManagementManifest.html">ManagementManifest</a></dt>
+    <dd><p>The assembled manifest.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a></dt>
+    <dd><p>If any call named a key that was never declared.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_ChildResource_" data-uid="Axiam.Sdk.Management.ManifestBuilder.ChildResource*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_ChildResource_System_String_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.ChildResource(System.String,System.String,System.String,System.String)">
+  ChildResource(string, string, string, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L177"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Declares a resource beneath <code class="paramref">parentKey</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder ChildResource(string key, string name, string resourceType, string parentKey)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Manifest-local identifier.</p>
+</dd>
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The resource's name.</p>
+</dd>
+    <dt><code>resourceType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The resource's type.</p>
+</dd>
+    <dt><code>parentKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The key of an already-declared resource.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_GlobalRole_" data-uid="Axiam.Sdk.Management.ManifestBuilder.GlobalRole*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_GlobalRole_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.GlobalRole(System.String,System.String,System.String)">
+  GlobalRole(string, string, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L236"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Declares a role that applies across every resource.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder GlobalRole(string key, string name, string description)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Manifest-local identifier.</p>
+</dd>
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The role's name.</p>
+</dd>
+    <dt><code>description</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>What it is for.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_Grant_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Grant*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_Grant_System_String_System_String_System_String_System_String___" data-uid="Axiam.Sdk.Management.ManifestBuilder.Grant(System.String,System.String,System.String,System.String[])">
+  Grant(string, string, string?, params string[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L248"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Grants a permission to the role named by <code class="paramref">roleKey</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder Grant(string roleKey, string permissionKey, string? effect = null, params string[] scopeKeys)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>roleKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The role receiving the grant.</p>
+</dd>
+    <dt><code>permissionKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The permission being granted.</p>
+</dd>
+    <dt><code>effect</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p><code>&quot;allow&quot;</code>, <code>&quot;deny&quot;</code>, or <code>null</code>.</p>
+</dd>
+    <dt><code>scopeKeys</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
+    <dd><p>The scopes this grant is narrowed to.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_Group_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Group*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_Group_System_String_System_String_System_String_System_String___" data-uid="Axiam.Sdk.Management.ManifestBuilder.Group(System.String,System.String,System.String,System.String[])">
+  Group(string, string, string, params string[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L268"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Declares a group, optionally holding roles.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder Group(string key, string name, string description, params string[] roleKeys)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Manifest-local identifier.</p>
+</dd>
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The group's name.</p>
+</dd>
+    <dt><code>description</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>What it is for.</p>
+</dd>
+    <dt><code>roleKeys</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
+    <dd><p>The roles this group should hold.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_Permission_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Permission*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_Permission_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Permission(System.String,System.String,System.String)">
+  Permission(string, string, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L214"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Declares a permission.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder Permission(string key, string action, string description)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Manifest-local identifier.</p>
+</dd>
+    <dt><code>action</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The action it allows.</p>
+</dd>
+    <dt><code>description</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>What it is for.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_Resource_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Resource*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_Resource_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Resource(System.String,System.String,System.String)">
+  Resource(string, string, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L165"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Declares a root resource.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder Resource(string key, string name, string resourceType)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Manifest-local identifier.</p>
+</dd>
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The resource's name.</p>
+</dd>
+    <dt><code>resourceType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The resource's type.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_Role_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Role*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_Role_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Role(System.String,System.String,System.String)">
+  Role(string, string, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L225"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Declares a role.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder Role(string key, string name, string description)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Manifest-local identifier.</p>
+</dd>
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The role's name.</p>
+</dd>
+    <dt><code>description</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>What it is for.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_Scope_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Scope*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_Scope_System_String_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Scope(System.String,System.String,System.String,System.String)">
+  Scope(string, string, string, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L196"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Declares a scope beneath <code class="paramref">resourceKey</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder Scope(string resourceKey, string key, string name, string description)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>resourceKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The resource this scope belongs to.</p>
+</dd>
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Manifest-local identifier.</p>
+</dd>
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The scope's name.</p>
+</dd>
+    <dt><code>description</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>What the scope is for.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_User_" data-uid="Axiam.Sdk.Management.ManifestBuilder.User*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_User_System_String_System_String_System_String_System_Nullable_Axiam_Sdk_Core_Sensitive_System_String___" data-uid="Axiam.Sdk.Management.ManifestBuilder.User(System.String,System.String,System.String,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}})">
+  User(string, string, string, Sensitive&lt;string&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/ManagementManifest.cs/#L285"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Declares a user.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder User(string key, string username, string email, Sensitive&lt;string&gt;? initialPassword = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Manifest-local identifier.</p>
+</dd>
+    <dt><code>username</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The user's username.</p>
+</dd>
+    <dt><code>email</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The user's email address.</p>
+</dd>
+    <dt><code>initialPassword</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;?</dt>
+    <dd><p>The password to CREATE the user with.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

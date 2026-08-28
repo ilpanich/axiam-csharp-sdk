@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha44/apiSpec/new?filename=Axiam_Sdk_Core_AuthzError.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Core.AuthzError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta02/apiSpec/new?filename=Axiam_Sdk_Core_AuthzError.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Core.AuthzError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Core_AuthzError" data-uid="Axiam.Sdk.Core.AuthzError" class="text-break">
-Class AuthzError  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha44/Axiam.Sdk/Core/AuthzError.cs/#L8"><i class="bi bi-code-slash"></i></a>
+Class AuthzError  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Core/AuthzError.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -104,7 +104,7 @@ and gRPC transports cannot drift on the error taxonomy.</p>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class AuthzError : Exception, ISerializable</code></pre>
+    <pre><code class="lang-csharp hljs">public class AuthzError : Exception, ISerializable</code></pre>
   </div>
 
 
@@ -126,6 +126,13 @@ and gRPC transports cannot drift on the error taxonomy.</p>
     </dd>
   </dl>
 
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="Axiam.Sdk.Management.ConflictError.html">ConflictError</a></div>
+      <div><a class="xref" href="Axiam.Sdk.Management.NotFoundError.html">NotFoundError</a></div>
+    </dd>
+  </dl>
 
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
@@ -164,6 +171,9 @@ and gRPC transports cannot drift on the error taxonomy.</p>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.targetsite">Exception.TargetSite</a>
     </div>
     <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.serializeobjectstate">Exception.SerializeObjectState</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
     </div>
     <div>
@@ -173,6 +183,9 @@ and gRPC transports cannot drift on the error taxonomy.</p>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
     </div>
     <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
   </dd></dl>
@@ -180,6 +193,14 @@ and gRPC transports cannot drift on the error taxonomy.</p>
 
 
 
+  <h2 id="Axiam_Sdk_Core_AuthzError_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Unsealed so CONTRACT.md §27.4 rule 7 can classify a 404 as
+<a class="xref" href="Axiam.Sdk.Management.NotFoundError.html">NotFoundError</a> and a 409 as
+<a class="xref" href="Axiam.Sdk.Management.ConflictError.html">ConflictError</a> <em>inside</em> this type rather than beside
+it. <code>catch (AuthzError)</code> written before §27 existed still catches both,
+which is exactly the property the rule asks for. The §2 taxonomy is still three
+top-level types; these are sub-types of one of them, not a fourth peer.</p>
+</div>
 
 
   <h2 class="section" id="constructors">Constructors
@@ -190,7 +211,7 @@ and gRPC transports cannot drift on the error taxonomy.</p>
 
   <h3 id="Axiam_Sdk_Core_AuthzError__ctor_System_String_" data-uid="Axiam.Sdk.Core.AuthzError.#ctor(System.String)">
   AuthzError(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha44/Axiam.Sdk/Core/AuthzError.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Core/AuthzError.cs/#L40"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs a message-only <a class="xref" href="Axiam.Sdk.Core.AuthzError.html">AuthzError</a> — <a class="xref" href="Axiam.Sdk.Core.AuthzError.html#Axiam_Sdk_Core_AuthzError_Action">Action</a> and
@@ -225,7 +246,7 @@ available to parse (e.g. gRPC <code>PERMISSION_DENIED</code>, which carries no b
 
   <h3 id="Axiam_Sdk_Core_AuthzError__ctor_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Core.AuthzError.#ctor(System.String,System.String,System.String)">
   AuthzError(string, string?, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha44/Axiam.Sdk/Core/AuthzError.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Core/AuthzError.cs/#L50"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs an <a class="xref" href="Axiam.Sdk.Core.AuthzError.html">AuthzError</a> carrying the structured <code>action</code>/
@@ -268,7 +289,7 @@ known, <code>resourceId</code> when the denial was not resource-scoped.</p>
 
   <h3 id="Axiam_Sdk_Core_AuthzError_Action" data-uid="Axiam.Sdk.Core.AuthzError.Action">
   Action
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha44/Axiam.Sdk/Core/AuthzError.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Core/AuthzError.cs/#L24"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The denied action (e.g. <code>&quot;users:get&quot;</code>), when known. Populated from the
@@ -303,7 +324,7 @@ has no body to parse (gRPC <code>PERMISSION_DENIED</code>) or the field was abse
 
   <h3 id="Axiam_Sdk_Core_AuthzError_ResourceId" data-uid="Axiam.Sdk.Core.AuthzError.ResourceId">
   ResourceId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha44/Axiam.Sdk/Core/AuthzError.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Core/AuthzError.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The resource UUID the denial was scoped to. Populated from the server's

@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class SetOrgSettings | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class SetOrgSettings | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Input for setting organization-level security settings.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta02/apiSpec/new?filename=Axiam_Sdk_Management_Models_SetOrgSettings.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.SetOrgSettings%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Management.Models.SetOrgSettings">
+
+
+
+  <h1 id="Axiam_Sdk_Management_Models_SetOrgSettings" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings" class="text-break">
+Class SetOrgSettings  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a>.<a class="xref" href="Axiam.Sdk.Management.Models.html">Models</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Input for setting organization-level security settings.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record SetOrgSettings : IEquatable&lt;SetOrgSettings&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">SetOrgSettings</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.SetOrgSettings.html">SetOrgSettings</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Management_Models_SetOrgSettings_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+This body REPLACES rather than patches (§27.4 rule 5): what you do not carry over from
+a prior read is not preserved, it is overwritten. Every property is required, so forgetting
+one is a compile error rather than a silent null on the wire. Read first,
+<code>with</code>-expression the parts you mean to keep, write back.
+</p>
+</div>
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_AccessTokenLifetimeSecs_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.AccessTokenLifetimeSecs*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_AccessTokenLifetimeSecs" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.AccessTokenLifetimeSecs">
+  AccessTokenLifetimeSecs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's access_token_lifetime_secs field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;access_token_lifetime_secs&quot;)]
+public required long AccessTokenLifetimeSecs { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_AdminNotificationsEnabled_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.AdminNotificationsEnabled*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_AdminNotificationsEnabled" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.AdminNotificationsEnabled">
+  AdminNotificationsEnabled
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's admin_notifications_enabled field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;admin_notifications_enabled&quot;)]
+public required bool AdminNotificationsEnabled { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_DefaultCertValidityDays_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.DefaultCertValidityDays*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_DefaultCertValidityDays" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.DefaultCertValidityDays">
+  DefaultCertValidityDays
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's default_cert_validity_days field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;default_cert_validity_days&quot;)]
+public required int DefaultCertValidityDays { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_DeletionGracePeriodDays_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.DeletionGracePeriodDays*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_DeletionGracePeriodDays" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.DeletionGracePeriodDays">
+  DeletionGracePeriodDays
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's deletion_grace_period_days field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;deletion_grace_period_days&quot;)]
+public int? DeletionGracePeriodDays { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_EmailVerificationGracePeriodHours_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.EmailVerificationGracePeriodHours*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_EmailVerificationGracePeriodHours" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.EmailVerificationGracePeriodHours">
+  EmailVerificationGracePeriodHours
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's email_verification_grace_period_hours field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;email_verification_grace_period_hours&quot;)]
+public required int EmailVerificationGracePeriodHours { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_EmailVerificationRequired_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.EmailVerificationRequired*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_EmailVerificationRequired" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.EmailVerificationRequired">
+  EmailVerificationRequired
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's email_verification_required field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;email_verification_required&quot;)]
+public required bool EmailVerificationRequired { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_HibpCheckEnabled_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.HibpCheckEnabled*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_HibpCheckEnabled" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.HibpCheckEnabled">
+  HibpCheckEnabled
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's hibp_check_enabled field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;hibp_check_enabled&quot;)]
+public required bool HibpCheckEnabled { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_LockoutBackoffMultiplier_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.LockoutBackoffMultiplier*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_LockoutBackoffMultiplier" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.LockoutBackoffMultiplier">
+  LockoutBackoffMultiplier
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's lockout_backoff_multiplier field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;lockout_backoff_multiplier&quot;)]
+public required double LockoutBackoffMultiplier { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_LockoutDurationSecs_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.LockoutDurationSecs*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_LockoutDurationSecs" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.LockoutDurationSecs">
+  LockoutDurationSecs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's lockout_duration_secs field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;lockout_duration_secs&quot;)]
+public required long LockoutDurationSecs { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_MaxCertValidityDays_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.MaxCertValidityDays*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_MaxCertValidityDays" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.MaxCertValidityDays">
+  MaxCertValidityDays
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's max_cert_validity_days field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;max_cert_validity_days&quot;)]
+public required int MaxCertValidityDays { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_MaxFailedLoginAttempts_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.MaxFailedLoginAttempts*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_MaxFailedLoginAttempts" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.MaxFailedLoginAttempts">
+  MaxFailedLoginAttempts
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's max_failed_login_attempts field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;max_failed_login_attempts&quot;)]
+public required int MaxFailedLoginAttempts { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_MaxLockoutDurationSecs_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.MaxLockoutDurationSecs*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_MaxLockoutDurationSecs" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.MaxLockoutDurationSecs">
+  MaxLockoutDurationSecs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's max_lockout_duration_secs field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;max_lockout_duration_secs&quot;)]
+public required long MaxLockoutDurationSecs { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_MfaChallengeLifetimeSecs_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.MfaChallengeLifetimeSecs*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_MfaChallengeLifetimeSecs" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.MfaChallengeLifetimeSecs">
+  MfaChallengeLifetimeSecs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's mfa_challenge_lifetime_secs field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;mfa_challenge_lifetime_secs&quot;)]
+public required long MfaChallengeLifetimeSecs { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_MfaEnforced_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.MfaEnforced*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_MfaEnforced" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.MfaEnforced">
+  MfaEnforced
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's mfa_enforced field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;mfa_enforced&quot;)]
+public required bool MfaEnforced { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_MinLength_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.MinLength*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_MinLength" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.MinLength">
+  MinLength
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's min_length field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;min_length&quot;)]
+public required int MinLength { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_OpaqueKsf_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.OpaqueKsf*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_OpaqueKsf" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.OpaqueKsf">
+  OpaqueKsf
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L120"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's opaque_ksf field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;opaque_ksf&quot;)]
+public string? OpaqueKsf { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_OpaqueMode_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.OpaqueMode*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_OpaqueMode" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.OpaqueMode">
+  OpaqueMode
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's opaque_mode field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;opaque_mode&quot;)]
+public string? OpaqueMode { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_OpaqueSuite_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.OpaqueSuite*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_OpaqueSuite" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.OpaqueSuite">
+  OpaqueSuite
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's opaque_suite field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;opaque_suite&quot;)]
+public string? OpaqueSuite { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_PasswordHistoryCount_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.PasswordHistoryCount*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_PasswordHistoryCount" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.PasswordHistoryCount">
+  PasswordHistoryCount
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's password_history_count field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;password_history_count&quot;)]
+public required int PasswordHistoryCount { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_RefreshTokenLifetimeSecs_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.RefreshTokenLifetimeSecs*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_RefreshTokenLifetimeSecs" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.RefreshTokenLifetimeSecs">
+  RefreshTokenLifetimeSecs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L144"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's refresh_token_lifetime_secs field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;refresh_token_lifetime_secs&quot;)]
+public required long RefreshTokenLifetimeSecs { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_RequireDigits_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.RequireDigits*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_RequireDigits" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.RequireDigits">
+  RequireDigits
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L150"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's require_digits field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;require_digits&quot;)]
+public required bool RequireDigits { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_RequireLowercase_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.RequireLowercase*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_RequireLowercase" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.RequireLowercase">
+  RequireLowercase
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L156"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's require_lowercase field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;require_lowercase&quot;)]
+public required bool RequireLowercase { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_RequireSymbols_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.RequireSymbols*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_RequireSymbols" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.RequireSymbols">
+  RequireSymbols
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's require_symbols field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;require_symbols&quot;)]
+public required bool RequireSymbols { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetOrgSettings_RequireUppercase_" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.RequireUppercase*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetOrgSettings_RequireUppercase" data-uid="Axiam.Sdk.Management.Models.SetOrgSettings.RequireUppercase">
+  RequireUppercase
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Management/Models/SetOrgSettings.cs/#L168"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's require_uppercase field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;require_uppercase&quot;)]
+public required bool RequireUppercase { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

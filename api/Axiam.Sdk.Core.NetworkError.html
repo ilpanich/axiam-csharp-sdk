@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-alpha44/apiSpec/new?filename=Axiam_Sdk_Core_NetworkError.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Core.NetworkError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta02/apiSpec/new?filename=Axiam_Sdk_Core_NetworkError.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Core.NetworkError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Core_NetworkError" data-uid="Axiam.Sdk.Core.NetworkError" class="text-break">
-Class NetworkError  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha44/Axiam.Sdk/Core/NetworkError.cs/#L23"><i class="bi bi-code-slash"></i></a>
+Class NetworkError  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Core/NetworkError.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -103,7 +103,7 @@ server-side 5xx (CONTRACT.md §2).</p>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class NetworkError : Exception, ISerializable</code></pre>
+    <pre><code class="lang-csharp hljs">public class NetworkError : Exception, ISerializable</code></pre>
   </div>
 
 
@@ -125,6 +125,12 @@ server-side 5xx (CONTRACT.md §2).</p>
     </dd>
   </dl>
 
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="Axiam.Sdk.Management.ValidationError.html">ValidationError</a></div>
+    </dd>
+  </dl>
 
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
@@ -163,6 +169,9 @@ server-side 5xx (CONTRACT.md §2).</p>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.targetsite">Exception.TargetSite</a>
     </div>
     <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.serializeobjectstate">Exception.SerializeObjectState</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
     </div>
     <div>
@@ -170,6 +179,9 @@ server-side 5xx (CONTRACT.md §2).</p>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -181,18 +193,61 @@ server-side 5xx (CONTRACT.md §2).</p>
 
   <h2 id="Axiam_Sdk_Core_NetworkError_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
-<b>Redact-before-wrap (D-12, CR-04 carry-forward):</b> this is the ONLY error class
-that may be constructed from an HTTP response, and there is exactly ONE construction
-path that accepts a live <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpresponsemessage">HttpResponseMessage</a> — the static
-<a class="xref" href="Axiam.Sdk.Core.NetworkError.html#Axiam_Sdk_Core_NetworkError_FromResponse_System_Net_Http_HttpResponseMessage_System_String_">FromResponse(HttpResponseMessage, string)</a> factory. There is no public or internal constructor that
-accepts an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpresponsemessage">HttpResponseMessage</a> directly; the live response object is
-NEVER stored as the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.innerexception">InnerException</a> or in
-<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.data">Data</a> — only a pre-sanitized message string survives. This
-structurally prevents the token-leak-via-error class of bug first found in the
-TypeScript sibling SDK (Phase 17 CR-04, <code>sdks/typescript/src/core/errorMapper.ts</code>
-<code>sanitizeAxiosError</code>) and mirrored across every later sibling SDK.
+Unsealed so CONTRACT.md §27.4 rule 7 can classify a 400/422 as
+<a class="xref" href="Axiam.Sdk.Management.ValidationError.html">ValidationError</a> inside this type — the parent §2 already
+gives a 400. <code>catch (NetworkError)</code> still catches it.
 </p>
 </div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Axiam_Sdk_Core_NetworkError__ctor_" data-uid="Axiam.Sdk.Core.NetworkError.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Core_NetworkError__ctor_System_String_System_Exception_" data-uid="Axiam.Sdk.Core.NetworkError.#ctor(System.String,System.Exception)">
+  NetworkError(string, Exception?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Core/NetworkError.cs/#L67"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The single construction path a subclass may use — a message this SDK authored
+plus an optional already-sanitized cause.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected NetworkError(string message, Exception? inner)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>An already-sanitized description of the failure.</p>
+</dd>
+    <dt><code>inner</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></dt>
+    <dd><p>An already-sanitized cause, or <code>null</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Core_NetworkError__ctor_System_String_System_Exception__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><code>protected</code> rather than <code>private</code> so CONTRACT.md §27.4 rule 7 can
+classify a 400/422 as <a class="xref" href="Axiam.Sdk.Management.ValidationError.html">ValidationError</a> inside this type.
+The redact-before-wrap invariant this class exists to enforce is untouched: this
+constructor takes a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> and an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a>, never an
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpresponsemessage">HttpResponseMessage</a>, so a subclass has no more access to a live
+response than any other caller does. <a class="xref" href="Axiam.Sdk.Core.NetworkError.html#Axiam_Sdk_Core_NetworkError_FromResponse_System_Net_Http_HttpResponseMessage_System_String_">FromResponse(HttpResponseMessage, string)</a> remains the only
+path from a response into this type.</p>
+</div>
+
+
 
 
   <h2 class="section" id="properties">Properties
@@ -203,7 +258,7 @@ TypeScript sibling SDK (Phase 17 CR-04, <code>sdks/typescript/src/core/errorMapp
 
   <h3 id="Axiam_Sdk_Core_NetworkError_RetryAfter" data-uid="Axiam.Sdk.Core.NetworkError.RetryAfter">
   RetryAfter
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha44/Axiam.Sdk/Core/NetworkError.cs/#L107"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Core/NetworkError.cs/#L129"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A server-supplied <code>Retry-After</code> hint (CONTRACT.md §16.1), <code>null</code>
@@ -253,7 +308,7 @@ stating when it will be ready, so retrying sooner is not permitted.
 
   <h3 id="Axiam_Sdk_Core_NetworkError_FromException_System_Exception_System_String_" data-uid="Axiam.Sdk.Core.NetworkError.FromException(System.Exception,System.String)">
   FromException(Exception, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha44/Axiam.Sdk/Core/NetworkError.cs/#L168"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Core/NetworkError.cs/#L190"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds a <a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a> from a caught exception (e.g. a socket/TLS/DNS
@@ -295,7 +350,7 @@ lower-level exception echoed a request header verbatim.</p>
 
   <h3 id="Axiam_Sdk_Core_NetworkError_FromMessage_System_String_" data-uid="Axiam.Sdk.Core.NetworkError.FromMessage(System.String)">
   FromMessage(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha44/Axiam.Sdk/Core/NetworkError.cs/#L160"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Core/NetworkError.cs/#L182"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds a <a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a> from a message this SDK authored, with no wire
@@ -348,7 +403,7 @@ so the redaction discipline the rest of this class enforces has nothing to strip
 
   <h3 id="Axiam_Sdk_Core_NetworkError_FromResponse_System_Net_Http_HttpResponseMessage_System_String_" data-uid="Axiam.Sdk.Core.NetworkError.FromResponse(System.Net.Http.HttpResponseMessage,System.String)">
   FromResponse(HttpResponseMessage, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-alpha44/Axiam.Sdk/Core/NetworkError.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta02/Axiam.Sdk/Core/NetworkError.cs/#L94"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds a <a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a> from a live <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpresponsemessage">HttpResponseMessage</a>.
