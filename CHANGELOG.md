@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta02] - 2026-08-28
+
 ### Added
+
+- Contract 1.31 — list search, the truthful resend, organization scope
 
 - **CONTRACT 1.31 — the AXIAM server PR #383 surface.** `CONTRACT.md`,
   `openapi.json` and `management-registry.json` re-vendored, and the six things
@@ -71,40 +75,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `Certificates.ListAsync` and `null` on `Certificates.GetAsync`. The SDK does
     not issue a second request to fill it in there.
 
-### Changed
-
-- **`WireEnumConverter<T>` decodes an unrecognised value to the enum's
-  `Unknown` member instead of throwing** (§27.11 rule 1), and every generated
-  enum gained that member. Throwing failed the **whole** response, so one field
-  of one record the caller did not ask about would take down an entire page —
-  including the records it did ask for.
-
-  The reasoning behind the old throw is preserved, not discarded: `Unknown` is
-  deliberately **not** the zero member, so the trap the throw existed to
-  avoid — reading `"suspended"` as whatever happens to be declared first — is
-  still impossible. Its wire spelling is the empty string, which no server value
-  is, so carrying an unrecognised value back into an update is refused by the
-  server rather than written as a spelling it never used. An enum with no
-  `Unknown` member still throws, so a hand-written one that never opted in is
-  unaffected.
-
-  `ManagementCoreTests.AnEnumRoundTripsItsWireSpelling…` was rewritten rather
-  than removed: it now asserts the decode, *and* the two properties that keep
-  the original guarantee.
-
-### Fixed
-
-- **`scripts/gen_management.py` no longer drops a projected list element.** The
-  server answers `GET /api/v1/certificates` with `Certificate` plus one resolved
-  graph edge, expressed as an `allOf` of the `$ref` and an anonymous object.
-  Read as a whole, that composition has no name, so the registry carried a page
-  with no element type and the added field reached no record. The generator now
-  takes the base name through the `allOf` and folds the projection's added
-  fields onto the base record as optional properties. (The registry-side half of
-  this is AXIAM PR #386.)
-
-### Added
-
 - **The §27 namespace handles now sit directly on the client** — `client.Roles`,
   `client.ServiceAccounts.RotateSecretAsync(id)` — which is the form §27.3's C# row
   specifies. `client.Management` still reaches the same 24 handles behind one accessor;
@@ -118,9 +88,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   method and path each form actually puts on the wire — a forwarding property that built
   its own handle with a default scope would return the right type and address the wrong
   organization, which is the failure the rule exists to prevent.
-
-
-### Added
 
 - **CONTRACT.md §27 Management API** — `client.Management`, 146 operations across 24
   namespaces (users, groups, roles, permissions, resources, scopes, service accounts,
@@ -175,6 +142,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Re-vendor openapi.json and management-registry.json from axiam main (#74)
+
+- Re-vendor the contract artifacts: spec digest + §27.10 posture (#72)
+
+- Put the §27 namespace handles directly on the client, per §27.2/§27.3
+
+- Correct the coverage figure recorded beside the floor
+
+- Implement CONTRACT.md §27 Management API
+
+- Re-vendor CONTRACT.md, openapi.json and the §27 registry
+
+- **`WireEnumConverter<T>` decodes an unrecognised value to the enum's
+  `Unknown` member instead of throwing** (§27.11 rule 1), and every generated
+  enum gained that member. Throwing failed the **whole** response, so one field
+  of one record the caller did not ask about would take down an entire page —
+  including the records it did ask for.
+
+  The reasoning behind the old throw is preserved, not discarded: `Unknown` is
+  deliberately **not** the zero member, so the trap the throw existed to
+  avoid — reading `"suspended"` as whatever happens to be declared first — is
+  still impossible. Its wire spelling is the empty string, which no server value
+  is, so carrying an unrecognised value back into an update is refused by the
+  server rather than written as a spelling it never used. An enum with no
+  `Unknown` member still throws, so a hand-written one that never opted in is
+  unaffected.
+
+  `ManagementCoreTests.AnEnumRoundTripsItsWireSpelling…` was rewritten rather
+  than removed: it now asserts the decode, *and* the two properties that keep
+  the original guarantee.
+
 - **`AuthzError` and `NetworkError` are no longer `sealed`.** §27.4 rule 7 classifies three
   statuses *inside* the existing §2 taxonomy rather than beside it: `NotFoundError` (404)
   and `ConflictError` (409) extend `AuthzError`; `ValidationError` (400/422) extends
@@ -195,6 +193,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   surface is 98.93% of its own 3380 lines and pulled everything else (94.58%) up with it,
   so the floor moves with it rather than staying where a two-point regression would go
   unnoticed.
+
+### Fixed
+
+- **`scripts/gen_management.py` no longer drops a projected list element.** The
+  server answers `GET /api/v1/certificates` with `Certificate` plus one resolved
+  graph edge, expressed as an `allOf` of the `$ref` and an anonymous object.
+  Read as a whole, that composition has no name, so the registry carried a page
+  with no element type and the added field reached no record. The generator now
+  takes the base name through the `allOf` and folds the projection's added
+  fields onto the base record as optional properties. (The registry-side half of
+  this is AXIAM PR #386.)
 
 ## [1.0.0-alpha44] - 2026-08-25
 
