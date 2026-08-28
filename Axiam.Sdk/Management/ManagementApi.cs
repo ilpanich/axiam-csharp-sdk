@@ -12,7 +12,7 @@ using System.Text.Json.Serialization;
 namespace Axiam.Sdk.Management;
 
 /// <summary>
-/// The CONTRACT.md &#167;27 management API: 146 operations across 24 namespaces.
+/// The CONTRACT.md &#167;27 management API: 147 operations across 24 namespaces.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -21,7 +21,7 @@ namespace Axiam.Sdk.Management;
 /// </para>
 /// <para>
 /// The namespaces are grouped behind this one accessor rather than added to AxiamClient
-/// directly: &#167;27.2's own argument for handles is that a flat surface of 146 methods buries
+/// directly: &#167;27.2's own argument for handles is that a flat surface of 147 methods buries
 /// the twenty a given caller needs, and hanging 24 more members off AxiamClient would do to it
 /// exactly what the handles exist to prevent.
 /// </para>

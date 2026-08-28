@@ -118,6 +118,15 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
         await Client.Management.Tenants.DeleteAsync(tenantId: ExampleId);
     }
 
+    /// <summary>Exercises tenants.export_audit.</summary>
+    [Fact]
+    public async Task Tenants_ExportAudit()
+    {
+        string body = "";
+        Mount("POST", $"/api/v1/organizations/{OrgId}/tenants/{ExampleId}/audit-export", 200, body);
+        await Client.Management.Tenants.ExportAuditAsync(tenantId: ExampleId);
+    }
+
     /// <summary>Exercises users.list.</summary>
     [Fact]
     public async Task Users_List()
@@ -1659,7 +1668,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     }
 
     /// <summary>
-    /// &#167;27.9: a partial regeneration must fail here, not ship 140 of 146.
+    /// &#167;27.9: a partial regeneration must fail here, not ship 140 of 147.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -1797,6 +1806,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "settings.set_tenant_override",
             "tenants.create",
             "tenants.delete",
+            "tenants.export_audit",
             "tenants.get",
             "tenants.list",
             "tenants.update",
@@ -1819,7 +1829,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "webhooks.list",
             "webhooks.update",
         };
-        Assert.Equal(146, exercised.Length);
+        Assert.Equal(147, exercised.Length);
         Assert.Equal(ExpectedSurface(), exercised);
     }
 }

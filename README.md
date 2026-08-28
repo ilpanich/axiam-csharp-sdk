@@ -27,7 +27,7 @@ verifier, T-145, the §20 UMA 2.0 Protection API and ticket grant, contract 1.10
 runtime, contract 1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, the §24 WebAuthn
 relying-party layer, the §25 account-lifecycle operations and §26 Pushed Authorization Requests,
 contract 1.28, §23.4 rule 7's `mode`-driven password-login fallback, contract 1.29, and the §27
-Management API — all 146 operations across 24 namespaces with the §27.6 declarative layer).
+Management API — all 147 operations across 24 namespaces with the §27.6 declarative layer).
 
 §12.7, §14, §15, §20, §22, §23, §24, §25, §26 and §27 are named rather than folded into the range
 because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
@@ -1351,7 +1351,7 @@ Worked end to end in [`examples/ParLogin`](examples/ParLogin).
 
 ## Management API (CONTRACT.md §27)
 
-The administrative surface: 146 operations across 24 namespaces — users, groups, roles,
+The administrative surface: 147 operations across 24 namespaces — users, groups, roles,
 permissions, resources, scopes, service accounts, certificates, CA certificates, PGP keys, webhooks,
 OAuth2 clients, federation, notification rules, e-mail config, settings, SCIM tokens, reactors,
 WebAuthn policy, audit, privacy, organizations, tenants and platform.

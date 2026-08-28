@@ -201,4 +201,41 @@ public sealed class TenantsApi
             null,
             cancellationToken).ConfigureAwait(false);
     }
+
+    /// <summary>
+    /// Streams the tenant's complete audit trail as newline-delimited JSON, one
+    /// [<c>axiam_core::models::audit::AuditLogEntry</c>] per line, newest first, and records
+    /// the export in that tenant's audit log — which is what [<c>delete</c>] then requires
+    /// (T-118). The last line is not an entry but a manifest object carrying
+    /// <c>record_count</c>, the SHA-256 <c>digest</c> over the entry lines that precede it, and
+    /// <c>receipt_id</c> — the id of the audit entry this export wrote. An archive can
+    /// therefore be tied back to the receipt that authorised the deletion, and re-hashing the
+    /// file proves it is the export the receipt describes. <c>POST</c> rather than <c>GET</c>:
+    /// it is not safe and not idempotent — every call appends a receipt.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Issues <c>POST /api/v1/organizations/{org_id}/tenants/{tenant_id}/audit-export</c>.
+    /// </para>
+    /// <para>
+    /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
+    /// the ones that look idempotent.
+    /// </para>
+    /// </remarks>
+    /// <param name="tenantId">the tenant id to address.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>a task that completes when the server has answered</returns>
+    public async Task ExportAuditAsync(Guid tenantId, CancellationToken cancellationToken = default)
+    {
+        Guid orgId = ManagementSupport.ResolveOrg(_transport, _scope, "tenants.export_audit");
+        string path = $"/api/v1/organizations/{orgId}/tenants/{tenantId}/audit-export";
+        await _transport.SendAsync(
+            "tenants.export_audit",
+            HttpMethod.Post,
+            "/api/v1/organizations/{org_id}/tenants/{tenant_id}/audit-export",
+            path,
+            null,
+            null,
+            cancellationToken).ConfigureAwait(false);
+    }
 }

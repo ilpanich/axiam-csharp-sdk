@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate the CONTRACT §27 management surface for the C# SDK.
 
-Reads ``management-registry.json`` (the 146 operations across 24 namespaces,
+Reads ``management-registry.json`` (the 147 operations across 24 namespaces,
 maintained in ``ilpanich/axiam`` and vendored here) plus ``openapi.json`` for the
 schemas those operations carry, and writes:
 
@@ -11,7 +11,7 @@ schemas those operations carry, and writes:
 - ``Axiam.Sdk/Management/ManagementApi.cs`` — the accessors;
 - ``tests/Axiam.Sdk.Tests/Management/ManagementSurfaceGeneratedTests.cs``
 - ``tests/Axiam.Sdk.Tests/Management/ManagementSparseBodiesGeneratedTests.cs``
-  — one conformance case per operation, plus the §27.9 assertion that all 146 are
+  — one conformance case per operation, plus the §27.9 assertion that all 147 are
   reached.
 
 Run with ``--check`` to verify the committed output is current; that is what CI runs,
@@ -969,13 +969,13 @@ def emit_namespace(namespace: str, nsdef: dict[str, Any]) -> str:
 def emit_api() -> str:
     """The root handle: one accessor per namespace."""
     lines = xmldoc(
-        "The CONTRACT.md &#167;27 management API: 146 operations across 24 namespaces."
+        "The CONTRACT.md &#167;27 management API: 147 operations across 24 namespaces."
         "\n\nObtained from <c>client.Management</c>. Each accessor returns a namespace "
         "handle, which is a view over the same session — acquiring one performs no I/O "
         "(&#167;27.2 rule 1)."
         "\n\nThe namespaces are grouped behind this one accessor rather than added to "
         "AxiamClient directly: &#167;27.2's own argument for handles is that a flat "
-        "surface of 146 methods buries the twenty a given caller needs, and hanging 24 "
+        "surface of 147 methods buries the twenty a given caller needs, and hanging 24 "
         "more members off AxiamClient would do to it exactly what the handles exist to "
         "prevent.")
     lines.append("public sealed class ManagementApi")
@@ -1267,7 +1267,7 @@ def emit_test() -> str:
             lines.append("")
 
     lines.extend(xmldoc(
-        "&#167;27.9: a partial regeneration must fail here, not ship 140 of 146."
+        "&#167;27.9: a partial regeneration must fail here, not ship 140 of 147."
         "\n\nAsserting the whole set rather than the count catches a regeneration that "
         "dropped one operation and gained another.", "    "))
     lines.append("    [Fact]")
