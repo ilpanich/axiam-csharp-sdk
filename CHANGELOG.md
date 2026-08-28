@@ -7,20 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-
-- **`TenantContext` now rejects a blank `orgSlug`** (CONTRACT.md §5.1, §5.2.1
-  rule 2). `tenantId` was already checked with `IsNullOrWhiteSpace`; `orgSlug`
-  accepted `""` and put it on the wire. A **null** `orgSlug` stays accepted —
-  that is the organization identifier being optional, not blank.
-
-  An SDK MUST NOT send an empty-string slug. Nothing can carry one, so the
-  server resolves nothing — and on `/auth/opaque/login/start` it fails on the
-  workspace *before* the tenant's OPAQUE mode is read, so the `404` of §23.4
-  rule 10 never arrives, this SDK has no fallback to take, and sign-in fails
-  even against a tenant with OPAQUE **disabled**.
+## [1.0.0-beta04] - 2026-08-28
 
 ### Changed
+
+- Attest the published packages, pin setup-python by digest, re-vendor contract 1.33
 
 - **CONTRACT 1.32 — signing in an organization-level principal (§5.2.1).**
   `CONTRACT.md`, `openapi.json` and `management-registry.json` re-vendored from
@@ -38,6 +29,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Prefer that over omitting the tenant: §5 rule 2 still requires one on the
   `X-Tenant-ID` header of every request after the login.
+
+### Fixed
+
+- Reject a blank orgSlug instead of sending it as ""
+
+- **`TenantContext` now rejects a blank `orgSlug`** (CONTRACT.md §5.1, §5.2.1
+  rule 2). `tenantId` was already checked with `IsNullOrWhiteSpace`; `orgSlug`
+  accepted `""` and put it on the wire. A **null** `orgSlug` stays accepted —
+  that is the organization identifier being optional, not blank.
+
+  An SDK MUST NOT send an empty-string slug. Nothing can carry one, so the
+  server resolves nothing — and on `/auth/opaque/login/start` it fails on the
+  workspace *before* the tenant's OPAQUE mode is read, so the `404` of §23.4
+  rule 10 never arrives, this SDK has no fallback to take, and sign-in fails
+  even against a tenant with OPAQUE **disabled**.
 
 ## [1.0.0-beta02] - 2026-08-28
 
