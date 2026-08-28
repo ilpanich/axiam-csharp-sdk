@@ -45,6 +45,22 @@ public sealed class TenantContext
                 nameof(tenantId));
         }
 
+        // §5.2.1 rule 2: an SDK MUST NOT send an empty-string slug. `tenantId`
+        // was already covered; `orgSlug` was not, and a blank one reaches the
+        // login body the same way. Nothing can carry an empty slug, so the
+        // server resolves nothing — and on /auth/opaque/login/start a workspace
+        // that does not resolve fails *before* the tenant's OPAQUE mode is
+        // read, so the 404 that means "OPAQUE is not offered here" never
+        // arrives and this SDK has no fallback to take. `null` stays fine: that
+        // is what "not named" looks like, and it is the organization identifier
+        // being optional rather than blank.
+        if (orgSlug is not null && string.IsNullOrWhiteSpace(orgSlug))
+        {
+            throw new ArgumentException(
+                "orgSlug must not be blank — omit it entirely, or name the organization (CONTRACT.md §5.1, §5.2.1).",
+                nameof(orgSlug));
+        }
+
         TenantId = tenantId;
         OrgId = orgId;
         OrgSlug = orgSlug;

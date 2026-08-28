@@ -102,6 +102,41 @@ public class CoreValueTypesTests
         Assert.Throws<ArgumentException>(() => new TenantContext(blank!));
     }
 
+    // CONTRACT.md §5.2.1 rule 2: an SDK MUST NOT send an empty-string slug.
+    //
+    // Nothing can carry a blank slug, so the server resolves nothing — and on
+    // /auth/opaque/login/start it fails on the workspace *before* the tenant's
+    // OPAQUE mode is read, so the 404 of §23.4 rule 10 never arrives, this SDK
+    // has no fallback to take, and sign-in fails even against a tenant with
+    // OPAQUE disabled. `tenantId` was already covered above; `orgSlug` was not.
+    [Theory]
+    [InlineData("")]
+    [InlineData("  ")]
+    public void TenantContext_BlankOrgSlug_Throws(string blank)
+    {
+        Assert.Throws<ArgumentException>(() => new TenantContext("acme", orgId: null, orgSlug: blank));
+    }
+
+    // A null orgSlug is not blank — it is the organization identifier being
+    // optional, which §5.1 allows for a client that never calls login/refresh.
+    [Fact]
+    public void TenantContext_NullOrgSlug_IsAccepted()
+    {
+        var ctx = new TenantContext("acme");
+        Assert.Null(ctx.OrgSlug);
+    }
+
+    // §5.2.1: an organization-level principal signs in by naming the
+    // organization's reserved tenant, whose slug is fixed in every deployment.
+    // No new surface — TenantContext takes it like any other tenant.
+    [Fact]
+    public void TenantContext_ReservedOrganizationTenant_IsNamedLikeAnyOther()
+    {
+        var ctx = new TenantContext("organization", orgId: null, orgSlug: "globex");
+        Assert.Equal("organization", ctx.TenantId);
+        Assert.Equal("globex", ctx.OrgSlug);
+    }
+
     [Fact]
     public void NetworkError_FromResponse_PreservesSafeHeaderValue_RedactsUnsafeOne()
     {
