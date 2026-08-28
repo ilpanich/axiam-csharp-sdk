@@ -22025,6 +22025,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.TenantsApi.DeleteAsync
   nameWithType: TenantsApi.DeleteAsync
+- uid: Axiam.Sdk.Management.TenantsApi.ExportAuditAsync(System.Guid,System.Threading.CancellationToken)
+  name: ExportAuditAsync(Guid, CancellationToken)
+  href: api/Axiam.Sdk.Management.TenantsApi.html#Axiam_Sdk_Management_TenantsApi_ExportAuditAsync_System_Guid_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.TenantsApi.ExportAuditAsync(System.Guid,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.TenantsApi.ExportAuditAsync(System.Guid, System.Threading.CancellationToken)
+  nameWithType: TenantsApi.ExportAuditAsync(Guid, CancellationToken)
+- uid: Axiam.Sdk.Management.TenantsApi.ExportAuditAsync*
+  name: ExportAuditAsync
+  href: api/Axiam.Sdk.Management.TenantsApi.html#Axiam_Sdk_Management_TenantsApi_ExportAuditAsync_
+  commentId: Overload:Axiam.Sdk.Management.TenantsApi.ExportAuditAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.TenantsApi.ExportAuditAsync
+  nameWithType: TenantsApi.ExportAuditAsync
 - uid: Axiam.Sdk.Management.TenantsApi.GetAsync(System.Guid,System.Threading.CancellationToken)
   name: GetAsync(Guid, CancellationToken)
   href: api/Axiam.Sdk.Management.TenantsApi.html#Axiam_Sdk_Management_TenantsApi_GetAsync_System_Guid_System_Threading_CancellationToken_

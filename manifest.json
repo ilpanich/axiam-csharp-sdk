@@ -1562,7 +1562,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.ManagementApi",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementApi.yml\" sourcestartlinenumber=\"1\">The CONTRACT.md §27 management API: 146 operations across 24 namespaces.</p>\n"
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementApi.yml\" sourcestartlinenumber=\"1\">The CONTRACT.md §27 management API: 147 operations across 24 namespaces.</p>\n"
     },
     {
       "type": "ManagedReference",
