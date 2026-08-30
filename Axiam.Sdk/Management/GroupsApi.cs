@@ -307,4 +307,104 @@ public sealed class GroupsApi
             cancellationToken).ConfigureAwait(false);
         return ManagementSupport.DecodeList<RoleAssignment>("groups.list_roles", node);
     }
+
+    /// <summary>
+    /// Issues <c>GET /api/v1/groups/{group_id}/service-accounts</c>.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Paginated: Total on the returned page is the size of the WHOLE set, not of this page
+    /// (&#167;27.4 rule 4). Use ListServiceAccountsAllAsync(...) to walk every page.
+    /// </para>
+    /// </remarks>
+    /// <param name="groupId">the group id to address.</param>
+    /// <param name="page">where to start and how many to ask for, or <c>null</c> for the
+    ///     server's default.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>the page of results</returns>
+    public async Task<Page<ServiceAccountResponse>> ListServiceAccountsAsync(Guid groupId, PageRequest? page = null, CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/groups/{groupId}/service-accounts";
+        Dictionary<string, string?> query = ManagementSupport.PageQuery(null, page);
+        JsonElement? node = await _transport.SendAsync(
+            "groups.list_service_accounts",
+            HttpMethod.Get,
+            "/api/v1/groups/{group_id}/service-accounts",
+            path,
+            query,
+            null,
+            cancellationToken).ConfigureAwait(false);
+        return ManagementSupport.DecodePage<ServiceAccountResponse>("groups.list_service_accounts", node);
+    }
+
+    /// <summary>
+    /// Walks ListServiceAccountsAsync to exhaustion and returns every item (&#167;27.4 rule 4).
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Stops on an empty page even when the server's Total disagrees, so a misreporting server
+    /// costs one wasted request rather than an unbounded loop.
+    /// </para>
+    /// </remarks>
+    /// <param name="groupId">the group id to address.</param>
+    /// <param name="start">the first window to request, or <c>null</c> for the server's
+    ///     default.</param>
+    /// <param name="cancellationToken">cancels the walk.</param>
+    /// <returns>every item, in the server's order</returns>
+    public Task<IReadOnlyList<ServiceAccountResponse>> ListServiceAccountsAllAsync(Guid groupId, PageRequest? start = null, CancellationToken cancellationToken = default) =>
+        ManagementSupport.CollectPagesAsync(start, window =>
+            ListServiceAccountsAsync(groupId: groupId, page: window, cancellationToken: cancellationToken));
+
+    /// <summary>
+    /// Issues <c>POST /api/v1/groups/{group_id}/service-accounts</c>.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
+    /// the ones that look idempotent.
+    /// </para>
+    /// </remarks>
+    /// <param name="groupId">the group id to address.</param>
+    /// <param name="body">the request body.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>a task that completes when the server has answered</returns>
+    public async Task AddServiceAccountAsync(Guid groupId, AddServiceAccountMemberRequest body, CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/groups/{groupId}/service-accounts";
+        string payload = ManagementSupport.EncodeBody("groups.add_service_account", body);
+        await _transport.SendAsync(
+            "groups.add_service_account",
+            HttpMethod.Post,
+            "/api/v1/groups/{group_id}/service-accounts",
+            path,
+            null,
+            payload,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Issues <c>DELETE /api/v1/groups/{group_id}/service-accounts/{service_account_id}</c>.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
+    /// the ones that look idempotent.
+    /// </para>
+    /// </remarks>
+    /// <param name="groupId">the group id to address.</param>
+    /// <param name="serviceAccountId">the service account id to address.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>a task that completes when the server has answered</returns>
+    public async Task RemoveServiceAccountAsync(Guid groupId, Guid serviceAccountId, CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/groups/{groupId}/service-accounts/{serviceAccountId}";
+        await _transport.SendAsync(
+            "groups.remove_service_account",
+            HttpMethod.Delete,
+            "/api/v1/groups/{group_id}/service-accounts/{service_account_id}",
+            path,
+            null,
+            null,
+            cancellationToken).ConfigureAwait(false);
+    }
 }

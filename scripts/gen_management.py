@@ -579,6 +579,17 @@ def emit_enum(name: str, schema: Any) -> str:
     return header("\n".join(body), MODELS_NAMESPACE)
 
 
+# Properties the server refuses when present-but-empty, so the record
+# normalises them to null — which the serializer's WhenWritingNull then drops.
+#
+# Deliberately a name list rather than a rule over every optional collection:
+# for most of them an empty list is meaningful (a replacement body clearing a
+# list), and normalising it away would make "remove every entry"
+# inexpressible. Only CONTRACT.md §5.2.3's `tenant_scope` has a server that
+# reads `[]` as a contradiction and answers 400.
+OMIT_WHEN_EMPTY = {"TenantScope"}
+
+
 def emit_record(name: str, secrets: set[str], replacement: bool) -> str:
     """A ``sealed record`` for an object schema."""
     type_name = pascal(name)
@@ -616,7 +627,19 @@ def emit_record(name: str, secrets: set[str], replacement: bool) -> str:
                     "one request body it is sent in.")
         body.extend(xmldoc(doc, "    "))
         body.append(f'    [JsonPropertyName("{f["wire"]}")]')
-        if f["required"]:
+        if f["name"] in OMIT_WHEN_EMPTY and not f["required"]:
+            # CONTRACT.md §5.2.3 rule 1 — a normalising `init` is the C#
+            # counterpart of a compact constructor: it runs however the record
+            # is built, including an object initialiser and a `with` expression.
+            field = "_" + f["name"][0].lower() + f["name"][1:]
+            body.append(f'    public {f["type"]}? {f["name"]}')
+            body.append("    {")
+            body.append(f"        get => {field};")
+            body.append(f"        init => {field} = value is {{ Count: 0 }} ? null : value;")
+            body.append("    }")
+            body.append("")
+            body.append(f'    private readonly {f["type"]}? {field};')
+        elif f["required"]:
             body.append(f'    public required {f["type"]} {f["name"]} {{ get; init; }}')
         else:
             body.append(f'    public {f["type"]}? {f["name"]} {{ get; init; }}')

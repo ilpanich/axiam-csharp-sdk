@@ -47,6 +47,22 @@ public sealed partial class AxiamClient : IDisposable
     private readonly AxiamHttpMessageHandler _authHandler;
     private readonly RefreshGuard _refreshGuard;
     private readonly JwksVerifier _jwksVerifier;
+
+    /// <summary>
+    /// CONTRACT.md &#167;5.2.2 — the tenant the signed-in principal's record <i>lives</i> in,
+    /// as reported by the login response.
+    /// </summary>
+    /// <remarks>
+    /// Distinct from the tenant being acted on, which is <see cref="_tenant"/>'s: the two
+    /// diverge for an organization-level principal that has selected another one. Read by
+    /// <see cref="OpaqueEnrollmentForSelfAsync"/>, which must seal a &#167;23 record against the
+    /// account's own tenant rather than whichever one this client is currently pointed at.
+    /// Held as a string because a client is shared and this must be visible across threads:
+    /// <c>volatile</c> cannot be applied to <c>Guid?</c>, which is a struct wider than a
+    /// reference, and a torn read of one would be worse than the round trip through text.
+    /// <c>null</c> until a login completes.
+    /// </remarks>
+    private volatile string? _principalTenantId;
     private readonly AuthzRestClient _authz;
     private readonly TelemetryDispatcher _telemetry;
     private readonly DecisionMemo _decisionMemo;
@@ -243,10 +259,9 @@ public sealed partial class AxiamClient : IDisposable
 
         if (response.StatusCode == HttpStatusCode.OK)
         {
-            return new LoginResult(
-                false,
-                OrganizationLevel: await OrganizationLevelOfAsync(response, cancellationToken)
-                    .ConfigureAwait(false));
+            (bool organizationLevel, PrincipalScope? scope) =
+                await ReadLoginScopeAsync(response, cancellationToken).ConfigureAwait(false);
+            return new LoginResult(false, OrganizationLevel: organizationLevel, Scope: scope);
         }
 
         if (response.StatusCode == HttpStatusCode.Accepted)
@@ -333,10 +348,9 @@ public sealed partial class AxiamClient : IDisposable
             throw ErrorMapper.FromHttpResponse(response, "MFA verification failed");
         }
 
-        return new LoginResult(
-            false,
-            OrganizationLevel: await OrganizationLevelOfAsync(response, cancellationToken)
-                .ConfigureAwait(false));
+        (bool organizationLevel, PrincipalScope? scope) =
+            await ReadLoginScopeAsync(response, cancellationToken).ConfigureAwait(false);
+        return new LoginResult(false, OrganizationLevel: organizationLevel, Scope: scope);
     }
 
     /// <summary>
@@ -632,10 +646,9 @@ public sealed partial class AxiamClient : IDisposable
             return new LoginResult(true, Sensitive.Of(ReadString(wire, "challenge_token")));
         }
 
-        return new LoginResult(
-            false,
-            OrganizationLevel: await OrganizationLevelOfAsync(response, cancellationToken)
-                .ConfigureAwait(false));
+        (bool organizationLevel, PrincipalScope? scope) =
+            await ReadLoginScopeAsync(response, cancellationToken).ConfigureAwait(false);
+        return new LoginResult(false, OrganizationLevel: organizationLevel, Scope: scope);
     }
 
     /// <summary>
@@ -668,9 +681,63 @@ public sealed partial class AxiamClient : IDisposable
     /// The tenant has OPAQUE disabled, <c>libaxiam_opaque_ffi</c> is not installed, or the
     /// server names a key-stretching function this SDK cannot ask for.
     /// </exception>
-    public async Task<OpaqueEnrollment> OpaqueEnrollmentAsync(
+    public Task<OpaqueEnrollment> OpaqueEnrollmentAsync(
+        char[] password,
+        CancellationToken cancellationToken = default) =>
+        EnrollAsync(password, null, cancellationToken);
+
+    /// <summary>
+    /// Builds a registration record for the <b>caller's own</b> new password, sealed against
+    /// the tenant the caller's account lives in.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// CONTRACT.md &#167;5.2.2 rule 2. <c>POST /auth/password/change</c> and the record that
+    /// accompanies it are about the account, not about whatever tenant the client is currently
+    /// pointed at, and a record sealed against the acting tenant is refused with <i>"the OPAQUE
+    /// session was issued for a different tenant"</i>.
+    /// </para>
+    /// <para>
+    /// The distinction only bites for an organization-level principal that has selected another
+    /// tenant to act on; for everyone else the two tenants are the same value and this behaves
+    /// identically to <see cref="OpaqueEnrollmentAsync"/>. It is still the method to call for a
+    /// self-service password change, because which principal is signed in is not something the
+    /// call site usually knows.
+    /// </para>
+    /// </remarks>
+    /// <param name="password">The new password.</param>
+    /// <param name="cancellationToken">Cancels the exchange.</param>
+    /// <returns>The <c>opaque</c> object to attach to the request.</returns>
+    /// <exception cref="NetworkError">
+    /// No login has completed on this client yet — the principal tenant is reported by the login
+    /// response, so there is nothing to seal against before then — or on the same terms as
+    /// <see cref="OpaqueEnrollmentAsync"/> otherwise.
+    /// </exception>
+    public Task<OpaqueEnrollment> OpaqueEnrollmentForSelfAsync(
         char[] password,
         CancellationToken cancellationToken = default)
+    {
+        if (_principalTenantId is not { } stored || !Guid.TryParse(stored, out Guid principalTenantId))
+        {
+            // FromMessage, not `new`: the constructor is protected so that FromResponse
+            // stays the only path from a live response into this type (see NetworkError's
+            // class remarks).
+            throw NetworkError.FromMessage(
+                "OPAQUE: no principal tenant is known yet — sign in before building a "
+                + "registration record for your own password");
+        }
+
+        return EnrollAsync(password, principalTenantId, cancellationToken);
+    }
+
+    /// <summary>
+    /// The shared body of the two enrolment methods; they differ only in the tenant the record
+    /// is sealed against.
+    /// </summary>
+    private async Task<OpaqueEnrollment> EnrollAsync(
+        char[] password,
+        Guid? principalTenantId,
+        CancellationToken cancellationToken)
     {
         EnsureNotDisposed();
         ArgumentNullException.ThrowIfNull(password);
@@ -682,6 +749,14 @@ public sealed partial class AxiamClient : IDisposable
             ["registration_request"] = exchange.Request,
         };
         ApplyTenantAndOrgFields(body);
+        if (principalTenantId is not null)
+        {
+            // CONTRACT.md §5.2.2 rule 2. Name the principal tenant by id and drop the slug: a
+            // slug naming the acting tenant would out-vote the id server-side, which is the
+            // exact confusion this override exists to avoid.
+            body.Remove("tenant_slug");
+            body["tenant_id"] = principalTenantId.Value.ToString();
+        }
 
         JsonElement started = await OpaqueStartAsync(
             OpaqueRegisterStartPath, body, "register/start", cancellationToken).ConfigureAwait(false);
@@ -742,33 +817,88 @@ public sealed partial class AxiamClient : IDisposable
     }
 
     /// <summary>
-    /// Reads the &#167;5.2 <c>user.organization_level</c> flag off a completed login
-    /// response.
+    /// Reads the &#167;5.2 flag and the &#167;5.2.2/&#167;5.2.3 scope off a completed login
+    /// response in one pass, and caches the principal tenant for
+    /// <see cref="OpaqueEnrollmentForSelfAsync"/>.
     /// </summary>
     /// <remarks>
-    /// Absent means <c>false</c>, which is what a server older than contract 1.31 answers
-    /// and the safe direction in both cases: the client then offers no cross-tenant action
-    /// rather than one that would <c>403</c>. Derived server-side and response-only — this
-    /// SDK never sends it. A body that is not JSON at all is also <c>false</c>: the login
-    /// already succeeded, and the scope flag is not worth failing it over.
+    /// One method rather than two because <see cref="ReadJsonAsync"/> disposes the content
+    /// stream: a second <c>...OfAsync(response)</c> pass would find nothing to read.
+    /// The scope is <c>null</c> when the server reports none of it, which is what a server older
+    /// than contract 1.34 does — <see cref="PrincipalScope"/> itself applies the "absent means
+    /// equal" fallback for the fields it does get.
     /// </remarks>
-    private static async Task<bool> OrganizationLevelOfAsync(
+    private async Task<(bool OrganizationLevel, PrincipalScope? Scope)> ReadLoginScopeAsync(
         HttpResponseMessage response, CancellationToken cancellationToken)
     {
+        JsonElement wire;
         try
         {
-            JsonElement wire = await ReadJsonAsync(response, cancellationToken).ConfigureAwait(false);
-            return wire.ValueKind == JsonValueKind.Object
-                && wire.TryGetProperty("user", out JsonElement user)
-                && user.ValueKind == JsonValueKind.Object
-                && user.TryGetProperty("organization_level", out JsonElement flag)
-                && flag.ValueKind == JsonValueKind.True;
+            wire = await ReadJsonAsync(response, cancellationToken).ConfigureAwait(false);
         }
         catch (JsonException)
         {
-            return false;
+            // The login already succeeded; the scope is not worth failing it over.
+            return (false, null);
         }
+
+        if (wire.ValueKind != JsonValueKind.Object
+            || !wire.TryGetProperty("user", out JsonElement user)
+            || user.ValueKind != JsonValueKind.Object)
+        {
+            return (false, null);
+        }
+
+        bool organizationLevel =
+            user.TryGetProperty("organization_level", out JsonElement flag)
+            && flag.ValueKind == JsonValueKind.True;
+
+        Guid? acting = ReadGuid(user, "tenant_id");
+        Guid? principal = ReadGuid(user, "principal_tenant_id");
+        Guid? orgId = ReadGuid(user, "org_id");
+        string? principalSlug =
+            user.TryGetProperty("principal_tenant_slug", out JsonElement slug)
+            && slug.ValueKind == JsonValueKind.String
+                ? slug.GetString()
+                : null;
+
+        List<Guid>? reachable = null;
+        if (user.TryGetProperty("reachable_tenant_ids", out JsonElement list)
+            && list.ValueKind == JsonValueKind.Array)
+        {
+            reachable = new List<Guid>();
+            foreach (JsonElement entry in list.EnumerateArray())
+            {
+                if (entry.ValueKind == JsonValueKind.String
+                    && Guid.TryParse(entry.GetString(), out Guid parsed))
+                {
+                    reachable.Add(parsed);
+                }
+            }
+        }
+
+        if (acting is null && principal is null && orgId is null
+            && principalSlug is null && reachable is null)
+        {
+            return (organizationLevel, null);
+        }
+
+        var scope = new PrincipalScope(acting, principal, principalSlug, orgId, reachable);
+        if (scope.PrincipalTenantId is Guid resolved)
+        {
+            _principalTenantId = resolved.ToString();
+        }
+
+        return (organizationLevel, scope);
     }
+
+    /// <summary>A <see cref="Guid"/> from a JSON property, or <c>null</c> when absent or unparseable.</summary>
+    private static Guid? ReadGuid(JsonElement element, string name) =>
+        element.TryGetProperty(name, out JsonElement value)
+        && value.ValueKind == JsonValueKind.String
+        && Guid.TryParse(value.GetString(), out Guid parsed)
+            ? parsed
+            : null;
 
     private static string ReadString(JsonElement element, string name) =>
         element.TryGetProperty(name, out JsonElement value) ? value.GetString() ?? string.Empty : string.Empty;

@@ -35,16 +35,25 @@ namespace Axiam.Sdk.Auth;
 /// <c>true</c> when the account that just signed in is an <b>organization-level</b>
 /// principal (CONTRACT.md &#167;5.2) — one whose record lives in its organization's
 /// reserved tenant, so its global grants apply in every tenant of that organization, and
-/// which can act on a different one by sending a different <c>X-Tenant-ID</c> on the next
+/// which can act on a different one by sending a different <c>X-Axiam-Tenant</c> on the next
 /// request. An ordinary tenant principal is a principal of exactly one tenant and gets a
 /// <c>403</c> for the same header change, so check this <i>before</i> offering a tenant
 /// switch rather than discovering the answer from a failed request.
 /// <c>false</c> against a server older than contract 1.31, and <c>false</c> on the two
 /// pending outcomes, where no principal has been established yet.
+/// Since contract 1.35 that reach can be narrowed per assignment, so this flag alone no
+/// longer decides what to offer: consult <see cref="PrincipalScope.ReachableTenantIds"/>
+/// as well (&#167;5.2.3 rule 3).
+/// </param>
+/// <param name="Scope">
+/// Where this principal lives and how far its roles reach (CONTRACT.md &#167;5.2.2,
+/// &#167;5.2.3). <c>null</c> on the two pending outcomes and against a server older than
+/// contract 1.34, which reports none of it.
 /// </param>
 public sealed record LoginResult(
     bool MfaRequired,
     Sensitive<string>? ChallengeToken = null,
     bool MfaSetupRequired = false,
     Sensitive<string>? SetupToken = null,
-    bool OrganizationLevel = false);
+    bool OrganizationLevel = false,
+    PrincipalScope? Scope = null);

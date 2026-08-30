@@ -12,24 +12,29 @@ using System.Text.Json.Serialization;
 namespace Axiam.Sdk.Management.Models;
 
 /// <summary>
-/// A role together with its assignment context (the resource it is scoped to).
+/// The AssignRoleToServiceAccountRequest schema from the server's OpenAPI document.
 /// </summary>
-public sealed record RoleAssignment
+public sealed record AssignRoleToServiceAccountRequest
 {
     /// <summary>
-    /// <c>None</c> means the role was assigned globally (no resource scope).
+    /// the server's resource_id field
     /// </summary>
     [JsonPropertyName("resource_id")]
     public Guid? ResourceId { get; init; }
 
     /// <summary>
-    /// the server's role field
+    /// the server's service_account_id field
     /// </summary>
-    [JsonPropertyName("role")]
-    public required Role Role { get; init; }
+    [JsonPropertyName("service_account_id")]
+    public required Guid ServiceAccountId { get; init; }
 
     /// <summary>
-    /// The tenants this assignment reaches. See [<c>TenantScope</c>].
+    /// The tenants this assignment reaches. Only meaningful for an assignment made in an
+    /// organization's scope, whose global roles otherwise reach every tenant of the
+    /// organization; naming tenants here confines the assignment to those and to nothing else,
+    /// the organization's own scope included. Omitted — the default — reaches wherever the role
+    /// does. Refused with 400 outside an organization scope, when empty, and when it names a
+    /// tenant of another organization or the organization's own scope tenant.
     /// </summary>
     [JsonPropertyName("tenant_scope")]
     public IReadOnlyList<Guid>? TenantScope
