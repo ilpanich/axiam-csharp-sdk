@@ -422,4 +422,80 @@ public sealed class RolesApi
             null,
             cancellationToken).ConfigureAwait(false);
     }
+
+    /// <summary>
+    /// Issues <c>GET /api/v1/roles/{role_id}/service-accounts</c>.
+    /// </summary>
+    /// <param name="roleId">the role id to address.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>the server response</returns>
+    public async Task<IReadOnlyList<RoleServiceAccountAssignment>> ListServiceAccountsAsync(Guid roleId, CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/roles/{roleId}/service-accounts";
+        JsonElement? node = await _transport.SendAsync(
+            "roles.list_service_accounts",
+            HttpMethod.Get,
+            "/api/v1/roles/{role_id}/service-accounts",
+            path,
+            null,
+            null,
+            cancellationToken).ConfigureAwait(false);
+        return ManagementSupport.DecodeList<RoleServiceAccountAssignment>("roles.list_service_accounts", node);
+    }
+
+    /// <summary>
+    /// Issues <c>POST /api/v1/roles/{role_id}/service-accounts</c>.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
+    /// the ones that look idempotent.
+    /// </para>
+    /// </remarks>
+    /// <param name="roleId">the role id to address.</param>
+    /// <param name="body">the request body.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>a task that completes when the server has answered</returns>
+    public async Task AssignToServiceAccountAsync(Guid roleId, AssignRoleToServiceAccountRequest body, CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/roles/{roleId}/service-accounts";
+        string payload = ManagementSupport.EncodeBody("roles.assign_to_service_account", body);
+        await _transport.SendAsync(
+            "roles.assign_to_service_account",
+            HttpMethod.Post,
+            "/api/v1/roles/{role_id}/service-accounts",
+            path,
+            null,
+            payload,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Issues <c>DELETE /api/v1/roles/{role_id}/service-accounts/{service_account_id}</c>.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
+    /// the ones that look idempotent.
+    /// </para>
+    /// </remarks>
+    /// <param name="roleId">the role id to address.</param>
+    /// <param name="serviceAccountId">the service account id to address.</param>
+    /// <param name="resourceId">the optional resource id filter, or <c>null</c> to omit
+    ///     it.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>a task that completes when the server has answered</returns>
+    public async Task UnassignFromServiceAccountAsync(Guid roleId, Guid serviceAccountId, string? resourceId = null, CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/roles/{roleId}/service-accounts/{serviceAccountId}";
+        Dictionary<string, string?> query = new Dictionary<string, string?>(StringComparer.Ordinal) { ["resource_id"] = resourceId };
+        await _transport.SendAsync(
+            "roles.unassign_from_service_account",
+            HttpMethod.Delete,
+            "/api/v1/roles/{role_id}/service-accounts/{service_account_id}",
+            path,
+            query,
+            null,
+            cancellationToken).ConfigureAwait(false);
+    }
 }

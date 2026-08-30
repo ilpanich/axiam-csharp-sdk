@@ -12,9 +12,9 @@ using System.Text.Json.Serialization;
 namespace Axiam.Sdk.Management.Models;
 
 /// <summary>
-/// A role together with its assignment context (the resource it is scoped to).
+/// A service account together with the resource scope of its assignment.
 /// </summary>
-public sealed record RoleAssignment
+public sealed record RoleServiceAccountAssignment
 {
     /// <summary>
     /// <c>None</c> means the role was assigned globally (no resource scope).
@@ -23,13 +23,16 @@ public sealed record RoleAssignment
     public Guid? ResourceId { get; init; }
 
     /// <summary>
-    /// the server's role field
+    /// The assigned service account. Carries no secret — the client secret is returned once, at
+    /// creation, and never again.
     /// </summary>
-    [JsonPropertyName("role")]
-    public required Role Role { get; init; }
+    [JsonPropertyName("service_account")]
+    public required ServiceAccountResponse ServiceAccount { get; init; }
 
     /// <summary>
-    /// The tenants this assignment reaches. See [<c>TenantScope</c>].
+    /// The tenants this assignment reaches, or omitted for "wherever the role does". Shown next
+    /// to the assignment so an operator can tell a deliberately narrowed grant from an
+    /// organization-wide one.
     /// </summary>
     [JsonPropertyName("tenant_scope")]
     public IReadOnlyList<Guid>? TenantScope

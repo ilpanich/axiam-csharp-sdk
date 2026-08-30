@@ -234,4 +234,44 @@ public sealed class ServiceAccountsApi
             payload,
             cancellationToken).ConfigureAwait(false);
     }
+
+    /// <summary>
+    /// Issues <c>GET /api/v1/service-accounts/{service_account_id}/roles</c>.
+    /// </summary>
+    /// <param name="serviceAccountId">the service account id to address.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>the server response</returns>
+    public async Task<IReadOnlyList<RoleAssignment>> ListRolesAsync(Guid serviceAccountId, CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/service-accounts/{serviceAccountId}/roles";
+        JsonElement? node = await _transport.SendAsync(
+            "service_accounts.list_roles",
+            HttpMethod.Get,
+            "/api/v1/service-accounts/{service_account_id}/roles",
+            path,
+            null,
+            null,
+            cancellationToken).ConfigureAwait(false);
+        return ManagementSupport.DecodeList<RoleAssignment>("service_accounts.list_roles", node);
+    }
+
+    /// <summary>
+    /// Issues <c>GET /api/v1/service-accounts/{service_account_id}/groups</c>.
+    /// </summary>
+    /// <param name="serviceAccountId">the service account id to address.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>the server response</returns>
+    public async Task<IReadOnlyList<Group>> ListGroupsAsync(Guid serviceAccountId, CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/service-accounts/{serviceAccountId}/groups";
+        JsonElement? node = await _transport.SendAsync(
+            "service_accounts.list_groups",
+            HttpMethod.Get,
+            "/api/v1/service-accounts/{service_account_id}/groups",
+            path,
+            null,
+            null,
+            cancellationToken).ConfigureAwait(false);
+        return ManagementSupport.DecodeList<Group>("service_accounts.list_groups", node);
+    }
 }

@@ -105,10 +105,9 @@ public sealed partial class AxiamClient
         {
             throw ErrorMapper.FromHttpResponse(http, "MfaSetupConfirmAsync failed");
         }
-        return new LoginResult(
-            false,
-            OrganizationLevel: await OrganizationLevelOfAsync(http, cancellationToken)
-                .ConfigureAwait(false));
+        (bool organizationLevel, PrincipalScope? scope) =
+            await ReadLoginScopeAsync(http, cancellationToken).ConfigureAwait(false);
+        return new LoginResult(false, OrganizationLevel: organizationLevel, Scope: scope);
     }
 
     /// <summary>

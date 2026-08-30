@@ -27,4 +27,18 @@ public sealed record RoleGroupAssignment
     /// </summary>
     [JsonPropertyName("resource_id")]
     public Guid? ResourceId { get; init; }
+
+    /// <summary>
+    /// The tenants this assignment reaches, or omitted for "wherever the role does". Shown next
+    /// to the assignment so an operator can tell a deliberately narrowed grant from an
+    /// organization-wide one.
+    /// </summary>
+    [JsonPropertyName("tenant_scope")]
+    public IReadOnlyList<Guid>? TenantScope
+    {
+        get => _tenantScope;
+        init => _tenantScope = value is { Count: 0 } ? null : value;
+    }
+
+    private readonly IReadOnlyList<Guid>? _tenantScope;
 }

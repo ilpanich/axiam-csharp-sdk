@@ -323,6 +323,37 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
         AssertDecodedEveryField(result[0], item);
     }
 
+    /// <summary>Exercises groups.list_service_accounts.</summary>
+    [Fact]
+    public async Task Groups_ListServiceAccounts()
+    {
+        string body = "{\"items\": [{\"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"status\": \"Active\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\"}], \"total\": 1, \"offset\": 0, \"limit\": 200}";
+        Mount("GET", $"/api/v1/groups/{ExampleId}/service-accounts", 200, body);
+        var result = await Client.Management.Groups.ListServiceAccountsAsync(groupId: ExampleId, page: PageRequest.Of(50));
+        string item = JsonDocument.Parse(body).RootElement.GetProperty("items")[0].GetRawText();
+        AssertDecodedEveryField(result.Items[0], item);
+        await Client.Management.Groups.ListServiceAccountsAllAsync(groupId: ExampleId, start: PageRequest.Of(50));
+        await Client.Management.Groups.ListServiceAccountsAllAsync(groupId: ExampleId);
+    }
+
+    /// <summary>Exercises groups.add_service_account.</summary>
+    [Fact]
+    public async Task Groups_AddServiceAccount()
+    {
+        string body = "";
+        Mount("POST", $"/api/v1/groups/{ExampleId}/service-accounts", 204, body);
+        await Client.Management.Groups.AddServiceAccountAsync(groupId: ExampleId, body: new AddServiceAccountMemberRequest { ServiceAccountId = ExampleId });
+    }
+
+    /// <summary>Exercises groups.remove_service_account.</summary>
+    [Fact]
+    public async Task Groups_RemoveServiceAccount()
+    {
+        string body = "";
+        Mount("DELETE", $"/api/v1/groups/{ExampleId}/service-accounts/{ExampleId}", 204, body);
+        await Client.Management.Groups.RemoveServiceAccountAsync(groupId: ExampleId, serviceAccountId: ExampleId);
+    }
+
     /// <summary>Exercises roles.list.</summary>
     [Fact]
     public async Task Roles_List()
@@ -460,6 +491,35 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
         string body = "";
         Mount("DELETE", $"/api/v1/roles/{ExampleId}/permissions/{ExampleId}", 204, body);
         await Client.Management.Roles.RevokePermissionAsync(roleId: ExampleId, permissionId: ExampleId);
+    }
+
+    /// <summary>Exercises roles.list_service_accounts.</summary>
+    [Fact]
+    public async Task Roles_ListServiceAccounts()
+    {
+        string body = "[{\"service_account\": {\"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"status\": \"Active\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\"}}]";
+        Mount("GET", $"/api/v1/roles/{ExampleId}/service-accounts", 200, body);
+        var result = await Client.Management.Roles.ListServiceAccountsAsync(roleId: ExampleId);
+        string item = JsonDocument.Parse(body).RootElement[0].GetRawText();
+        AssertDecodedEveryField(result[0], item);
+    }
+
+    /// <summary>Exercises roles.assign_to_service_account.</summary>
+    [Fact]
+    public async Task Roles_AssignToServiceAccount()
+    {
+        string body = "";
+        Mount("POST", $"/api/v1/roles/{ExampleId}/service-accounts", 204, body);
+        await Client.Management.Roles.AssignToServiceAccountAsync(roleId: ExampleId, body: new AssignRoleToServiceAccountRequest { ServiceAccountId = ExampleId });
+    }
+
+    /// <summary>Exercises roles.unassign_from_service_account.</summary>
+    [Fact]
+    public async Task Roles_UnassignFromServiceAccount()
+    {
+        string body = "";
+        Mount("DELETE", $"/api/v1/roles/{ExampleId}/service-accounts/{ExampleId}", 204, body);
+        await Client.Management.Roles.UnassignFromServiceAccountAsync(roleId: ExampleId, serviceAccountId: ExampleId, resourceId: null);
     }
 
     /// <summary>Exercises permissions.list.</summary>
@@ -707,6 +767,28 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
         string body = "";
         Mount("POST", $"/api/v1/service-accounts/{ExampleId}/bind-certificate", 200, body);
         await Client.Management.ServiceAccounts.BindCertificateAsync(saId: ExampleId, body: new BindCertificate { CertificateId = ExampleId });
+    }
+
+    /// <summary>Exercises service_accounts.list_roles.</summary>
+    [Fact]
+    public async Task ServiceAccounts_ListRoles()
+    {
+        string body = "[{\"role\": {\"created_at\": \"2026-08-26T00:00:00Z\", \"description\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"is_global\": true, \"name\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\"}}]";
+        Mount("GET", $"/api/v1/service-accounts/{ExampleId}/roles", 200, body);
+        var result = await Client.Management.ServiceAccounts.ListRolesAsync(serviceAccountId: ExampleId);
+        string item = JsonDocument.Parse(body).RootElement[0].GetRawText();
+        AssertDecodedEveryField(result[0], item);
+    }
+
+    /// <summary>Exercises service_accounts.list_groups.</summary>
+    [Fact]
+    public async Task ServiceAccounts_ListGroups()
+    {
+        string body = "[{\"created_at\": \"2026-08-26T00:00:00Z\", \"description\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"metadata\": null, \"name\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\"}]";
+        Mount("GET", $"/api/v1/service-accounts/{ExampleId}/groups", 200, body);
+        var result = await Client.Management.ServiceAccounts.ListGroupsAsync(serviceAccountId: ExampleId);
+        string item = JsonDocument.Parse(body).RootElement[0].GetRawText();
+        AssertDecodedEveryField(result[0], item);
     }
 
     /// <summary>Exercises certificates.list.</summary>
@@ -1715,13 +1797,16 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "federation.oidc_callback",
             "federation.update_config",
             "groups.add_member",
+            "groups.add_service_account",
             "groups.create",
             "groups.delete",
             "groups.get",
             "groups.list",
             "groups.list_members",
             "groups.list_roles",
+            "groups.list_service_accounts",
             "groups.remove_member",
+            "groups.remove_service_account",
             "groups.update",
             "notification_rules.create",
             "notification_rules.delete",
@@ -1769,6 +1854,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "resources.list_children",
             "resources.update",
             "roles.assign_to_group",
+            "roles.assign_to_service_account",
             "roles.assign_to_user",
             "roles.create",
             "roles.delete",
@@ -1777,9 +1863,11 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "roles.list",
             "roles.list_groups",
             "roles.list_permissions",
+            "roles.list_service_accounts",
             "roles.list_users",
             "roles.revoke_permission",
             "roles.unassign_from_group",
+            "roles.unassign_from_service_account",
             "roles.unassign_from_user",
             "roles.update",
             "scim_tokens.create",
@@ -1795,6 +1883,8 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "service_accounts.delete",
             "service_accounts.get",
             "service_accounts.list",
+            "service_accounts.list_groups",
+            "service_accounts.list_roles",
             "service_accounts.rotate_secret",
             "service_accounts.update",
             "settings.delete_tenant_override",
@@ -1829,7 +1919,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "webhooks.list",
             "webhooks.update",
         };
-        Assert.Equal(147, exercised.Length);
+        Assert.Equal(155, exercised.Length);
         Assert.Equal(ExpectedSurface(), exercised);
     }
 }
