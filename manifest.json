@@ -964,6 +964,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.PrincipalScope.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.PrincipalScope.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.PrincipalScope",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.PrincipalScope.yml\" sourcestartlinenumber=\"1\">Where the signed-in principal lives, and how far its roles reach —\nCONTRACT.md §5.2.2 and §5.2.3.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Auth.RefreshGuard.yml",
       "output": {
         ".html": {
@@ -1748,6 +1762,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest.yml\" sourcestartlinenumber=\"1\">The AddServiceAccountMemberRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Management.Models.ApiProviderConfig.yml",
       "output": {
         ".html": {
@@ -1773,6 +1801,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.AssignRoleToGroupRequest",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.yml\" sourcestartlinenumber=\"1\">The AssignRoleToGroupRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.yml\" sourcestartlinenumber=\"1\">The AssignRoleToServiceAccountRequest schema from the server's OpenAPI document.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -3173,6 +3215,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.RoleGroupAssignment",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.RoleGroupAssignment.yml\" sourcestartlinenumber=\"1\">A group together with the resource scope of its assignment of this role.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.RoleServiceAccountAssignment",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.yml\" sourcestartlinenumber=\"1\">A service account together with the resource scope of its assignment.</p>\n"
     },
     {
       "type": "ManagedReference",

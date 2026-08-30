@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta04/apiSpec/new?filename=Axiam_Sdk_Management_RolesApi.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.RolesApi%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta05/apiSpec/new?filename=Axiam_Sdk_Management_RolesApi.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.RolesApi%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Management_RolesApi" data-uid="Axiam.Sdk.Management.RolesApi" class="text-break">
-Class RolesApi  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L25"><i class="bi bi-code-slash"></i></a>
+Class RolesApi  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -160,7 +160,7 @@ A view over the client that created it, not a connection: constructing one perfo
 
   <h3 id="Axiam_Sdk_Management_RolesApi_AssignToGroupAsync_System_Guid_Axiam_Sdk_Management_Models_AssignRoleToGroupRequest_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.AssignToGroupAsync(System.Guid,Axiam.Sdk.Management.Models.AssignRoleToGroupRequest,System.Threading.CancellationToken)">
   AssignToGroupAsync(Guid, AssignRoleToGroupRequest, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L310"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L310"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Issues <code>POST /api/v1/roles/{role_id}/groups</code>.</p>
@@ -207,11 +207,62 @@ the ones that look idempotent.
 
 
 
+  <a id="Axiam_Sdk_Management_RolesApi_AssignToServiceAccountAsync_" data-uid="Axiam.Sdk.Management.RolesApi.AssignToServiceAccountAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_RolesApi_AssignToServiceAccountAsync_System_Guid_Axiam_Sdk_Management_Models_AssignRoleToServiceAccountRequest_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.AssignToServiceAccountAsync(System.Guid,Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest,System.Threading.CancellationToken)">
+  AssignToServiceAccountAsync(Guid, AssignRoleToServiceAccountRequest, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L459"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Issues <code>POST /api/v1/roles/{role_id}/service-accounts</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task AssignToServiceAccountAsync(Guid roleId, AssignRoleToServiceAccountRequest body, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>roleId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the role id to address.</p>
+</dd>
+    <dt><code>body</code> <a class="xref" href="Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.html">AssignRoleToServiceAccountRequest</a></dt>
+    <dd><p>the request body.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd><p>a task that completes when the server has answered</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_RolesApi_AssignToServiceAccountAsync_System_Guid_Axiam_Sdk_Management_Models_AssignRoleToServiceAccountRequest_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Not retried: §27.4 rule 8 makes every write on this surface single-shot, including
+the ones that look idempotent.
+</p>
+</div>
+
+
+
+
   <a id="Axiam_Sdk_Management_RolesApi_AssignToUserAsync_" data-uid="Axiam.Sdk.Management.RolesApi.AssignToUserAsync*"></a>
 
   <h3 id="Axiam_Sdk_Management_RolesApi_AssignToUserAsync_System_Guid_Axiam_Sdk_Management_Models_AssignRoleToUserRequest_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.AssignToUserAsync(System.Guid,Axiam.Sdk.Management.Models.AssignRoleToUserRequest,System.Threading.CancellationToken)">
   AssignToUserAsync(Guid, AssignRoleToUserRequest, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L227"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L227"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Issues <code>POST /api/v1/roles/{role_id}/users</code>.</p>
@@ -262,7 +313,7 @@ the ones that look idempotent.
 
   <h3 id="Axiam_Sdk_Management_RolesApi_CreateAsync_Axiam_Sdk_Management_Models_CreateRoleRequest_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.CreateAsync(Axiam.Sdk.Management.Models.CreateRoleRequest,System.Threading.CancellationToken)">
   CreateAsync(CreateRoleRequest, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L93"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Issues <code>POST /api/v1/roles</code>.</p>
@@ -310,7 +361,7 @@ the ones that look idempotent.
 
   <h3 id="Axiam_Sdk_Management_RolesApi_DeleteAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.DeleteAsync(System.Guid,System.Threading.CancellationToken)">
   DeleteAsync(Guid, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L172"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L172"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Issues <code>DELETE /api/v1/roles/{role_id}</code>.</p>
@@ -358,7 +409,7 @@ the ones that look idempotent.
 
   <h3 id="Axiam_Sdk_Management_RolesApi_GetAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.GetAsync(System.Guid,System.Threading.CancellationToken)">
   GetAsync(Guid, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Issues <code>GET /api/v1/roles/{role_id}</code>.</p>
@@ -400,7 +451,7 @@ the ones that look idempotent.
 
   <h3 id="Axiam_Sdk_Management_RolesApi_GrantPermissionAsync_System_Guid_Axiam_Sdk_Management_Models_GrantPermissionRequest_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.GrantPermissionAsync(System.Guid,Axiam.Sdk.Management.Models.GrantPermissionRequest,System.Threading.CancellationToken)">
   GrantPermissionAsync(Guid, GrantPermissionRequest, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L386"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L386"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Issues <code>POST /api/v1/roles/{role_id}/permissions</code>.</p>
@@ -451,7 +502,7 @@ the ones that look idempotent.
 
   <h3 id="Axiam_Sdk_Management_RolesApi_ListAllAsync_Axiam_Sdk_Management_PageRequest_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.ListAllAsync(Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)">
   ListAllAsync(PageRequest?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L77"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Walks ListAsync to exhaustion and returns every item (§27.4 rule 4).</p>
@@ -500,7 +551,7 @@ costs one wasted request rather than an unbounded loop.
 
   <h3 id="Axiam_Sdk_Management_RolesApi_ListAsync_Axiam_Sdk_Management_PageRequest_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.ListAsync(Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)">
   ListAsync(PageRequest?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L49"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Issues <code>GET /api/v1/roles</code>.</p>
@@ -549,7 +600,7 @@ Paginated: Total on the returned page is the size of the WHOLE set, not of this 
 
   <h3 id="Axiam_Sdk_Management_RolesApi_ListGroupsAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.ListGroupsAsync(System.Guid,System.Threading.CancellationToken)">
   ListGroupsAsync(Guid, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L283"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L283"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lists this role's group assignments (the inverse of <code>GET
@@ -598,7 +649,7 @@ Issues <code>GET /api/v1/roles/{role_id}/groups</code>.
 
   <h3 id="Axiam_Sdk_Management_RolesApi_ListPermissionsAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.ListPermissionsAsync(System.Guid,System.Threading.CancellationToken)">
   ListPermissionsAsync(Guid, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L359"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L359"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Issues <code>GET /api/v1/roles/{role_id}/permissions</code>.</p>
@@ -636,11 +687,53 @@ Issues <code>GET /api/v1/roles/{role_id}/groups</code>.
 
 
 
+  <a id="Axiam_Sdk_Management_RolesApi_ListServiceAccountsAsync_" data-uid="Axiam.Sdk.Management.RolesApi.ListServiceAccountsAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_RolesApi_ListServiceAccountsAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.ListServiceAccountsAsync(System.Guid,System.Threading.CancellationToken)">
+  ListServiceAccountsAsync(Guid, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L432"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Issues <code>GET /api/v1/roles/{role_id}/service-accounts</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IReadOnlyList&lt;RoleServiceAccountAssignment&gt;&gt; ListServiceAccountsAsync(Guid roleId, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>roleId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the role id to address.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.html">RoleServiceAccountAssignment</a>&gt;&gt;</dt>
+    <dd><p>the server response</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_RolesApi_ListUsersAsync_" data-uid="Axiam.Sdk.Management.RolesApi.ListUsersAsync*"></a>
 
   <h3 id="Axiam_Sdk_Management_RolesApi_ListUsersAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.ListUsersAsync(System.Guid,System.Threading.CancellationToken)">
   ListUsersAsync(Guid, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L200"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L200"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lists this role's user assignments (the inverse of <code>GET /users/{user_id}/roles</code>).
@@ -691,7 +784,7 @@ Issues <code>GET /api/v1/roles/{role_id}/users</code>.
 
   <h3 id="Axiam_Sdk_Management_RolesApi_RevokePermissionAsync_System_Guid_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.RevokePermissionAsync(System.Guid,System.Guid,System.Threading.CancellationToken)">
   RevokePermissionAsync(Guid, Guid, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L413"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L413"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Issues <code>DELETE /api/v1/roles/{role_id}/permissions/{permission_id}</code>.</p>
@@ -742,7 +835,7 @@ the ones that look idempotent.
 
   <h3 id="Axiam_Sdk_Management_RolesApi_UnassignFromGroupAsync_System_Guid_System_Guid_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.UnassignFromGroupAsync(System.Guid,System.Guid,System.String,System.Threading.CancellationToken)">
   UnassignFromGroupAsync(Guid, Guid, string?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L339"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L339"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Issues <code>DELETE /api/v1/roles/{role_id}/groups/{group_id}</code>.</p>
@@ -793,11 +886,66 @@ the ones that look idempotent.
 
 
 
+  <a id="Axiam_Sdk_Management_RolesApi_UnassignFromServiceAccountAsync_" data-uid="Axiam.Sdk.Management.RolesApi.UnassignFromServiceAccountAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_RolesApi_UnassignFromServiceAccountAsync_System_Guid_System_Guid_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.UnassignFromServiceAccountAsync(System.Guid,System.Guid,System.String,System.Threading.CancellationToken)">
+  UnassignFromServiceAccountAsync(Guid, Guid, string?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L488"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Issues <code>DELETE /api/v1/roles/{role_id}/service-accounts/{service_account_id}</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task UnassignFromServiceAccountAsync(Guid roleId, Guid serviceAccountId, string? resourceId = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>roleId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the role id to address.</p>
+</dd>
+    <dt><code>serviceAccountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the service account id to address.</p>
+</dd>
+    <dt><code>resourceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>the optional resource id filter, or <code>null</code> to omit
+it.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd><p>a task that completes when the server has answered</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_RolesApi_UnassignFromServiceAccountAsync_System_Guid_System_Guid_System_String_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Not retried: §27.4 rule 8 makes every write on this surface single-shot, including
+the ones that look idempotent.
+</p>
+</div>
+
+
+
+
   <a id="Axiam_Sdk_Management_RolesApi_UnassignFromUserAsync_" data-uid="Axiam.Sdk.Management.RolesApi.UnassignFromUserAsync*"></a>
 
   <h3 id="Axiam_Sdk_Management_RolesApi_UnassignFromUserAsync_System_Guid_System_Guid_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.UnassignFromUserAsync(System.Guid,System.Guid,System.String,System.Threading.CancellationToken)">
   UnassignFromUserAsync(Guid, Guid, string?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L256"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Issues <code>DELETE /api/v1/roles/{role_id}/users/{user_id}</code>.</p>
@@ -852,7 +1000,7 @@ the ones that look idempotent.
 
   <h3 id="Axiam_Sdk_Management_RolesApi_UpdateAsync_System_Guid_Axiam_Sdk_Management_Models_UpdateRole_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.RolesApi.UpdateAsync(System.Guid,Axiam.Sdk.Management.Models.UpdateRole,System.Threading.CancellationToken)">
   UpdateAsync(Guid, UpdateRole, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta04/Axiam.Sdk/Management/RolesApi.cs/#L145"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta05/Axiam.Sdk/Management/RolesApi.cs/#L145"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Issues <code>PUT /api/v1/roles/{role_id}</code>.</p>

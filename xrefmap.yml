@@ -1671,15 +1671,15 @@ references:
   commentId: T:Axiam.Sdk.Auth.LoginResult
   fullName: Axiam.Sdk.Auth.LoginResult
   nameWithType: LoginResult
-- uid: Axiam.Sdk.Auth.LoginResult.#ctor(System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Boolean)
-  name: LoginResult(bool, Sensitive<string>?, bool, Sensitive<string>?, bool)
-  href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult__ctor_System_Boolean_System_Nullable_Axiam_Sdk_Core_Sensitive_System_String___System_Boolean_System_Nullable_Axiam_Sdk_Core_Sensitive_System_String___System_Boolean_
-  commentId: M:Axiam.Sdk.Auth.LoginResult.#ctor(System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Boolean)
-  name.vb: New(Boolean, Sensitive(Of String)?, Boolean, Sensitive(Of String)?, Boolean)
-  fullName: Axiam.Sdk.Auth.LoginResult.LoginResult(bool, Axiam.Sdk.Core.Sensitive<string>?, bool, Axiam.Sdk.Core.Sensitive<string>?, bool)
-  fullName.vb: Axiam.Sdk.Auth.LoginResult.New(Boolean, Axiam.Sdk.Core.Sensitive(Of String)?, Boolean, Axiam.Sdk.Core.Sensitive(Of String)?, Boolean)
-  nameWithType: LoginResult.LoginResult(bool, Sensitive<string>?, bool, Sensitive<string>?, bool)
-  nameWithType.vb: LoginResult.New(Boolean, Sensitive(Of String)?, Boolean, Sensitive(Of String)?, Boolean)
+- uid: Axiam.Sdk.Auth.LoginResult.#ctor(System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Boolean,Axiam.Sdk.Auth.PrincipalScope)
+  name: LoginResult(bool, Sensitive<string>?, bool, Sensitive<string>?, bool, PrincipalScope?)
+  href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult__ctor_System_Boolean_System_Nullable_Axiam_Sdk_Core_Sensitive_System_String___System_Boolean_System_Nullable_Axiam_Sdk_Core_Sensitive_System_String___System_Boolean_Axiam_Sdk_Auth_PrincipalScope_
+  commentId: M:Axiam.Sdk.Auth.LoginResult.#ctor(System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Boolean,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Boolean,Axiam.Sdk.Auth.PrincipalScope)
+  name.vb: New(Boolean, Sensitive(Of String)?, Boolean, Sensitive(Of String)?, Boolean, PrincipalScope)
+  fullName: Axiam.Sdk.Auth.LoginResult.LoginResult(bool, Axiam.Sdk.Core.Sensitive<string>?, bool, Axiam.Sdk.Core.Sensitive<string>?, bool, Axiam.Sdk.Auth.PrincipalScope?)
+  fullName.vb: Axiam.Sdk.Auth.LoginResult.New(Boolean, Axiam.Sdk.Core.Sensitive(Of String)?, Boolean, Axiam.Sdk.Core.Sensitive(Of String)?, Boolean, Axiam.Sdk.Auth.PrincipalScope)
+  nameWithType: LoginResult.LoginResult(bool, Sensitive<string>?, bool, Sensitive<string>?, bool, PrincipalScope?)
+  nameWithType.vb: LoginResult.New(Boolean, Sensitive(Of String)?, Boolean, Sensitive(Of String)?, Boolean, PrincipalScope)
 - uid: Axiam.Sdk.Auth.LoginResult.#ctor*
   name: LoginResult
   href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult__ctor_
@@ -1742,6 +1742,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.LoginResult.OrganizationLevel
   nameWithType: LoginResult.OrganizationLevel
+- uid: Axiam.Sdk.Auth.LoginResult.Scope
+  name: Scope
+  href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult_Scope
+  commentId: P:Axiam.Sdk.Auth.LoginResult.Scope
+  fullName: Axiam.Sdk.Auth.LoginResult.Scope
+  nameWithType: LoginResult.Scope
+- uid: Axiam.Sdk.Auth.LoginResult.Scope*
+  name: Scope
+  href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult_Scope_
+  commentId: Overload:Axiam.Sdk.Auth.LoginResult.Scope
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.LoginResult.Scope
+  nameWithType: LoginResult.Scope
 - uid: Axiam.Sdk.Auth.LoginResult.SetupToken
   name: SetupToken
   href: api/Axiam.Sdk.Auth.LoginResult.html#Axiam_Sdk_Auth_LoginResult_SetupToken
@@ -4709,6 +4722,96 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.PresentedProofs.None
   nameWithType: PresentedProofs.None
+- uid: Axiam.Sdk.Auth.PrincipalScope
+  name: PrincipalScope
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html
+  commentId: T:Axiam.Sdk.Auth.PrincipalScope
+  fullName: Axiam.Sdk.Auth.PrincipalScope
+  nameWithType: PrincipalScope
+- uid: Axiam.Sdk.Auth.PrincipalScope.#ctor(System.Nullable{System.Guid},System.Nullable{System.Guid},System.String,System.Nullable{System.Guid},System.Collections.Generic.IReadOnlyList{System.Guid})
+  name: PrincipalScope(Guid?, Guid?, string?, Guid?, IReadOnlyList<Guid>?)
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html#Axiam_Sdk_Auth_PrincipalScope__ctor_System_Nullable_System_Guid__System_Nullable_System_Guid__System_String_System_Nullable_System_Guid__System_Collections_Generic_IReadOnlyList_System_Guid__
+  commentId: M:Axiam.Sdk.Auth.PrincipalScope.#ctor(System.Nullable{System.Guid},System.Nullable{System.Guid},System.String,System.Nullable{System.Guid},System.Collections.Generic.IReadOnlyList{System.Guid})
+  name.vb: New(Guid?, Guid?, String, Guid?, IReadOnlyList(Of Guid))
+  fullName: Axiam.Sdk.Auth.PrincipalScope.PrincipalScope(System.Guid?, System.Guid?, string?, System.Guid?, System.Collections.Generic.IReadOnlyList<System.Guid>?)
+  fullName.vb: Axiam.Sdk.Auth.PrincipalScope.New(System.Guid?, System.Guid?, String, System.Guid?, System.Collections.Generic.IReadOnlyList(Of System.Guid))
+  nameWithType: PrincipalScope.PrincipalScope(Guid?, Guid?, string?, Guid?, IReadOnlyList<Guid>?)
+  nameWithType.vb: PrincipalScope.New(Guid?, Guid?, String, Guid?, IReadOnlyList(Of Guid))
+- uid: Axiam.Sdk.Auth.PrincipalScope.#ctor*
+  name: PrincipalScope
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html#Axiam_Sdk_Auth_PrincipalScope__ctor_
+  commentId: Overload:Axiam.Sdk.Auth.PrincipalScope.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Auth.PrincipalScope.PrincipalScope
+  fullName.vb: Axiam.Sdk.Auth.PrincipalScope.New
+  nameWithType: PrincipalScope.PrincipalScope
+  nameWithType.vb: PrincipalScope.New
+- uid: Axiam.Sdk.Auth.PrincipalScope.ActingTenantId
+  name: ActingTenantId
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html#Axiam_Sdk_Auth_PrincipalScope_ActingTenantId
+  commentId: P:Axiam.Sdk.Auth.PrincipalScope.ActingTenantId
+  fullName: Axiam.Sdk.Auth.PrincipalScope.ActingTenantId
+  nameWithType: PrincipalScope.ActingTenantId
+- uid: Axiam.Sdk.Auth.PrincipalScope.ActingTenantId*
+  name: ActingTenantId
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html#Axiam_Sdk_Auth_PrincipalScope_ActingTenantId_
+  commentId: Overload:Axiam.Sdk.Auth.PrincipalScope.ActingTenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.PrincipalScope.ActingTenantId
+  nameWithType: PrincipalScope.ActingTenantId
+- uid: Axiam.Sdk.Auth.PrincipalScope.OrgId
+  name: OrgId
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html#Axiam_Sdk_Auth_PrincipalScope_OrgId
+  commentId: P:Axiam.Sdk.Auth.PrincipalScope.OrgId
+  fullName: Axiam.Sdk.Auth.PrincipalScope.OrgId
+  nameWithType: PrincipalScope.OrgId
+- uid: Axiam.Sdk.Auth.PrincipalScope.OrgId*
+  name: OrgId
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html#Axiam_Sdk_Auth_PrincipalScope_OrgId_
+  commentId: Overload:Axiam.Sdk.Auth.PrincipalScope.OrgId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.PrincipalScope.OrgId
+  nameWithType: PrincipalScope.OrgId
+- uid: Axiam.Sdk.Auth.PrincipalScope.PrincipalTenantId
+  name: PrincipalTenantId
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html#Axiam_Sdk_Auth_PrincipalScope_PrincipalTenantId
+  commentId: P:Axiam.Sdk.Auth.PrincipalScope.PrincipalTenantId
+  fullName: Axiam.Sdk.Auth.PrincipalScope.PrincipalTenantId
+  nameWithType: PrincipalScope.PrincipalTenantId
+- uid: Axiam.Sdk.Auth.PrincipalScope.PrincipalTenantId*
+  name: PrincipalTenantId
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html#Axiam_Sdk_Auth_PrincipalScope_PrincipalTenantId_
+  commentId: Overload:Axiam.Sdk.Auth.PrincipalScope.PrincipalTenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.PrincipalScope.PrincipalTenantId
+  nameWithType: PrincipalScope.PrincipalTenantId
+- uid: Axiam.Sdk.Auth.PrincipalScope.PrincipalTenantSlug
+  name: PrincipalTenantSlug
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html#Axiam_Sdk_Auth_PrincipalScope_PrincipalTenantSlug
+  commentId: P:Axiam.Sdk.Auth.PrincipalScope.PrincipalTenantSlug
+  fullName: Axiam.Sdk.Auth.PrincipalScope.PrincipalTenantSlug
+  nameWithType: PrincipalScope.PrincipalTenantSlug
+- uid: Axiam.Sdk.Auth.PrincipalScope.PrincipalTenantSlug*
+  name: PrincipalTenantSlug
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html#Axiam_Sdk_Auth_PrincipalScope_PrincipalTenantSlug_
+  commentId: Overload:Axiam.Sdk.Auth.PrincipalScope.PrincipalTenantSlug
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.PrincipalScope.PrincipalTenantSlug
+  nameWithType: PrincipalScope.PrincipalTenantSlug
+- uid: Axiam.Sdk.Auth.PrincipalScope.ReachableTenantIds
+  name: ReachableTenantIds
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html#Axiam_Sdk_Auth_PrincipalScope_ReachableTenantIds
+  commentId: P:Axiam.Sdk.Auth.PrincipalScope.ReachableTenantIds
+  fullName: Axiam.Sdk.Auth.PrincipalScope.ReachableTenantIds
+  nameWithType: PrincipalScope.ReachableTenantIds
+- uid: Axiam.Sdk.Auth.PrincipalScope.ReachableTenantIds*
+  name: ReachableTenantIds
+  href: api/Axiam.Sdk.Auth.PrincipalScope.html#Axiam_Sdk_Auth_PrincipalScope_ReachableTenantIds_
+  commentId: Overload:Axiam.Sdk.Auth.PrincipalScope.ReachableTenantIds
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.PrincipalScope.ReachableTenantIds
+  nameWithType: PrincipalScope.ReachableTenantIds
 - uid: Axiam.Sdk.Auth.RefreshGuard
   name: RefreshGuard
   href: api/Axiam.Sdk.Auth.RefreshGuard.html
@@ -5295,6 +5398,22 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.OpaqueEnrollmentAsync
   nameWithType: AxiamClient.OpaqueEnrollmentAsync
+- uid: Axiam.Sdk.AxiamClient.OpaqueEnrollmentForSelfAsync(System.Char[],System.Threading.CancellationToken)
+  name: OpaqueEnrollmentForSelfAsync(char[], CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OpaqueEnrollmentForSelfAsync_System_Char___System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.OpaqueEnrollmentForSelfAsync(System.Char[],System.Threading.CancellationToken)
+  name.vb: OpaqueEnrollmentForSelfAsync(Char(), CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.OpaqueEnrollmentForSelfAsync(char[], System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.OpaqueEnrollmentForSelfAsync(Char(), System.Threading.CancellationToken)
+  nameWithType: AxiamClient.OpaqueEnrollmentForSelfAsync(char[], CancellationToken)
+  nameWithType.vb: AxiamClient.OpaqueEnrollmentForSelfAsync(Char(), CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.OpaqueEnrollmentForSelfAsync*
+  name: OpaqueEnrollmentForSelfAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_OpaqueEnrollmentForSelfAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.OpaqueEnrollmentForSelfAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.OpaqueEnrollmentForSelfAsync
+  nameWithType: AxiamClient.OpaqueEnrollmentForSelfAsync
 - uid: Axiam.Sdk.AxiamClient.Organizations
   name: Organizations
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_Organizations
@@ -8251,6 +8370,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.GroupsApi.AddMemberAsync
   nameWithType: GroupsApi.AddMemberAsync
+- uid: Axiam.Sdk.Management.GroupsApi.AddServiceAccountAsync(System.Guid,Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest,System.Threading.CancellationToken)
+  name: AddServiceAccountAsync(Guid, AddServiceAccountMemberRequest, CancellationToken)
+  href: api/Axiam.Sdk.Management.GroupsApi.html#Axiam_Sdk_Management_GroupsApi_AddServiceAccountAsync_System_Guid_Axiam_Sdk_Management_Models_AddServiceAccountMemberRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.GroupsApi.AddServiceAccountAsync(System.Guid,Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.GroupsApi.AddServiceAccountAsync(System.Guid, Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest, System.Threading.CancellationToken)
+  nameWithType: GroupsApi.AddServiceAccountAsync(Guid, AddServiceAccountMemberRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.GroupsApi.AddServiceAccountAsync*
+  name: AddServiceAccountAsync
+  href: api/Axiam.Sdk.Management.GroupsApi.html#Axiam_Sdk_Management_GroupsApi_AddServiceAccountAsync_
+  commentId: Overload:Axiam.Sdk.Management.GroupsApi.AddServiceAccountAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.GroupsApi.AddServiceAccountAsync
+  nameWithType: GroupsApi.AddServiceAccountAsync
 - uid: Axiam.Sdk.Management.GroupsApi.CreateAsync(Axiam.Sdk.Management.Models.CreateGroupRequest,System.Threading.CancellationToken)
   name: CreateAsync(CreateGroupRequest, CancellationToken)
   href: api/Axiam.Sdk.Management.GroupsApi.html#Axiam_Sdk_Management_GroupsApi_CreateAsync_Axiam_Sdk_Management_Models_CreateGroupRequest_System_Threading_CancellationToken_
@@ -8367,6 +8499,38 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.GroupsApi.ListRolesAsync
   nameWithType: GroupsApi.ListRolesAsync
+- uid: Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAllAsync(System.Guid,Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)
+  name: ListServiceAccountsAllAsync(Guid, PageRequest?, CancellationToken)
+  href: api/Axiam.Sdk.Management.GroupsApi.html#Axiam_Sdk_Management_GroupsApi_ListServiceAccountsAllAsync_System_Guid_Axiam_Sdk_Management_PageRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAllAsync(System.Guid,Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)
+  name.vb: ListServiceAccountsAllAsync(Guid, PageRequest, CancellationToken)
+  fullName: Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAllAsync(System.Guid, Axiam.Sdk.Management.PageRequest?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAllAsync(System.Guid, Axiam.Sdk.Management.PageRequest, System.Threading.CancellationToken)
+  nameWithType: GroupsApi.ListServiceAccountsAllAsync(Guid, PageRequest?, CancellationToken)
+  nameWithType.vb: GroupsApi.ListServiceAccountsAllAsync(Guid, PageRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAllAsync*
+  name: ListServiceAccountsAllAsync
+  href: api/Axiam.Sdk.Management.GroupsApi.html#Axiam_Sdk_Management_GroupsApi_ListServiceAccountsAllAsync_
+  commentId: Overload:Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAllAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAllAsync
+  nameWithType: GroupsApi.ListServiceAccountsAllAsync
+- uid: Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAsync(System.Guid,Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)
+  name: ListServiceAccountsAsync(Guid, PageRequest?, CancellationToken)
+  href: api/Axiam.Sdk.Management.GroupsApi.html#Axiam_Sdk_Management_GroupsApi_ListServiceAccountsAsync_System_Guid_Axiam_Sdk_Management_PageRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAsync(System.Guid,Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)
+  name.vb: ListServiceAccountsAsync(Guid, PageRequest, CancellationToken)
+  fullName: Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAsync(System.Guid, Axiam.Sdk.Management.PageRequest?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAsync(System.Guid, Axiam.Sdk.Management.PageRequest, System.Threading.CancellationToken)
+  nameWithType: GroupsApi.ListServiceAccountsAsync(Guid, PageRequest?, CancellationToken)
+  nameWithType.vb: GroupsApi.ListServiceAccountsAsync(Guid, PageRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAsync*
+  name: ListServiceAccountsAsync
+  href: api/Axiam.Sdk.Management.GroupsApi.html#Axiam_Sdk_Management_GroupsApi_ListServiceAccountsAsync_
+  commentId: Overload:Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.GroupsApi.ListServiceAccountsAsync
+  nameWithType: GroupsApi.ListServiceAccountsAsync
 - uid: Axiam.Sdk.Management.GroupsApi.RemoveMemberAsync(System.Guid,System.Guid,System.Threading.CancellationToken)
   name: RemoveMemberAsync(Guid, Guid, CancellationToken)
   href: api/Axiam.Sdk.Management.GroupsApi.html#Axiam_Sdk_Management_GroupsApi_RemoveMemberAsync_System_Guid_System_Guid_System_Threading_CancellationToken_
@@ -8380,6 +8544,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.GroupsApi.RemoveMemberAsync
   nameWithType: GroupsApi.RemoveMemberAsync
+- uid: Axiam.Sdk.Management.GroupsApi.RemoveServiceAccountAsync(System.Guid,System.Guid,System.Threading.CancellationToken)
+  name: RemoveServiceAccountAsync(Guid, Guid, CancellationToken)
+  href: api/Axiam.Sdk.Management.GroupsApi.html#Axiam_Sdk_Management_GroupsApi_RemoveServiceAccountAsync_System_Guid_System_Guid_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.GroupsApi.RemoveServiceAccountAsync(System.Guid,System.Guid,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.GroupsApi.RemoveServiceAccountAsync(System.Guid, System.Guid, System.Threading.CancellationToken)
+  nameWithType: GroupsApi.RemoveServiceAccountAsync(Guid, Guid, CancellationToken)
+- uid: Axiam.Sdk.Management.GroupsApi.RemoveServiceAccountAsync*
+  name: RemoveServiceAccountAsync
+  href: api/Axiam.Sdk.Management.GroupsApi.html#Axiam_Sdk_Management_GroupsApi_RemoveServiceAccountAsync_
+  commentId: Overload:Axiam.Sdk.Management.GroupsApi.RemoveServiceAccountAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.GroupsApi.RemoveServiceAccountAsync
+  nameWithType: GroupsApi.RemoveServiceAccountAsync
 - uid: Axiam.Sdk.Management.GroupsApi.UpdateAsync(System.Guid,Axiam.Sdk.Management.Models.UpdateGroup,System.Threading.CancellationToken)
   name: UpdateAsync(Guid, UpdateGroup, CancellationToken)
   href: api/Axiam.Sdk.Management.GroupsApi.html#Axiam_Sdk_Management_GroupsApi_UpdateAsync_System_Guid_Axiam_Sdk_Management_Models_UpdateGroup_System_Threading_CancellationToken_
@@ -9719,6 +9896,25 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.AddMemberRequest.UserId
   nameWithType: AddMemberRequest.UserId
+- uid: Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest
+  name: AddServiceAccountMemberRequest
+  href: api/Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest.html
+  commentId: T:Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest
+  fullName: Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest
+  nameWithType: AddServiceAccountMemberRequest
+- uid: Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest.ServiceAccountId
+  name: ServiceAccountId
+  href: api/Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest.html#Axiam_Sdk_Management_Models_AddServiceAccountMemberRequest_ServiceAccountId
+  commentId: P:Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest.ServiceAccountId
+  fullName: Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest.ServiceAccountId
+  nameWithType: AddServiceAccountMemberRequest.ServiceAccountId
+- uid: Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest.ServiceAccountId*
+  name: ServiceAccountId
+  href: api/Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest.html#Axiam_Sdk_Management_Models_AddServiceAccountMemberRequest_ServiceAccountId_
+  commentId: Overload:Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest.ServiceAccountId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.AddServiceAccountMemberRequest.ServiceAccountId
+  nameWithType: AddServiceAccountMemberRequest.ServiceAccountId
 - uid: Axiam.Sdk.Management.Models.ApiProviderConfig
   name: ApiProviderConfig
   href: api/Axiam.Sdk.Management.Models.ApiProviderConfig.html
@@ -9770,6 +9966,64 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.ResourceId
   nameWithType: AssignRoleToGroupRequest.ResourceId
+- uid: Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.TenantScope
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.html#Axiam_Sdk_Management_Models_AssignRoleToGroupRequest_TenantScope
+  commentId: P:Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.TenantScope
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.TenantScope
+  nameWithType: AssignRoleToGroupRequest.TenantScope
+- uid: Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.TenantScope*
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.html#Axiam_Sdk_Management_Models_AssignRoleToGroupRequest_TenantScope_
+  commentId: Overload:Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.TenantScope
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.TenantScope
+  nameWithType: AssignRoleToGroupRequest.TenantScope
+- uid: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest
+  name: AssignRoleToServiceAccountRequest
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.html
+  commentId: T:Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest
+  nameWithType: AssignRoleToServiceAccountRequest
+- uid: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ResourceId
+  name: ResourceId
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.html#Axiam_Sdk_Management_Models_AssignRoleToServiceAccountRequest_ResourceId
+  commentId: P:Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ResourceId
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ResourceId
+  nameWithType: AssignRoleToServiceAccountRequest.ResourceId
+- uid: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ResourceId*
+  name: ResourceId
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.html#Axiam_Sdk_Management_Models_AssignRoleToServiceAccountRequest_ResourceId_
+  commentId: Overload:Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ResourceId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ResourceId
+  nameWithType: AssignRoleToServiceAccountRequest.ResourceId
+- uid: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ServiceAccountId
+  name: ServiceAccountId
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.html#Axiam_Sdk_Management_Models_AssignRoleToServiceAccountRequest_ServiceAccountId
+  commentId: P:Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ServiceAccountId
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ServiceAccountId
+  nameWithType: AssignRoleToServiceAccountRequest.ServiceAccountId
+- uid: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ServiceAccountId*
+  name: ServiceAccountId
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.html#Axiam_Sdk_Management_Models_AssignRoleToServiceAccountRequest_ServiceAccountId_
+  commentId: Overload:Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ServiceAccountId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ServiceAccountId
+  nameWithType: AssignRoleToServiceAccountRequest.ServiceAccountId
+- uid: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.TenantScope
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.html#Axiam_Sdk_Management_Models_AssignRoleToServiceAccountRequest_TenantScope
+  commentId: P:Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.TenantScope
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.TenantScope
+  nameWithType: AssignRoleToServiceAccountRequest.TenantScope
+- uid: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.TenantScope*
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.html#Axiam_Sdk_Management_Models_AssignRoleToServiceAccountRequest_TenantScope_
+  commentId: Overload:Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.TenantScope
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.TenantScope
+  nameWithType: AssignRoleToServiceAccountRequest.TenantScope
 - uid: Axiam.Sdk.Management.Models.AssignRoleToUserRequest
   name: AssignRoleToUserRequest
   href: api/Axiam.Sdk.Management.Models.AssignRoleToUserRequest.html
@@ -9789,6 +10043,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.AssignRoleToUserRequest.ResourceId
   nameWithType: AssignRoleToUserRequest.ResourceId
+- uid: Axiam.Sdk.Management.Models.AssignRoleToUserRequest.TenantScope
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToUserRequest.html#Axiam_Sdk_Management_Models_AssignRoleToUserRequest_TenantScope
+  commentId: P:Axiam.Sdk.Management.Models.AssignRoleToUserRequest.TenantScope
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToUserRequest.TenantScope
+  nameWithType: AssignRoleToUserRequest.TenantScope
+- uid: Axiam.Sdk.Management.Models.AssignRoleToUserRequest.TenantScope*
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToUserRequest.html#Axiam_Sdk_Management_Models_AssignRoleToUserRequest_TenantScope_
+  commentId: Overload:Axiam.Sdk.Management.Models.AssignRoleToUserRequest.TenantScope
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToUserRequest.TenantScope
+  nameWithType: AssignRoleToUserRequest.TenantScope
 - uid: Axiam.Sdk.Management.Models.AssignRoleToUserRequest.UserId
   name: UserId
   href: api/Axiam.Sdk.Management.Models.AssignRoleToUserRequest.html#Axiam_Sdk_Management_Models_AssignRoleToUserRequest_UserId
@@ -16489,6 +16756,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.RoleAssignment.Role
   nameWithType: RoleAssignment.Role
+- uid: Axiam.Sdk.Management.Models.RoleAssignment.TenantScope
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.RoleAssignment.html#Axiam_Sdk_Management_Models_RoleAssignment_TenantScope
+  commentId: P:Axiam.Sdk.Management.Models.RoleAssignment.TenantScope
+  fullName: Axiam.Sdk.Management.Models.RoleAssignment.TenantScope
+  nameWithType: RoleAssignment.TenantScope
+- uid: Axiam.Sdk.Management.Models.RoleAssignment.TenantScope*
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.RoleAssignment.html#Axiam_Sdk_Management_Models_RoleAssignment_TenantScope_
+  commentId: Overload:Axiam.Sdk.Management.Models.RoleAssignment.TenantScope
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RoleAssignment.TenantScope
+  nameWithType: RoleAssignment.TenantScope
 - uid: Axiam.Sdk.Management.Models.RoleGroupAssignment
   name: RoleGroupAssignment
   href: api/Axiam.Sdk.Management.Models.RoleGroupAssignment.html
@@ -16521,6 +16801,64 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.RoleGroupAssignment.ResourceId
   nameWithType: RoleGroupAssignment.ResourceId
+- uid: Axiam.Sdk.Management.Models.RoleGroupAssignment.TenantScope
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.RoleGroupAssignment.html#Axiam_Sdk_Management_Models_RoleGroupAssignment_TenantScope
+  commentId: P:Axiam.Sdk.Management.Models.RoleGroupAssignment.TenantScope
+  fullName: Axiam.Sdk.Management.Models.RoleGroupAssignment.TenantScope
+  nameWithType: RoleGroupAssignment.TenantScope
+- uid: Axiam.Sdk.Management.Models.RoleGroupAssignment.TenantScope*
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.RoleGroupAssignment.html#Axiam_Sdk_Management_Models_RoleGroupAssignment_TenantScope_
+  commentId: Overload:Axiam.Sdk.Management.Models.RoleGroupAssignment.TenantScope
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RoleGroupAssignment.TenantScope
+  nameWithType: RoleGroupAssignment.TenantScope
+- uid: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment
+  name: RoleServiceAccountAssignment
+  href: api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.html
+  commentId: T:Axiam.Sdk.Management.Models.RoleServiceAccountAssignment
+  fullName: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment
+  nameWithType: RoleServiceAccountAssignment
+- uid: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ResourceId
+  name: ResourceId
+  href: api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.html#Axiam_Sdk_Management_Models_RoleServiceAccountAssignment_ResourceId
+  commentId: P:Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ResourceId
+  fullName: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ResourceId
+  nameWithType: RoleServiceAccountAssignment.ResourceId
+- uid: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ResourceId*
+  name: ResourceId
+  href: api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.html#Axiam_Sdk_Management_Models_RoleServiceAccountAssignment_ResourceId_
+  commentId: Overload:Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ResourceId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ResourceId
+  nameWithType: RoleServiceAccountAssignment.ResourceId
+- uid: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ServiceAccount
+  name: ServiceAccount
+  href: api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.html#Axiam_Sdk_Management_Models_RoleServiceAccountAssignment_ServiceAccount
+  commentId: P:Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ServiceAccount
+  fullName: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ServiceAccount
+  nameWithType: RoleServiceAccountAssignment.ServiceAccount
+- uid: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ServiceAccount*
+  name: ServiceAccount
+  href: api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.html#Axiam_Sdk_Management_Models_RoleServiceAccountAssignment_ServiceAccount_
+  commentId: Overload:Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ServiceAccount
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ServiceAccount
+  nameWithType: RoleServiceAccountAssignment.ServiceAccount
+- uid: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.TenantScope
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.html#Axiam_Sdk_Management_Models_RoleServiceAccountAssignment_TenantScope
+  commentId: P:Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.TenantScope
+  fullName: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.TenantScope
+  nameWithType: RoleServiceAccountAssignment.TenantScope
+- uid: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.TenantScope*
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.html#Axiam_Sdk_Management_Models_RoleServiceAccountAssignment_TenantScope_
+  commentId: Overload:Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.TenantScope
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.TenantScope
+  nameWithType: RoleServiceAccountAssignment.TenantScope
 - uid: Axiam.Sdk.Management.Models.RoleUserAssignment
   name: RoleUserAssignment
   href: api/Axiam.Sdk.Management.Models.RoleUserAssignment.html
@@ -16540,6 +16878,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.RoleUserAssignment.ResourceId
   nameWithType: RoleUserAssignment.ResourceId
+- uid: Axiam.Sdk.Management.Models.RoleUserAssignment.TenantScope
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.RoleUserAssignment.html#Axiam_Sdk_Management_Models_RoleUserAssignment_TenantScope
+  commentId: P:Axiam.Sdk.Management.Models.RoleUserAssignment.TenantScope
+  fullName: Axiam.Sdk.Management.Models.RoleUserAssignment.TenantScope
+  nameWithType: RoleUserAssignment.TenantScope
+- uid: Axiam.Sdk.Management.Models.RoleUserAssignment.TenantScope*
+  name: TenantScope
+  href: api/Axiam.Sdk.Management.Models.RoleUserAssignment.html#Axiam_Sdk_Management_Models_RoleUserAssignment_TenantScope_
+  commentId: Overload:Axiam.Sdk.Management.Models.RoleUserAssignment.TenantScope
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RoleUserAssignment.TenantScope
+  nameWithType: RoleUserAssignment.TenantScope
 - uid: Axiam.Sdk.Management.Models.RoleUserAssignment.User
   name: User
   href: api/Axiam.Sdk.Management.Models.RoleUserAssignment.html#Axiam_Sdk_Management_Models_RoleUserAssignment_User
@@ -21393,6 +21744,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.RolesApi.AssignToGroupAsync
   nameWithType: RolesApi.AssignToGroupAsync
+- uid: Axiam.Sdk.Management.RolesApi.AssignToServiceAccountAsync(System.Guid,Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest,System.Threading.CancellationToken)
+  name: AssignToServiceAccountAsync(Guid, AssignRoleToServiceAccountRequest, CancellationToken)
+  href: api/Axiam.Sdk.Management.RolesApi.html#Axiam_Sdk_Management_RolesApi_AssignToServiceAccountAsync_System_Guid_Axiam_Sdk_Management_Models_AssignRoleToServiceAccountRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.RolesApi.AssignToServiceAccountAsync(System.Guid,Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.RolesApi.AssignToServiceAccountAsync(System.Guid, Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest, System.Threading.CancellationToken)
+  nameWithType: RolesApi.AssignToServiceAccountAsync(Guid, AssignRoleToServiceAccountRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.RolesApi.AssignToServiceAccountAsync*
+  name: AssignToServiceAccountAsync
+  href: api/Axiam.Sdk.Management.RolesApi.html#Axiam_Sdk_Management_RolesApi_AssignToServiceAccountAsync_
+  commentId: Overload:Axiam.Sdk.Management.RolesApi.AssignToServiceAccountAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.RolesApi.AssignToServiceAccountAsync
+  nameWithType: RolesApi.AssignToServiceAccountAsync
 - uid: Axiam.Sdk.Management.RolesApi.AssignToUserAsync(System.Guid,Axiam.Sdk.Management.Models.AssignRoleToUserRequest,System.Threading.CancellationToken)
   name: AssignToUserAsync(Guid, AssignRoleToUserRequest, CancellationToken)
   href: api/Axiam.Sdk.Management.RolesApi.html#Axiam_Sdk_Management_RolesApi_AssignToUserAsync_System_Guid_Axiam_Sdk_Management_Models_AssignRoleToUserRequest_System_Threading_CancellationToken_
@@ -21516,6 +21880,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.RolesApi.ListPermissionsAsync
   nameWithType: RolesApi.ListPermissionsAsync
+- uid: Axiam.Sdk.Management.RolesApi.ListServiceAccountsAsync(System.Guid,System.Threading.CancellationToken)
+  name: ListServiceAccountsAsync(Guid, CancellationToken)
+  href: api/Axiam.Sdk.Management.RolesApi.html#Axiam_Sdk_Management_RolesApi_ListServiceAccountsAsync_System_Guid_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.RolesApi.ListServiceAccountsAsync(System.Guid,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.RolesApi.ListServiceAccountsAsync(System.Guid, System.Threading.CancellationToken)
+  nameWithType: RolesApi.ListServiceAccountsAsync(Guid, CancellationToken)
+- uid: Axiam.Sdk.Management.RolesApi.ListServiceAccountsAsync*
+  name: ListServiceAccountsAsync
+  href: api/Axiam.Sdk.Management.RolesApi.html#Axiam_Sdk_Management_RolesApi_ListServiceAccountsAsync_
+  commentId: Overload:Axiam.Sdk.Management.RolesApi.ListServiceAccountsAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.RolesApi.ListServiceAccountsAsync
+  nameWithType: RolesApi.ListServiceAccountsAsync
 - uid: Axiam.Sdk.Management.RolesApi.ListUsersAsync(System.Guid,System.Threading.CancellationToken)
   name: ListUsersAsync(Guid, CancellationToken)
   href: api/Axiam.Sdk.Management.RolesApi.html#Axiam_Sdk_Management_RolesApi_ListUsersAsync_System_Guid_System_Threading_CancellationToken_
@@ -21558,6 +21935,22 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.RolesApi.UnassignFromGroupAsync
   nameWithType: RolesApi.UnassignFromGroupAsync
+- uid: Axiam.Sdk.Management.RolesApi.UnassignFromServiceAccountAsync(System.Guid,System.Guid,System.String,System.Threading.CancellationToken)
+  name: UnassignFromServiceAccountAsync(Guid, Guid, string?, CancellationToken)
+  href: api/Axiam.Sdk.Management.RolesApi.html#Axiam_Sdk_Management_RolesApi_UnassignFromServiceAccountAsync_System_Guid_System_Guid_System_String_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.RolesApi.UnassignFromServiceAccountAsync(System.Guid,System.Guid,System.String,System.Threading.CancellationToken)
+  name.vb: UnassignFromServiceAccountAsync(Guid, Guid, String, CancellationToken)
+  fullName: Axiam.Sdk.Management.RolesApi.UnassignFromServiceAccountAsync(System.Guid, System.Guid, string?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Management.RolesApi.UnassignFromServiceAccountAsync(System.Guid, System.Guid, String, System.Threading.CancellationToken)
+  nameWithType: RolesApi.UnassignFromServiceAccountAsync(Guid, Guid, string?, CancellationToken)
+  nameWithType.vb: RolesApi.UnassignFromServiceAccountAsync(Guid, Guid, String, CancellationToken)
+- uid: Axiam.Sdk.Management.RolesApi.UnassignFromServiceAccountAsync*
+  name: UnassignFromServiceAccountAsync
+  href: api/Axiam.Sdk.Management.RolesApi.html#Axiam_Sdk_Management_RolesApi_UnassignFromServiceAccountAsync_
+  commentId: Overload:Axiam.Sdk.Management.RolesApi.UnassignFromServiceAccountAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.RolesApi.UnassignFromServiceAccountAsync
+  nameWithType: RolesApi.UnassignFromServiceAccountAsync
 - uid: Axiam.Sdk.Management.RolesApi.UnassignFromUserAsync(System.Guid,System.Guid,System.String,System.Threading.CancellationToken)
   name: UnassignFromUserAsync(Guid, Guid, string?, CancellationToken)
   href: api/Axiam.Sdk.Management.RolesApi.html#Axiam_Sdk_Management_RolesApi_UnassignFromUserAsync_System_Guid_System_Guid_System_String_System_Threading_CancellationToken_
@@ -21793,6 +22186,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ServiceAccountsApi.ListAsync
   nameWithType: ServiceAccountsApi.ListAsync
+- uid: Axiam.Sdk.Management.ServiceAccountsApi.ListGroupsAsync(System.Guid,System.Threading.CancellationToken)
+  name: ListGroupsAsync(Guid, CancellationToken)
+  href: api/Axiam.Sdk.Management.ServiceAccountsApi.html#Axiam_Sdk_Management_ServiceAccountsApi_ListGroupsAsync_System_Guid_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.ServiceAccountsApi.ListGroupsAsync(System.Guid,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.ServiceAccountsApi.ListGroupsAsync(System.Guid, System.Threading.CancellationToken)
+  nameWithType: ServiceAccountsApi.ListGroupsAsync(Guid, CancellationToken)
+- uid: Axiam.Sdk.Management.ServiceAccountsApi.ListGroupsAsync*
+  name: ListGroupsAsync
+  href: api/Axiam.Sdk.Management.ServiceAccountsApi.html#Axiam_Sdk_Management_ServiceAccountsApi_ListGroupsAsync_
+  commentId: Overload:Axiam.Sdk.Management.ServiceAccountsApi.ListGroupsAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ServiceAccountsApi.ListGroupsAsync
+  nameWithType: ServiceAccountsApi.ListGroupsAsync
+- uid: Axiam.Sdk.Management.ServiceAccountsApi.ListRolesAsync(System.Guid,System.Threading.CancellationToken)
+  name: ListRolesAsync(Guid, CancellationToken)
+  href: api/Axiam.Sdk.Management.ServiceAccountsApi.html#Axiam_Sdk_Management_ServiceAccountsApi_ListRolesAsync_System_Guid_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.ServiceAccountsApi.ListRolesAsync(System.Guid,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.ServiceAccountsApi.ListRolesAsync(System.Guid, System.Threading.CancellationToken)
+  nameWithType: ServiceAccountsApi.ListRolesAsync(Guid, CancellationToken)
+- uid: Axiam.Sdk.Management.ServiceAccountsApi.ListRolesAsync*
+  name: ListRolesAsync
+  href: api/Axiam.Sdk.Management.ServiceAccountsApi.html#Axiam_Sdk_Management_ServiceAccountsApi_ListRolesAsync_
+  commentId: Overload:Axiam.Sdk.Management.ServiceAccountsApi.ListRolesAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ServiceAccountsApi.ListRolesAsync
+  nameWithType: ServiceAccountsApi.ListRolesAsync
 - uid: Axiam.Sdk.Management.ServiceAccountsApi.RotateSecretAsync(System.Guid,System.Threading.CancellationToken)
   name: RotateSecretAsync(Guid, CancellationToken)
   href: api/Axiam.Sdk.Management.ServiceAccountsApi.html#Axiam_Sdk_Management_ServiceAccountsApi_RotateSecretAsync_System_Guid_System_Threading_CancellationToken_
