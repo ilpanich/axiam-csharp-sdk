@@ -261,7 +261,9 @@ public sealed class Contract135Tests : IDisposable
         using AxiamClient client = SlugClient(handler);
         await client.LoginAsync("alice@example.com", PasswordText, CancellationToken.None);
 
-        OpaqueEnrollment enrollment =
+        // Fully qualified: Axiam.Sdk.Management.Models has an OpaqueEnrollment of its own
+        // (the §27 request-body shape), and both namespaces are in scope here.
+        Axiam.Sdk.Opaque.OpaqueEnrollment enrollment =
             await client.OpaqueEnrollmentForSelfAsync(Password, CancellationToken.None);
 
         Assert.NotNull(registerBody);
