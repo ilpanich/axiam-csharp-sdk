@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta05] - 2026-08-30
+
 ### Added
+
+- Contract 1.35 (carrying 1.34) — principal tenant, tenant_scope, service-account RBAC
 
 - **Contract 1.35, which carries contract 1.34 with it.** Nothing had been fanned
   out since 1.33, so this re-vendors `CONTRACT.md`, `openapi.json` and
@@ -48,7 +52,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   application gating a tenant switcher on that flag alone offers tenants the
   server refuses at the header.
 
+### Changed
+
+- `ReadLoginScopeAsync` replaces `OrganizationLevelOfAsync`, reading the §5.2 flag
+  and the §5.2.2/§5.2.3 scope in a single pass. `ReadJsonAsync` disposes the
+  response content stream, so a second reader over the same response would have
+  found nothing — a bug the one-field version could not have.
+
 ### Fixed
+
+- Disambiguate OpaqueEnrollment in the contract 1.35 test
+
+- Construct the refusal through NetworkError.FromMessage
 
 - **A registration record for your own password was sealed against the wrong
   tenant.** CONTRACT.md §5.2.2 rule 2: the caller's credentials live in the tenant
@@ -78,13 +93,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The allowlist is one field wide on purpose: elsewhere an empty list is
   meaningful — a replacement body clearing a list — and `Contract135Tests` pins
   that `UpdateWebhookRequest { Events = [] }` still serializes `"events":[]`.
-
-### Changed
-
-- `ReadLoginScopeAsync` replaces `OrganizationLevelOfAsync`, reading the §5.2 flag
-  and the §5.2.2/§5.2.3 scope in a single pass. `ReadJsonAsync` disposes the
-  response content stream, so a second reader over the same response would have
-  found nothing — a bug the one-field version could not have.
 
 ### Note on `X-Tenant-ID` vs `X-Axiam-Tenant`
 
