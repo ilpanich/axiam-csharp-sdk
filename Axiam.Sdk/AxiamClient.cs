@@ -719,7 +719,10 @@ public sealed partial class AxiamClient : IDisposable
     {
         if (_principalTenantId is not { } stored || !Guid.TryParse(stored, out Guid principalTenantId))
         {
-            throw new NetworkError(
+            // FromMessage, not `new`: the constructor is protected so that FromResponse
+            // stays the only path from a live response into this type (see NetworkError's
+            // class remarks).
+            throw NetworkError.FromMessage(
                 "OPAQUE: no principal tenant is known yet — sign in before building a "
                 + "registration record for your own password");
         }
