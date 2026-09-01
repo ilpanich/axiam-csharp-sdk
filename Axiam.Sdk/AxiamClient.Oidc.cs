@@ -16,7 +16,8 @@ namespace Axiam.Sdk;
 // (§12 T1 reference judgment call 1 — no parallel client type):
 //   OidcDiscoverAsync, OidcBegin, OidcExchangeAsync, OidcRefreshAsync,
 //   LoginClientCredentialsAsync, IntrospectAsync, RevokeAsync, SsoStartAsync,
-//   SsoCompleteAsync.
+//   SsoCompleteAsync, and -- as of contract 1.38 -- SsoProvidersAsync,
+//   SsoStartOauth2Async, SsoCompleteOauth2Async, SsoCompleteHandoffAsync.
 //
 // Built on the SDK's EXISTING machinery only (§12 forbids forking any of it):
 //   - the same _httpClient / AxiamHttpMessageHandler transport every other REST call uses,
@@ -30,6 +31,12 @@ public sealed partial class AxiamClient
     private const string OidcDiscoveryPath = "/.well-known/openid-configuration";
     private const string SsoStartPath = "/api/v1/auth/federation/oidc/start";
     private const string SsoCompletePath = "/api/v1/auth/federation/oidc/callback";
+
+    // Contract 1.38's public "Sign in with X" surface.
+    private const string SsoProvidersPath = "/api/v1/auth/federation/providers";
+    private const string SsoOAuth2StartPath = "/api/v1/auth/federation/oauth2/start";
+    private const string SsoOAuth2CompletePath = "/api/v1/auth/federation/oauth2/callback";
+    private const string SsoHandoffPath = "/api/v1/auth/federation/handoff";
 
     /// <summary>CONTRACT.md &#167;12.3 rule 6 FLOOR for the discovery-document cache TTL.</summary>
     private static readonly TimeSpan MinOidcDiscoveryTtl = TimeSpan.FromMinutes(5);
@@ -652,6 +659,298 @@ public sealed partial class AxiamClient
 
         SsoLoginSuccessResponseWire wire = await ReadOidcJsonAsync<SsoLoginSuccessResponseWire>(response, cancellationToken).ConfigureAwait(false);
         return new SsoCompleteResult(wire.UserId, wire.SessionId, wire.ExpiresIn, wire.RedirectUri);
+    }
+
+    // ------------------------------------------------------------------
+    // 10. SsoProvidersAsync  (contract 1.38)
+    // ------------------------------------------------------------------
+
+    /// <summary>
+    /// <c>GET /api/v1/auth/federation/providers</c> (CONTRACT.md &#167;12.1) — which
+    /// "Sign in with X" buttons to render for a workspace.
+    /// </summary>
+    /// <remarks>
+    /// <para>The identifiers travel as <b>query</b> parameters; this is a <c>GET</c> and
+    /// sends no body. The neighbouring start operations take the same four in a JSON body,
+    /// and the two are one copy-paste apart.</para>
+    /// <para><b>An empty list is a success.</b> An unknown organization, a known one with
+    /// nothing configured, and a request naming no workspace at all all answer <c>200</c>
+    /// with an empty <c>providers</c> array (&#167;12.1 note 9). Every one of them comes back
+    /// as an ordinary result and nothing here synthesises a not-found: the endpoint is
+    /// deliberately shaped so it cannot be used to enumerate organization or tenant slugs,
+    /// and an SDK that reintroduced the distinction would reintroduce the oracle. A caller
+    /// learns it named the workspace wrongly at the start operations, where every failure is
+    /// a uniform <c>401</c>.</para>
+    /// <para>For the same reason this is the one federation operation that does <b>not</b>
+    /// throw client-side when no workspace resolves.</para>
+    /// </remarks>
+    /// <param name="params">The workspace to list providers for; every field optional.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>The providers to offer, possibly empty.</returns>
+    public async Task<FederationProviderList> SsoProvidersAsync(SsoProvidersParams? @params = null, CancellationToken cancellationToken = default)
+    {
+        @params ??= new SsoProvidersParams();
+
+        string? tenantIdStr = @params.TenantId?.ToString();
+        string? tenantSlug = @params.TenantSlug;
+        if (tenantIdStr is null && tenantSlug is null)
+        {
+            if (Guid.TryParse(_tenant.TenantId, out Guid selfTenantGuid))
+            {
+                tenantIdStr = selfTenantGuid.ToString();
+            }
+            else
+            {
+                tenantSlug = _tenant.TenantId;
+            }
+        }
+
+        string? orgIdStr = @params.OrgId?.ToString();
+        string? orgSlug = @params.OrgSlug;
+        if (orgIdStr is null && orgSlug is null)
+        {
+            if (_tenant.OrgId is Guid selfOrgId)
+            {
+                orgIdStr = selfOrgId.ToString();
+            }
+            else if (_tenant.OrgSlug is string selfOrgSlug)
+            {
+                orgSlug = selfOrgSlug;
+            }
+        }
+
+        // Deliberately NO client-side refusal when nothing resolves: see the remarks above.
+        var query = new List<string>(4);
+        if (orgIdStr is not null)
+        {
+            query.Add($"org_id={Uri.EscapeDataString(orgIdStr)}");
+        }
+        else if (orgSlug is not null)
+        {
+            query.Add($"org_slug={Uri.EscapeDataString(orgSlug)}");
+        }
+        if (tenantIdStr is not null)
+        {
+            query.Add($"tenant_id={Uri.EscapeDataString(tenantIdStr)}");
+        }
+        else if (tenantSlug is not null)
+        {
+            query.Add($"tenant_slug={Uri.EscapeDataString(tenantSlug)}");
+        }
+
+        string url = query.Count == 0 ? SsoProvidersPath : $"{SsoProvidersPath}?{string.Join("&", query)}";
+        using HttpResponseMessage response = await GetOidcAsync(url, cancellationToken).ConfigureAwait(false);
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            throw ErrorMapper.FromHttpResponse(response, "sso_providers failed");
+        }
+
+        PublicFederationProvidersResponseWire wire =
+            await ReadOidcJsonAsync<PublicFederationProvidersResponseWire>(response, cancellationToken).ConfigureAwait(false);
+        var providers = (wire.Providers ?? Array.Empty<PublicFederationProviderWire>())
+            .Select(p => new FederationProvider(
+                p.Id, p.ProviderKind, p.DisplayName, p.Protocol, p.HasBundledMark, p.Inherited, p.ButtonIcon))
+            .ToList();
+        return new FederationProviderList(providers);
+    }
+
+    // ------------------------------------------------------------------
+    // 11. SsoStartOauth2Async  (contract 1.38)
+    // ------------------------------------------------------------------
+
+    /// <summary>
+    /// <c>POST /api/v1/auth/federation/oauth2/start</c> (CONTRACT.md &#167;12.1) — step 1
+    /// of a login through a <b>plain-OAuth2</b> upstream (GitHub, Facebook,
+    /// <c>generic_oauth2</c>).
+    /// </summary>
+    /// <remarks>
+    /// <para>Call this, rather than <see cref="SsoStartAsync"/>, exactly when the provider's
+    /// <c>protocol</c> is <see cref="FederationProtocols.OAuth2"/> (&#167;12.1 note 10). The
+    /// server refuses a mismatch with <c>400</c> rather than accepting it silently, so a
+    /// client that assumes OIDC fails on every GitHub button.</para>
+    /// <para>PKCE is mandatory on this path and is generated and stored <b>server-side</b>;
+    /// nothing about it appears in the request or the response (&#167;12.1 note 11).</para>
+    /// <para>A <c>400</c> here can mean the <c>RedirectUri</c> is not on an origin the
+    /// deployment accepts (&#167;12.1 rule 12a). &#167;2's <c>400</c> row makes that a
+    /// <see cref="NetworkError"/> — this taxonomy's configuration/programming-error member,
+    /// as distinct from the <see cref="AuthError"/> a <c>401</c> gets. It is not retried.</para>
+    /// </remarks>
+    /// <param name="params">The federation config, redirect URI and workspace context.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>The authorize URL and single-use state to round-trip.</returns>
+    public async Task<SsoStartResult> SsoStartOauth2Async(SsoStartOauth2Params @params, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(@params);
+
+        string? tenantIdStr = @params.TenantId?.ToString();
+        string? tenantSlug = @params.TenantSlug;
+        if (tenantIdStr is null && tenantSlug is null)
+        {
+            if (Guid.TryParse(_tenant.TenantId, out Guid selfTenantGuid))
+            {
+                tenantIdStr = selfTenantGuid.ToString();
+            }
+            else
+            {
+                tenantSlug = _tenant.TenantId;
+            }
+        }
+        if (tenantIdStr is null && tenantSlug is null)
+        {
+            throw new AuthError("SsoStartOauth2Async requires tenant context: pass TenantId or TenantSlug, or construct the client with one (CONTRACT.md §5.1).");
+        }
+
+        string? orgIdStr = @params.OrgId?.ToString();
+        string? orgSlug = @params.OrgSlug;
+        if (orgIdStr is null && orgSlug is null)
+        {
+            if (_tenant.OrgId is Guid selfOrgId)
+            {
+                orgIdStr = selfOrgId.ToString();
+            }
+            else if (_tenant.OrgSlug is string selfOrgSlug)
+            {
+                orgSlug = selfOrgSlug;
+            }
+        }
+        if (orgIdStr is null && orgSlug is null)
+        {
+            throw new AuthError("SsoStartOauth2Async requires organization context: pass OrgId or OrgSlug, or construct the client with OrgId/OrgSlug (CONTRACT.md §5.1).");
+        }
+
+        var body = new Dictionary<string, object?>
+        {
+            ["federation_config_id"] = @params.FederationConfigId,
+            ["redirect_uri"] = @params.RedirectUri,
+        };
+        if (tenantIdStr is not null)
+        {
+            body["tenant_id"] = tenantIdStr;
+        }
+        else
+        {
+            body["tenant_slug"] = tenantSlug;
+        }
+        if (orgIdStr is not null)
+        {
+            body["org_id"] = orgIdStr;
+        }
+        else
+        {
+            body["org_slug"] = orgSlug;
+        }
+        // No PKCE anywhere in this body, and there must not be (§12.1 note 11).
+
+        using HttpResponseMessage response = await PostJsonAsync(SsoOAuth2StartPath, body, cancellationToken).ConfigureAwait(false);
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            // The federation endpoints document no error schema — the generic §2 status
+            // mapping, never an OAuth2ErrorResponse parse (§12.3 rule 3 scopes that to
+            // /oauth2/*).
+            throw ErrorMapper.FromHttpResponse(response, "sso_start_oauth2 failed");
+        }
+
+        OAuth2StartResponseWire wire = await ReadOidcJsonAsync<OAuth2StartResponseWire>(response, cancellationToken).ConfigureAwait(false);
+        return new SsoStartResult(wire.AuthorizeUrl, wire.State, wire.ExpiresInSecs);
+    }
+
+    // ------------------------------------------------------------------
+    // 12. SsoCompleteOauth2Async  (contract 1.38)
+    // ------------------------------------------------------------------
+
+    /// <summary>
+    /// <c>POST /api/v1/auth/federation/oauth2/callback</c> (CONTRACT.md &#167;12.1) — step
+    /// 2 of a plain-OAuth2 login.
+    /// </summary>
+    /// <remarks>
+    /// The session arrives as <c>Set-Cookie</c> (&#167;12.1 note 6) through the same
+    /// &#167;4 cookie-jar path <see cref="SsoCompleteAsync"/> uses. &#167;12.4 does not
+    /// apply: an <c>OAuth2</c> provider issues no ID token, so there is nothing to validate
+    /// — the server authenticated the user by calling a configured userinfo endpoint with
+    /// the access token it had just received (&#167;12.1 note 11).
+    /// </remarks>
+    /// <param name="params">The state and code the provider redirected back with.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>The established session's identifiers and post-login destination.</returns>
+    public async Task<SsoCompleteResult> SsoCompleteOauth2Async(SsoCompleteOauth2Params @params, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(@params);
+
+        var body = new Dictionary<string, object?> { ["state"] = @params.State, ["code"] = @params.Code };
+        return await CompleteFederationSessionAsync(SsoOAuth2CompletePath, body, "sso_complete_oauth2", cancellationToken).ConfigureAwait(false);
+    }
+
+    // ------------------------------------------------------------------
+    // 13. SsoCompleteHandoffAsync  (contract 1.38)
+    // ------------------------------------------------------------------
+
+    /// <summary>
+    /// <c>POST /api/v1/auth/federation/handoff</c> (CONTRACT.md &#167;12.1) — redeem the
+    /// single-use code the SAML and Apple flows deliver.
+    /// </summary>
+    /// <remarks>
+    /// <para>Those two protocols return <b>cross-site</b>, so the server cannot set
+    /// <c>SameSite=Strict</c> session cookies on that response. It instead redirects the
+    /// browser to the SPA's callback URL with a <see cref="FederationHandoff.QueryParam"/>
+    /// query parameter; this call posts that code back same-origin, and <i>this</i> response
+    /// is the one that carries the cookies (&#167;12.1 note 12).</para>
+    /// <para><b>The code is gone either way.</b> It is valid for
+    /// <see cref="FederationHandoff.CodeTtlSeconds"/> seconds and redeemable <b>once</b>.
+    /// Redeem it from the same origin, immediately, and never retry a failed redemption: a
+    /// <c>401</c> is terminal, and this method makes exactly one wire call so that it cannot
+    /// become a retry by accident. Unknown, expired and already-redeemed all answer the same
+    /// <c>401</c>, deliberately.</para>
+    /// </remarks>
+    /// <param name="params">The single-use handoff code.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>The established session's identifiers and post-login destination.</returns>
+    public async Task<SsoCompleteResult> SsoCompleteHandoffAsync(SsoCompleteHandoffParams @params, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(@params);
+
+        var body = new Dictionary<string, object?> { ["code"] = @params.Code };
+        return await CompleteFederationSessionAsync(SsoHandoffPath, body, "sso_complete_handoff", cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// The shared body of the two session-establishing federation POSTs: one wire call, the
+    /// &#167;2 status mapping on anything but <c>200</c>, and the &#167;4 cookie container
+    /// absorbing the session because the request went through the shared
+    /// <c>HttpClient</c>.
+    /// </summary>
+    private async Task<SsoCompleteResult> CompleteFederationSessionAsync(
+        string path,
+        Dictionary<string, object?> body,
+        string operation,
+        CancellationToken cancellationToken)
+    {
+        using HttpResponseMessage response = await PostJsonAsync(path, body, cancellationToken).ConfigureAwait(false);
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            throw ErrorMapper.FromHttpResponse(response, $"{operation} failed");
+        }
+
+        SsoLoginSuccessResponseWire wire =
+            await ReadOidcJsonAsync<SsoLoginSuccessResponseWire>(response, cancellationToken).ConfigureAwait(false);
+        return new SsoCompleteResult(wire.UserId, wire.SessionId, wire.ExpiresIn, wire.RedirectUri);
+    }
+
+    /// <summary>GET a &#167;12 path on the shared transport, mapping a transport failure to
+    /// <see cref="NetworkError"/> exactly as <c>PostJsonAsync</c> does.</summary>
+    private async Task<HttpResponseMessage> GetOidcAsync(string path, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await _httpClient.GetAsync(path, cancellationToken).ConfigureAwait(false);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw NetworkError.FromException(ex, $"GET {path} failed");
+        }
+        catch (OperationCanceledException ex) when (ex.CancellationToken != cancellationToken)
+        {
+            throw NetworkError.FromException(ex, $"GET {path} timed out");
+        }
     }
 
     // ------------------------------------------------------------------
