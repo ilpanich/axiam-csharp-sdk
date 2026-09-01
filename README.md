@@ -20,8 +20,8 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20, §22, §23, §24, §25,
-§26, §27 (including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation,
+This SDK conforms to **contract 1.38**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
+§22, §23, §24, §25, §26, §27 (including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation,
 contract 1.3, the §12 OIDC/SSO relying-party helpers, contract 1.4, the §13 webhook signature
 verifier, T-145, the §20 UMA 2.0 Protection API and ticket grant, contract 1.10, the §22 reactor
 runtime, contract 1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, the §24 WebAuthn
@@ -58,7 +58,7 @@ See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract
 | §10 | `app.UseMiddleware<AxiamAuthMiddleware>()` + `ClaimsPrincipal` injection + policy-based `[Authorize]` | `Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
 | §10.1 | Complete minimum local-verification set: EdDSA-pinned signature (before key lookup), **required** `exp`, honoured `nbf`, asserted `tenant_id`, conditional `iss`/`aud`, named 60s clock skew — all fail-closed | `Auth/JwksVerifier.VerifyAsync`/`ApplyClaimPolicy`, exercised by `tests/Axiam.Sdk.Tests/Contract101LocalVerificationTests.cs` |
 | §11 | Declarative `[AxiamAccess(action, resource)]` authorization attribute with scope + route-param resolution; `require_auth`/`require_role` as framework-native `[Authorize]`/`[Authorize(Roles = ...)]` | `Axiam.Sdk.AspNetCore/AxiamAccessAttribute.cs`, `AxiamRequirement.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
-| §12 | OIDC/SSO relying-party helpers: `OidcDiscoverAsync`/`OidcBegin`/`OidcExchangeAsync`/`OidcRefreshAsync`/`LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync`/`SsoStartAsync`/`SsoCompleteAsync`; `MapAxiamOidcLogin` ASP.NET Core glue | `AxiamClient.Oidc.cs`, `Auth/Oidc/*.cs`, `Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs` |
+| §12 | OIDC/SSO relying-party helpers: `OidcDiscoverAsync`/`OidcBegin`/`OidcExchangeAsync`/`OidcRefreshAsync`/`LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync`/`SsoStartAsync`/`SsoCompleteAsync`/`SsoProvidersAsync`/`SsoStartOauth2Async`/`SsoCompleteOauth2Async`/`SsoCompleteHandoffAsync`; `MapAxiamOidcLogin` ASP.NET Core glue | `AxiamClient.Oidc.cs`, `Auth/Oidc/*.cs`, `Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs` |
 | §13 | Webhook signature verifier: HMAC-SHA256 over `<t>.<raw_body>`, `CryptographicOperations.FixedTimeEquals` constant-time compare on decoded bytes, two-sided 300s default freshness tolerance, `TimeProvider` injection seam, fail-closed on malformed/tampered input | `Webhooks/AxiamWebhooks.cs`, `Webhooks/WebhookEvent.cs`, `Webhooks/WebhookVerificationException.cs` |
 | §22 | Reactor runtime — AMQP extension actors: `ReactorServeAsync` consumes the **server-declared** queue, verifies each event under §8 v2 before the handler sees it, and signs the reply with the same tenant subkey. The reactor canonicalization differs from §8's in exactly one place (`hmac_signature` serialized as **`null`**, not omitted), proven byte-for-byte against the server-generated §22.13 vectors. §22.7's hot-path exclusion is asserted against the constant list. | `Reactor/ReactorProtocol.cs`, `Reactor/ReactorServer.cs`, `Reactor/ReactorEvents.cs`, `Reactor/ReactorDecision.cs`, `Reactor/ReactorEvent.cs`, `Reactor/ReactorServeOptions.cs` |
 
@@ -164,10 +164,11 @@ documented here (as in every AXIAM SDK) as NOT a substitute for the resource-lev
 
 ## OIDC / SSO relying-party helpers (CONTRACT.md §12)
 
-`Axiam.Sdk` ships the nine canonical §12 operations directly on the existing
+`Axiam.Sdk` ships the thirteen canonical §12 operations directly on the existing
 `AxiamClient` (no separate client type) — "Login with AXIAM" via authorization-code +
-PKCE, service-account login via `client_credentials`, token introspection/revocation, and
-the upstream-IdP federation pair:
+PKCE, service-account login via `client_credentials`, token introspection/revocation, the
+upstream-IdP federation pair, and — as of **contract 1.38** — the four public
+"Sign in with X" entry points:
 
 | Canonical operation | C# method |
 |---|---|
@@ -180,6 +181,13 @@ the upstream-IdP federation pair:
 | `revoke` | `RevokeAsync` |
 | `sso_start` | `SsoStartAsync` |
 | `sso_complete` | `SsoCompleteAsync` |
+| `sso_providers` | `SsoProvidersAsync` |
+| `sso_start_oauth2` | `SsoStartOauth2Async` |
+| `sso_complete_oauth2` | `SsoCompleteOauth2Async` |
+| `sso_complete_handoff` | `SsoCompleteHandoffAsync` |
+
+All four take the `Async` suffix: every one performs network I/O, so the `OidcBegin`
+exception does not extend to them.
 
 ```csharp
 using Axiam.Sdk;
@@ -266,6 +274,39 @@ Notes:
   callback. `MemoryOidcStateStore` is a single-process, 10-minute-TTL, single-use
   reference implementation — a multi-instance deployment needs a shared store (Redis, a
   database): implement `IOidcStateStore` directly.
+- **An empty provider list is a success** (§12.1 note 9). An unknown organization, a known
+  one with nothing configured, and a request naming no workspace at all *all* answer `200`
+  with an empty array. `SsoProvidersAsync` returns every one of them as an ordinary result
+  and never synthesises a not-found: the endpoint is deliberately shaped so it cannot be
+  used to enumerate organization or tenant slugs, and telling the three apart client-side
+  would rebuild that oracle. For the same reason it is the one federation operation that
+  does **not** throw client-side when no workspace resolves — it sends the request. You
+  learn you named the workspace wrongly at the start operations, where every failure is a
+  uniform `401`.
+- **`protocol` selects which start operation to call** (§12.1 note 10) — never
+  `ProviderKind`, which is branding: `FederationProtocols.OidcConnect` → `SsoStartAsync`,
+  `FederationProtocols.OAuth2` → `SsoStartOauth2Async`, `FederationProtocols.Saml` → the
+  SAML login endpoint, which is not a §12 vocabulary operation. The server refuses a
+  mismatch with `400` rather than accepting it silently, so a client that assumes OIDC
+  fails on every GitHub button. An `OAuth2` provider also issues **no ID token**: the
+  server authenticates by calling a configured userinfo endpoint, so there is no signature,
+  no `nonce` and no `aud` — a distinction a UI rendering these buttons should make visible.
+- **PKCE on the OAuth2 variant is server-side** (§12.1 note 11). `SsoStartOauth2Async`
+  computes no verifier and sends no challenge; its absence is the contract.
+- **A `400` from a start call is a configuration refusal** (§12.1 rule 12a). On the SAML and
+  Apple flows the identity provider never validates the SPA `RedirectUri`, so the server
+  confines it to its own issuer origin plus `AXIAM__AUTH__SSO_SPA_ORIGINS`. That refusal
+  surfaces as `NetworkError` — §2's `400` row, the taxonomy's
+  configuration/programming-error member, as distinct from the `AuthError` a `401` gets —
+  and is not retried. Never build a `RedirectUri` out of anything the identity provider
+  supplied.
+- **A handoff code is single-use and lives 60 s** (§12.1 note 12).
+  `SsoCompleteHandoffAsync` makes exactly one wire call, so a terminal `401` cannot become
+  a retry by accident. `FederationHandoff.QueryParam` (`axiam_handoff`) and
+  `FederationHandoff.CodeTtlSeconds` are exported for callers driving the browser hop.
+- **Inheritance is resolved server-side** (§12.1 note 13). `FederationProvider.Inherited` is
+  reported so an admin surface can show that a provider is not the tenant's to edit;
+  nothing here computes it.
 - **S256-only PKCE.** `"plain"` is never emitted, never accepted, and not configurable.
 - **`client_id` is client configuration** (`AxiamClientOptions.OidcClientId`), never a
   per-call argument — required before any §12 operation other than `OidcDiscoverAsync`.

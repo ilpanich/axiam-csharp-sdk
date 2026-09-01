@@ -7,6 +7,74 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Contract 1.38: the four public "Sign in with X" operations.** `SsoProvidersAsync`,
+  `SsoStartOauth2Async`, `SsoCompleteOauth2Async` and `SsoCompleteHandoffAsync`, under the
+  exact CONTRACT.md §12.2 C# names, on the same `AxiamClient` as the nine §12 operations
+  that came before. All four take the `Async` suffix: every one performs network I/O, so
+  the `OidcBegin` exception does not extend to them, and a test asserts the unsuffixed
+  names do not exist. New public types `FederationProvider`, `FederationProviderList`,
+  `FederationProtocols` and `FederationHandoff`. Upstream: ilpanich/axiam#398.
+
+  Four rules an implementation can satisfy by accident and break by accident, so each is
+  stated in the code and carries a test:
+
+  - **An empty provider list is a success** (§12.1 note 9). An unknown organization, a
+    known one with nothing configured, and a request naming no workspace at all all answer
+    `200 []`. `SsoProvidersAsync` returns each as an ordinary result and never synthesises
+    a not-found: the endpoint is shaped so it cannot enumerate organization or tenant
+    slugs, and distinguishing the three client-side would rebuild that oracle. It is
+    therefore also the one federation operation that does *not* throw client-side when no
+    workspace resolves — a client-side refusal would be that same two-valued answer by
+    another route.
+  - **`protocol` selects the start operation** (§12.1 note 10), never `ProviderKind`. It is
+    the wire string with `FederationProtocols` constants to compare against, rather than an
+    enum: a value added server-side must not become a deserialization failure for the whole
+    list.
+  - **PKCE on the OAuth2 variant is server-side** (§12.1 note 11). Nothing here computes a
+    verifier or sends a challenge, and a test asserts the absence rather than leaving it to
+    be noticed.
+  - **A `400` from a start call is a configuration refusal** (§12.1 rule 12a, new at 1.38):
+    the deployment rejecting a `RedirectUri` whose origin is neither its own issuer nor
+    listed in `AXIAM__AUTH__SSO_SPA_ORIGINS`. It surfaces as `NetworkError` — §2's `400`
+    row, the taxonomy's configuration/programming-error member, distinct from the
+    `AuthError` a `401` gets — and is not retried.
+
+  A handoff `401` is terminal: `SsoCompleteHandoffAsync` makes exactly one wire call, so it
+  cannot become a retry by accident.
+
+- `OidcLoginProvidersTests` — 25 tests. The wire-shape half reads the vendored
+  `openapi.json` and asserts method, path, media type, the success schema names, that the
+  `SsoProviders` identifiers are declared `in: query`, and that neither OAuth2 start schema
+  carries PKCE material; the SDK half asserts what actually reaches the wire matches. The
+  rule half covers note 9 (all three empty-list cases, plus that a workspace-less request is
+  still *sent* while `SsoStartAsync` on the same client refuses), note 10 (all three
+  dispatch branches, with a `Saml` fixture whose `provider_kind` is `google` so a kind-based
+  dispatch fails), note 12 (terminal `401`, exactly one request) and rule 12a (a `400` from
+  either start operation is `NetworkError` and unretried; a `401` from the same endpoint
+  stays `AuthError`). Plus the §12.2 naming assertion above.
+
+### Changed
+
+- Re-vendored `CONTRACT.md` (1.29 → 1.38), `openapi.json` and `management-registry.json`
+  byte-for-byte from `ilpanich/axiam@1c457f6`. `proto/axiam/v1/` and
+  `opaque-test-vectors.json` did not change upstream and were re-verified as already
+  identical rather than re-copied. `management-registry.json` moves only its `spec_digest`:
+  `operation_count` stays at 155, so no §27 operation was added or removed.
+
+- Regenerated the §27 management surface (`python3 scripts/gen_management.py`), as §27.8
+  requires whenever the vendored artifacts move. `openapi.json` gains ten fields on the
+  federation-config schemas (`allow_tenant_inheritance`, `allowed_issuer_tenants`, the two
+  Apple identifiers, the OAuth2 endpoint trio, `provider_kind`/`provider_slug`,
+  `button_icon`, `scopes`/`effective_scopes`, `has_bundled_mark`, `mints_client_secret`,
+  `pkce_required`), so the three federation-config models and the two generated tests move
+  with it. The operation surface itself is unchanged.
+
+- The README's contract-conformance statement names **contract 1.38** and §12's thirteen
+  operations, and its §12 section documents the four new ones, the protocol-dispatch rule,
+  the faithful `FederationProvider` shape, and the rule-12a taxonomy mapping.
+
 ## [1.0.0-beta07] - 2026-08-30
 
 ### Changed
