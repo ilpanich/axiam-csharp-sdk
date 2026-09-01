@@ -530,6 +530,62 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.FederationHandoff.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.FederationHandoff.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.FederationHandoff",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.FederationHandoff.yml\" sourcestartlinenumber=\"1\">The handoff-code constants a caller driving the browser hop needs (CONTRACT.md\n§12.1 note 12).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.FederationProtocols.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.FederationProtocols.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.FederationProtocols",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.FederationProtocols.yml\" sourcestartlinenumber=\"1\">The <code>protocol</code> values a <xref href=\"Axiam.Sdk.Auth.Oidc.FederationProvider\" data-throw-if-not-resolved=\"false\"></xref> may carry (CONTRACT.md\n§12.1 note 10). The value — not <xref href=\"Axiam.Sdk.Auth.Oidc.FederationProvider.ProviderKind\" data-throw-if-not-resolved=\"false\"></xref>, which\nis branding — selects which start operation to call.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.FederationProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.FederationProvider.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.FederationProvider",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.FederationProvider.yml\" sourcestartlinenumber=\"1\">One sign-in button (wire schema <code>PublicFederationProvider</code>, CONTRACT.md\n§12.1, contract 1.38).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.FederationProviderList.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.FederationProviderList.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.FederationProviderList",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.FederationProviderList.yml\" sourcestartlinenumber=\"1\">The result of <xref href=\"Axiam.Sdk.AxiamClient.SsoProvidersAsync(Axiam.Sdk.Auth.Oidc.SsoProvidersParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (wire schema\n<code>PublicFederationProvidersResponse</code>, CONTRACT.md §12.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.IOidcStateStore.yml",
       "output": {
         ".html": {
@@ -824,6 +880,34 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.SsoCompleteHandoffAsync(Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>\n(<code>POST /api/v1/auth/federation/handoff</code>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.SsoCompleteOauth2Async(Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>\n(<code>POST /api/v1/auth/federation/oauth2/callback</code>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoCompleteParams.yml",
       "output": {
         ".html": {
@@ -849,6 +933,34 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Auth.Oidc.SsoCompleteResult",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.SsoCompleteResult.yml\" sourcestartlinenumber=\"1\">The result of <xref href=\"Axiam.Sdk.AxiamClient.SsoCompleteAsync(Axiam.Sdk.Auth.Oidc.SsoCompleteParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> (wire schema\n<code>SsoLoginSuccessResponse</code>). Carries NO token material — the session arrives as\n<code>Set-Cookie</code>, so the §4 cookie jar (already owned by every\n<xref href=\"Axiam.Sdk.AxiamClient\" data-throw-if-not-resolved=\"false\"></xref>) is what actually captures it (§12.1 note 6).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoProvidersParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoProvidersParams.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.SsoProvidersParams",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.SsoProvidersParams.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.SsoProvidersAsync(Axiam.Sdk.Auth.Oidc.SsoProvidersParams%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>\n(<code>GET /api/v1/auth/federation/providers</code>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.AxiamClient.SsoStartOauth2Async(Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref>\n(<code>POST /api/v1/auth/federation/oauth2/start</code>).</p>\n"
     },
     {
       "type": "ManagedReference",

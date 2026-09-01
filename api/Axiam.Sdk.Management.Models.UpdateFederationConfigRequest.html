@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta07/apiSpec/new?filename=Axiam_Sdk_Management_Models_UpdateFederationConfigRequest.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.UpdateFederationConfigRequest%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta08/apiSpec/new?filename=Axiam_Sdk_Management_Models_UpdateFederationConfigRequest.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.UpdateFederationConfigRequest%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest" class="text-break">
-Class UpdateFederationConfigRequest  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta07/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L27"><i class="bi bi-code-slash"></i></a>
+Class UpdateFederationConfigRequest  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -165,11 +165,44 @@ field you did not name.
 </h2>
 
 
+  <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AllowTenantInheritance_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowTenantInheritance*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AllowTenantInheritance" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowTenantInheritance">
+  AllowTenantInheritance
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether tenants may inherit this organization-level provider.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;allow_tenant_inheritance&quot;)]
+public bool? AllowTenantInheritance { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AllowedAlgorithms_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowedAlgorithms*"></a>
 
   <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AllowedAlgorithms" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowedAlgorithms">
   AllowedAlgorithms
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta07/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L38"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Accepted signature algorithms (CQ-B40/REQ-14 AC-5).</p>
@@ -198,11 +231,110 @@ public IReadOnlyList&lt;string&gt;? AllowedAlgorithms { get; init; }</code></pre
 
 
 
+  <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AllowedIssuerTenants_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowedIssuerTenants*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AllowedIssuerTenants" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowedIssuerTenants">
+  AllowedIssuerTenants
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Accepted external IdP tenants for a templated issuer. Replaced wholesale.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;allowed_issuer_tenants&quot;)]
+public IReadOnlyList&lt;string&gt;? AllowedIssuerTenants { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AppleKeyId_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleKeyId*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AppleKeyId" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleKeyId">
+  AppleKeyId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Apple Key ID. <code>Some(None)</code> clears it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;apple_key_id&quot;)]
+public string? AppleKeyId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AppleTeamId_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleTeamId*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AppleTeamId" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleTeamId">
+  AppleTeamId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L56"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Apple Team ID. <code>Some(None)</code> clears it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;apple_team_id&quot;)]
+public string? AppleTeamId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AttributeMap_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AttributeMap*"></a>
 
   <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AttributeMap" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AttributeMap">
   AttributeMap
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta07/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L62"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>the server's attribute_map field</p>
@@ -231,11 +363,77 @@ public JsonElement? AttributeMap { get; init; }</code></pre>
 
 
 
+  <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AuthorizationEndpoint_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AuthorizationEndpoint*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AuthorizationEndpoint" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AuthorizationEndpoint">
+  AuthorizationEndpoint
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>OAuth2-variant authorization endpoint. <code>Some(None)</code> clears it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;authorization_endpoint&quot;)]
+public string? AuthorizationEndpoint { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_ButtonIcon_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ButtonIcon*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_ButtonIcon" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ButtonIcon">
+  ButtonIcon
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sign-in-button icon for a generic provider. <code>Some(None)</code> clears it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;button_icon&quot;)]
+public string? ButtonIcon { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_ClientId_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ClientId*"></a>
 
   <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_ClientId" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ClientId">
   ClientId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta07/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L80"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>the server's client_id field</p>
@@ -268,7 +466,7 @@ public string? ClientId { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_ClientSecret" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ClientSecret">
   ClientSecret
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta07/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L87"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>the server's client_secret field -- SECRET: redacted from ToString and from every
@@ -302,7 +500,7 @@ public Sensitive&lt;string&gt;? ClientSecret { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_Enabled" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.Enabled">
   Enabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta07/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L93"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>the server's enabled field</p>
@@ -335,7 +533,7 @@ public bool? Enabled { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_IdpSigningCertPem" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.IdpSigningCertPem">
   IdpSigningCertPem
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta07/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L100"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>PEM-encoded X.509 certificate for verifying SAML assertions (CQ-B40/REQ-14 AC-5).
@@ -369,7 +567,7 @@ public string? IdpSigningCertPem { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_MetadataUrl" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.MetadataUrl">
   MetadataUrl
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta07/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L106"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>the server's metadata_url field</p>
@@ -402,7 +600,7 @@ public string? MetadataUrl { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_Provider" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.Provider">
   Provider
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta07/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>the server's provider field</p>
@@ -431,11 +629,143 @@ public string? Provider { get; init; }</code></pre>
 
 
 
+  <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_ProviderSlug_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ProviderSlug*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_ProviderSlug" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ProviderSlug">
+  ProviderSlug
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Operator-chosen identifier for a <code>generic_*</code> kind. <code>Some(None)</code> clears it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;provider_slug&quot;)]
+public string? ProviderSlug { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_RequirePkce_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.RequirePkce*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_RequirePkce" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.RequirePkce">
+  RequirePkce
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L124"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Send PKCE on the authorization request.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;require_pkce&quot;)]
+public bool? RequirePkce { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_Scopes_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.Scopes*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_Scopes" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.Scopes">
+  Scopes
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L130"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Scopes to request. Replaced wholesale; empty restores the per-kind default.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;scopes&quot;)]
+public IReadOnlyList&lt;string&gt;? Scopes { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_TokenEndpoint_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.TokenEndpoint*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_TokenEndpoint" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.TokenEndpoint">
+  TokenEndpoint
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L136"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>OAuth2-variant token endpoint. <code>Some(None)</code> clears it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;token_endpoint&quot;)]
+public string? TokenEndpoint { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_TokenExchange_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.TokenExchange*"></a>
 
   <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_TokenExchange" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.TokenExchange">
   TokenExchange
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta07/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L82"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L142"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>the server's token_exchange field</p>
@@ -454,6 +784,39 @@ public TokenExchangeTrustRequest? TokenExchange { get; init; }</code></pre>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="Axiam.Sdk.Management.Models.TokenExchangeTrustRequest.html">TokenExchangeTrustRequest</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_UserinfoEndpoint_" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.UserinfoEndpoint*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_UserinfoEndpoint" data-uid="Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.UserinfoEndpoint">
+  UserinfoEndpoint
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Management/Models/UpdateFederationConfigRequest.cs/#L148"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>OAuth2-variant userinfo endpoint. <code>Some(None)</code> clears it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;userinfo_endpoint&quot;)]
+public string? UserinfoEndpoint { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 

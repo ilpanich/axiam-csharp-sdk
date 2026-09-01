@@ -127,6 +127,31 @@ an authorization-code + PKCE login (CONTRACT.md §12.1).</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationHandoff.html">FederationHandoff</a></dt>
+      <dd><p>The handoff-code constants a caller driving the browser hop needs (CONTRACT.md
+§12.1 note 12).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationProtocols.html">FederationProtocols</a></dt>
+      <dd><p>The <code>protocol</code> values a <a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationProvider.html">FederationProvider</a> may carry (CONTRACT.md
+§12.1 note 10). The value — not <a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_ProviderKind">ProviderKind</a>, which
+is branding — selects which start operation to call.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationProvider.html">FederationProvider</a></dt>
+      <dd><p>One sign-in button (wire schema <code>PublicFederationProvider</code>, CONTRACT.md
+§12.1, contract 1.38).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationProviderList.html">FederationProviderList</a></dt>
+      <dd><p>The result of <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoProvidersAsync_Axiam_Sdk_Auth_Oidc_SsoProvidersParams_System_Threading_CancellationToken_">SsoProvidersAsync(SsoProvidersParams?, CancellationToken)</a> (wire schema
+<code>PublicFederationProvidersResponse</code>, CONTRACT.md §12.1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.IdTokenClaims.html">IdTokenClaims</a></dt>
       <dd><p>The decoded, ALREADY-VALIDATED ID-token claim set carried by
 <a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcTokenSet.html#Axiam_Sdk_Auth_Oidc_OidcTokenSet_IdClaims">IdClaims</a> (CONTRACT.md §12.1).</p>
@@ -247,6 +272,18 @@ confidential-client credentials (§12.1 note 4).</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.html">SsoCompleteHandoffParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteHandoffAsync_Axiam_Sdk_Auth_Oidc_SsoCompleteHandoffParams_System_Threading_CancellationToken_">SsoCompleteHandoffAsync(SsoCompleteHandoffParams, CancellationToken)</a>
+(<code>POST /api/v1/auth/federation/handoff</code>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.html">SsoCompleteOauth2Params</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteOauth2Async_Axiam_Sdk_Auth_Oidc_SsoCompleteOauth2Params_System_Threading_CancellationToken_">SsoCompleteOauth2Async(SsoCompleteOauth2Params, CancellationToken)</a>
+(<code>POST /api/v1/auth/federation/oauth2/callback</code>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoCompleteParams.html">SsoCompleteParams</a></dt>
       <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteAsync_Axiam_Sdk_Auth_Oidc_SsoCompleteParams_System_Threading_CancellationToken_">SsoCompleteAsync(SsoCompleteParams, CancellationToken)</a>
 (<code>POST /api/v1/auth/federation/oidc/callback</code>).</p>
@@ -258,6 +295,18 @@ confidential-client credentials (§12.1 note 4).</p>
 <code>SsoLoginSuccessResponse</code>). Carries NO token material — the session arrives as
 <code>Set-Cookie</code>, so the §4 cookie jar (already owned by every
 <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a>) is what actually captures it (§12.1 note 6).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoProvidersParams.html">SsoProvidersParams</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoProvidersAsync_Axiam_Sdk_Auth_Oidc_SsoProvidersParams_System_Threading_CancellationToken_">SsoProvidersAsync(SsoProvidersParams?, CancellationToken)</a>
+(<code>GET /api/v1/auth/federation/providers</code>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html">SsoStartOauth2Params</a></dt>
+      <dd><p>Arguments to <a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoStartOauth2Async_Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_System_Threading_CancellationToken_">SsoStartOauth2Async(SsoStartOauth2Params, CancellationToken)</a>
+(<code>POST /api/v1/auth/federation/oauth2/start</code>).</p>
 </dd>
     </dl>
     <dl class="jumplist">

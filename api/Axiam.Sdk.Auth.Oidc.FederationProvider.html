@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class FederationProvider | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class FederationProvider | AXIAM .NET SDK ">
+      
+      <meta name="description" content="One sign-in button (wire schema PublicFederationProvider, CONTRACT.md &#167;12.1, contract 1.38).">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta08/apiSpec/new?filename=Axiam_Sdk_Auth_Oidc_FederationProvider.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.Oidc.FederationProvider%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider">
+
+
+
+  <h1 id="Axiam_Sdk_Auth_Oidc_FederationProvider" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider" class="text-break">
+Class FederationProvider  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L323"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Auth.html">Auth</a>.<a class="xref" href="Axiam.Sdk.Auth.Oidc.html">Oidc</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>One sign-in button (wire schema <code>PublicFederationProvider</code>, CONTRACT.md
+§12.1, contract 1.38).</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record FederationProvider : IEquatable&lt;FederationProvider&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">FederationProvider</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationProvider.html">FederationProvider</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Auth_Oidc_FederationProvider_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>This is an <b>unauthenticated</b> response and carries only what a button needs. There
+is no <code>client_id</code>, no <code>metadata_url</code>, no endpoint URL and no secret — absent
+by construction rather than filtered out — and §12.1 note 9 forbids an SDK from
+expecting one.</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Axiam_Sdk_Auth_Oidc_FederationProvider__ctor_" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_FederationProvider__ctor_System_String_System_String_System_String_System_String_System_Boolean_System_Boolean_System_String_" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.#ctor(System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.String)">
+  FederationProvider(string, string, string, string, bool, bool, string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L323"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>One sign-in button (wire schema <code>PublicFederationProvider</code>, CONTRACT.md
+§12.1, contract 1.38).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FederationProvider(string Id, string ProviderKind, string DisplayName, string Protocol, bool HasBundledMark, bool Inherited, string? ButtonIcon)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>Id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Config id, echoed back to the matching start operation. Pass it through
+unmodified: inheritance is resolved server-side (§12.1 note 13) and this id is how
+the server is told what resolution produced.</p>
+</dd>
+    <dt><code>ProviderKind</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Which provider this is, for the button's branding —
+<code>google</code>, <code>github</code>, <code>generic_oidc</code>, … <b>Not</b> what selects the start
+operation; see <code class="paramref">Protocol</code>.</p>
+</dd>
+    <dt><code>DisplayName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The operator's display name for the provider.</p>
+</dd>
+    <dt><code>Protocol</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p><a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationProtocols.html#Axiam_Sdk_Auth_Oidc_FederationProtocols_OidcConnect">OidcConnect</a>,
+<a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationProtocols.html#Axiam_Sdk_Auth_Oidc_FederationProtocols_Saml">Saml</a> or <a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationProtocols.html#Axiam_Sdk_Auth_Oidc_FederationProtocols_OAuth2">OAuth2</a> — the
+value that selects which start operation to call (§12.1 note 10). Kept as the wire
+string rather than narrowed to an enum: the server owns this vocabulary, and a value
+added server-side must not become a deserialization failure for the whole list. An
+<code>OAuth2</code> provider issues <b>no</b> ID token (§12.1 note 11), a distinction a
+surface rendering these buttons SHOULD make visible.</p>
+</dd>
+    <dt><code>HasBundledMark</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Whether AXIAM ships this provider's own sign-in mark, which
+its button must then use. <code>false</code> for the generic kinds, whose buttons read &quot;Sign in
+with <code class="paramref">DisplayName</code>&quot; and use <code class="paramref">ButtonIcon</code> where the
+operator uploaded one.</p>
+</dd>
+    <dt><code>Inherited</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> when the provider is inherited from the organization
+rather than configured on this tenant (§12.1 note 13). Informational — it is not
+needed to sign in, and nothing in this SDK computes it.</p>
+</dd>
+    <dt><code>ButtonIcon</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The operator's uploaded button icon as a bounded raster
+<code>data:</code> URL, or <code>null</code> — which is the case for most providers.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Auth_Oidc_FederationProvider__ctor_System_String_System_String_System_String_System_String_System_Boolean_System_Boolean_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This is an <b>unauthenticated</b> response and carries only what a button needs. There
+is no <code>client_id</code>, no <code>metadata_url</code>, no endpoint URL and no secret — absent
+by construction rather than filtered out — and §12.1 note 9 forbids an SDK from
+expecting one.</p>
+</div>
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Auth_Oidc_FederationProvider_ButtonIcon_" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.ButtonIcon*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_FederationProvider_ButtonIcon" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.ButtonIcon">
+  ButtonIcon
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L330"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The operator's uploaded button icon as a bounded raster
+<code>data:</code> URL, or <code>null</code> — which is the case for most providers.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? ButtonIcon { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Auth_Oidc_FederationProvider_DisplayName_" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.DisplayName*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_FederationProvider_DisplayName" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.DisplayName">
+  DisplayName
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L326"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The operator's display name for the provider.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DisplayName { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Auth_Oidc_FederationProvider_HasBundledMark_" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.HasBundledMark*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_FederationProvider_HasBundledMark" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.HasBundledMark">
+  HasBundledMark
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L328"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether AXIAM ships this provider's own sign-in mark, which
+its button must then use. <code>false</code> for the generic kinds, whose buttons read &quot;Sign in
+with <code class="paramref">DisplayName</code>&quot; and use <code class="paramref">ButtonIcon</code> where the
+operator uploaded one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasBundledMark { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Auth_Oidc_FederationProvider_Id_" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.Id*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_FederationProvider_Id" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.Id">
+  Id
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L324"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Config id, echoed back to the matching start operation. Pass it through
+unmodified: inheritance is resolved server-side (§12.1 note 13) and this id is how
+the server is told what resolution produced.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Id { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Auth_Oidc_FederationProvider_Inherited_" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.Inherited*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_FederationProvider_Inherited" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.Inherited">
+  Inherited
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L329"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>true</code> when the provider is inherited from the organization
+rather than configured on this tenant (§12.1 note 13). Informational — it is not
+needed to sign in, and nothing in this SDK computes it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Inherited { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Auth_Oidc_FederationProvider_Protocol_" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.Protocol*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_FederationProvider_Protocol" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.Protocol">
+  Protocol
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L327"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationProtocols.html#Axiam_Sdk_Auth_Oidc_FederationProtocols_OidcConnect">OidcConnect</a>,
+<a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationProtocols.html#Axiam_Sdk_Auth_Oidc_FederationProtocols_Saml">Saml</a> or <a class="xref" href="Axiam.Sdk.Auth.Oidc.FederationProtocols.html#Axiam_Sdk_Auth_Oidc_FederationProtocols_OAuth2">OAuth2</a> — the
+value that selects which start operation to call (§12.1 note 10). Kept as the wire
+string rather than narrowed to an enum: the server owns this vocabulary, and a value
+added server-side must not become a deserialization failure for the whole list. An
+<code>OAuth2</code> provider issues <b>no</b> ID token (§12.1 note 11), a distinction a
+surface rendering these buttons SHOULD make visible.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Protocol { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Auth_Oidc_FederationProvider_ProviderKind_" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.ProviderKind*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_FederationProvider_ProviderKind" data-uid="Axiam.Sdk.Auth.Oidc.FederationProvider.ProviderKind">
+  ProviderKind
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta08/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L325"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Which provider this is, for the button's branding —
+<code>google</code>, <code>github</code>, <code>generic_oidc</code>, … <b>Not</b> what selects the start
+operation; see <code class="paramref">Protocol</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ProviderKind { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

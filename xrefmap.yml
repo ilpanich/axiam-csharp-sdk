@@ -2262,6 +2262,202 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.ExchangedToken.TokenType
   nameWithType: ExchangedToken.TokenType
+- uid: Axiam.Sdk.Auth.Oidc.FederationHandoff
+  name: FederationHandoff
+  href: api/Axiam.Sdk.Auth.Oidc.FederationHandoff.html
+  commentId: T:Axiam.Sdk.Auth.Oidc.FederationHandoff
+  fullName: Axiam.Sdk.Auth.Oidc.FederationHandoff
+  nameWithType: FederationHandoff
+- uid: Axiam.Sdk.Auth.Oidc.FederationHandoff.CodeTtlSeconds
+  name: CodeTtlSeconds
+  href: api/Axiam.Sdk.Auth.Oidc.FederationHandoff.html#Axiam_Sdk_Auth_Oidc_FederationHandoff_CodeTtlSeconds
+  commentId: F:Axiam.Sdk.Auth.Oidc.FederationHandoff.CodeTtlSeconds
+  fullName: Axiam.Sdk.Auth.Oidc.FederationHandoff.CodeTtlSeconds
+  nameWithType: FederationHandoff.CodeTtlSeconds
+- uid: Axiam.Sdk.Auth.Oidc.FederationHandoff.QueryParam
+  name: QueryParam
+  href: api/Axiam.Sdk.Auth.Oidc.FederationHandoff.html#Axiam_Sdk_Auth_Oidc_FederationHandoff_QueryParam
+  commentId: F:Axiam.Sdk.Auth.Oidc.FederationHandoff.QueryParam
+  fullName: Axiam.Sdk.Auth.Oidc.FederationHandoff.QueryParam
+  nameWithType: FederationHandoff.QueryParam
+- uid: Axiam.Sdk.Auth.Oidc.FederationProtocols
+  name: FederationProtocols
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProtocols.html
+  commentId: T:Axiam.Sdk.Auth.Oidc.FederationProtocols
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProtocols
+  nameWithType: FederationProtocols
+- uid: Axiam.Sdk.Auth.Oidc.FederationProtocols.OAuth2
+  name: OAuth2
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProtocols.html#Axiam_Sdk_Auth_Oidc_FederationProtocols_OAuth2
+  commentId: F:Axiam.Sdk.Auth.Oidc.FederationProtocols.OAuth2
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProtocols.OAuth2
+  nameWithType: FederationProtocols.OAuth2
+- uid: Axiam.Sdk.Auth.Oidc.FederationProtocols.OidcConnect
+  name: OidcConnect
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProtocols.html#Axiam_Sdk_Auth_Oidc_FederationProtocols_OidcConnect
+  commentId: F:Axiam.Sdk.Auth.Oidc.FederationProtocols.OidcConnect
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProtocols.OidcConnect
+  nameWithType: FederationProtocols.OidcConnect
+- uid: Axiam.Sdk.Auth.Oidc.FederationProtocols.Saml
+  name: Saml
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProtocols.html#Axiam_Sdk_Auth_Oidc_FederationProtocols_Saml
+  commentId: F:Axiam.Sdk.Auth.Oidc.FederationProtocols.Saml
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProtocols.Saml
+  nameWithType: FederationProtocols.Saml
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider
+  name: FederationProvider
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html
+  commentId: T:Axiam.Sdk.Auth.Oidc.FederationProvider
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider
+  nameWithType: FederationProvider
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.#ctor(System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.String)
+  name: FederationProvider(string, string, string, string, bool, bool, string?)
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider__ctor_System_String_System_String_System_String_System_String_System_Boolean_System_Boolean_System_String_
+  commentId: M:Axiam.Sdk.Auth.Oidc.FederationProvider.#ctor(System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.String)
+  name.vb: New(String, String, String, String, Boolean, Boolean, String)
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.FederationProvider(string, string, string, string, bool, bool, string?)
+  fullName.vb: Axiam.Sdk.Auth.Oidc.FederationProvider.New(String, String, String, String, Boolean, Boolean, String)
+  nameWithType: FederationProvider.FederationProvider(string, string, string, string, bool, bool, string?)
+  nameWithType.vb: FederationProvider.New(String, String, String, String, Boolean, Boolean, String)
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.#ctor*
+  name: FederationProvider
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider__ctor_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.FederationProvider.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.FederationProvider
+  fullName.vb: Axiam.Sdk.Auth.Oidc.FederationProvider.New
+  nameWithType: FederationProvider.FederationProvider
+  nameWithType.vb: FederationProvider.New
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.ButtonIcon
+  name: ButtonIcon
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_ButtonIcon
+  commentId: P:Axiam.Sdk.Auth.Oidc.FederationProvider.ButtonIcon
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.ButtonIcon
+  nameWithType: FederationProvider.ButtonIcon
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.ButtonIcon*
+  name: ButtonIcon
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_ButtonIcon_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.FederationProvider.ButtonIcon
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.ButtonIcon
+  nameWithType: FederationProvider.ButtonIcon
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.DisplayName
+  name: DisplayName
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_DisplayName
+  commentId: P:Axiam.Sdk.Auth.Oidc.FederationProvider.DisplayName
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.DisplayName
+  nameWithType: FederationProvider.DisplayName
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.DisplayName*
+  name: DisplayName
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_DisplayName_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.FederationProvider.DisplayName
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.DisplayName
+  nameWithType: FederationProvider.DisplayName
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.HasBundledMark
+  name: HasBundledMark
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_HasBundledMark
+  commentId: P:Axiam.Sdk.Auth.Oidc.FederationProvider.HasBundledMark
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.HasBundledMark
+  nameWithType: FederationProvider.HasBundledMark
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.HasBundledMark*
+  name: HasBundledMark
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_HasBundledMark_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.FederationProvider.HasBundledMark
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.HasBundledMark
+  nameWithType: FederationProvider.HasBundledMark
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.Id
+  name: Id
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_Id
+  commentId: P:Axiam.Sdk.Auth.Oidc.FederationProvider.Id
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.Id
+  nameWithType: FederationProvider.Id
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.Id*
+  name: Id
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_Id_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.FederationProvider.Id
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.Id
+  nameWithType: FederationProvider.Id
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.Inherited
+  name: Inherited
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_Inherited
+  commentId: P:Axiam.Sdk.Auth.Oidc.FederationProvider.Inherited
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.Inherited
+  nameWithType: FederationProvider.Inherited
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.Inherited*
+  name: Inherited
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_Inherited_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.FederationProvider.Inherited
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.Inherited
+  nameWithType: FederationProvider.Inherited
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.Protocol
+  name: Protocol
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_Protocol
+  commentId: P:Axiam.Sdk.Auth.Oidc.FederationProvider.Protocol
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.Protocol
+  nameWithType: FederationProvider.Protocol
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.Protocol*
+  name: Protocol
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_Protocol_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.FederationProvider.Protocol
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.Protocol
+  nameWithType: FederationProvider.Protocol
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.ProviderKind
+  name: ProviderKind
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_ProviderKind
+  commentId: P:Axiam.Sdk.Auth.Oidc.FederationProvider.ProviderKind
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.ProviderKind
+  nameWithType: FederationProvider.ProviderKind
+- uid: Axiam.Sdk.Auth.Oidc.FederationProvider.ProviderKind*
+  name: ProviderKind
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProvider.html#Axiam_Sdk_Auth_Oidc_FederationProvider_ProviderKind_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.FederationProvider.ProviderKind
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProvider.ProviderKind
+  nameWithType: FederationProvider.ProviderKind
+- uid: Axiam.Sdk.Auth.Oidc.FederationProviderList
+  name: FederationProviderList
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProviderList.html
+  commentId: T:Axiam.Sdk.Auth.Oidc.FederationProviderList
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProviderList
+  nameWithType: FederationProviderList
+- uid: Axiam.Sdk.Auth.Oidc.FederationProviderList.#ctor(System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Auth.Oidc.FederationProvider})
+  name: FederationProviderList(IReadOnlyList<FederationProvider>)
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProviderList.html#Axiam_Sdk_Auth_Oidc_FederationProviderList__ctor_System_Collections_Generic_IReadOnlyList_Axiam_Sdk_Auth_Oidc_FederationProvider__
+  commentId: M:Axiam.Sdk.Auth.Oidc.FederationProviderList.#ctor(System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Auth.Oidc.FederationProvider})
+  name.vb: New(IReadOnlyList(Of FederationProvider))
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProviderList.FederationProviderList(System.Collections.Generic.IReadOnlyList<Axiam.Sdk.Auth.Oidc.FederationProvider>)
+  fullName.vb: Axiam.Sdk.Auth.Oidc.FederationProviderList.New(System.Collections.Generic.IReadOnlyList(Of Axiam.Sdk.Auth.Oidc.FederationProvider))
+  nameWithType: FederationProviderList.FederationProviderList(IReadOnlyList<FederationProvider>)
+  nameWithType.vb: FederationProviderList.New(IReadOnlyList(Of FederationProvider))
+- uid: Axiam.Sdk.Auth.Oidc.FederationProviderList.#ctor*
+  name: FederationProviderList
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProviderList.html#Axiam_Sdk_Auth_Oidc_FederationProviderList__ctor_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.FederationProviderList.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProviderList.FederationProviderList
+  fullName.vb: Axiam.Sdk.Auth.Oidc.FederationProviderList.New
+  nameWithType: FederationProviderList.FederationProviderList
+  nameWithType.vb: FederationProviderList.New
+- uid: Axiam.Sdk.Auth.Oidc.FederationProviderList.Providers
+  name: Providers
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProviderList.html#Axiam_Sdk_Auth_Oidc_FederationProviderList_Providers
+  commentId: P:Axiam.Sdk.Auth.Oidc.FederationProviderList.Providers
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProviderList.Providers
+  nameWithType: FederationProviderList.Providers
+- uid: Axiam.Sdk.Auth.Oidc.FederationProviderList.Providers*
+  name: Providers
+  href: api/Axiam.Sdk.Auth.Oidc.FederationProviderList.html#Axiam_Sdk_Auth_Oidc_FederationProviderList_Providers_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.FederationProviderList.Providers
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.FederationProviderList.Providers
+  nameWithType: FederationProviderList.Providers
 - uid: Axiam.Sdk.Auth.Oidc.IOidcStateStore
   name: IOidcStateStore
   href: api/Axiam.Sdk.Auth.Oidc.IOidcStateStore.html
@@ -4003,6 +4199,57 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.RptPermission.ResourceScopes
   nameWithType: RptPermission.ResourceScopes
+- uid: Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams
+  name: SsoCompleteHandoffParams
+  href: api/Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.html
+  commentId: T:Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams
+  fullName: Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams
+  nameWithType: SsoCompleteHandoffParams
+- uid: Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.Code
+  name: Code
+  href: api/Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.html#Axiam_Sdk_Auth_Oidc_SsoCompleteHandoffParams_Code
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.Code
+  fullName: Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.Code
+  nameWithType: SsoCompleteHandoffParams.Code
+- uid: Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.Code*
+  name: Code
+  href: api/Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.html#Axiam_Sdk_Auth_Oidc_SsoCompleteHandoffParams_Code_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.Code
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams.Code
+  nameWithType: SsoCompleteHandoffParams.Code
+- uid: Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params
+  name: SsoCompleteOauth2Params
+  href: api/Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.html
+  commentId: T:Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params
+  fullName: Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params
+  nameWithType: SsoCompleteOauth2Params
+- uid: Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.Code
+  name: Code
+  href: api/Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoCompleteOauth2Params_Code
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.Code
+  fullName: Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.Code
+  nameWithType: SsoCompleteOauth2Params.Code
+- uid: Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.Code*
+  name: Code
+  href: api/Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoCompleteOauth2Params_Code_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.Code
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.Code
+  nameWithType: SsoCompleteOauth2Params.Code
+- uid: Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.State
+  name: State
+  href: api/Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoCompleteOauth2Params_State
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.State
+  fullName: Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.State
+  nameWithType: SsoCompleteOauth2Params.State
+- uid: Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.State*
+  name: State
+  href: api/Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoCompleteOauth2Params_State_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.State
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params.State
+  nameWithType: SsoCompleteOauth2Params.State
 - uid: Axiam.Sdk.Auth.Oidc.SsoCompleteParams
   name: SsoCompleteParams
   href: api/Axiam.Sdk.Auth.Oidc.SsoCompleteParams.html
@@ -4112,6 +4359,148 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.SsoCompleteResult.UserId
   nameWithType: SsoCompleteResult.UserId
+- uid: Axiam.Sdk.Auth.Oidc.SsoProvidersParams
+  name: SsoProvidersParams
+  href: api/Axiam.Sdk.Auth.Oidc.SsoProvidersParams.html
+  commentId: T:Axiam.Sdk.Auth.Oidc.SsoProvidersParams
+  fullName: Axiam.Sdk.Auth.Oidc.SsoProvidersParams
+  nameWithType: SsoProvidersParams
+- uid: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.OrgId
+  name: OrgId
+  href: api/Axiam.Sdk.Auth.Oidc.SsoProvidersParams.html#Axiam_Sdk_Auth_Oidc_SsoProvidersParams_OrgId
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoProvidersParams.OrgId
+  fullName: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.OrgId
+  nameWithType: SsoProvidersParams.OrgId
+- uid: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.OrgId*
+  name: OrgId
+  href: api/Axiam.Sdk.Auth.Oidc.SsoProvidersParams.html#Axiam_Sdk_Auth_Oidc_SsoProvidersParams_OrgId_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoProvidersParams.OrgId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.OrgId
+  nameWithType: SsoProvidersParams.OrgId
+- uid: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.OrgSlug
+  name: OrgSlug
+  href: api/Axiam.Sdk.Auth.Oidc.SsoProvidersParams.html#Axiam_Sdk_Auth_Oidc_SsoProvidersParams_OrgSlug
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoProvidersParams.OrgSlug
+  fullName: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.OrgSlug
+  nameWithType: SsoProvidersParams.OrgSlug
+- uid: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.OrgSlug*
+  name: OrgSlug
+  href: api/Axiam.Sdk.Auth.Oidc.SsoProvidersParams.html#Axiam_Sdk_Auth_Oidc_SsoProvidersParams_OrgSlug_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoProvidersParams.OrgSlug
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.OrgSlug
+  nameWithType: SsoProvidersParams.OrgSlug
+- uid: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.TenantId
+  name: TenantId
+  href: api/Axiam.Sdk.Auth.Oidc.SsoProvidersParams.html#Axiam_Sdk_Auth_Oidc_SsoProvidersParams_TenantId
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoProvidersParams.TenantId
+  fullName: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.TenantId
+  nameWithType: SsoProvidersParams.TenantId
+- uid: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.TenantId*
+  name: TenantId
+  href: api/Axiam.Sdk.Auth.Oidc.SsoProvidersParams.html#Axiam_Sdk_Auth_Oidc_SsoProvidersParams_TenantId_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoProvidersParams.TenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.TenantId
+  nameWithType: SsoProvidersParams.TenantId
+- uid: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.TenantSlug
+  name: TenantSlug
+  href: api/Axiam.Sdk.Auth.Oidc.SsoProvidersParams.html#Axiam_Sdk_Auth_Oidc_SsoProvidersParams_TenantSlug
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoProvidersParams.TenantSlug
+  fullName: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.TenantSlug
+  nameWithType: SsoProvidersParams.TenantSlug
+- uid: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.TenantSlug*
+  name: TenantSlug
+  href: api/Axiam.Sdk.Auth.Oidc.SsoProvidersParams.html#Axiam_Sdk_Auth_Oidc_SsoProvidersParams_TenantSlug_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoProvidersParams.TenantSlug
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoProvidersParams.TenantSlug
+  nameWithType: SsoProvidersParams.TenantSlug
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params
+  name: SsoStartOauth2Params
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html
+  commentId: T:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params
+  nameWithType: SsoStartOauth2Params
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.FederationConfigId
+  name: FederationConfigId
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_FederationConfigId
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.FederationConfigId
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.FederationConfigId
+  nameWithType: SsoStartOauth2Params.FederationConfigId
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.FederationConfigId*
+  name: FederationConfigId
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_FederationConfigId_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.FederationConfigId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.FederationConfigId
+  nameWithType: SsoStartOauth2Params.FederationConfigId
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.OrgId
+  name: OrgId
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_OrgId
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.OrgId
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.OrgId
+  nameWithType: SsoStartOauth2Params.OrgId
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.OrgId*
+  name: OrgId
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_OrgId_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.OrgId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.OrgId
+  nameWithType: SsoStartOauth2Params.OrgId
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.OrgSlug
+  name: OrgSlug
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_OrgSlug
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.OrgSlug
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.OrgSlug
+  nameWithType: SsoStartOauth2Params.OrgSlug
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.OrgSlug*
+  name: OrgSlug
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_OrgSlug_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.OrgSlug
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.OrgSlug
+  nameWithType: SsoStartOauth2Params.OrgSlug
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.RedirectUri
+  name: RedirectUri
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_RedirectUri
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.RedirectUri
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.RedirectUri
+  nameWithType: SsoStartOauth2Params.RedirectUri
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.RedirectUri*
+  name: RedirectUri
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_RedirectUri_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.RedirectUri
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.RedirectUri
+  nameWithType: SsoStartOauth2Params.RedirectUri
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.TenantId
+  name: TenantId
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_TenantId
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.TenantId
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.TenantId
+  nameWithType: SsoStartOauth2Params.TenantId
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.TenantId*
+  name: TenantId
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_TenantId_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.TenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.TenantId
+  nameWithType: SsoStartOauth2Params.TenantId
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.TenantSlug
+  name: TenantSlug
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_TenantSlug
+  commentId: P:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.TenantSlug
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.TenantSlug
+  nameWithType: SsoStartOauth2Params.TenantSlug
+- uid: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.TenantSlug*
+  name: TenantSlug
+  href: api/Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.html#Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_TenantSlug_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.TenantSlug
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params.TenantSlug
+  nameWithType: SsoStartOauth2Params.TenantSlug
 - uid: Axiam.Sdk.Auth.Oidc.SsoStartParams
   name: SsoStartParams
   href: api/Axiam.Sdk.Auth.Oidc.SsoStartParams.html
@@ -5693,6 +6082,48 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.SsoCompleteAsync
   nameWithType: AxiamClient.SsoCompleteAsync
+- uid: Axiam.Sdk.AxiamClient.SsoCompleteHandoffAsync(Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams,System.Threading.CancellationToken)
+  name: SsoCompleteHandoffAsync(SsoCompleteHandoffParams, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteHandoffAsync_Axiam_Sdk_Auth_Oidc_SsoCompleteHandoffParams_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.SsoCompleteHandoffAsync(Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.SsoCompleteHandoffAsync(Axiam.Sdk.Auth.Oidc.SsoCompleteHandoffParams, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.SsoCompleteHandoffAsync(SsoCompleteHandoffParams, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.SsoCompleteHandoffAsync*
+  name: SsoCompleteHandoffAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteHandoffAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.SsoCompleteHandoffAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.SsoCompleteHandoffAsync
+  nameWithType: AxiamClient.SsoCompleteHandoffAsync
+- uid: Axiam.Sdk.AxiamClient.SsoCompleteOauth2Async(Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params,System.Threading.CancellationToken)
+  name: SsoCompleteOauth2Async(SsoCompleteOauth2Params, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteOauth2Async_Axiam_Sdk_Auth_Oidc_SsoCompleteOauth2Params_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.SsoCompleteOauth2Async(Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.SsoCompleteOauth2Async(Axiam.Sdk.Auth.Oidc.SsoCompleteOauth2Params, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.SsoCompleteOauth2Async(SsoCompleteOauth2Params, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.SsoCompleteOauth2Async*
+  name: SsoCompleteOauth2Async
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoCompleteOauth2Async_
+  commentId: Overload:Axiam.Sdk.AxiamClient.SsoCompleteOauth2Async
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.SsoCompleteOauth2Async
+  nameWithType: AxiamClient.SsoCompleteOauth2Async
+- uid: Axiam.Sdk.AxiamClient.SsoProvidersAsync(Axiam.Sdk.Auth.Oidc.SsoProvidersParams,System.Threading.CancellationToken)
+  name: SsoProvidersAsync(SsoProvidersParams?, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoProvidersAsync_Axiam_Sdk_Auth_Oidc_SsoProvidersParams_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.SsoProvidersAsync(Axiam.Sdk.Auth.Oidc.SsoProvidersParams,System.Threading.CancellationToken)
+  name.vb: SsoProvidersAsync(SsoProvidersParams, CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.SsoProvidersAsync(Axiam.Sdk.Auth.Oidc.SsoProvidersParams?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.SsoProvidersAsync(Axiam.Sdk.Auth.Oidc.SsoProvidersParams, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.SsoProvidersAsync(SsoProvidersParams?, CancellationToken)
+  nameWithType.vb: AxiamClient.SsoProvidersAsync(SsoProvidersParams, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.SsoProvidersAsync*
+  name: SsoProvidersAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoProvidersAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.SsoProvidersAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.SsoProvidersAsync
+  nameWithType: AxiamClient.SsoProvidersAsync
 - uid: Axiam.Sdk.AxiamClient.SsoStartAsync(Axiam.Sdk.Auth.Oidc.SsoStartParams,System.Threading.CancellationToken)
   name: SsoStartAsync(SsoStartParams, CancellationToken)
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoStartAsync_Axiam_Sdk_Auth_Oidc_SsoStartParams_System_Threading_CancellationToken_
@@ -5706,6 +6137,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.SsoStartAsync
   nameWithType: AxiamClient.SsoStartAsync
+- uid: Axiam.Sdk.AxiamClient.SsoStartOauth2Async(Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params,System.Threading.CancellationToken)
+  name: SsoStartOauth2Async(SsoStartOauth2Params, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoStartOauth2Async_Axiam_Sdk_Auth_Oidc_SsoStartOauth2Params_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.SsoStartOauth2Async(Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.SsoStartOauth2Async(Axiam.Sdk.Auth.Oidc.SsoStartOauth2Params, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.SsoStartOauth2Async(SsoStartOauth2Params, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.SsoStartOauth2Async*
+  name: SsoStartOauth2Async
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_SsoStartOauth2Async_
+  commentId: Overload:Axiam.Sdk.AxiamClient.SsoStartOauth2Async
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.SsoStartOauth2Async
+  nameWithType: AxiamClient.SsoStartOauth2Async
 - uid: Axiam.Sdk.AxiamClient.Tenants
   name: Tenants
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_Tenants
@@ -11157,6 +11601,19 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.CreateFederationConfigRequest
   fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest
   nameWithType: CreateFederationConfigRequest
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowTenantInheritance
+  name: AllowTenantInheritance
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AllowTenantInheritance
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowTenantInheritance
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowTenantInheritance
+  nameWithType: CreateFederationConfigRequest.AllowTenantInheritance
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowTenantInheritance*
+  name: AllowTenantInheritance
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AllowTenantInheritance_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowTenantInheritance
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowTenantInheritance
+  nameWithType: CreateFederationConfigRequest.AllowTenantInheritance
 - uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowedAlgorithms
   name: AllowedAlgorithms
   href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AllowedAlgorithms
@@ -11170,6 +11627,45 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowedAlgorithms
   nameWithType: CreateFederationConfigRequest.AllowedAlgorithms
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowedIssuerTenants
+  name: AllowedIssuerTenants
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AllowedIssuerTenants
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowedIssuerTenants
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowedIssuerTenants
+  nameWithType: CreateFederationConfigRequest.AllowedIssuerTenants
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowedIssuerTenants*
+  name: AllowedIssuerTenants
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AllowedIssuerTenants_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowedIssuerTenants
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowedIssuerTenants
+  nameWithType: CreateFederationConfigRequest.AllowedIssuerTenants
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleKeyId
+  name: AppleKeyId
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AppleKeyId
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleKeyId
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleKeyId
+  nameWithType: CreateFederationConfigRequest.AppleKeyId
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleKeyId*
+  name: AppleKeyId
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AppleKeyId_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleKeyId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleKeyId
+  nameWithType: CreateFederationConfigRequest.AppleKeyId
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleTeamId
+  name: AppleTeamId
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AppleTeamId
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleTeamId
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleTeamId
+  nameWithType: CreateFederationConfigRequest.AppleTeamId
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleTeamId*
+  name: AppleTeamId
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AppleTeamId_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleTeamId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleTeamId
+  nameWithType: CreateFederationConfigRequest.AppleTeamId
 - uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AttributeMap
   name: AttributeMap
   href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AttributeMap
@@ -11183,6 +11679,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AttributeMap
   nameWithType: CreateFederationConfigRequest.AttributeMap
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AuthorizationEndpoint
+  name: AuthorizationEndpoint
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AuthorizationEndpoint
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AuthorizationEndpoint
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AuthorizationEndpoint
+  nameWithType: CreateFederationConfigRequest.AuthorizationEndpoint
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AuthorizationEndpoint*
+  name: AuthorizationEndpoint
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AuthorizationEndpoint_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AuthorizationEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AuthorizationEndpoint
+  nameWithType: CreateFederationConfigRequest.AuthorizationEndpoint
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ButtonIcon
+  name: ButtonIcon
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_ButtonIcon
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ButtonIcon
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ButtonIcon
+  nameWithType: CreateFederationConfigRequest.ButtonIcon
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ButtonIcon*
+  name: ButtonIcon
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_ButtonIcon_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ButtonIcon
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ButtonIcon
+  nameWithType: CreateFederationConfigRequest.ButtonIcon
 - uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ClientId
   name: ClientId
   href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_ClientId
@@ -11261,6 +11783,71 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.Provider
   nameWithType: CreateFederationConfigRequest.Provider
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderKind
+  name: ProviderKind
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_ProviderKind
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderKind
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderKind
+  nameWithType: CreateFederationConfigRequest.ProviderKind
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderKind*
+  name: ProviderKind
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_ProviderKind_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderKind
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderKind
+  nameWithType: CreateFederationConfigRequest.ProviderKind
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderSlug
+  name: ProviderSlug
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_ProviderSlug
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderSlug
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderSlug
+  nameWithType: CreateFederationConfigRequest.ProviderSlug
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderSlug*
+  name: ProviderSlug
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_ProviderSlug_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderSlug
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderSlug
+  nameWithType: CreateFederationConfigRequest.ProviderSlug
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.RequirePkce
+  name: RequirePkce
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_RequirePkce
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.RequirePkce
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.RequirePkce
+  nameWithType: CreateFederationConfigRequest.RequirePkce
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.RequirePkce*
+  name: RequirePkce
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_RequirePkce_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.RequirePkce
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.RequirePkce
+  nameWithType: CreateFederationConfigRequest.RequirePkce
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.Scopes
+  name: Scopes
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_Scopes
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.Scopes
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.Scopes
+  nameWithType: CreateFederationConfigRequest.Scopes
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.Scopes*
+  name: Scopes
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_Scopes_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.Scopes
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.Scopes
+  nameWithType: CreateFederationConfigRequest.Scopes
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.TokenEndpoint
+  name: TokenEndpoint
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_TokenEndpoint
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.TokenEndpoint
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.TokenEndpoint
+  nameWithType: CreateFederationConfigRequest.TokenEndpoint
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.TokenEndpoint*
+  name: TokenEndpoint
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_TokenEndpoint_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.TokenEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.TokenEndpoint
+  nameWithType: CreateFederationConfigRequest.TokenEndpoint
 - uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.TokenExchange
   name: TokenExchange
   href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_TokenExchange
@@ -11274,6 +11861,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.TokenExchange
   nameWithType: CreateFederationConfigRequest.TokenExchange
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.UserinfoEndpoint
+  name: UserinfoEndpoint
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_UserinfoEndpoint
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.UserinfoEndpoint
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.UserinfoEndpoint
+  nameWithType: CreateFederationConfigRequest.UserinfoEndpoint
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.UserinfoEndpoint*
+  name: UserinfoEndpoint
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_UserinfoEndpoint_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.UserinfoEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.UserinfoEndpoint
+  nameWithType: CreateFederationConfigRequest.UserinfoEndpoint
 - uid: Axiam.Sdk.Management.Models.CreateGroupRequest
   name: CreateGroupRequest
   href: api/Axiam.Sdk.Management.Models.CreateGroupRequest.html
@@ -12775,6 +13375,71 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.FederationConfigResponse
   fullName: Axiam.Sdk.Management.Models.FederationConfigResponse
   nameWithType: FederationConfigResponse
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AllowTenantInheritance
+  name: AllowTenantInheritance
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AllowTenantInheritance
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.AllowTenantInheritance
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AllowTenantInheritance
+  nameWithType: FederationConfigResponse.AllowTenantInheritance
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AllowTenantInheritance*
+  name: AllowTenantInheritance
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AllowTenantInheritance_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.AllowTenantInheritance
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AllowTenantInheritance
+  nameWithType: FederationConfigResponse.AllowTenantInheritance
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AllowedAlgorithms
+  name: AllowedAlgorithms
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AllowedAlgorithms
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.AllowedAlgorithms
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AllowedAlgorithms
+  nameWithType: FederationConfigResponse.AllowedAlgorithms
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AllowedAlgorithms*
+  name: AllowedAlgorithms
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AllowedAlgorithms_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.AllowedAlgorithms
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AllowedAlgorithms
+  nameWithType: FederationConfigResponse.AllowedAlgorithms
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AllowedIssuerTenants
+  name: AllowedIssuerTenants
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AllowedIssuerTenants
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.AllowedIssuerTenants
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AllowedIssuerTenants
+  nameWithType: FederationConfigResponse.AllowedIssuerTenants
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AllowedIssuerTenants*
+  name: AllowedIssuerTenants
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AllowedIssuerTenants_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.AllowedIssuerTenants
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AllowedIssuerTenants
+  nameWithType: FederationConfigResponse.AllowedIssuerTenants
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AppleKeyId
+  name: AppleKeyId
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AppleKeyId
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.AppleKeyId
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AppleKeyId
+  nameWithType: FederationConfigResponse.AppleKeyId
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AppleKeyId*
+  name: AppleKeyId
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AppleKeyId_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.AppleKeyId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AppleKeyId
+  nameWithType: FederationConfigResponse.AppleKeyId
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AppleTeamId
+  name: AppleTeamId
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AppleTeamId
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.AppleTeamId
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AppleTeamId
+  nameWithType: FederationConfigResponse.AppleTeamId
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AppleTeamId*
+  name: AppleTeamId
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AppleTeamId_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.AppleTeamId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AppleTeamId
+  nameWithType: FederationConfigResponse.AppleTeamId
 - uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AttributeMap
   name: AttributeMap
   href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AttributeMap
@@ -12788,6 +13453,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AttributeMap
   nameWithType: FederationConfigResponse.AttributeMap
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AuthorizationEndpoint
+  name: AuthorizationEndpoint
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AuthorizationEndpoint
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.AuthorizationEndpoint
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AuthorizationEndpoint
+  nameWithType: FederationConfigResponse.AuthorizationEndpoint
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.AuthorizationEndpoint*
+  name: AuthorizationEndpoint
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_AuthorizationEndpoint_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.AuthorizationEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.AuthorizationEndpoint
+  nameWithType: FederationConfigResponse.AuthorizationEndpoint
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.ButtonIcon
+  name: ButtonIcon
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_ButtonIcon
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.ButtonIcon
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.ButtonIcon
+  nameWithType: FederationConfigResponse.ButtonIcon
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.ButtonIcon*
+  name: ButtonIcon
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_ButtonIcon_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.ButtonIcon
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.ButtonIcon
+  nameWithType: FederationConfigResponse.ButtonIcon
 - uid: Axiam.Sdk.Management.Models.FederationConfigResponse.ClientId
   name: ClientId
   href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_ClientId
@@ -12814,6 +13505,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.CreatedAt
   nameWithType: FederationConfigResponse.CreatedAt
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.EffectiveScopes
+  name: EffectiveScopes
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_EffectiveScopes
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.EffectiveScopes
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.EffectiveScopes
+  nameWithType: FederationConfigResponse.EffectiveScopes
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.EffectiveScopes*
+  name: EffectiveScopes
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_EffectiveScopes_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.EffectiveScopes
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.EffectiveScopes
+  nameWithType: FederationConfigResponse.EffectiveScopes
 - uid: Axiam.Sdk.Management.Models.FederationConfigResponse.Enabled
   name: Enabled
   href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_Enabled
@@ -12827,6 +13531,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.Enabled
   nameWithType: FederationConfigResponse.Enabled
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.HasBundledMark
+  name: HasBundledMark
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_HasBundledMark
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.HasBundledMark
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.HasBundledMark
+  nameWithType: FederationConfigResponse.HasBundledMark
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.HasBundledMark*
+  name: HasBundledMark
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_HasBundledMark_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.HasBundledMark
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.HasBundledMark
+  nameWithType: FederationConfigResponse.HasBundledMark
 - uid: Axiam.Sdk.Management.Models.FederationConfigResponse.Id
   name: Id
   href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_Id
@@ -12853,6 +13570,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.MetadataUrl
   nameWithType: FederationConfigResponse.MetadataUrl
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.MintsClientSecret
+  name: MintsClientSecret
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_MintsClientSecret
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.MintsClientSecret
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.MintsClientSecret
+  nameWithType: FederationConfigResponse.MintsClientSecret
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.MintsClientSecret*
+  name: MintsClientSecret
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_MintsClientSecret_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.MintsClientSecret
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.MintsClientSecret
+  nameWithType: FederationConfigResponse.MintsClientSecret
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.PkceRequired
+  name: PkceRequired
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_PkceRequired
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.PkceRequired
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.PkceRequired
+  nameWithType: FederationConfigResponse.PkceRequired
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.PkceRequired*
+  name: PkceRequired
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_PkceRequired_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.PkceRequired
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.PkceRequired
+  nameWithType: FederationConfigResponse.PkceRequired
 - uid: Axiam.Sdk.Management.Models.FederationConfigResponse.Protocol
   name: Protocol
   href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_Protocol
@@ -12879,6 +13622,45 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.Provider
   nameWithType: FederationConfigResponse.Provider
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.ProviderKind
+  name: ProviderKind
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_ProviderKind
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.ProviderKind
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.ProviderKind
+  nameWithType: FederationConfigResponse.ProviderKind
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.ProviderKind*
+  name: ProviderKind
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_ProviderKind_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.ProviderKind
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.ProviderKind
+  nameWithType: FederationConfigResponse.ProviderKind
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.ProviderSlug
+  name: ProviderSlug
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_ProviderSlug
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.ProviderSlug
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.ProviderSlug
+  nameWithType: FederationConfigResponse.ProviderSlug
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.ProviderSlug*
+  name: ProviderSlug
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_ProviderSlug_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.ProviderSlug
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.ProviderSlug
+  nameWithType: FederationConfigResponse.ProviderSlug
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.Scopes
+  name: Scopes
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_Scopes
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.Scopes
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.Scopes
+  nameWithType: FederationConfigResponse.Scopes
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.Scopes*
+  name: Scopes
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_Scopes_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.Scopes
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.Scopes
+  nameWithType: FederationConfigResponse.Scopes
 - uid: Axiam.Sdk.Management.Models.FederationConfigResponse.TenantId
   name: TenantId
   href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_TenantId
@@ -12892,6 +13674,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.TenantId
   nameWithType: FederationConfigResponse.TenantId
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.TokenEndpoint
+  name: TokenEndpoint
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_TokenEndpoint
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.TokenEndpoint
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.TokenEndpoint
+  nameWithType: FederationConfigResponse.TokenEndpoint
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.TokenEndpoint*
+  name: TokenEndpoint
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_TokenEndpoint_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.TokenEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.TokenEndpoint
+  nameWithType: FederationConfigResponse.TokenEndpoint
 - uid: Axiam.Sdk.Management.Models.FederationConfigResponse.TokenExchange
   name: TokenExchange
   href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_TokenExchange
@@ -12918,6 +13713,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.UpdatedAt
   nameWithType: FederationConfigResponse.UpdatedAt
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.UserinfoEndpoint
+  name: UserinfoEndpoint
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_UserinfoEndpoint
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.UserinfoEndpoint
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.UserinfoEndpoint
+  nameWithType: FederationConfigResponse.UserinfoEndpoint
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.UserinfoEndpoint*
+  name: UserinfoEndpoint
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_UserinfoEndpoint_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.UserinfoEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.UserinfoEndpoint
+  nameWithType: FederationConfigResponse.UserinfoEndpoint
 - uid: Axiam.Sdk.Management.Models.FederationLinkResponse
   name: FederationLinkResponse
   href: api/Axiam.Sdk.Management.Models.FederationLinkResponse.html
@@ -18964,6 +19772,19 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest
   fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest
   nameWithType: UpdateFederationConfigRequest
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowTenantInheritance
+  name: AllowTenantInheritance
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AllowTenantInheritance
+  commentId: P:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowTenantInheritance
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowTenantInheritance
+  nameWithType: UpdateFederationConfigRequest.AllowTenantInheritance
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowTenantInheritance*
+  name: AllowTenantInheritance
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AllowTenantInheritance_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowTenantInheritance
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowTenantInheritance
+  nameWithType: UpdateFederationConfigRequest.AllowTenantInheritance
 - uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowedAlgorithms
   name: AllowedAlgorithms
   href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AllowedAlgorithms
@@ -18977,6 +19798,45 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowedAlgorithms
   nameWithType: UpdateFederationConfigRequest.AllowedAlgorithms
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowedIssuerTenants
+  name: AllowedIssuerTenants
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AllowedIssuerTenants
+  commentId: P:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowedIssuerTenants
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowedIssuerTenants
+  nameWithType: UpdateFederationConfigRequest.AllowedIssuerTenants
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowedIssuerTenants*
+  name: AllowedIssuerTenants
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AllowedIssuerTenants_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowedIssuerTenants
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AllowedIssuerTenants
+  nameWithType: UpdateFederationConfigRequest.AllowedIssuerTenants
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleKeyId
+  name: AppleKeyId
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AppleKeyId
+  commentId: P:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleKeyId
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleKeyId
+  nameWithType: UpdateFederationConfigRequest.AppleKeyId
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleKeyId*
+  name: AppleKeyId
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AppleKeyId_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleKeyId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleKeyId
+  nameWithType: UpdateFederationConfigRequest.AppleKeyId
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleTeamId
+  name: AppleTeamId
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AppleTeamId
+  commentId: P:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleTeamId
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleTeamId
+  nameWithType: UpdateFederationConfigRequest.AppleTeamId
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleTeamId*
+  name: AppleTeamId
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AppleTeamId_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleTeamId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AppleTeamId
+  nameWithType: UpdateFederationConfigRequest.AppleTeamId
 - uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AttributeMap
   name: AttributeMap
   href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AttributeMap
@@ -18990,6 +19850,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AttributeMap
   nameWithType: UpdateFederationConfigRequest.AttributeMap
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AuthorizationEndpoint
+  name: AuthorizationEndpoint
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AuthorizationEndpoint
+  commentId: P:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AuthorizationEndpoint
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AuthorizationEndpoint
+  nameWithType: UpdateFederationConfigRequest.AuthorizationEndpoint
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AuthorizationEndpoint*
+  name: AuthorizationEndpoint
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_AuthorizationEndpoint_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AuthorizationEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.AuthorizationEndpoint
+  nameWithType: UpdateFederationConfigRequest.AuthorizationEndpoint
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ButtonIcon
+  name: ButtonIcon
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_ButtonIcon
+  commentId: P:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ButtonIcon
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ButtonIcon
+  nameWithType: UpdateFederationConfigRequest.ButtonIcon
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ButtonIcon*
+  name: ButtonIcon
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_ButtonIcon_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ButtonIcon
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ButtonIcon
+  nameWithType: UpdateFederationConfigRequest.ButtonIcon
 - uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ClientId
   name: ClientId
   href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_ClientId
@@ -19068,6 +19954,58 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.Provider
   nameWithType: UpdateFederationConfigRequest.Provider
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ProviderSlug
+  name: ProviderSlug
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_ProviderSlug
+  commentId: P:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ProviderSlug
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ProviderSlug
+  nameWithType: UpdateFederationConfigRequest.ProviderSlug
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ProviderSlug*
+  name: ProviderSlug
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_ProviderSlug_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ProviderSlug
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.ProviderSlug
+  nameWithType: UpdateFederationConfigRequest.ProviderSlug
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.RequirePkce
+  name: RequirePkce
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_RequirePkce
+  commentId: P:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.RequirePkce
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.RequirePkce
+  nameWithType: UpdateFederationConfigRequest.RequirePkce
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.RequirePkce*
+  name: RequirePkce
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_RequirePkce_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.RequirePkce
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.RequirePkce
+  nameWithType: UpdateFederationConfigRequest.RequirePkce
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.Scopes
+  name: Scopes
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_Scopes
+  commentId: P:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.Scopes
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.Scopes
+  nameWithType: UpdateFederationConfigRequest.Scopes
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.Scopes*
+  name: Scopes
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_Scopes_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.Scopes
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.Scopes
+  nameWithType: UpdateFederationConfigRequest.Scopes
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.TokenEndpoint
+  name: TokenEndpoint
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_TokenEndpoint
+  commentId: P:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.TokenEndpoint
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.TokenEndpoint
+  nameWithType: UpdateFederationConfigRequest.TokenEndpoint
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.TokenEndpoint*
+  name: TokenEndpoint
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_TokenEndpoint_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.TokenEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.TokenEndpoint
+  nameWithType: UpdateFederationConfigRequest.TokenEndpoint
 - uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.TokenExchange
   name: TokenExchange
   href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_TokenExchange
@@ -19081,6 +20019,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.TokenExchange
   nameWithType: UpdateFederationConfigRequest.TokenExchange
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.UserinfoEndpoint
+  name: UserinfoEndpoint
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_UserinfoEndpoint
+  commentId: P:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.UserinfoEndpoint
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.UserinfoEndpoint
+  nameWithType: UpdateFederationConfigRequest.UserinfoEndpoint
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.UserinfoEndpoint*
+  name: UserinfoEndpoint
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_UserinfoEndpoint_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.UserinfoEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.UserinfoEndpoint
+  nameWithType: UpdateFederationConfigRequest.UserinfoEndpoint
 - uid: Axiam.Sdk.Management.Models.UpdateGroup
   name: UpdateGroup
   href: api/Axiam.Sdk.Management.Models.UpdateGroup.html
