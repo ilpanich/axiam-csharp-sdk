@@ -256,11 +256,29 @@ public sealed class ManagementSparseBodiesGeneratedTests
     public void UpdateFederationConfigRequestSendsOnlyWhatWasSet()
     {
         AssertKeys(
+            new UpdateFederationConfigRequest { AllowTenantInheritance = true },
+            "allow_tenant_inheritance");
+        AssertKeys(
             new UpdateFederationConfigRequest { AllowedAlgorithms = Array.Empty<string>() },
             "allowed_algorithms");
         AssertKeys(
+            new UpdateFederationConfigRequest { AllowedIssuerTenants = Array.Empty<string>() },
+            "allowed_issuer_tenants");
+        AssertKeys(
+            new UpdateFederationConfigRequest { AppleKeyId = "example" },
+            "apple_key_id");
+        AssertKeys(
+            new UpdateFederationConfigRequest { AppleTeamId = "example" },
+            "apple_team_id");
+        AssertKeys(
             new UpdateFederationConfigRequest { AttributeMap = JsonDocument.Parse("{}").RootElement },
             "attribute_map");
+        AssertKeys(
+            new UpdateFederationConfigRequest { AuthorizationEndpoint = "example" },
+            "authorization_endpoint");
+        AssertKeys(
+            new UpdateFederationConfigRequest { ButtonIcon = "example" },
+            "button_icon");
         AssertKeys(
             new UpdateFederationConfigRequest { ClientId = "example" },
             "client_id");
@@ -280,24 +298,52 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new UpdateFederationConfigRequest { Provider = "example" },
             "provider");
         AssertKeys(
+            new UpdateFederationConfigRequest { ProviderSlug = "example" },
+            "provider_slug");
+        AssertKeys(
+            new UpdateFederationConfigRequest { RequirePkce = true },
+            "require_pkce");
+        AssertKeys(
+            new UpdateFederationConfigRequest { Scopes = Array.Empty<string>() },
+            "scopes");
+        AssertKeys(
+            new UpdateFederationConfigRequest { TokenEndpoint = "example" },
+            "token_endpoint");
+        AssertKeys(
             new UpdateFederationConfigRequest { TokenExchange = new TokenExchangeTrustRequest {  } },
             "token_exchange");
         AssertKeys(
+            new UpdateFederationConfigRequest { UserinfoEndpoint = "example" },
+            "userinfo_endpoint");
+        AssertKeys(
             new UpdateFederationConfigRequest
             {
+                AllowTenantInheritance = true,
                 AllowedAlgorithms = Array.Empty<string>(),
+                AllowedIssuerTenants = Array.Empty<string>(),
+                AppleKeyId = "example",
+                AppleTeamId = "example",
                 AttributeMap = JsonDocument.Parse("{}").RootElement,
+                AuthorizationEndpoint = "example",
+                ButtonIcon = "example",
                 ClientId = "example",
                 ClientSecret = Sensitive<string>.Wrap("example"),
                 Enabled = true,
                 IdpSigningCertPem = "example",
                 MetadataUrl = "example",
                 Provider = "example",
+                ProviderSlug = "example",
+                RequirePkce = true,
+                Scopes = Array.Empty<string>(),
+                TokenEndpoint = "example",
                 TokenExchange = new TokenExchangeTrustRequest {  },
+                UserinfoEndpoint = "example",
             },
-            "allowed_algorithms", "attribute_map", "client_id", "client_secret",
-            "enabled", "idp_signing_cert_pem", "metadata_url", "provider",
-            "token_exchange");
+            "allow_tenant_inheritance", "allowed_algorithms", "allowed_issuer_tenants",
+            "apple_key_id", "apple_team_id", "attribute_map", "authorization_endpoint",
+            "button_icon", "client_id", "client_secret", "enabled", "idp_signing_cert_pem",
+            "metadata_url", "provider", "provider_slug", "require_pkce", "scopes",
+            "token_endpoint", "token_exchange", "userinfo_endpoint");
         AssertKeys(new UpdateFederationConfigRequest());
     }
 
