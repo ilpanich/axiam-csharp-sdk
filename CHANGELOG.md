@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta08] - 2026-09-02
+
 ### Added
+
+- Contract 1.38 — the four public "Sign in with X" operations (#81)
 
 - **Contract 1.38: the four public "Sign in with X" operations.** `SsoProvidersAsync`,
   `SsoStartOauth2Async`, `SsoCompleteOauth2Async` and `SsoCompleteHandoffAsync`, under the
@@ -56,6 +60,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   stays `AuthError`). Plus the §12.2 naming assertion above.
 
 ### Changed
+
+- Bump actions/checkout from 4.4.0 to 7.0.1
+
+- Bump actions/setup-python from 5.6.0 to 7.0.0
 
 - Re-vendored `CONTRACT.md` (1.29 → 1.38), `openapi.json` and `management-registry.json`
   byte-for-byte from `ilpanich/axiam@1c457f6`. `proto/axiam/v1/` and
