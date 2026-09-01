@@ -17,10 +17,53 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record FederationConfigResponse
 {
     /// <summary>
+    /// Whether tenants of this organization may inherit this provider.
+    /// </summary>
+    [JsonPropertyName("allow_tenant_inheritance")]
+    public required bool AllowTenantInheritance { get; init; }
+
+    /// <summary>
+    /// Accepted signing algorithms. Returned for OIDC and SAML; meaningless, and therefore
+    /// empty, for the OAuth2 variant.
+    /// </summary>
+    [JsonPropertyName("allowed_algorithms")]
+    public required IReadOnlyList<string> AllowedAlgorithms { get; init; }
+
+    /// <summary>
+    /// Accepted external IdP tenants for a templated issuer.
+    /// </summary>
+    [JsonPropertyName("allowed_issuer_tenants")]
+    public required IReadOnlyList<string> AllowedIssuerTenants { get; init; }
+
+    /// <summary>
+    /// Apple Key ID.
+    /// </summary>
+    [JsonPropertyName("apple_key_id")]
+    public string? AppleKeyId { get; init; }
+
+    /// <summary>
+    /// Apple Team ID. Not secret — the <c>.p8</c> key is, and it is never returned.
+    /// </summary>
+    [JsonPropertyName("apple_team_id")]
+    public string? AppleTeamId { get; init; }
+
+    /// <summary>
     /// the server's attribute_map field
     /// </summary>
     [JsonPropertyName("attribute_map")]
     public required JsonElement AttributeMap { get; init; }
+
+    /// <summary>
+    /// OAuth2-variant authorization endpoint.
+    /// </summary>
+    [JsonPropertyName("authorization_endpoint")]
+    public string? AuthorizationEndpoint { get; init; }
+
+    /// <summary>
+    /// Custom sign-in-button icon, when one is set.
+    /// </summary>
+    [JsonPropertyName("button_icon")]
+    public string? ButtonIcon { get; init; }
 
     /// <summary>
     /// the server's client_id field
@@ -35,10 +78,25 @@ public sealed record FederationConfigResponse
     public required DateTimeOffset CreatedAt { get; init; }
 
     /// <summary>
+    /// The per-kind default that an empty <c>scopes</c> resolves to. Returned so the admin UI
+    /// can show what will actually be requested without duplicating the table.
+    /// </summary>
+    [JsonPropertyName("effective_scopes")]
+    public required IReadOnlyList<string> EffectiveScopes { get; init; }
+
+    /// <summary>
     /// the server's enabled field
     /// </summary>
     [JsonPropertyName("enabled")]
     public required bool Enabled { get; init; }
+
+    /// <summary>
+    /// Whether AXIAM ships this provider's own mark. When true the button uses it and
+    /// <c>button_icon</c> is refused; when false the button reads "Sign in with
+    /// &lt;provider&gt;" and may carry a custom icon.
+    /// </summary>
+    [JsonPropertyName("has_bundled_mark")]
+    public required bool HasBundledMark { get; init; }
 
     /// <summary>
     /// the server's id field
@@ -53,6 +111,20 @@ public sealed record FederationConfigResponse
     public string? MetadataUrl { get; init; }
 
     /// <summary>
+    /// Whether AXIAM mints this provider's client secret itself, per exchange, rather than
+    /// sending a stored one. True only for an Apple config with both identifiers set.
+    /// </summary>
+    [JsonPropertyName("mints_client_secret")]
+    public required bool MintsClientSecret { get; init; }
+
+    /// <summary>
+    /// Whether PKCE is sent on the authorization request. Always true for the OAuth2 variant
+    /// regardless of the stored flag.
+    /// </summary>
+    [JsonPropertyName("pkce_required")]
+    public required bool PkceRequired { get; init; }
+
+    /// <summary>
     /// the server's protocol field
     /// </summary>
     [JsonPropertyName("protocol")]
@@ -65,10 +137,35 @@ public sealed record FederationConfigResponse
     public required string Provider { get; init; }
 
     /// <summary>
+    /// Which provider this is. Derived from <c>protocol</c> for a config written before the
+    /// field existed.
+    /// </summary>
+    [JsonPropertyName("provider_kind")]
+    public required string ProviderKind { get; init; }
+
+    /// <summary>
+    /// Operator-chosen identifier for a <c>generic_*</c> kind.
+    /// </summary>
+    [JsonPropertyName("provider_slug")]
+    public string? ProviderSlug { get; init; }
+
+    /// <summary>
+    /// Scopes as stored. Empty means "use the per-kind default"; see <c>effective_scopes</c>.
+    /// </summary>
+    [JsonPropertyName("scopes")]
+    public required IReadOnlyList<string> Scopes { get; init; }
+
+    /// <summary>
     /// the server's tenant_id field
     /// </summary>
     [JsonPropertyName("tenant_id")]
     public required Guid TenantId { get; init; }
+
+    /// <summary>
+    /// OAuth2-variant token endpoint.
+    /// </summary>
+    [JsonPropertyName("token_endpoint")]
+    public string? TokenEndpoint { get; init; }
 
     /// <summary>
     /// X4 external token-exchange trust.
@@ -81,4 +178,10 @@ public sealed record FederationConfigResponse
     /// </summary>
     [JsonPropertyName("updated_at")]
     public required DateTimeOffset UpdatedAt { get; init; }
+
+    /// <summary>
+    /// OAuth2-variant userinfo endpoint.
+    /// </summary>
+    [JsonPropertyName("userinfo_endpoint")]
+    public string? UserinfoEndpoint { get; init; }
 }

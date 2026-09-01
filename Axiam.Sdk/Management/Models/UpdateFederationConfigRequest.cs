@@ -27,16 +27,52 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record UpdateFederationConfigRequest
 {
     /// <summary>
+    /// Whether tenants may inherit this organization-level provider.
+    /// </summary>
+    [JsonPropertyName("allow_tenant_inheritance")]
+    public bool? AllowTenantInheritance { get; init; }
+
+    /// <summary>
     /// Accepted signature algorithms (CQ-B40/REQ-14 AC-5).
     /// </summary>
     [JsonPropertyName("allowed_algorithms")]
     public IReadOnlyList<string>? AllowedAlgorithms { get; init; }
 
     /// <summary>
+    /// Accepted external IdP tenants for a templated issuer. Replaced wholesale.
+    /// </summary>
+    [JsonPropertyName("allowed_issuer_tenants")]
+    public IReadOnlyList<string>? AllowedIssuerTenants { get; init; }
+
+    /// <summary>
+    /// Apple Key ID. <c>Some(None)</c> clears it.
+    /// </summary>
+    [JsonPropertyName("apple_key_id")]
+    public string? AppleKeyId { get; init; }
+
+    /// <summary>
+    /// Apple Team ID. <c>Some(None)</c> clears it.
+    /// </summary>
+    [JsonPropertyName("apple_team_id")]
+    public string? AppleTeamId { get; init; }
+
+    /// <summary>
     /// the server's attribute_map field
     /// </summary>
     [JsonPropertyName("attribute_map")]
     public JsonElement? AttributeMap { get; init; }
+
+    /// <summary>
+    /// OAuth2-variant authorization endpoint. <c>Some(None)</c> clears it.
+    /// </summary>
+    [JsonPropertyName("authorization_endpoint")]
+    public string? AuthorizationEndpoint { get; init; }
+
+    /// <summary>
+    /// Sign-in-button icon for a generic provider. <c>Some(None)</c> clears it.
+    /// </summary>
+    [JsonPropertyName("button_icon")]
+    public string? ButtonIcon { get; init; }
 
     /// <summary>
     /// the server's client_id field
@@ -77,8 +113,38 @@ public sealed record UpdateFederationConfigRequest
     public string? Provider { get; init; }
 
     /// <summary>
+    /// Operator-chosen identifier for a <c>generic_*</c> kind. <c>Some(None)</c> clears it.
+    /// </summary>
+    [JsonPropertyName("provider_slug")]
+    public string? ProviderSlug { get; init; }
+
+    /// <summary>
+    /// Send PKCE on the authorization request.
+    /// </summary>
+    [JsonPropertyName("require_pkce")]
+    public bool? RequirePkce { get; init; }
+
+    /// <summary>
+    /// Scopes to request. Replaced wholesale; empty restores the per-kind default.
+    /// </summary>
+    [JsonPropertyName("scopes")]
+    public IReadOnlyList<string>? Scopes { get; init; }
+
+    /// <summary>
+    /// OAuth2-variant token endpoint. <c>Some(None)</c> clears it.
+    /// </summary>
+    [JsonPropertyName("token_endpoint")]
+    public string? TokenEndpoint { get; init; }
+
+    /// <summary>
     /// the server's token_exchange field
     /// </summary>
     [JsonPropertyName("token_exchange")]
     public TokenExchangeTrustRequest? TokenExchange { get; init; }
+
+    /// <summary>
+    /// OAuth2-variant userinfo endpoint. <c>Some(None)</c> clears it.
+    /// </summary>
+    [JsonPropertyName("userinfo_endpoint")]
+    public string? UserinfoEndpoint { get; init; }
 }

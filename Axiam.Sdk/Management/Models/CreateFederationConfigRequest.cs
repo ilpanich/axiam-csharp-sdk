@@ -18,6 +18,13 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record CreateFederationConfigRequest
 {
     /// <summary>
+    /// Whether tenants of this organization may inherit this provider. Only meaningful on a
+    /// config in the organization-scope tenant.
+    /// </summary>
+    [JsonPropertyName("allow_tenant_inheritance")]
+    public bool? AllowTenantInheritance { get; init; }
+
+    /// <summary>
     /// Accepted JWT signing algorithms (OIDC) or signature algorithms (SAML). Defaults to
     /// <c>["RS256"]</c> when not provided (CQ-B40/REQ-14 AC-5).
     /// </summary>
@@ -25,10 +32,47 @@ public sealed record CreateFederationConfigRequest
     public IReadOnlyList<string>? AllowedAlgorithms { get; init; }
 
     /// <summary>
+    /// External IdP tenant identifiers accepted when the provider publishes a templated issuer
+    /// (Entra ID's <c>{tenantid}</c>).
+    /// </summary>
+    [JsonPropertyName("allowed_issuer_tenants")]
+    public IReadOnlyList<string>? AllowedIssuerTenants { get; init; }
+
+    /// <summary>
+    /// Apple Key ID of the <c>.p8</c> signing key (10 characters). With both Apple identifiers
+    /// set, <c>client_secret</c> is the <c>.p8</c> key itself and AXIAM mints a fresh
+    /// five-minute client secret per token exchange.
+    /// </summary>
+    [JsonPropertyName("apple_key_id")]
+    public string? AppleKeyId { get; init; }
+
+    /// <summary>
+    /// Apple Team ID (10 characters).
+    /// </summary>
+    [JsonPropertyName("apple_team_id")]
+    public string? AppleTeamId { get; init; }
+
+    /// <summary>
     /// Maps external IdP attributes to AXIAM user fields.
     /// </summary>
     [JsonPropertyName("attribute_map")]
     public JsonElement? AttributeMap { get; init; }
+
+    /// <summary>
+    /// OAuth2-variant authorization endpoint. Required for <c>OAuth2</c>.
+    /// </summary>
+    [JsonPropertyName("authorization_endpoint")]
+    public string? AuthorizationEndpoint { get; init; }
+
+    /// <summary>
+    /// Sign-in-button icon for a **generic** provider, as a base64 raster data URL
+    /// (<c>data:image/png;base64,…</c>), already cropped to <c>PROVIDER_ICON_SIZE_PX</c> square
+    /// by the client. Refused for the branded kinds: Google, Apple and Microsoft all publish
+    /// sign-in-button rules that require their own mark, so substituting a picture would
+    /// produce a button that breaks the guidelines it exists to follow.
+    /// </summary>
+    [JsonPropertyName("button_icon")]
+    public string? ButtonIcon { get; init; }
 
     /// <summary>
     /// OAuth2 client ID registered with the external IdP.
@@ -69,8 +113,49 @@ public sealed record CreateFederationConfigRequest
     public required string Provider { get; init; }
 
     /// <summary>
+    /// Which provider this is: <c>google</c>, <c>github</c>, <c>facebook</c>, <c>apple</c>,
+    /// <c>microsoft</c>, <c>generic_oidc</c>, <c>generic_oauth2</c> or <c>generic_saml</c>.
+    /// Selects the sign-in button's branding, the per-kind defaults, and the key on which a
+    /// tenant config overrides an inherited organization one. Omitted ⇒ derived from
+    /// <c>protocol</c>, which is what every config written before this field existed means.
+    /// </summary>
+    [JsonPropertyName("provider_kind")]
+    public string? ProviderKind { get; init; }
+
+    /// <summary>
+    /// Operator-chosen identifier, **required** for the <c>generic_*</c> kinds and refused for
+    /// the branded ones.
+    /// </summary>
+    [JsonPropertyName("provider_slug")]
+    public string? ProviderSlug { get; init; }
+
+    /// <summary>
+    /// Send PKCE on the authorization request. Forced on for <c>OAuth2</c>.
+    /// </summary>
+    [JsonPropertyName("require_pkce")]
+    public bool? RequirePkce { get; init; }
+
+    /// <summary>
+    /// Scopes to request. Omitted or empty ⇒ the per-kind default.
+    /// </summary>
+    [JsonPropertyName("scopes")]
+    public IReadOnlyList<string>? Scopes { get; init; }
+
+    /// <summary>
+    /// OAuth2-variant token endpoint. Required for <c>OAuth2</c>.
+    /// </summary>
+    [JsonPropertyName("token_endpoint")]
+    public string? TokenEndpoint { get; init; }
+
+    /// <summary>
     /// the server's token_exchange field
     /// </summary>
     [JsonPropertyName("token_exchange")]
     public TokenExchangeTrustRequest? TokenExchange { get; init; }
+
+    /// <summary>
+    /// OAuth2-variant userinfo endpoint. Required for <c>OAuth2</c>.
+    /// </summary>
+    [JsonPropertyName("userinfo_endpoint")]
+    public string? UserinfoEndpoint { get; init; }
 }

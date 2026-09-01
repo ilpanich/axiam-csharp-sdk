@@ -287,6 +287,175 @@ public sealed class SsoStartParams
 /// </summary>
 public sealed record SsoStartResult(string AuthorizeUrl, string State, long ExpiresInSecs);
 
+/// <summary>
+/// One sign-in button (wire schema <c>PublicFederationProvider</c>, CONTRACT.md
+/// &#167;12.1, contract 1.38).
+/// </summary>
+/// <remarks>
+/// This is an <b>unauthenticated</b> response and carries only what a button needs. There
+/// is no <c>client_id</c>, no <c>metadata_url</c>, no endpoint URL and no secret — absent
+/// by construction rather than filtered out — and &#167;12.1 note 9 forbids an SDK from
+/// expecting one.
+/// </remarks>
+/// <param name="Id">Config id, echoed back to the matching start operation. Pass it through
+/// unmodified: inheritance is resolved server-side (&#167;12.1 note 13) and this id is how
+/// the server is told what resolution produced.</param>
+/// <param name="ProviderKind">Which provider this is, for the button's branding —
+/// <c>google</c>, <c>github</c>, <c>generic_oidc</c>, … <b>Not</b> what selects the start
+/// operation; see <paramref name="Protocol"/>.</param>
+/// <param name="DisplayName">The operator's display name for the provider.</param>
+/// <param name="Protocol"><see cref="FederationProtocols.OidcConnect"/>,
+/// <see cref="FederationProtocols.Saml"/> or <see cref="FederationProtocols.OAuth2"/> — the
+/// value that selects which start operation to call (&#167;12.1 note 10). Kept as the wire
+/// string rather than narrowed to an enum: the server owns this vocabulary, and a value
+/// added server-side must not become a deserialization failure for the whole list. An
+/// <c>OAuth2</c> provider issues <b>no</b> ID token (&#167;12.1 note 11), a distinction a
+/// surface rendering these buttons SHOULD make visible.</param>
+/// <param name="HasBundledMark">Whether AXIAM ships this provider's own sign-in mark, which
+/// its button must then use. <c>false</c> for the generic kinds, whose buttons read "Sign in
+/// with <paramref name="DisplayName"/>" and use <paramref name="ButtonIcon"/> where the
+/// operator uploaded one.</param>
+/// <param name="Inherited"><c>true</c> when the provider is inherited from the organization
+/// rather than configured on this tenant (&#167;12.1 note 13). Informational — it is not
+/// needed to sign in, and nothing in this SDK computes it.</param>
+/// <param name="ButtonIcon">The operator's uploaded button icon as a bounded raster
+/// <c>data:</c> URL, or <c>null</c> — which is the case for most providers.</param>
+public sealed record FederationProvider(
+    string Id,
+    string ProviderKind,
+    string DisplayName,
+    string Protocol,
+    bool HasBundledMark,
+    bool Inherited,
+    string? ButtonIcon);
+
+/// <summary>
+/// The result of <see cref="AxiamClient.SsoProvidersAsync"/> (wire schema
+/// <c>PublicFederationProvidersResponse</c>, CONTRACT.md &#167;12.1).
+/// </summary>
+/// <remarks>
+/// An <b>empty</b> <see cref="Providers"/> is a normal success, never an error (&#167;12.1
+/// note 9). An unknown organization, a known one with nothing configured, and a request
+/// naming no workspace at all all answer <c>200</c> this way, precisely so the endpoint
+/// cannot be used to enumerate organization or tenant slugs.
+/// </remarks>
+/// <param name="Providers">The providers to offer, in a stable server-defined order.</param>
+public sealed record FederationProviderList(IReadOnlyList<FederationProvider> Providers);
+
+/// <summary>
+/// The <c>protocol</c> values a <see cref="FederationProvider"/> may carry (CONTRACT.md
+/// &#167;12.1 note 10). The value — not <see cref="FederationProvider.ProviderKind"/>, which
+/// is branding — selects which start operation to call.
+/// </summary>
+public static class FederationProtocols
+{
+    /// <summary><c>protocol</c> value selecting <see cref="AxiamClient.SsoStartAsync"/>.</summary>
+    public const string OidcConnect = "OidcConnect";
+
+    /// <summary><c>protocol</c> value selecting <see cref="AxiamClient.SsoStartOauth2Async"/>.</summary>
+    public const string OAuth2 = "OAuth2";
+
+    /// <summary><c>protocol</c> value selecting the SAML login endpoint, which is
+    /// <b>not</b> a &#167;12 vocabulary operation.</summary>
+    public const string Saml = "Saml";
+}
+
+/// <summary>
+/// The handoff-code constants a caller driving the browser hop needs (CONTRACT.md
+/// &#167;12.1 note 12).
+/// </summary>
+public static class FederationHandoff
+{
+    /// <summary>The query parameter the server delivers a handoff code in, on the SPA's own
+    /// callback URL.</summary>
+    public const string QueryParam = "axiam_handoff";
+
+    /// <summary>How long a handoff code is valid, in seconds. It exists to survive one
+    /// redirect. Redeem it immediately, once.</summary>
+    public const long CodeTtlSeconds = 60L;
+}
+
+/// <summary>
+/// Arguments to <see cref="AxiamClient.SsoProvidersAsync"/>
+/// (<c>GET /api/v1/auth/federation/providers</c>).
+/// </summary>
+/// <remarks>
+/// Every property is optional and all four travel as <b>query</b> parameters — this is a
+/// <c>GET</c> and sends no body (&#167;12.1). Unset forms fall back to the client's own
+/// configuration (&#167;5.1); when neither these nor the client supply a workspace the
+/// request is still sent, and still answers <c>200</c> with an empty list.
+/// </remarks>
+public sealed class SsoProvidersParams
+{
+    /// <summary>The organization UUID. Alternative to <see cref="OrgSlug"/>.</summary>
+    public Guid? OrgId { get; init; }
+
+    /// <summary>The organization slug, as typed on a login page.</summary>
+    public string? OrgSlug { get; init; }
+
+    /// <summary>The tenant UUID. Alternative to <see cref="TenantSlug"/>.</summary>
+    public Guid? TenantId { get; init; }
+
+    /// <summary>The tenant slug. Omitted or blank means the organization's own scope.</summary>
+    public string? TenantSlug { get; init; }
+}
+
+/// <summary>
+/// Arguments to <see cref="AxiamClient.SsoStartOauth2Async"/>
+/// (<c>POST /api/v1/auth/federation/oauth2/start</c>).
+/// </summary>
+/// <remarks>
+/// Deliberately identical in shape to <see cref="SsoStartParams"/>, because the wire schemas
+/// are: <c>OAuth2StartRequest</c> and <c>OidcStartRequest</c> differ in name only. There is
+/// <b>no</b> PKCE property, and there must not be — the verifier is generated and held
+/// server-side (&#167;12.1 note 11).
+/// </remarks>
+public sealed class SsoStartOauth2Params
+{
+    /// <summary>The UUID of the federation configuration, from
+    /// <see cref="FederationProvider.Id"/>.</summary>
+    public required string FederationConfigId { get; init; }
+
+    /// <summary>The SPA callback route. Sent to the provider verbatim, so it must match what
+    /// is registered there byte for byte.</summary>
+    public required string RedirectUri { get; init; }
+
+    /// <summary>The tenant UUID. Defaults to the client's own tenant.</summary>
+    public Guid? TenantId { get; init; }
+
+    /// <summary>The tenant slug. Alternative to <see cref="TenantId"/>.</summary>
+    public string? TenantSlug { get; init; }
+
+    /// <summary>The organization UUID. Defaults to the client's configured organization.</summary>
+    public Guid? OrgId { get; init; }
+
+    /// <summary>The organization slug. Alternative to <see cref="OrgId"/>.</summary>
+    public string? OrgSlug { get; init; }
+}
+
+/// <summary>Arguments to <see cref="AxiamClient.SsoCompleteOauth2Async"/>
+/// (<c>POST /api/v1/auth/federation/oauth2/callback</c>).</summary>
+public sealed class SsoCompleteOauth2Params
+{
+    /// <summary>The <c>state</c> the provider redirected back with — the one
+    /// <see cref="AxiamClient.SsoStartOauth2Async"/> returned, unmodified.</summary>
+    public required string State { get; init; }
+
+    /// <summary>The authorization code the provider redirected back with.</summary>
+    public required string Code { get; init; }
+}
+
+/// <summary>Arguments to <see cref="AxiamClient.SsoCompleteHandoffAsync"/>
+/// (<c>POST /api/v1/auth/federation/handoff</c>).</summary>
+public sealed class SsoCompleteHandoffParams
+{
+    /// <summary>The single-use code read from the
+    /// <see cref="FederationHandoff.QueryParam"/> query parameter on the SPA's callback URL.
+    /// Valid for <see cref="FederationHandoff.CodeTtlSeconds"/> seconds and redeemable
+    /// <b>once</b>.</summary>
+    public required string Code { get; init; }
+}
+
 /// <summary>Arguments to <see cref="AxiamClient.SsoCompleteAsync"/>
 /// (<c>POST /api/v1/auth/federation/oidc/callback</c>).</summary>
 public sealed class SsoCompleteParams

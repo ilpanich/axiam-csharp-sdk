@@ -48,6 +48,31 @@ internal sealed record SsoLoginSuccessResponseWire(
     [property: JsonPropertyName("expires_in")] long ExpiresIn,
     [property: JsonPropertyName("redirect_uri")] string RedirectUri);
 
+/// <summary>One item of <c>GET /api/v1/auth/federation/providers</c> (wire schema
+/// <c>PublicFederationProvider</c>, contract 1.38).</summary>
+internal sealed record PublicFederationProviderWire(
+    [property: JsonPropertyName("id")] string Id,
+    [property: JsonPropertyName("provider_kind")] string ProviderKind,
+    [property: JsonPropertyName("display_name")] string DisplayName,
+    [property: JsonPropertyName("protocol")] string Protocol,
+    [property: JsonPropertyName("has_bundled_mark")] bool HasBundledMark,
+    [property: JsonPropertyName("inherited")] bool Inherited,
+    [property: JsonPropertyName("button_icon")] string? ButtonIcon);
+
+/// <summary>The <c>200</c> body of <c>GET /api/v1/auth/federation/providers</c> (wire
+/// schema <c>PublicFederationProvidersResponse</c>, contract 1.38).</summary>
+internal sealed record PublicFederationProvidersResponseWire(
+    [property: JsonPropertyName("providers")] IReadOnlyList<PublicFederationProviderWire>? Providers);
+
+/// <summary>The <c>200</c> body of <c>POST /api/v1/auth/federation/oauth2/start</c> (wire
+/// schema <c>OAuth2StartResponse</c>, contract 1.38).</summary>
+/// <remarks>The PKCE verifier is not here and never will be: it stays server-side in the
+/// login-state row, for the same reason the OIDC nonce does (&#167;12.1 note 11).</remarks>
+internal sealed record OAuth2StartResponseWire(
+    [property: JsonPropertyName("authorize_url")] string AuthorizeUrl,
+    [property: JsonPropertyName("state")] string State,
+    [property: JsonPropertyName("expires_in_secs")] long ExpiresInSecs);
+
 /// <summary>200 body of <c>POST /oauth2/device_authorization</c> (CONTRACT.md &#167;14.1).</summary>
 internal sealed record DeviceAuthorizationResponseWire(
     [property: JsonPropertyName("device_code")] string DeviceCode,
