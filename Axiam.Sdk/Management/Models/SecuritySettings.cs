@@ -99,4 +99,10 @@ public sealed record SecuritySettings
     /// </summary>
     [JsonPropertyName("updated_at")]
     public required DateTimeOffset UpdatedAt { get; init; }
+
+    /// <summary>
+    /// the server's webauthn field
+    /// </summary>
+    [JsonPropertyName("webauthn")]
+    public required WebauthnPolicy Webauthn { get; init; }
 }

@@ -168,4 +168,10 @@ public sealed record TenantSettingsOverride
     /// </summary>
     [JsonPropertyName("require_uppercase")]
     public bool? RequireUppercase { get; init; }
+
+    /// <summary>
+    /// the server's webauthn_user_verification field
+    /// </summary>
+    [JsonPropertyName("webauthn_user_verification")]
+    public string? WebauthnUserVerification { get; init; }
 }
