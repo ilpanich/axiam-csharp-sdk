@@ -171,6 +171,9 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new TenantSettingsOverride { RequireUppercase = true },
             "require_uppercase");
         AssertKeys(
+            new TenantSettingsOverride { WebauthnUserVerification = "example" },
+            "webauthn_user_verification");
+        AssertKeys(
             new TenantSettingsOverride
             {
                 AccessTokenLifetimeSecs = 1L,
@@ -197,6 +200,7 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 RequireLowercase = true,
                 RequireSymbols = true,
                 RequireUppercase = true,
+                WebauthnUserVerification = "example",
             },
             "access_token_lifetime_secs", "admin_notifications_enabled", "default_cert_validity_days",
             "deletion_grace_period_days", "email_verification_grace_period_hours",
@@ -205,7 +209,7 @@ public sealed class ManagementSparseBodiesGeneratedTests
             "max_lockout_duration_secs", "mfa_challenge_lifetime_secs", "mfa_enforced",
             "min_length", "opaque_ksf", "opaque_mode", "opaque_suite", "password_history_count",
             "refresh_token_lifetime_secs", "require_digits", "require_lowercase",
-            "require_symbols", "require_uppercase");
+            "require_symbols", "require_uppercase", "webauthn_user_verification");
         AssertKeys(new TenantSettingsOverride());
     }
 

@@ -167,4 +167,10 @@ public sealed record SetOrgSettings
     /// </summary>
     [JsonPropertyName("require_uppercase")]
     public required bool RequireUppercase { get; init; }
+
+    /// <summary>
+    /// the server's webauthn_user_verification field
+    /// </summary>
+    [JsonPropertyName("webauthn_user_verification")]
+    public string? WebauthnUserVerification { get; init; }
 }
