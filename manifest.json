@@ -3918,6 +3918,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.WebauthnPolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.WebauthnPolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.WebauthnPolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.WebauthnPolicy.yml\" sourcestartlinenumber=\"1\">WebAuthn ceremony policy. One field today. It is a struct rather than a bare field on\n[<code>SecuritySettings</code>] so that the next WebAuthn control has an obvious home, and so the\nadmin UI can group them. The <em sourcefile=\"api/Axiam.Sdk.Management.Models.WebauthnPolicy.yml\" sourcestartlinenumber=\"3\">attestation</em> policy is deliberately not here: it lives in\n[<code>crate::models::webauthn_policy::WebauthnAttestationPolicy</code>], is tenant-only, and\ncannot join this model because AAGUID allow/block lists have no &quot;more restrictive than&quot;\nordering to validate an override against. User verification does, so it can.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Management.Models.WebhookResponse.yml",
       "output": {
         ".html": {

@@ -18182,6 +18182,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SecuritySettings.UpdatedAt
   nameWithType: SecuritySettings.UpdatedAt
+- uid: Axiam.Sdk.Management.Models.SecuritySettings.Webauthn
+  name: Webauthn
+  href: api/Axiam.Sdk.Management.Models.SecuritySettings.html#Axiam_Sdk_Management_Models_SecuritySettings_Webauthn
+  commentId: P:Axiam.Sdk.Management.Models.SecuritySettings.Webauthn
+  fullName: Axiam.Sdk.Management.Models.SecuritySettings.Webauthn
+  nameWithType: SecuritySettings.Webauthn
+- uid: Axiam.Sdk.Management.Models.SecuritySettings.Webauthn*
+  name: Webauthn
+  href: api/Axiam.Sdk.Management.Models.SecuritySettings.html#Axiam_Sdk_Management_Models_SecuritySettings_Webauthn_
+  commentId: Overload:Axiam.Sdk.Management.Models.SecuritySettings.Webauthn
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SecuritySettings.Webauthn
+  nameWithType: SecuritySettings.Webauthn
 - uid: Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse
   name: ServiceAccountCreatedResponse
   href: api/Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse.html
@@ -18823,6 +18836,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SetOrgSettings.RequireUppercase
   nameWithType: SetOrgSettings.RequireUppercase
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.WebauthnUserVerification
+  name: WebauthnUserVerification
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_WebauthnUserVerification
+  commentId: P:Axiam.Sdk.Management.Models.SetOrgSettings.WebauthnUserVerification
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.WebauthnUserVerification
+  nameWithType: SetOrgSettings.WebauthnUserVerification
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.WebauthnUserVerification*
+  name: WebauthnUserVerification
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_WebauthnUserVerification_
+  commentId: Overload:Axiam.Sdk.Management.Models.SetOrgSettings.WebauthnUserVerification
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.WebauthnUserVerification
+  nameWithType: SetOrgSettings.WebauthnUserVerification
 - uid: Axiam.Sdk.Management.Models.SettingsScope
   name: SettingsScope
   href: api/Axiam.Sdk.Management.Models.SettingsScope.html
@@ -19518,6 +19544,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.RequireUppercase
   nameWithType: TenantSettingsOverride.RequireUppercase
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.WebauthnUserVerification
+  name: WebauthnUserVerification
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_WebauthnUserVerification
+  commentId: P:Axiam.Sdk.Management.Models.TenantSettingsOverride.WebauthnUserVerification
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.WebauthnUserVerification
+  nameWithType: TenantSettingsOverride.WebauthnUserVerification
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.WebauthnUserVerification*
+  name: WebauthnUserVerification
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_WebauthnUserVerification_
+  commentId: Overload:Axiam.Sdk.Management.Models.TenantSettingsOverride.WebauthnUserVerification
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.WebauthnUserVerification
+  nameWithType: TenantSettingsOverride.WebauthnUserVerification
 - uid: Axiam.Sdk.Management.Models.TenantStatus
   name: TenantStatus
   href: api/Axiam.Sdk.Management.Models.TenantStatus.html
@@ -21262,6 +21301,25 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.WebauthnAttestationPolicy.UnknownAaguid
   nameWithType: WebauthnAttestationPolicy.UnknownAaguid
+- uid: Axiam.Sdk.Management.Models.WebauthnPolicy
+  name: WebauthnPolicy
+  href: api/Axiam.Sdk.Management.Models.WebauthnPolicy.html
+  commentId: T:Axiam.Sdk.Management.Models.WebauthnPolicy
+  fullName: Axiam.Sdk.Management.Models.WebauthnPolicy
+  nameWithType: WebauthnPolicy
+- uid: Axiam.Sdk.Management.Models.WebauthnPolicy.WebauthnUserVerification
+  name: WebauthnUserVerification
+  href: api/Axiam.Sdk.Management.Models.WebauthnPolicy.html#Axiam_Sdk_Management_Models_WebauthnPolicy_WebauthnUserVerification
+  commentId: P:Axiam.Sdk.Management.Models.WebauthnPolicy.WebauthnUserVerification
+  fullName: Axiam.Sdk.Management.Models.WebauthnPolicy.WebauthnUserVerification
+  nameWithType: WebauthnPolicy.WebauthnUserVerification
+- uid: Axiam.Sdk.Management.Models.WebauthnPolicy.WebauthnUserVerification*
+  name: WebauthnUserVerification
+  href: api/Axiam.Sdk.Management.Models.WebauthnPolicy.html#Axiam_Sdk_Management_Models_WebauthnPolicy_WebauthnUserVerification_
+  commentId: Overload:Axiam.Sdk.Management.Models.WebauthnPolicy.WebauthnUserVerification
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.WebauthnPolicy.WebauthnUserVerification
+  nameWithType: WebauthnPolicy.WebauthnUserVerification
 - uid: Axiam.Sdk.Management.Models.WebhookResponse
   name: WebhookResponse
   href: api/Axiam.Sdk.Management.Models.WebhookResponse.html

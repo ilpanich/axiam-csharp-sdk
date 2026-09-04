@@ -787,6 +787,16 @@ reading a provider needs to see exactly what it trusts.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.WebauthnPolicy.html">WebauthnPolicy</a></dt>
+      <dd><p>WebAuthn ceremony policy. One field today. It is a struct rather than a bare field on
+[<code>SecuritySettings</code>] so that the next WebAuthn control has an obvious home, and so the
+admin UI can group them. The <em>attestation</em> policy is deliberately not here: it lives in
+[<code>crate::models::webauthn_policy::WebauthnAttestationPolicy</code>], is tenant-only, and
+cannot join this model because AAGUID allow/block lists have no &quot;more restrictive than&quot;
+ordering to validate an override against. User verification does, so it can.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.WebhookResponse.html">WebhookResponse</a></dt>
       <dd><p>Webhook response — omits the shared secret.</p>
 </dd>

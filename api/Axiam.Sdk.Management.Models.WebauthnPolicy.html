@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class EmailVerificationPolicy | AXIAM .NET SDK </title>
+      <title>Class WebauthnPolicy | AXIAM .NET SDK </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class EmailVerificationPolicy | AXIAM .NET SDK ">
+      <meta name="title" content="Class WebauthnPolicy | AXIAM .NET SDK ">
       
-      <meta name="description" content="Email verification requirements.">
+      <meta name="description" content="WebAuthn ceremony policy. One field today. It is a struct rather than a bare field on [SecuritySettings] so that the next WebAuthn control has an obvious home, and so the admin UI can group them. The attestation policy is deliberately not here: it lives in [crate::models::webauthn_policy::WebauthnAttestationPolicy], is tenant-only, and cannot join this model because AAGUID allow/block lists have no &amp;quot;more restrictive than&amp;quot; ordering to validate an override against. User verification does, so it can.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta11/apiSpec/new?filename=Axiam_Sdk_Management_Models_EmailVerificationPolicy.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.EmailVerificationPolicy%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta11/apiSpec/new?filename=Axiam_Sdk_Management_Models_WebauthnPolicy.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.WebauthnPolicy%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,12 +84,12 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Axiam.Sdk.Management.Models.EmailVerificationPolicy">
+        <article data-uid="Axiam.Sdk.Management.Models.WebauthnPolicy">
 
 
 
-  <h1 id="Axiam_Sdk_Management_Models_EmailVerificationPolicy" data-uid="Axiam.Sdk.Management.Models.EmailVerificationPolicy" class="text-break">
-Class EmailVerificationPolicy  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta11/Axiam.Sdk/Management/Models/EmailVerificationPolicy.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Axiam_Sdk_Management_Models_WebauthnPolicy" data-uid="Axiam.Sdk.Management.Models.WebauthnPolicy" class="text-break">
+Class WebauthnPolicy  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta11/Axiam.Sdk/Management/Models/WebauthnPolicy.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,12 +97,17 @@ Class EmailVerificationPolicy  <a class="header-action link-secondary" title="Vi
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Email verification requirements.</p>
+  <div class="markdown summary"><p>WebAuthn ceremony policy. One field today. It is a struct rather than a bare field on
+[<code>SecuritySettings</code>] so that the next WebAuthn control has an obvious home, and so the
+admin UI can group them. The <em>attestation</em> policy is deliberately not here: it lives in
+[<code>crate::models::webauthn_policy::WebauthnAttestationPolicy</code>], is tenant-only, and
+cannot join this model because AAGUID allow/block lists have no &quot;more restrictive than&quot;
+ordering to validate an override against. User verification does, so it can.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed record EmailVerificationPolicy : IEquatable&lt;EmailVerificationPolicy&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed record WebauthnPolicy : IEquatable&lt;WebauthnPolicy&gt;</code></pre>
   </div>
 
 
@@ -112,14 +117,14 @@ Class EmailVerificationPolicy  <a class="header-action link-secondary" title="Vi
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">EmailVerificationPolicy</span></div>
+      <div><span class="xref">WebauthnPolicy</span></div>
     </dd>
   </dl>
 
   <dl class="typelist implements">
     <dt>Implements</dt>
     <dd>
-      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.EmailVerificationPolicy.html">EmailVerificationPolicy</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.WebauthnPolicy.html">WebauthnPolicy</a>&gt;</div>
     </dd>
   </dl>
 
@@ -156,20 +161,22 @@ Class EmailVerificationPolicy  <a class="header-action link-secondary" title="Vi
 </h2>
 
 
-  <a id="Axiam_Sdk_Management_Models_EmailVerificationPolicy_EmailVerificationGracePeriodHours_" data-uid="Axiam.Sdk.Management.Models.EmailVerificationPolicy.EmailVerificationGracePeriodHours*"></a>
+  <a id="Axiam_Sdk_Management_Models_WebauthnPolicy_WebauthnUserVerification_" data-uid="Axiam.Sdk.Management.Models.WebauthnPolicy.WebauthnUserVerification*"></a>
 
-  <h3 id="Axiam_Sdk_Management_Models_EmailVerificationPolicy_EmailVerificationGracePeriodHours" data-uid="Axiam.Sdk.Management.Models.EmailVerificationPolicy.EmailVerificationGracePeriodHours">
-  EmailVerificationGracePeriodHours
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta11/Axiam.Sdk/Management/Models/EmailVerificationPolicy.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Management_Models_WebauthnPolicy_WebauthnUserVerification" data-uid="Axiam.Sdk.Management.Models.WebauthnPolicy.WebauthnUserVerification">
+  WebauthnUserVerification
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta11/Axiam.Sdk/Management/Models/WebauthnPolicy.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>the server's email_verification_grace_period_hours field</p>
+  <div class="markdown level1 summary"><p>How hard the authenticator must prove <em>who</em> is present. Applies to enrolment and to
+second-factor authentication. Usernameless sign-in is held to <code>required</code> whatever
+this says — see [<code>WebauthnUserVerification</code>].</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;email_verification_grace_period_hours&quot;)]
-public required int EmailVerificationGracePeriodHours { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;webauthn_user_verification&quot;)]
+public required string WebauthnUserVerification { get; init; }</code></pre>
   </div>
 
 
@@ -178,40 +185,7 @@ public required int EmailVerificationGracePeriodHours { get; init; }</code></pre
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="Axiam_Sdk_Management_Models_EmailVerificationPolicy_EmailVerificationRequired_" data-uid="Axiam.Sdk.Management.Models.EmailVerificationPolicy.EmailVerificationRequired*"></a>
-
-  <h3 id="Axiam_Sdk_Management_Models_EmailVerificationPolicy_EmailVerificationRequired" data-uid="Axiam.Sdk.Management.Models.EmailVerificationPolicy.EmailVerificationRequired">
-  EmailVerificationRequired
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta11/Axiam.Sdk/Management/Models/EmailVerificationPolicy.cs/#L28"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>the server's email_verification_required field</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;email_verification_required&quot;)]
-public required bool EmailVerificationRequired { get; init; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 
