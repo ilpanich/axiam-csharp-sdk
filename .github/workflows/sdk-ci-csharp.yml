@@ -168,9 +168,13 @@ jobs:
   # version number. Git tags are NOT branch-scoped, so without this gate a release
   # tag cut on a feature branch would ship unreviewed code to the world under a
   # version that can never be reclaimed. The publish job below `needs:` this.
+
+  # R-2 (T-235): runs on BOTH triggers. It was `pull_request`-only, so a stale
+  # §27 surface reaching a tag by any route other than `scripts/mass-tag.sh`
+  # met no repository-side gate at all — and the version it shipped under can
+  # never be reused.
   management-drift-check:
     name: "§27 management surface drift-check"
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -212,7 +216,7 @@ jobs:
     # vX.Y.Z tag, and only after build-test (restore/build/test/grep-gate/pack)
     # has passed on that exact tagged commit.
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-    needs: [build-test, verify-tag-on-main]
+    needs: [build-test, management-drift-check, verify-tag-on-main]
     runs-on: ubuntu-latest
     # The nuget.org Trusted Publishing policy for this repo is bound to the
     # `production` GitHub environment: the OIDC token this job presents carries
