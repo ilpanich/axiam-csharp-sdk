@@ -90,7 +90,11 @@ public sealed partial class AxiamClient
     {
         ArgumentNullException.ThrowIfNull(@params);
         OidcConfiguration configuration = await ResolveOidcConfigurationAsync(@params.Configuration, cancellationToken).ConfigureAwait(false);
-        string? endpoint = configuration.DeviceAuthorizationEndpoint;
+        // §21.3 rule 2: prefer the mTLS alias when this call presents a client
+        // certificate. Null at BOTH levels still means "unsupported" — never a cue to
+        // build the URL by concatenation (§14.1).
+        string? endpoint = PreferredEndpoint(
+            configuration, a => a.DeviceAuthorizationEndpoint, configuration.DeviceAuthorizationEndpoint);
         if (string.IsNullOrEmpty(endpoint))
         {
             throw new AuthError(
@@ -341,7 +345,9 @@ public sealed partial class AxiamClient
             form["resource"] = @params.Resource;
         }
 
-        using HttpResponseMessage response = await PostOAuth2FormAsync(configuration.TokenEndpoint, form, tenantId, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await PostOAuth2FormAsync(
+            PreferredRequiredEndpoint(configuration, a => a.TokenEndpoint, configuration.TokenEndpoint),
+            form, tenantId, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
             throw await MapOAuth2ErrorAsync(response, "token exchange request failed", cancellationToken).ConfigureAwait(false);

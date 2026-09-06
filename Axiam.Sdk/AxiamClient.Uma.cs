@@ -220,7 +220,8 @@ public sealed partial class AxiamClient
         // One POST, no retry wrapper. See the rule-6 note above — this is the
         // §16 exception, and it is load-bearing rather than stylistic.
         using HttpResponseMessage response = await PostOAuth2FormAsync(
-            configuration.TokenEndpoint, form, tenantId, cancellationToken).ConfigureAwait(false);
+            PreferredRequiredEndpoint(configuration, a => a.TokenEndpoint, configuration.TokenEndpoint),
+            form, tenantId, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
             throw await MapUmaGrantErrorAsync(response, "uma ticket exchange request failed", cancellationToken)

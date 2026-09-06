@@ -47,7 +47,14 @@ public sealed partial class AxiamClient
             await ResolveOidcConfigurationAsync(@params.Configuration, cancellationToken).ConfigureAwait(false);
         string clientId = RequireOidcClientId();
 
-        if (string.IsNullOrEmpty(configuration.PushedAuthorizationRequestEndpoint))
+        // §21.3 rule 2: prefer the mTLS alias when this call presents a client
+        // certificate. Null at BOTH levels still means "unsupported" — never a cue to
+        // build <issuer>/oauth2/par by concatenation (§26.1).
+        string? parEndpoint = PreferredEndpoint(
+            configuration,
+            a => a.PushedAuthorizationRequestEndpoint,
+            configuration.PushedAuthorizationRequestEndpoint);
+        if (string.IsNullOrEmpty(parEndpoint))
         {
             throw new AuthError(
                 "the authorization server's discovery document advertises no " +
@@ -79,7 +86,7 @@ public sealed partial class AxiamClient
         // treats every successful push as a failure while passing every other assertion.
         // IsSuccessStatusCode admits both, which is the point.
         using (HttpResponseMessage response = await PostOAuth2FormAsync(
-                   configuration.PushedAuthorizationRequestEndpoint, form, tenantId, cancellationToken).ConfigureAwait(false))
+                   parEndpoint, form, tenantId, cancellationToken).ConfigureAwait(false))
         {
             if (!response.IsSuccessStatusCode)
             {
