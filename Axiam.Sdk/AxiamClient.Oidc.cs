@@ -481,7 +481,9 @@ public sealed partial class AxiamClient
             form["token_type_hint"] = @params.TokenTypeHint;
         }
 
-        using HttpResponseMessage response = await PostOAuth2FormAsync(configuration.IntrospectionEndpoint, form, tenantId, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await PostOAuth2FormAsync(
+            PreferredRequiredEndpoint(configuration, a => a.IntrospectionEndpoint, configuration.IntrospectionEndpoint),
+            form, tenantId, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
             throw await MapOAuth2ErrorAsync(response, "introspect failed", cancellationToken).ConfigureAwait(false);
@@ -526,7 +528,9 @@ public sealed partial class AxiamClient
             form["token_type_hint"] = @params.TokenTypeHint;
         }
 
-        using HttpResponseMessage response = await PostOAuth2FormAsync(configuration.RevocationEndpoint, form, tenantId, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await PostOAuth2FormAsync(
+            PreferredRequiredEndpoint(configuration, a => a.RevocationEndpoint, configuration.RevocationEndpoint),
+            form, tenantId, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
             throw await MapOAuth2ErrorAsync(response, "revoke failed", cancellationToken).ConfigureAwait(false);
@@ -1041,6 +1045,69 @@ public sealed partial class AxiamClient
     /// the &#167;4 cookie jar / &#167;6 TLS transport all apply unconditionally, exactly as
     /// CONTRACT.md &#167;12.1 note 2 requires.
     /// </summary>
+    /// <summary>
+    /// Whether this client presents a &#167;6.1 mTLS client certificate, and so whether
+    /// CONTRACT.md &#167;21.3 rule 2 applies to the calls it makes.
+    /// </summary>
+    /// <remarks>
+    /// The identity is configured once on the options and presented on every request, so
+    /// "is this call going over mutual TLS" has a whole-client answer here rather than a
+    /// per-call one.
+    /// </remarks>
+    internal bool PresentsClientCertificate => ClientCertificatePem is { Length: > 0 };
+
+    /// <summary>
+    /// The endpoint a call should use, preferring its RFC 8705 &#167;5 alias when this
+    /// client presents a &#167;6.1 certificate (CONTRACT.md &#167;21.3 rule 2).
+    /// </summary>
+    /// <remarks>
+    /// <para>Three things this deliberately does NOT do, each of them a documented way to
+    /// get rule 2 wrong:</para>
+    /// <list type="bullet">
+    ///   <item>An absent <c>mtls_endpoint_aliases</c> is never an error. It means "no
+    ///   separate mTLS host", not "mTLS unsupported" — a deployment running
+    ///   <c>client_auth = optional</c> on one listener serves both populations at the
+    ///   conventional endpoints and correctly publishes nothing.</item>
+    ///   <item><paramref name="pick"/> can only reach <see cref="MtlsEndpointAliases"/>, so
+    ///   <c>authorization_endpoint</c>, <c>end_session_endpoint</c> and <c>jwks_uri</c> are
+    ///   unreachable rather than merely unused: they are front-channel or public, and an
+    ///   mTLS host would raise a certificate-chooser dialog in the user's browser.</item>
+    ///   <item><c>issuer</c> is untouched. It is an identifier, not an endpoint, and
+    ///   &#167;12.4 rule 3 still compares a token's <c>iss</c> against
+    ///   <c>configuration.Issuer</c> by exact string — including for a token minted at an
+    ///   alias endpoint.</item>
+    /// </list>
+    /// <para>A <c>null</c> result for a conditionally-advertised endpoint still means
+    /// "this server does not support the feature" — the caller raises that, and never
+    /// concatenates a URL onto the issuer.</para>
+    /// </remarks>
+    internal string? PreferredEndpoint(
+        OidcConfiguration configuration,
+        Func<MtlsEndpointAliases, string?> pick,
+        string? topLevel)
+    {
+        if (PresentsClientCertificate && configuration.MtlsEndpointAliases is { } aliases)
+        {
+            string? alias = pick(aliases);
+            if (!string.IsNullOrEmpty(alias))
+            {
+                return alias;
+            }
+        }
+
+        return topLevel;
+    }
+
+    /// <summary>
+    /// <see cref="PreferredEndpoint"/> for an always-advertised endpoint, where the
+    /// top-level entry is never null.
+    /// </summary>
+    internal string PreferredRequiredEndpoint(
+        OidcConfiguration configuration,
+        Func<MtlsEndpointAliases, string?> pick,
+        string topLevel)
+        => PreferredEndpoint(configuration, pick, topLevel) ?? topLevel;
+
     private async Task<HttpResponseMessage> PostOAuth2FormAsync(string endpointUrl, IDictionary<string, string> form, Guid tenantId, CancellationToken cancellationToken)
     {
         string url = AppendTenantIdQuery(endpointUrl, tenantId);
@@ -1067,7 +1134,9 @@ public sealed partial class AxiamClient
 
     private async Task<TokenResponseWire> PostTokenAsync(OidcConfiguration configuration, IDictionary<string, string> form, Guid tenantId, CancellationToken cancellationToken)
     {
-        using HttpResponseMessage response = await PostOAuth2FormAsync(configuration.TokenEndpoint, form, tenantId, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await PostOAuth2FormAsync(
+            PreferredRequiredEndpoint(configuration, a => a.TokenEndpoint, configuration.TokenEndpoint),
+            form, tenantId, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
             throw await MapOAuth2ErrorAsync(response, "oidc token request failed", cancellationToken).ConfigureAwait(false);
