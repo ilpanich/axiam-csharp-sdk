@@ -17,6 +17,19 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record OAuth2ClientResponse
 {
     /// <summary>
+    /// X7.1 — echoed so an operator can audit which clients act on the OIDC
+    /// authentication-request parameters, from this endpoint rather than from the database.
+    /// </summary>
+    [JsonPropertyName("authn_request_params")]
+    public required AuthnRequestParamsMode AuthnRequestParams { get; init; }
+
+    /// <summary>
+    /// X7.3 — echoed for the same reason.
+    /// </summary>
+    [JsonPropertyName("browser_sso")]
+    public required bool BrowserSso { get; init; }
+
+    /// <summary>
     /// the server's client_id field
     /// </summary>
     [JsonPropertyName("client_id")]

@@ -26,11 +26,23 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record UpdateOAuth2ClientRequest
 {
     /// <summary>
+    /// the server's authn_request_params field
+    /// </summary>
+    [JsonPropertyName("authn_request_params")]
+    public AuthnRequestParamsMode? AuthnRequestParams { get; init; }
+
+    /// <summary>
     /// Pass an empty string to clear a previously registered URI — the one edit an operator
     /// makes when an RP is decommissioned.
     /// </summary>
     [JsonPropertyName("backchannel_logout_uri")]
     public string? BackchannelLogoutUri { get; init; }
+
+    /// <summary>
+    /// X7.3 — see [<c>CreateOAuth2ClientRequest::browser_sso</c>].
+    /// </summary>
+    [JsonPropertyName("browser_sso")]
+    public bool? BrowserSso { get; init; }
 
     /// <summary>
     /// the server's dpop_bound_access_tokens field

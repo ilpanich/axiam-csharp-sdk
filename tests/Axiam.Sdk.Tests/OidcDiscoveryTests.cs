@@ -140,6 +140,37 @@ public class OidcDiscoveryTests
         Assert.Equal(new[] { "client_secret_post" }, configuration.TokenEndpointAuthMethodsSupported);
         Assert.Equal(new[] { "sub" }, configuration.ClaimsSupported);
         Assert.Contains("authorization_code", configuration.GrantTypesSupported);
+        // Contract 1.42, RFC 8414 / RFC 7636 §4.2.
+        Assert.Equal(new[] { "S256" }, configuration.CodeChallengeMethodsSupported);
+        Assert.Equal(new[] { "EdDSA" }, configuration.TokenEndpointAuthSigningAlgValuesSupported);
+    }
+
+    /// <summary>
+    /// <c>code_challenge_methods_supported</c> and
+    /// <c>token_endpoint_auth_signing_alg_values_supported</c> are modelled nullable even
+    /// though <c>openapi.json</c> marks them required (contract 1.42).
+    /// </summary>
+    /// <remarks>
+    /// CONTRACT.md &#167;21.5 is explicit about why: RFC 8414 defines no default for the
+    /// first, <i>so its absence does not mean <c>S256</c></i>. Modelling either as required
+    /// would reject a document from a non-AXIAM OP that this SDK parses today — the same
+    /// &#167;12.3 rule 6 posture that keeps the endpoint members nullable. Absent must read
+    /// as absent, not as an empty list and not as a parse failure.
+    /// </remarks>
+    [Fact]
+    public async Task OidcDiscoverAsync_DocumentWithoutTheContract142Members_StillParses()
+    {
+        using var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler, withOptionalEndpoints: false);
+        AxiamClient client = OidcTestKit.Client(handler);
+
+        OidcConfiguration configuration = await client.OidcDiscoverAsync();
+
+        Assert.Null(configuration.CodeChallengeMethodsSupported);
+        Assert.Null(configuration.TokenEndpointAuthSigningAlgValuesSupported);
+        // The rest of the document is intact — this is a successful parse, not a salvage.
+        Assert.Equal("https://axiam.test", configuration.Issuer);
+        Assert.Equal("https://axiam.test/oauth2/token", configuration.TokenEndpoint);
     }
 
     [Fact]

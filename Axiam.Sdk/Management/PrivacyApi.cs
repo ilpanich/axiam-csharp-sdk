@@ -145,4 +145,108 @@ public sealed class PrivacyApi
             null,
             cancellationToken).ConfigureAwait(false);
     }
+
+    /// <summary>
+    /// Art. 7(1) says a controller must be able to demonstrate that consent was given; Art.
+    /// 15(1)(a) says the subject may see what is held about them. This endpoint is the second,
+    /// and it is also the page the withdrawal control lives on.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Issues <c>GET /api/v1/account/consents</c>.
+    /// </para>
+    /// </remarks>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>the server response</returns>
+    public async Task<IReadOnlyList<ConsentView>> ListConsentsAsync(CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/account/consents";
+        JsonElement? node = await _transport.SendAsync(
+            "privacy.list_consents",
+            HttpMethod.Get,
+            "/api/v1/account/consents",
+            path,
+            null,
+            null,
+            cancellationToken).ConfigureAwait(false);
+        return ManagementSupport.DecodeList<ConsentView>("privacy.list_consents", node);
+    }
+
+    /// <summary>
+    /// What the SPA's consent screen calls when the end user says yes. Everything it accepts is
+    /// checked against the registration rather than taken on trust, because a consent record is
+    /// the thing UserInfo releases personal data on the strength of: * the scopes must be
+    /// sensitive ones — nothing else belongs in this namespace, and a record naming
+    /// <c>openid</c> would be a record that never matches and never expires; * the client must
+    /// exist in the caller's tenant; * the client must have every named scope **registered**,
+    /// so a consent cannot be recorded for a release the client could never have been
+    /// authorised for; * the tenant switch must be on, so consent collected while the
+    /// capability is off cannot sit waiting for somebody to turn it on. Idempotent: the
+    /// <c>(tenant, user, type, version)</c> index makes a repeated grant the same grant, and a
+    /// second call is answered <c>200</c> rather than a conflict. A consent screen the user
+    /// double-submits has consented once.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Issues <c>POST /api/v1/account/consents/oidc-scopes</c>.
+    /// </para>
+    /// <para>
+    /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
+    /// the ones that look idempotent.
+    /// </para>
+    /// </remarks>
+    /// <param name="body">the request body.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>a task that completes when the server has answered</returns>
+    public async Task GrantScopeConsentAsync(GrantScopeConsent body, CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/account/consents/oidc-scopes";
+        string payload = ManagementSupport.EncodeBody("privacy.grant_scope_consent", body);
+        await _transport.SendAsync(
+            "privacy.grant_scope_consent",
+            HttpMethod.Post,
+            "/api/v1/account/consents/oidc-scopes",
+            path,
+            null,
+            payload,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Art. 7(3): as easy to withdraw as to give. One call, no grace period, no confirmation
+    /// step, and it takes effect on the **next UserInfo call with the token the relying party
+    /// already holds** — not on the next token. That is the property T8.4 asserts, and it is
+    /// why the release gate re-reads the record on every call rather than trusting the one
+    /// taken at authorization. Withdraws every scope set consented to for this relying party,
+    /// not one of them: a subject saying "stop giving my address to this app" does not mean
+    /// "stop giving it under the two-scope record but carry on under the one-scope one".
+    /// Answers <c>200</c> whether or not anything was there, and says how many records went. A
+    /// subject who withdraws twice is not told off, and an attacker who guesses
+    /// <c>client_id</c>s learns nothing from the status code — though they would have to be the
+    /// subject to ask at all.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Issues <c>DELETE /api/v1/account/consents/oidc-scopes/{client_id}</c>.
+    /// </para>
+    /// <para>
+    /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
+    /// the ones that look idempotent.
+    /// </para>
+    /// </remarks>
+    /// <param name="clientId">the client id to address.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>a task that completes when the server has answered</returns>
+    public async Task WithdrawScopeConsentAsync(Guid clientId, CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/account/consents/oidc-scopes/{clientId}";
+        await _transport.SendAsync(
+            "privacy.withdraw_scope_consent",
+            HttpMethod.Delete,
+            "/api/v1/account/consents/oidc-scopes/{client_id}",
+            path,
+            null,
+            null,
+            cancellationToken).ConfigureAwait(false);
+    }
 }

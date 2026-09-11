@@ -59,6 +59,12 @@ public sealed record SecuritySettings
     public required NotificationPolicy Notification { get; init; }
 
     /// <summary>
+    /// the server's oidc field
+    /// </summary>
+    [JsonPropertyName("oidc")]
+    public required OidcPolicy Oidc { get; init; }
+
+    /// <summary>
     /// the server's opaque field
     /// </summary>
     [JsonPropertyName("opaque")]

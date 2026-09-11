@@ -44,6 +44,13 @@ public sealed record TenantSettingsOverride
     public int? DefaultCertValidityDays { get; init; }
 
     /// <summary>
+    /// The tenant's fallback UI language. Not ordered, therefore not validated against the
+    /// baseline and never clamped — see [<c>OidcPolicy</c>].
+    /// </summary>
+    [JsonPropertyName("default_locale")]
+    public string? DefaultLocale { get; init; }
+
+    /// <summary>
     /// the server's deletion_grace_period_days field
     /// </summary>
     [JsonPropertyName("deletion_grace_period_days")]
@@ -168,6 +175,12 @@ public sealed record TenantSettingsOverride
     /// </summary>
     [JsonPropertyName("require_uppercase")]
     public bool? RequireUppercase { get; init; }
+
+    /// <summary>
+    /// the server's sensitive_scopes_enabled field
+    /// </summary>
+    [JsonPropertyName("sensitive_scopes_enabled")]
+    public bool? SensitiveScopesEnabled { get; init; }
 
     /// <summary>
     /// the server's webauthn_user_verification field

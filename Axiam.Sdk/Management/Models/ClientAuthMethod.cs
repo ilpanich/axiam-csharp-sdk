@@ -40,6 +40,10 @@ public enum ClientAuthMethod
     [WireName("client_secret_post")]
     ClientSecretPost,
 
+    /// <summary>The server's <c>client_secret_basic</c> value.</summary>
+    [WireName("client_secret_basic")]
+    ClientSecretBasic,
+
     /// <summary>The server's <c>tls_client_auth</c> value.</summary>
     [WireName("tls_client_auth")]
     TlsClientAuth,

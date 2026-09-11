@@ -284,6 +284,139 @@ public class OidcParTests
             HttpUtility.ParseQueryString(new Uri(pushed.Url).Query);
         Assert.Equal(2, query.Count);
         Assert.Null(query["audience"]);
+        Assert.Null(query["scope"]);
+    }
+
+    /// <summary>
+    /// Contract 1.42: the server publishes <c>authorization_endpoint</c> already carrying
+    /// <c>?tenant_id=</c> whenever the discovery request named a tenant (or the deployment
+    /// sets <c>oauth2_default_tenant_id</c>). Clearing the query wholesale — which is what
+    /// &#167;26.2 rule 2 asks for and what this SDK did — takes that with it, and the
+    /// authorization endpoint's anonymous lane answers <c>401</c> without it: a browser
+    /// carrying no AXIAM session cannot be told which tenant's client to look up.
+    /// <c>tenant_id</c> is not one of the nine OIDC authentication-request parameters the
+    /// server's refusal is computed over, so carrying it is not the merge rule 2 forbids.
+    /// </summary>
+    [Fact]
+    public async Task RedirectUrl_KeepsTheTenantWhenTheDiscoveredEndpointWasTenantScoped()
+    {
+        using var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        MapPar(handler);
+        using AxiamClient client = OidcTestKit.Client(handler);
+        OidcConfiguration discovered = await client.OidcDiscoverAsync();
+
+        OidcConfiguration config = discovered with
+        {
+            AuthorizationEndpoint =
+                "https://axiam.test/oauth2/authorize?audience=legacy&tenant_id=99999999-9999-9999-9999-999999999999",
+        };
+        AuthorizationRequest begun = client.OidcBegin(config, new OidcBeginParams { RedirectUri = RedirectUri });
+
+        PushedAuthorizationRequest pushed = await client.OidcParAsync(new OidcParParams
+        {
+            Request = begun,
+            RedirectUri = RedirectUri,
+            Configuration = config,
+        });
+
+        var url = new Uri(pushed.Url);
+        System.Collections.Specialized.NameValueCollection query = HttpUtility.ParseQueryString(url.Query);
+        Assert.Equal("/oauth2/authorize", url.AbsolutePath);
+        Assert.Equal(3, query.Count);
+        Assert.Equal(OidcTestKit.ClientId, query["client_id"]);
+        Assert.Equal(RequestUri, query["request_uri"]);
+        // The VALUE is the tenant the push was actually made under — the tenant the
+        // request_uri now lives in. Naming the published one instead would hand the
+        // browser a handle the authorization endpoint cannot resolve.
+        Assert.Equal(OidcTestKit.TenantGuid, query["tenant_id"]);
+        // Everything that IS an authorization parameter still goes.
+        Assert.Null(query["audience"]);
+    }
+
+    [Fact]
+    public async Task RedirectUrl_AddsNoTenantWhenTheServerPublishedABareEndpoint()
+    {
+        using var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        MapPar(handler);
+        using AxiamClient client = OidcTestKit.Client(handler);
+        (OidcConfiguration config, AuthorizationRequest begun) = await BeginAsync(client);
+
+        PushedAuthorizationRequest pushed = await client.OidcParAsync(new OidcParParams
+        {
+            Request = begun,
+            RedirectUri = RedirectUri,
+            Configuration = config,
+        });
+
+        // A parameter the OP did not publish is one this SDK does not invent.
+        Assert.Null(HttpUtility.ParseQueryString(new Uri(pushed.Url).Query)["tenant_id"]);
+    }
+
+    // -----------------------------------------------------------------------
+    // RFC 9449 §10.1 — dpop_jkt (contract 1.42)
+    // -----------------------------------------------------------------------
+
+    [Fact]
+    public async Task DpopJkt_IsPushedWhenTheCallerSuppliesOne()
+    {
+        const string Thumbprint = "0ZcOCORZNYy-DWpqq30jZyJGHTN0d2HglBV3uiguA4I";
+        Dictionary<string, string>? form = null;
+        using var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        MapPar(handler, r => form = OidcTestKit.ReadForm(r));
+        using AxiamClient client = OidcTestKit.Client(handler);
+        (OidcConfiguration config, AuthorizationRequest begun) = await BeginAsync(client);
+
+        await client.OidcParAsync(new OidcParParams
+        {
+            Request = begun,
+            RedirectUri = RedirectUri,
+            Configuration = config,
+            DpopJkt = Thumbprint,
+        });
+
+        Assert.Equal(Thumbprint, form!["dpop_jkt"]);
+    }
+
+    [Fact]
+    public async Task DpopJkt_IsOmittedEntirelyWhenUnset()
+    {
+        Dictionary<string, string>? form = null;
+        using var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        MapPar(handler, r => form = OidcTestKit.ReadForm(r));
+        using AxiamClient client = OidcTestKit.Client(handler);
+        (OidcConfiguration config, AuthorizationRequest begun) = await BeginAsync(client);
+
+        await client.OidcParAsync(new OidcParParams { Request = begun, RedirectUri = RedirectUri, Configuration = config });
+
+        // §12.1 forbids sending an empty value for an absent optional field: the key must
+        // be gone, not present-and-blank.
+        Assert.False(form!.ContainsKey("dpop_jkt"));
+    }
+
+    /// <summary>
+    /// RFC 9126 &#167;2.1 makes <c>request_uri</c> the one authorization parameter a client
+    /// MUST NOT push. The server's <c>PushedAuthorizationRequest</c> schema models it so it
+    /// can REFUSE it; a client that can send it is a client that can build the
+    /// chained-request attack that refusal exists to stop. It is therefore not on
+    /// <see cref="OidcParParams"/> at all, and this asserts the push carries none.
+    /// </summary>
+    [Fact]
+    public async Task Push_NeverCarriesARequestUri()
+    {
+        Dictionary<string, string>? form = null;
+        using var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        MapPar(handler, r => form = OidcTestKit.ReadForm(r));
+        using AxiamClient client = OidcTestKit.Client(handler);
+        (OidcConfiguration config, AuthorizationRequest begun) = await BeginAsync(client);
+
+        await client.OidcParAsync(new OidcParParams { Request = begun, RedirectUri = RedirectUri, Configuration = config });
+
+        Assert.False(form!.ContainsKey("request_uri"));
     }
 
     // -----------------------------------------------------------------------
