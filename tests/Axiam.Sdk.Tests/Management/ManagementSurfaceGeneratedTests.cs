@@ -1056,7 +1056,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Oauth2Clients_List()
     {
-        string body = "{\"items\": [{\"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"dpop_bound_access_tokens\": true, \"dpop_require_nonce\": true, \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"profile\": \"standard\", \"redirect_uris\": [], \"require_par\": true, \"scopes\": [], \"self_signed_tls_client_auth_thumbprints\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"tls_client_certificate_bound_access_tokens\": true, \"token_endpoint_auth_method\": \"client_secret_post\", \"updated_at\": \"2026-08-26T00:00:00Z\"}], \"total\": 1, \"offset\": 0, \"limit\": 200}";
+        string body = "{\"items\": [{\"authn_request_params\": \"ignore\", \"browser_sso\": true, \"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"dpop_bound_access_tokens\": true, \"dpop_require_nonce\": true, \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"profile\": \"standard\", \"redirect_uris\": [], \"require_par\": true, \"scopes\": [], \"self_signed_tls_client_auth_thumbprints\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"tls_client_certificate_bound_access_tokens\": true, \"token_endpoint_auth_method\": \"client_secret_post\", \"updated_at\": \"2026-08-26T00:00:00Z\"}], \"total\": 1, \"offset\": 0, \"limit\": 200}";
         Mount("GET", $"/api/v1/oauth2-clients", 200, body);
         var result = await Client.Management.Oauth2Clients.ListAsync(page: PageRequest.Of(50));
         string item = JsonDocument.Parse(body).RootElement.GetProperty("items")[0].GetRawText();
@@ -1079,7 +1079,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Oauth2Clients_Get()
     {
-        string body = "{\"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"dpop_bound_access_tokens\": true, \"dpop_require_nonce\": true, \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"profile\": \"standard\", \"redirect_uris\": [], \"require_par\": true, \"scopes\": [], \"self_signed_tls_client_auth_thumbprints\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"tls_client_certificate_bound_access_tokens\": true, \"token_endpoint_auth_method\": \"client_secret_post\", \"updated_at\": \"2026-08-26T00:00:00Z\"}";
+        string body = "{\"authn_request_params\": \"ignore\", \"browser_sso\": true, \"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"dpop_bound_access_tokens\": true, \"dpop_require_nonce\": true, \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"profile\": \"standard\", \"redirect_uris\": [], \"require_par\": true, \"scopes\": [], \"self_signed_tls_client_auth_thumbprints\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"tls_client_certificate_bound_access_tokens\": true, \"token_endpoint_auth_method\": \"client_secret_post\", \"updated_at\": \"2026-08-26T00:00:00Z\"}";
         Mount("GET", $"/api/v1/oauth2-clients/{ExampleId}", 200, body);
         var result = await Client.Management.Oauth2Clients.GetAsync(id: ExampleId);
         AssertDecodedEveryField(result, body);
@@ -1089,7 +1089,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Oauth2Clients_Update()
     {
-        string body = "{\"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"dpop_bound_access_tokens\": true, \"dpop_require_nonce\": true, \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"profile\": \"standard\", \"redirect_uris\": [], \"require_par\": true, \"scopes\": [], \"self_signed_tls_client_auth_thumbprints\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"tls_client_certificate_bound_access_tokens\": true, \"token_endpoint_auth_method\": \"client_secret_post\", \"updated_at\": \"2026-08-26T00:00:00Z\"}";
+        string body = "{\"authn_request_params\": \"ignore\", \"browser_sso\": true, \"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"dpop_bound_access_tokens\": true, \"dpop_require_nonce\": true, \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"profile\": \"standard\", \"redirect_uris\": [], \"require_par\": true, \"scopes\": [], \"self_signed_tls_client_auth_thumbprints\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"tls_client_certificate_bound_access_tokens\": true, \"token_endpoint_auth_method\": \"client_secret_post\", \"updated_at\": \"2026-08-26T00:00:00Z\"}";
         Mount("PUT", $"/api/v1/oauth2-clients/{ExampleId}", 200, body);
         var result = await Client.Management.Oauth2Clients.UpdateAsync(id: ExampleId, body: new UpdateOAuth2ClientRequest {  });
         AssertDecodedEveryField(result, body);
@@ -1330,7 +1330,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Settings_GetOrg()
     {
-        string body = "{\"certificate\": {\"default_cert_validity_days\": 1, \"max_cert_validity_days\": 1}, \"created_at\": \"2026-08-26T00:00:00Z\", \"email\": {\"email_verification_grace_period_hours\": 1, \"email_verification_required\": true}, \"id\": \"11111111-1111-4111-8111-111111111111\", \"lockout\": {\"lockout_backoff_multiplier\": 1.0, \"lockout_duration_secs\": 1, \"max_failed_login_attempts\": 1, \"max_lockout_duration_secs\": 1}, \"mfa\": {\"mfa_challenge_lifetime_secs\": 1, \"mfa_enforced\": true}, \"notification\": {\"admin_notifications_enabled\": true}, \"opaque\": {\"opaque_ksf\": \"example\", \"opaque_mode\": \"example\", \"opaque_suite\": \"example\"}, \"password\": {\"hibp_check_enabled\": true, \"min_length\": 1, \"password_history_count\": 1, \"require_digits\": true, \"require_lowercase\": true, \"require_symbols\": true, \"require_uppercase\": true}, \"privacy\": {\"deletion_grace_period_days\": 1}, \"scope\": \"Org\", \"scope_id\": \"11111111-1111-4111-8111-111111111111\", \"token\": {\"access_token_lifetime_secs\": 1, \"refresh_token_lifetime_secs\": 1}, \"updated_at\": \"2026-08-26T00:00:00Z\", \"webauthn\": {\"webauthn_user_verification\": \"example\"}}";
+        string body = "{\"certificate\": {\"default_cert_validity_days\": 1, \"max_cert_validity_days\": 1}, \"created_at\": \"2026-08-26T00:00:00Z\", \"email\": {\"email_verification_grace_period_hours\": 1, \"email_verification_required\": true}, \"id\": \"11111111-1111-4111-8111-111111111111\", \"lockout\": {\"lockout_backoff_multiplier\": 1.0, \"lockout_duration_secs\": 1, \"max_failed_login_attempts\": 1, \"max_lockout_duration_secs\": 1}, \"mfa\": {\"mfa_challenge_lifetime_secs\": 1, \"mfa_enforced\": true}, \"notification\": {\"admin_notifications_enabled\": true}, \"oidc\": {\"sensitive_scopes_enabled\": true}, \"opaque\": {\"opaque_ksf\": \"example\", \"opaque_mode\": \"example\", \"opaque_suite\": \"example\"}, \"password\": {\"hibp_check_enabled\": true, \"min_length\": 1, \"password_history_count\": 1, \"require_digits\": true, \"require_lowercase\": true, \"require_symbols\": true, \"require_uppercase\": true}, \"privacy\": {\"deletion_grace_period_days\": 1}, \"scope\": \"Org\", \"scope_id\": \"11111111-1111-4111-8111-111111111111\", \"token\": {\"access_token_lifetime_secs\": 1, \"refresh_token_lifetime_secs\": 1}, \"updated_at\": \"2026-08-26T00:00:00Z\", \"webauthn\": {\"webauthn_user_verification\": \"example\"}}";
         Mount("GET", $"/api/v1/organizations/{OrgId}/settings", 200, body);
         var result = await Client.Management.Settings.GetOrgAsync();
         AssertDecodedEveryField(result, body);
@@ -1340,7 +1340,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Settings_SetOrg()
     {
-        string body = "{\"certificate\": {\"default_cert_validity_days\": 1, \"max_cert_validity_days\": 1}, \"created_at\": \"2026-08-26T00:00:00Z\", \"email\": {\"email_verification_grace_period_hours\": 1, \"email_verification_required\": true}, \"id\": \"11111111-1111-4111-8111-111111111111\", \"lockout\": {\"lockout_backoff_multiplier\": 1.0, \"lockout_duration_secs\": 1, \"max_failed_login_attempts\": 1, \"max_lockout_duration_secs\": 1}, \"mfa\": {\"mfa_challenge_lifetime_secs\": 1, \"mfa_enforced\": true}, \"notification\": {\"admin_notifications_enabled\": true}, \"opaque\": {\"opaque_ksf\": \"example\", \"opaque_mode\": \"example\", \"opaque_suite\": \"example\"}, \"password\": {\"hibp_check_enabled\": true, \"min_length\": 1, \"password_history_count\": 1, \"require_digits\": true, \"require_lowercase\": true, \"require_symbols\": true, \"require_uppercase\": true}, \"privacy\": {\"deletion_grace_period_days\": 1}, \"scope\": \"Org\", \"scope_id\": \"11111111-1111-4111-8111-111111111111\", \"token\": {\"access_token_lifetime_secs\": 1, \"refresh_token_lifetime_secs\": 1}, \"updated_at\": \"2026-08-26T00:00:00Z\", \"webauthn\": {\"webauthn_user_verification\": \"example\"}}";
+        string body = "{\"certificate\": {\"default_cert_validity_days\": 1, \"max_cert_validity_days\": 1}, \"created_at\": \"2026-08-26T00:00:00Z\", \"email\": {\"email_verification_grace_period_hours\": 1, \"email_verification_required\": true}, \"id\": \"11111111-1111-4111-8111-111111111111\", \"lockout\": {\"lockout_backoff_multiplier\": 1.0, \"lockout_duration_secs\": 1, \"max_failed_login_attempts\": 1, \"max_lockout_duration_secs\": 1}, \"mfa\": {\"mfa_challenge_lifetime_secs\": 1, \"mfa_enforced\": true}, \"notification\": {\"admin_notifications_enabled\": true}, \"oidc\": {\"sensitive_scopes_enabled\": true}, \"opaque\": {\"opaque_ksf\": \"example\", \"opaque_mode\": \"example\", \"opaque_suite\": \"example\"}, \"password\": {\"hibp_check_enabled\": true, \"min_length\": 1, \"password_history_count\": 1, \"require_digits\": true, \"require_lowercase\": true, \"require_symbols\": true, \"require_uppercase\": true}, \"privacy\": {\"deletion_grace_period_days\": 1}, \"scope\": \"Org\", \"scope_id\": \"11111111-1111-4111-8111-111111111111\", \"token\": {\"access_token_lifetime_secs\": 1, \"refresh_token_lifetime_secs\": 1}, \"updated_at\": \"2026-08-26T00:00:00Z\", \"webauthn\": {\"webauthn_user_verification\": \"example\"}}";
         Mount("PUT", $"/api/v1/organizations/{OrgId}/settings", 200, body);
         var result = await Client.Management.Settings.SetOrgAsync(body: new SetOrgSettings { AccessTokenLifetimeSecs = 1L, AdminNotificationsEnabled = true, DefaultCertValidityDays = 1, EmailVerificationGracePeriodHours = 1, EmailVerificationRequired = true, HibpCheckEnabled = true, LockoutBackoffMultiplier = 1.0, LockoutDurationSecs = 1L, MaxCertValidityDays = 1, MaxFailedLoginAttempts = 1, MaxLockoutDurationSecs = 1L, MfaChallengeLifetimeSecs = 1L, MfaEnforced = true, MinLength = 1, PasswordHistoryCount = 1, RefreshTokenLifetimeSecs = 1L, RequireDigits = true, RequireLowercase = true, RequireSymbols = true, RequireUppercase = true });
         AssertDecodedEveryField(result, body);
@@ -1350,7 +1350,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Settings_GetEffective()
     {
-        string body = "{\"certificate\": {\"default_cert_validity_days\": 1, \"max_cert_validity_days\": 1}, \"created_at\": \"2026-08-26T00:00:00Z\", \"email\": {\"email_verification_grace_period_hours\": 1, \"email_verification_required\": true}, \"id\": \"11111111-1111-4111-8111-111111111111\", \"lockout\": {\"lockout_backoff_multiplier\": 1.0, \"lockout_duration_secs\": 1, \"max_failed_login_attempts\": 1, \"max_lockout_duration_secs\": 1}, \"mfa\": {\"mfa_challenge_lifetime_secs\": 1, \"mfa_enforced\": true}, \"notification\": {\"admin_notifications_enabled\": true}, \"opaque\": {\"opaque_ksf\": \"example\", \"opaque_mode\": \"example\", \"opaque_suite\": \"example\"}, \"password\": {\"hibp_check_enabled\": true, \"min_length\": 1, \"password_history_count\": 1, \"require_digits\": true, \"require_lowercase\": true, \"require_symbols\": true, \"require_uppercase\": true}, \"privacy\": {\"deletion_grace_period_days\": 1}, \"scope\": \"Org\", \"scope_id\": \"11111111-1111-4111-8111-111111111111\", \"token\": {\"access_token_lifetime_secs\": 1, \"refresh_token_lifetime_secs\": 1}, \"updated_at\": \"2026-08-26T00:00:00Z\", \"webauthn\": {\"webauthn_user_verification\": \"example\"}}";
+        string body = "{\"certificate\": {\"default_cert_validity_days\": 1, \"max_cert_validity_days\": 1}, \"created_at\": \"2026-08-26T00:00:00Z\", \"email\": {\"email_verification_grace_period_hours\": 1, \"email_verification_required\": true}, \"id\": \"11111111-1111-4111-8111-111111111111\", \"lockout\": {\"lockout_backoff_multiplier\": 1.0, \"lockout_duration_secs\": 1, \"max_failed_login_attempts\": 1, \"max_lockout_duration_secs\": 1}, \"mfa\": {\"mfa_challenge_lifetime_secs\": 1, \"mfa_enforced\": true}, \"notification\": {\"admin_notifications_enabled\": true}, \"oidc\": {\"sensitive_scopes_enabled\": true}, \"opaque\": {\"opaque_ksf\": \"example\", \"opaque_mode\": \"example\", \"opaque_suite\": \"example\"}, \"password\": {\"hibp_check_enabled\": true, \"min_length\": 1, \"password_history_count\": 1, \"require_digits\": true, \"require_lowercase\": true, \"require_symbols\": true, \"require_uppercase\": true}, \"privacy\": {\"deletion_grace_period_days\": 1}, \"scope\": \"Org\", \"scope_id\": \"11111111-1111-4111-8111-111111111111\", \"token\": {\"access_token_lifetime_secs\": 1, \"refresh_token_lifetime_secs\": 1}, \"updated_at\": \"2026-08-26T00:00:00Z\", \"webauthn\": {\"webauthn_user_verification\": \"example\"}}";
         Mount("GET", $"/api/v1/settings", 200, body);
         var result = await Client.Management.Settings.GetEffectiveAsync();
         AssertDecodedEveryField(result, body);
@@ -1360,7 +1360,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Settings_SetEffective()
     {
-        string body = "{\"certificate\": {\"default_cert_validity_days\": 1, \"max_cert_validity_days\": 1}, \"created_at\": \"2026-08-26T00:00:00Z\", \"email\": {\"email_verification_grace_period_hours\": 1, \"email_verification_required\": true}, \"id\": \"11111111-1111-4111-8111-111111111111\", \"lockout\": {\"lockout_backoff_multiplier\": 1.0, \"lockout_duration_secs\": 1, \"max_failed_login_attempts\": 1, \"max_lockout_duration_secs\": 1}, \"mfa\": {\"mfa_challenge_lifetime_secs\": 1, \"mfa_enforced\": true}, \"notification\": {\"admin_notifications_enabled\": true}, \"opaque\": {\"opaque_ksf\": \"example\", \"opaque_mode\": \"example\", \"opaque_suite\": \"example\"}, \"password\": {\"hibp_check_enabled\": true, \"min_length\": 1, \"password_history_count\": 1, \"require_digits\": true, \"require_lowercase\": true, \"require_symbols\": true, \"require_uppercase\": true}, \"privacy\": {\"deletion_grace_period_days\": 1}, \"scope\": \"Org\", \"scope_id\": \"11111111-1111-4111-8111-111111111111\", \"token\": {\"access_token_lifetime_secs\": 1, \"refresh_token_lifetime_secs\": 1}, \"updated_at\": \"2026-08-26T00:00:00Z\", \"webauthn\": {\"webauthn_user_verification\": \"example\"}}";
+        string body = "{\"certificate\": {\"default_cert_validity_days\": 1, \"max_cert_validity_days\": 1}, \"created_at\": \"2026-08-26T00:00:00Z\", \"email\": {\"email_verification_grace_period_hours\": 1, \"email_verification_required\": true}, \"id\": \"11111111-1111-4111-8111-111111111111\", \"lockout\": {\"lockout_backoff_multiplier\": 1.0, \"lockout_duration_secs\": 1, \"max_failed_login_attempts\": 1, \"max_lockout_duration_secs\": 1}, \"mfa\": {\"mfa_challenge_lifetime_secs\": 1, \"mfa_enforced\": true}, \"notification\": {\"admin_notifications_enabled\": true}, \"oidc\": {\"sensitive_scopes_enabled\": true}, \"opaque\": {\"opaque_ksf\": \"example\", \"opaque_mode\": \"example\", \"opaque_suite\": \"example\"}, \"password\": {\"hibp_check_enabled\": true, \"min_length\": 1, \"password_history_count\": 1, \"require_digits\": true, \"require_lowercase\": true, \"require_symbols\": true, \"require_uppercase\": true}, \"privacy\": {\"deletion_grace_period_days\": 1}, \"scope\": \"Org\", \"scope_id\": \"11111111-1111-4111-8111-111111111111\", \"token\": {\"access_token_lifetime_secs\": 1, \"refresh_token_lifetime_secs\": 1}, \"updated_at\": \"2026-08-26T00:00:00Z\", \"webauthn\": {\"webauthn_user_verification\": \"example\"}}";
         Mount("PUT", $"/api/v1/settings", 200, body);
         var result = await Client.Management.Settings.SetEffectiveAsync(body: new TenantSettingsOverride {  });
         AssertDecodedEveryField(result, body);
@@ -1581,6 +1581,35 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
         await Client.Management.Privacy.CancelDeleteAsync(token: null);
     }
 
+    /// <summary>Exercises privacy.list_consents.</summary>
+    [Fact]
+    public async Task Privacy_ListConsents()
+    {
+        string body = "[{\"accepted_at\": \"2026-08-26T00:00:00Z\", \"consent_type\": \"example\", \"version\": \"example\", \"withdrawable\": true}]";
+        Mount("GET", $"/api/v1/account/consents", 200, body);
+        var result = await Client.Management.Privacy.ListConsentsAsync();
+        string item = JsonDocument.Parse(body).RootElement[0].GetRawText();
+        AssertDecodedEveryField(result[0], item);
+    }
+
+    /// <summary>Exercises privacy.grant_scope_consent.</summary>
+    [Fact]
+    public async Task Privacy_GrantScopeConsent()
+    {
+        string body = "";
+        Mount("POST", $"/api/v1/account/consents/oidc-scopes", 200, body);
+        await Client.Management.Privacy.GrantScopeConsentAsync(body: new GrantScopeConsent { ClientId = "example", Scopes = Array.Empty<string>() });
+    }
+
+    /// <summary>Exercises privacy.withdraw_scope_consent.</summary>
+    [Fact]
+    public async Task Privacy_WithdrawScopeConsent()
+    {
+        string body = "";
+        Mount("DELETE", $"/api/v1/account/consents/oidc-scopes/{ExampleId}", 200, body);
+        await Client.Management.Privacy.WithdrawScopeConsentAsync(clientId: ExampleId);
+    }
+
     /// <summary>Exercises platform.health.</summary>
     [Fact]
     public async Task Platform_Health()
@@ -1708,8 +1737,8 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Settings_InOrg_ChangesThePath()
     {
-        var scoped = Mount("GET", $"/api/v1/organizations/{OverrideId}/settings", 200, "{\"certificate\": {\"default_cert_validity_days\": 1, \"max_cert_validity_days\": 1}, \"created_at\": \"2026-08-26T00:00:00Z\", \"email\": {\"email_verification_grace_period_hours\": 1, \"email_verification_required\": true}, \"id\": \"11111111-1111-4111-8111-111111111111\", \"lockout\": {\"lockout_backoff_multiplier\": 1.0, \"lockout_duration_secs\": 1, \"max_failed_login_attempts\": 1, \"max_lockout_duration_secs\": 1}, \"mfa\": {\"mfa_challenge_lifetime_secs\": 1, \"mfa_enforced\": true}, \"notification\": {\"admin_notifications_enabled\": true}, \"opaque\": {\"opaque_ksf\": \"example\", \"opaque_mode\": \"example\", \"opaque_suite\": \"example\"}, \"password\": {\"hibp_check_enabled\": true, \"min_length\": 1, \"password_history_count\": 1, \"require_digits\": true, \"require_lowercase\": true, \"require_symbols\": true, \"require_uppercase\": true}, \"privacy\": {\"deletion_grace_period_days\": 1}, \"scope\": \"Org\", \"scope_id\": \"11111111-1111-4111-8111-111111111111\", \"token\": {\"access_token_lifetime_secs\": 1, \"refresh_token_lifetime_secs\": 1}, \"updated_at\": \"2026-08-26T00:00:00Z\", \"webauthn\": {\"webauthn_user_verification\": \"example\"}}");
-        var inherited = Mount("GET", $"/api/v1/organizations/{OrgId}/settings", 200, "{\"certificate\": {\"default_cert_validity_days\": 1, \"max_cert_validity_days\": 1}, \"created_at\": \"2026-08-26T00:00:00Z\", \"email\": {\"email_verification_grace_period_hours\": 1, \"email_verification_required\": true}, \"id\": \"11111111-1111-4111-8111-111111111111\", \"lockout\": {\"lockout_backoff_multiplier\": 1.0, \"lockout_duration_secs\": 1, \"max_failed_login_attempts\": 1, \"max_lockout_duration_secs\": 1}, \"mfa\": {\"mfa_challenge_lifetime_secs\": 1, \"mfa_enforced\": true}, \"notification\": {\"admin_notifications_enabled\": true}, \"opaque\": {\"opaque_ksf\": \"example\", \"opaque_mode\": \"example\", \"opaque_suite\": \"example\"}, \"password\": {\"hibp_check_enabled\": true, \"min_length\": 1, \"password_history_count\": 1, \"require_digits\": true, \"require_lowercase\": true, \"require_symbols\": true, \"require_uppercase\": true}, \"privacy\": {\"deletion_grace_period_days\": 1}, \"scope\": \"Org\", \"scope_id\": \"11111111-1111-4111-8111-111111111111\", \"token\": {\"access_token_lifetime_secs\": 1, \"refresh_token_lifetime_secs\": 1}, \"updated_at\": \"2026-08-26T00:00:00Z\", \"webauthn\": {\"webauthn_user_verification\": \"example\"}}");
+        var scoped = Mount("GET", $"/api/v1/organizations/{OverrideId}/settings", 200, "{\"certificate\": {\"default_cert_validity_days\": 1, \"max_cert_validity_days\": 1}, \"created_at\": \"2026-08-26T00:00:00Z\", \"email\": {\"email_verification_grace_period_hours\": 1, \"email_verification_required\": true}, \"id\": \"11111111-1111-4111-8111-111111111111\", \"lockout\": {\"lockout_backoff_multiplier\": 1.0, \"lockout_duration_secs\": 1, \"max_failed_login_attempts\": 1, \"max_lockout_duration_secs\": 1}, \"mfa\": {\"mfa_challenge_lifetime_secs\": 1, \"mfa_enforced\": true}, \"notification\": {\"admin_notifications_enabled\": true}, \"oidc\": {\"sensitive_scopes_enabled\": true}, \"opaque\": {\"opaque_ksf\": \"example\", \"opaque_mode\": \"example\", \"opaque_suite\": \"example\"}, \"password\": {\"hibp_check_enabled\": true, \"min_length\": 1, \"password_history_count\": 1, \"require_digits\": true, \"require_lowercase\": true, \"require_symbols\": true, \"require_uppercase\": true}, \"privacy\": {\"deletion_grace_period_days\": 1}, \"scope\": \"Org\", \"scope_id\": \"11111111-1111-4111-8111-111111111111\", \"token\": {\"access_token_lifetime_secs\": 1, \"refresh_token_lifetime_secs\": 1}, \"updated_at\": \"2026-08-26T00:00:00Z\", \"webauthn\": {\"webauthn_user_verification\": \"example\"}}");
+        var inherited = Mount("GET", $"/api/v1/organizations/{OrgId}/settings", 200, "{\"certificate\": {\"default_cert_validity_days\": 1, \"max_cert_validity_days\": 1}, \"created_at\": \"2026-08-26T00:00:00Z\", \"email\": {\"email_verification_grace_period_hours\": 1, \"email_verification_required\": true}, \"id\": \"11111111-1111-4111-8111-111111111111\", \"lockout\": {\"lockout_backoff_multiplier\": 1.0, \"lockout_duration_secs\": 1, \"max_failed_login_attempts\": 1, \"max_lockout_duration_secs\": 1}, \"mfa\": {\"mfa_challenge_lifetime_secs\": 1, \"mfa_enforced\": true}, \"notification\": {\"admin_notifications_enabled\": true}, \"oidc\": {\"sensitive_scopes_enabled\": true}, \"opaque\": {\"opaque_ksf\": \"example\", \"opaque_mode\": \"example\", \"opaque_suite\": \"example\"}, \"password\": {\"hibp_check_enabled\": true, \"min_length\": 1, \"password_history_count\": 1, \"require_digits\": true, \"require_lowercase\": true, \"require_symbols\": true, \"require_uppercase\": true}, \"privacy\": {\"deletion_grace_period_days\": 1}, \"scope\": \"Org\", \"scope_id\": \"11111111-1111-4111-8111-111111111111\", \"token\": {\"access_token_lifetime_secs\": 1, \"refresh_token_lifetime_secs\": 1}, \"updated_at\": \"2026-08-26T00:00:00Z\", \"webauthn\": {\"webauthn_user_verification\": \"example\"}}");
         var handle = Client.Management.Settings;
         await handle.InOrg(OverrideId).GetOrgAsync();
         await handle.GetOrgAsync();
@@ -1838,8 +1867,11 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "platform.ready",
             "privacy.cancel_delete",
             "privacy.download_export",
+            "privacy.grant_scope_consent",
+            "privacy.list_consents",
             "privacy.request_delete",
             "privacy.request_export",
+            "privacy.withdraw_scope_consent",
             "reactors.create",
             "reactors.delete",
             "reactors.get",
@@ -1919,7 +1951,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "webhooks.list",
             "webhooks.update",
         };
-        Assert.Equal(155, exercised.Length);
+        Assert.Equal(158, exercised.Length);
         Assert.Equal(ExpectedSurface(), exercised);
     }
 }

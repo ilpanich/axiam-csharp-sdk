@@ -108,6 +108,9 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new TenantSettingsOverride { DefaultCertValidityDays = 1 },
             "default_cert_validity_days");
         AssertKeys(
+            new TenantSettingsOverride { DefaultLocale = "example" },
+            "default_locale");
+        AssertKeys(
             new TenantSettingsOverride { DeletionGracePeriodDays = 1 },
             "deletion_grace_period_days");
         AssertKeys(
@@ -171,6 +174,9 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new TenantSettingsOverride { RequireUppercase = true },
             "require_uppercase");
         AssertKeys(
+            new TenantSettingsOverride { SensitiveScopesEnabled = true },
+            "sensitive_scopes_enabled");
+        AssertKeys(
             new TenantSettingsOverride { WebauthnUserVerification = "example" },
             "webauthn_user_verification");
         AssertKeys(
@@ -179,6 +185,7 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 AccessTokenLifetimeSecs = 1L,
                 AdminNotificationsEnabled = true,
                 DefaultCertValidityDays = 1,
+                DefaultLocale = "example",
                 DeletionGracePeriodDays = 1,
                 EmailVerificationGracePeriodHours = 1,
                 EmailVerificationRequired = true,
@@ -200,16 +207,18 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 RequireLowercase = true,
                 RequireSymbols = true,
                 RequireUppercase = true,
+                SensitiveScopesEnabled = true,
                 WebauthnUserVerification = "example",
             },
             "access_token_lifetime_secs", "admin_notifications_enabled", "default_cert_validity_days",
-            "deletion_grace_period_days", "email_verification_grace_period_hours",
+            "default_locale", "deletion_grace_period_days", "email_verification_grace_period_hours",
             "email_verification_required", "hibp_check_enabled", "lockout_backoff_multiplier",
             "lockout_duration_secs", "max_cert_validity_days", "max_failed_login_attempts",
             "max_lockout_duration_secs", "mfa_challenge_lifetime_secs", "mfa_enforced",
             "min_length", "opaque_ksf", "opaque_mode", "opaque_suite", "password_history_count",
             "refresh_token_lifetime_secs", "require_digits", "require_lowercase",
-            "require_symbols", "require_uppercase", "webauthn_user_verification");
+            "require_symbols", "require_uppercase", "sensitive_scopes_enabled",
+            "webauthn_user_verification");
         AssertKeys(new TenantSettingsOverride());
     }
 
@@ -419,8 +428,14 @@ public sealed class ManagementSparseBodiesGeneratedTests
     public void UpdateOAuth2ClientRequestSendsOnlyWhatWasSet()
     {
         AssertKeys(
+            new UpdateOAuth2ClientRequest { AuthnRequestParams = AuthnRequestParamsMode.Ignore },
+            "authn_request_params");
+        AssertKeys(
             new UpdateOAuth2ClientRequest { BackchannelLogoutUri = "example" },
             "backchannel_logout_uri");
+        AssertKeys(
+            new UpdateOAuth2ClientRequest { BrowserSso = true },
+            "browser_sso");
         AssertKeys(
             new UpdateOAuth2ClientRequest { DpopBoundAccessTokens = true },
             "dpop_bound_access_tokens");
@@ -475,7 +490,9 @@ public sealed class ManagementSparseBodiesGeneratedTests
         AssertKeys(
             new UpdateOAuth2ClientRequest
             {
+                AuthnRequestParams = AuthnRequestParamsMode.Ignore,
                 BackchannelLogoutUri = "example",
+                BrowserSso = true,
                 DpopBoundAccessTokens = true,
                 DpopRequireNonce = true,
                 GrantTypes = Array.Empty<string>(),
@@ -494,9 +511,10 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 TlsClientCertificateBoundAccessTokens = true,
                 TokenEndpointAuthMethod = ClientAuthMethod.ClientSecretPost,
             },
-            "backchannel_logout_uri", "dpop_bound_access_tokens", "dpop_require_nonce",
-            "grant_types", "jwks", "jwks_uri", "name", "post_logout_redirect_uris",
-            "profile", "redirect_uris", "require_par", "scopes", "self_signed_tls_client_auth_thumbprints",
+            "authn_request_params", "backchannel_logout_uri", "browser_sso",
+            "dpop_bound_access_tokens", "dpop_require_nonce", "grant_types",
+            "jwks", "jwks_uri", "name", "post_logout_redirect_uris", "profile",
+            "redirect_uris", "require_par", "scopes", "self_signed_tls_client_auth_thumbprints",
             "tls_client_auth_san_dns", "tls_client_auth_san_uri", "tls_client_auth_subject_dn",
             "tls_client_certificate_bound_access_tokens", "token_endpoint_auth_method");
         AssertKeys(new UpdateOAuth2ClientRequest());

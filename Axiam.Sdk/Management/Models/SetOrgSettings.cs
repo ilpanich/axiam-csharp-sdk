@@ -43,6 +43,12 @@ public sealed record SetOrgSettings
     public required int DefaultCertValidityDays { get; init; }
 
     /// <summary>
+    /// the server's default_locale field
+    /// </summary>
+    [JsonPropertyName("default_locale")]
+    public string? DefaultLocale { get; init; }
+
+    /// <summary>
     /// the server's deletion_grace_period_days field
     /// </summary>
     [JsonPropertyName("deletion_grace_period_days")]
@@ -167,6 +173,12 @@ public sealed record SetOrgSettings
     /// </summary>
     [JsonPropertyName("require_uppercase")]
     public required bool RequireUppercase { get; init; }
+
+    /// <summary>
+    /// the server's sensitive_scopes_enabled field
+    /// </summary>
+    [JsonPropertyName("sensitive_scopes_enabled")]
+    public bool? SensitiveScopesEnabled { get; init; }
 
     /// <summary>
     /// the server's webauthn_user_verification field

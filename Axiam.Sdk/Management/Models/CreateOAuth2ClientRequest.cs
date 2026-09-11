@@ -17,11 +17,34 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record CreateOAuth2ClientRequest
 {
     /// <summary>
+    /// X7.1 — whether this client's authorization requests may carry the OpenID Connect
+    /// authentication-request parameters (<c>prompt</c>, <c>max_age</c>, <c>acr_values</c>,
+    /// <c>claims</c>, <c>id_token_hint</c>, <c>login_hint</c>, <c>display</c>,
+    /// <c>ui_locales</c>, <c>claims_locales</c>). <c>"ignore"</c> (the default) is what every
+    /// AXIAM client has always done: they are dropped and reach no decision. <c>"honour"</c>
+    /// opts in, and is **refused on a <c>fapi2</c> client** at both this gate and the
+    /// authorization endpoint — the two are different answers to the same question about what a
+    /// request from this client means.
+    /// </summary>
+    [JsonPropertyName("authn_request_params")]
+    public AuthnRequestParamsMode? AuthnRequestParams { get; init; }
+
+    /// <summary>
     /// B5 — where OIDC back-channel logout tokens are delivered. Omit for a client that does
     /// not participate.
     /// </summary>
     [JsonPropertyName("backchannel_logout_uri")]
     public string? BackchannelLogoutUri { get; init; }
+
+    /// <summary>
+    /// X7.3 — whether an unauthenticated authorization request from this client may be answered
+    /// with a redirect to the login page rather than the <c>401</c> AXIAM answers today.
+    /// Accepted and stored, but **nothing reads it yet**: the login hop it gates is a later
+    /// wave. Unlike <c>authn_request_params</c> it is permitted on a <c>fapi2</c> client,
+    /// because it relaxes nothing — it decides only how an anonymous browser is answered.
+    /// </summary>
+    [JsonPropertyName("browser_sso")]
+    public bool? BrowserSso { get; init; }
 
     /// <summary>
     /// RFC 9449 §5.2 — issue DPoP-bound (sender-constrained) access tokens to this client.
