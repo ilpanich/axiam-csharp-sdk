@@ -83,11 +83,17 @@ static async Task PushAndRedirectAsync(AxiamClient client, OidcConfiguration con
     // is a fresh push, which costs one round trip and cannot double-consume anything
     // (§26.2 rule 4).
 
-    // The URL carries EXACTLY client_id and request_uri. The server refuses a request that
-    // mixes a request_uri with inline authorization parameters rather than merging them —
-    // an attacker supplies the inline value they want and lets the pushed copy satisfy
-    // whichever check reads the other one. Re-adding scope "for compatibility" restores
-    // the attack (§26.2 rule 2).
+    // The URL carries client_id and request_uri, and no inline AUTHORIZATION parameter.
+    // The server refuses a request that mixes a request_uri with one rather than merging
+    // them — an attacker supplies the inline value they want and lets the pushed copy
+    // satisfy whichever check reads the other one. Re-adding scope "for compatibility"
+    // restores the attack (§26.2 rule 2).
+    //
+    // tenant_id is the one thing carried through from the discovered
+    // authorization_endpoint, and it is not an authorization parameter: it is how the
+    // endpoint is addressed. Contract 1.42's server publishes a tenant-scoped
+    // authorization_endpoint whenever discovery named a tenant, and its anonymous lane
+    // answers 401 without it. A bare authorization_endpoint still yields two parameters.
     Console.WriteLine($"redirect the browser to: {pushed.Url}");
     Console.WriteLine($"the handle expires in {pushed.ExpiresIn}s");
 
