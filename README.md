@@ -27,7 +27,7 @@ verifier, T-145, the §20 UMA 2.0 Protection API and ticket grant, contract 1.10
 runtime, contract 1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, the §24 WebAuthn
 relying-party layer, the §25 account-lifecycle operations and §26 Pushed Authorization Requests,
 contract 1.28, §23.4 rule 7's `mode`-driven password-login fallback, contract 1.29, and the §27
-Management API — all 147 operations across 24 namespaces with the §27.6 declarative layer).
+Management API — all 158 operations across 24 namespaces with the §27.6 declarative layer).
 
 §12.7, §14, §15, §20, §22, §23, §24, §25, §26 and §27 are named rather than folded into the range
 because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
@@ -308,6 +308,25 @@ Notes:
   reported so an admin surface can show that a provider is not the tenant's to edit;
   nothing here computes it.
 - **S256-only PKCE.** `"plain"` is never emitted, never accepted, and not configurable.
+- **A discovery-advertised endpoint's own `tenant_id` is replaced, not doubled** (§12.3
+  rule 4, contract 1.42). AXIAM now publishes `token_endpoint`, `revocation_endpoint`,
+  `introspection_endpoint`, `device_authorization_endpoint`,
+  `pushed_authorization_request_endpoint` and `authorization_endpoint` already carrying
+  `?tenant_id=` whenever the discovery request named a tenant, or the deployment sets
+  `oauth2_default_tenant_id`. The SDK drops the published copy and sets the resolved one,
+  so exactly one reaches the wire; the resolved value wins, because it is the tenant the
+  caller or the current session actually authenticated against. **Every other query
+  parameter the endpoint carried is preserved** — RFC 6749 §3.1/§3.2 require a client to
+  retain an endpoint's own query component. `userinfo_endpoint` and `jwks_uri` are never
+  tenant-scoped by the server and are never rewritten here.
+- **`OidcConfiguration` models a curated subset of the metadata document,** and the
+  members it does model are nullable where an OP may legitimately omit them.
+  `CodeChallengeMethodsSupported` and `TokenEndpointAuthSigningAlgValuesSupported`
+  (contract 1.42) are nullable even though the server marks them required: RFC 8414
+  defines no default for the first, so its **absence does not mean `S256`**
+  (CONTRACT.md §21.5). Unknown members — `acr_values_supported`,
+  `claims_parameter_supported`, `request_parameter_supported`,
+  `dpop_signing_alg_values_supported` — are ignored on parse, never rejected.
 - **`client_id` is client configuration** (`AxiamClientOptions.OidcClientId`), never a
   per-call argument — required before any §12 operation other than `OidcDiscoverAsync`.
 - **`oidc_refresh` is distinct from `RefreshAsync`.** The §1 cookie/opaque-token session
@@ -1405,17 +1424,30 @@ PushedAuthorizationRequest pushed = await client.OidcParAsync(new OidcParParams
     Request = begun, RedirectUri = redirectUri, Configuration = config, Scope = "openid profile",
 });
 
-return Results.Redirect(pushed.Url);   // exactly ?client_id=…&request_uri=…
+return Results.Redirect(pushed.Url);   // ?client_id=…&request_uri=…
 ```
 
-Three things worth knowing:
+Four things worth knowing:
 
 - **The server answers `201`,** not `200` — RFC 9126 §2.2 specifies *Created*. A success predicate
   written `== 200` treats every successful push as a failure.
-- **The redirect URL carries exactly two parameters.** The server refuses a request that mixes a
-  `request_uri` with inline authorization parameters rather than merging them; merging is where
-  parameter confusion lives (§26.2 rule 2). Any query the discovered `AuthorizationEndpoint` already
-  carried is dropped.
+- **The redirect URL carries `client_id` and `request_uri`, and nothing else that is an
+  authorization parameter.** The server refuses a request that mixes a `request_uri` with inline
+  authorization parameters rather than merging them; merging is where parameter confusion lives
+  (§26.2 rule 2). Any query the discovered `AuthorizationEndpoint` already carried is dropped —
+  **except `tenant_id`**, which is not an authorization parameter but how the endpoint is
+  addressed. Contract 1.42's server publishes a tenant-scoped `authorization_endpoint` whenever
+  discovery named a tenant, and its anonymous lane answers `401` without it: a browser carrying no
+  AXIAM session cannot otherwise be told which tenant's client to look up. A bare
+  `authorization_endpoint` still yields a two-parameter redirect — the SDK invents no parameter the
+  OP did not publish.
+- **`DpopJkt` is yours to compute.** `OidcParParams.DpopJkt` (RFC 9449 §10.1, contract 1.42) binds
+  the authorization request to the DPoP key you will present at the token endpoint, and is sent only
+  when set. This SDK implements the resource-server half of DPoP (`DpopVerifier`) and ships **no
+  proof generator**, so it holds no key to thumbprint — pass RFC 7638 over the public JWK of the key
+  you will sign your proofs with. There is deliberately no `request_uri` on `OidcParParams`: RFC 9126
+  §2.1 makes it the one authorization parameter a client MUST NOT push, and the server models it so
+  it can refuse it.
 - **`OidcBegin` still owns `State`, `Nonce` and the PKCE pair.** There is no second generator (§26.2
   rule 1), and `PushedAuthorizationRequest` carries all three straight through to the exchange.
 
@@ -1432,7 +1464,7 @@ Worked end to end in [`examples/ParLogin`](examples/ParLogin).
 
 ## Management API (CONTRACT.md §27)
 
-The administrative surface: 147 operations across 24 namespaces — users, groups, roles,
+The administrative surface: 158 operations across 24 namespaces — users, groups, roles,
 permissions, resources, scopes, service accounts, certificates, CA certificates, PGP keys, webhooks,
 OAuth2 clients, federation, notification rules, e-mail config, settings, SCIM tokens, reactors,
 WebAuthn policy, audit, privacy, organizations, tenants and platform.

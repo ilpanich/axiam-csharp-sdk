@@ -78,6 +78,11 @@ public static class OidcTestKit
             end_session_endpoint = $"{origin}/oauth2/end_session",
             backchannel_logout_supported = true,
             backchannel_logout_session_supported = true,
+            // Contract 1.42 — RFC 8414/RFC 7636. AXIAM publishes both; the trimmed
+            // document above deliberately omits them, because RFC 8414 defines no default
+            // for code_challenge_methods_supported and an OP is free to send neither.
+            code_challenge_methods_supported = new[] { "S256" },
+            token_endpoint_auth_signing_alg_values_supported = new[] { "EdDSA" },
         };
         return JsonSerializer.Serialize(document);
     }

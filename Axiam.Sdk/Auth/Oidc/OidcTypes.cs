@@ -73,6 +73,24 @@ public sealed record MtlsEndpointAliases(
 /// rule 3). It may legitimately differ from the client's base URL when AXIAM runs behind a
 /// proxy, so this SDK never rejects a document on an issuer/base-URL mismatch (&#167;12.3
 /// rule 6). Likewise <see cref="JwksUri"/> is read from here rather than hardcoded.
+/// <para>
+/// <see cref="CodeChallengeMethodsSupported"/> and
+/// <see cref="TokenEndpointAuthSigningAlgValuesSupported"/> (contract 1.42) are modelled
+/// <b>nullable</b> even though <c>openapi.json</c> marks them required, and that is
+/// deliberate: CONTRACT.md &#167;21.5 records that RFC 8414 defines no default for the
+/// first, <i>so its absence does not mean <c>S256</c></i>. This record must still parse a
+/// document from a non-AXIAM OP, and modelling either as required would reject documents
+/// this SDK accepts today. The same reasoning is why
+/// <see cref="DeviceAuthorizationEndpoint"/>, <see cref="EndSessionEndpoint"/> and
+/// <see cref="MtlsEndpointAliases"/> are nullable next to them.
+/// </para>
+/// <para>
+/// This record deliberately models a <i>curated subset</i> of the metadata document, not
+/// all of it. <c>acr_values_supported</c>, <c>claims_parameter_supported</c>,
+/// <c>request_parameter_supported</c> and <c>dpop_signing_alg_values_supported</c> are
+/// among the members AXIAM publishes and this SDK does not read; unknown members are
+/// ignored on parse rather than rejected.
+/// </para>
 /// </remarks>
 public sealed record OidcConfiguration(
     [property: JsonPropertyName("issuer")] string Issuer,
@@ -94,7 +112,9 @@ public sealed record OidcConfiguration(
     [property: JsonPropertyName("end_session_endpoint")] string? EndSessionEndpoint = null,
     [property: JsonPropertyName("backchannel_logout_supported")] bool BackchannelLogoutSupported = false,
     [property: JsonPropertyName("backchannel_logout_session_supported")] bool BackchannelLogoutSessionSupported = false,
-    [property: JsonPropertyName("mtls_endpoint_aliases")] MtlsEndpointAliases? MtlsEndpointAliases = null);
+    [property: JsonPropertyName("mtls_endpoint_aliases")] MtlsEndpointAliases? MtlsEndpointAliases = null,
+    [property: JsonPropertyName("code_challenge_methods_supported")] IReadOnlyList<string>? CodeChallengeMethodsSupported = null,
+    [property: JsonPropertyName("token_endpoint_auth_signing_alg_values_supported")] IReadOnlyList<string>? TokenEndpointAuthSigningAlgValuesSupported = null);
 
 /// <summary>
 /// The result of <see cref="AxiamClient.OidcBegin"/> — everything the caller needs to start
@@ -910,6 +930,23 @@ public sealed class OidcParParams
 
     /// <summary>A tenant override for the <c>?tenant_id=</c> query parameter.</summary>
     public Guid? TenantId { get; init; }
+
+    /// <summary>
+    /// RFC 9449 &#167;10.1 <c>dpop_jkt</c> — the JWK SHA-256 thumbprint of the key the
+    /// client will prove possession of at the token endpoint, bound to the authorization
+    /// request at push time (contract 1.42). Omitted from the form entirely when
+    /// <c>null</c>.
+    /// </summary>
+    /// <remarks>
+    /// <b>Caller-supplied, and necessarily so.</b> This SDK implements the resource-server
+    /// half of DPoP (<see cref="Axiam.Sdk.Auth.DpopVerifier"/>) and ships no proof
+    /// generator, so it holds no DPoP key and cannot compute this value. An application
+    /// that mints its own proofs computes the thumbprint from the same key it will sign
+    /// them with — RFC 7638 over the public JWK — and passes it here; supplying a
+    /// thumbprint for a key you will not present at the token endpoint turns a successful
+    /// push into a failed exchange.
+    /// </remarks>
+    public string? DpopJkt { get; init; }
 }
 
 /// <summary>
@@ -926,10 +963,13 @@ public sealed class OidcParParams
 /// </para>
 /// </remarks>
 /// <param name="Url">
-/// Where to redirect the user agent. Carries <b>exactly</b> <c>client_id</c> and
-/// <c>request_uri</c> — the server refuses a request that mixes a <c>request_uri</c> with
-/// inline authorization parameters rather than merging them, because merging is where
-/// parameter confusion lives (&#167;26.2 rule 2).
+/// Where to redirect the user agent. Carries <c>client_id</c> and <c>request_uri</c>, and
+/// <c>tenant_id</c> only when the discovered <c>authorization_endpoint</c> was itself
+/// tenant-scoped — nothing else. The server refuses a request that mixes a
+/// <c>request_uri</c> with inline <i>authorization</i> parameters rather than merging them,
+/// because merging is where parameter confusion lives (&#167;26.2 rule 2); <c>tenant_id</c>
+/// is not one of those — it is how the endpoint is addressed, and the anonymous lane
+/// answers <c>401</c> without it.
 /// </param>
 /// <param name="RequestUri">
 /// The opaque, single-use handle. <see cref="Sensitive{T}"/> per &#167;26.5: between the

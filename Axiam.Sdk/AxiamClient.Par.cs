@@ -78,6 +78,22 @@ public sealed partial class AxiamClient
         };
         AppendOidcClientSecretIfConfigured(form);
 
+        // `request_uri` is deliberately NOT on this surface, though the server's
+        // PushedAuthorizationRequest schema models it. RFC 9126 §2.1 makes it the one
+        // authorization parameter a client MUST NOT push; the server models it so it can
+        // REFUSE it. A client that can send it is a client that can build the
+        // chained-request attack that refusal exists to stop.
+
+        // RFC 9449 §10.1 — bind the authorization request to the DPoP key the client will
+        // present at the token endpoint. Caller-supplied: Auth/DpopVerifier is the
+        // resource-server half of §21.7.2 and this SDK ships no proof generator, so it
+        // holds no key to thumbprint. Sent only when set — §12.1 forbids sending an empty
+        // value for an absent optional field.
+        if (@params.DpopJkt is { Length: > 0 } dpopJkt)
+        {
+            form["dpop_jkt"] = dpopJkt;
+        }
+
         Guid tenantId = ResolveOidcTenantId(@params.TenantId);
         PushedAuthorizationResponseWire wire;
 
@@ -103,12 +119,23 @@ public sealed partial class AxiamClient
                 "pushed authorization response carried no request_uri");
         }
 
-        // §26.2 rule 2: exactly two query parameters. The server REFUSES a request carrying
-        // both a request_uri and any inline authorization parameter rather than merging
-        // them: an attacker supplies the inline value they want and lets the pushed copy
-        // satisfy whichever check reads the other one. Re-adding them "for compatibility"
-        // restores the attack — which is why any query the discovered endpoint already
-        // carried is dropped here rather than preserved.
+        // §26.2 rule 2: no inline AUTHORIZATION parameter travels beside the request_uri.
+        // The server REFUSES a request carrying both rather than merging them: an attacker
+        // supplies the inline value they want and lets the pushed copy satisfy whichever
+        // check reads the other one. Re-adding them "for compatibility" restores the
+        // attack — which is why any query the discovered endpoint already carried is
+        // dropped here rather than preserved.
+        //
+        // `tenant_id` is the one exception, and it is not an exception to the rule: it is
+        // not an authorization-request parameter at all. The server's refusal is computed
+        // over the nine OIDC authentication-request parameters (prompt, max_age,
+        // acr_values, claims, id_token_hint, login_hint, display, ui_locales,
+        // claims_locales) and `tenant_id` is not among them. It is how the endpoint is
+        // ADDRESSED: a discovery request that named a tenant — or a deployment with
+        // `oauth2_default_tenant_id` set — gets `authorization_endpoint` back already
+        // carrying it, and the authorization endpoint's anonymous lane needs it to find
+        // the client at all. Dropping it turns "a browser with no AXIAM session follows
+        // this URL" into a 401.
         if (!Uri.TryCreate(configuration.AuthorizationEndpoint, UriKind.Absolute, out Uri? authorizationEndpoint))
         {
             throw NetworkError.FromException(
@@ -119,6 +146,15 @@ public sealed partial class AxiamClient
         string url = $"{authorizationEndpoint.GetLeftPart(UriPartial.Path)}" +
                      $"?{EncodeQueryParam("client_id", clientId)}" +
                      $"&{EncodeQueryParam("request_uri", wire.RequestUri)}";
+
+        // Presence comes from the OP — a parameter it did not publish is one this SDK does
+        // not invent. The VALUE is the tenant the push was actually made under, which is
+        // where the request_uri now lives; naming a different one here would hand the
+        // browser a handle the authorization endpoint cannot resolve.
+        if (EndpointPublishesTenantId(configuration.AuthorizationEndpoint))
+        {
+            url += $"&{EncodeQueryParam("tenant_id", tenantId.ToString())}";
+        }
 
         return new PushedAuthorizationRequest(
             url,

@@ -7,7 +7,74 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **A tenant-scoped discovery endpoint no longer gets a second `tenant_id`
+  (SDK contract 1.42).** Contract 1.42's server publishes
+  `token_endpoint`, `revocation_endpoint`, `introspection_endpoint`,
+  `device_authorization_endpoint`, `pushed_authorization_request_endpoint` and
+  `authorization_endpoint` already carrying `?tenant_id=<uuid>` whenever the
+  discovery request named a tenant, or the deployment sets
+  `oauth2_default_tenant_id`. This SDK appended its own copy unconditionally,
+  producing `?tenant_id=A&tenant_id=B` — one parameter with two values, settled
+  by whichever the server's deserialiser happens to read first.
+
+  It now **replaces**: any `tenant_id` the endpoint already carries is dropped
+  and the resolved one set, so exactly one reaches the wire. The resolved value
+  wins on a disagreement — it is the tenant the caller, or the current session's
+  access token, actually authenticated against. **Every other query parameter
+  the endpoint carried survives**; RFC 6749 §3.1/§3.2 require a client to retain
+  an endpoint's own query component, and dropping it was never the fix.
+
+- **`OidcParAsync`'s redirect URL keeps a tenant-scoped
+  `authorization_endpoint`'s `tenant_id`.** §26.2 rule 2 kept that URL to
+  `client_id` + `request_uri` by clearing the endpoint's query wholesale, which
+  as of contract 1.42 takes the server's own `tenant_id` with it — and the
+  authorization endpoint's anonymous lane answers `401` without it, because a
+  browser carrying no AXIAM session cannot otherwise be told which tenant's
+  client to look up. `tenant_id` is not one of the nine OIDC
+  authentication-request parameters the server's "no inline parameters beside a
+  `request_uri`" refusal is computed over, so carrying it is not the merge rule 2
+  forbids. Presence still comes from the OP — a bare `authorization_endpoint`
+  still yields a two-parameter redirect — and the value sent is the tenant the
+  push was made under, which is where the `request_uri` lives.
+
 ### Added
+
+- **RFC 9449 §10.1 `dpop_jkt` on the PAR surface (SDK contract 1.42).**
+  `OidcParParams` gains an optional `DpopJkt`, emitted in the
+  `POST /oauth2/par` form only when set. **Caller-supplied**: this SDK
+  implements the resource-server half of DPoP (`DpopVerifier`) and ships no
+  proof generator, so it holds no key to thumbprint — an application that mints
+  its own proofs computes RFC 7638 over the public JWK of the key it will sign
+  them with and passes it here.
+
+  `request_uri` was deliberately **not** added alongside it, though contract
+  1.42 adds it to the server's `PushedAuthorizationRequest` schema. RFC 9126
+  §2.1 makes it the one authorization parameter a client MUST NOT push; upstream
+  models it so the server can *refuse* it. A client that can send it is a client
+  that can build the chained-request attack that refusal exists to stop. The
+  other nine new PAR members (`acr_values`, `claims`, `claims_locales`,
+  `display`, `id_token_hint`, `login_hint`, `max_age`, `prompt`, `ui_locales`)
+  are contract 1.41 additive optional surface and are out of scope for a
+  re-sync.
+
+- **Two `OidcConfiguration` members (SDK contract 1.42):**
+  `CodeChallengeMethodsSupported` and
+  `TokenEndpointAuthSigningAlgValuesSupported`. Both are modelled
+  **nullable with a default of absent** even though `openapi.json` marks them
+  required, and CONTRACT.md §21.5 says why: RFC 8414 defines no default for the
+  first, *so its absence does not mean `S256`*. This record must still parse a
+  document from a non-AXIAM OP, and modelling either as required would reject
+  documents the SDK accepts today. Both are new optional record components with
+  defaults, so existing positional `new OidcConfiguration(...)` call sites still
+  compile.
+
+  `acr_values_supported`, `claims_parameter_supported` and
+  `request_parameter_supported` — also newly required upstream — were **not**
+  added: this record models a curated subset (it does not model
+  `dpop_signing_alg_values_supported` either), and widening it is new surface
+  rather than a re-sync.
 
 - **RFC 8705 §5 `mtls_endpoint_aliases` (SDK contract 1.40, CONTRACT.md §21.3
   rule 2).** `OidcConfiguration` gains an optional `MtlsEndpointAliases`
@@ -33,6 +100,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `new OidcConfiguration(...)` call sites still compile.
 
 ### Changed
+
+- Re-vendored `CONTRACT.md`, `openapi.json` and `management-registry.json` from
+  `ilpanich/axiam` at **SDK contract 1.42**. This spans **two** revisions
+  (1.40 → 1.42): the previously vendored copy was 1.40, not 1.41.
+
+  The registry goes from **155 to 158 operations** across the same 24
+  namespaces. All three additions are in the `privacy` namespace and come out
+  of `python3 scripts/gen_management.py`:
+  `PrivacyApi.ListConsentsAsync`, `PrivacyApi.GrantScopeConsentAsync` and
+  `PrivacyApi.WithdrawScopeConsentAsync`, with the new
+  `ConsentView` / `GrantScopeConsent` models.
+
+  Also regenerated from the new spec: `ClientAuthMethod` gains
+  `ClientSecretBasic`; `CreateOAuth2ClientRequest`, `UpdateOAuth2ClientRequest`
+  and `OAuth2ClientResponse` gain `AuthnRequestParams` (the new
+  `AuthnRequestParamsMode` open enum) and `BrowserSso`; `SecuritySettings`
+  gains a required `Oidc` (the new `OidcPolicy` model); `SetOrgSettings` and
+  `TenantSettingsOverride` gain `DefaultLocale` and `SensitiveScopesEnabled`.
+
+  `ClientSecretBasic` arriving in the generated enum does **not** change this
+  SDK's own token-endpoint authentication: CONTRACT.md §5 rule 3 and the §21.5
+  row are explicit that an advertised method is a statement about the
+  deployment, not an instruction to the client. It is a registration value a
+  management caller may set, and nothing more.
+
+  `openapi.json`'s `User`/`UpdateUser` gained `address`, `phone_number` and
+  `phone_number_verified_at`, and a new `Address` schema — none of which reach
+  this SDK: the C# management surface is generated from `UserResponse` /
+  `UpdateUserRequest`, which are unchanged.
 
 - Re-vendored `CONTRACT.md`, `openapi.json` and `management-registry.json` from
   `ilpanich/axiam` at SDK contract 1.40. The registry's 155 operations are

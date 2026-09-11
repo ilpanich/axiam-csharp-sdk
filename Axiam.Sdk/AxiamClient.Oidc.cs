@@ -1030,10 +1030,87 @@ public sealed partial class AxiamClient
         }
     }
 
+    /// <summary>
+    /// Sets the mandatory <c>?tenant_id=</c> query parameter on a discovery-advertised
+    /// endpoint (CONTRACT.md &#167;12.3 rule 4) — <b>replacing</b> any <c>tenant_id</c> the
+    /// endpoint already carries, and preserving every other query parameter it carries.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This used to append unconditionally, which was correct only while AXIAM published
+    /// bare endpoints. It no longer does: a discovery request that names a tenant — or a
+    /// deployment with <c>oauth2_default_tenant_id</c> set — gets
+    /// <c>token_endpoint</c>, <c>revocation_endpoint</c>, <c>introspection_endpoint</c>,
+    /// <c>device_authorization_endpoint</c> and
+    /// <c>pushed_authorization_request_endpoint</c> back already scoped. Appending a second
+    /// copy produces <c>?tenant_id=A&amp;tenant_id=B</c>, which is not a request any
+    /// deserialiser has to read the way the client meant it.
+    /// </para>
+    /// <para>
+    /// <b>The resolved value wins</b> on a disagreement: it is the tenant the caller (or the
+    /// current session's access token) actually authenticated against, and one deterministic
+    /// answer is better than a silent dependence on parameter order.
+    /// </para>
+    /// <para>
+    /// Every <i>other</i> parameter survives. RFC 6749 &#167;3.1/&#167;3.2 require a client
+    /// to retain an endpoint's own query component, so an authorization server that scopes
+    /// its endpoints with something besides the tenant keeps working.
+    /// </para>
+    /// </remarks>
     private static string AppendTenantIdQuery(string endpointUrl, Guid tenantId)
     {
-        char separator = endpointUrl.Contains('?') ? '&' : '?';
-        return $"{endpointUrl}{separator}tenant_id={tenantId}";
+        // Split the fragment off first: a parameter written after '#' is not in the query
+        // at all, and appending to it would put the tenant somewhere no server reads.
+        int hash = endpointUrl.IndexOf('#');
+        string fragment = hash >= 0 ? endpointUrl[hash..] : string.Empty;
+        string withoutFragment = hash >= 0 ? endpointUrl[..hash] : endpointUrl;
+
+        int mark = withoutFragment.IndexOf('?');
+        string head = mark >= 0 ? withoutFragment[..mark] : withoutFragment;
+        string existingQuery = mark >= 0 ? withoutFragment[(mark + 1)..] : string.Empty;
+
+        var kept = new List<string>();
+        foreach (string pair in existingQuery.Split('&'))
+        {
+            if (pair.Length == 0 || IsTenantIdPair(pair))
+            {
+                continue;
+            }
+            kept.Add(pair);
+        }
+        kept.Add($"tenant_id={tenantId}");
+
+        return $"{head}?{string.Join("&", kept)}{fragment}";
+    }
+
+    /// <summary>Whether one raw <c>name=value</c> query pair names <c>tenant_id</c>.</summary>
+    /// <remarks>
+    /// The name is unescaped before the comparison, so a percent-encoded spelling
+    /// (<c>tenant%5Fid</c>) is recognised as the same parameter rather than surviving
+    /// alongside the one this SDK sets.
+    /// </remarks>
+    private static bool IsTenantIdPair(string pair)
+    {
+        int eq = pair.IndexOf('=');
+        string name = eq >= 0 ? pair[..eq] : pair;
+        return string.Equals(Uri.UnescapeDataString(name), "tenant_id", StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Whether a discovery-advertised endpoint's own query component names
+    /// <c>tenant_id</c> — that is, whether the authorization server scopes that endpoint by
+    /// tenant at all.
+    /// </summary>
+    /// <remarks>
+    /// Only the presence is asked for, never the value: see <see cref="OidcParAsync"/> for
+    /// why the value that gets sent is the resolved tenant rather than the published one.
+    /// </remarks>
+    private static bool EndpointPublishesTenantId(string endpointUrl)
+    {
+        int hash = endpointUrl.IndexOf('#');
+        string withoutFragment = hash >= 0 ? endpointUrl[..hash] : endpointUrl;
+        int mark = withoutFragment.IndexOf('?');
+        return mark >= 0 && withoutFragment[(mark + 1)..].Split('&').Any(IsTenantIdPair);
     }
 
     /// <summary>
