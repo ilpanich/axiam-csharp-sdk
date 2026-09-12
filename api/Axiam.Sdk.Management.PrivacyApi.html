@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta12/apiSpec/new?filename=Axiam_Sdk_Management_PrivacyApi.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.PrivacyApi%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta13/apiSpec/new?filename=Axiam_Sdk_Management_PrivacyApi.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.PrivacyApi%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Management_PrivacyApi" data-uid="Axiam.Sdk.Management.PrivacyApi" class="text-break">
-Class PrivacyApi  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta12/Axiam.Sdk/Management/PrivacyApi.cs/#L25"><i class="bi bi-code-slash"></i></a>
+Class PrivacyApi  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta13/Axiam.Sdk/Management/PrivacyApi.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -160,7 +160,7 @@ A view over the client that created it, not a connection: constructing one perfo
 
   <h3 id="Axiam_Sdk_Management_PrivacyApi_CancelDeleteAsync_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.CancelDeleteAsync(System.String,System.Threading.CancellationToken)">
   CancelDeleteAsync(string?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta12/Axiam.Sdk/Management/PrivacyApi.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta13/Axiam.Sdk/Management/PrivacyApi.cs/#L135"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><strong>Public endpoint</strong> (token-authenticated; listed in <code>PUBLIC_PATHS</code>). Validates the
@@ -210,7 +210,7 @@ Issues <code>GET /api/v1/auth/account/delete/cancel</code>.
 
   <h3 id="Axiam_Sdk_Management_PrivacyApi_DownloadExportAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.DownloadExportAsync(System.Guid,System.Threading.CancellationToken)">
   DownloadExportAsync(Guid, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta12/Axiam.Sdk/Management/PrivacyApi.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta13/Axiam.Sdk/Management/PrivacyApi.cs/#L79"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Single-use download of the GDPR export blob (D-13). Looks up the job by SHA-256(token),
@@ -255,11 +255,119 @@ Issues <code>GET /api/v1/account/export/{token}</code>.
 
 
 
+  <a id="Axiam_Sdk_Management_PrivacyApi_GrantScopeConsentAsync_" data-uid="Axiam.Sdk.Management.PrivacyApi.GrantScopeConsentAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_PrivacyApi_GrantScopeConsentAsync_Axiam_Sdk_Management_Models_GrantScopeConsent_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.GrantScopeConsentAsync(Axiam.Sdk.Management.Models.GrantScopeConsent,System.Threading.CancellationToken)">
+  GrantScopeConsentAsync(GrantScopeConsent, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta13/Axiam.Sdk/Management/PrivacyApi.cs/#L201"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>What the SPA's consent screen calls when the end user says yes. Everything it accepts is
+checked against the registration rather than taken on trust, because a consent record is
+the thing UserInfo releases personal data on the strength of: * the scopes must be
+sensitive ones — nothing else belongs in this namespace, and a record naming
+<code>openid</code> would be a record that never matches and never expires; * the client must
+exist in the caller's tenant; * the client must have every named scope <strong>registered</strong>,
+so a consent cannot be recorded for a release the client could never have been
+authorised for; * the tenant switch must be on, so consent collected while the
+capability is off cannot sit waiting for somebody to turn it on. Idempotent: the
+<code>(tenant, user, type, version)</code> index makes a repeated grant the same grant, and a
+second call is answered <code>200</code> rather than a conflict. A consent screen the user
+double-submits has consented once.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task GrantScopeConsentAsync(GrantScopeConsent body, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>body</code> <a class="xref" href="Axiam.Sdk.Management.Models.GrantScopeConsent.html">GrantScopeConsent</a></dt>
+    <dd><p>the request body.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd><p>a task that completes when the server has answered</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_PrivacyApi_GrantScopeConsentAsync_Axiam_Sdk_Management_Models_GrantScopeConsent_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Issues <code>POST /api/v1/account/consents/oidc-scopes</code>.
+</p>
+<p>
+Not retried: §27.4 rule 8 makes every write on this surface single-shot, including
+the ones that look idempotent.
+</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Management_PrivacyApi_ListConsentsAsync_" data-uid="Axiam.Sdk.Management.PrivacyApi.ListConsentsAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_PrivacyApi_ListConsentsAsync_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.ListConsentsAsync(System.Threading.CancellationToken)">
+  ListConsentsAsync(CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta13/Axiam.Sdk/Management/PrivacyApi.cs/#L161"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Art. 7(1) says a controller must be able to demonstrate that consent was given; Art.
+15(1)(a) says the subject may see what is held about them. This endpoint is the second,
+and it is also the page the withdrawal control lives on.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;IReadOnlyList&lt;ConsentView&gt;&gt; ListConsentsAsync(CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.ConsentView.html">ConsentView</a>&gt;&gt;</dt>
+    <dd><p>the server response</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_PrivacyApi_ListConsentsAsync_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Issues <code>GET /api/v1/account/consents</code>.
+</p>
+</div>
+
+
+
+
   <a id="Axiam_Sdk_Management_PrivacyApi_RequestDeleteAsync_" data-uid="Axiam.Sdk.Management.PrivacyApi.RequestDeleteAsync*"></a>
 
   <h3 id="Axiam_Sdk_Management_PrivacyApi_RequestDeleteAsync_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.RequestDeleteAsync(System.Threading.CancellationToken)">
   RequestDeleteAsync(CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta12/Axiam.Sdk/Management/PrivacyApi.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta13/Axiam.Sdk/Management/PrivacyApi.cs/#L108"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initiates Art. 17 erasure: immediately disables the account, revokes all sessions,
@@ -309,7 +417,7 @@ the ones that look idempotent.
 
   <h3 id="Axiam_Sdk_Management_PrivacyApi_RequestExportAsync_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.RequestExportAsync(System.Threading.CancellationToken)">
   RequestExportAsync(CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta12/Axiam.Sdk/Management/PrivacyApi.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta13/Axiam.Sdk/Management/PrivacyApi.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enqueues an async GDPR Art. 15 data-export job. Returns immediately with <code>{&quot;queued&quot;:
@@ -346,6 +454,67 @@ single-use 24 h download link (D-12). Self-service (own account) or admin with
   <h4 class="section" id="Axiam_Sdk_Management_PrivacyApi_RequestExportAsync_System_Threading_CancellationToken__remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>
 Issues <code>POST /api/v1/account/export</code>.
+</p>
+<p>
+Not retried: §27.4 rule 8 makes every write on this surface single-shot, including
+the ones that look idempotent.
+</p>
+</div>
+
+
+
+
+  <a id="Axiam_Sdk_Management_PrivacyApi_WithdrawScopeConsentAsync_" data-uid="Axiam.Sdk.Management.PrivacyApi.WithdrawScopeConsentAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Management_PrivacyApi_WithdrawScopeConsentAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.WithdrawScopeConsentAsync(System.Guid,System.Threading.CancellationToken)">
+  WithdrawScopeConsentAsync(Guid, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta13/Axiam.Sdk/Management/PrivacyApi.cs/#L240"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Art. 7(3): as easy to withdraw as to give. One call, no grace period, no confirmation
+step, and it takes effect on the <strong>next UserInfo call with the token the relying party
+already holds</strong> — not on the next token. That is the property T8.4 asserts, and it is
+why the release gate re-reads the record on every call rather than trusting the one
+taken at authorization. Withdraws every scope set consented to for this relying party,
+not one of them: a subject saying &quot;stop giving my address to this app&quot; does not mean
+&quot;stop giving it under the two-scope record but carry on under the one-scope one&quot;.
+Answers <code>200</code> whether or not anything was there, and says how many records went. A
+subject who withdraws twice is not told off, and an attacker who guesses
+<code>client_id</code>s learns nothing from the status code — though they would have to be the
+subject to ask at all.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task WithdrawScopeConsentAsync(Guid clientId, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>clientId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd><p>the client id to address.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>cancels the request.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd><p>a task that completes when the server has answered</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_PrivacyApi_WithdrawScopeConsentAsync_System_Guid_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Issues <code>DELETE /api/v1/account/consents/oidc-scopes/{client_id}</code>.
 </p>
 <p>
 Not retried: §27.4 rule 8 makes every write on this surface single-shot, including

@@ -161,6 +161,11 @@ AXIAM.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ConsentView.html">ConsentView</a></dt>
+      <dd><p>One consent record, as the subject sees it.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.CreateCaCertificateRequest.html">CreateCaCertificateRequest</a></dt>
       <dd><p>The CreateCaCertificateRequest schema from the server's OpenAPI document.</p>
 </dd>
@@ -321,6 +326,11 @@ returned <strong>once</strong> and never stored.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.GrantScopeConsent.html">GrantScopeConsent</a></dt>
+      <dd><p>Body for recording an OIDC scope-release consent.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.GrantedScope.html">GrantedScope</a></dt>
       <dd><p>A scope named by a grant, resolved to something a human can read.</p>
 </dd>
@@ -443,6 +453,23 @@ ingested yet&quot;), not an error.</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.OidcCallbackResponse.html">OidcCallbackResponse</a></dt>
       <dd><p>The OidcCallbackResponse schema from the server's OpenAPI document.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.OidcPolicy.html">OidcPolicy</a></dt>
+      <dd><p>OpenID Connect surface controls (X7 G8, plan §4.6/§4.8). Two settings that are not password
+rules, and are here because this is the org-baseline-plus-tenant-override surface every
+other per-tenant control lives on. They are also the two settings in this model that are
+<em>not</em> of the same kind as each other, so it is worth saying which is which: *
+[<code>Self::sensitive_scopes_enabled</code>] <strong>is</strong> ordered. Releasing personal data is the
+less-restrictive direction, so it is validated disable-only — the mirror image of
+<code>mfa_enforced</code> — and a tenant can turn its organization's decision off but never on. *
+[<code>Self::default_locale</code>] is <strong>not</strong> ordered, and no ordering is invented for it. A
+language is a presentation preference; there is no sense in which Italian is stricter than
+French. [<code>validate_tenant_override</code>] therefore does not check it and
+[<code>clamp_overrides_to_org</code>] never clears it. The model's rule is &quot;a tenant may only be
+more restrictive&quot;, which binds every field that <em>has</em> a restrictiveness; a field that has
+none cannot violate it.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -819,6 +846,21 @@ enforced at all. <code>None</code> is the default and reproduces today's behavio
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.AuditOutcome.html">AuditOutcome</a></dt>
       <dd><p>The AuditOutcome values the server uses.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.AuthnRequestParamsMode.html">AuthnRequestParamsMode</a></dt>
+      <dd><p>Whether this client's authorization requests may carry OpenID Connect's
+authentication-request parameters, or whether they are ignored (X7.1). The bundle this
+governs is <code>prompt</code>, <code>max_age</code>, <code>acr_values</code>, <code>claims</code>,
+<code>id_token_hint</code>, <code>login_hint</code>, <code>display</code>, <code>ui_locales</code> and
+<code>claims_locales</code>. It is <strong>one</strong> field rather than nine booleans for the same reason
+[<code>ClientProfile</code>] is one field rather than a dozen: a client that honours
+<code>max_age</code> but ignores <code>prompt=none</code> is not &quot;mostly conformant&quot;, it is a client a
+relying party cannot reason about. <a href="Self::Ignore"><code>Ignore</code></a> is the serde default and is
+exactly what AXIAM has always done — unknown authorization-request parameters are dropped by
+the query deserialiser and never reach a decision. Every row written before schema v54
+therefore decodes to the behaviour it already had.</p>
 </dd>
     </dl>
     <dl class="jumplist">

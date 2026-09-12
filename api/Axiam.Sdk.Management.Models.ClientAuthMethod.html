@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta12/apiSpec/new?filename=Axiam_Sdk_Management_Models_ClientAuthMethod.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.ClientAuthMethod%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta13/apiSpec/new?filename=Axiam_Sdk_Management_Models_ClientAuthMethod.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.ClientAuthMethod%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -90,7 +90,7 @@
 
 
   <h1 id="Axiam_Sdk_Management_Models_ClientAuthMethod" data-uid="Axiam.Sdk.Management.Models.ClientAuthMethod" class="text-break">
-Enum ClientAuthMethod  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta12/Axiam.Sdk/Management/Models/ClientAuthMethod.cs/#L36"><i class="bi bi-code-slash"></i></a>
+Enum ClientAuthMethod  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta13/Axiam.Sdk/Management/Models/ClientAuthMethod.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -123,28 +123,33 @@ public enum ClientAuthMethod</code></pre>
   <h2 id="fields">Fields
 </h2>
   <dl class="parameters">
+    <dt id="Axiam_Sdk_Management_Models_ClientAuthMethod_ClientSecretBasic"><code>[WireName(&quot;client_secret_basic&quot;)]
+ClientSecretBasic = 1</code></dt>
+  
+  <dd><p>The server's <code>client_secret_basic</code> value.</p>
+</dd>
     <dt id="Axiam_Sdk_Management_Models_ClientAuthMethod_ClientSecretPost"><code>[WireName(&quot;client_secret_post&quot;)]
 ClientSecretPost = 0</code></dt>
   
   <dd><p>The server's <code>client_secret_post</code> value.</p>
 </dd>
     <dt id="Axiam_Sdk_Management_Models_ClientAuthMethod_PrivateKeyJwt"><code>[WireName(&quot;private_key_jwt&quot;)]
-PrivateKeyJwt = 3</code></dt>
+PrivateKeyJwt = 4</code></dt>
   
   <dd><p>The server's <code>private_key_jwt</code> value.</p>
 </dd>
     <dt id="Axiam_Sdk_Management_Models_ClientAuthMethod_SelfSignedTlsClientAuth"><code>[WireName(&quot;self_signed_tls_client_auth&quot;)]
-SelfSignedTlsClientAuth = 2</code></dt>
+SelfSignedTlsClientAuth = 3</code></dt>
   
   <dd><p>The server's <code>self_signed_tls_client_auth</code> value.</p>
 </dd>
     <dt id="Axiam_Sdk_Management_Models_ClientAuthMethod_TlsClientAuth"><code>[WireName(&quot;tls_client_auth&quot;)]
-TlsClientAuth = 1</code></dt>
+TlsClientAuth = 2</code></dt>
   
   <dd><p>The server's <code>tls_client_auth</code> value.</p>
 </dd>
     <dt id="Axiam_Sdk_Management_Models_ClientAuthMethod_Unknown"><code>[WireName(&quot;&quot;)]
-Unknown = 4</code></dt>
+Unknown = 5</code></dt>
   <dd><p>A value this SDK’s copy of the spec does not list.</p>
 <p>
 Its wire spelling is the empty string, which no server value is: carrying an

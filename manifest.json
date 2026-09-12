@@ -698,6 +698,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.yml\" sourcestartlinenumber=\"1\">RFC 8705 §5 <code>mtls_endpoint_aliases</code> — the six endpoints re-based on the host\nthat performs the mutual-TLS handshake (wire schema <code>MtlsEndpointAliases</code>,\ncontract 1.40).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.OidcBeginParams.yml",
       "output": {
         ".html": {
@@ -1986,6 +2000,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.AuthnRequestParamsMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.AuthnRequestParamsMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.AuthnRequestParamsMode",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.AuthnRequestParamsMode.yml\" sourcestartlinenumber=\"1\">Whether this client's authorization requests may carry OpenID Connect's\nauthentication-request parameters, or whether they are ignored (X7.1). The bundle this\ngoverns is <code>prompt</code>, <code>max_age</code>, <code>acr_values</code>, <code>claims</code>,\n<code>id_token_hint</code>, <code>login_hint</code>, <code>display</code>, <code>ui_locales</code> and\n<code>claims_locales</code>. It is <strong sourcefile=\"api/Axiam.Sdk.Management.Models.AuthnRequestParamsMode.yml\" sourcestartlinenumber=\"5\">one</strong> field rather than nine booleans for the same reason\n[<code>ClientProfile</code>] is one field rather than a dozen: a client that honours\n<code>max_age</code> but ignores <code>prompt=none</code> is not &quot;mostly conformant&quot;, it is a client a\nrelying party cannot reason about. <a href=\"Self::Ignore\" sourcefile=\"api/Axiam.Sdk.Management.Models.AuthnRequestParamsMode.yml\" sourcestartlinenumber=\"8\"><code>Ignore</code></a> is the serde default and is\nexactly what AXIAM has always done — unknown authorization-request parameters are dropped by\nthe query deserialiser and never reach a decision. Every row written before schema v54\ntherefore decodes to the behaviour it already had.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Management.Models.BindCertificate.yml",
       "output": {
         ".html": {
@@ -2123,6 +2151,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.ComplianceReportEntry",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ComplianceReportEntry.yml\" sourcestartlinenumber=\"1\">One credential's compliance outcome (D9).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ConsentView.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ConsentView.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ConsentView",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ConsentView.yml\" sourcestartlinenumber=\"1\">One consent record, as the subject sees it.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2574,6 +2616,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.GrantScopeConsent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.GrantScopeConsent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.GrantScopeConsent",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.GrantScopeConsent.yml\" sourcestartlinenumber=\"1\">Body for recording an OIDC scope-release consent.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Management.Models.GrantedScope.yml",
       "output": {
         ".html": {
@@ -2935,6 +2991,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.OidcCallbackResponse",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OidcCallbackResponse.yml\" sourcestartlinenumber=\"1\">The OidcCallbackResponse schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.OidcPolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.OidcPolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.OidcPolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"1\">OpenID Connect surface controls (X7 G8, plan §4.6/§4.8). Two settings that are not password\nrules, and are here because this is the org-baseline-plus-tenant-override surface every\nother per-tenant control lives on. They are also the two settings in this model that are\n<em sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"4\">not</em> of the same kind as each other, so it is worth saying which is which: *\n[<code>Self::sensitive_scopes_enabled</code>] <strong sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"5\">is</strong> ordered. Releasing personal data is the\nless-restrictive direction, so it is validated disable-only — the mirror image of\n<code>mfa_enforced</code> — and a tenant can turn its organization's decision off but never on. *\n[<code>Self::default_locale</code>] is <strong sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"8\">not</strong> ordered, and no ordering is invented for it. A\nlanguage is a presentation preference; there is no sense in which Italian is stricter than\nFrench. [<code>validate_tenant_override</code>] therefore does not check it and\n[<code>clamp_overrides_to_org</code>] never clears it. The model's rule is &quot;a tenant may only be\nmore restrictive&quot;, which binds every field that <em sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"12\">has</em> a restrictiveness; a field that has\nnone cannot violate it.</p>\n"
     },
     {
       "type": "ManagedReference",

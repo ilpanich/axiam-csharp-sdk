@@ -3046,6 +3046,109 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.Size
   nameWithType: MemoryOidcStateStore.Size
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases
+  name: MtlsEndpointAliases
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html
+  commentId: T:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases
+  nameWithType: MtlsEndpointAliases
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.#ctor(System.String,System.String,System.String,System.String,System.String,System.String)
+  name: MtlsEndpointAliases(string?, string?, string?, string?, string?, string?)
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases__ctor_System_String_System_String_System_String_System_String_System_String_System_String_
+  commentId: M:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.#ctor(System.String,System.String,System.String,System.String,System.String,System.String)
+  name.vb: New(String, String, String, String, String, String)
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.MtlsEndpointAliases(string?, string?, string?, string?, string?, string?)
+  fullName.vb: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.New(String, String, String, String, String, String)
+  nameWithType: MtlsEndpointAliases.MtlsEndpointAliases(string?, string?, string?, string?, string?, string?)
+  nameWithType.vb: MtlsEndpointAliases.New(String, String, String, String, String, String)
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.#ctor*
+  name: MtlsEndpointAliases
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases__ctor_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.MtlsEndpointAliases
+  fullName.vb: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.New
+  nameWithType: MtlsEndpointAliases.MtlsEndpointAliases
+  nameWithType.vb: MtlsEndpointAliases.New
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.DeviceAuthorizationEndpoint
+  name: DeviceAuthorizationEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_DeviceAuthorizationEndpoint
+  commentId: P:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.DeviceAuthorizationEndpoint
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.DeviceAuthorizationEndpoint
+  nameWithType: MtlsEndpointAliases.DeviceAuthorizationEndpoint
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.DeviceAuthorizationEndpoint*
+  name: DeviceAuthorizationEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_DeviceAuthorizationEndpoint_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.DeviceAuthorizationEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.DeviceAuthorizationEndpoint
+  nameWithType: MtlsEndpointAliases.DeviceAuthorizationEndpoint
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.IntrospectionEndpoint
+  name: IntrospectionEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_IntrospectionEndpoint
+  commentId: P:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.IntrospectionEndpoint
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.IntrospectionEndpoint
+  nameWithType: MtlsEndpointAliases.IntrospectionEndpoint
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.IntrospectionEndpoint*
+  name: IntrospectionEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_IntrospectionEndpoint_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.IntrospectionEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.IntrospectionEndpoint
+  nameWithType: MtlsEndpointAliases.IntrospectionEndpoint
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.PushedAuthorizationRequestEndpoint
+  name: PushedAuthorizationRequestEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_PushedAuthorizationRequestEndpoint
+  commentId: P:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.PushedAuthorizationRequestEndpoint
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.PushedAuthorizationRequestEndpoint
+  nameWithType: MtlsEndpointAliases.PushedAuthorizationRequestEndpoint
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.PushedAuthorizationRequestEndpoint*
+  name: PushedAuthorizationRequestEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_PushedAuthorizationRequestEndpoint_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.PushedAuthorizationRequestEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.PushedAuthorizationRequestEndpoint
+  nameWithType: MtlsEndpointAliases.PushedAuthorizationRequestEndpoint
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.RevocationEndpoint
+  name: RevocationEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_RevocationEndpoint
+  commentId: P:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.RevocationEndpoint
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.RevocationEndpoint
+  nameWithType: MtlsEndpointAliases.RevocationEndpoint
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.RevocationEndpoint*
+  name: RevocationEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_RevocationEndpoint_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.RevocationEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.RevocationEndpoint
+  nameWithType: MtlsEndpointAliases.RevocationEndpoint
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.TokenEndpoint
+  name: TokenEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_TokenEndpoint
+  commentId: P:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.TokenEndpoint
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.TokenEndpoint
+  nameWithType: MtlsEndpointAliases.TokenEndpoint
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.TokenEndpoint*
+  name: TokenEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_TokenEndpoint_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.TokenEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.TokenEndpoint
+  nameWithType: MtlsEndpointAliases.TokenEndpoint
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.UserinfoEndpoint
+  name: UserinfoEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_UserinfoEndpoint
+  commentId: P:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.UserinfoEndpoint
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.UserinfoEndpoint
+  nameWithType: MtlsEndpointAliases.UserinfoEndpoint
+- uid: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.UserinfoEndpoint*
+  name: UserinfoEndpoint
+  href: api/Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.html#Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_UserinfoEndpoint_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.UserinfoEndpoint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases.UserinfoEndpoint
+  nameWithType: MtlsEndpointAliases.UserinfoEndpoint
 - uid: Axiam.Sdk.Auth.Oidc.OidcBeginParams
   name: OidcBeginParams
   href: api/Axiam.Sdk.Auth.Oidc.OidcBeginParams.html
@@ -3097,15 +3200,15 @@ references:
   commentId: T:Axiam.Sdk.Auth.Oidc.OidcConfiguration
   fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration
   nameWithType: OidcConfiguration
-- uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String,System.String,System.Boolean,System.Boolean)
-  name: OidcConfiguration(string, string, string, string, string, string, string, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, string?, string?, string?, bool, bool)
-  href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration__ctor_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_String_System_String_System_String_System_Boolean_System_Boolean_
-  commentId: M:Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String,System.String,System.Boolean,System.Boolean)
-  name.vb: New(String, String, String, String, String, String, String, IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), String, String, String, Boolean, Boolean)
-  fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.OidcConfiguration(string, string, string, string, string, string, string, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, string?, string?, string?, bool, bool)
-  fullName.vb: Axiam.Sdk.Auth.Oidc.OidcConfiguration.New(String, String, String, String, String, String, String, System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), String, String, String, Boolean, Boolean)
-  nameWithType: OidcConfiguration.OidcConfiguration(string, string, string, string, string, string, string, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, string?, string?, string?, bool, bool)
-  nameWithType.vb: OidcConfiguration.New(String, String, String, String, String, String, String, IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), String, String, String, Boolean, Boolean)
+- uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String,System.String,System.Boolean,System.Boolean,Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String})
+  name: OidcConfiguration(string, string, string, string, string, string, string, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, string?, string?, string?, bool, bool, MtlsEndpointAliases?, IReadOnlyList<string>?, IReadOnlyList<string>?)
+  href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration__ctor_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_String_System_String_System_String_System_Boolean_System_Boolean_Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__
+  commentId: M:Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String,System.String,System.Boolean,System.Boolean,Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String})
+  name.vb: New(String, String, String, String, String, String, String, IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), String, String, String, Boolean, Boolean, MtlsEndpointAliases, IReadOnlyList(Of String), IReadOnlyList(Of String))
+  fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.OidcConfiguration(string, string, string, string, string, string, string, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, System.Collections.Generic.IReadOnlyList<string>, string?, string?, string?, bool, bool, Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases?, System.Collections.Generic.IReadOnlyList<string>?, System.Collections.Generic.IReadOnlyList<string>?)
+  fullName.vb: Axiam.Sdk.Auth.Oidc.OidcConfiguration.New(String, String, String, String, String, String, String, System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String), String, String, String, Boolean, Boolean, Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases, System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String))
+  nameWithType: OidcConfiguration.OidcConfiguration(string, string, string, string, string, string, string, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, IReadOnlyList<string>, string?, string?, string?, bool, bool, MtlsEndpointAliases?, IReadOnlyList<string>?, IReadOnlyList<string>?)
+  nameWithType.vb: OidcConfiguration.New(String, String, String, String, String, String, String, IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), IReadOnlyList(Of String), String, String, String, Boolean, Boolean, MtlsEndpointAliases, IReadOnlyList(Of String), IReadOnlyList(Of String))
 - uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor*
   name: OidcConfiguration
   href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration__ctor_
@@ -3168,6 +3271,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.ClaimsSupported
   nameWithType: OidcConfiguration.ClaimsSupported
+- uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.CodeChallengeMethodsSupported
+  name: CodeChallengeMethodsSupported
+  href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_CodeChallengeMethodsSupported
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcConfiguration.CodeChallengeMethodsSupported
+  fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.CodeChallengeMethodsSupported
+  nameWithType: OidcConfiguration.CodeChallengeMethodsSupported
+- uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.CodeChallengeMethodsSupported*
+  name: CodeChallengeMethodsSupported
+  href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_CodeChallengeMethodsSupported_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcConfiguration.CodeChallengeMethodsSupported
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.CodeChallengeMethodsSupported
+  nameWithType: OidcConfiguration.CodeChallengeMethodsSupported
 - uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.DeviceAuthorizationEndpoint
   name: DeviceAuthorizationEndpoint
   href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_DeviceAuthorizationEndpoint
@@ -3259,6 +3375,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.JwksUri
   nameWithType: OidcConfiguration.JwksUri
+- uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.MtlsEndpointAliases
+  name: MtlsEndpointAliases
+  href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_MtlsEndpointAliases
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcConfiguration.MtlsEndpointAliases
+  fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.MtlsEndpointAliases
+  nameWithType: OidcConfiguration.MtlsEndpointAliases
+- uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.MtlsEndpointAliases*
+  name: MtlsEndpointAliases
+  href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_MtlsEndpointAliases_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcConfiguration.MtlsEndpointAliases
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.MtlsEndpointAliases
+  nameWithType: OidcConfiguration.MtlsEndpointAliases
 - uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.PushedAuthorizationRequestEndpoint
   name: PushedAuthorizationRequestEndpoint
   href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_PushedAuthorizationRequestEndpoint
@@ -3350,6 +3479,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.TokenEndpointAuthMethodsSupported
   nameWithType: OidcConfiguration.TokenEndpointAuthMethodsSupported
+- uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.TokenEndpointAuthSigningAlgValuesSupported
+  name: TokenEndpointAuthSigningAlgValuesSupported
+  href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_TokenEndpointAuthSigningAlgValuesSupported
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcConfiguration.TokenEndpointAuthSigningAlgValuesSupported
+  fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.TokenEndpointAuthSigningAlgValuesSupported
+  nameWithType: OidcConfiguration.TokenEndpointAuthSigningAlgValuesSupported
+- uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.TokenEndpointAuthSigningAlgValuesSupported*
+  name: TokenEndpointAuthSigningAlgValuesSupported
+  href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_TokenEndpointAuthSigningAlgValuesSupported_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcConfiguration.TokenEndpointAuthSigningAlgValuesSupported
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcConfiguration.TokenEndpointAuthSigningAlgValuesSupported
+  nameWithType: OidcConfiguration.TokenEndpointAuthSigningAlgValuesSupported
 - uid: Axiam.Sdk.Auth.Oidc.OidcConfiguration.UserinfoEndpoint
   name: UserinfoEndpoint
   href: api/Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_UserinfoEndpoint
@@ -3466,6 +3608,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.Configuration
   nameWithType: OidcParParams.Configuration
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.DpopJkt
+  name: DpopJkt
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_DpopJkt
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcParParams.DpopJkt
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.DpopJkt
+  nameWithType: OidcParParams.DpopJkt
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.DpopJkt*
+  name: DpopJkt
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_DpopJkt_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcParParams.DpopJkt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.DpopJkt
+  nameWithType: OidcParParams.DpopJkt
 - uid: Axiam.Sdk.Auth.Oidc.OidcParParams.RedirectUri
   name: RedirectUri
   href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_RedirectUri
@@ -10709,6 +10864,30 @@ references:
   commentId: F:Axiam.Sdk.Management.Models.AuditOutcome.Unknown
   fullName: Axiam.Sdk.Management.Models.AuditOutcome.Unknown
   nameWithType: AuditOutcome.Unknown
+- uid: Axiam.Sdk.Management.Models.AuthnRequestParamsMode
+  name: AuthnRequestParamsMode
+  href: api/Axiam.Sdk.Management.Models.AuthnRequestParamsMode.html
+  commentId: T:Axiam.Sdk.Management.Models.AuthnRequestParamsMode
+  fullName: Axiam.Sdk.Management.Models.AuthnRequestParamsMode
+  nameWithType: AuthnRequestParamsMode
+- uid: Axiam.Sdk.Management.Models.AuthnRequestParamsMode.Honour
+  name: Honour
+  href: api/Axiam.Sdk.Management.Models.AuthnRequestParamsMode.html#Axiam_Sdk_Management_Models_AuthnRequestParamsMode_Honour
+  commentId: F:Axiam.Sdk.Management.Models.AuthnRequestParamsMode.Honour
+  fullName: Axiam.Sdk.Management.Models.AuthnRequestParamsMode.Honour
+  nameWithType: AuthnRequestParamsMode.Honour
+- uid: Axiam.Sdk.Management.Models.AuthnRequestParamsMode.Ignore
+  name: Ignore
+  href: api/Axiam.Sdk.Management.Models.AuthnRequestParamsMode.html#Axiam_Sdk_Management_Models_AuthnRequestParamsMode_Ignore
+  commentId: F:Axiam.Sdk.Management.Models.AuthnRequestParamsMode.Ignore
+  fullName: Axiam.Sdk.Management.Models.AuthnRequestParamsMode.Ignore
+  nameWithType: AuthnRequestParamsMode.Ignore
+- uid: Axiam.Sdk.Management.Models.AuthnRequestParamsMode.Unknown
+  name: Unknown
+  href: api/Axiam.Sdk.Management.Models.AuthnRequestParamsMode.html#Axiam_Sdk_Management_Models_AuthnRequestParamsMode_Unknown
+  commentId: F:Axiam.Sdk.Management.Models.AuthnRequestParamsMode.Unknown
+  fullName: Axiam.Sdk.Management.Models.AuthnRequestParamsMode.Unknown
+  nameWithType: AuthnRequestParamsMode.Unknown
 - uid: Axiam.Sdk.Management.Models.BindCertificate
   name: BindCertificate
   href: api/Axiam.Sdk.Management.Models.BindCertificate.html
@@ -11276,6 +11455,12 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.ClientAuthMethod
   fullName: Axiam.Sdk.Management.Models.ClientAuthMethod
   nameWithType: ClientAuthMethod
+- uid: Axiam.Sdk.Management.Models.ClientAuthMethod.ClientSecretBasic
+  name: ClientSecretBasic
+  href: api/Axiam.Sdk.Management.Models.ClientAuthMethod.html#Axiam_Sdk_Management_Models_ClientAuthMethod_ClientSecretBasic
+  commentId: F:Axiam.Sdk.Management.Models.ClientAuthMethod.ClientSecretBasic
+  fullName: Axiam.Sdk.Management.Models.ClientAuthMethod.ClientSecretBasic
+  nameWithType: ClientAuthMethod.ClientSecretBasic
 - uid: Axiam.Sdk.Management.Models.ClientAuthMethod.ClientSecretPost
   name: ClientSecretPost
   href: api/Axiam.Sdk.Management.Models.ClientAuthMethod.html#Axiam_Sdk_Management_Models_ClientAuthMethod_ClientSecretPost
@@ -11427,6 +11612,64 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.ComplianceReportEntry.UserId
   nameWithType: ComplianceReportEntry.UserId
+- uid: Axiam.Sdk.Management.Models.ConsentView
+  name: ConsentView
+  href: api/Axiam.Sdk.Management.Models.ConsentView.html
+  commentId: T:Axiam.Sdk.Management.Models.ConsentView
+  fullName: Axiam.Sdk.Management.Models.ConsentView
+  nameWithType: ConsentView
+- uid: Axiam.Sdk.Management.Models.ConsentView.AcceptedAt
+  name: AcceptedAt
+  href: api/Axiam.Sdk.Management.Models.ConsentView.html#Axiam_Sdk_Management_Models_ConsentView_AcceptedAt
+  commentId: P:Axiam.Sdk.Management.Models.ConsentView.AcceptedAt
+  fullName: Axiam.Sdk.Management.Models.ConsentView.AcceptedAt
+  nameWithType: ConsentView.AcceptedAt
+- uid: Axiam.Sdk.Management.Models.ConsentView.AcceptedAt*
+  name: AcceptedAt
+  href: api/Axiam.Sdk.Management.Models.ConsentView.html#Axiam_Sdk_Management_Models_ConsentView_AcceptedAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.ConsentView.AcceptedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ConsentView.AcceptedAt
+  nameWithType: ConsentView.AcceptedAt
+- uid: Axiam.Sdk.Management.Models.ConsentView.ConsentType
+  name: ConsentType
+  href: api/Axiam.Sdk.Management.Models.ConsentView.html#Axiam_Sdk_Management_Models_ConsentView_ConsentType
+  commentId: P:Axiam.Sdk.Management.Models.ConsentView.ConsentType
+  fullName: Axiam.Sdk.Management.Models.ConsentView.ConsentType
+  nameWithType: ConsentView.ConsentType
+- uid: Axiam.Sdk.Management.Models.ConsentView.ConsentType*
+  name: ConsentType
+  href: api/Axiam.Sdk.Management.Models.ConsentView.html#Axiam_Sdk_Management_Models_ConsentView_ConsentType_
+  commentId: Overload:Axiam.Sdk.Management.Models.ConsentView.ConsentType
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ConsentView.ConsentType
+  nameWithType: ConsentView.ConsentType
+- uid: Axiam.Sdk.Management.Models.ConsentView.Version
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.ConsentView.html#Axiam_Sdk_Management_Models_ConsentView_Version
+  commentId: P:Axiam.Sdk.Management.Models.ConsentView.Version
+  fullName: Axiam.Sdk.Management.Models.ConsentView.Version
+  nameWithType: ConsentView.Version
+- uid: Axiam.Sdk.Management.Models.ConsentView.Version*
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.ConsentView.html#Axiam_Sdk_Management_Models_ConsentView_Version_
+  commentId: Overload:Axiam.Sdk.Management.Models.ConsentView.Version
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ConsentView.Version
+  nameWithType: ConsentView.Version
+- uid: Axiam.Sdk.Management.Models.ConsentView.Withdrawable
+  name: Withdrawable
+  href: api/Axiam.Sdk.Management.Models.ConsentView.html#Axiam_Sdk_Management_Models_ConsentView_Withdrawable
+  commentId: P:Axiam.Sdk.Management.Models.ConsentView.Withdrawable
+  fullName: Axiam.Sdk.Management.Models.ConsentView.Withdrawable
+  nameWithType: ConsentView.Withdrawable
+- uid: Axiam.Sdk.Management.Models.ConsentView.Withdrawable*
+  name: Withdrawable
+  href: api/Axiam.Sdk.Management.Models.ConsentView.html#Axiam_Sdk_Management_Models_ConsentView_Withdrawable_
+  commentId: Overload:Axiam.Sdk.Management.Models.ConsentView.Withdrawable
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ConsentView.Withdrawable
+  nameWithType: ConsentView.Withdrawable
 - uid: Axiam.Sdk.Management.Models.CreateCaCertificateRequest
   name: CreateCaCertificateRequest
   href: api/Axiam.Sdk.Management.Models.CreateCaCertificateRequest.html
@@ -12041,6 +12284,19 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest
   fullName: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest
   nameWithType: CreateOAuth2ClientRequest
+- uid: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AuthnRequestParams
+  name: AuthnRequestParams
+  href: api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_CreateOAuth2ClientRequest_AuthnRequestParams
+  commentId: P:Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AuthnRequestParams
+  fullName: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AuthnRequestParams
+  nameWithType: CreateOAuth2ClientRequest.AuthnRequestParams
+- uid: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AuthnRequestParams*
+  name: AuthnRequestParams
+  href: api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_CreateOAuth2ClientRequest_AuthnRequestParams_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AuthnRequestParams
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AuthnRequestParams
+  nameWithType: CreateOAuth2ClientRequest.AuthnRequestParams
 - uid: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.BackchannelLogoutUri
   name: BackchannelLogoutUri
   href: api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_CreateOAuth2ClientRequest_BackchannelLogoutUri
@@ -12054,6 +12310,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.BackchannelLogoutUri
   nameWithType: CreateOAuth2ClientRequest.BackchannelLogoutUri
+- uid: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.BrowserSso
+  name: BrowserSso
+  href: api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_CreateOAuth2ClientRequest_BrowserSso
+  commentId: P:Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.BrowserSso
+  fullName: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.BrowserSso
+  nameWithType: CreateOAuth2ClientRequest.BrowserSso
+- uid: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.BrowserSso*
+  name: BrowserSso
+  href: api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_CreateOAuth2ClientRequest_BrowserSso_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.BrowserSso
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.BrowserSso
+  nameWithType: CreateOAuth2ClientRequest.BrowserSso
 - uid: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.DpopBoundAccessTokens
   name: DpopBoundAccessTokens
   href: api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_CreateOAuth2ClientRequest_DpopBoundAccessTokens
@@ -14445,6 +14714,38 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.GrantPermissionRequest.ScopeIds
   nameWithType: GrantPermissionRequest.ScopeIds
+- uid: Axiam.Sdk.Management.Models.GrantScopeConsent
+  name: GrantScopeConsent
+  href: api/Axiam.Sdk.Management.Models.GrantScopeConsent.html
+  commentId: T:Axiam.Sdk.Management.Models.GrantScopeConsent
+  fullName: Axiam.Sdk.Management.Models.GrantScopeConsent
+  nameWithType: GrantScopeConsent
+- uid: Axiam.Sdk.Management.Models.GrantScopeConsent.ClientId
+  name: ClientId
+  href: api/Axiam.Sdk.Management.Models.GrantScopeConsent.html#Axiam_Sdk_Management_Models_GrantScopeConsent_ClientId
+  commentId: P:Axiam.Sdk.Management.Models.GrantScopeConsent.ClientId
+  fullName: Axiam.Sdk.Management.Models.GrantScopeConsent.ClientId
+  nameWithType: GrantScopeConsent.ClientId
+- uid: Axiam.Sdk.Management.Models.GrantScopeConsent.ClientId*
+  name: ClientId
+  href: api/Axiam.Sdk.Management.Models.GrantScopeConsent.html#Axiam_Sdk_Management_Models_GrantScopeConsent_ClientId_
+  commentId: Overload:Axiam.Sdk.Management.Models.GrantScopeConsent.ClientId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.GrantScopeConsent.ClientId
+  nameWithType: GrantScopeConsent.ClientId
+- uid: Axiam.Sdk.Management.Models.GrantScopeConsent.Scopes
+  name: Scopes
+  href: api/Axiam.Sdk.Management.Models.GrantScopeConsent.html#Axiam_Sdk_Management_Models_GrantScopeConsent_Scopes
+  commentId: P:Axiam.Sdk.Management.Models.GrantScopeConsent.Scopes
+  fullName: Axiam.Sdk.Management.Models.GrantScopeConsent.Scopes
+  nameWithType: GrantScopeConsent.Scopes
+- uid: Axiam.Sdk.Management.Models.GrantScopeConsent.Scopes*
+  name: Scopes
+  href: api/Axiam.Sdk.Management.Models.GrantScopeConsent.html#Axiam_Sdk_Management_Models_GrantScopeConsent_Scopes_
+  commentId: Overload:Axiam.Sdk.Management.Models.GrantScopeConsent.Scopes
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.GrantScopeConsent.Scopes
+  nameWithType: GrantScopeConsent.Scopes
 - uid: Axiam.Sdk.Management.Models.GrantedScope
   name: GrantedScope
   href: api/Axiam.Sdk.Management.Models.GrantedScope.html
@@ -15572,6 +15873,32 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.OAuth2ClientResponse
   fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse
   nameWithType: OAuth2ClientResponse
+- uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.AuthnRequestParams
+  name: AuthnRequestParams
+  href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_AuthnRequestParams
+  commentId: P:Axiam.Sdk.Management.Models.OAuth2ClientResponse.AuthnRequestParams
+  fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.AuthnRequestParams
+  nameWithType: OAuth2ClientResponse.AuthnRequestParams
+- uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.AuthnRequestParams*
+  name: AuthnRequestParams
+  href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_AuthnRequestParams_
+  commentId: Overload:Axiam.Sdk.Management.Models.OAuth2ClientResponse.AuthnRequestParams
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.AuthnRequestParams
+  nameWithType: OAuth2ClientResponse.AuthnRequestParams
+- uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.BrowserSso
+  name: BrowserSso
+  href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_BrowserSso
+  commentId: P:Axiam.Sdk.Management.Models.OAuth2ClientResponse.BrowserSso
+  fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.BrowserSso
+  nameWithType: OAuth2ClientResponse.BrowserSso
+- uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.BrowserSso*
+  name: BrowserSso
+  href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_BrowserSso_
+  commentId: Overload:Axiam.Sdk.Management.Models.OAuth2ClientResponse.BrowserSso
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.BrowserSso
+  nameWithType: OAuth2ClientResponse.BrowserSso
 - uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.ClientId
   name: ClientId
   href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_ClientId
@@ -16038,6 +16365,38 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.OidcCallbackResponse.UserId
   nameWithType: OidcCallbackResponse.UserId
+- uid: Axiam.Sdk.Management.Models.OidcPolicy
+  name: OidcPolicy
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html
+  commentId: T:Axiam.Sdk.Management.Models.OidcPolicy
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy
+  nameWithType: OidcPolicy
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.DefaultLocale
+  name: DefaultLocale
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DefaultLocale
+  commentId: P:Axiam.Sdk.Management.Models.OidcPolicy.DefaultLocale
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.DefaultLocale
+  nameWithType: OidcPolicy.DefaultLocale
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.DefaultLocale*
+  name: DefaultLocale
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DefaultLocale_
+  commentId: Overload:Axiam.Sdk.Management.Models.OidcPolicy.DefaultLocale
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.DefaultLocale
+  nameWithType: OidcPolicy.DefaultLocale
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.SensitiveScopesEnabled
+  name: SensitiveScopesEnabled
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_SensitiveScopesEnabled
+  commentId: P:Axiam.Sdk.Management.Models.OidcPolicy.SensitiveScopesEnabled
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.SensitiveScopesEnabled
+  nameWithType: OidcPolicy.SensitiveScopesEnabled
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.SensitiveScopesEnabled*
+  name: SensitiveScopesEnabled
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_SensitiveScopesEnabled_
+  commentId: Overload:Axiam.Sdk.Management.Models.OidcPolicy.SensitiveScopesEnabled
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.SensitiveScopesEnabled
+  nameWithType: OidcPolicy.SensitiveScopesEnabled
 - uid: Axiam.Sdk.Management.Models.OpaqueEnrollment
   name: OpaqueEnrollment
   href: api/Axiam.Sdk.Management.Models.OpaqueEnrollment.html
@@ -18091,6 +18450,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SecuritySettings.Notification
   nameWithType: SecuritySettings.Notification
+- uid: Axiam.Sdk.Management.Models.SecuritySettings.Oidc
+  name: Oidc
+  href: api/Axiam.Sdk.Management.Models.SecuritySettings.html#Axiam_Sdk_Management_Models_SecuritySettings_Oidc
+  commentId: P:Axiam.Sdk.Management.Models.SecuritySettings.Oidc
+  fullName: Axiam.Sdk.Management.Models.SecuritySettings.Oidc
+  nameWithType: SecuritySettings.Oidc
+- uid: Axiam.Sdk.Management.Models.SecuritySettings.Oidc*
+  name: Oidc
+  href: api/Axiam.Sdk.Management.Models.SecuritySettings.html#Axiam_Sdk_Management_Models_SecuritySettings_Oidc_
+  commentId: Overload:Axiam.Sdk.Management.Models.SecuritySettings.Oidc
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SecuritySettings.Oidc
+  nameWithType: SecuritySettings.Oidc
 - uid: Axiam.Sdk.Management.Models.SecuritySettings.Opaque
   name: Opaque
   href: api/Axiam.Sdk.Management.Models.SecuritySettings.html#Axiam_Sdk_Management_Models_SecuritySettings_Opaque
@@ -18563,6 +18935,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DefaultCertValidityDays
   nameWithType: SetOrgSettings.DefaultCertValidityDays
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.DefaultLocale
+  name: DefaultLocale
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DefaultLocale
+  commentId: P:Axiam.Sdk.Management.Models.SetOrgSettings.DefaultLocale
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DefaultLocale
+  nameWithType: SetOrgSettings.DefaultLocale
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.DefaultLocale*
+  name: DefaultLocale
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DefaultLocale_
+  commentId: Overload:Axiam.Sdk.Management.Models.SetOrgSettings.DefaultLocale
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DefaultLocale
+  nameWithType: SetOrgSettings.DefaultLocale
 - uid: Axiam.Sdk.Management.Models.SetOrgSettings.DeletionGracePeriodDays
   name: DeletionGracePeriodDays
   href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DeletionGracePeriodDays
@@ -18836,6 +19221,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SetOrgSettings.RequireUppercase
   nameWithType: SetOrgSettings.RequireUppercase
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.SensitiveScopesEnabled
+  name: SensitiveScopesEnabled
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_SensitiveScopesEnabled
+  commentId: P:Axiam.Sdk.Management.Models.SetOrgSettings.SensitiveScopesEnabled
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.SensitiveScopesEnabled
+  nameWithType: SetOrgSettings.SensitiveScopesEnabled
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.SensitiveScopesEnabled*
+  name: SensitiveScopesEnabled
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_SensitiveScopesEnabled_
+  commentId: Overload:Axiam.Sdk.Management.Models.SetOrgSettings.SensitiveScopesEnabled
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.SensitiveScopesEnabled
+  nameWithType: SetOrgSettings.SensitiveScopesEnabled
 - uid: Axiam.Sdk.Management.Models.SetOrgSettings.WebauthnUserVerification
   name: WebauthnUserVerification
   href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_WebauthnUserVerification
@@ -19271,6 +19669,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DefaultCertValidityDays
   nameWithType: TenantSettingsOverride.DefaultCertValidityDays
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DefaultLocale
+  name: DefaultLocale
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DefaultLocale
+  commentId: P:Axiam.Sdk.Management.Models.TenantSettingsOverride.DefaultLocale
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DefaultLocale
+  nameWithType: TenantSettingsOverride.DefaultLocale
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DefaultLocale*
+  name: DefaultLocale
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DefaultLocale_
+  commentId: Overload:Axiam.Sdk.Management.Models.TenantSettingsOverride.DefaultLocale
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DefaultLocale
+  nameWithType: TenantSettingsOverride.DefaultLocale
 - uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DeletionGracePeriodDays
   name: DeletionGracePeriodDays
   href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DeletionGracePeriodDays
@@ -19544,6 +19955,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.RequireUppercase
   nameWithType: TenantSettingsOverride.RequireUppercase
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.SensitiveScopesEnabled
+  name: SensitiveScopesEnabled
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_SensitiveScopesEnabled
+  commentId: P:Axiam.Sdk.Management.Models.TenantSettingsOverride.SensitiveScopesEnabled
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.SensitiveScopesEnabled
+  nameWithType: TenantSettingsOverride.SensitiveScopesEnabled
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.SensitiveScopesEnabled*
+  name: SensitiveScopesEnabled
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_SensitiveScopesEnabled_
+  commentId: Overload:Axiam.Sdk.Management.Models.TenantSettingsOverride.SensitiveScopesEnabled
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.SensitiveScopesEnabled
+  nameWithType: TenantSettingsOverride.SensitiveScopesEnabled
 - uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.WebauthnUserVerification
   name: WebauthnUserVerification
   href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_WebauthnUserVerification
@@ -20193,6 +20617,19 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest
   fullName: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest
   nameWithType: UpdateOAuth2ClientRequest
+- uid: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AuthnRequestParams
+  name: AuthnRequestParams
+  href: api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_AuthnRequestParams
+  commentId: P:Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AuthnRequestParams
+  fullName: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AuthnRequestParams
+  nameWithType: UpdateOAuth2ClientRequest.AuthnRequestParams
+- uid: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AuthnRequestParams*
+  name: AuthnRequestParams
+  href: api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_AuthnRequestParams_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AuthnRequestParams
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AuthnRequestParams
+  nameWithType: UpdateOAuth2ClientRequest.AuthnRequestParams
 - uid: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.BackchannelLogoutUri
   name: BackchannelLogoutUri
   href: api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_BackchannelLogoutUri
@@ -20206,6 +20643,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.BackchannelLogoutUri
   nameWithType: UpdateOAuth2ClientRequest.BackchannelLogoutUri
+- uid: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.BrowserSso
+  name: BrowserSso
+  href: api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_BrowserSso
+  commentId: P:Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.BrowserSso
+  fullName: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.BrowserSso
+  nameWithType: UpdateOAuth2ClientRequest.BrowserSso
+- uid: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.BrowserSso*
+  name: BrowserSso
+  href: api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_BrowserSso_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.BrowserSso
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.BrowserSso
+  nameWithType: UpdateOAuth2ClientRequest.BrowserSso
 - uid: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.DpopBoundAccessTokens
   name: DpopBoundAccessTokens
   href: api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_DpopBoundAccessTokens
@@ -22489,6 +22939,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.PrivacyApi.DownloadExportAsync
   nameWithType: PrivacyApi.DownloadExportAsync
+- uid: Axiam.Sdk.Management.PrivacyApi.GrantScopeConsentAsync(Axiam.Sdk.Management.Models.GrantScopeConsent,System.Threading.CancellationToken)
+  name: GrantScopeConsentAsync(GrantScopeConsent, CancellationToken)
+  href: api/Axiam.Sdk.Management.PrivacyApi.html#Axiam_Sdk_Management_PrivacyApi_GrantScopeConsentAsync_Axiam_Sdk_Management_Models_GrantScopeConsent_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.PrivacyApi.GrantScopeConsentAsync(Axiam.Sdk.Management.Models.GrantScopeConsent,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.PrivacyApi.GrantScopeConsentAsync(Axiam.Sdk.Management.Models.GrantScopeConsent, System.Threading.CancellationToken)
+  nameWithType: PrivacyApi.GrantScopeConsentAsync(GrantScopeConsent, CancellationToken)
+- uid: Axiam.Sdk.Management.PrivacyApi.GrantScopeConsentAsync*
+  name: GrantScopeConsentAsync
+  href: api/Axiam.Sdk.Management.PrivacyApi.html#Axiam_Sdk_Management_PrivacyApi_GrantScopeConsentAsync_
+  commentId: Overload:Axiam.Sdk.Management.PrivacyApi.GrantScopeConsentAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.PrivacyApi.GrantScopeConsentAsync
+  nameWithType: PrivacyApi.GrantScopeConsentAsync
+- uid: Axiam.Sdk.Management.PrivacyApi.ListConsentsAsync(System.Threading.CancellationToken)
+  name: ListConsentsAsync(CancellationToken)
+  href: api/Axiam.Sdk.Management.PrivacyApi.html#Axiam_Sdk_Management_PrivacyApi_ListConsentsAsync_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.PrivacyApi.ListConsentsAsync(System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.PrivacyApi.ListConsentsAsync(System.Threading.CancellationToken)
+  nameWithType: PrivacyApi.ListConsentsAsync(CancellationToken)
+- uid: Axiam.Sdk.Management.PrivacyApi.ListConsentsAsync*
+  name: ListConsentsAsync
+  href: api/Axiam.Sdk.Management.PrivacyApi.html#Axiam_Sdk_Management_PrivacyApi_ListConsentsAsync_
+  commentId: Overload:Axiam.Sdk.Management.PrivacyApi.ListConsentsAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.PrivacyApi.ListConsentsAsync
+  nameWithType: PrivacyApi.ListConsentsAsync
 - uid: Axiam.Sdk.Management.PrivacyApi.RequestDeleteAsync(System.Threading.CancellationToken)
   name: RequestDeleteAsync(CancellationToken)
   href: api/Axiam.Sdk.Management.PrivacyApi.html#Axiam_Sdk_Management_PrivacyApi_RequestDeleteAsync_System_Threading_CancellationToken_
@@ -22515,6 +22991,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.PrivacyApi.RequestExportAsync
   nameWithType: PrivacyApi.RequestExportAsync
+- uid: Axiam.Sdk.Management.PrivacyApi.WithdrawScopeConsentAsync(System.Guid,System.Threading.CancellationToken)
+  name: WithdrawScopeConsentAsync(Guid, CancellationToken)
+  href: api/Axiam.Sdk.Management.PrivacyApi.html#Axiam_Sdk_Management_PrivacyApi_WithdrawScopeConsentAsync_System_Guid_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.PrivacyApi.WithdrawScopeConsentAsync(System.Guid,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.PrivacyApi.WithdrawScopeConsentAsync(System.Guid, System.Threading.CancellationToken)
+  nameWithType: PrivacyApi.WithdrawScopeConsentAsync(Guid, CancellationToken)
+- uid: Axiam.Sdk.Management.PrivacyApi.WithdrawScopeConsentAsync*
+  name: WithdrawScopeConsentAsync
+  href: api/Axiam.Sdk.Management.PrivacyApi.html#Axiam_Sdk_Management_PrivacyApi_WithdrawScopeConsentAsync_
+  commentId: Overload:Axiam.Sdk.Management.PrivacyApi.WithdrawScopeConsentAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.PrivacyApi.WithdrawScopeConsentAsync
+  nameWithType: PrivacyApi.WithdrawScopeConsentAsync
 - uid: Axiam.Sdk.Management.ReactorsApi
   name: ReactorsApi
   href: api/Axiam.Sdk.Management.ReactorsApi.html
