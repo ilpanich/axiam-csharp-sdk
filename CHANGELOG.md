@@ -7,39 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-
-- **A tenant-scoped discovery endpoint no longer gets a second `tenant_id`
-  (SDK contract 1.42).** Contract 1.42's server publishes
-  `token_endpoint`, `revocation_endpoint`, `introspection_endpoint`,
-  `device_authorization_endpoint`, `pushed_authorization_request_endpoint` and
-  `authorization_endpoint` already carrying `?tenant_id=<uuid>` whenever the
-  discovery request named a tenant, or the deployment sets
-  `oauth2_default_tenant_id`. This SDK appended its own copy unconditionally,
-  producing `?tenant_id=A&tenant_id=B` — one parameter with two values, settled
-  by whichever the server's deserialiser happens to read first.
-
-  It now **replaces**: any `tenant_id` the endpoint already carries is dropped
-  and the resolved one set, so exactly one reaches the wire. The resolved value
-  wins on a disagreement — it is the tenant the caller, or the current session's
-  access token, actually authenticated against. **Every other query parameter
-  the endpoint carried survives**; RFC 6749 §3.1/§3.2 require a client to retain
-  an endpoint's own query component, and dropping it was never the fix.
-
-- **`OidcParAsync`'s redirect URL keeps a tenant-scoped
-  `authorization_endpoint`'s `tenant_id`.** §26.2 rule 2 kept that URL to
-  `client_id` + `request_uri` by clearing the endpoint's query wholesale, which
-  as of contract 1.42 takes the server's own `tenant_id` with it — and the
-  authorization endpoint's anonymous lane answers `401` without it, because a
-  browser carrying no AXIAM session cannot otherwise be told which tenant's
-  client to look up. `tenant_id` is not one of the nine OIDC
-  authentication-request parameters the server's "no inline parameters beside a
-  `request_uri`" refusal is computed over, so carrying it is not the merge rule 2
-  forbids. Presence still comes from the OP — a bare `authorization_endpoint`
-  still yields a two-parameter redirect — and the value sent is the tenant the
-  push was made under, which is where the `request_uri` lives.
+## [1.0.0-beta13] - 2026-09-12
 
 ### Added
+
+- Prefer RFC 8705 §5 mtls_endpoint_aliases on mTLS calls
 
 - **RFC 9449 §10.1 `dpop_jkt` on the PAR surface (SDK contract 1.42).**
   `OidcParParams` gains an optional `DpopJkt`, emitted in the
@@ -101,6 +73,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- ParLogin's redirect comment, for the carried tenant_id
+
+- Re-vendor at SDK contract 1.42 and regenerate §27
+
+- Bump the minor-patch group with 1 update
+
 - Re-vendored `CONTRACT.md`, `openapi.json` and `management-registry.json` from
   `ilpanich/axiam` at **SDK contract 1.42**. This spans **two** revisions
   (1.40 → 1.42): the previously vendored copy was 1.40, not 1.41.
@@ -140,6 +118,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   until an operator sets `AXIAM__AUTH__OAUTH2_MTLS_BASE_URL`, so every existing
   consumer keeps working unchanged against every existing deployment. No public
   API was removed or renamed.
+
+### Fixed
+
+- Replace, don't append, tenant_id on a scoped endpoint; add dpop_jkt
+
+- **A tenant-scoped discovery endpoint no longer gets a second `tenant_id`
+  (SDK contract 1.42).** Contract 1.42's server publishes
+  `token_endpoint`, `revocation_endpoint`, `introspection_endpoint`,
+  `device_authorization_endpoint`, `pushed_authorization_request_endpoint` and
+  `authorization_endpoint` already carrying `?tenant_id=<uuid>` whenever the
+  discovery request named a tenant, or the deployment sets
+  `oauth2_default_tenant_id`. This SDK appended its own copy unconditionally,
+  producing `?tenant_id=A&tenant_id=B` — one parameter with two values, settled
+  by whichever the server's deserialiser happens to read first.
+
+  It now **replaces**: any `tenant_id` the endpoint already carries is dropped
+  and the resolved one set, so exactly one reaches the wire. The resolved value
+  wins on a disagreement — it is the tenant the caller, or the current session's
+  access token, actually authenticated against. **Every other query parameter
+  the endpoint carried survives**; RFC 6749 §3.1/§3.2 require a client to retain
+  an endpoint's own query component, and dropping it was never the fix.
+
+- **`OidcParAsync`'s redirect URL keeps a tenant-scoped
+  `authorization_endpoint`'s `tenant_id`.** §26.2 rule 2 kept that URL to
+  `client_id` + `request_uri` by clearing the endpoint's query wholesale, which
+  as of contract 1.42 takes the server's own `tenant_id` with it — and the
+  authorization endpoint's anonymous lane answers `401` without it, because a
+  browser carrying no AXIAM session cannot otherwise be told which tenant's
+  client to look up. `tenant_id` is not one of the nine OIDC
+  authentication-request parameters the server's "no inline parameters beside a
+  `request_uri`" refusal is computed over, so carrying it is not the merge rule 2
+  forbids. Presence still comes from the OP — a bare `authorization_endpoint`
+  still yields a two-parameter redirect — and the value sent is the tenant the
+  push was made under, which is where the `request_uri` lives.
 
 ## [1.0.0-beta12] - 2026-09-06
 
