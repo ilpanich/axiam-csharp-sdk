@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using Axiam.Sdk;
+using Axiam.Sdk.Auth;
 using Axiam.Sdk.Core;
 using Axiam.Sdk.Options;
 using Axiam.Sdk.Tests.Fixtures;
@@ -36,11 +37,15 @@ public class WebauthnTests
     private const string AccessToken = "access-token-fixture-do-not-log";
     private const string RefreshToken = "refresh-token-fixture-do-not-log";
 
+    private const string SetupToken = "setup-token-fixture-do-not-log";
+
     private const string RegisterStartPath = "/api/v1/auth/webauthn/register/start";
     private const string RegisterFinishPath = "/api/v1/auth/webauthn/register/finish";
     private const string AuthStartPath = "/api/v1/auth/webauthn/authenticate/start";
     private const string DiscoverableStartPath = "/api/v1/auth/webauthn/authenticate/discoverable/start";
     private const string DiscoverableFinishPath = "/api/v1/auth/webauthn/authenticate/discoverable/finish";
+    private const string SetupRegisterStartPath = "/api/v1/auth/webauthn/setup/register/start";
+    private const string SetupRegisterFinishPath = "/api/v1/auth/webauthn/setup/register/finish";
 
     /// <summary>
     /// Deliberately "unusual but valid": every optional field populated, so the
@@ -453,6 +458,189 @@ public class WebauthnTests
             Sensitive.Of(StateToken), AuthenticationResponse);
         Assert.DoesNotContain(AccessToken, login.ToString());
         Assert.DoesNotContain(RefreshToken, login.ToString());
+    }
+
+    // -----------------------------------------------------------------------
+    // §24.1 / §25.1-§25.2 — forced enrolment with a passkey or security key
+    // (contract 1.45): the setup token is the ONLY credential these two take.
+    // -----------------------------------------------------------------------
+
+    [Fact]
+    public async Task SetupRegisterStart_SendsOnlyTheSetupTokenAndNoSessionCredential()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map(SetupRegisterStartPath, _ => ChallengeResponse(CreationChallenge));
+        using AxiamClient client = Client(handler);
+        // A session IS configured on this client — the point of the assertion below is
+        // that it must never reach the wire on this call regardless.
+        SeedSession(client);
+
+        WebauthnChallenge challenge = await client.WebauthnSetupRegisterStartAsync(Sensitive.Of(SetupToken));
+
+        Assert.Single(handler.Requests);
+        HttpRequestMessage sent = handler.Requests[0];
+        JsonElement body = OidcTestKit.ReadJsonBody(sent);
+        Assert.Equal(SetupToken, body.GetProperty("setup_token").GetString());
+
+        // §24.1: "an SDK MUST NOT attach its session credential to these two" — asserted
+        // on the transport, not by trusting that no code path happens to set one.
+        Assert.Null(sent.Headers.Authorization);
+        Assert.False(sent.Headers.Contains("Cookie"), "no session cookie may reach the wire on this call");
+
+        Assert.Equal(StateToken, challenge.StateToken.Reveal());
+        Assert.Equal("axiam.test", challenge.Challenge.GetProperty("publicKey").GetProperty("rp").GetProperty("id").GetString());
+    }
+
+    [Fact]
+    public async Task SetupRegisterFinish_SendsOnlyTheSetupTokenAndNoSessionCredential()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map(SetupRegisterFinishPath, _ => OidcTestKit.JsonOk("{}"));
+        using AxiamClient client = Client(handler);
+        SeedSession(client);
+
+        await client.WebauthnSetupRegisterFinishAsync(
+            Sensitive.Of(SetupToken), Sensitive.Of(StateToken), "Alice's security key", RegistrationResponse);
+
+        Assert.Single(handler.Requests);
+        HttpRequestMessage sent = handler.Requests[0];
+        JsonElement body = OidcTestKit.ReadJsonBody(sent);
+        Assert.Equal(SetupToken, body.GetProperty("setup_token").GetString());
+        Assert.Equal(StateToken, body.GetProperty("state_token").GetString());
+        Assert.Equal("Alice's security key", body.GetProperty("credential_name").GetString());
+
+        Assert.Null(sent.Headers.Authorization);
+        Assert.False(sent.Headers.Contains("Cookie"), "no session cookie may reach the wire on this call");
+    }
+
+    [Fact]
+    public async Task SetupRegisterFinish_AdoptsCredentialsExactlyAsMfaSetupConfirmDoes()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map(SetupRegisterFinishPath, _ => OidcTestKit.JsonOk("{}"));
+        using AxiamClient client = Client(handler);
+
+        // No session configured — this is the ordinary case: a login just answered
+        // MfaSetupRequired and there was no prior session to begin with.
+        LoginResult result = await client.WebauthnSetupRegisterFinishAsync(
+            Sensitive.Of(SetupToken), Sensitive.Of(StateToken), "Alice's security key", RegistrationResponse);
+
+        // §25.2 rule 2: this IS the completion of a login (the WebAuthn twin of
+        // MfaSetupConfirmAsync), so the credentials it returns are adopted exactly as
+        // MfaSetupConfirmAsync's own LoginResult shape reports — see
+        // AccountLifecycleTests.MfaSetupConfirm_CompletesTheLogin.
+        Assert.False(result.MfaRequired);
+        Assert.False(result.MfaSetupRequired);
+    }
+
+    [Fact]
+    public async Task SetupRegisterFinish_DropsAMemoizedDecision()
+    {
+        var resource = Guid.Parse("55555555-5555-5555-5555-555555555555");
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/authz/check", _ => OidcTestKit.JsonOk("""{"allowed":true}"""));
+        handler.Map(SetupRegisterFinishPath, _ => OidcTestKit.JsonOk("{}"));
+
+        var options = new AxiamClientOptions
+        {
+            BaseUrl = BaseUrl,
+            TenantId = TenantGuid,
+            OrgId = Guid.Parse(OrgGuid),
+            DecisionMemoTtl = TimeSpan.FromMinutes(5),
+        };
+        using AxiamClient client = Client(handler, options);
+        SeedSession(client);
+
+        await client.Authz.CheckAccessAsync("read", resource);
+        await client.Authz.CheckAccessAsync("read", resource);
+        Assert.Equal(1, handler.CountFor("/api/v1/authz/check"));
+
+        await client.WebauthnSetupRegisterFinishAsync(
+            Sensitive.Of(SetupToken), Sensitive.Of(StateToken), "key", RegistrationResponse);
+
+        // §17.1 rule 9 / §24.3 rule 4: the ceremony changed the subject, so this must hit
+        // the wire again rather than answer from a warm cache.
+        await client.Authz.CheckAccessAsync("read", resource);
+        Assert.Equal(2, handler.CountFor("/api/v1/authz/check"));
+    }
+
+    [Fact]
+    public async Task SetupRegisterFinish_CapturesTheCsrfTokenForTheNextCall()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map(SetupRegisterFinishPath, _ =>
+        {
+            HttpResponseMessage response = OidcTestKit.JsonOk("{}");
+            response.Headers.Add("X-CSRF-Token", "csrf-from-setup-finish");
+            return response;
+        });
+        handler.Map("/api/v1/authz/check", _ => OidcTestKit.JsonOk("""{"allowed":true}"""));
+        using AxiamClient client = Client(handler);
+
+        await client.WebauthnSetupRegisterFinishAsync(
+            Sensitive.Of(SetupToken), Sensitive.Of(StateToken), "key", RegistrationResponse);
+        await client.Authz.CheckAccessAsync("read", Guid.NewGuid());
+
+        HttpRequestMessage authzCall = handler.Requests[^1];
+        Assert.True(authzCall.Headers.TryGetValues("X-CSRF-Token", out IEnumerable<string>? values));
+        Assert.Equal("csrf-from-setup-finish", values!.Single());
+    }
+
+    [Fact]
+    public async Task SetupRegisterStart_RefusesAnAccountThatAlreadyHasAFactor()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map(SetupRegisterStartPath, _ => OidcTestKit.JsonStatus(
+            HttpStatusCode.BadRequest, """{"error":"mfa_already_configured"}"""));
+        using AxiamClient client = Client(handler);
+
+        // Same 400 answer setup/enroll gives for the same reason: a setup token adds the
+        // first factor, never a second.
+        await Assert.ThrowsAnyAsync<Exception>(() =>
+            client.WebauthnSetupRegisterStartAsync(Sensitive.Of(SetupToken)));
+    }
+
+    [Fact]
+    public async Task SetupRegisterStart_InvalidToken_IsAnAuthError()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map(SetupRegisterStartPath, _ => OidcTestKit.JsonStatus(
+            HttpStatusCode.Unauthorized, """{"message":"invalid or expired setup token"}"""));
+        using AxiamClient client = Client(handler);
+
+        await Assert.ThrowsAsync<AuthError>(() =>
+            client.WebauthnSetupRegisterStartAsync(Sensitive.Of(SetupToken)));
+    }
+
+    [Fact]
+    public async Task SetupRegisterStart_503_IsNotRetried()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map(SetupRegisterStartPath, _ => OidcTestKit.JsonStatus(
+            HttpStatusCode.ServiceUnavailable, """{"message":"FIDO metadata unavailable"}"""));
+        using AxiamClient client = Client(handler);
+
+        await Assert.ThrowsAnyAsync<Exception>(() =>
+            client.WebauthnSetupRegisterStartAsync(Sensitive.Of(SetupToken)));
+
+        // §24.4 rule 2, asserted on the request count exactly as RegisterStart_503_IsNotRetried
+        // asserts it for the session-bound twin.
+        Assert.Equal(1, handler.CountFor(SetupRegisterStartPath));
+    }
+
+    [Fact]
+    public async Task SetupRegisterFinish_403_KeepsTheAttestationPolicyMessage()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map(SetupRegisterFinishPath, _ => OidcTestKit.JsonStatus(
+            HttpStatusCode.Forbidden, """{"message":"this security key is not FIDO certified"}"""));
+        using AxiamClient client = Client(handler);
+
+        AuthzError error = await Assert.ThrowsAsync<AuthzError>(() =>
+            client.WebauthnSetupRegisterFinishAsync(
+                Sensitive.Of(SetupToken), Sensitive.Of(StateToken), "key", RegistrationResponse));
+
+        Assert.Contains("FIDO certified", error.Message);
     }
 
     // -----------------------------------------------------------------------

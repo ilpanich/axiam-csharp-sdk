@@ -285,7 +285,18 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
         }
     }
 
-    private void CaptureCsrfToken(HttpResponseMessage response)
+    /// <summary>
+    /// Captures the <c>X-CSRF-Token</c> response header into this handler's in-memory
+    /// cache, exactly as every request through this handler already does on the way back
+    /// (&#167;3). Exposed internally so a call that deliberately bypasses this handler's
+    /// pipeline — CONTRACT.md &#167;24.1's <c>setup/register/*</c> pair, which MUST NOT
+    /// carry a session credential outbound but still adopts the new one a successful
+    /// <c>finish</c> issues — can feed its own response through the same capture the
+    /// pipeline would have performed, so the very next state-changing call already carries
+    /// it.
+    /// </summary>
+    /// <param name="response">The response to read the header from.</param>
+    internal void CaptureCsrfToken(HttpResponseMessage response)
     {
         if (response.Headers.TryGetValues(CsrfHeaderName, out IEnumerable<string>? values))
         {

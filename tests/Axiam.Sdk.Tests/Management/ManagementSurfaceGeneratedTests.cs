@@ -825,6 +825,16 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
         AssertDecodedEveryField(result, body);
     }
 
+    /// <summary>Exercises certificates.sign_csr.</summary>
+    [Fact]
+    public async Task Certificates_SignCsr()
+    {
+        string body = "{\"cert_type\": \"User\", \"created_at\": \"2026-08-26T00:00:00Z\", \"fingerprint\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"issuer_ca_id\": \"11111111-1111-4111-8111-111111111111\", \"key_algorithm\": \"Rsa4096\", \"metadata\": null, \"not_after\": \"2026-08-26T00:00:00Z\", \"not_before\": \"2026-08-26T00:00:00Z\", \"public_cert_pem\": \"example\", \"status\": \"Active\", \"subject\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\"}";
+        Mount("POST", $"/api/v1/certificates/sign-csr", 201, body);
+        var result = await Client.Management.Certificates.SignCsrAsync(body: new SignCertificateCsrRequest { CertType = CertificateType.User, CsrPem = "example", IssuerCaId = ExampleId, ValidityDays = 1 });
+        AssertDecodedEveryField(result, body);
+    }
+
     /// <summary>Exercises certificates.get.</summary>
     [Fact]
     public async Task Certificates_Get()
@@ -1819,6 +1829,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "certificates.get",
             "certificates.list",
             "certificates.revoke",
+            "certificates.sign_csr",
             "email_config.delete_org",
             "email_config.delete_tenant",
             "email_config.get_org",
@@ -1963,7 +1974,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "webhooks.list",
             "webhooks.update",
         };
-        Assert.Equal(159, exercised.Length);
+        Assert.Equal(160, exercised.Length);
         Assert.Equal(ExpectedSurface(), exercised);
     }
 }
