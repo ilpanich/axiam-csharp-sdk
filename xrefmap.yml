@@ -1579,15 +1579,15 @@ references:
   commentId: T:Axiam.Sdk.Auth.JwksVerifier
   fullName: Axiam.Sdk.Auth.JwksVerifier
   nameWithType: JwksVerifier
-- uid: Axiam.Sdk.Auth.JwksVerifier.#ctor(System.Net.Http.HttpClient,System.Uri,System.TimeSpan,System.String,System.String)
-  name: JwksVerifier(HttpClient, Uri, TimeSpan, string?, string?)
-  href: api/Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier__ctor_System_Net_Http_HttpClient_System_Uri_System_TimeSpan_System_String_System_String_
-  commentId: M:Axiam.Sdk.Auth.JwksVerifier.#ctor(System.Net.Http.HttpClient,System.Uri,System.TimeSpan,System.String,System.String)
-  name.vb: New(HttpClient, Uri, TimeSpan, String, String)
-  fullName: Axiam.Sdk.Auth.JwksVerifier.JwksVerifier(System.Net.Http.HttpClient, System.Uri, System.TimeSpan, string?, string?)
-  fullName.vb: Axiam.Sdk.Auth.JwksVerifier.New(System.Net.Http.HttpClient, System.Uri, System.TimeSpan, String, String)
-  nameWithType: JwksVerifier.JwksVerifier(HttpClient, Uri, TimeSpan, string?, string?)
-  nameWithType.vb: JwksVerifier.New(HttpClient, Uri, TimeSpan, String, String)
+- uid: Axiam.Sdk.Auth.JwksVerifier.#ctor(System.Net.Http.HttpClient,System.Uri,System.TimeSpan,System.String,System.String,Axiam.Sdk.Auth.RevocationFeed)
+  name: JwksVerifier(HttpClient, Uri, TimeSpan, string?, string?, RevocationFeed?)
+  href: api/Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier__ctor_System_Net_Http_HttpClient_System_Uri_System_TimeSpan_System_String_System_String_Axiam_Sdk_Auth_RevocationFeed_
+  commentId: M:Axiam.Sdk.Auth.JwksVerifier.#ctor(System.Net.Http.HttpClient,System.Uri,System.TimeSpan,System.String,System.String,Axiam.Sdk.Auth.RevocationFeed)
+  name.vb: New(HttpClient, Uri, TimeSpan, String, String, RevocationFeed)
+  fullName: Axiam.Sdk.Auth.JwksVerifier.JwksVerifier(System.Net.Http.HttpClient, System.Uri, System.TimeSpan, string?, string?, Axiam.Sdk.Auth.RevocationFeed?)
+  fullName.vb: Axiam.Sdk.Auth.JwksVerifier.New(System.Net.Http.HttpClient, System.Uri, System.TimeSpan, String, String, Axiam.Sdk.Auth.RevocationFeed)
+  nameWithType: JwksVerifier.JwksVerifier(HttpClient, Uri, TimeSpan, string?, string?, RevocationFeed?)
+  nameWithType.vb: JwksVerifier.New(HttpClient, Uri, TimeSpan, String, String, RevocationFeed)
 - uid: Axiam.Sdk.Auth.JwksVerifier.#ctor*
   name: JwksVerifier
   href: api/Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier__ctor_
@@ -5407,6 +5407,126 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.RefreshGuard.RefreshIfNeededAsync
   nameWithType: RefreshGuard.RefreshIfNeededAsync
+- uid: Axiam.Sdk.Auth.RevocationFeed
+  name: RevocationFeed
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html
+  commentId: T:Axiam.Sdk.Auth.RevocationFeed
+  fullName: Axiam.Sdk.Auth.RevocationFeed
+  nameWithType: RevocationFeed
+- uid: Axiam.Sdk.Auth.RevocationFeed.#ctor(System.Net.Http.HttpClient,System.Uri,System.Nullable{System.TimeSpan})
+  name: RevocationFeed(HttpClient, Uri, TimeSpan?)
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed__ctor_System_Net_Http_HttpClient_System_Uri_System_Nullable_System_TimeSpan__
+  commentId: M:Axiam.Sdk.Auth.RevocationFeed.#ctor(System.Net.Http.HttpClient,System.Uri,System.Nullable{System.TimeSpan})
+  name.vb: New(HttpClient, Uri, TimeSpan?)
+  fullName: Axiam.Sdk.Auth.RevocationFeed.RevocationFeed(System.Net.Http.HttpClient, System.Uri, System.TimeSpan?)
+  fullName.vb: Axiam.Sdk.Auth.RevocationFeed.New(System.Net.Http.HttpClient, System.Uri, System.TimeSpan?)
+  nameWithType: RevocationFeed.RevocationFeed(HttpClient, Uri, TimeSpan?)
+  nameWithType.vb: RevocationFeed.New(HttpClient, Uri, TimeSpan?)
+- uid: Axiam.Sdk.Auth.RevocationFeed.#ctor*
+  name: RevocationFeed
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed__ctor_
+  commentId: Overload:Axiam.Sdk.Auth.RevocationFeed.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Auth.RevocationFeed.RevocationFeed
+  fullName.vb: Axiam.Sdk.Auth.RevocationFeed.New
+  nameWithType: RevocationFeed.RevocationFeed
+  nameWithType.vb: RevocationFeed.New
+- uid: Axiam.Sdk.Auth.RevocationFeed.DefaultPollInterval
+  name: DefaultPollInterval
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_DefaultPollInterval
+  commentId: F:Axiam.Sdk.Auth.RevocationFeed.DefaultPollInterval
+  fullName: Axiam.Sdk.Auth.RevocationFeed.DefaultPollInterval
+  nameWithType: RevocationFeed.DefaultPollInterval
+- uid: Axiam.Sdk.Auth.RevocationFeed.EntryFor(System.String)
+  name: EntryFor(string)
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_EntryFor_System_String_
+  commentId: M:Axiam.Sdk.Auth.RevocationFeed.EntryFor(System.String)
+  name.vb: EntryFor(String)
+  fullName: Axiam.Sdk.Auth.RevocationFeed.EntryFor(string)
+  fullName.vb: Axiam.Sdk.Auth.RevocationFeed.EntryFor(String)
+  nameWithType: RevocationFeed.EntryFor(string)
+  nameWithType.vb: RevocationFeed.EntryFor(String)
+- uid: Axiam.Sdk.Auth.RevocationFeed.EntryFor*
+  name: EntryFor
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_EntryFor_
+  commentId: Overload:Axiam.Sdk.Auth.RevocationFeed.EntryFor
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.RevocationFeed.EntryFor
+  nameWithType: RevocationFeed.EntryFor
+- uid: Axiam.Sdk.Auth.RevocationFeed.FeedPath
+  name: FeedPath
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_FeedPath
+  commentId: F:Axiam.Sdk.Auth.RevocationFeed.FeedPath
+  fullName: Axiam.Sdk.Auth.RevocationFeed.FeedPath
+  nameWithType: RevocationFeed.FeedPath
+- uid: Axiam.Sdk.Auth.RevocationFeed.FeedUri
+  name: FeedUri
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_FeedUri
+  commentId: P:Axiam.Sdk.Auth.RevocationFeed.FeedUri
+  fullName: Axiam.Sdk.Auth.RevocationFeed.FeedUri
+  nameWithType: RevocationFeed.FeedUri
+- uid: Axiam.Sdk.Auth.RevocationFeed.FeedUri*
+  name: FeedUri
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_FeedUri_
+  commentId: Overload:Axiam.Sdk.Auth.RevocationFeed.FeedUri
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.RevocationFeed.FeedUri
+  nameWithType: RevocationFeed.FeedUri
+- uid: Axiam.Sdk.Auth.RevocationFeed.IsRevokedAsync(System.String,System.Threading.CancellationToken)
+  name: IsRevokedAsync(string?, CancellationToken)
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_IsRevokedAsync_System_String_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Auth.RevocationFeed.IsRevokedAsync(System.String,System.Threading.CancellationToken)
+  name.vb: IsRevokedAsync(String, CancellationToken)
+  fullName: Axiam.Sdk.Auth.RevocationFeed.IsRevokedAsync(string?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Auth.RevocationFeed.IsRevokedAsync(String, System.Threading.CancellationToken)
+  nameWithType: RevocationFeed.IsRevokedAsync(string?, CancellationToken)
+  nameWithType.vb: RevocationFeed.IsRevokedAsync(String, CancellationToken)
+- uid: Axiam.Sdk.Auth.RevocationFeed.IsRevokedAsync*
+  name: IsRevokedAsync
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_IsRevokedAsync_
+  commentId: Overload:Axiam.Sdk.Auth.RevocationFeed.IsRevokedAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.RevocationFeed.IsRevokedAsync
+  nameWithType: RevocationFeed.IsRevokedAsync
+- uid: Axiam.Sdk.Auth.RevocationFeed.MaxEntries
+  name: MaxEntries
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_MaxEntries
+  commentId: F:Axiam.Sdk.Auth.RevocationFeed.MaxEntries
+  fullName: Axiam.Sdk.Auth.RevocationFeed.MaxEntries
+  nameWithType: RevocationFeed.MaxEntries
+- uid: Axiam.Sdk.Auth.RevocationFeed.MinPollInterval
+  name: MinPollInterval
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_MinPollInterval
+  commentId: F:Axiam.Sdk.Auth.RevocationFeed.MinPollInterval
+  fullName: Axiam.Sdk.Auth.RevocationFeed.MinPollInterval
+  nameWithType: RevocationFeed.MinPollInterval
+- uid: Axiam.Sdk.Auth.RevocationFeed.PollInterval
+  name: PollInterval
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_PollInterval
+  commentId: P:Axiam.Sdk.Auth.RevocationFeed.PollInterval
+  fullName: Axiam.Sdk.Auth.RevocationFeed.PollInterval
+  nameWithType: RevocationFeed.PollInterval
+- uid: Axiam.Sdk.Auth.RevocationFeed.PollInterval*
+  name: PollInterval
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_PollInterval_
+  commentId: Overload:Axiam.Sdk.Auth.RevocationFeed.PollInterval
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.RevocationFeed.PollInterval
+  nameWithType: RevocationFeed.PollInterval
+- uid: Axiam.Sdk.Auth.RevocationFeed.RefreshAsync(System.Threading.CancellationToken)
+  name: RefreshAsync(CancellationToken)
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_RefreshAsync_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Auth.RevocationFeed.RefreshAsync(System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Auth.RevocationFeed.RefreshAsync(System.Threading.CancellationToken)
+  nameWithType: RevocationFeed.RefreshAsync(CancellationToken)
+- uid: Axiam.Sdk.Auth.RevocationFeed.RefreshAsync*
+  name: RefreshAsync
+  href: api/Axiam.Sdk.Auth.RevocationFeed.html#Axiam_Sdk_Auth_RevocationFeed_RefreshAsync_
+  commentId: Overload:Axiam.Sdk.Auth.RevocationFeed.RefreshAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.RevocationFeed.RefreshAsync
+  nameWithType: RevocationFeed.RefreshAsync
 - uid: Axiam.Sdk.Auth.TokenPair
   name: TokenPair
   href: api/Axiam.Sdk.Auth.TokenPair.html
@@ -18800,6 +18920,155 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.ServiceAccountResponse.UpdatedAt
   nameWithType: ServiceAccountResponse.UpdatedAt
+- uid: Axiam.Sdk.Management.Models.SessionResponse
+  name: SessionResponse
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html
+  commentId: T:Axiam.Sdk.Management.Models.SessionResponse
+  fullName: Axiam.Sdk.Management.Models.SessionResponse
+  nameWithType: SessionResponse
+- uid: Axiam.Sdk.Management.Models.SessionResponse.Amr
+  name: Amr
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_Amr
+  commentId: P:Axiam.Sdk.Management.Models.SessionResponse.Amr
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.Amr
+  nameWithType: SessionResponse.Amr
+- uid: Axiam.Sdk.Management.Models.SessionResponse.Amr*
+  name: Amr
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_Amr_
+  commentId: Overload:Axiam.Sdk.Management.Models.SessionResponse.Amr
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.Amr
+  nameWithType: SessionResponse.Amr
+- uid: Axiam.Sdk.Management.Models.SessionResponse.AuthenticatedAt
+  name: AuthenticatedAt
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_AuthenticatedAt
+  commentId: P:Axiam.Sdk.Management.Models.SessionResponse.AuthenticatedAt
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.AuthenticatedAt
+  nameWithType: SessionResponse.AuthenticatedAt
+- uid: Axiam.Sdk.Management.Models.SessionResponse.AuthenticatedAt*
+  name: AuthenticatedAt
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_AuthenticatedAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.SessionResponse.AuthenticatedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.AuthenticatedAt
+  nameWithType: SessionResponse.AuthenticatedAt
+- uid: Axiam.Sdk.Management.Models.SessionResponse.CreatedAt
+  name: CreatedAt
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_CreatedAt
+  commentId: P:Axiam.Sdk.Management.Models.SessionResponse.CreatedAt
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.CreatedAt
+  nameWithType: SessionResponse.CreatedAt
+- uid: Axiam.Sdk.Management.Models.SessionResponse.CreatedAt*
+  name: CreatedAt
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_CreatedAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.SessionResponse.CreatedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.CreatedAt
+  nameWithType: SessionResponse.CreatedAt
+- uid: Axiam.Sdk.Management.Models.SessionResponse.ExpiresAt
+  name: ExpiresAt
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_ExpiresAt
+  commentId: P:Axiam.Sdk.Management.Models.SessionResponse.ExpiresAt
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.ExpiresAt
+  nameWithType: SessionResponse.ExpiresAt
+- uid: Axiam.Sdk.Management.Models.SessionResponse.ExpiresAt*
+  name: ExpiresAt
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_ExpiresAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.SessionResponse.ExpiresAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.ExpiresAt
+  nameWithType: SessionResponse.ExpiresAt
+- uid: Axiam.Sdk.Management.Models.SessionResponse.Id
+  name: Id
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_Id
+  commentId: P:Axiam.Sdk.Management.Models.SessionResponse.Id
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.Id
+  nameWithType: SessionResponse.Id
+- uid: Axiam.Sdk.Management.Models.SessionResponse.Id*
+  name: Id
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_Id_
+  commentId: Overload:Axiam.Sdk.Management.Models.SessionResponse.Id
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.Id
+  nameWithType: SessionResponse.Id
+- uid: Axiam.Sdk.Management.Models.SessionResponse.IpAddress
+  name: IpAddress
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_IpAddress
+  commentId: P:Axiam.Sdk.Management.Models.SessionResponse.IpAddress
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.IpAddress
+  nameWithType: SessionResponse.IpAddress
+- uid: Axiam.Sdk.Management.Models.SessionResponse.IpAddress*
+  name: IpAddress
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_IpAddress_
+  commentId: Overload:Axiam.Sdk.Management.Models.SessionResponse.IpAddress
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.IpAddress
+  nameWithType: SessionResponse.IpAddress
+- uid: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayAt
+  name: RefreshReplayAt
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_RefreshReplayAt
+  commentId: P:Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayAt
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayAt
+  nameWithType: SessionResponse.RefreshReplayAt
+- uid: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayAt*
+  name: RefreshReplayAt
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_RefreshReplayAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayAt
+  nameWithType: SessionResponse.RefreshReplayAt
+- uid: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayGraceAccepted
+  name: RefreshReplayGraceAccepted
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_RefreshReplayGraceAccepted
+  commentId: P:Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayGraceAccepted
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayGraceAccepted
+  nameWithType: SessionResponse.RefreshReplayGraceAccepted
+- uid: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayGraceAccepted*
+  name: RefreshReplayGraceAccepted
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_RefreshReplayGraceAccepted_
+  commentId: Overload:Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayGraceAccepted
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayGraceAccepted
+  nameWithType: SessionResponse.RefreshReplayGraceAccepted
+- uid: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayRefused
+  name: RefreshReplayRefused
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_RefreshReplayRefused
+  commentId: P:Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayRefused
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayRefused
+  nameWithType: SessionResponse.RefreshReplayRefused
+- uid: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayRefused*
+  name: RefreshReplayRefused
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_RefreshReplayRefused_
+  commentId: Overload:Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayRefused
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayRefused
+  nameWithType: SessionResponse.RefreshReplayRefused
+- uid: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayVerdict
+  name: RefreshReplayVerdict
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_RefreshReplayVerdict
+  commentId: P:Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayVerdict
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayVerdict
+  nameWithType: SessionResponse.RefreshReplayVerdict
+- uid: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayVerdict*
+  name: RefreshReplayVerdict
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_RefreshReplayVerdict_
+  commentId: Overload:Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayVerdict
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.RefreshReplayVerdict
+  nameWithType: SessionResponse.RefreshReplayVerdict
+- uid: Axiam.Sdk.Management.Models.SessionResponse.UserAgent
+  name: UserAgent
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_UserAgent
+  commentId: P:Axiam.Sdk.Management.Models.SessionResponse.UserAgent
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.UserAgent
+  nameWithType: SessionResponse.UserAgent
+- uid: Axiam.Sdk.Management.Models.SessionResponse.UserAgent*
+  name: UserAgent
+  href: api/Axiam.Sdk.Management.Models.SessionResponse.html#Axiam_Sdk_Management_Models_SessionResponse_UserAgent_
+  commentId: Overload:Axiam.Sdk.Management.Models.SessionResponse.UserAgent
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SessionResponse.UserAgent
+  nameWithType: SessionResponse.UserAgent
 - uid: Axiam.Sdk.Management.Models.SetMtlsTrustAnchor
   name: SetMtlsTrustAnchor
   href: api/Axiam.Sdk.Management.Models.SetMtlsTrustAnchor.html
@@ -24142,6 +24411,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.UsersApi.ListRolesAsync
   nameWithType: UsersApi.ListRolesAsync
+- uid: Axiam.Sdk.Management.UsersApi.ListSessionsAsync(System.Guid,System.Threading.CancellationToken)
+  name: ListSessionsAsync(Guid, CancellationToken)
+  href: api/Axiam.Sdk.Management.UsersApi.html#Axiam_Sdk_Management_UsersApi_ListSessionsAsync_System_Guid_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.UsersApi.ListSessionsAsync(System.Guid,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.UsersApi.ListSessionsAsync(System.Guid, System.Threading.CancellationToken)
+  nameWithType: UsersApi.ListSessionsAsync(Guid, CancellationToken)
+- uid: Axiam.Sdk.Management.UsersApi.ListSessionsAsync*
+  name: ListSessionsAsync
+  href: api/Axiam.Sdk.Management.UsersApi.html#Axiam_Sdk_Management_UsersApi_ListSessionsAsync_
+  commentId: Overload:Axiam.Sdk.Management.UsersApi.ListSessionsAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.UsersApi.ListSessionsAsync
+  nameWithType: UsersApi.ListSessionsAsync
 - uid: Axiam.Sdk.Management.UsersApi.ResetMfaAsync(System.Guid,System.Threading.CancellationToken)
   name: ResetMfaAsync(Guid, CancellationToken)
   href: api/Axiam.Sdk.Management.UsersApi.html#Axiam_Sdk_Management_UsersApi_ResetMfaAsync_System_Guid_System_Threading_CancellationToken_

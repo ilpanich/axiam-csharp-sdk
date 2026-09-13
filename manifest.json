@@ -1118,6 +1118,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.RevocationFeed.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.RevocationFeed.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.RevocationFeed",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.RevocationFeed.yml\" sourcestartlinenumber=\"1\">The optional session-revocation feed poller (CONTRACT.md §10.4, contract 1.44 —\nAXIAM threats T-39 and T-143).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Auth.TokenPair.yml",
       "output": {
         ".html": {
@@ -3523,6 +3537,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.ServiceAccountResponse",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ServiceAccountResponse.yml\" sourcestartlinenumber=\"1\">Public-safe service account representation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SessionResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SessionResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SessionResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SessionResponse.yml\" sourcestartlinenumber=\"1\">One of a user's sessions, as an administrator sees it.</p>\n"
     },
     {
       "type": "ManagedReference",
