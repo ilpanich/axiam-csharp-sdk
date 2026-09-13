@@ -49,6 +49,30 @@ public sealed partial class AxiamClient : IDisposable
     private readonly JwksVerifier _jwksVerifier;
 
     /// <summary>
+    /// The transport backing <c>_anonymousHttpClient</c> — the SAME <c>primaryHandler</c>
+    /// this client would otherwise wrap in <see cref="AxiamHttpMessageHandler"/> in
+    /// production, or the test double <c>CreateForTesting</c> was given. Kept as its own
+    /// field (rather than only living inside <c>_anonymousHttpClient</c>) so
+    /// <c>AdoptAnonymousCookies</c> can pattern-match it back to a real
+    /// <see cref="HttpClientHandler"/> and read the cookies it captured.
+    /// </summary>
+    private readonly HttpMessageHandler _anonymousPrimaryHandler;
+
+    /// <summary>
+    /// CONTRACT.md &#167;24.1 (contract 1.45): the transport for
+    /// <c>WebauthnSetupRegisterStartAsync</c>/<c>WebauthnSetupRegisterFinishAsync</c> —
+    /// the two calls that take a setup token as their sole credential and MUST NOT carry
+    /// this client's own session credential. Points at the same underlying handler as
+    /// <see cref="_httpClient"/> (so it shares &#167;6/&#167;6.1's TLS policy and, in tests,
+    /// the same fake transport) but is never wrapped in <see cref="AxiamHttpMessageHandler"/>
+    /// and — critically, in production — owns its OWN, permanently empty
+    /// <see cref="CookieContainer"/> rather than <see cref="_cookieContainer"/>: there is
+    /// nothing in it for a real transport to send, by construction, rather than by a
+    /// conditional someone could get wrong later.
+    /// </summary>
+    private readonly HttpClient _anonymousHttpClient;
+
+    /// <summary>
     /// CONTRACT.md &#167;5.2.2 — the tenant the signed-in principal's record <i>lives</i> in,
     /// as reported by the login response.
     /// </summary>
@@ -134,6 +158,23 @@ public sealed partial class AxiamClient : IDisposable
             Timeout = _options.RequestTimeout,
         };
 
+        // CONTRACT.md §24.1 (contract 1.45): the setup/register/* pair MUST NOT carry this
+        // client's own session credential. In production that means an entirely separate
+        // HttpClientHandler with its own, permanently empty CookieContainer — reusing
+        // `primaryHandler` here would reuse `_cookieContainer` too, since a real
+        // HttpClientHandler's cookie jar IS the CookieContainer object, not something the
+        // outer AxiamHttpMessageHandler can suppress per request. Against
+        // `CreateForTesting`'s fake transport (not an HttpClientHandler, so it manages no
+        // cookies of its own either way) the same override handler is reused directly so
+        // the WebAuthn setup tests share the suite's mounted routes.
+        _anonymousPrimaryHandler = transportOverride
+            ?? AxiamHttpClientFactory.CreatePrimaryHandler(_options.CustomCaPem, _options.ClientCertificatePem, _options.ClientKeyPem);
+        _anonymousHttpClient = new HttpClient(_anonymousPrimaryHandler, disposeHandler: transportOverride is null)
+        {
+            BaseAddress = _baseUrl,
+            Timeout = _options.RequestTimeout,
+        };
+
         _jwksVerifier = new JwksVerifier(
             _httpClient,
             _baseUrl,
@@ -205,6 +246,7 @@ public sealed partial class AxiamClient : IDisposable
 
         _decisionMemo.Clear();
         _httpClient.Dispose();
+        _anonymousHttpClient.Dispose();
         _refreshGuard.Dispose();
         DisposeOidcState();
     }

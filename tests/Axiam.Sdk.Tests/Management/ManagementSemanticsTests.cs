@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text.Json;
 using Axiam.Sdk;
 using Axiam.Sdk.Core;
@@ -481,6 +482,34 @@ public sealed class ManagementSemanticsTests : ManagementTestBase
         Assert.Equal(
             "correct-horse-battery",
             route.Last.Json().GetProperty("password").GetString());
+    }
+
+    /// <summary>
+    /// &#167;27.5's new sentence: <c>certificates.sign_csr</c> returns the existing
+    /// <c>Certificate</c>, not <c>GeneratedCertificate</c> — there is no key to return, so
+    /// there must be no field to leave empty. Asserted twice: reflectively, that the
+    /// <b>type</b> carries no private-key property at all (not merely that this response
+    /// omitted one), and on the wire, that a round trip decodes cleanly without one.
+    /// </summary>
+    [Fact]
+    public async Task SignCsrReturnsACertificateWithNoPrivateKeyField()
+    {
+        Assert.DoesNotContain(
+            typeof(Certificate).GetProperties(),
+            p => p.Name.Contains("PrivateKey", StringComparison.Ordinal));
+
+        Mount("POST", "/api/v1/certificates/sign-csr", 201, CertificateBody(bound: null));
+
+        Certificate result = await Client.Management.Certificates.SignCsrAsync(new SignCertificateCsrRequest
+        {
+            IssuerCaId = OrgId,
+            CsrPem = "-----BEGIN CERTIFICATE REQUEST-----",
+            CertType = CertificateType.Device,
+            ValidityDays = 90,
+        });
+
+        Assert.Equal("CN=device-1", result.Subject);
+        Assert.IsType<Certificate>(result);
     }
 
     /// <summary>&#167;27.2 rule 1: acquiring a handle performs no I/O.</summary>
