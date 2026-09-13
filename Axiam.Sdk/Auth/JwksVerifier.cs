@@ -93,6 +93,13 @@ public sealed class JwksVerifier
     private readonly string? _expectedIssuer;
     private readonly string? _expectedAudience;
 
+    /// <summary>
+    /// The optional CONTRACT.md &#167;10.4 revocation feed. <c>null</c> — the default — is
+    /// the feature off, which is what every integration built before contract 1.44 gets on
+    /// upgrade.
+    /// </summary>
+    private readonly RevocationFeed? _revocationFeed;
+
     private Dictionary<string, byte[]> _keysByKid = new();
     private DateTimeOffset _fetchedAt = DateTimeOffset.MinValue;
 
@@ -123,13 +130,22 @@ public sealed class JwksVerifier
     /// with no <c>aud</c> at all — is rejected. A verifier fronting a user-facing resource
     /// server should generally expect <c>axiam:user</c>.
     /// </param>
+    /// <param name="revocationFeed">
+    /// The CONTRACT.md &#167;10.4 session-revocation feed (contract 1.44). OPTIONAL, and
+    /// <c>null</c> — the default — is the feature <strong>off</strong>: nothing is fetched,
+    /// and this verifier behaves byte-for-byte as it did before contract 1.44. Supplying one
+    /// lets a revoked session be rejected within one poll interval rather than one token
+    /// lifetime; it can only ever turn an accept into a reject, and a feed that is
+    /// unreachable or unusable behaves exactly as no feed at all.
+    /// </param>
     public JwksVerifier(
         HttpClient httpClient,
         Uri baseUrl,
         TimeSpan cacheTtl,
         string? expectedIssuer = null,
-        string? expectedAudience = null)
-        : this(httpClient, ResolveDefaultJwksUri(baseUrl), cacheTtl, exact: true, expectedIssuer, expectedAudience)
+        string? expectedAudience = null,
+        RevocationFeed? revocationFeed = null)
+        : this(httpClient, ResolveDefaultJwksUri(baseUrl), cacheTtl, exact: true, expectedIssuer, expectedAudience, revocationFeed)
     {
     }
 
@@ -152,11 +168,13 @@ public sealed class JwksVerifier
         TimeSpan cacheTtl,
         bool exact,
         string? expectedIssuer = null,
-        string? expectedAudience = null)
+        string? expectedAudience = null,
+        RevocationFeed? revocationFeed = null)
     {
         _http = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         _jwksUri = jwksUri ?? throw new ArgumentNullException(nameof(jwksUri));
         _cacheTtl = cacheTtl;
+        _revocationFeed = revocationFeed;
         // Normalize "" to null so an empty configuration value can never be mistaken for
         // "expect the empty string" — it means "not configured, so not checked".
         _expectedIssuer = string.IsNullOrWhiteSpace(expectedIssuer) ? null : expectedIssuer;
@@ -231,7 +249,33 @@ public sealed class JwksVerifier
             using JsonDocument payload = JsonDocument.Parse(payloadJson);
             JsonElement claims = payload.RootElement.Clone();
 
-            return ApplyClaimPolicy(claims, expectedTenantId) ? claims : null;
+            if (!ApplyClaimPolicy(claims, expectedTenantId))
+                return null;
+
+            // CONTRACT.md §10.4 (contract 1.44) — LAST, and only after every §10.1 rule
+            // has already decided to accept. The feed "only ever rejects" (rule 4), so
+            // running it here rather than earlier is what makes that true: a token that
+            // fails a §10.1 rule is rejected whatever the feed says, and the feed is not
+            // consulted — nor fetched — for it at all.
+            //
+            // This sits in VerifyAsync and NOT in the shared signature-verification helper
+            // below, so the §12.4 ID-token path cannot reach it: an ID token carries no
+            // AXIAM session and has no `sid` to match.
+            if (_revocationFeed is not null)
+            {
+                string? sid = claims.TryGetProperty("sid", out JsonElement sidEl) &&
+                              sidEl.ValueKind == JsonValueKind.String
+                    ? sidEl.GetString()
+                    : null;
+
+                // Rule 6: a token with no `sid` — client credentials, an RPT, a token
+                // exchange — is never matched. Hashing `jti` instead would match nothing
+                // while looking like it worked.
+                if (await _revocationFeed.IsRevokedAsync(sid, cancellationToken).ConfigureAwait(false))
+                    return null;
+            }
+
+            return claims;
         }
         catch
         {

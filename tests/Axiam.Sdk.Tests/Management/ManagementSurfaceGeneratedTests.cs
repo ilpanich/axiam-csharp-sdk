@@ -229,6 +229,17 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
         AssertDecodedEveryField(result[0], item);
     }
 
+    /// <summary>Exercises users.list_sessions.</summary>
+    [Fact]
+    public async Task Users_ListSessions()
+    {
+        string body = "[{\"amr\": [], \"authenticated_at\": \"example\", \"created_at\": \"example\", \"expires_at\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"refresh_replay_grace_accepted\": 1, \"refresh_replay_refused\": 1, \"refresh_replay_verdict\": \"example\"}]";
+        Mount("GET", $"/api/v1/users/{ExampleId}/sessions", 200, body);
+        var result = await Client.Management.Users.ListSessionsAsync(userId: ExampleId);
+        string item = JsonDocument.Parse(body).RootElement[0].GetRawText();
+        AssertDecodedEveryField(result[0], item);
+    }
+
     /// <summary>Exercises groups.list.</summary>
     [Fact]
     public async Task Groups_List()
@@ -1939,6 +1950,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "users.list",
             "users.list_mfa_methods",
             "users.list_roles",
+            "users.list_sessions",
             "users.reset_mfa",
             "users.unlock",
             "users.update",
@@ -1951,7 +1963,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "webhooks.list",
             "webhooks.update",
         };
-        Assert.Equal(158, exercised.Length);
+        Assert.Equal(159, exercised.Length);
         Assert.Equal(ExpectedSurface(), exercised);
     }
 }

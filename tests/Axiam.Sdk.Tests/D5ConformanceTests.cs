@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Axiam.Sdk;
 using Axiam.Sdk.Core;
 using Axiam.Sdk.Options;
 using Axiam.Sdk.Rest;
@@ -649,5 +651,89 @@ public class D5ConformanceTests
         Assert.All(
             events.OfType<RequestStartEvent>(),
             e => Assert.Equal("/api/v1/authz/check/batch", e.PathTemplate));
+    }
+
+    // -----------------------------------------------------------------------
+    // R-4 / AXIAM T-262 — the contended-write answer
+    // -----------------------------------------------------------------------
+
+    /// <summary>
+    /// Replays a status script, attaching <c>Retry-After: 1</c> to every
+    /// <c>503</c> — the shape a write that lost a datastore race now answers with
+    /// (AXIAM T-262: previously a bare <c>500</c>).
+    /// </summary>
+    private sealed class ContendedHandler : HttpMessageHandler
+    {
+        private readonly HttpStatusCode[] _statuses;
+        private int _calls;
+
+        internal ContendedHandler(HttpStatusCode[] statuses) => _statuses = statuses;
+
+        internal int Calls => Volatile.Read(ref _calls);
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            int n = Interlocked.Increment(ref _calls);
+            HttpStatusCode status = _statuses[Math.Min(n - 1, _statuses.Length - 1)];
+            var response = new HttpResponseMessage(status);
+            if (status == HttpStatusCode.ServiceUnavailable)
+            {
+                response.Headers.RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromSeconds(1));
+            }
+            else
+            {
+                response.Content = new StringContent(AllowBody, Encoding.UTF8, "application/json");
+            }
+
+            return Task.FromResult(response);
+        }
+    }
+
+    [Fact]
+    public async Task AContendedWriteAnswerIsRetriedAndSucceeds()
+    {
+        // T-262 changed a lost datastore race from `500` to `503` + `Retry-After: 1`
+        // precisely so a client would come back rather than stop. This asserts the SDK
+        // takes that advice — and asserts it by COUNTING REQUESTS ON THE WIRE, because a
+        // retry helper that is exported, unit-tested and green while no production path
+        // calls it is the §16.7 failure mode this suite exists to catch.
+        var handler = new ContendedHandler(
+            [HttpStatusCode.ServiceUnavailable, HttpStatusCode.OK]);
+        AxiamClientOptions options = Options();
+        var http = new HttpClient(handler) { BaseAddress = BaseUrl };
+        var client = new AuthzRestClient(
+            http,
+            options,
+            new TelemetryDispatcher(null),
+            new DecisionMemo(options.DecisionMemoTtl),
+            jitter: () => 0.0);
+
+        AccessDecision decision = await client.CheckAccessDecisionAsync("read", Resource);
+
+        Assert.True(decision.Allowed);
+        Assert.Equal(2, handler.Calls);
+    }
+
+    [Fact]
+    public async Task ANonIdempotentCallMakesExactlyOneAttemptAgainstTheSame503()
+    {
+        // The other half, and the one that matters more. `Retry-After` is advice about
+        // WHEN to come back, never permission to replay a mutation: a login that is
+        // retried on a 503 may authenticate twice, and the same reasoning covers every
+        // POST that is not idempotent. The status is identical to the test above — only
+        // the idempotency of the call differs, which is the whole point.
+        var handler = new ContendedHandler([HttpStatusCode.ServiceUnavailable]);
+        AxiamClient client = AxiamClient.CreateForTesting(BaseUrl, "acme", Options(), handler);
+
+        // Minted, not written down. A literal password in a test is indistinguishable, to
+        // a secret scanner, from a real one — CodeQL's "hard-coded cryptographic value"
+        // rule fires on exactly this line shape.
+        string password = $"Fixture-{Guid.NewGuid()}-aA1!";
+
+        await Assert.ThrowsAnyAsync<Exception>(
+            () => client.LoginAsync("someone@example.test", password, CancellationToken.None));
+
+        Assert.Equal(1, handler.Calls);
     }
 }
