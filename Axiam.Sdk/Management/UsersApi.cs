@@ -328,4 +328,29 @@ public sealed class UsersApi
             cancellationToken).ConfigureAwait(false);
         return ManagementSupport.DecodeList<RoleAssignment>("users.list_roles", node);
     }
+
+    /// <summary>
+    /// List the sessions a user currently holds, with the T-254 refresh-replay marker on each.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Issues <c>GET /api/v1/users/{user_id}/sessions</c>.
+    /// </para>
+    /// </remarks>
+    /// <param name="userId">the user id to address.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>the server response</returns>
+    public async Task<IReadOnlyList<SessionResponse>> ListSessionsAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/users/{userId}/sessions";
+        JsonElement? node = await _transport.SendAsync(
+            "users.list_sessions",
+            HttpMethod.Get,
+            "/api/v1/users/{user_id}/sessions",
+            path,
+            null,
+            null,
+            cancellationToken).ConfigureAwait(false);
+        return ManagementSupport.DecodeList<SessionResponse>("users.list_sessions", node);
+    }
 }

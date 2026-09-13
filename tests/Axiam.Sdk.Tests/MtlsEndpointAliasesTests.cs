@@ -299,4 +299,137 @@ public class MtlsEndpointAliasesTests
         Assert.Equal(ConventionalOrigin, configuration.Issuer);
         Assert.NotEqual(MtlsOrigin, configuration.Issuer);
     }
+
+    // -- Vector C: a published-but-unusable alias is REFUSED, never fallen ---
+    // -- back from (CONTRACT.md §21.3.1, contract 1.43) ----------------------
+
+    /// <summary>The discovery document with <paramref name="tokenEndpoint"/> as the
+    /// top-level entry, so a like-with-like scheme comparison can be exercised.</summary>
+    private static string DiscoveryJsonWithTokenEndpoint(object aliases, string tokenEndpoint)
+    {
+        var document = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+            DiscoveryJson(aliases))!;
+        document["token_endpoint"] =
+            JsonSerializer.Deserialize<JsonElement>(JsonSerializer.Serialize(tokenEndpoint));
+        return JsonSerializer.Serialize(document);
+    }
+
+    private static RoutingHandler HandlerWithDiscovery(string discoveryJson)
+    {
+        var handler = new RoutingHandler();
+        handler.Map("/.well-known/openid-configuration", _ => OidcTestKit.JsonOk(discoveryJson));
+        handler.Map("/oauth2/token", _ => OidcTestKit.JsonOk(
+            OidcTestKit.TokenResponseJson("access-token-value")));
+        handler.Map("/oauth2/userinfo", _ => OidcTestKit.JsonOk("""{"sub":"user-1"}"""));
+        return handler;
+    }
+
+    [Fact]
+    public async Task RelativeAlias_IsRefused_AndNeverFallsBack()
+    {
+        // Vector C defect 1. A relative alias resolves against nothing the client holds,
+        // and the one base that might seem obvious — the issuer's host — is precisely the
+        // host the alias exists to name a different one from.
+        using RoutingHandler handler = Handler(new { token_endpoint = "/oauth2/token" });
+        AxiamClient client = Client(handler, mtls: true);
+
+        AuthError error = await Assert.ThrowsAsync<AuthError>(
+            () => client.LoginClientCredentialsAsync(new LoginClientCredentialsParams()));
+
+        Assert.Contains("/oauth2/token", error.Message);
+        Assert.Contains("§21.3.1", error.Message);
+
+        // The refusal is the point: NOTHING was sent to either origin. Falling back would
+        // have presented the client certificate to the front-channel host, which
+        // authenticates nothing while appearing to work.
+        Assert.Empty(HostsFor(handler, "/oauth2/token"));
+    }
+
+    [Fact]
+    public async Task SchemeDowngradingAlias_IsRefused_AndNeverFallsBack()
+    {
+        // Vector C defect 2. The top-level endpoint is https; the alias is cleartext.
+        // Mutual TLS over cleartext is a contradiction.
+        using RoutingHandler handler = Handler(new
+        {
+            introspection_endpoint = "http://mtls.axiam.test/oauth2/introspect",
+        });
+        AxiamClient client = Client(handler, mtls: true);
+
+        AuthError error = await Assert.ThrowsAsync<AuthError>(
+            () => client.IntrospectAsync(new IntrospectParams
+            {
+                Token = Sensitive<string>.Wrap("t"),
+            }));
+
+        Assert.Contains("http", error.Message);
+        Assert.Contains("§21.3.1", error.Message);
+        Assert.Empty(HostsFor(handler, "/oauth2/introspect"));
+    }
+
+    [Fact]
+    public async Task TheRefusal_IsAnAuthError_NotANetworkError()
+    {
+        // Not a stylistic choice. §16.3 retries NetworkError and ONLY NetworkError, so
+        // classifying this as one would attempt a permanent, deterministic operator
+        // misconfiguration three times and then report it as transient.
+        using RoutingHandler handler = Handler(new { token_endpoint = "/oauth2/token" });
+        AxiamClient client = Client(handler, mtls: true);
+
+        Exception error = await Record.ExceptionAsync(
+            () => client.LoginClientCredentialsAsync(new LoginClientCredentialsParams()));
+
+        Assert.IsType<AuthError>(error);
+        Assert.IsNotType<NetworkError>(error);
+    }
+
+    [Fact]
+    public async Task LikeForLikeCleartext_IsAccepted_NotADowngrade()
+    {
+        // The I4 twin for the downgrade rule. A development deployment served over http
+        // publishes http aliases; that is not a downgrade, and AXIAM's own
+        // build_mtls_aliases produces exactly this. Refusing it would break a supported
+        // configuration in the name of a rule about downgrades.
+        const string HttpOrigin = "http://dev.axiam.test";
+        using RoutingHandler handler = HandlerWithDiscovery(DiscoveryJsonWithTokenEndpoint(
+            new { token_endpoint = $"{HttpOrigin}/oauth2/token" },
+            $"{HttpOrigin}/oauth2/token"));
+        AxiamClient client = Client(handler, mtls: true);
+
+        await client.LoginClientCredentialsAsync(new LoginClientCredentialsParams());
+
+        AssertOnly(handler, "/oauth2/token", HttpOrigin);
+    }
+
+    [Fact]
+    public async Task AMalformedAlias_IsInertForAClientNotDoingMtls()
+    {
+        // The I4 twin for the whole vector. A client with no §6.1 identity never reaches
+        // an alias at all, so an operator publishing a broken one cannot break it. This is
+        // what "configured as today behaves as today" means for the majority of callers.
+        using RoutingHandler handler = Handler(new { token_endpoint = "/oauth2/token" });
+        AxiamClient client = Client(handler, mtls: false);
+
+        await client.LoginClientCredentialsAsync(new LoginClientCredentialsParams());
+
+        AssertOnly(handler, "/oauth2/token", ConventionalOrigin);
+    }
+
+    [Fact]
+    public async Task AnUnusableAliasForOneEndpoint_DoesNotPoisonAnother()
+    {
+        // Only the member actually used is validated. An operator who breaks
+        // `userinfo_endpoint` has not thereby broken the token endpoint — the refusal is
+        // scoped to the call that would have used the bad alias.
+        using RoutingHandler handler = Handler(new
+        {
+            token_endpoint = $"{MtlsOrigin}/oauth2/token",
+            userinfo_endpoint = "/oauth2/userinfo",
+        });
+        AxiamClient client = Client(handler, mtls: true);
+
+        await client.LoginClientCredentialsAsync(new LoginClientCredentialsParams());
+
+        AssertOnly(handler, "/oauth2/token", MtlsOrigin);
+    }
 }

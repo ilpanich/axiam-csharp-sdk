@@ -1168,11 +1168,70 @@ public sealed partial class AxiamClient
             string? alias = pick(aliases);
             if (!string.IsNullOrEmpty(alias))
             {
+                AssertUsableMtlsAlias(alias, topLevel);
                 return alias;
             }
         }
 
         return topLevel;
+    }
+
+    /// <summary>
+    /// Refuses an <c>mtls_endpoint_aliases</c> entry that cannot carry a client certificate
+    /// (CONTRACT.md &#167;21.3.1 vector C, contract 1.43).
+    /// </summary>
+    /// <remarks>
+    /// <para>Falling back to the top-level endpoint looks like the safe answer and is the
+    /// dangerous one: the caller asked to authenticate with a certificate, the operator
+    /// published something unusable, and sending the certificate to the front-channel host
+    /// authenticates nothing while appearing to work.</para>
+    /// <para>Two defects, each a refusal on its own:</para>
+    /// <list type="bullet">
+    ///   <item><strong>Not an absolute URL.</strong> A relative alias resolves against
+    ///   nothing the client holds, and the base that might seem obvious — the issuer's host
+    ///   — is precisely the host the alias exists to name a different one from.</item>
+    ///   <item><strong>A scheme weaker than the endpoint it replaces.</strong> An alias
+    ///   substitutes for exactly one top-level endpoint, so that is what it is compared
+    ///   against: <c>https</c> &#8594; <c>http</c> is a downgrade, while <c>http</c> &#8594;
+    ///   <c>http</c> is a development deployment, which AXIAM's own
+    ///   <c>build_mtls_aliases</c> supports.</item>
+    /// </list>
+    /// <para>The refusal is an <see cref="AuthError"/>, matching every other "the discovery
+    /// document advertises something this client cannot use" in this SDK. It also matters
+    /// operationally: &#167;16.3 retries <see cref="NetworkError"/> and only
+    /// <see cref="NetworkError"/>, so the other choice would have attempted a permanent,
+    /// deterministic misconfiguration three times and reported it as transient.</para>
+    /// </remarks>
+    /// <exception cref="AuthError">The alias is relative, or downgrades the scheme of the
+    /// endpoint it replaces.</exception>
+    private static void AssertUsableMtlsAlias(string alias, string? replaces)
+    {
+        if (!Uri.TryCreate(alias, UriKind.Absolute, out Uri? parsed) ||
+            string.IsNullOrEmpty(parsed.Scheme) ||
+            string.IsNullOrEmpty(parsed.Authority))
+        {
+            throw new AuthError(
+                $"mtls_endpoint_aliases publishes '{alias}', which is not an absolute URL. " +
+                "Refusing rather than falling back to the top-level endpoint: this call " +
+                "presents a client certificate, and sending it to the front-channel host " +
+                "would authenticate nothing while appearing to work " +
+                "(CONTRACT.md §21.3.1 vector C)");
+        }
+
+        bool replacedIsTls =
+            !string.IsNullOrEmpty(replaces) &&
+            Uri.TryCreate(replaces, UriKind.Absolute, out Uri? replaced) &&
+            replaced.Scheme == Uri.UriSchemeHttps;
+
+        if (replacedIsTls && parsed.Scheme != Uri.UriSchemeHttps)
+        {
+            throw new AuthError(
+                $"mtls_endpoint_aliases publishes '{alias}', whose scheme is " +
+                $"'{parsed.Scheme}', in place of an https endpoint. That is a downgrade, " +
+                "and mutual TLS over cleartext is a contradiction; refusing rather than " +
+                "falling back to the top-level endpoint " +
+                "(CONTRACT.md §21.3.1 vector C)");
+        }
     }
 
     /// <summary>

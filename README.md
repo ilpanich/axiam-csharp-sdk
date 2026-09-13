@@ -57,6 +57,7 @@ See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract
 | §9 | `SemaphoreSlim(1,1)` single-flight refresh, one guard across REST + gRPC | `Auth/RefreshGuard.cs` (shared by `AxiamClient` and `Grpc/AuthInterceptor.cs`) |
 | §10 | `app.UseMiddleware<AxiamAuthMiddleware>()` + `ClaimsPrincipal` injection + policy-based `[Authorize]` | `Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
 | §10.1 | Complete minimum local-verification set: EdDSA-pinned signature (before key lookup), **required** `exp`, honoured `nbf`, asserted `tenant_id`, conditional `iss`/`aud`, named 60s clock skew — all fail-closed | `Auth/JwksVerifier.VerifyAsync`/`ApplyClaimPolicy`, exercised by `tests/Axiam.Sdk.Tests/Contract101LocalVerificationTests.cs` |
+| §10.4 | Optional session-revocation feed poller — off by default, never on the request path once warm, never fails closed, only ever rejects, and never matches a token with no `sid` | `Auth/RevocationFeed.cs` + the `revocationFeed` argument to `Auth/JwksVerifier`, exercised by `tests/Axiam.Sdk.Tests/RevocationFeedTests.cs` |
 | §11 | Declarative `[AxiamAccess(action, resource)]` authorization attribute with scope + route-param resolution; `require_auth`/`require_role` as framework-native `[Authorize]`/`[Authorize(Roles = ...)]` | `Axiam.Sdk.AspNetCore/AxiamAccessAttribute.cs`, `AxiamRequirement.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
 | §12 | OIDC/SSO relying-party helpers: `OidcDiscoverAsync`/`OidcBegin`/`OidcExchangeAsync`/`OidcRefreshAsync`/`LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync`/`SsoStartAsync`/`SsoCompleteAsync`/`SsoProvidersAsync`/`SsoStartOauth2Async`/`SsoCompleteOauth2Async`/`SsoCompleteHandoffAsync`; `MapAxiamOidcLogin` ASP.NET Core glue | `AxiamClient.Oidc.cs`, `Auth/Oidc/*.cs`, `Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs` |
 | §13 | Webhook signature verifier: HMAC-SHA256 over `<t>.<raw_body>`, `CryptographicOperations.FixedTimeEquals` constant-time compare on decoded bytes, two-sided 300s default freshness tolerance, `TimeProvider` injection seam, fail-closed on malformed/tampered input | `Webhooks/AxiamWebhooks.cs`, `Webhooks/WebhookEvent.cs`, `Webhooks/WebhookVerificationException.cs` |
@@ -496,6 +497,78 @@ Three things this deliberately does **not** do:
 
 A client without a certificate keeps using the top-level endpoints even when the document
 publishes aliases: the alias exists for the handshake, and there is no handshake to make.
+
+#### An unusable alias is refused, never fallen back from (§21.3.1 vector C, contract 1.43)
+
+A published alias that cannot carry a client certificate throws an `AuthError` naming the
+member. It does **not** quietly fall back to the top-level endpoint.
+
+Falling back looks like the safe answer and is the dangerous one. The caller asked to
+authenticate with a certificate; the operator published something unusable; presenting the
+certificate to the front-channel host authenticates nothing while appearing to work. A
+refusal is loud, local to one endpoint, and fixable by the operator who caused it.
+
+Two defects, each a refusal on its own:
+
+- **Not an absolute URL.** A relative alias resolves against nothing the client holds, and
+  the one base that might seem obvious — the issuer's host — is precisely the host the
+  alias exists to name a different one from.
+- **A scheme weaker than the endpoint it replaces.** An alias substitutes for exactly one
+  top-level endpoint, so that is what it is compared against. `https` → `http` is a
+  downgrade and mutual TLS over cleartext is a contradiction; `http` → `http` is a
+  development deployment, which AXIAM's own `build_mtls_aliases` supports, and it is
+  accepted.
+
+It is an `AuthError` rather than a `NetworkError` deliberately. Nothing failed in transport,
+and §16.3 retries `NetworkError` and only `NetworkError` — classifying this as one would
+attempt a permanent, deterministic misconfiguration three times and then report it as
+transient.
+
+The check is scoped to the alias actually used, so a broken `userinfo_endpoint` leaves the
+token endpoint working, and a client with no certificate never reads the member at all.
+
+## The session-revocation feed (CONTRACT.md §10.4, contract 1.44, opt-in)
+
+`JwksVerifier` proves a token was issued by this deployment and has not expired. It cannot
+prove the session behind it still exists — so a logout, a role removal or an account
+disable does not reach a token already in a caller's hands until that token expires, up to
+fifteen minutes later. §10.2 records this, and its standing answer is to route the decision
+through gRPC introspection, which is correct and costs a round trip **per request**.
+
+A deployment may instead publish `GET /oauth2/revocations`: the base64url-unpadded SHA-256
+of every session id revoked within the last access-token lifetime. Polling it narrows the
+window to **one poll interval**, for one cacheable fetch per interval.
+
+```csharp
+var feed = new RevocationFeed(httpClient, new Uri("https://axiam.example.com"));
+
+var verifier = new JwksVerifier(
+    httpClient,
+    new Uri("https://axiam.example.com"),
+    TimeSpan.FromMinutes(5),
+    expectedIssuer: "https://axiam.example.com",
+    expectedAudience: "axiam:user",
+    revocationFeed: feed);   // omit this argument and nothing below happens at all
+```
+
+Five properties, each of which is a test in `tests/Axiam.Sdk.Tests/RevocationFeedTests.cs`:
+
+| Rule | What it means here |
+|---|---|
+| **Default off** | The parameter is optional and defaults to `null`. Every existing call site compiles unchanged and fetches nothing — asserted by counting requests on the wire, not by reading a flag. |
+| **Never on the request path** | `VerifyAsync` answers from the cached set and refreshes at most once per interval. A revoked session is rejected *after one poll and not before*. |
+| **Never fails closed** | Unreachable, non-`200`, unparseable, unknown `alg`, or more than `MaxEntries` entries — every one behaves exactly as no feed at all, and specifically **not** as an empty list, which would assert that nothing has been revoked. A failed poll leaves the last good set in place. |
+| **Only ever rejects** | Every §10.1 rule runs first and still decides. A token that fails one is rejected whatever the feed says, and the feed is not consulted — nor fetched — for it. |
+| **No `sid`, never matched** | A client-credentials token, an RPT or a token exchange has no session behind it. There is no `jti` fallback: hashing `jti` would match nothing while looking like it worked. |
+
+The poll interval defaults to 30 s and is **clamped** to a 15 s floor rather than refused, so
+a caller who asks for something faster gets the fastest thing on offer. `RevocationFeed` is
+safe for concurrent use; share one instance across verifiers and they poll once between
+them.
+
+This is a narrowing, not a control. It shortens the window in which a revoked session is
+still accepted; it does not close it, and a deployment that does not publish the feed is
+unaffected.
 
 ## UMA 2.0 — protecting resources whose owner isn't the caller (CONTRACT.md §20)
 
