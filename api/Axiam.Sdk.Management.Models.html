@@ -684,6 +684,14 @@ in [<code>CreateScimTokenResponse</code>].</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html">SignCertificateCsrRequest</a></dt>
+      <dd><p>Body of <code>POST /api/v1/certificates/sign-csr</code>. No <code>subject</code> and no
+<code>key_algorithm</code>: both are read out of the CSR, which is the only place they can be
+stated without the row and the certificate being able to disagree. No key is returned, so
+there is no key field anywhere on this exchange.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.SignIntermediateCsrRequest.html">SignIntermediateCsrRequest</a></dt>
       <dd><p>Body of <code>POST .../tenants/{tenant_id}/signing-cas/sign-csr</code>. Deliberately carries no
 key algorithm: it is the CSR's, read out of the request, because a caller who could state it

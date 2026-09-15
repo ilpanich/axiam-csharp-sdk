@@ -3624,6 +3624,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SignCertificateCsrRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.yml\" sourcestartlinenumber=\"1\">Body of <code>POST /api/v1/certificates/sign-csr</code>. No <code>subject</code> and no\n<code>key_algorithm</code>: both are read out of the CSR, which is the only place they can be\nstated without the row and the certificate being able to disagree. No key is returned, so\nthere is no key field anywhere on this exchange.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Management.Models.SignIntermediateCsrRequest.yml",
       "output": {
         ".html": {

@@ -6727,6 +6727,38 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.WebauthnRegisterStartAsync
   nameWithType: AxiamClient.WebauthnRegisterStartAsync
+- uid: Axiam.Sdk.AxiamClient.WebauthnSetupRegisterFinishAsync(Axiam.Sdk.Core.Sensitive{System.String},Axiam.Sdk.Core.Sensitive{System.String},System.String,System.String,System.Threading.CancellationToken)
+  name: WebauthnSetupRegisterFinishAsync(Sensitive<string>, Sensitive<string>, string, string, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnSetupRegisterFinishAsync_Axiam_Sdk_Core_Sensitive_System_String__Axiam_Sdk_Core_Sensitive_System_String__System_String_System_String_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.WebauthnSetupRegisterFinishAsync(Axiam.Sdk.Core.Sensitive{System.String},Axiam.Sdk.Core.Sensitive{System.String},System.String,System.String,System.Threading.CancellationToken)
+  name.vb: WebauthnSetupRegisterFinishAsync(Sensitive(Of String), Sensitive(Of String), String, String, CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.WebauthnSetupRegisterFinishAsync(Axiam.Sdk.Core.Sensitive<string>, Axiam.Sdk.Core.Sensitive<string>, string, string, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.WebauthnSetupRegisterFinishAsync(Axiam.Sdk.Core.Sensitive(Of String), Axiam.Sdk.Core.Sensitive(Of String), String, String, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.WebauthnSetupRegisterFinishAsync(Sensitive<string>, Sensitive<string>, string, string, CancellationToken)
+  nameWithType.vb: AxiamClient.WebauthnSetupRegisterFinishAsync(Sensitive(Of String), Sensitive(Of String), String, String, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.WebauthnSetupRegisterFinishAsync*
+  name: WebauthnSetupRegisterFinishAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnSetupRegisterFinishAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.WebauthnSetupRegisterFinishAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.WebauthnSetupRegisterFinishAsync
+  nameWithType: AxiamClient.WebauthnSetupRegisterFinishAsync
+- uid: Axiam.Sdk.AxiamClient.WebauthnSetupRegisterStartAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)
+  name: WebauthnSetupRegisterStartAsync(Sensitive<string>, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnSetupRegisterStartAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.WebauthnSetupRegisterStartAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)
+  name.vb: WebauthnSetupRegisterStartAsync(Sensitive(Of String), CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.WebauthnSetupRegisterStartAsync(Axiam.Sdk.Core.Sensitive<string>, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.WebauthnSetupRegisterStartAsync(Axiam.Sdk.Core.Sensitive(Of String), System.Threading.CancellationToken)
+  nameWithType: AxiamClient.WebauthnSetupRegisterStartAsync(Sensitive<string>, CancellationToken)
+  nameWithType.vb: AxiamClient.WebauthnSetupRegisterStartAsync(Sensitive(Of String), CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.WebauthnSetupRegisterStartAsync*
+  name: WebauthnSetupRegisterStartAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_WebauthnSetupRegisterStartAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.WebauthnSetupRegisterStartAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.WebauthnSetupRegisterStartAsync
+  nameWithType: AxiamClient.WebauthnSetupRegisterStartAsync
 - uid: Axiam.Sdk.AxiamClient.Webhooks
   name: Webhooks
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_Webhooks
@@ -8716,6 +8748,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.CertificatesApi.RevokeAsync
   nameWithType: CertificatesApi.RevokeAsync
+- uid: Axiam.Sdk.Management.CertificatesApi.SignCsrAsync(Axiam.Sdk.Management.Models.SignCertificateCsrRequest,System.Threading.CancellationToken)
+  name: SignCsrAsync(SignCertificateCsrRequest, CancellationToken)
+  href: api/Axiam.Sdk.Management.CertificatesApi.html#Axiam_Sdk_Management_CertificatesApi_SignCsrAsync_Axiam_Sdk_Management_Models_SignCertificateCsrRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.CertificatesApi.SignCsrAsync(Axiam.Sdk.Management.Models.SignCertificateCsrRequest,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.CertificatesApi.SignCsrAsync(Axiam.Sdk.Management.Models.SignCertificateCsrRequest, System.Threading.CancellationToken)
+  nameWithType: CertificatesApi.SignCsrAsync(SignCertificateCsrRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.CertificatesApi.SignCsrAsync*
+  name: SignCsrAsync
+  href: api/Axiam.Sdk.Management.CertificatesApi.html#Axiam_Sdk_Management_CertificatesApi_SignCsrAsync_
+  commentId: Overload:Axiam.Sdk.Management.CertificatesApi.SignCsrAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.CertificatesApi.SignCsrAsync
+  nameWithType: CertificatesApi.SignCsrAsync
 - uid: Axiam.Sdk.Management.ConflictError
   name: ConflictError
   href: api/Axiam.Sdk.Management.ConflictError.html
@@ -19559,6 +19604,77 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SignAuditBatchRequest.EntryIds
   nameWithType: SignAuditBatchRequest.EntryIds
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest
+  name: SignCertificateCsrRequest
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html
+  commentId: T:Axiam.Sdk.Management.Models.SignCertificateCsrRequest
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest
+  nameWithType: SignCertificateCsrRequest
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CertType
+  name: CertType
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_CertType
+  commentId: P:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CertType
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CertType
+  nameWithType: SignCertificateCsrRequest.CertType
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CertType*
+  name: CertType
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_CertType_
+  commentId: Overload:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CertType
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CertType
+  nameWithType: SignCertificateCsrRequest.CertType
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CsrPem
+  name: CsrPem
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_CsrPem
+  commentId: P:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CsrPem
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CsrPem
+  nameWithType: SignCertificateCsrRequest.CsrPem
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CsrPem*
+  name: CsrPem
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_CsrPem_
+  commentId: Overload:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CsrPem
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CsrPem
+  nameWithType: SignCertificateCsrRequest.CsrPem
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.IssuerCaId
+  name: IssuerCaId
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_IssuerCaId
+  commentId: P:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.IssuerCaId
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.IssuerCaId
+  nameWithType: SignCertificateCsrRequest.IssuerCaId
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.IssuerCaId*
+  name: IssuerCaId
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_IssuerCaId_
+  commentId: Overload:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.IssuerCaId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.IssuerCaId
+  nameWithType: SignCertificateCsrRequest.IssuerCaId
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.Metadata
+  name: Metadata
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_Metadata
+  commentId: P:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.Metadata
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.Metadata
+  nameWithType: SignCertificateCsrRequest.Metadata
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.Metadata*
+  name: Metadata
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_Metadata_
+  commentId: Overload:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.Metadata
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.Metadata
+  nameWithType: SignCertificateCsrRequest.Metadata
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.ValidityDays
+  name: ValidityDays
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_ValidityDays
+  commentId: P:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.ValidityDays
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.ValidityDays
+  nameWithType: SignCertificateCsrRequest.ValidityDays
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.ValidityDays*
+  name: ValidityDays
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_ValidityDays_
+  commentId: Overload:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.ValidityDays
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.ValidityDays
+  nameWithType: SignCertificateCsrRequest.ValidityDays
 - uid: Axiam.Sdk.Management.Models.SignIntermediateCsrRequest
   name: SignIntermediateCsrRequest
   href: api/Axiam.Sdk.Management.Models.SignIntermediateCsrRequest.html

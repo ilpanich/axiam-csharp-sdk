@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class EmailConfigOverride | AXIAM .NET SDK </title>
+      <title>Class SignCertificateCsrRequest | AXIAM .NET SDK </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class EmailConfigOverride | AXIAM .NET SDK ">
+      <meta name="title" content="Class SignCertificateCsrRequest | AXIAM .NET SDK ">
       
-      <meta name="description" content="Partial tenant overrides for email configuration. None = inherit from org baseline.">
+      <meta name="description" content="Body of POST /api/v1/certificates/sign-csr. No subject and no key_algorithm: both are read out of the CSR, which is the only place they can be stated without the row and the certificate being able to disagree. No key is returned, so there is no key field anywhere on this exchange.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta15/apiSpec/new?filename=Axiam_Sdk_Management_Models_EmailConfigOverride.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.EmailConfigOverride%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta15/apiSpec/new?filename=Axiam_Sdk_Management_Models_SignCertificateCsrRequest.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.SignCertificateCsrRequest%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,12 +84,12 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Axiam.Sdk.Management.Models.EmailConfigOverride">
+        <article data-uid="Axiam.Sdk.Management.Models.SignCertificateCsrRequest">
 
 
 
-  <h1 id="Axiam_Sdk_Management_Models_EmailConfigOverride" data-uid="Axiam.Sdk.Management.Models.EmailConfigOverride" class="text-break">
-Class EmailConfigOverride  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/EmailConfigOverride.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Axiam_Sdk_Management_Models_SignCertificateCsrRequest" data-uid="Axiam.Sdk.Management.Models.SignCertificateCsrRequest" class="text-break">
+Class SignCertificateCsrRequest  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/SignCertificateCsrRequest.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,12 +97,15 @@ Class EmailConfigOverride  <a class="header-action link-secondary" title="View s
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Partial tenant overrides for email configuration. <code>None</code> = inherit from org baseline.</p>
+  <div class="markdown summary"><p>Body of <code>POST /api/v1/certificates/sign-csr</code>. No <code>subject</code> and no
+<code>key_algorithm</code>: both are read out of the CSR, which is the only place they can be
+stated without the row and the certificate being able to disagree. No key is returned, so
+there is no key field anywhere on this exchange.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed record EmailConfigOverride : IEquatable&lt;EmailConfigOverride&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed record SignCertificateCsrRequest : IEquatable&lt;SignCertificateCsrRequest&gt;</code></pre>
   </div>
 
 
@@ -112,14 +115,14 @@ Class EmailConfigOverride  <a class="header-action link-secondary" title="View s
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">EmailConfigOverride</span></div>
+      <div><span class="xref">SignCertificateCsrRequest</span></div>
     </dd>
   </dl>
 
   <dl class="typelist implements">
     <dt>Implements</dt>
     <dd>
-      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.EmailConfigOverride.html">EmailConfigOverride</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html">SignCertificateCsrRequest</a>&gt;</div>
     </dd>
   </dl>
 
@@ -150,35 +153,26 @@ Class EmailConfigOverride  <a class="header-action link-secondary" title="View s
 
 
 
-  <h2 id="Axiam_Sdk_Management_Models_EmailConfigOverride_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>
-Every property is optional, so this is a SPARSE body: what you leave unset is left
-unchanged, and is omitted from the wire request entirely rather than sent as null
-(§27.4 rule 5). Naming the properties you mean to change is the whole API — there is no
-builder because C# object initializers already are one, and no way to accidentally send a
-field you did not name.
-</p>
-</div>
 
 
   <h2 class="section" id="properties">Properties
 </h2>
 
 
-  <a id="Axiam_Sdk_Management_Models_EmailConfigOverride_Enabled_" data-uid="Axiam.Sdk.Management.Models.EmailConfigOverride.Enabled*"></a>
+  <a id="Axiam_Sdk_Management_Models_SignCertificateCsrRequest_CertType_" data-uid="Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CertType*"></a>
 
-  <h3 id="Axiam_Sdk_Management_Models_EmailConfigOverride_Enabled" data-uid="Axiam.Sdk.Management.Models.EmailConfigOverride.Enabled">
-  Enabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/EmailConfigOverride.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Management_Models_SignCertificateCsrRequest_CertType" data-uid="Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CertType">
+  CertType
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/SignCertificateCsrRequest.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>the server's enabled field</p>
+  <div class="markdown level1 summary"><p>the server's cert_type field</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;enabled&quot;)]
-public bool? Enabled { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;cert_type&quot;)]
+public required CertificateType CertType { get; init; }</code></pre>
   </div>
 
 
@@ -187,7 +181,7 @@ public bool? Enabled { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.CertificateType.html">CertificateType</a></dt>
     <dd></dd>
   </dl>
 
@@ -198,20 +192,21 @@ public bool? Enabled { get; init; }</code></pre>
 
 
 
-  <a id="Axiam_Sdk_Management_Models_EmailConfigOverride_FromEmail_" data-uid="Axiam.Sdk.Management.Models.EmailConfigOverride.FromEmail*"></a>
+  <a id="Axiam_Sdk_Management_Models_SignCertificateCsrRequest_CsrPem_" data-uid="Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CsrPem*"></a>
 
-  <h3 id="Axiam_Sdk_Management_Models_EmailConfigOverride_FromEmail" data-uid="Axiam.Sdk.Management.Models.EmailConfigOverride.FromEmail">
-  FromEmail
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/EmailConfigOverride.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Management_Models_SignCertificateCsrRequest_CsrPem" data-uid="Axiam.Sdk.Management.Models.SignCertificateCsrRequest.CsrPem">
+  CsrPem
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/SignCertificateCsrRequest.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>the server's from_email field</p>
+  <div class="markdown level1 summary"><p>PEM-encoded PKCS#10 request — a <code>BEGIN CERTIFICATE REQUEST</code> block. The legacy
+OpenSSL <code>BEGIN NEW CERTIFICATE REQUEST</code> header is not accepted.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;from_email&quot;)]
-public string? FromEmail { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;csr_pem&quot;)]
+public required string CsrPem { get; init; }</code></pre>
   </div>
 
 
@@ -231,20 +226,20 @@ public string? FromEmail { get; init; }</code></pre>
 
 
 
-  <a id="Axiam_Sdk_Management_Models_EmailConfigOverride_FromName_" data-uid="Axiam.Sdk.Management.Models.EmailConfigOverride.FromName*"></a>
+  <a id="Axiam_Sdk_Management_Models_SignCertificateCsrRequest_IssuerCaId_" data-uid="Axiam.Sdk.Management.Models.SignCertificateCsrRequest.IssuerCaId*"></a>
 
-  <h3 id="Axiam_Sdk_Management_Models_EmailConfigOverride_FromName" data-uid="Axiam.Sdk.Management.Models.EmailConfigOverride.FromName">
-  FromName
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/EmailConfigOverride.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Management_Models_SignCertificateCsrRequest_IssuerCaId" data-uid="Axiam.Sdk.Management.Models.SignCertificateCsrRequest.IssuerCaId">
+  IssuerCaId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/SignCertificateCsrRequest.cs/#L38"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>the server's from_name field</p>
+  <div class="markdown level1 summary"><p>the server's issuer_ca_id field</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;from_name&quot;)]
-public string? FromName { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;issuer_ca_id&quot;)]
+public required Guid IssuerCaId { get; init; }</code></pre>
   </div>
 
 
@@ -253,7 +248,7 @@ public string? FromName { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
     <dd></dd>
   </dl>
 
@@ -264,20 +259,20 @@ public string? FromName { get; init; }</code></pre>
 
 
 
-  <a id="Axiam_Sdk_Management_Models_EmailConfigOverride_Provider_" data-uid="Axiam.Sdk.Management.Models.EmailConfigOverride.Provider*"></a>
+  <a id="Axiam_Sdk_Management_Models_SignCertificateCsrRequest_Metadata_" data-uid="Axiam.Sdk.Management.Models.SignCertificateCsrRequest.Metadata*"></a>
 
-  <h3 id="Axiam_Sdk_Management_Models_EmailConfigOverride_Provider" data-uid="Axiam.Sdk.Management.Models.EmailConfigOverride.Provider">
-  Provider
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/EmailConfigOverride.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Management_Models_SignCertificateCsrRequest_Metadata" data-uid="Axiam.Sdk.Management.Models.SignCertificateCsrRequest.Metadata">
+  Metadata
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/SignCertificateCsrRequest.cs/#L44"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>the server's provider field</p>
+  <div class="markdown level1 summary"><p>the server's metadata field</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;provider&quot;)]
-public ProviderConfig? Provider { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;metadata&quot;)]
+public JsonElement? Metadata { get; init; }</code></pre>
   </div>
 
 
@@ -286,7 +281,7 @@ public ProviderConfig? Provider { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="Axiam.Sdk.Management.Models.ProviderConfig.html">ProviderConfig</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonelement">JsonElement</a>?</dt>
     <dd></dd>
   </dl>
 
@@ -297,20 +292,20 @@ public ProviderConfig? Provider { get; init; }</code></pre>
 
 
 
-  <a id="Axiam_Sdk_Management_Models_EmailConfigOverride_ReplyTo_" data-uid="Axiam.Sdk.Management.Models.EmailConfigOverride.ReplyTo*"></a>
+  <a id="Axiam_Sdk_Management_Models_SignCertificateCsrRequest_ValidityDays_" data-uid="Axiam.Sdk.Management.Models.SignCertificateCsrRequest.ValidityDays*"></a>
 
-  <h3 id="Axiam_Sdk_Management_Models_EmailConfigOverride_ReplyTo" data-uid="Axiam.Sdk.Management.Models.EmailConfigOverride.ReplyTo">
-  ReplyTo
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/EmailConfigOverride.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Management_Models_SignCertificateCsrRequest_ValidityDays" data-uid="Axiam.Sdk.Management.Models.SignCertificateCsrRequest.ValidityDays">
+  ValidityDays
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/SignCertificateCsrRequest.cs/#L50"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p><code>Some(None)</code> explicitly clears reply-to; <code>None</code> inherits.</p>
+  <div class="markdown level1 summary"><p>Validity duration in days.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;reply_to&quot;)]
-public string? ReplyTo { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;validity_days&quot;)]
+public required int ValidityDays { get; init; }</code></pre>
   </div>
 
 
@@ -319,7 +314,7 @@ public string? ReplyTo { get; init; }</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
     <dd></dd>
   </dl>
 
