@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta15] - 2026-09-15
+
 ### Added
+
+- CSR-signed certificates and passkey first-factor setup (contract 1.45) (#88)
 
 - **Re-vendor CONTRACT.md/openapi.json/management-registry.json/proto/ to
   contract 1.45** (upstream `3d5b279`). Two additive changes land with it,
@@ -51,6 +55,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   surfaces the tenant's attestation-policy message verbatim, exactly as
   `WebauthnRegisterFinishAsync`'s `403` already does; a `503` from `start` is
   not retried, exactly as `WebauthnRegisterStartAsync`'s.
+
+### Changed
+
+- Re-vendor CONTRACT.md at 1.46
+
+- Bump the minor-patch group with 5 updates
 
 ## [1.0.0-beta14] - 2026-09-13
 
