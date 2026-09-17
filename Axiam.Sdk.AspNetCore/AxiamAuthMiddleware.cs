@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Axiam.Sdk;
+using Axiam.Sdk.AspNetCore.Mcp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
@@ -66,6 +67,14 @@ namespace Axiam.Sdk.AspNetCore;
 /// locally, the same double-submit check the AXIAM server performs on its own
 /// endpoints (&#167;3).
 /// </description></item>
+/// <item><description>
+/// MCP resource-server helpers (CONTRACT.md &#167;28, opt-in via
+/// <see cref="AxiamOptions.ResourceMetadataUrl"/>): with the option unset, none of the
+/// above changes — no <c>WWW-Authenticate</c> header on any response, no path exempted.
+/// Set, every 401 this middleware writes carries the RFC 6750 challenge, and the
+/// document's own path answers unauthenticated even though this middleware is normally
+/// mounted globally.
+/// </description></item>
 /// </list>
 /// </remarks>
 public sealed class AxiamAuthMiddleware
@@ -78,13 +87,27 @@ public sealed class AxiamAuthMiddleware
     private static readonly HashSet<string> SafeMethods = new(StringComparer.OrdinalIgnoreCase) { "GET", "HEAD", "OPTIONS" };
 
     private readonly RequestDelegate _next;
+    private readonly AxiamGuardChallenges? _mcpChallenges;
 
     /// <summary>Constructs the middleware. Registered by the ASP.NET Core pipeline
-    /// (<c>app.UseMiddleware&lt;AxiamAuthMiddleware&gt;()</c>), which supplies <paramref name="next"/>.</summary>
+    /// (<c>app.UseMiddleware&lt;AxiamAuthMiddleware&gt;()</c>), which supplies
+    /// <paramref name="next"/> and resolves <paramref name="optionsAccessor"/> from the
+    /// root service provider exactly once, at pipeline-build time — which is what makes
+    /// <see cref="AxiamGuardChallenges.Build"/>'s CONTRACT.md &#167;28.5 rule 2 refusal a
+    /// genuine startup failure rather than a surprise on the first request.</summary>
     /// <param name="next">The next delegate in the middleware pipeline.</param>
-    public AxiamAuthMiddleware(RequestDelegate next)
+    /// <param name="optionsAccessor">The singleton AXIAM options this app was configured
+    /// with (<see cref="ServiceCollectionExtensions.AddAxiam"/>).</param>
+    /// <exception cref="Axiam.Sdk.Management.ValidationError">
+    /// <see cref="AxiamOptions.ResourceMetadataUrl"/> is set without
+    /// <see cref="AxiamOptions.ExpectedAudience"/> (CONTRACT.md &#167;28.5 rule 2), or
+    /// either is outside &#167;28's syntax.
+    /// </exception>
+    public AxiamAuthMiddleware(RequestDelegate next, IOptions<AxiamOptions> optionsAccessor)
     {
         _next = next ?? throw new ArgumentNullException(nameof(next));
+        ArgumentNullException.ThrowIfNull(optionsAccessor);
+        _mcpChallenges = AxiamGuardChallenges.Build(optionsAccessor.Value, nameof(AxiamAuthMiddleware));
     }
 
     /// <summary>
@@ -100,6 +123,17 @@ public sealed class AxiamAuthMiddleware
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(optionsAccessor);
 
+        // CONTRACT.md §28.3 rule 2: the metadata document MUST answer without a
+        // credential, and this middleware is normally mounted globally — so the
+        // exemption is here, explicit, and derived from the one path
+        // AxiamOptions.ResourceMetadataUrl names. A no-op (never true) when §28 is off.
+        if (_mcpChallenges is not null &&
+            _mcpChallenges.IsMetadataDocumentRequest(context.Request.Method, context.Request.Path))
+        {
+            await _next(context).ConfigureAwait(false);
+            return;
+        }
+
         // CONTRACT.md §10.1 rule 4: the token's tenant_id MUST be asserted against the
         // CONFIGURED tenant. X-Tenant-ID is attacker-controlled, so it can only ever
         // NARROW which tenant this request asserts (checked against the verified claim
@@ -108,25 +142,39 @@ public sealed class AxiamAuthMiddleware
         // whole check vacuous: an attacker would present a token for tenant B alongside
         // `X-Tenant-ID: B` and be compared against himself.
         string tenantId = optionsAccessor.Value.DefaultTenantId; // never a silent default (§5)
+
+        // Extracted before the tenant check below so that EVERY 401 this middleware
+        // emits — including the "no tenant configured" fail-closed case — can pick the
+        // right §28.4 vector: `noCredential` when the request carried nothing to reject,
+        // `invalidToken` once we know a credential was actually presented (§28.5 rule 4:
+        // "every 401 the guard emits carries the challenge").
+        (string? token, bool fromCookie) = ExtractToken(context);
+        string? challengeFor401 = _mcpChallenges is null
+            ? null
+            : token is null ? _mcpChallenges.NoCredential : _mcpChallenges.InvalidToken;
+
         if (string.IsNullOrWhiteSpace(tenantId))
         {
             // No configured tenant to compare against — §10.1 rule 4 fails closed.
-            await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "no tenant available").ConfigureAwait(false);
+            await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "no tenant available", challengeFor401).ConfigureAwait(false);
             return;
         }
 
-        (string? token, bool fromCookie) = ExtractToken(context);
         if (token is null)
         {
             // No credentials presented at all — let the framework's own [Authorize] /
             // authorization middleware 401 it (Java filter lines 78-83 precedent). Do
             // NOT reject here; some endpoints downstream may be anonymous.
+            // AxiamAuthorizationMiddlewareResultHandler attaches the §28 `noCredential`
+            // challenge to that 401 itself (CONTRACT.md §28.5 rule 4).
             await _next(context).ConfigureAwait(false);
             return;
         }
 
         if (fromCookie && !SafeMethods.Contains(context.Request.Method) && !IsCsrfValid(context))
         {
+            // CONTRACT.md §28.5 rule 5: a §3a CSRF refusal is not a `no_grant` scope
+            // denial — it carries no challenge.
             await WriteErrorAsync(context, StatusCodes.Status403Forbidden, "authorization_denied", "csrf_validation_failed").ConfigureAwait(false);
             return;
         }
@@ -150,7 +198,7 @@ public sealed class AxiamAuthMiddleware
             JsonElement? claims = await client.JwksVerifier.VerifyAsync(token, tenantId, context.RequestAborted).ConfigureAwait(false);
             if (claims is null)
             {
-                await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "invalid or expired token").ConfigureAwait(false);
+                await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "invalid or expired token", challengeFor401).ConfigureAwait(false);
                 return;
             }
 
@@ -165,7 +213,7 @@ public sealed class AxiamAuthMiddleware
                     : null;
                 if (requestedTenant != claimedTenant)
                 {
-                    await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "invalid or expired token").ConfigureAwait(false);
+                    await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "invalid or expired token", challengeFor401).ConfigureAwait(false);
                     return;
                 }
             }
@@ -173,7 +221,7 @@ public sealed class AxiamAuthMiddleware
             string? userId = claims.Value.TryGetProperty("sub", out JsonElement subEl) ? subEl.GetString() : null;
             if (string.IsNullOrEmpty(userId))
             {
-                await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "token missing subject claim").ConfigureAwait(false);
+                await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "token missing subject claim", challengeFor401).ConfigureAwait(false);
                 return;
             }
 
@@ -202,7 +250,7 @@ public sealed class AxiamAuthMiddleware
             // Fail-closed on any unexpected error (Java filter lines 106-111
             // precedent) — never let an unexpected exception fall through to an
             // authenticated principal or an unhandled 500.
-            await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "invalid or expired token").ConfigureAwait(false);
+            await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "invalid or expired token", challengeFor401).ConfigureAwait(false);
             return;
         }
 
@@ -247,8 +295,15 @@ public sealed class AxiamAuthMiddleware
         return headerBytes.Length == cookieBytes.Length && CryptographicOperations.FixedTimeEquals(headerBytes, cookieBytes);
     }
 
-    private static Task WriteErrorAsync(HttpContext context, int statusCode, string error, string message)
+    private static Task WriteErrorAsync(HttpContext context, int statusCode, string error, string message, string? wwwAuthenticate = null)
     {
+        // CONTRACT.md §28.5 rule 4/7: set before the status line and body are written —
+        // an additive header on the unchanged §10 JSON body, never present on anything
+        // but the 401s this method is asked to attach one to.
+        if (wwwAuthenticate is not null)
+        {
+            context.Response.Headers["WWW-Authenticate"] = wwwAuthenticate;
+        }
         context.Response.StatusCode = statusCode;
         context.Response.ContentType = "application/json";
         // JSON-injection-safe: WriteAsJsonAsync (System.Text.Json) — never manual string

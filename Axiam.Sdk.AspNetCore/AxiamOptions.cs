@@ -105,4 +105,28 @@ public sealed class AxiamOptions
     /// <summary>The OIDC discovery-document cache TTL, passed through to the underlying
     /// <c>AxiamClient</c> (CONTRACT.md &#167;12.3 rule 6 floors it at 5 minutes).</summary>
     public TimeSpan OidcDiscoveryTtl { get; set; } = TimeSpan.FromMinutes(5);
+
+    /// <summary>
+    /// The URL of this resource server's RFC 9728 protected-resource metadata document
+    /// (CONTRACT.md &#167;28.5) &#8212; normally the <c>MetadataUrl</c> a prior
+    /// <c>AxiamMcp.ProtectedResourceMetadata(...)</c> call returned. <b>Setting this is
+    /// what turns &#167;28 on.</b>
+    /// </summary>
+    /// <remarks>
+    /// Opt-in and unset by default: with it unset, <see cref="AxiamAuthMiddleware"/> and
+    /// <see cref="AxiamPolicyHandler"/> are byte-for-byte what they were before &#167;28
+    /// existed &#8212; no <c>WWW-Authenticate</c> header on any response, no status
+    /// changed, no body changed, no path exempted from authentication.
+    /// <para>
+    /// <b><see cref="ExpectedAudience"/> MUST be set together with this property.</b> A
+    /// resource server that publishes "tokens for me carry this <c>aud</c>" and then does
+    /// not check <c>aud</c> has published a claim it does not honour, and a token minted
+    /// for a different resource server opens it (&#167;28.5 rule 2). Setting this without
+    /// <see cref="ExpectedAudience"/> is refused at the first request-independent
+    /// resolution of the AXIAM authentication/authorization singletons (middleware
+    /// construction, policy-handler construction) &#8212; the invalid configuration is
+    /// impossible to run, not merely discouraged.
+    /// </para>
+    /// </remarks>
+    public string? ResourceMetadataUrl { get; set; }
 }

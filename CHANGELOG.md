@@ -7,6 +7,140 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- MCP resource-server helpers — RFC 9728 protected-resource metadata and the RFC 6750
+  bearer challenge (CONTRACT.md §28, contract 1.48)
+
+- **The resource-server half of the Model Context Protocol authorization handshake.**
+  Two pure operations on `Axiam.Sdk.Mcp` — `AxiamMcp.ProtectedResourceMetadata` and
+  `AxiamMcp.BearerChallenge` — plus one ASP.NET Core minimal-API endpoint extension,
+  `IEndpointRouteBuilder.ServeProtectedResourceMetadata`, and one new
+  `AxiamOptions.ResourceMetadataUrl` guard option. AXIAM is the authorization server and
+  implements none of this; an application hosting an MCP server on this SDK is the
+  resource server, and this is its side.
+
+  ```csharp
+  ProtectedResourceMetadata metadata = AxiamMcp.ProtectedResourceMetadata(new ProtectedResourceMetadataOptions
+  {
+      Resource = "https://mcp.example.com/mcp",
+      AuthorizationServers = new[] { "https://axiam.example.com" },
+      ScopesSupported = new[] { "mcp:read", "mcp:tools" },
+  });
+  builder.Services.AddAxiamAspNetCore(options =>
+  {
+      options.ExpectedAudience = metadata.Document.Resource;
+      options.ResourceMetadataUrl = metadata.MetadataUrl;
+  });
+  app.UseMiddleware<AxiamAuthMiddleware>();
+  app.UseAuthorization();
+  app.ServeProtectedResourceMetadata(metadata);
+  ```
+
+  **Neither operation performs network I/O**, so §16's retry policy and §9's
+  single-flight refresh do not apply and neither touches the shared `AxiamClient`'s own
+  session — both are pure local computation, like `OidcBegin` and `UmaChallenge.Parse`,
+  and carry no `Async` suffix for the same reason. The *client* half of the handshake is
+  deliberately not shipped: a helper that read a 401 and acted on it would send a
+  credential to whatever host the 401 asked it to.
+
+- **Opt-in and off by default, and a new regression test proves it.** With
+  `ResourceMetadataUrl` unset, `AxiamAuthMiddleware`, `AxiamPolicyHandler` and
+  `AxiamAuthorizationMiddlewareResultHandler` are byte-for-byte what they were before
+  §28 existed: no `WWW-Authenticate` header on any response, no status changed, no body
+  changed, no path exempted. The new test asserts the header's *absence* explicitly on
+  every response shape (401, 403, 200), rather than asserting the status alone — a 401
+  that grew a header is still a 401.
+
+- **`ExpectedAudience` is now mandatory when `ResourceMetadataUrl` is set, and the
+  invalid configuration is impossible to run rather than merely discouraged.** Every
+  AXIAM guard singleton that reads `ResourceMetadataUrl`
+  (`AxiamAuthMiddleware`, `AxiamPolicyHandler`, `AxiamAuthorizationMiddlewareResultHandler`)
+  validates the pair once, in its own constructor — which ASP.NET Core resolves while
+  building the request pipeline, so a misconfigured app fails at that point rather than
+  on the first request. A resource server that publishes "tokens for me carry this
+  `aud`" and then does not check `aud` has published a claim it does not honour, and a
+  token minted for a *different* resource server opens it — that is the confusion
+  RFC 8707 exists to prevent.
+
+  This changes nothing for an existing deployment: `ResourceMetadataUrl` is new, so
+  there is no configuration that was valid before and is refused now.
+
+- **The document's path is derived from the resource, not chosen**, and exactly one
+  route is registered — RFC 9728 §3.1's insertion between the authority and the path,
+  with a trailing slash carried through rather than trimmed. `ServeProtectedResourceMetadata`
+  serves it `200 application/json` with `Cache-Control: public, max-age=3600` and
+  `Access-Control-Allow-Origin: *` (never `Access-Control-Allow-Credentials`), and
+  **without authentication**: `AxiamAuthMiddleware` separately exempts that one path
+  itself, derived from `ResourceMetadataUrl`, so the route is reachable even when a
+  caller happens to attach a stale or garbage bearer token while probing it.
+
+- **One class of 403 gains a header, and only one.** An `[AxiamAccess(action, resource)
+  { Scope = "…" }]` (or legacy `"resource:action"` policy-string) denial whose decision
+  came back `AxiamReasonCode.NoGrant` now carries `error="insufficient_scope",
+  scope="…"`. The JSON body does not change — it is still `authorization_denied`, and
+  `insufficient_scope` appears only in the header. `AxiamReasonCode.DeniedByRule`, an
+  absent or unrecognised reason code, and a denial from a requirement with no `Scope`
+  all carry no header. Where a §20.3 `UmaChallenger` is also registered, its challenge
+  wins and exactly one `WWW-Authenticate` value is ever emitted for one 403.
+  `AxiamPolicyHandler` now calls `AuthzRestClient.CheckAccessDecisionAsync` (rather than
+  the bare-`bool` `CheckAccessAsync`) so the reason code is available to read.
+
+- **The challenge never says why.** Expired, not yet valid, wrong tenant, wrong
+  audience, bad signature, `alg` confusion, an unsatisfiable `cnf`, a revoked `sid` — all
+  of them are `invalid_token`, indistinguishably, and no guard in this package adds an
+  `error_description`, a header or a body field that tells them apart. A request that
+  carried *no* credential gets a challenge with no `error` parameter at all, which is a
+  different answer and deliberately so. `AxiamMcp.BearerChallenge` **refuses rather than
+  escapes** any value outside RFC 6750's character sets, raising `ValidationError`
+  rather than emitting `\"`.
+
+- **Validation refuses; it never repairs.** `AxiamMcp.ProtectedResourceMetadata` applies
+  every §28.2 rule at construction — absolute URI with no query and no fragment,
+  `https` except on `127.0.0.1`/`[::1]`/`localhost`, at least one issuer with no
+  duplicates and no query, `NQCHAR` scope tokens in the caller's order,
+  `BearerMethodsSupported` exactly `["header"]` — and raises `ValidationError`
+  (`Axiam.Sdk.Management.ValidationError`, this SDK's §27.4 rule 7 sub-type of
+  `NetworkError` — §2's taxonomy, unchanged; §28 adds no error type) rather than
+  normalising, trimming, lowercasing or re-encoding anything to make it pass. An empty
+  `ScopesSupported` and an absent `ResourceDocumentation` omit their document members
+  rather than emitting `null`. Nothing in the document may come from a request, and
+  there is no option that would let it.
+
+- **Tests**: §28.9's five required tests, on the fixture §28.9 names —
+  `tests/Axiam.Sdk.Tests/Mcp/AxiamMcpTests.cs` for the two framework-independent ones
+  (document shape and validation negatives; challenge quoting and its refusals) and
+  `tests/Axiam.Sdk.AspNetCore.Tests/Mcp/McpResourceServerTests.cs`, against a real
+  `TestServer`, for the three that need one (401 with the challenge, including the
+  unauthenticated metadata `GET`; 403 `insufficient_scope`; a token whose `aud` is not
+  the resource), plus the off-by-default regression.
+
+- **Not ported: a gRPC or AMQP form of the challenge.** CONTRACT.md §28.5 rule 8 makes a
+  gRPC `WWW-Authenticate` metadata attachment optional for "an SDK whose guard also
+  covers gRPC" and forbids an AMQP form outright. This SDK's `Axiam.Sdk.Grpc` and
+  `Axiam.Sdk.Amqp` namespaces are this SDK's own **client** halves of those transports
+  (`AxiamGrpcAuthzClient` calls AXIAM's `AuthorizationService`; `AxiamAmqpConsumer`
+  verifies HMAC-signed messages AXIAM's own bus sends to this application) — neither
+  authenticates an inbound call from an MCP client the way `AxiamAuthMiddleware` does,
+  so there is no server-side gRPC or AMQP guard here for the optional rule to extend.
+  Documented on the PR as a justified divergence rather than shipped as a defect.
+
+- **Contract**: the vendored `CONTRACT.md` is re-synced to **1.48** from
+  `ilpanich/axiam`'s `claude/t21-2a-public-clients` branch, ahead of `axiam` `main`
+  until Phase 21 lands there. `proto/` is byte-identical between that branch and the
+  copy already vendored here, so it needed no update. **`openapi.json` is deliberately
+  *not* re-synced in this change**: that branch's copy also carries T21.2a/T21.4's
+  Dynamic Client Registration schema additions (new `OidcPolicy` fields, a new
+  `ManagedBy` model, `CreateOAuth2ClientRequest`/`OAuth2ClientResponse` changes, two new
+  `/api/v1/oauth2-clients/registration-tokens` operations) — unrelated work, not yet
+  reviewed or landed on `axiam` main, that a full re-sync would silently pull into the
+  committed §27 management surface via `scripts/gen_management.py`. §28 itself needs no
+  `openapi.json` change: every §28 operation is pure local computation with no server
+  API surface of its own (§28.0). `openapi.json`'s own re-sync — including T21.3's RFC
+  8707 `resource` parameter, which §28's CONTRACT.md changelog note folds in — is left
+  for a change that also updates `management-registry.json` and regenerates the §27
+  surface deliberately, once T21.2a/T21.4 have their own review.
+
 ## [1.0.0-beta15] - 2026-09-15
 
 ### Added

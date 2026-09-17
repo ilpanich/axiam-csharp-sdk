@@ -1,11 +1,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Axiam.Sdk;
+using Axiam.Sdk.AspNetCore.Mcp;
 using Axiam.Sdk.Auth.Oidc;
 using Axiam.Sdk.Core;
+using Axiam.Sdk.Mcp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace Axiam.Sdk.AspNetCore;
 
@@ -101,10 +104,14 @@ public sealed class AxiamPolicyHandler : AuthorizationHandler<AxiamRequirement>
 
     private readonly AxiamClient _client;
     private readonly UmaChallenger? _challenger;
+    private readonly AxiamGuardChallenges? _mcpChallenges;
 
     /// <summary>Constructs the handler over the shared <see cref="AxiamClient"/> registered by
     /// <see cref="ServiceCollectionExtensions.AddAxiamAspNetCore"/>.</summary>
-    /// <param name="client">The shared client whose <c>Authz.CheckAccessAsync</c> this handler calls.</param>
+    /// <param name="client">The shared client whose <c>Authz.CheckAccessDecisionAsync</c> this handler calls.</param>
+    /// <param name="optionsAccessor">The singleton AXIAM options this app was configured
+    /// with — read once, at construction, for CONTRACT.md &#167;28.5 rule 5's
+    /// <c>insufficient_scope</c> challenge.</param>
     /// <param name="challenger">
     /// An optional &#167;20.3 challenge emitter, registered by
     /// <see cref="ServiceCollectionExtensions.AddAxiamUmaChallenge"/>. When absent
@@ -112,9 +119,16 @@ public sealed class AxiamPolicyHandler : AuthorizationHandler<AxiamRequirement>
     /// <see cref="UmaChallenger"/> for why this is opt-in and why a minting failure
     /// still denies plainly.
     /// </param>
-    public AxiamPolicyHandler(AxiamClient client, UmaChallenger? challenger = null)
+    /// <exception cref="Axiam.Sdk.Management.ValidationError">
+    /// <see cref="AxiamOptions.ResourceMetadataUrl"/> is set without
+    /// <see cref="AxiamOptions.ExpectedAudience"/> (CONTRACT.md &#167;28.5 rule 2), or
+    /// either is outside &#167;28's syntax.
+    /// </exception>
+    public AxiamPolicyHandler(AxiamClient client, IOptions<AxiamOptions> optionsAccessor, UmaChallenger? challenger = null)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
+        ArgumentNullException.ThrowIfNull(optionsAccessor);
+        _mcpChallenges = AxiamGuardChallenges.Build(optionsAccessor.Value, nameof(AxiamPolicyHandler));
         _challenger = challenger;
     }
 
@@ -170,19 +184,25 @@ public sealed class AxiamPolicyHandler : AuthorizationHandler<AxiamRequirement>
 
         CancellationToken cancellationToken = httpContext?.RequestAborted ?? CancellationToken.None;
 
-        bool allowed;
+        AccessDecision decision;
         try
         {
             // Server-side additive-only RBAC (allow-wins, default-deny, SEC-040) is the
-            // sole source of truth — CheckAccessAsync is called FRESH every time, no
-            // local decision cache (T-21-18). subjectId is the end-user identified by
-            // AxiamAuthMiddleware's ClaimsPrincipal, checked "as" that user via the
-            // check-as subject override (requires this handler's own AxiamClient
-            // identity to hold authz:check_as server-side, per CONTRACT.md's authz/check
-            // endpoint contract) — the shared AxiamClient checks access ON BEHALF OF the
-            // incoming request's caller, never on behalf of itself.
-            allowed = await _client.Authz
-                .CheckAccessAsync(requirement.PolicyName, resourceId, requirement.Scope, subjectId: subjectId, cancellationToken: cancellationToken)
+            // sole source of truth — CheckAccessDecisionAsync is called FRESH every
+            // time, no local decision cache (T-21-18). subjectId is the end-user
+            // identified by AxiamAuthMiddleware's ClaimsPrincipal, checked "as" that
+            // user via the check-as subject override (requires this handler's own
+            // AxiamClient identity to hold authz:check_as server-side, per
+            // CONTRACT.md's authz/check endpoint contract) — the shared AxiamClient
+            // checks access ON BEHALF OF the incoming request's caller, never on behalf
+            // of itself.
+            //
+            // The full-decision overload (rather than the bare-bool CheckAccessAsync)
+            // is what surfaces CONTRACT.md §11 rule 9's reason_code — CONTRACT.md §28.5
+            // rule 5 reads it to decide whether a denial's 403 additionally carries an
+            // `insufficient_scope` WWW-Authenticate challenge.
+            decision = await _client.Authz
+                .CheckAccessDecisionAsync(requirement.PolicyName, resourceId, requirement.Scope, subjectId: subjectId, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
         catch (NetworkError)
@@ -232,7 +252,7 @@ public sealed class AxiamPolicyHandler : AuthorizationHandler<AxiamRequirement>
             return;
         }
 
-        if (allowed)
+        if (decision.Allowed)
         {
             context.Succeed(requirement);
             return;
@@ -241,9 +261,45 @@ public sealed class AxiamPolicyHandler : AuthorizationHandler<AxiamRequirement>
         // Left unsatisfied — AxiamAuthorizationMiddlewareResultHandler maps an
         // unsatisfied/Forbidden requirement to a standardized 403 JSON body. §20.3:
         // with a challenger registered, that 403 additionally tells the caller where
-        // to obtain authority rather than only that they lack it.
+        // to obtain authority rather than only that they lack it. §28.5 rule 5: absent
+        // (or overridden by) a UMA challenge, a `no_grant` denial on a route that named
+        // a scope additionally carries an `insufficient_scope` WWW-Authenticate value.
         await PrepareUmaChallengeAsync(httpContext, requirement.PolicyName, resourceId, cancellationToken)
             .ConfigureAwait(false);
+        PrepareMcpChallenge(httpContext, requirement, decision.ReasonCode);
+    }
+
+    /// <summary>
+    /// CONTRACT.md &#167;28.5 rule 5: the ONE class of 403 that carries a challenge, and
+    /// only it &#8212; a route that named a <see cref="AxiamRequirement.Scope"/> whose
+    /// decision came back <see cref="AxiamReasonCode.NoGrant"/>. Every other refusal
+    /// &#8212; <see cref="AxiamReasonCode.DeniedByRule"/>, an absent or unrecognised
+    /// reason code, a decision for a requirement with no <see cref="AxiamRequirement.Scope"/>
+    /// &#8212; carries none.
+    /// </summary>
+    /// <remarks>
+    /// Never overrides a &#167;20.3 UMA challenge <see cref="PrepareUmaChallengeAsync"/>
+    /// already stashed: exactly one <c>WWW-Authenticate</c> value is ever emitted for one
+    /// response.
+    /// </remarks>
+    private void PrepareMcpChallenge(HttpContext? httpContext, AxiamRequirement requirement, string? reasonCode)
+    {
+        if (_mcpChallenges is null || httpContext is null || httpContext.Items.ContainsKey(ChallengeItemKey))
+        {
+            return;
+        }
+
+        if (reasonCode != AxiamReasonCode.NoGrant || string.IsNullOrEmpty(requirement.Scope))
+        {
+            return;
+        }
+
+        httpContext.Items[ChallengeItemKey] = AxiamMcp.BearerChallenge(new BearerChallengeOptions
+        {
+            ResourceMetadataUrl = _mcpChallenges.ResourceMetadataUrl,
+            Error = AxiamBearerChallengeError.InsufficientScope,
+            Scope = requirement.Scope,
+        });
     }
 
     /// <summary>
@@ -342,6 +398,24 @@ public sealed class AxiamPolicyHandler : AuthorizationHandler<AxiamRequirement>
 /// </remarks>
 public sealed class AxiamAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewareResultHandler
 {
+    private readonly AxiamGuardChallenges? _mcpChallenges;
+
+    /// <summary>Constructs the handler. Registered as a singleton by
+    /// <see cref="ServiceCollectionExtensions.AddAxiamAspNetCore"/>.</summary>
+    /// <param name="optionsAccessor">The singleton AXIAM options this app was configured
+    /// with — read once, at construction, for CONTRACT.md &#167;28.5 rule 4's
+    /// no-credential challenge on the 401 this handler writes.</param>
+    /// <exception cref="Axiam.Sdk.Management.ValidationError">
+    /// <see cref="AxiamOptions.ResourceMetadataUrl"/> is set without
+    /// <see cref="AxiamOptions.ExpectedAudience"/> (CONTRACT.md &#167;28.5 rule 2), or
+    /// either is outside &#167;28's syntax.
+    /// </exception>
+    public AxiamAuthorizationMiddlewareResultHandler(IOptions<AxiamOptions> optionsAccessor)
+    {
+        ArgumentNullException.ThrowIfNull(optionsAccessor);
+        _mcpChallenges = AxiamGuardChallenges.Build(optionsAccessor.Value, nameof(AxiamAuthorizationMiddlewareResultHandler));
+    }
+
     /// <summary>
     /// On success, continues the pipeline exactly like the framework default. On failure,
     /// writes a standardized JSON error body, checking
@@ -394,6 +468,16 @@ public sealed class AxiamAuthorizationMiddlewareResultHandler : IAuthorizationMi
         bool isAuthenticated = context.User.Identity?.IsAuthenticated == true;
         if (!isAuthenticated)
         {
+            // CONTRACT.md §28.5 rule 4: every 401 the guard emits carries the
+            // challenge, this one included. AxiamAuthMiddleware never reaches this
+            // handler for a request it rejected itself (it writes its own body and
+            // returns without calling `next`), so a request reaching this branch
+            // unauthenticated is one that carried no credential at all — §28.4's
+            // `noCredential` vector, with no `error` parameter.
+            if (_mcpChallenges is not null)
+            {
+                context.Response.Headers["WWW-Authenticate"] = _mcpChallenges.NoCredential;
+            }
             return WriteJsonAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "authentication required");
         }
 

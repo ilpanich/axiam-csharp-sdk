@@ -21,13 +21,14 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 ## Contract conformance
 
 This SDK conforms to **contract 1.38**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
-§22, §23, §24, §25, §26, §27 (including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation,
+§22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation,
 contract 1.3, the §12 OIDC/SSO relying-party helpers, contract 1.4, the §13 webhook signature
 verifier, T-145, the §20 UMA 2.0 Protection API and ticket grant, contract 1.10, the §22 reactor
 runtime, contract 1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, the §24 WebAuthn
 relying-party layer, the §25 account-lifecycle operations and §26 Pushed Authorization Requests,
 contract 1.28, §23.4 rule 7's `mode`-driven password-login fallback, contract 1.29, and the §27
-Management API — all 158 operations across 24 namespaces with the §27.6 declarative layer).
+Management API — all 158 operations across 24 namespaces with the §27.6 declarative layer — and
+the §28 MCP resource-server helpers, contract 1.48).
 
 §12.7, §14, §15, §20, §22, §23, §24, §25, §26 and §27 are named rather than folded into the range
 because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
@@ -625,6 +626,95 @@ failure, obtain a *new* ticket.
 
 Both halves run in [`examples/UmaResourceServer`](examples/UmaResourceServer) and
 [`examples/UmaClient`](examples/UmaClient).
+
+## MCP resource-server helpers (CONTRACT.md §28, RFC 9728 + RFC 6750)
+
+The resource-server half of the Model Context Protocol authorization handshake:
+publishing the RFC 9728 protected-resource metadata document that tells an MCP client
+which AXIAM deployment guards this resource, and emitting the `WWW-Authenticate`
+challenge that starts the client's discovery. AXIAM is the authorization server and
+implements none of this — an application hosting an MCP server on top of this SDK is the
+*resource server*, and §28 is its side.
+
+**Opt-in and off by default.** With `AxiamOptions.ResourceMetadataUrl` unset,
+`AxiamAuthMiddleware` and the policy-authorization surface are byte-for-byte what they
+were before §28 existed: no `WWW-Authenticate` header on any response, no path exempted
+from authentication.
+
+```csharp
+using Axiam.Sdk.Mcp;
+
+ProtectedResourceMetadata metadata = AxiamMcp.ProtectedResourceMetadata(new ProtectedResourceMetadataOptions
+{
+    Resource = "https://mcp.example.com/mcp",
+    AuthorizationServers = new[] { "https://axiam.example.com" },
+    ScopesSupported = new[] { "mcp:read", "mcp:tools" },
+});
+
+builder.Services.AddAxiamAspNetCore(options =>
+{
+    options.BaseUrl = axiamBaseUrl;
+    options.DefaultTenantId = "acme";
+    options.ExpectedAudience = metadata.Document.Resource;  // §28.5 rule 2: mandatory once set
+    options.ResourceMetadataUrl = metadata.MetadataUrl;     // setting this is what turns §28 on
+});
+
+app.UseRouting();
+app.UseMiddleware<AxiamAuthMiddleware>();
+app.UseAuthorization();
+app.ServeProtectedResourceMetadata(metadata);
+// GET /.well-known/oauth-protected-resource/mcp — 200, unauthenticated, always.
+```
+
+**`ExpectedAudience` is mandatory once `ResourceMetadataUrl` is set, and the invalid
+configuration is impossible to run rather than merely discouraged.** The refusal —
+naming both options — happens while the ASP.NET Core pipeline is built (inside
+`AxiamAuthMiddleware`'s and `AxiamPolicyHandler`'s own constructors), not on the first
+request. A resource server that publishes "tokens for me carry this `aud`" and does not
+check `aud` is opened by a token minted for a *different* resource server, which is the
+confusion RFC 8707 exists to prevent.
+
+Every 401 `AxiamAuthMiddleware` writes itself, and every 401 the framework's own
+`[Authorize]` produces for a request this middleware let through unauthenticated, now
+carries the challenge — no `error` parameter when the request carried no credential at
+all, `error="invalid_token"` once one was presented and rejected. Expired, wrong tenant,
+wrong audience, bad signature, an unsatisfiable `cnf`, a revoked `sid` — all of them are
+`invalid_token`, indistinguishably; the challenge never says which, because every
+distinction a 401 draws for an unauthenticated stranger is an oracle. One class of 403
+gains a header, and only one: an `[AxiamAccess(action, resource) { Scope = "…" }]` (or
+`"resource:action"` policy string) denial whose `reason_code` came back `no_grant`.
+`denied_by_rule`, an absent or unrecognised reason code, and a denial from a route with no
+`Scope` all carry none. Where a §20.3 `UmaChallenger` is also registered, its challenge
+wins over §28's and exactly one `WWW-Authenticate` value is ever emitted for one 403.
+
+`ServeProtectedResourceMetadata` registers the one `GET` route the document is derived to
+live at (RFC 9728 §3.1 — the well-known prefix inserted between the resource's authority
+and its path), served `200 application/json` with `Cache-Control: public, max-age=3600`
+and `Access-Control-Allow-Origin: *`, reachable with **no credential of any kind**: where
+the §10 guard is mounted globally (the normal `app.UseMiddleware<AxiamAuthMiddleware>()`
+arrangement), that middleware separately exempts this exact path itself, derived from
+`ResourceMetadataUrl` — so the route works whichever order the middleware and this call
+are registered in, and even a request that happens to carry a stale or garbage bearer
+token cannot 401 it.
+
+`AxiamMcp.ProtectedResourceMetadata` and `AxiamMcp.BearerChallenge` are **pure, local
+computation** — no network I/O, so neither the §16 retry policy nor the §9 single-flight
+refresh guard applies, and neither touches the shared `AxiamClient`'s own session (there is
+no `Async` suffix on either, for the same reason `OidcBegin` has none). The *client* half
+of the handshake — parsing a challenge, fetching the document it points at, deciding
+whether to trust the authorization server it names — is deliberately not in this contract
+version, for the reason `UmaChallenge.Parse` stops at parsing (§20.3, above): acting on a
+401 automatically would send a credential to whatever host it pointed at.
+
+**§28 covers HTTP only, and this SDK has no server-side gRPC or AMQP guard for it to
+extend.** `Axiam.Sdk`'s `Grpc` and `Amqp` namespaces are this SDK's *client* halves of
+those transports — `AxiamGrpcAuthzClient` calls AXIAM's own `AuthorizationService`, and
+`AxiamAmqpConsumer` verifies HMAC-signed messages AXIAM's own bus sends *to* this
+application — neither authenticates an inbound call from an MCP client the way
+`AxiamAuthMiddleware` does, so neither is the "guard that also covers gRPC" §28.5 rule 8
+makes the optional `WWW-Authenticate` gRPC metadata attachment available to. AMQP has no
+equivalent in any case (§28.5 rule 8): there is no client waiting on a response to
+re-authorize with.
 
 ## Device authorization grant (CONTRACT.md §14)
 
