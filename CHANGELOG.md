@@ -139,7 +139,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   API surface of its own (§28.0). `openapi.json`'s own re-sync — including T21.3's RFC
   8707 `resource` parameter, which §28's CONTRACT.md changelog note folds in — is left
   for a change that also updates `management-registry.json` and regenerates the §27
-  surface deliberately, once T21.2a/T21.4 have their own review.
+  surface deliberately, once T21.2a/T21.4 have their own review. **That
+  deliberate change now has a name and a schedule: F-28-01 below.** The T21.9
+  T9d cross-SDK review upheld this decision and made it the rule for all
+  eleven SDKs.
+
+### Changed
+
+- **Contract conformance statement corrected** (CONTRACT.md Closing Notes,
+  §28.11 row R-3, T21.9 T9d). The README named §28 correctly but still claimed
+  *contract 1.38*, while the vendored `CONTRACT.md` was already at 1.48. The
+  contract's own rule is that the statement follows the code; it now reads
+  *contract 1.48*.
+
+### Deferred
+
+- **F-28-01 — the vendored `openapi.json` and `CONTRACT.md` re-sync.** This
+  repository declined the `openapi.json` re-sync during T21.9 T9c, for the
+  reason stated above, and the T9d cross-SDK review found that decision
+  **correct and now normative**. Seven of the eleven SDKs re-synced
+  `openapi.json` from `ilpanich/axiam`'s `claude/t21-2a-public-clients` phase
+  branch; that branch kept moving, so those seven were stale against it within
+  hours, and none of the eleven matches `ilpanich/axiam`'s current tree.
+  Between them the eleven held five distinct byte-states of `CONTRACT.md` and
+  two of `openapi.json`, all calling themselves contract 1.48 (CONTRACT.md
+  §28.11 row R-1). Contract **1.49** states the rule that was missing: a
+  vendored artefact is re-synced from a **merged** `main`, never a phase
+  branch. Both artefacts are therefore re-synced here **once**, as F-28-01,
+  after AXIAM Phase 21 lands on `main`, together with a regeneration of the
+  §27 management surface in the same commit. F-28-01 is recorded identically
+  in all eleven SDK repositories so that it cannot be lost.
 
 ## [1.0.0-beta15] - 2026-09-15
 
