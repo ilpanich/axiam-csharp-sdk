@@ -38,6 +38,36 @@ public sealed record TenantSettingsOverride
     public bool? AdminNotificationsEnabled { get; init; }
 
     /// <summary>
+    /// the server's cimd field
+    /// </summary>
+    [JsonPropertyName("cimd")]
+    public CimdPolicy? Cimd { get; init; }
+
+    /// <summary>
+    /// the server's dcr_allowed_redirect_hosts field
+    /// </summary>
+    [JsonPropertyName("dcr_allowed_redirect_hosts")]
+    public IReadOnlyList<string>? DcrAllowedRedirectHosts { get; init; }
+
+    /// <summary>
+    /// the server's dcr_allowed_scopes field
+    /// </summary>
+    [JsonPropertyName("dcr_allowed_scopes")]
+    public IReadOnlyList<string>? DcrAllowedScopes { get; init; }
+
+    /// <summary>
+    /// the server's dcr_max_clients field
+    /// </summary>
+    [JsonPropertyName("dcr_max_clients")]
+    public int? DcrMaxClients { get; init; }
+
+    /// <summary>
+    /// the server's dcr_unused_client_ttl_days field
+    /// </summary>
+    [JsonPropertyName("dcr_unused_client_ttl_days")]
+    public int? DcrUnusedClientTtlDays { get; init; }
+
+    /// <summary>
     /// the server's default_cert_validity_days field
     /// </summary>
     [JsonPropertyName("default_cert_validity_days")]
@@ -57,6 +87,12 @@ public sealed record TenantSettingsOverride
     public int? DeletionGracePeriodDays { get; init; }
 
     /// <summary>
+    /// the server's dynamic_registration field
+    /// </summary>
+    [JsonPropertyName("dynamic_registration")]
+    public string? DynamicRegistration { get; init; }
+
+    /// <summary>
     /// the server's email_verification_grace_period_hours field
     /// </summary>
     [JsonPropertyName("email_verification_grace_period_hours")]
@@ -67,6 +103,12 @@ public sealed record TenantSettingsOverride
     /// </summary>
     [JsonPropertyName("email_verification_required")]
     public bool? EmailVerificationRequired { get; init; }
+
+    /// <summary>
+    /// the server's external_client_allowed_resources field
+    /// </summary>
+    [JsonPropertyName("external_client_allowed_resources")]
+    public IReadOnlyList<string>? ExternalClientAllowedResources { get; init; }
 
     /// <summary>
     /// the server's hibp_check_enabled field

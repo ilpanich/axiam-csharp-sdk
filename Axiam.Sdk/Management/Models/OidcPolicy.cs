@@ -12,22 +12,93 @@ using System.Text.Json.Serialization;
 namespace Axiam.Sdk.Management.Models;
 
 /// <summary>
-/// OpenID Connect surface controls (X7 G8, plan §4.6/§4.8). Two settings that are not password
-/// rules, and are here because this is the org-baseline-plus-tenant-override surface every
-/// other per-tenant control lives on. They are also the two settings in this model that are
-/// *not* of the same kind as each other, so it is worth saying which is which: *
-/// [<c>Self::sensitive_scopes_enabled</c>] **is** ordered. Releasing personal data is the
-/// less-restrictive direction, so it is validated disable-only — the mirror image of
-/// <c>mfa_enforced</c> — and a tenant can turn its organization's decision off but never on. *
-/// [<c>Self::default_locale</c>] is **not** ordered, and no ordering is invented for it. A
-/// language is a presentation preference; there is no sense in which Italian is stricter than
-/// French. [<c>validate_tenant_override</c>] therefore does not check it and
-/// [<c>clamp_overrides_to_org</c>] never clears it. The model's rule is "a tenant may only be
-/// more restrictive", which binds every field that *has* a restrictiveness; a field that has
-/// none cannot violate it.
+/// OpenID Connect surface controls (X7 G8, plan §4.6/§4.8; T21.4). Settings that are not
+/// password rules, here because this is the org-baseline-plus-tenant-override surface every
+/// other per-tenant control lives on. They are not all of the same kind as each other, and
+/// which is which is the whole of what [<c>validate_tenant_override</c>] and
+/// [<c>clamp_overrides_to_org</c>] read, so it is set out rather than inferred. **Ordered** — a
+/// tenant may be stricter than its organization and never more permissive: *
+/// [<c>Self::sensitive_scopes_enabled</c>], validated **disable-only** — the mirror image of
+/// <c>mfa_enforced</c>, because releasing personal data is the less-restrictive direction, so a
+/// tenant can turn its organization's decision off but never on. *
+/// [<c>Self::dynamic_registration</c>], on the ladder <c>disabled</c> →
+/// <c>initial_access_token</c> → <c>anonymous</c>: a tenant may move down it and never up. *
+/// [<c>Self::dcr_max_clients</c>] and [<c>Self::dcr_unused_client_ttl_days</c>], on the
+/// ordinary <c>tenant &lt;= org</c> rule — with the wrinkle that <c>0</c> on the second means
+/// *never sweep*, which is the longest window of all and is handled by
+/// [<c>dcr_ttl_strictness</c>]. **Not ordered**, therefore never validated against the baseline
+/// and never clamped: * [<c>Self::default_locale</c>]. A language is a presentation preference;
+/// there is no sense in which Italian is stricter than French. *
+/// [<c>Self::dcr_allowed_scopes</c>], [<c>Self::dcr_allowed_redirect_hosts</c>] and
+/// [<c>Self::external_client_allowed_resources</c>]. Each names per-tenant resources — *this*
+/// tenant's MCP servers, *this* tenant's callback hosts — and there is no sense in which one
+/// such list is stricter than another. A subset rule would force an organization to enumerate
+/// every tenant's resource servers in its own baseline before any tenant could name one. The
+/// model's rule is "a tenant may only be more restrictive", which binds every field that *has*
+/// a restrictiveness; a field that has none cannot violate it. One cross-field interlock spans
+/// both groups and is checked on the resolved policy rather than on either input: see
+/// [<c>validate_dcr_policy</c>].
 /// </summary>
 public sealed record OidcPolicy
 {
+    /// <summary>
+    /// T21.5 — whether a URL-shaped <c>client_id</c> is resolved by fetching the document it
+    /// names, and on what terms. See [<c>CimdPolicy</c>]; off unless somebody turns it on (I1).
+    /// Nested, and therefore inherited or overridden **whole**: the fields are terms of one
+    /// decision, and a half-merged posture is one neither the organization nor the tenant
+    /// wrote.
+    /// </summary>
+    [JsonPropertyName("cimd")]
+    public CimdPolicy? Cimd { get; init; }
+
+    /// <summary>
+    /// T21.4 — hosts a self-registered client's <c>redirect_uris</c> may point at, as globs
+    /// (<c>*.example.com</c>, or <c>*</c> for any). The loopback hosts (<c>127.0.0.1</c>,
+    /// <c>[::1]</c>, <c>localhost</c>) are always allowed whatever this says, because RFC 8252
+    /// §7.3 is how every desktop MCP client receives its callback and a tenant that forbade
+    /// them would have turned registration on for nobody.
+    /// </summary>
+    [JsonPropertyName("dcr_allowed_redirect_hosts")]
+    public IReadOnlyList<string>? DcrAllowedRedirectHosts { get; init; }
+
+    /// <summary>
+    /// T21.4 — the scopes a self-registered client may ask for. A <c>scope</c> a registration
+    /// names that is not on this list is <c>invalid_client_metadata</c>; an empty list means a
+    /// self-registered client gets no scopes at all, which is the honest default for a tenant
+    /// that has turned registration on without deciding what it grants. May not contain
+    /// <c>address</c> or <c>phone</c> — see this module's [<c>sensitive_scope_in_dcr_list</c>].
+    /// </summary>
+    [JsonPropertyName("dcr_allowed_scopes")]
+    public IReadOnlyList<string>? DcrAllowedScopes { get; init; }
+
+    /// <summary>
+    /// T21.4 — how many externally registered clients this tenant may hold. See
+    /// [<c>DEFAULT_DCR_MAX_CLIENTS</c>]. **Counted once per mechanism, against the same
+    /// number** (T21.8): <c>managed_by: dcr</c> rows and <c>managed_by: cimd</c> rows each have
+    /// this many. So a tenant running both cannot have shadow rows materialised from documents
+    /// exhaust the allowance for self-registration, or the reverse. The CIMD count is checked
+    /// *before* the document is fetched, so a tenant at its ceiling is not an outbound
+    /// amplifier either. It keeps its <c>dcr_</c> name because dynamic registration defined it,
+    /// on the same precedent as [<c>Self::dcr_allowed_scopes</c>].
+    /// </summary>
+    [JsonPropertyName("dcr_max_clients")]
+    public int? DcrMaxClients { get; init; }
+
+    /// <summary>
+    /// T21.4 — how long an externally registered client survives without being used. See
+    /// [<c>DEFAULT_DCR_UNUSED_CLIENT_TTL_DAYS</c>]. <c>0</c> disables the sweep for this
+    /// tenant, which an operator who prunes out of band may legitimately want. **Two sweeps
+    /// read it, over different clocks** (T21.8). A <c>managed_by: dcr</c> row is measured from
+    /// its last authorization, falling back to when it was registered. A <c>managed_by:
+    /// cimd</c> row is measured from the last time its document was *presented*, which every
+    /// authorize, token and PAR request moves — so a document in daily use is never swept
+    /// however old its registration is, and one nobody has presented since the window is, and
+    /// re-materialises on the next request if it is still published. Like the ceiling, it keeps
+    /// its <c>dcr_</c> name.
+    /// </summary>
+    [JsonPropertyName("dcr_unused_client_ttl_days")]
+    public int? DcrUnusedClientTtlDays { get; init; }
+
     /// <summary>
     /// The BCP 47 tag the sign-in page falls back to when the relying party's <c>ui_locales</c>
     /// selects nothing (W5's chain, plan §4.6). <c>None</c> means "no tenant preference", which
@@ -40,6 +111,28 @@ public sealed record OidcPolicy
     /// </summary>
     [JsonPropertyName("default_locale")]
     public string? DefaultLocale { get; init; }
+
+    /// <summary>
+    /// T21.4 — whether a client may register itself (RFC 7591), and on what terms.
+    /// <c>disabled</c> unless somebody says otherwise (I1).
+    /// </summary>
+    [JsonPropertyName("dynamic_registration")]
+    public string? DynamicRegistration { get; init; }
+
+    /// <summary>
+    /// **D3** — the audiences an externally registered client may address. The single most
+    /// important field on this policy, and the reason the settings handler refuses
+    /// <c>dynamic_registration: anonymous</c> while it is empty. A client an unrelated party
+    /// registered cannot declare its own <c>allowed_resources</c>; it inherits this list
+    /// verbatim, so what a stranger can mint a token *for* is a decision the tenant took in
+    /// advance rather than one the registration request makes. Empty means an externally
+    /// registered client can obtain only today's <c>axiam:user</c> tokens — which AXIAM's own
+    /// APIs accept. That is why the interlock exists: the empty list is not a safe default for
+    /// an *open* registration endpoint, it is the most dangerous one. Shared with T5 (CIMD),
+    /// which inherits the same list for the same reason.
+    /// </summary>
+    [JsonPropertyName("external_client_allowed_resources")]
+    public IReadOnlyList<string>? ExternalClientAllowedResources { get; init; }
 
     /// <summary>
     /// Whether <c>address</c> and <c>phone</c> may be registered on a client, requested at the

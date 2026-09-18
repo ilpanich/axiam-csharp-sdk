@@ -181,4 +181,63 @@ public sealed class Oauth2ClientsApi
             null,
             cancellationToken).ConfigureAwait(false);
     }
+
+    /// <summary>
+    /// Mints the single-use credential RFC 7591 §1.2's protected registration profile requires.
+    /// Gated on <c>oauth2_clients:create</c> rather than a permission of its own: a token
+    /// minted here authorises exactly one registration, and a registration is strictly less
+    /// than what that permission already confers (an administrator holding it can create any
+    /// client directly, with any scopes, any audiences and any profile). A separate permission
+    /// would suggest this is the more dangerous of the two, which it is not.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Issues <c>POST /api/v1/oauth2-clients/registration-tokens</c>.
+    /// </para>
+    /// <para>
+    /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
+    /// the ones that look idempotent.
+    /// </para>
+    /// </remarks>
+    /// <param name="body">the request body.</param>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>the server response</returns>
+    public async Task<CreateRegistrationTokenResponse> CreateRegistrationTokenAsync(CreateRegistrationTokenRequest body, CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/oauth2-clients/registration-tokens";
+        string payload = ManagementSupport.EncodeBody("oauth2_clients.create_registration_token", body);
+        JsonElement? node = await _transport.SendAsync(
+            "oauth2_clients.create_registration_token",
+            HttpMethod.Post,
+            "/api/v1/oauth2-clients/registration-tokens",
+            path,
+            null,
+            payload,
+            cancellationToken).ConfigureAwait(false);
+        return ManagementSupport.Decode<CreateRegistrationTokenResponse>("oauth2_clients.create_registration_token", node);
+    }
+
+    /// <summary>
+    /// Metadata only — the handle is not stored, so it cannot be listed.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Issues <c>GET /api/v1/oauth2-clients/registration-tokens</c>.
+    /// </para>
+    /// </remarks>
+    /// <param name="cancellationToken">cancels the request.</param>
+    /// <returns>the server response</returns>
+    public async Task<IReadOnlyList<RegistrationTokenResponse>> ListRegistrationTokensAsync(CancellationToken cancellationToken = default)
+    {
+        string path = $"/api/v1/oauth2-clients/registration-tokens";
+        JsonElement? node = await _transport.SendAsync(
+            "oauth2_clients.list_registration_tokens",
+            HttpMethod.Get,
+            "/api/v1/oauth2-clients/registration-tokens",
+            path,
+            null,
+            null,
+            cancellationToken).ConfigureAwait(false);
+        return ManagementSupport.DecodeList<RegistrationTokenResponse>("oauth2_clients.list_registration_tokens", node);
+    }
 }

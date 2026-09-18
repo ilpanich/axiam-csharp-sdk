@@ -152,23 +152,74 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   contract's own rule is that the statement follows the code; it now reads
   *contract 1.48*.
 
-### Deferred
+- **F-28-01 — `CONTRACT.md`, `openapi.json` and `management-registry.json`
+  re-synced from `ilpanich/axiam` `main` @ `e4c62180e`, with the §27
+  management surface regenerated in the same commit.** This resolves the
+  F-28-01 follow-up previously recorded under *Deferred*, and is the
+  deliberate `openapi.json` re-sync this repository declined to take from a
+  phase branch during T21.9 T9c (above). Contract 1.49 requires a vendored
+  artefact to be re-synced from a **merged** `main`; the three artefacts are
+  now byte-identical to that commit:
 
-- **F-28-01 — the vendored `openapi.json` and `CONTRACT.md` re-sync.** This
-  repository declined the `openapi.json` re-sync during T21.9 T9c, for the
-  reason stated above, and the T9d cross-SDK review found that decision
-  **correct and now normative**. Seven of the eleven SDKs re-synced
-  `openapi.json` from `ilpanich/axiam`'s `claude/t21-2a-public-clients` phase
-  branch; that branch kept moving, so those seven were stale against it within
-  hours, and none of the eleven matches `ilpanich/axiam`'s current tree.
-  Between them the eleven held five distinct byte-states of `CONTRACT.md` and
-  two of `openapi.json`, all calling themselves contract 1.48 (CONTRACT.md
-  §28.11 row R-1). Contract **1.49** states the rule that was missing: a
-  vendored artefact is re-synced from a **merged** `main`, never a phase
-  branch. Both artefacts are therefore re-synced here **once**, as F-28-01,
-  after AXIAM Phase 21 lands on `main`, together with a regeneration of the
-  §27 management surface in the same commit. F-28-01 is recorded identically
-  in all eleven SDK repositories so that it cannot be lost.
+  | Artefact | Git blob |
+  |----------|----------|
+  | `CONTRACT.md` (contract **1.49**) | `2493348c32852fd1972696d3c1672021cb8f878c` |
+  | `openapi.json` | `b75e30eaa3597d2e1063bb50e7c0e469634ba60b` |
+  | `management-registry.json` | `4619f441aac0b1f4ed18da7ad45178ca14a3f449` |
+
+  `proto/` was already byte-identical to `main` and is untouched. Contract 1.49
+  is clarifying only, so no hand-written SDK behaviour changes with it; the
+  README's conformance statement now names *contract 1.49*, and its two §27
+  operation counts read 162 (they had lagged at 158).
+
+  `python3 scripts/gen_management.py` regenerated the §27 surface from the new
+  registry and spec; the operation count moves **160 → 162** across the same
+  24 namespaces. Because this repository's previous `openapi.json` predated
+  T21.2a/T21.3/T21.4, the regeneration carries all of Phase 21's management
+  schema deltas at once:
+
+  - `ManagementApi.Oauth2Clients` gains `CreateRegistrationTokenAsync`
+    (`POST /api/v1/oauth2-clients/registration-tokens`, 201 →
+    `CreateRegistrationTokenResponse`) and `ListRegistrationTokensAsync`
+    (`GET` on the same path → `IReadOnlyList<RegistrationTokenResponse>`) —
+    the T21.4 initial access tokens for RFC 7591 dynamic client registration.
+  - **Public clients (T21.2a).** `ClientAuthMethod` gains `None`, and
+    `OAuth2ClientCreatedResponse.ClientSecret` becomes nullable — see the
+    first **BREAKING** entry below.
+  - **Externally managed clients (T21.4/T21.5).** New `ManagedBy` enum
+    (`admin`, `dcr`, `cimd`); `OAuth2ClientResponse` gains `required`
+    `ManagedBy`, `required` `AllowedResources` and optional
+    `LastAuthorizedAt` — see the second **BREAKING** entry below.
+  - **RFC 8707 resource indicators (T21.3).** `CreateOAuth2ClientRequest` and
+    `UpdateOAuth2ClientRequest` gain `AllowedResources`.
+  - **Tenant/org OIDC policy.** New `CimdPolicy` model (T21.5 client ID
+    metadata documents); `OidcPolicy`, `SetOrgSettings` and
+    `TenantSettingsOverride` gain `Cimd`, `DcrAllowedRedirectHosts`,
+    `DcrAllowedScopes`, `DcrMaxClients`, `DcrUnusedClientTtlDays`,
+    `DynamicRegistration` and `ExternalClientAllowedResources`, all optional.
+  - `ManagementSurfaceGeneratedTests` and `ManagementSparseBodiesGeneratedTests`
+    regenerated with the surface; nothing was hand-edited.
+
+- **BREAKING** — `OAuth2ClientCreatedResponse.ClientSecret` changes from
+  `required Sensitive<string>` to `Sensitive<string>?` (F-28-01, T21.2a). A
+  public client (`token_endpoint_auth_method: none`) is created with no secret,
+  so the member is absent for that registration and present exactly as before
+  for every confidential one. `Sensitive<T>` is a struct, so the property is now
+  `Nullable<Sensitive<string>>` — **source- and binary-breaking** for code that
+  reads the secret: `created.ClientSecret.Expose()` becomes
+  `created.ClientSecret?.Expose()`, or `created.ClientSecret.Value.Expose()`
+  where the client is known to be confidential. Recompile against this version.
+  The same change has already shipped in the C++, TypeScript, Swift and Kotlin
+  SDKs; it is §27.8 generator output, not a hand-written choice.
+
+- **BREAKING** — `OAuth2ClientResponse` gains two `required` members,
+  `ManagedBy` and `AllowedResources` (F-28-01, T21.3/T21.4). Every client AXIAM
+  returns now says who manages it (`admin`, `dcr` or `cimd`) and which resource
+  indicators it may request. Because both are `required`, **responses from a
+  pre-Phase-21 AXIAM server, which carry neither field, no longer
+  deserialize** — `OAuth2Clients` reads against such a server fail on decoding.
+  Code that constructs an `OAuth2ClientResponse` itself (a test double, for
+  instance) must now set both members in its object initializer.
 
 ## [1.0.0-beta15] - 2026-09-15
 

@@ -1077,7 +1077,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Oauth2Clients_List()
     {
-        string body = "{\"items\": [{\"authn_request_params\": \"ignore\", \"browser_sso\": true, \"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"dpop_bound_access_tokens\": true, \"dpop_require_nonce\": true, \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"profile\": \"standard\", \"redirect_uris\": [], \"require_par\": true, \"scopes\": [], \"self_signed_tls_client_auth_thumbprints\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"tls_client_certificate_bound_access_tokens\": true, \"token_endpoint_auth_method\": \"client_secret_post\", \"updated_at\": \"2026-08-26T00:00:00Z\"}], \"total\": 1, \"offset\": 0, \"limit\": 200}";
+        string body = "{\"items\": [{\"allowed_resources\": [], \"authn_request_params\": \"ignore\", \"browser_sso\": true, \"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"dpop_bound_access_tokens\": true, \"dpop_require_nonce\": true, \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"managed_by\": \"admin\", \"name\": \"example\", \"profile\": \"standard\", \"redirect_uris\": [], \"require_par\": true, \"scopes\": [], \"self_signed_tls_client_auth_thumbprints\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"tls_client_certificate_bound_access_tokens\": true, \"token_endpoint_auth_method\": \"client_secret_post\", \"updated_at\": \"2026-08-26T00:00:00Z\"}], \"total\": 1, \"offset\": 0, \"limit\": 200}";
         Mount("GET", $"/api/v1/oauth2-clients", 200, body);
         var result = await Client.Management.Oauth2Clients.ListAsync(page: PageRequest.Of(50));
         string item = JsonDocument.Parse(body).RootElement.GetProperty("items")[0].GetRawText();
@@ -1090,7 +1090,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Oauth2Clients_Create()
     {
-        string body = "{\"client_id\": \"example\", \"client_secret\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"redirect_uris\": [], \"scopes\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\"}";
+        string body = "{\"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"redirect_uris\": [], \"scopes\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\"}";
         Mount("POST", $"/api/v1/oauth2-clients", 201, body);
         var result = await Client.Management.Oauth2Clients.CreateAsync(body: new CreateOAuth2ClientRequest { GrantTypes = Array.Empty<string>(), Name = "example", RedirectUris = Array.Empty<string>(), Scopes = Array.Empty<string>() });
         AssertDecodedEveryField(result, body);
@@ -1100,7 +1100,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Oauth2Clients_Get()
     {
-        string body = "{\"authn_request_params\": \"ignore\", \"browser_sso\": true, \"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"dpop_bound_access_tokens\": true, \"dpop_require_nonce\": true, \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"profile\": \"standard\", \"redirect_uris\": [], \"require_par\": true, \"scopes\": [], \"self_signed_tls_client_auth_thumbprints\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"tls_client_certificate_bound_access_tokens\": true, \"token_endpoint_auth_method\": \"client_secret_post\", \"updated_at\": \"2026-08-26T00:00:00Z\"}";
+        string body = "{\"allowed_resources\": [], \"authn_request_params\": \"ignore\", \"browser_sso\": true, \"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"dpop_bound_access_tokens\": true, \"dpop_require_nonce\": true, \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"managed_by\": \"admin\", \"name\": \"example\", \"profile\": \"standard\", \"redirect_uris\": [], \"require_par\": true, \"scopes\": [], \"self_signed_tls_client_auth_thumbprints\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"tls_client_certificate_bound_access_tokens\": true, \"token_endpoint_auth_method\": \"client_secret_post\", \"updated_at\": \"2026-08-26T00:00:00Z\"}";
         Mount("GET", $"/api/v1/oauth2-clients/{ExampleId}", 200, body);
         var result = await Client.Management.Oauth2Clients.GetAsync(id: ExampleId);
         AssertDecodedEveryField(result, body);
@@ -1110,7 +1110,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Oauth2Clients_Update()
     {
-        string body = "{\"authn_request_params\": \"ignore\", \"browser_sso\": true, \"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"dpop_bound_access_tokens\": true, \"dpop_require_nonce\": true, \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"profile\": \"standard\", \"redirect_uris\": [], \"require_par\": true, \"scopes\": [], \"self_signed_tls_client_auth_thumbprints\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"tls_client_certificate_bound_access_tokens\": true, \"token_endpoint_auth_method\": \"client_secret_post\", \"updated_at\": \"2026-08-26T00:00:00Z\"}";
+        string body = "{\"allowed_resources\": [], \"authn_request_params\": \"ignore\", \"browser_sso\": true, \"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"dpop_bound_access_tokens\": true, \"dpop_require_nonce\": true, \"grant_types\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"managed_by\": \"admin\", \"name\": \"example\", \"profile\": \"standard\", \"redirect_uris\": [], \"require_par\": true, \"scopes\": [], \"self_signed_tls_client_auth_thumbprints\": [], \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"tls_client_certificate_bound_access_tokens\": true, \"token_endpoint_auth_method\": \"client_secret_post\", \"updated_at\": \"2026-08-26T00:00:00Z\"}";
         Mount("PUT", $"/api/v1/oauth2-clients/{ExampleId}", 200, body);
         var result = await Client.Management.Oauth2Clients.UpdateAsync(id: ExampleId, body: new UpdateOAuth2ClientRequest {  });
         AssertDecodedEveryField(result, body);
@@ -1123,6 +1123,27 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
         string body = "";
         Mount("DELETE", $"/api/v1/oauth2-clients/{ExampleId}", 204, body);
         await Client.Management.Oauth2Clients.DeleteAsync(id: ExampleId);
+    }
+
+    /// <summary>Exercises oauth2_clients.create_registration_token.</summary>
+    [Fact]
+    public async Task Oauth2Clients_CreateRegistrationToken()
+    {
+        string body = "{\"initial_access_token\": \"example\", \"token\": {\"created_at\": \"2026-08-26T00:00:00Z\", \"created_by\": \"11111111-1111-4111-8111-111111111111\", \"expires_at\": \"2026-08-26T00:00:00Z\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\"}}";
+        Mount("POST", $"/api/v1/oauth2-clients/registration-tokens", 201, body);
+        var result = await Client.Management.Oauth2Clients.CreateRegistrationTokenAsync(body: new CreateRegistrationTokenRequest { Name = "example" });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises oauth2_clients.list_registration_tokens.</summary>
+    [Fact]
+    public async Task Oauth2Clients_ListRegistrationTokens()
+    {
+        string body = "[{\"created_at\": \"2026-08-26T00:00:00Z\", \"created_by\": \"11111111-1111-4111-8111-111111111111\", \"expires_at\": \"2026-08-26T00:00:00Z\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\"}]";
+        Mount("GET", $"/api/v1/oauth2-clients/registration-tokens", 200, body);
+        var result = await Client.Management.Oauth2Clients.ListRegistrationTokensAsync();
+        string item = JsonDocument.Parse(body).RootElement[0].GetRawText();
+        AssertDecodedEveryField(result[0], item);
     }
 
     /// <summary>Exercises federation.list_configs.</summary>
@@ -1865,9 +1886,11 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "notification_rules.list",
             "notification_rules.update",
             "oauth2_clients.create",
+            "oauth2_clients.create_registration_token",
             "oauth2_clients.delete",
             "oauth2_clients.get",
             "oauth2_clients.list",
+            "oauth2_clients.list_registration_tokens",
             "oauth2_clients.update",
             "organizations.get",
             "organizations.list",
@@ -1974,7 +1997,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "webhooks.list",
             "webhooks.update",
         };
-        Assert.Equal(160, exercised.Length);
+        Assert.Equal(162, exercised.Length);
         Assert.Equal(ExpectedSurface(), exercised);
     }
 }

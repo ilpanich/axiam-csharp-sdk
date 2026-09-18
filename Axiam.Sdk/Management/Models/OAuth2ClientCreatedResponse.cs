@@ -24,11 +24,16 @@ public sealed record OAuth2ClientCreatedResponse
     public required string ClientId { get; init; }
 
     /// <summary>
-    /// the server's client_secret field -- SECRET: redacted from ToString and from every
-    /// rendering except the one request body it is sent in.
+    /// The plaintext client secret, shown exactly once. T21.2 — **absent** for a client
+    /// registered with <c>token_endpoint_auth_method: none</c>. A public client is created with
+    /// no secret, so there is nothing to show; the member is omitted rather than sent as
+    /// <c>""</c>, which an operator (or an SDK) would reasonably read as a secret that happens
+    /// to be empty. Every confidential registration — that is, every registration that existed
+    /// before T21.2 — carries it exactly as before. -- SECRET: redacted from ToString and from
+    /// every rendering except the one request body it is sent in.
     /// </summary>
     [JsonPropertyName("client_secret")]
-    public required Sensitive<string> ClientSecret { get; init; }
+    public Sensitive<string>? ClientSecret { get; init; }
 
     /// <summary>
     /// the server's created_at field

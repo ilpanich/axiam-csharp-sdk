@@ -58,6 +58,56 @@ public sealed class ManagementSparseBodiesGeneratedTests
         AssertKeys(new ApiProviderConfig());
     }
 
+    /// <summary>&#167;27.4 rule 5 for CimdPolicy: each property sets exactly its own key.</summary>
+    [Fact]
+    public void CimdPolicySendsOnlyWhatWasSet()
+    {
+        AssertKeys(
+            new CimdPolicy { AllowHttp = true },
+            "allow_http");
+        AssertKeys(
+            new CimdPolicy { ConfidentialOnly = true },
+            "confidential_only");
+        AssertKeys(
+            new CimdPolicy { Enabled = true },
+            "enabled");
+        AssertKeys(
+            new CimdPolicy { MaxCacheSecs = 1L },
+            "max_cache_secs");
+        AssertKeys(
+            new CimdPolicy { MaxMetadataBytes = 1L },
+            "max_metadata_bytes");
+        AssertKeys(
+            new CimdPolicy { MinCacheSecs = 1L },
+            "min_cache_secs");
+        AssertKeys(
+            new CimdPolicy { RestrictSameDomain = true },
+            "restrict_same_domain");
+        AssertKeys(
+            new CimdPolicy { TrustedClientIdDomains = Array.Empty<string>() },
+            "trusted_client_id_domains");
+        AssertKeys(
+            new CimdPolicy { TrustedRedirectDomains = Array.Empty<string>() },
+            "trusted_redirect_domains");
+        AssertKeys(
+            new CimdPolicy
+            {
+                AllowHttp = true,
+                ConfidentialOnly = true,
+                Enabled = true,
+                MaxCacheSecs = 1L,
+                MaxMetadataBytes = 1L,
+                MinCacheSecs = 1L,
+                RestrictSameDomain = true,
+                TrustedClientIdDomains = Array.Empty<string>(),
+                TrustedRedirectDomains = Array.Empty<string>(),
+            },
+            "allow_http", "confidential_only", "enabled", "max_cache_secs",
+            "max_metadata_bytes", "min_cache_secs", "restrict_same_domain",
+            "trusted_client_id_domains", "trusted_redirect_domains");
+        AssertKeys(new CimdPolicy());
+    }
+
     /// <summary>
     /// &#167;27.4 rule 5 for EmailConfigOverride: each property sets exactly its own key.
     /// </summary>
@@ -105,6 +155,21 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new TenantSettingsOverride { AdminNotificationsEnabled = true },
             "admin_notifications_enabled");
         AssertKeys(
+            new TenantSettingsOverride { Cimd = new CimdPolicy {  } },
+            "cimd");
+        AssertKeys(
+            new TenantSettingsOverride { DcrAllowedRedirectHosts = Array.Empty<string>() },
+            "dcr_allowed_redirect_hosts");
+        AssertKeys(
+            new TenantSettingsOverride { DcrAllowedScopes = Array.Empty<string>() },
+            "dcr_allowed_scopes");
+        AssertKeys(
+            new TenantSettingsOverride { DcrMaxClients = 1 },
+            "dcr_max_clients");
+        AssertKeys(
+            new TenantSettingsOverride { DcrUnusedClientTtlDays = 1 },
+            "dcr_unused_client_ttl_days");
+        AssertKeys(
             new TenantSettingsOverride { DefaultCertValidityDays = 1 },
             "default_cert_validity_days");
         AssertKeys(
@@ -114,11 +179,17 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new TenantSettingsOverride { DeletionGracePeriodDays = 1 },
             "deletion_grace_period_days");
         AssertKeys(
+            new TenantSettingsOverride { DynamicRegistration = "example" },
+            "dynamic_registration");
+        AssertKeys(
             new TenantSettingsOverride { EmailVerificationGracePeriodHours = 1 },
             "email_verification_grace_period_hours");
         AssertKeys(
             new TenantSettingsOverride { EmailVerificationRequired = true },
             "email_verification_required");
+        AssertKeys(
+            new TenantSettingsOverride { ExternalClientAllowedResources = Array.Empty<string>() },
+            "external_client_allowed_resources");
         AssertKeys(
             new TenantSettingsOverride { HibpCheckEnabled = true },
             "hibp_check_enabled");
@@ -184,11 +255,18 @@ public sealed class ManagementSparseBodiesGeneratedTests
             {
                 AccessTokenLifetimeSecs = 1L,
                 AdminNotificationsEnabled = true,
+                Cimd = new CimdPolicy {  },
+                DcrAllowedRedirectHosts = Array.Empty<string>(),
+                DcrAllowedScopes = Array.Empty<string>(),
+                DcrMaxClients = 1,
+                DcrUnusedClientTtlDays = 1,
                 DefaultCertValidityDays = 1,
                 DefaultLocale = "example",
                 DeletionGracePeriodDays = 1,
+                DynamicRegistration = "example",
                 EmailVerificationGracePeriodHours = 1,
                 EmailVerificationRequired = true,
+                ExternalClientAllowedResources = Array.Empty<string>(),
                 HibpCheckEnabled = true,
                 LockoutBackoffMultiplier = 1.0,
                 LockoutDurationSecs = 1L,
@@ -210,15 +288,17 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 SensitiveScopesEnabled = true,
                 WebauthnUserVerification = "example",
             },
-            "access_token_lifetime_secs", "admin_notifications_enabled", "default_cert_validity_days",
-            "default_locale", "deletion_grace_period_days", "email_verification_grace_period_hours",
-            "email_verification_required", "hibp_check_enabled", "lockout_backoff_multiplier",
-            "lockout_duration_secs", "max_cert_validity_days", "max_failed_login_attempts",
-            "max_lockout_duration_secs", "mfa_challenge_lifetime_secs", "mfa_enforced",
-            "min_length", "opaque_ksf", "opaque_mode", "opaque_suite", "password_history_count",
-            "refresh_token_lifetime_secs", "require_digits", "require_lowercase",
-            "require_symbols", "require_uppercase", "sensitive_scopes_enabled",
-            "webauthn_user_verification");
+            "access_token_lifetime_secs", "admin_notifications_enabled", "cimd",
+            "dcr_allowed_redirect_hosts", "dcr_allowed_scopes", "dcr_max_clients",
+            "dcr_unused_client_ttl_days", "default_cert_validity_days", "default_locale",
+            "deletion_grace_period_days", "dynamic_registration", "email_verification_grace_period_hours",
+            "email_verification_required", "external_client_allowed_resources",
+            "hibp_check_enabled", "lockout_backoff_multiplier", "lockout_duration_secs",
+            "max_cert_validity_days", "max_failed_login_attempts", "max_lockout_duration_secs",
+            "mfa_challenge_lifetime_secs", "mfa_enforced", "min_length", "opaque_ksf",
+            "opaque_mode", "opaque_suite", "password_history_count", "refresh_token_lifetime_secs",
+            "require_digits", "require_lowercase", "require_symbols", "require_uppercase",
+            "sensitive_scopes_enabled", "webauthn_user_verification");
         AssertKeys(new TenantSettingsOverride());
     }
 
@@ -428,6 +508,9 @@ public sealed class ManagementSparseBodiesGeneratedTests
     public void UpdateOAuth2ClientRequestSendsOnlyWhatWasSet()
     {
         AssertKeys(
+            new UpdateOAuth2ClientRequest { AllowedResources = Array.Empty<string>() },
+            "allowed_resources");
+        AssertKeys(
             new UpdateOAuth2ClientRequest { AuthnRequestParams = AuthnRequestParamsMode.Ignore },
             "authn_request_params");
         AssertKeys(
@@ -490,6 +573,7 @@ public sealed class ManagementSparseBodiesGeneratedTests
         AssertKeys(
             new UpdateOAuth2ClientRequest
             {
+                AllowedResources = Array.Empty<string>(),
                 AuthnRequestParams = AuthnRequestParamsMode.Ignore,
                 BackchannelLogoutUri = "example",
                 BrowserSso = true,
@@ -511,10 +595,10 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 TlsClientCertificateBoundAccessTokens = true,
                 TokenEndpointAuthMethod = ClientAuthMethod.ClientSecretPost,
             },
-            "authn_request_params", "backchannel_logout_uri", "browser_sso",
-            "dpop_bound_access_tokens", "dpop_require_nonce", "grant_types",
-            "jwks", "jwks_uri", "name", "post_logout_redirect_uris", "profile",
-            "redirect_uris", "require_par", "scopes", "self_signed_tls_client_auth_thumbprints",
+            "allowed_resources", "authn_request_params", "backchannel_logout_uri",
+            "browser_sso", "dpop_bound_access_tokens", "dpop_require_nonce",
+            "grant_types", "jwks", "jwks_uri", "name", "post_logout_redirect_uris",
+            "profile", "redirect_uris", "require_par", "scopes", "self_signed_tls_client_auth_thumbprints",
             "tls_client_auth_san_dns", "tls_client_auth_san_uri", "tls_client_auth_subject_dn",
             "tls_client_certificate_bound_access_tokens", "token_endpoint_auth_method");
         AssertKeys(new UpdateOAuth2ClientRequest());
@@ -826,7 +910,7 @@ public sealed class ManagementSparseBodiesGeneratedTests
         int cases = typeof(ManagementSparseBodiesGeneratedTests)
             .GetMethods()
             .Count(m => m.Name.EndsWith("SendsOnlyWhatWasSet", StringComparison.Ordinal));
-        Assert.Equal(18, cases);
+        Assert.Equal(19, cases);
     }
 
     /// <summary>

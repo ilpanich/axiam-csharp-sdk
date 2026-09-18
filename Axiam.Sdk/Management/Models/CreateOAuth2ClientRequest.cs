@@ -17,6 +17,20 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record CreateOAuth2ClientRequest
 {
     /// <summary>
+    /// T21.3 / RFC 8707 — the target services this client may name in a <c>resource</c>
+    /// parameter, at <c>/oauth2/authorize</c>, <c>/oauth2/par</c>,
+    /// <c>/oauth2/device_authorization</c> and <c>/oauth2/token</c>. Each entry must be an
+    /// absolute URI without a fragment (RFC 8707 §2). Entries are stored in their RFC 3986
+    /// §6.2.2 normalised form, which is what the read-back shows and what every comparison
+    /// uses; matching is by equivalence and **never by prefix**. Empty (the default) means the
+    /// client may name no resource, so every token it obtains carries <c>axiam:user</c> or
+    /// <c>axiam:m2m</c> exactly as before RFC 8707 support existed. This is also the list the
+    /// RFC 8693 token exchange consults for its <c>audience</c>/<c>resource</c> target.
+    /// </summary>
+    [JsonPropertyName("allowed_resources")]
+    public IReadOnlyList<string>? AllowedResources { get; init; }
+
+    /// <summary>
     /// X7.1 — whether this client's authorization requests may carry the OpenID Connect
     /// authentication-request parameters (<c>prompt</c>, <c>max_age</c>, <c>acr_values</c>,
     /// <c>claims</c>, <c>id_token_hint</c>, <c>login_hint</c>, <c>display</c>,
@@ -114,10 +128,13 @@ public sealed record CreateOAuth2ClientRequest
     public ClientProfile? Profile { get; init; }
 
     /// <summary>
-    /// Allowed redirect URIs (must be HTTPS, except localhost for dev). SEC-089: this list
-    /// doubles as the token-exchange audience allow-list — adding a URI here also authorises it
-    /// as a token audience for this client, so review additions on exchange-capable clients
-    /// with that in mind (see <c>docs/api/token-exchange.md#audience</c>).
+    /// Allowed redirect URIs (must be HTTPS, except localhost for dev). SEC-089 / T21.3: this
+    /// list **also** authorises token-exchange audiences, and that coupling is now deprecated —
+    /// <c>allowed_resources</c> is the field that means "audiences this client may address".
+    /// The redirect-URI branch survives one release so that no deployment's working exchange
+    /// breaks on upgrade, and it logs a deprecation warning when it is the branch that matched.
+    /// Register exchange targets in <c>allowed_resources</c> (see
+    /// <c>docs/api/token-exchange.md#audience</c>).
     /// </summary>
     [JsonPropertyName("redirect_uris")]
     public required IReadOnlyList<string> RedirectUris { get; init; }

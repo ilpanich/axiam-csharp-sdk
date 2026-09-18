@@ -26,6 +26,13 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record UpdateOAuth2ClientRequest
 {
     /// <summary>
+    /// T21.3 — see [<c>CreateOAuth2ClientRequest::allowed_resources</c>]. A whole-list
+    /// replacement; <c>[]</c> withdraws every target.
+    /// </summary>
+    [JsonPropertyName("allowed_resources")]
+    public IReadOnlyList<string>? AllowedResources { get; init; }
+
+    /// <summary>
     /// the server's authn_request_params field
     /// </summary>
     [JsonPropertyName("authn_request_params")]

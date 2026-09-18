@@ -17,6 +17,14 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record OAuth2ClientResponse
 {
     /// <summary>
+    /// T21.3 — echoed in its stored, normalised form, so an operator auditing which audiences a
+    /// client may mint tokens for reads the strings the server actually compares rather than
+    /// the ones they typed.
+    /// </summary>
+    [JsonPropertyName("allowed_resources")]
+    public required IReadOnlyList<string> AllowedResources { get; init; }
+
+    /// <summary>
     /// X7.1 — echoed so an operator can audit which clients act on the OIDC
     /// authentication-request parameters, from this endpoint rather than from the database.
     /// </summary>
@@ -78,6 +86,30 @@ public sealed record OAuth2ClientResponse
     /// </summary>
     [JsonPropertyName("jwks_uri")]
     public string? JwksUri { get; init; }
+
+    /// <summary>
+    /// T21.4 — when this client was last issued an authorization code, for the sweeper that
+    /// deletes self-registered clients nobody uses. Always absent for an <c>admin</c> client:
+    /// the stamp is written only for a non-<c>admin</c> one, so that an administrator's client
+    /// takes exactly the path it took before T21.4 (I1). <c>null</c> on a self-registered
+    /// client means it has never been authorized, and the sweeper reads <c>created_at</c>
+    /// instead.
+    /// </summary>
+    [JsonPropertyName("last_authorized_at")]
+    public DateTimeOffset? LastAuthorizedAt { get; init; }
+
+    /// <summary>
+    /// T21.4 / D5 — who created this registration: <c>admin</c>, <c>dcr</c> or <c>cimd</c>.
+    /// Echoed because an operator auditing a tenant needs to answer "which of these did we
+    /// create?" from this endpoint rather than from the database, and because three behaviours
+    /// hang off it: a non-<c>admin</c> client may never carry the FAPI profile, is always
+    /// consent-gated, and is the only kind the unused-client sweeper touches. Read-only. There
+    /// is no corresponding member on the update DTO: a registration's provenance is a fact
+    /// about how it came to exist, and a field that could be edited to <c>admin</c> would be a
+    /// field that launders one.
+    /// </summary>
+    [JsonPropertyName("managed_by")]
+    public required ManagedBy ManagedBy { get; init; }
 
     /// <summary>
     /// the server's name field

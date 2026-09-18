@@ -20,14 +20,14 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to **contract 1.48**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
+This SDK conforms to **contract 1.49**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
 §22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation,
 contract 1.3, the §12 OIDC/SSO relying-party helpers, contract 1.4, the §13 webhook signature
 verifier, T-145, the §20 UMA 2.0 Protection API and ticket grant, contract 1.10, the §22 reactor
 runtime, contract 1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, the §24 WebAuthn
 relying-party layer, the §25 account-lifecycle operations and §26 Pushed Authorization Requests,
 contract 1.28, §23.4 rule 7's `mode`-driven password-login fallback, contract 1.29, and the §27
-Management API — all 158 operations across 24 namespaces with the §27.6 declarative layer — and
+Management API — all 162 operations across 24 namespaces with the §27.6 declarative layer — and
 the §28 MCP resource-server helpers, contract 1.48).
 
 §12.7, §14, §15, §20, §22, §23, §24, §25, §26 and §27 are named rather than folded into the range
@@ -1627,7 +1627,7 @@ Worked end to end in [`examples/ParLogin`](examples/ParLogin).
 
 ## Management API (CONTRACT.md §27)
 
-The administrative surface: 158 operations across 24 namespaces — users, groups, roles,
+The administrative surface: 162 operations across 24 namespaces — users, groups, roles,
 permissions, resources, scopes, service accounts, certificates, CA certificates, PGP keys, webhooks,
 OAuth2 clients, federation, notification rules, e-mail config, settings, SCIM tokens, reactors,
 WebAuthn policy, audit, privacy, organizations, tenants and platform.
