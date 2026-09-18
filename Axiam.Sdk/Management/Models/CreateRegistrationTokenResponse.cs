@@ -6,6 +6,7 @@
 
 #nullable enable
 
+using Axiam.Sdk.Core;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -18,10 +19,11 @@ public sealed record CreateRegistrationTokenResponse
 {
     /// <summary>
     /// The plaintext handle, shown exactly once. Presented by the registering client as
-    /// <c>Authorization: Bearer &lt;this&gt;</c>.
+    /// <c>Authorization: Bearer &lt;this&gt;</c>. -- SECRET: redacted from ToString and from
+    /// every rendering except the one request body it is sent in.
     /// </summary>
     [JsonPropertyName("initial_access_token")]
-    public required string InitialAccessToken { get; init; }
+    public required Sensitive<string> InitialAccessToken { get; init; }
 
     /// <summary>
     /// The token's metadata.
