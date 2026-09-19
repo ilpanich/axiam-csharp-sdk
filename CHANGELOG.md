@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking
+
+- **`CreateRegistrationTokenResponse.InitialAccessToken` is now `Sensitive<string>`, not `string`
+  (CONTRACT.md §27.5, contract 1.50, security fix).** The RFC 7591 §1.2 initial access token
+  returned by `ManagementApi.Oauth2Clients.CreateRegistrationTokenAsync(...)` is a plaintext
+  one-time credential — shown once, never retrievable — but contract 1.49's
+  `management-registry.json` published `sensitive_response_fields: []` for that operation, so the
+  generated record carried it as a bare `string` and it appeared verbatim in the record's
+  `ToString()` rendering. That is exactly the leak §7 rule 1 and §27.5 exist to prevent. Contract
+  1.50 adds the `(CreateRegistrationTokenResponse, initial_access_token)` pair to the registry's
+  curated table, which now names **fifteen** operations rather than fourteen.
+
+  | | Before (1.49) | After (1.50) |
+  |---|---|---|
+  | Property type | `required string InitialAccessToken` | `required Sensitive<string> InitialAccessToken` |
+  | `ToString()` | prints the token | prints the redacted placeholder |
+
+  **Migration.** Reading the value now takes the explicit §7 rule 3 reveal:
+
+  ```csharp
+  // before
+  string token = response.InitialAccessToken;
+  // after
+  string token = response.InitialAccessToken.Expose();
+  ```
+
+  No plain-string accessor is kept alongside it: contract 1.50 forbids one, since the plain
+  accessor is precisely the leak. The wire shape is unchanged — `openapi.json` and `proto/` do not
+  move — so only source compatibility breaks, and only for a caller that reads this one field.
+
+  Vendored from `ilpanich/axiam` `main` @ `da94e1d04` (merge of #480, the contract-1.50 change; the
+  1.49 merged-`main`-only rule holds):
+
+  | Artefact | Git blob |
+  |----------|----------|
+  | `CONTRACT.md` (contract **1.50**) | `28c163e32d253edca01f3040540e01212c5460f2` |
+  | `management-registry.json` | `aab87fd799101457ebd92223643cb2ad10a6bbe7` |
+  | `openapi.json` (unchanged) | `b75e30eaa3597d2e1063bb50e7c0e469634ba60b` |
+
+  `proto/` was already byte-identical to that commit and is untouched. `scripts/gen_management.py`
+  regenerated the §27 surface in the same commit; the operation count stays **162** across the same
+  24 namespaces, and this one property's type is the only generated movement. The README's
+  conformance statement now names *contract 1.50*.
+
 ### Added
 
 - MCP resource-server helpers — RFC 9728 protected-resource metadata and the RFC 6750

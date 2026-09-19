@@ -20,7 +20,7 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to **contract 1.49**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
+This SDK conforms to **contract 1.50**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
 §22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation,
 contract 1.3, the §12 OIDC/SSO relying-party helpers, contract 1.4, the §13 webhook signature
 verifier, T-145, the §20 UMA 2.0 Protection API and ticket grant, contract 1.10, the §22 reactor
