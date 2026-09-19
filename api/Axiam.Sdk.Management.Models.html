@@ -156,6 +156,28 @@ AXIAM.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.CimdPolicy.html">CimdPolicy</a></dt>
+      <dd><p>Whether, and on what terms, a <code>client_id</code> that is a URL is resolved by fetching the
+document it names (T21.5, <code>draft-ietf-oauth-client-id-metadata-document</code>). # Why this
+is one nested policy rather than nine fields Every field here is a term of a single decision
+— <em>do we fetch a stranger's URL and make a client out of what comes back</em> — and none of them
+means anything without [<code>Self::enabled</code>]. A tenant that states a CIMD posture states
+all of it; a tenant that states none inherits its organization's whole posture rather than
+half of one, which is the only merge that cannot produce a combination neither party wrote.</p>
+<h1 id="the-two-fields-that-can-widen-and-the-seven-that-cannot-selfenabled-and">The two fields that can widen, and the seven that cannot [<code>Self::enabled</code>] and</h1>
+<p>[<code>Self::allow_http</code>] are <strong>ordered</strong>: a tenant may turn either off but never on,
+exactly as <code>dynamic_registration</code> may only move down its ladder. Everything else names
+<em>this tenant's</em> domains or <em>this tenant's</em> bounds, and there is no sense in which one
+tenant's list of trusted publishers is stricter than another's — the same argument
+[<code>OidcPolicy</code>] already makes for <code>dcr_allowed_redirect_hosts</code>. # Every bound here
+is a security control [<code>Self::max_metadata_bytes</code>], [<code>Self::min_cache_secs</code>] and
+[<code>Self::max_cache_secs</code>] are not tuning knobs. They are, respectively, the ceiling on a
+read from an attacker-chosen URL, the floor under how often that read may be repeated, and
+the ceiling on how long its result may be trusted. Each is clamped again in code against the
+three constants above, so a settings row written by hand cannot lift them.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.ComplianceReportEntry.html">ComplianceReportEntry</a></dt>
       <dd><p>One credential's compliance outcome (D9).</p>
 </dd>
@@ -213,6 +235,16 @@ AXIAM.</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.CreateReactorRequest.html">CreateReactorRequest</a></dt>
       <dd><p>The CreateReactorRequest schema from the server's OpenAPI document.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.html">CreateRegistrationTokenRequest</a></dt>
+      <dd><p>Request body for [<code>create_registration_token</code>].</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.html">CreateRegistrationTokenResponse</a></dt>
+      <dd><p>The one response that carries the handle.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -457,19 +489,32 @@ ingested yet&quot;), not an error.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.OidcPolicy.html">OidcPolicy</a></dt>
-      <dd><p>OpenID Connect surface controls (X7 G8, plan §4.6/§4.8). Two settings that are not password
-rules, and are here because this is the org-baseline-plus-tenant-override surface every
-other per-tenant control lives on. They are also the two settings in this model that are
-<em>not</em> of the same kind as each other, so it is worth saying which is which: *
-[<code>Self::sensitive_scopes_enabled</code>] <strong>is</strong> ordered. Releasing personal data is the
-less-restrictive direction, so it is validated disable-only — the mirror image of
-<code>mfa_enforced</code> — and a tenant can turn its organization's decision off but never on. *
-[<code>Self::default_locale</code>] is <strong>not</strong> ordered, and no ordering is invented for it. A
-language is a presentation preference; there is no sense in which Italian is stricter than
-French. [<code>validate_tenant_override</code>] therefore does not check it and
-[<code>clamp_overrides_to_org</code>] never clears it. The model's rule is &quot;a tenant may only be
-more restrictive&quot;, which binds every field that <em>has</em> a restrictiveness; a field that has
-none cannot violate it.</p>
+      <dd><p>OpenID Connect surface controls (X7 G8, plan §4.6/§4.8; T21.4). Settings that are not
+password rules, here because this is the org-baseline-plus-tenant-override surface every
+other per-tenant control lives on. They are not all of the same kind as each other, and
+which is which is the whole of what [<code>validate_tenant_override</code>] and
+[<code>clamp_overrides_to_org</code>] read, so it is set out rather than inferred. <strong>Ordered</strong> — a
+tenant may be stricter than its organization and never more permissive: *
+[<code>Self::sensitive_scopes_enabled</code>], validated <strong>disable-only</strong> — the mirror image of
+<code>mfa_enforced</code>, because releasing personal data is the less-restrictive direction, so a
+tenant can turn its organization's decision off but never on. *
+[<code>Self::dynamic_registration</code>], on the ladder <code>disabled</code> →
+<code>initial_access_token</code> → <code>anonymous</code>: a tenant may move down it and never up. *
+[<code>Self::dcr_max_clients</code>] and [<code>Self::dcr_unused_client_ttl_days</code>], on the
+ordinary <code>tenant &lt;= org</code> rule — with the wrinkle that <code>0</code> on the second means
+<em>never sweep</em>, which is the longest window of all and is handled by
+[<code>dcr_ttl_strictness</code>]. <strong>Not ordered</strong>, therefore never validated against the baseline
+and never clamped: * [<code>Self::default_locale</code>]. A language is a presentation preference;
+there is no sense in which Italian is stricter than French. *
+[<code>Self::dcr_allowed_scopes</code>], [<code>Self::dcr_allowed_redirect_hosts</code>] and
+[<code>Self::external_client_allowed_resources</code>]. Each names per-tenant resources — <em>this</em>
+tenant's MCP servers, <em>this</em> tenant's callback hosts — and there is no sense in which one
+such list is stricter than another. A subset rule would force an organization to enumerate
+every tenant's resource servers in its own baseline before any tenant could name one. The
+model's rule is &quot;a tenant may only be more restrictive&quot;, which binds every field that <em>has</em>
+a restrictiveness; a field that has none cannot violate it. One cross-field interlock spans
+both groups and is checked on the resolved policy rather than on either input: see
+[<code>validate_dcr_policy</code>].</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -583,6 +628,12 @@ set_org_config</code>). A non-empty value is a real secret to encrypt+replace.</
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.ReadyResponse.html">ReadyResponse</a></dt>
       <dd><p>The ReadyResponse schema from the server's OpenAPI document.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.RegistrationTokenResponse.html">RegistrationTokenResponse</a></dt>
+      <dd><p>Metadata only. The handle exists in plaintext exactly once, in
+[<code>CreateRegistrationTokenResponse</code>].</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -898,11 +949,14 @@ gives <code>L1 &lt; L1Plus &lt; L2 &lt; L2Plus &lt; L3 &lt; L3Plus</code>, which
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.ClientAuthMethod.html">ClientAuthMethod</a></dt>
       <dd><p>How a client proves its identity at the token endpoint (RFC 8705 §2, OIDC Core §9 naming).
-Only the methods AXIAM actually implements are representable. There is deliberately no
-<code>none</code> variant: every AXIAM client is confidential today (see
-<code>handle_authorization_code</code>), and adding a public-client value here before the rest of
-the server understands one would let an operator register a client whose authentication is
-silently skipped.</p>
+Only the methods AXIAM actually implements are representable. <code>None</code> — the
+public-client value — was deliberately absent until T21.2: adding it before the rest of the
+server understood one would have let an operator register a client whose authentication is
+silently skipped. The server understands one now (<code>token.rs</code>'s
+<code>authenticate_client_credential</code> has an arm that accepts <em>no</em> credential and refuses a
+presented one, the authorization endpoint derives its PKCE requirement from this enum, and
+the admin API refuses the method alongside any grant or binding that contradicts it), so the
+variant exists — and only that arm may ever treat a missing credential as success.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -927,6 +981,21 @@ transport failure, bad signature, stale nonce, or a patch the allow-list rejects
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.KeyAlgorithm.html">KeyAlgorithm</a></dt>
       <dd><p>The type of key algorithm used for a certificate.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ManagedBy.html">ManagedBy</a></dt>
+      <dd><p>Who created a client registration (D5, T21.4). The discriminator that separates a
+registration an administrator made from one that arrived over an open endpoint. Three things
+read it and each would otherwise have to infer provenance from something that is not
+provenance: * <code>axiam_oauth2::fapi</code> refuses a FAPI profile on anything but
+<a href="Self::Admin"><code>Admin</code></a> (I5) — a client nobody vetted cannot be financial-grade; * the
+authorization endpoint forces a consent hop for every other value (D4) — an unrelated party
+gets a question put to the end user, whatever scopes it asked for; * the T21.4 sweeper
+deletes only <a href="Self::Dcr"><code>Dcr</code></a> rows, so an administrator's client is never swept
+however long it sits unused. <a href="Self::Admin"><code>Admin</code></a> is the serde default and therefore
+what every row written before T21.4 decodes to, which is the truth: they were all created
+through <code>POST /oauth2-clients</code> by somebody holding <code>oauth2_clients:create</code>.</p>
 </dd>
     </dl>
     <dl class="jumplist">

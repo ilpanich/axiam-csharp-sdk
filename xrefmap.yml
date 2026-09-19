@@ -574,15 +574,15 @@ references:
   commentId: T:Axiam.Sdk.AspNetCore.AxiamAuthMiddleware
   fullName: Axiam.Sdk.AspNetCore.AxiamAuthMiddleware
   nameWithType: AxiamAuthMiddleware
-- uid: Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)
-  name: AxiamAuthMiddleware(RequestDelegate)
-  href: api/Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.html#Axiam_Sdk_AspNetCore_AxiamAuthMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_
-  commentId: M:Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)
-  name.vb: New(RequestDelegate)
-  fullName: Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.AxiamAuthMiddleware(Microsoft.AspNetCore.Http.RequestDelegate)
-  fullName.vb: Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.New(Microsoft.AspNetCore.Http.RequestDelegate)
-  nameWithType: AxiamAuthMiddleware.AxiamAuthMiddleware(RequestDelegate)
-  nameWithType.vb: AxiamAuthMiddleware.New(RequestDelegate)
+- uid: Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{Axiam.Sdk.AspNetCore.AxiamOptions})
+  name: AxiamAuthMiddleware(RequestDelegate, IOptions<AxiamOptions>)
+  href: api/Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.html#Axiam_Sdk_AspNetCore_AxiamAuthMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_Microsoft_Extensions_Options_IOptions_Axiam_Sdk_AspNetCore_AxiamOptions__
+  commentId: M:Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{Axiam.Sdk.AspNetCore.AxiamOptions})
+  name.vb: New(RequestDelegate, IOptions(Of AxiamOptions))
+  fullName: Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.AxiamAuthMiddleware(Microsoft.AspNetCore.Http.RequestDelegate, Microsoft.Extensions.Options.IOptions<Axiam.Sdk.AspNetCore.AxiamOptions>)
+  fullName.vb: Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.New(Microsoft.AspNetCore.Http.RequestDelegate, Microsoft.Extensions.Options.IOptions(Of Axiam.Sdk.AspNetCore.AxiamOptions))
+  nameWithType: AxiamAuthMiddleware.AxiamAuthMiddleware(RequestDelegate, IOptions<AxiamOptions>)
+  nameWithType.vb: AxiamAuthMiddleware.New(RequestDelegate, IOptions(Of AxiamOptions))
 - uid: Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.#ctor*
   name: AxiamAuthMiddleware
   href: api/Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.html#Axiam_Sdk_AspNetCore_AxiamAuthMiddleware__ctor_
@@ -615,6 +615,25 @@ references:
   commentId: T:Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler
   fullName: Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler
   nameWithType: AxiamAuthorizationMiddlewareResultHandler
+- uid: Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.#ctor(Microsoft.Extensions.Options.IOptions{Axiam.Sdk.AspNetCore.AxiamOptions})
+  name: AxiamAuthorizationMiddlewareResultHandler(IOptions<AxiamOptions>)
+  href: api/Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.html#Axiam_Sdk_AspNetCore_AxiamAuthorizationMiddlewareResultHandler__ctor_Microsoft_Extensions_Options_IOptions_Axiam_Sdk_AspNetCore_AxiamOptions__
+  commentId: M:Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.#ctor(Microsoft.Extensions.Options.IOptions{Axiam.Sdk.AspNetCore.AxiamOptions})
+  name.vb: New(IOptions(Of AxiamOptions))
+  fullName: Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.AxiamAuthorizationMiddlewareResultHandler(Microsoft.Extensions.Options.IOptions<Axiam.Sdk.AspNetCore.AxiamOptions>)
+  fullName.vb: Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.New(Microsoft.Extensions.Options.IOptions(Of Axiam.Sdk.AspNetCore.AxiamOptions))
+  nameWithType: AxiamAuthorizationMiddlewareResultHandler.AxiamAuthorizationMiddlewareResultHandler(IOptions<AxiamOptions>)
+  nameWithType.vb: AxiamAuthorizationMiddlewareResultHandler.New(IOptions(Of AxiamOptions))
+- uid: Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.#ctor*
+  name: AxiamAuthorizationMiddlewareResultHandler
+  href: api/Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.html#Axiam_Sdk_AspNetCore_AxiamAuthorizationMiddlewareResultHandler__ctor_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.AxiamAuthorizationMiddlewareResultHandler
+  fullName.vb: Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.New
+  nameWithType: AxiamAuthorizationMiddlewareResultHandler.AxiamAuthorizationMiddlewareResultHandler
+  nameWithType.vb: AxiamAuthorizationMiddlewareResultHandler.New
 - uid: Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.HandleAsync(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Authorization.AuthorizationPolicy,Microsoft.AspNetCore.Authorization.Policy.PolicyAuthorizationResult)
   name: HandleAsync(RequestDelegate, HttpContext, AuthorizationPolicy, PolicyAuthorizationResult)
   href: api/Axiam.Sdk.AspNetCore.AxiamAuthorizationMiddlewareResultHandler.html#Axiam_Sdk_AspNetCore_AxiamAuthorizationMiddlewareResultHandler_HandleAsync_Microsoft_AspNetCore_Http_RequestDelegate_Microsoft_AspNetCore_Http_HttpContext_Microsoft_AspNetCore_Authorization_AuthorizationPolicy_Microsoft_AspNetCore_Authorization_Policy_PolicyAuthorizationResult_
@@ -861,21 +880,34 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AspNetCore.AxiamOptions.OrgSlug
   nameWithType: AxiamOptions.OrgSlug
+- uid: Axiam.Sdk.AspNetCore.AxiamOptions.ResourceMetadataUrl
+  name: ResourceMetadataUrl
+  href: api/Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ResourceMetadataUrl
+  commentId: P:Axiam.Sdk.AspNetCore.AxiamOptions.ResourceMetadataUrl
+  fullName: Axiam.Sdk.AspNetCore.AxiamOptions.ResourceMetadataUrl
+  nameWithType: AxiamOptions.ResourceMetadataUrl
+- uid: Axiam.Sdk.AspNetCore.AxiamOptions.ResourceMetadataUrl*
+  name: ResourceMetadataUrl
+  href: api/Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ResourceMetadataUrl_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamOptions.ResourceMetadataUrl
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.AxiamOptions.ResourceMetadataUrl
+  nameWithType: AxiamOptions.ResourceMetadataUrl
 - uid: Axiam.Sdk.AspNetCore.AxiamPolicyHandler
   name: AxiamPolicyHandler
   href: api/Axiam.Sdk.AspNetCore.AxiamPolicyHandler.html
   commentId: T:Axiam.Sdk.AspNetCore.AxiamPolicyHandler
   fullName: Axiam.Sdk.AspNetCore.AxiamPolicyHandler
   nameWithType: AxiamPolicyHandler
-- uid: Axiam.Sdk.AspNetCore.AxiamPolicyHandler.#ctor(Axiam.Sdk.AxiamClient,Axiam.Sdk.AspNetCore.UmaChallenger)
-  name: AxiamPolicyHandler(AxiamClient, UmaChallenger?)
-  href: api/Axiam.Sdk.AspNetCore.AxiamPolicyHandler.html#Axiam_Sdk_AspNetCore_AxiamPolicyHandler__ctor_Axiam_Sdk_AxiamClient_Axiam_Sdk_AspNetCore_UmaChallenger_
-  commentId: M:Axiam.Sdk.AspNetCore.AxiamPolicyHandler.#ctor(Axiam.Sdk.AxiamClient,Axiam.Sdk.AspNetCore.UmaChallenger)
-  name.vb: New(AxiamClient, UmaChallenger)
-  fullName: Axiam.Sdk.AspNetCore.AxiamPolicyHandler.AxiamPolicyHandler(Axiam.Sdk.AxiamClient, Axiam.Sdk.AspNetCore.UmaChallenger?)
-  fullName.vb: Axiam.Sdk.AspNetCore.AxiamPolicyHandler.New(Axiam.Sdk.AxiamClient, Axiam.Sdk.AspNetCore.UmaChallenger)
-  nameWithType: AxiamPolicyHandler.AxiamPolicyHandler(AxiamClient, UmaChallenger?)
-  nameWithType.vb: AxiamPolicyHandler.New(AxiamClient, UmaChallenger)
+- uid: Axiam.Sdk.AspNetCore.AxiamPolicyHandler.#ctor(Axiam.Sdk.AxiamClient,Microsoft.Extensions.Options.IOptions{Axiam.Sdk.AspNetCore.AxiamOptions},Axiam.Sdk.AspNetCore.UmaChallenger)
+  name: AxiamPolicyHandler(AxiamClient, IOptions<AxiamOptions>, UmaChallenger?)
+  href: api/Axiam.Sdk.AspNetCore.AxiamPolicyHandler.html#Axiam_Sdk_AspNetCore_AxiamPolicyHandler__ctor_Axiam_Sdk_AxiamClient_Microsoft_Extensions_Options_IOptions_Axiam_Sdk_AspNetCore_AxiamOptions__Axiam_Sdk_AspNetCore_UmaChallenger_
+  commentId: M:Axiam.Sdk.AspNetCore.AxiamPolicyHandler.#ctor(Axiam.Sdk.AxiamClient,Microsoft.Extensions.Options.IOptions{Axiam.Sdk.AspNetCore.AxiamOptions},Axiam.Sdk.AspNetCore.UmaChallenger)
+  name.vb: New(AxiamClient, IOptions(Of AxiamOptions), UmaChallenger)
+  fullName: Axiam.Sdk.AspNetCore.AxiamPolicyHandler.AxiamPolicyHandler(Axiam.Sdk.AxiamClient, Microsoft.Extensions.Options.IOptions<Axiam.Sdk.AspNetCore.AxiamOptions>, Axiam.Sdk.AspNetCore.UmaChallenger?)
+  fullName.vb: Axiam.Sdk.AspNetCore.AxiamPolicyHandler.New(Axiam.Sdk.AxiamClient, Microsoft.Extensions.Options.IOptions(Of Axiam.Sdk.AspNetCore.AxiamOptions), Axiam.Sdk.AspNetCore.UmaChallenger)
+  nameWithType: AxiamPolicyHandler.AxiamPolicyHandler(AxiamClient, IOptions<AxiamOptions>, UmaChallenger?)
+  nameWithType.vb: AxiamPolicyHandler.New(AxiamClient, IOptions(Of AxiamOptions), UmaChallenger)
 - uid: Axiam.Sdk.AspNetCore.AxiamPolicyHandler.#ctor*
   name: AxiamPolicyHandler
   href: api/Axiam.Sdk.AspNetCore.AxiamPolicyHandler.html#Axiam_Sdk_AspNetCore_AxiamPolicyHandler__ctor_
@@ -1056,6 +1088,28 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AspNetCore.AxiamRequirement.Scope
   nameWithType: AxiamRequirement.Scope
+- uid: Axiam.Sdk.AspNetCore.McpEndpointExtensions
+  name: McpEndpointExtensions
+  href: api/Axiam.Sdk.AspNetCore.McpEndpointExtensions.html
+  commentId: T:Axiam.Sdk.AspNetCore.McpEndpointExtensions
+  fullName: Axiam.Sdk.AspNetCore.McpEndpointExtensions
+  nameWithType: McpEndpointExtensions
+- uid: Axiam.Sdk.AspNetCore.McpEndpointExtensions.ServeProtectedResourceMetadata(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,Axiam.Sdk.Mcp.ProtectedResourceMetadata,Axiam.Sdk.AspNetCore.AxiamOptions)
+  name: ServeProtectedResourceMetadata(IEndpointRouteBuilder, ProtectedResourceMetadata, AxiamOptions?)
+  href: api/Axiam.Sdk.AspNetCore.McpEndpointExtensions.html#Axiam_Sdk_AspNetCore_McpEndpointExtensions_ServeProtectedResourceMetadata_Microsoft_AspNetCore_Routing_IEndpointRouteBuilder_Axiam_Sdk_Mcp_ProtectedResourceMetadata_Axiam_Sdk_AspNetCore_AxiamOptions_
+  commentId: M:Axiam.Sdk.AspNetCore.McpEndpointExtensions.ServeProtectedResourceMetadata(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,Axiam.Sdk.Mcp.ProtectedResourceMetadata,Axiam.Sdk.AspNetCore.AxiamOptions)
+  name.vb: ServeProtectedResourceMetadata(IEndpointRouteBuilder, ProtectedResourceMetadata, AxiamOptions)
+  fullName: Axiam.Sdk.AspNetCore.McpEndpointExtensions.ServeProtectedResourceMetadata(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder, Axiam.Sdk.Mcp.ProtectedResourceMetadata, Axiam.Sdk.AspNetCore.AxiamOptions?)
+  fullName.vb: Axiam.Sdk.AspNetCore.McpEndpointExtensions.ServeProtectedResourceMetadata(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder, Axiam.Sdk.Mcp.ProtectedResourceMetadata, Axiam.Sdk.AspNetCore.AxiamOptions)
+  nameWithType: McpEndpointExtensions.ServeProtectedResourceMetadata(IEndpointRouteBuilder, ProtectedResourceMetadata, AxiamOptions?)
+  nameWithType.vb: McpEndpointExtensions.ServeProtectedResourceMetadata(IEndpointRouteBuilder, ProtectedResourceMetadata, AxiamOptions)
+- uid: Axiam.Sdk.AspNetCore.McpEndpointExtensions.ServeProtectedResourceMetadata*
+  name: ServeProtectedResourceMetadata
+  href: api/Axiam.Sdk.AspNetCore.McpEndpointExtensions.html#Axiam_Sdk_AspNetCore_McpEndpointExtensions_ServeProtectedResourceMetadata_
+  commentId: Overload:Axiam.Sdk.AspNetCore.McpEndpointExtensions.ServeProtectedResourceMetadata
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.McpEndpointExtensions.ServeProtectedResourceMetadata
+  nameWithType: McpEndpointExtensions.ServeProtectedResourceMetadata
 - uid: Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions
   name: OidcLoginEndpointExtensions
   href: api/Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions.html
@@ -11614,6 +11668,129 @@ references:
   commentId: F:Axiam.Sdk.Management.Models.CertificationLevel.Unknown
   fullName: Axiam.Sdk.Management.Models.CertificationLevel.Unknown
   nameWithType: CertificationLevel.Unknown
+- uid: Axiam.Sdk.Management.Models.CimdPolicy
+  name: CimdPolicy
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html
+  commentId: T:Axiam.Sdk.Management.Models.CimdPolicy
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy
+  nameWithType: CimdPolicy
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.AllowHttp
+  name: AllowHttp
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_AllowHttp
+  commentId: P:Axiam.Sdk.Management.Models.CimdPolicy.AllowHttp
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.AllowHttp
+  nameWithType: CimdPolicy.AllowHttp
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.AllowHttp*
+  name: AllowHttp
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_AllowHttp_
+  commentId: Overload:Axiam.Sdk.Management.Models.CimdPolicy.AllowHttp
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.AllowHttp
+  nameWithType: CimdPolicy.AllowHttp
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.ConfidentialOnly
+  name: ConfidentialOnly
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_ConfidentialOnly
+  commentId: P:Axiam.Sdk.Management.Models.CimdPolicy.ConfidentialOnly
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.ConfidentialOnly
+  nameWithType: CimdPolicy.ConfidentialOnly
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.ConfidentialOnly*
+  name: ConfidentialOnly
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_ConfidentialOnly_
+  commentId: Overload:Axiam.Sdk.Management.Models.CimdPolicy.ConfidentialOnly
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.ConfidentialOnly
+  nameWithType: CimdPolicy.ConfidentialOnly
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.Enabled
+  name: Enabled
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_Enabled
+  commentId: P:Axiam.Sdk.Management.Models.CimdPolicy.Enabled
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.Enabled
+  nameWithType: CimdPolicy.Enabled
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.Enabled*
+  name: Enabled
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_Enabled_
+  commentId: Overload:Axiam.Sdk.Management.Models.CimdPolicy.Enabled
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.Enabled
+  nameWithType: CimdPolicy.Enabled
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.MaxCacheSecs
+  name: MaxCacheSecs
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_MaxCacheSecs
+  commentId: P:Axiam.Sdk.Management.Models.CimdPolicy.MaxCacheSecs
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.MaxCacheSecs
+  nameWithType: CimdPolicy.MaxCacheSecs
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.MaxCacheSecs*
+  name: MaxCacheSecs
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_MaxCacheSecs_
+  commentId: Overload:Axiam.Sdk.Management.Models.CimdPolicy.MaxCacheSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.MaxCacheSecs
+  nameWithType: CimdPolicy.MaxCacheSecs
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.MaxMetadataBytes
+  name: MaxMetadataBytes
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_MaxMetadataBytes
+  commentId: P:Axiam.Sdk.Management.Models.CimdPolicy.MaxMetadataBytes
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.MaxMetadataBytes
+  nameWithType: CimdPolicy.MaxMetadataBytes
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.MaxMetadataBytes*
+  name: MaxMetadataBytes
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_MaxMetadataBytes_
+  commentId: Overload:Axiam.Sdk.Management.Models.CimdPolicy.MaxMetadataBytes
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.MaxMetadataBytes
+  nameWithType: CimdPolicy.MaxMetadataBytes
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.MinCacheSecs
+  name: MinCacheSecs
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_MinCacheSecs
+  commentId: P:Axiam.Sdk.Management.Models.CimdPolicy.MinCacheSecs
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.MinCacheSecs
+  nameWithType: CimdPolicy.MinCacheSecs
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.MinCacheSecs*
+  name: MinCacheSecs
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_MinCacheSecs_
+  commentId: Overload:Axiam.Sdk.Management.Models.CimdPolicy.MinCacheSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.MinCacheSecs
+  nameWithType: CimdPolicy.MinCacheSecs
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.RestrictSameDomain
+  name: RestrictSameDomain
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_RestrictSameDomain
+  commentId: P:Axiam.Sdk.Management.Models.CimdPolicy.RestrictSameDomain
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.RestrictSameDomain
+  nameWithType: CimdPolicy.RestrictSameDomain
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.RestrictSameDomain*
+  name: RestrictSameDomain
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_RestrictSameDomain_
+  commentId: Overload:Axiam.Sdk.Management.Models.CimdPolicy.RestrictSameDomain
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.RestrictSameDomain
+  nameWithType: CimdPolicy.RestrictSameDomain
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.TrustedClientIdDomains
+  name: TrustedClientIdDomains
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_TrustedClientIdDomains
+  commentId: P:Axiam.Sdk.Management.Models.CimdPolicy.TrustedClientIdDomains
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.TrustedClientIdDomains
+  nameWithType: CimdPolicy.TrustedClientIdDomains
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.TrustedClientIdDomains*
+  name: TrustedClientIdDomains
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_TrustedClientIdDomains_
+  commentId: Overload:Axiam.Sdk.Management.Models.CimdPolicy.TrustedClientIdDomains
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.TrustedClientIdDomains
+  nameWithType: CimdPolicy.TrustedClientIdDomains
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.TrustedRedirectDomains
+  name: TrustedRedirectDomains
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_TrustedRedirectDomains
+  commentId: P:Axiam.Sdk.Management.Models.CimdPolicy.TrustedRedirectDomains
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.TrustedRedirectDomains
+  nameWithType: CimdPolicy.TrustedRedirectDomains
+- uid: Axiam.Sdk.Management.Models.CimdPolicy.TrustedRedirectDomains*
+  name: TrustedRedirectDomains
+  href: api/Axiam.Sdk.Management.Models.CimdPolicy.html#Axiam_Sdk_Management_Models_CimdPolicy_TrustedRedirectDomains_
+  commentId: Overload:Axiam.Sdk.Management.Models.CimdPolicy.TrustedRedirectDomains
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CimdPolicy.TrustedRedirectDomains
+  nameWithType: CimdPolicy.TrustedRedirectDomains
 - uid: Axiam.Sdk.Management.Models.ClientAuthMethod
   name: ClientAuthMethod
   href: api/Axiam.Sdk.Management.Models.ClientAuthMethod.html
@@ -11632,6 +11809,12 @@ references:
   commentId: F:Axiam.Sdk.Management.Models.ClientAuthMethod.ClientSecretPost
   fullName: Axiam.Sdk.Management.Models.ClientAuthMethod.ClientSecretPost
   nameWithType: ClientAuthMethod.ClientSecretPost
+- uid: Axiam.Sdk.Management.Models.ClientAuthMethod.None
+  name: None
+  href: api/Axiam.Sdk.Management.Models.ClientAuthMethod.html#Axiam_Sdk_Management_Models_ClientAuthMethod_None
+  commentId: F:Axiam.Sdk.Management.Models.ClientAuthMethod.None
+  fullName: Axiam.Sdk.Management.Models.ClientAuthMethod.None
+  nameWithType: ClientAuthMethod.None
 - uid: Axiam.Sdk.Management.Models.ClientAuthMethod.PrivateKeyJwt
   name: PrivateKeyJwt
   href: api/Axiam.Sdk.Management.Models.ClientAuthMethod.html#Axiam_Sdk_Management_Models_ClientAuthMethod_PrivateKeyJwt
@@ -12449,6 +12632,19 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest
   fullName: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest
   nameWithType: CreateOAuth2ClientRequest
+- uid: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AllowedResources
+  name: AllowedResources
+  href: api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_CreateOAuth2ClientRequest_AllowedResources
+  commentId: P:Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AllowedResources
+  fullName: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AllowedResources
+  nameWithType: CreateOAuth2ClientRequest.AllowedResources
+- uid: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AllowedResources*
+  name: AllowedResources
+  href: api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_CreateOAuth2ClientRequest_AllowedResources_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AllowedResources
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AllowedResources
+  nameWithType: CreateOAuth2ClientRequest.AllowedResources
 - uid: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.AuthnRequestParams
   name: AuthnRequestParams
   href: api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_CreateOAuth2ClientRequest_AuthnRequestParams
@@ -12909,6 +13105,70 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.CreateReactorRequest.TimeoutMs
   nameWithType: CreateReactorRequest.TimeoutMs
+- uid: Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest
+  name: CreateRegistrationTokenRequest
+  href: api/Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.html
+  commentId: T:Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest
+  fullName: Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest
+  nameWithType: CreateRegistrationTokenRequest
+- uid: Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.ExpiresInHours
+  name: ExpiresInHours
+  href: api/Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.html#Axiam_Sdk_Management_Models_CreateRegistrationTokenRequest_ExpiresInHours
+  commentId: P:Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.ExpiresInHours
+  fullName: Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.ExpiresInHours
+  nameWithType: CreateRegistrationTokenRequest.ExpiresInHours
+- uid: Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.ExpiresInHours*
+  name: ExpiresInHours
+  href: api/Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.html#Axiam_Sdk_Management_Models_CreateRegistrationTokenRequest_ExpiresInHours_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.ExpiresInHours
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.ExpiresInHours
+  nameWithType: CreateRegistrationTokenRequest.ExpiresInHours
+- uid: Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.Name
+  name: Name
+  href: api/Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.html#Axiam_Sdk_Management_Models_CreateRegistrationTokenRequest_Name
+  commentId: P:Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.Name
+  fullName: Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.Name
+  nameWithType: CreateRegistrationTokenRequest.Name
+- uid: Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.Name*
+  name: Name
+  href: api/Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.html#Axiam_Sdk_Management_Models_CreateRegistrationTokenRequest_Name_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.Name
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.Name
+  nameWithType: CreateRegistrationTokenRequest.Name
+- uid: Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse
+  name: CreateRegistrationTokenResponse
+  href: api/Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.html
+  commentId: T:Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse
+  fullName: Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse
+  nameWithType: CreateRegistrationTokenResponse
+- uid: Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.InitialAccessToken
+  name: InitialAccessToken
+  href: api/Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.html#Axiam_Sdk_Management_Models_CreateRegistrationTokenResponse_InitialAccessToken
+  commentId: P:Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.InitialAccessToken
+  fullName: Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.InitialAccessToken
+  nameWithType: CreateRegistrationTokenResponse.InitialAccessToken
+- uid: Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.InitialAccessToken*
+  name: InitialAccessToken
+  href: api/Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.html#Axiam_Sdk_Management_Models_CreateRegistrationTokenResponse_InitialAccessToken_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.InitialAccessToken
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.InitialAccessToken
+  nameWithType: CreateRegistrationTokenResponse.InitialAccessToken
+- uid: Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.Token
+  name: Token
+  href: api/Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.html#Axiam_Sdk_Management_Models_CreateRegistrationTokenResponse_Token
+  commentId: P:Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.Token
+  fullName: Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.Token
+  nameWithType: CreateRegistrationTokenResponse.Token
+- uid: Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.Token*
+  name: Token
+  href: api/Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.html#Axiam_Sdk_Management_Models_CreateRegistrationTokenResponse_Token_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.Token
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.Token
+  nameWithType: CreateRegistrationTokenResponse.Token
 - uid: Axiam.Sdk.Management.Models.CreateResourceRequest
   name: CreateResourceRequest
   href: api/Axiam.Sdk.Management.Models.CreateResourceRequest.html
@@ -15186,6 +15446,36 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.LockoutPolicy.MaxLockoutDurationSecs
   nameWithType: LockoutPolicy.MaxLockoutDurationSecs
+- uid: Axiam.Sdk.Management.Models.ManagedBy
+  name: ManagedBy
+  href: api/Axiam.Sdk.Management.Models.ManagedBy.html
+  commentId: T:Axiam.Sdk.Management.Models.ManagedBy
+  fullName: Axiam.Sdk.Management.Models.ManagedBy
+  nameWithType: ManagedBy
+- uid: Axiam.Sdk.Management.Models.ManagedBy.Admin
+  name: Admin
+  href: api/Axiam.Sdk.Management.Models.ManagedBy.html#Axiam_Sdk_Management_Models_ManagedBy_Admin
+  commentId: F:Axiam.Sdk.Management.Models.ManagedBy.Admin
+  fullName: Axiam.Sdk.Management.Models.ManagedBy.Admin
+  nameWithType: ManagedBy.Admin
+- uid: Axiam.Sdk.Management.Models.ManagedBy.Cimd
+  name: Cimd
+  href: api/Axiam.Sdk.Management.Models.ManagedBy.html#Axiam_Sdk_Management_Models_ManagedBy_Cimd
+  commentId: F:Axiam.Sdk.Management.Models.ManagedBy.Cimd
+  fullName: Axiam.Sdk.Management.Models.ManagedBy.Cimd
+  nameWithType: ManagedBy.Cimd
+- uid: Axiam.Sdk.Management.Models.ManagedBy.Dcr
+  name: Dcr
+  href: api/Axiam.Sdk.Management.Models.ManagedBy.html#Axiam_Sdk_Management_Models_ManagedBy_Dcr
+  commentId: F:Axiam.Sdk.Management.Models.ManagedBy.Dcr
+  fullName: Axiam.Sdk.Management.Models.ManagedBy.Dcr
+  nameWithType: ManagedBy.Dcr
+- uid: Axiam.Sdk.Management.Models.ManagedBy.Unknown
+  name: Unknown
+  href: api/Axiam.Sdk.Management.Models.ManagedBy.html#Axiam_Sdk_Management_Models_ManagedBy_Unknown
+  commentId: F:Axiam.Sdk.Management.Models.ManagedBy.Unknown
+  fullName: Axiam.Sdk.Management.Models.ManagedBy.Unknown
+  nameWithType: ManagedBy.Unknown
 - uid: Axiam.Sdk.Management.Models.MdsRefreshOutcome
   name: MdsRefreshOutcome
   href: api/Axiam.Sdk.Management.Models.MdsRefreshOutcome.html
@@ -16038,6 +16328,19 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.OAuth2ClientResponse
   fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse
   nameWithType: OAuth2ClientResponse
+- uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.AllowedResources
+  name: AllowedResources
+  href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_AllowedResources
+  commentId: P:Axiam.Sdk.Management.Models.OAuth2ClientResponse.AllowedResources
+  fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.AllowedResources
+  nameWithType: OAuth2ClientResponse.AllowedResources
+- uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.AllowedResources*
+  name: AllowedResources
+  href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_AllowedResources_
+  commentId: Overload:Axiam.Sdk.Management.Models.OAuth2ClientResponse.AllowedResources
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.AllowedResources
+  nameWithType: OAuth2ClientResponse.AllowedResources
 - uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.AuthnRequestParams
   name: AuthnRequestParams
   href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_AuthnRequestParams
@@ -16168,6 +16471,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.JwksUri
   nameWithType: OAuth2ClientResponse.JwksUri
+- uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.LastAuthorizedAt
+  name: LastAuthorizedAt
+  href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_LastAuthorizedAt
+  commentId: P:Axiam.Sdk.Management.Models.OAuth2ClientResponse.LastAuthorizedAt
+  fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.LastAuthorizedAt
+  nameWithType: OAuth2ClientResponse.LastAuthorizedAt
+- uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.LastAuthorizedAt*
+  name: LastAuthorizedAt
+  href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_LastAuthorizedAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.OAuth2ClientResponse.LastAuthorizedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.LastAuthorizedAt
+  nameWithType: OAuth2ClientResponse.LastAuthorizedAt
+- uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.ManagedBy
+  name: ManagedBy
+  href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_ManagedBy
+  commentId: P:Axiam.Sdk.Management.Models.OAuth2ClientResponse.ManagedBy
+  fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.ManagedBy
+  nameWithType: OAuth2ClientResponse.ManagedBy
+- uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.ManagedBy*
+  name: ManagedBy
+  href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_ManagedBy_
+  commentId: Overload:Axiam.Sdk.Management.Models.OAuth2ClientResponse.ManagedBy
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.ManagedBy
+  nameWithType: OAuth2ClientResponse.ManagedBy
 - uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.Name
   name: Name
   href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_Name
@@ -16536,6 +16865,71 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.OidcPolicy
   fullName: Axiam.Sdk.Management.Models.OidcPolicy
   nameWithType: OidcPolicy
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.Cimd
+  name: Cimd
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_Cimd
+  commentId: P:Axiam.Sdk.Management.Models.OidcPolicy.Cimd
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.Cimd
+  nameWithType: OidcPolicy.Cimd
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.Cimd*
+  name: Cimd
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_Cimd_
+  commentId: Overload:Axiam.Sdk.Management.Models.OidcPolicy.Cimd
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.Cimd
+  nameWithType: OidcPolicy.Cimd
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedRedirectHosts
+  name: DcrAllowedRedirectHosts
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DcrAllowedRedirectHosts
+  commentId: P:Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedRedirectHosts
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedRedirectHosts
+  nameWithType: OidcPolicy.DcrAllowedRedirectHosts
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedRedirectHosts*
+  name: DcrAllowedRedirectHosts
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DcrAllowedRedirectHosts_
+  commentId: Overload:Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedRedirectHosts
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedRedirectHosts
+  nameWithType: OidcPolicy.DcrAllowedRedirectHosts
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedScopes
+  name: DcrAllowedScopes
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DcrAllowedScopes
+  commentId: P:Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedScopes
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedScopes
+  nameWithType: OidcPolicy.DcrAllowedScopes
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedScopes*
+  name: DcrAllowedScopes
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DcrAllowedScopes_
+  commentId: Overload:Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedScopes
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedScopes
+  nameWithType: OidcPolicy.DcrAllowedScopes
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.DcrMaxClients
+  name: DcrMaxClients
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DcrMaxClients
+  commentId: P:Axiam.Sdk.Management.Models.OidcPolicy.DcrMaxClients
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.DcrMaxClients
+  nameWithType: OidcPolicy.DcrMaxClients
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.DcrMaxClients*
+  name: DcrMaxClients
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DcrMaxClients_
+  commentId: Overload:Axiam.Sdk.Management.Models.OidcPolicy.DcrMaxClients
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.DcrMaxClients
+  nameWithType: OidcPolicy.DcrMaxClients
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.DcrUnusedClientTtlDays
+  name: DcrUnusedClientTtlDays
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DcrUnusedClientTtlDays
+  commentId: P:Axiam.Sdk.Management.Models.OidcPolicy.DcrUnusedClientTtlDays
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.DcrUnusedClientTtlDays
+  nameWithType: OidcPolicy.DcrUnusedClientTtlDays
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.DcrUnusedClientTtlDays*
+  name: DcrUnusedClientTtlDays
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DcrUnusedClientTtlDays_
+  commentId: Overload:Axiam.Sdk.Management.Models.OidcPolicy.DcrUnusedClientTtlDays
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.DcrUnusedClientTtlDays
+  nameWithType: OidcPolicy.DcrUnusedClientTtlDays
 - uid: Axiam.Sdk.Management.Models.OidcPolicy.DefaultLocale
   name: DefaultLocale
   href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DefaultLocale
@@ -16549,6 +16943,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.OidcPolicy.DefaultLocale
   nameWithType: OidcPolicy.DefaultLocale
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.DynamicRegistration
+  name: DynamicRegistration
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DynamicRegistration
+  commentId: P:Axiam.Sdk.Management.Models.OidcPolicy.DynamicRegistration
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.DynamicRegistration
+  nameWithType: OidcPolicy.DynamicRegistration
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.DynamicRegistration*
+  name: DynamicRegistration
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_DynamicRegistration_
+  commentId: Overload:Axiam.Sdk.Management.Models.OidcPolicy.DynamicRegistration
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.DynamicRegistration
+  nameWithType: OidcPolicy.DynamicRegistration
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.ExternalClientAllowedResources
+  name: ExternalClientAllowedResources
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_ExternalClientAllowedResources
+  commentId: P:Axiam.Sdk.Management.Models.OidcPolicy.ExternalClientAllowedResources
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.ExternalClientAllowedResources
+  nameWithType: OidcPolicy.ExternalClientAllowedResources
+- uid: Axiam.Sdk.Management.Models.OidcPolicy.ExternalClientAllowedResources*
+  name: ExternalClientAllowedResources
+  href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_ExternalClientAllowedResources_
+  commentId: Overload:Axiam.Sdk.Management.Models.OidcPolicy.ExternalClientAllowedResources
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OidcPolicy.ExternalClientAllowedResources
+  nameWithType: OidcPolicy.ExternalClientAllowedResources
 - uid: Axiam.Sdk.Management.Models.OidcPolicy.SensitiveScopesEnabled
   name: SensitiveScopesEnabled
   href: api/Axiam.Sdk.Management.Models.OidcPolicy.html#Axiam_Sdk_Management_Models_OidcPolicy_SensitiveScopesEnabled
@@ -17733,6 +18153,116 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.ReadyResponse.Status
   nameWithType: ReadyResponse.Status
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse
+  name: RegistrationTokenResponse
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html
+  commentId: T:Axiam.Sdk.Management.Models.RegistrationTokenResponse
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse
+  nameWithType: RegistrationTokenResponse
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.CreatedAt
+  name: CreatedAt
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_CreatedAt
+  commentId: P:Axiam.Sdk.Management.Models.RegistrationTokenResponse.CreatedAt
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.CreatedAt
+  nameWithType: RegistrationTokenResponse.CreatedAt
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.CreatedAt*
+  name: CreatedAt
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_CreatedAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.RegistrationTokenResponse.CreatedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.CreatedAt
+  nameWithType: RegistrationTokenResponse.CreatedAt
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.CreatedBy
+  name: CreatedBy
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_CreatedBy
+  commentId: P:Axiam.Sdk.Management.Models.RegistrationTokenResponse.CreatedBy
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.CreatedBy
+  nameWithType: RegistrationTokenResponse.CreatedBy
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.CreatedBy*
+  name: CreatedBy
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_CreatedBy_
+  commentId: Overload:Axiam.Sdk.Management.Models.RegistrationTokenResponse.CreatedBy
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.CreatedBy
+  nameWithType: RegistrationTokenResponse.CreatedBy
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.ExpiresAt
+  name: ExpiresAt
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_ExpiresAt
+  commentId: P:Axiam.Sdk.Management.Models.RegistrationTokenResponse.ExpiresAt
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.ExpiresAt
+  nameWithType: RegistrationTokenResponse.ExpiresAt
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.ExpiresAt*
+  name: ExpiresAt
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_ExpiresAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.RegistrationTokenResponse.ExpiresAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.ExpiresAt
+  nameWithType: RegistrationTokenResponse.ExpiresAt
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.Id
+  name: Id
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_Id
+  commentId: P:Axiam.Sdk.Management.Models.RegistrationTokenResponse.Id
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.Id
+  nameWithType: RegistrationTokenResponse.Id
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.Id*
+  name: Id
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_Id_
+  commentId: Overload:Axiam.Sdk.Management.Models.RegistrationTokenResponse.Id
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.Id
+  nameWithType: RegistrationTokenResponse.Id
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.Name
+  name: Name
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_Name
+  commentId: P:Axiam.Sdk.Management.Models.RegistrationTokenResponse.Name
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.Name
+  nameWithType: RegistrationTokenResponse.Name
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.Name*
+  name: Name
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_Name_
+  commentId: Overload:Axiam.Sdk.Management.Models.RegistrationTokenResponse.Name
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.Name
+  nameWithType: RegistrationTokenResponse.Name
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.TenantId
+  name: TenantId
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_TenantId
+  commentId: P:Axiam.Sdk.Management.Models.RegistrationTokenResponse.TenantId
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.TenantId
+  nameWithType: RegistrationTokenResponse.TenantId
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.TenantId*
+  name: TenantId
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_TenantId_
+  commentId: Overload:Axiam.Sdk.Management.Models.RegistrationTokenResponse.TenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.TenantId
+  nameWithType: RegistrationTokenResponse.TenantId
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedAt
+  name: UsedAt
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_UsedAt
+  commentId: P:Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedAt
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedAt
+  nameWithType: RegistrationTokenResponse.UsedAt
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedAt*
+  name: UsedAt
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_UsedAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedAt
+  nameWithType: RegistrationTokenResponse.UsedAt
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedByClientId
+  name: UsedByClientId
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_UsedByClientId
+  commentId: P:Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedByClientId
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedByClientId
+  nameWithType: RegistrationTokenResponse.UsedByClientId
+- uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedByClientId*
+  name: UsedByClientId
+  href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html#Axiam_Sdk_Management_Models_RegistrationTokenResponse_UsedByClientId_
+  commentId: Overload:Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedByClientId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedByClientId
+  nameWithType: RegistrationTokenResponse.UsedByClientId
 - uid: Axiam.Sdk.Management.Models.ResolvedPermissionGrant
   name: ResolvedPermissionGrant
   href: api/Axiam.Sdk.Management.Models.ResolvedPermissionGrant.html
@@ -19236,6 +19766,71 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SetOrgSettings.AdminNotificationsEnabled
   nameWithType: SetOrgSettings.AdminNotificationsEnabled
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.Cimd
+  name: Cimd
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_Cimd
+  commentId: P:Axiam.Sdk.Management.Models.SetOrgSettings.Cimd
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.Cimd
+  nameWithType: SetOrgSettings.Cimd
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.Cimd*
+  name: Cimd
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_Cimd_
+  commentId: Overload:Axiam.Sdk.Management.Models.SetOrgSettings.Cimd
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.Cimd
+  nameWithType: SetOrgSettings.Cimd
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.DcrAllowedRedirectHosts
+  name: DcrAllowedRedirectHosts
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DcrAllowedRedirectHosts
+  commentId: P:Axiam.Sdk.Management.Models.SetOrgSettings.DcrAllowedRedirectHosts
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DcrAllowedRedirectHosts
+  nameWithType: SetOrgSettings.DcrAllowedRedirectHosts
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.DcrAllowedRedirectHosts*
+  name: DcrAllowedRedirectHosts
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DcrAllowedRedirectHosts_
+  commentId: Overload:Axiam.Sdk.Management.Models.SetOrgSettings.DcrAllowedRedirectHosts
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DcrAllowedRedirectHosts
+  nameWithType: SetOrgSettings.DcrAllowedRedirectHosts
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.DcrAllowedScopes
+  name: DcrAllowedScopes
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DcrAllowedScopes
+  commentId: P:Axiam.Sdk.Management.Models.SetOrgSettings.DcrAllowedScopes
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DcrAllowedScopes
+  nameWithType: SetOrgSettings.DcrAllowedScopes
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.DcrAllowedScopes*
+  name: DcrAllowedScopes
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DcrAllowedScopes_
+  commentId: Overload:Axiam.Sdk.Management.Models.SetOrgSettings.DcrAllowedScopes
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DcrAllowedScopes
+  nameWithType: SetOrgSettings.DcrAllowedScopes
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.DcrMaxClients
+  name: DcrMaxClients
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DcrMaxClients
+  commentId: P:Axiam.Sdk.Management.Models.SetOrgSettings.DcrMaxClients
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DcrMaxClients
+  nameWithType: SetOrgSettings.DcrMaxClients
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.DcrMaxClients*
+  name: DcrMaxClients
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DcrMaxClients_
+  commentId: Overload:Axiam.Sdk.Management.Models.SetOrgSettings.DcrMaxClients
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DcrMaxClients
+  nameWithType: SetOrgSettings.DcrMaxClients
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.DcrUnusedClientTtlDays
+  name: DcrUnusedClientTtlDays
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DcrUnusedClientTtlDays
+  commentId: P:Axiam.Sdk.Management.Models.SetOrgSettings.DcrUnusedClientTtlDays
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DcrUnusedClientTtlDays
+  nameWithType: SetOrgSettings.DcrUnusedClientTtlDays
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.DcrUnusedClientTtlDays*
+  name: DcrUnusedClientTtlDays
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DcrUnusedClientTtlDays_
+  commentId: Overload:Axiam.Sdk.Management.Models.SetOrgSettings.DcrUnusedClientTtlDays
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DcrUnusedClientTtlDays
+  nameWithType: SetOrgSettings.DcrUnusedClientTtlDays
 - uid: Axiam.Sdk.Management.Models.SetOrgSettings.DefaultCertValidityDays
   name: DefaultCertValidityDays
   href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DefaultCertValidityDays
@@ -19275,6 +19870,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DeletionGracePeriodDays
   nameWithType: SetOrgSettings.DeletionGracePeriodDays
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.DynamicRegistration
+  name: DynamicRegistration
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DynamicRegistration
+  commentId: P:Axiam.Sdk.Management.Models.SetOrgSettings.DynamicRegistration
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DynamicRegistration
+  nameWithType: SetOrgSettings.DynamicRegistration
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.DynamicRegistration*
+  name: DynamicRegistration
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_DynamicRegistration_
+  commentId: Overload:Axiam.Sdk.Management.Models.SetOrgSettings.DynamicRegistration
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.DynamicRegistration
+  nameWithType: SetOrgSettings.DynamicRegistration
 - uid: Axiam.Sdk.Management.Models.SetOrgSettings.EmailVerificationGracePeriodHours
   name: EmailVerificationGracePeriodHours
   href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_EmailVerificationGracePeriodHours
@@ -19301,6 +19909,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SetOrgSettings.EmailVerificationRequired
   nameWithType: SetOrgSettings.EmailVerificationRequired
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.ExternalClientAllowedResources
+  name: ExternalClientAllowedResources
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_ExternalClientAllowedResources
+  commentId: P:Axiam.Sdk.Management.Models.SetOrgSettings.ExternalClientAllowedResources
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.ExternalClientAllowedResources
+  nameWithType: SetOrgSettings.ExternalClientAllowedResources
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.ExternalClientAllowedResources*
+  name: ExternalClientAllowedResources
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_ExternalClientAllowedResources_
+  commentId: Overload:Axiam.Sdk.Management.Models.SetOrgSettings.ExternalClientAllowedResources
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.ExternalClientAllowedResources
+  nameWithType: SetOrgSettings.ExternalClientAllowedResources
 - uid: Axiam.Sdk.Management.Models.SetOrgSettings.HibpCheckEnabled
   name: HibpCheckEnabled
   href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_HibpCheckEnabled
@@ -20041,6 +20662,71 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.AdminNotificationsEnabled
   nameWithType: TenantSettingsOverride.AdminNotificationsEnabled
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.Cimd
+  name: Cimd
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_Cimd
+  commentId: P:Axiam.Sdk.Management.Models.TenantSettingsOverride.Cimd
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.Cimd
+  nameWithType: TenantSettingsOverride.Cimd
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.Cimd*
+  name: Cimd
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_Cimd_
+  commentId: Overload:Axiam.Sdk.Management.Models.TenantSettingsOverride.Cimd
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.Cimd
+  nameWithType: TenantSettingsOverride.Cimd
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrAllowedRedirectHosts
+  name: DcrAllowedRedirectHosts
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DcrAllowedRedirectHosts
+  commentId: P:Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrAllowedRedirectHosts
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrAllowedRedirectHosts
+  nameWithType: TenantSettingsOverride.DcrAllowedRedirectHosts
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrAllowedRedirectHosts*
+  name: DcrAllowedRedirectHosts
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DcrAllowedRedirectHosts_
+  commentId: Overload:Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrAllowedRedirectHosts
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrAllowedRedirectHosts
+  nameWithType: TenantSettingsOverride.DcrAllowedRedirectHosts
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrAllowedScopes
+  name: DcrAllowedScopes
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DcrAllowedScopes
+  commentId: P:Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrAllowedScopes
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrAllowedScopes
+  nameWithType: TenantSettingsOverride.DcrAllowedScopes
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrAllowedScopes*
+  name: DcrAllowedScopes
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DcrAllowedScopes_
+  commentId: Overload:Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrAllowedScopes
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrAllowedScopes
+  nameWithType: TenantSettingsOverride.DcrAllowedScopes
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrMaxClients
+  name: DcrMaxClients
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DcrMaxClients
+  commentId: P:Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrMaxClients
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrMaxClients
+  nameWithType: TenantSettingsOverride.DcrMaxClients
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrMaxClients*
+  name: DcrMaxClients
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DcrMaxClients_
+  commentId: Overload:Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrMaxClients
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrMaxClients
+  nameWithType: TenantSettingsOverride.DcrMaxClients
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrUnusedClientTtlDays
+  name: DcrUnusedClientTtlDays
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DcrUnusedClientTtlDays
+  commentId: P:Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrUnusedClientTtlDays
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrUnusedClientTtlDays
+  nameWithType: TenantSettingsOverride.DcrUnusedClientTtlDays
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrUnusedClientTtlDays*
+  name: DcrUnusedClientTtlDays
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DcrUnusedClientTtlDays_
+  commentId: Overload:Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrUnusedClientTtlDays
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DcrUnusedClientTtlDays
+  nameWithType: TenantSettingsOverride.DcrUnusedClientTtlDays
 - uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DefaultCertValidityDays
   name: DefaultCertValidityDays
   href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DefaultCertValidityDays
@@ -20080,6 +20766,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DeletionGracePeriodDays
   nameWithType: TenantSettingsOverride.DeletionGracePeriodDays
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DynamicRegistration
+  name: DynamicRegistration
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DynamicRegistration
+  commentId: P:Axiam.Sdk.Management.Models.TenantSettingsOverride.DynamicRegistration
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DynamicRegistration
+  nameWithType: TenantSettingsOverride.DynamicRegistration
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.DynamicRegistration*
+  name: DynamicRegistration
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_DynamicRegistration_
+  commentId: Overload:Axiam.Sdk.Management.Models.TenantSettingsOverride.DynamicRegistration
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.DynamicRegistration
+  nameWithType: TenantSettingsOverride.DynamicRegistration
 - uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.EmailVerificationGracePeriodHours
   name: EmailVerificationGracePeriodHours
   href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_EmailVerificationGracePeriodHours
@@ -20106,6 +20805,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.EmailVerificationRequired
   nameWithType: TenantSettingsOverride.EmailVerificationRequired
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.ExternalClientAllowedResources
+  name: ExternalClientAllowedResources
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_ExternalClientAllowedResources
+  commentId: P:Axiam.Sdk.Management.Models.TenantSettingsOverride.ExternalClientAllowedResources
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.ExternalClientAllowedResources
+  nameWithType: TenantSettingsOverride.ExternalClientAllowedResources
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.ExternalClientAllowedResources*
+  name: ExternalClientAllowedResources
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_ExternalClientAllowedResources_
+  commentId: Overload:Axiam.Sdk.Management.Models.TenantSettingsOverride.ExternalClientAllowedResources
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.ExternalClientAllowedResources
+  nameWithType: TenantSettingsOverride.ExternalClientAllowedResources
 - uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.HibpCheckEnabled
   name: HibpCheckEnabled
   href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_HibpCheckEnabled
@@ -21002,6 +21714,19 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest
   fullName: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest
   nameWithType: UpdateOAuth2ClientRequest
+- uid: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AllowedResources
+  name: AllowedResources
+  href: api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_AllowedResources
+  commentId: P:Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AllowedResources
+  fullName: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AllowedResources
+  nameWithType: UpdateOAuth2ClientRequest.AllowedResources
+- uid: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AllowedResources*
+  name: AllowedResources
+  href: api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_AllowedResources_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AllowedResources
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AllowedResources
+  nameWithType: UpdateOAuth2ClientRequest.AllowedResources
 - uid: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.AuthnRequestParams
   name: AuthnRequestParams
   href: api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_AuthnRequestParams
@@ -22450,6 +23175,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Oauth2ClientsApi.CreateAsync
   nameWithType: Oauth2ClientsApi.CreateAsync
+- uid: Axiam.Sdk.Management.Oauth2ClientsApi.CreateRegistrationTokenAsync(Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest,System.Threading.CancellationToken)
+  name: CreateRegistrationTokenAsync(CreateRegistrationTokenRequest, CancellationToken)
+  href: api/Axiam.Sdk.Management.Oauth2ClientsApi.html#Axiam_Sdk_Management_Oauth2ClientsApi_CreateRegistrationTokenAsync_Axiam_Sdk_Management_Models_CreateRegistrationTokenRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.Oauth2ClientsApi.CreateRegistrationTokenAsync(Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.Oauth2ClientsApi.CreateRegistrationTokenAsync(Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest, System.Threading.CancellationToken)
+  nameWithType: Oauth2ClientsApi.CreateRegistrationTokenAsync(CreateRegistrationTokenRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.Oauth2ClientsApi.CreateRegistrationTokenAsync*
+  name: CreateRegistrationTokenAsync
+  href: api/Axiam.Sdk.Management.Oauth2ClientsApi.html#Axiam_Sdk_Management_Oauth2ClientsApi_CreateRegistrationTokenAsync_
+  commentId: Overload:Axiam.Sdk.Management.Oauth2ClientsApi.CreateRegistrationTokenAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Oauth2ClientsApi.CreateRegistrationTokenAsync
+  nameWithType: Oauth2ClientsApi.CreateRegistrationTokenAsync
 - uid: Axiam.Sdk.Management.Oauth2ClientsApi.DeleteAsync(System.Guid,System.Threading.CancellationToken)
   name: DeleteAsync(Guid, CancellationToken)
   href: api/Axiam.Sdk.Management.Oauth2ClientsApi.html#Axiam_Sdk_Management_Oauth2ClientsApi_DeleteAsync_System_Guid_System_Threading_CancellationToken_
@@ -22508,6 +23246,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Oauth2ClientsApi.ListAsync
   nameWithType: Oauth2ClientsApi.ListAsync
+- uid: Axiam.Sdk.Management.Oauth2ClientsApi.ListRegistrationTokensAsync(System.Threading.CancellationToken)
+  name: ListRegistrationTokensAsync(CancellationToken)
+  href: api/Axiam.Sdk.Management.Oauth2ClientsApi.html#Axiam_Sdk_Management_Oauth2ClientsApi_ListRegistrationTokensAsync_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.Oauth2ClientsApi.ListRegistrationTokensAsync(System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.Oauth2ClientsApi.ListRegistrationTokensAsync(System.Threading.CancellationToken)
+  nameWithType: Oauth2ClientsApi.ListRegistrationTokensAsync(CancellationToken)
+- uid: Axiam.Sdk.Management.Oauth2ClientsApi.ListRegistrationTokensAsync*
+  name: ListRegistrationTokensAsync
+  href: api/Axiam.Sdk.Management.Oauth2ClientsApi.html#Axiam_Sdk_Management_Oauth2ClientsApi_ListRegistrationTokensAsync_
+  commentId: Overload:Axiam.Sdk.Management.Oauth2ClientsApi.ListRegistrationTokensAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Oauth2ClientsApi.ListRegistrationTokensAsync
+  nameWithType: Oauth2ClientsApi.ListRegistrationTokensAsync
 - uid: Axiam.Sdk.Management.Oauth2ClientsApi.UpdateAsync(System.Guid,Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest,System.Threading.CancellationToken)
   name: UpdateAsync(Guid, UpdateOAuth2ClientRequest, CancellationToken)
   href: api/Axiam.Sdk.Management.Oauth2ClientsApi.html#Axiam_Sdk_Management_Oauth2ClientsApi_UpdateAsync_System_Guid_Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_System_Threading_CancellationToken_
@@ -24847,6 +25598,325 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.WireNameAttribute.Value
   nameWithType: WireNameAttribute.Value
+- uid: Axiam.Sdk.Mcp
+  name: Axiam.Sdk.Mcp
+  href: api/Axiam.Sdk.Mcp.html
+  commentId: N:Axiam.Sdk.Mcp
+  fullName: Axiam.Sdk.Mcp
+  nameWithType: Axiam.Sdk.Mcp
+- uid: Axiam.Sdk.Mcp.AxiamBearerChallengeError
+  name: AxiamBearerChallengeError
+  href: api/Axiam.Sdk.Mcp.AxiamBearerChallengeError.html
+  commentId: T:Axiam.Sdk.Mcp.AxiamBearerChallengeError
+  fullName: Axiam.Sdk.Mcp.AxiamBearerChallengeError
+  nameWithType: AxiamBearerChallengeError
+- uid: Axiam.Sdk.Mcp.AxiamBearerChallengeError.InsufficientScope
+  name: InsufficientScope
+  href: api/Axiam.Sdk.Mcp.AxiamBearerChallengeError.html#Axiam_Sdk_Mcp_AxiamBearerChallengeError_InsufficientScope
+  commentId: F:Axiam.Sdk.Mcp.AxiamBearerChallengeError.InsufficientScope
+  fullName: Axiam.Sdk.Mcp.AxiamBearerChallengeError.InsufficientScope
+  nameWithType: AxiamBearerChallengeError.InsufficientScope
+- uid: Axiam.Sdk.Mcp.AxiamBearerChallengeError.InvalidRequest
+  name: InvalidRequest
+  href: api/Axiam.Sdk.Mcp.AxiamBearerChallengeError.html#Axiam_Sdk_Mcp_AxiamBearerChallengeError_InvalidRequest
+  commentId: F:Axiam.Sdk.Mcp.AxiamBearerChallengeError.InvalidRequest
+  fullName: Axiam.Sdk.Mcp.AxiamBearerChallengeError.InvalidRequest
+  nameWithType: AxiamBearerChallengeError.InvalidRequest
+- uid: Axiam.Sdk.Mcp.AxiamBearerChallengeError.InvalidToken
+  name: InvalidToken
+  href: api/Axiam.Sdk.Mcp.AxiamBearerChallengeError.html#Axiam_Sdk_Mcp_AxiamBearerChallengeError_InvalidToken
+  commentId: F:Axiam.Sdk.Mcp.AxiamBearerChallengeError.InvalidToken
+  fullName: Axiam.Sdk.Mcp.AxiamBearerChallengeError.InvalidToken
+  nameWithType: AxiamBearerChallengeError.InvalidToken
+- uid: Axiam.Sdk.Mcp.AxiamMcp
+  name: AxiamMcp
+  href: api/Axiam.Sdk.Mcp.AxiamMcp.html
+  commentId: T:Axiam.Sdk.Mcp.AxiamMcp
+  fullName: Axiam.Sdk.Mcp.AxiamMcp
+  nameWithType: AxiamMcp
+- uid: Axiam.Sdk.Mcp.AxiamMcp.BearerChallenge(Axiam.Sdk.Mcp.BearerChallengeOptions)
+  name: BearerChallenge(BearerChallengeOptions)
+  href: api/Axiam.Sdk.Mcp.AxiamMcp.html#Axiam_Sdk_Mcp_AxiamMcp_BearerChallenge_Axiam_Sdk_Mcp_BearerChallengeOptions_
+  commentId: M:Axiam.Sdk.Mcp.AxiamMcp.BearerChallenge(Axiam.Sdk.Mcp.BearerChallengeOptions)
+  fullName: Axiam.Sdk.Mcp.AxiamMcp.BearerChallenge(Axiam.Sdk.Mcp.BearerChallengeOptions)
+  nameWithType: AxiamMcp.BearerChallenge(BearerChallengeOptions)
+- uid: Axiam.Sdk.Mcp.AxiamMcp.BearerChallenge*
+  name: BearerChallenge
+  href: api/Axiam.Sdk.Mcp.AxiamMcp.html#Axiam_Sdk_Mcp_AxiamMcp_BearerChallenge_
+  commentId: Overload:Axiam.Sdk.Mcp.AxiamMcp.BearerChallenge
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.AxiamMcp.BearerChallenge
+  nameWithType: AxiamMcp.BearerChallenge
+- uid: Axiam.Sdk.Mcp.AxiamMcp.DefaultBearerMethodsSupported
+  name: DefaultBearerMethodsSupported
+  href: api/Axiam.Sdk.Mcp.AxiamMcp.html#Axiam_Sdk_Mcp_AxiamMcp_DefaultBearerMethodsSupported
+  commentId: F:Axiam.Sdk.Mcp.AxiamMcp.DefaultBearerMethodsSupported
+  fullName: Axiam.Sdk.Mcp.AxiamMcp.DefaultBearerMethodsSupported
+  nameWithType: AxiamMcp.DefaultBearerMethodsSupported
+- uid: Axiam.Sdk.Mcp.AxiamMcp.ProtectedResourceMetadata(Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions)
+  name: ProtectedResourceMetadata(ProtectedResourceMetadataOptions)
+  href: api/Axiam.Sdk.Mcp.AxiamMcp.html#Axiam_Sdk_Mcp_AxiamMcp_ProtectedResourceMetadata_Axiam_Sdk_Mcp_ProtectedResourceMetadataOptions_
+  commentId: M:Axiam.Sdk.Mcp.AxiamMcp.ProtectedResourceMetadata(Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions)
+  fullName: Axiam.Sdk.Mcp.AxiamMcp.ProtectedResourceMetadata(Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions)
+  nameWithType: AxiamMcp.ProtectedResourceMetadata(ProtectedResourceMetadataOptions)
+- uid: Axiam.Sdk.Mcp.AxiamMcp.ProtectedResourceMetadata*
+  name: ProtectedResourceMetadata
+  href: api/Axiam.Sdk.Mcp.AxiamMcp.html#Axiam_Sdk_Mcp_AxiamMcp_ProtectedResourceMetadata_
+  commentId: Overload:Axiam.Sdk.Mcp.AxiamMcp.ProtectedResourceMetadata
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.AxiamMcp.ProtectedResourceMetadata
+  nameWithType: AxiamMcp.ProtectedResourceMetadata
+- uid: Axiam.Sdk.Mcp.AxiamMcp.ProtectedResourceMetadataPrefix
+  name: ProtectedResourceMetadataPrefix
+  href: api/Axiam.Sdk.Mcp.AxiamMcp.html#Axiam_Sdk_Mcp_AxiamMcp_ProtectedResourceMetadataPrefix
+  commentId: F:Axiam.Sdk.Mcp.AxiamMcp.ProtectedResourceMetadataPrefix
+  fullName: Axiam.Sdk.Mcp.AxiamMcp.ProtectedResourceMetadataPrefix
+  nameWithType: AxiamMcp.ProtectedResourceMetadataPrefix
+- uid: Axiam.Sdk.Mcp.BearerChallengeOptions
+  name: BearerChallengeOptions
+  href: api/Axiam.Sdk.Mcp.BearerChallengeOptions.html
+  commentId: T:Axiam.Sdk.Mcp.BearerChallengeOptions
+  fullName: Axiam.Sdk.Mcp.BearerChallengeOptions
+  nameWithType: BearerChallengeOptions
+- uid: Axiam.Sdk.Mcp.BearerChallengeOptions.Error
+  name: Error
+  href: api/Axiam.Sdk.Mcp.BearerChallengeOptions.html#Axiam_Sdk_Mcp_BearerChallengeOptions_Error
+  commentId: P:Axiam.Sdk.Mcp.BearerChallengeOptions.Error
+  fullName: Axiam.Sdk.Mcp.BearerChallengeOptions.Error
+  nameWithType: BearerChallengeOptions.Error
+- uid: Axiam.Sdk.Mcp.BearerChallengeOptions.Error*
+  name: Error
+  href: api/Axiam.Sdk.Mcp.BearerChallengeOptions.html#Axiam_Sdk_Mcp_BearerChallengeOptions_Error_
+  commentId: Overload:Axiam.Sdk.Mcp.BearerChallengeOptions.Error
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.BearerChallengeOptions.Error
+  nameWithType: BearerChallengeOptions.Error
+- uid: Axiam.Sdk.Mcp.BearerChallengeOptions.ErrorDescription
+  name: ErrorDescription
+  href: api/Axiam.Sdk.Mcp.BearerChallengeOptions.html#Axiam_Sdk_Mcp_BearerChallengeOptions_ErrorDescription
+  commentId: P:Axiam.Sdk.Mcp.BearerChallengeOptions.ErrorDescription
+  fullName: Axiam.Sdk.Mcp.BearerChallengeOptions.ErrorDescription
+  nameWithType: BearerChallengeOptions.ErrorDescription
+- uid: Axiam.Sdk.Mcp.BearerChallengeOptions.ErrorDescription*
+  name: ErrorDescription
+  href: api/Axiam.Sdk.Mcp.BearerChallengeOptions.html#Axiam_Sdk_Mcp_BearerChallengeOptions_ErrorDescription_
+  commentId: Overload:Axiam.Sdk.Mcp.BearerChallengeOptions.ErrorDescription
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.BearerChallengeOptions.ErrorDescription
+  nameWithType: BearerChallengeOptions.ErrorDescription
+- uid: Axiam.Sdk.Mcp.BearerChallengeOptions.ResourceMetadataUrl
+  name: ResourceMetadataUrl
+  href: api/Axiam.Sdk.Mcp.BearerChallengeOptions.html#Axiam_Sdk_Mcp_BearerChallengeOptions_ResourceMetadataUrl
+  commentId: P:Axiam.Sdk.Mcp.BearerChallengeOptions.ResourceMetadataUrl
+  fullName: Axiam.Sdk.Mcp.BearerChallengeOptions.ResourceMetadataUrl
+  nameWithType: BearerChallengeOptions.ResourceMetadataUrl
+- uid: Axiam.Sdk.Mcp.BearerChallengeOptions.ResourceMetadataUrl*
+  name: ResourceMetadataUrl
+  href: api/Axiam.Sdk.Mcp.BearerChallengeOptions.html#Axiam_Sdk_Mcp_BearerChallengeOptions_ResourceMetadataUrl_
+  commentId: Overload:Axiam.Sdk.Mcp.BearerChallengeOptions.ResourceMetadataUrl
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.BearerChallengeOptions.ResourceMetadataUrl
+  nameWithType: BearerChallengeOptions.ResourceMetadataUrl
+- uid: Axiam.Sdk.Mcp.BearerChallengeOptions.Scope
+  name: Scope
+  href: api/Axiam.Sdk.Mcp.BearerChallengeOptions.html#Axiam_Sdk_Mcp_BearerChallengeOptions_Scope
+  commentId: P:Axiam.Sdk.Mcp.BearerChallengeOptions.Scope
+  fullName: Axiam.Sdk.Mcp.BearerChallengeOptions.Scope
+  nameWithType: BearerChallengeOptions.Scope
+- uid: Axiam.Sdk.Mcp.BearerChallengeOptions.Scope*
+  name: Scope
+  href: api/Axiam.Sdk.Mcp.BearerChallengeOptions.html#Axiam_Sdk_Mcp_BearerChallengeOptions_Scope_
+  commentId: Overload:Axiam.Sdk.Mcp.BearerChallengeOptions.Scope
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.BearerChallengeOptions.Scope
+  nameWithType: BearerChallengeOptions.Scope
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadata
+  name: ProtectedResourceMetadata
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadata.html
+  commentId: T:Axiam.Sdk.Mcp.ProtectedResourceMetadata
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadata
+  nameWithType: ProtectedResourceMetadata
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadata.Document
+  name: Document
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadata.html#Axiam_Sdk_Mcp_ProtectedResourceMetadata_Document
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadata.Document
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadata.Document
+  nameWithType: ProtectedResourceMetadata.Document
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadata.Document*
+  name: Document
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadata.html#Axiam_Sdk_Mcp_ProtectedResourceMetadata_Document_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadata.Document
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadata.Document
+  nameWithType: ProtectedResourceMetadata.Document
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadata.MetadataPath
+  name: MetadataPath
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadata.html#Axiam_Sdk_Mcp_ProtectedResourceMetadata_MetadataPath
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadata.MetadataPath
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadata.MetadataPath
+  nameWithType: ProtectedResourceMetadata.MetadataPath
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadata.MetadataPath*
+  name: MetadataPath
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadata.html#Axiam_Sdk_Mcp_ProtectedResourceMetadata_MetadataPath_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadata.MetadataPath
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadata.MetadataPath
+  nameWithType: ProtectedResourceMetadata.MetadataPath
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadata.MetadataUrl
+  name: MetadataUrl
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadata.html#Axiam_Sdk_Mcp_ProtectedResourceMetadata_MetadataUrl
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadata.MetadataUrl
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadata.MetadataUrl
+  nameWithType: ProtectedResourceMetadata.MetadataUrl
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadata.MetadataUrl*
+  name: MetadataUrl
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadata.html#Axiam_Sdk_Mcp_ProtectedResourceMetadata_MetadataUrl_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadata.MetadataUrl
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadata.MetadataUrl
+  nameWithType: ProtectedResourceMetadata.MetadataUrl
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument
+  name: ProtectedResourceMetadataDocument
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.html
+  commentId: T:Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument
+  nameWithType: ProtectedResourceMetadataDocument
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.AuthorizationServers
+  name: AuthorizationServers
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataDocument_AuthorizationServers
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.AuthorizationServers
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.AuthorizationServers
+  nameWithType: ProtectedResourceMetadataDocument.AuthorizationServers
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.AuthorizationServers*
+  name: AuthorizationServers
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataDocument_AuthorizationServers_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.AuthorizationServers
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.AuthorizationServers
+  nameWithType: ProtectedResourceMetadataDocument.AuthorizationServers
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.BearerMethodsSupported
+  name: BearerMethodsSupported
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataDocument_BearerMethodsSupported
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.BearerMethodsSupported
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.BearerMethodsSupported
+  nameWithType: ProtectedResourceMetadataDocument.BearerMethodsSupported
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.BearerMethodsSupported*
+  name: BearerMethodsSupported
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataDocument_BearerMethodsSupported_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.BearerMethodsSupported
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.BearerMethodsSupported
+  nameWithType: ProtectedResourceMetadataDocument.BearerMethodsSupported
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.Resource
+  name: Resource
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataDocument_Resource
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.Resource
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.Resource
+  nameWithType: ProtectedResourceMetadataDocument.Resource
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.Resource*
+  name: Resource
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataDocument_Resource_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.Resource
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.Resource
+  nameWithType: ProtectedResourceMetadataDocument.Resource
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.ResourceDocumentation
+  name: ResourceDocumentation
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataDocument_ResourceDocumentation
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.ResourceDocumentation
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.ResourceDocumentation
+  nameWithType: ProtectedResourceMetadataDocument.ResourceDocumentation
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.ResourceDocumentation*
+  name: ResourceDocumentation
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataDocument_ResourceDocumentation_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.ResourceDocumentation
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.ResourceDocumentation
+  nameWithType: ProtectedResourceMetadataDocument.ResourceDocumentation
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.ScopesSupported
+  name: ScopesSupported
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataDocument_ScopesSupported
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.ScopesSupported
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.ScopesSupported
+  nameWithType: ProtectedResourceMetadataDocument.ScopesSupported
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.ScopesSupported*
+  name: ScopesSupported
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataDocument_ScopesSupported_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.ScopesSupported
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.ScopesSupported
+  nameWithType: ProtectedResourceMetadataDocument.ScopesSupported
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions
+  name: ProtectedResourceMetadataOptions
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.html
+  commentId: T:Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions
+  nameWithType: ProtectedResourceMetadataOptions
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.AuthorizationServers
+  name: AuthorizationServers
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataOptions_AuthorizationServers
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.AuthorizationServers
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.AuthorizationServers
+  nameWithType: ProtectedResourceMetadataOptions.AuthorizationServers
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.AuthorizationServers*
+  name: AuthorizationServers
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataOptions_AuthorizationServers_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.AuthorizationServers
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.AuthorizationServers
+  nameWithType: ProtectedResourceMetadataOptions.AuthorizationServers
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.BearerMethodsSupported
+  name: BearerMethodsSupported
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataOptions_BearerMethodsSupported
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.BearerMethodsSupported
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.BearerMethodsSupported
+  nameWithType: ProtectedResourceMetadataOptions.BearerMethodsSupported
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.BearerMethodsSupported*
+  name: BearerMethodsSupported
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataOptions_BearerMethodsSupported_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.BearerMethodsSupported
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.BearerMethodsSupported
+  nameWithType: ProtectedResourceMetadataOptions.BearerMethodsSupported
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.Resource
+  name: Resource
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataOptions_Resource
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.Resource
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.Resource
+  nameWithType: ProtectedResourceMetadataOptions.Resource
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.Resource*
+  name: Resource
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataOptions_Resource_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.Resource
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.Resource
+  nameWithType: ProtectedResourceMetadataOptions.Resource
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.ResourceDocumentation
+  name: ResourceDocumentation
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataOptions_ResourceDocumentation
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.ResourceDocumentation
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.ResourceDocumentation
+  nameWithType: ProtectedResourceMetadataOptions.ResourceDocumentation
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.ResourceDocumentation*
+  name: ResourceDocumentation
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataOptions_ResourceDocumentation_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.ResourceDocumentation
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.ResourceDocumentation
+  nameWithType: ProtectedResourceMetadataOptions.ResourceDocumentation
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.ScopesSupported
+  name: ScopesSupported
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataOptions_ScopesSupported
+  commentId: P:Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.ScopesSupported
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.ScopesSupported
+  nameWithType: ProtectedResourceMetadataOptions.ScopesSupported
+- uid: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.ScopesSupported*
+  name: ScopesSupported
+  href: api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.html#Axiam_Sdk_Mcp_ProtectedResourceMetadataOptions_ScopesSupported_
+  commentId: Overload:Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.ScopesSupported
+  isSpec: "True"
+  fullName: Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.ScopesSupported
+  nameWithType: ProtectedResourceMetadataOptions.ScopesSupported
 - uid: Axiam.Sdk.Opaque
   name: Axiam.Sdk.Opaque
   href: api/Axiam.Sdk.Opaque.html

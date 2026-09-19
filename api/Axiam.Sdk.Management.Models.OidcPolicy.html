@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class OidcPolicy | AXIAM .NET SDK ">
       
-      <meta name="description" content="OpenID Connect surface controls (X7 G8, plan &#167;4.6/&#167;4.8). Two settings that are not password rules, and are here because this is the org-baseline-plus-tenant-override surface every other per-tenant control lives on. They are also the two settings in this model that are not of the same kind as each other, so it is worth saying which is which: * [Self::sensitive_scopes_enabled] is ordered. Releasing personal data is the less-restrictive direction, so it is validated disable-only — the mirror image of mfa_enforced — and a tenant can turn its organization&#39;s decision off but never on. * [Self::default_locale] is not ordered, and no ordering is invented for it. A language is a presentation preference; there is no sense in which Italian is stricter than French. [validate_tenant_override] therefore does not check it and [clamp_overrides_to_org] never clears it. The model&#39;s rule is &amp;quot;a tenant may only be more restrictive&amp;quot;, which binds every field that has a restrictiveness; a field that has none cannot violate it.">
+      <meta name="description" content="OpenID Connect surface controls (X7 G8, plan &#167;4.6/&#167;4.8; T21.4). Settings that are not password rules, here because this is the org-baseline-plus-tenant-override surface every other per-tenant control lives on. They are not all of the same kind as each other, and which is which is the whole of what [validate_tenant_override] and [clamp_overrides_to_org] read, so it is set out rather than inferred. Ordered — a tenant may be stricter than its organization and never more permissive: * [Self::sensitive_scopes_enabled], validated disable-only — the mirror image of mfa_enforced, because releasing personal data is the less-restrictive direction, so a tenant can turn its organization&#39;s decision off but never on. * [Self::dynamic_registration], on the ladder disabled → initial_access_token → anonymous: a tenant may move down it and never up. * [Self::dcr_max_clients] and [Self::dcr_unused_client_ttl_days], on the ordinary tenant &amp;lt;= org rule — with the wrinkle that 0 on the second means never sweep, which is the longest window of all and is handled by [dcr_ttl_strictness]. Not ordered, therefore never validated against the baseline and never clamped: * [Self::default_locale]. A language is a presentation preference; there is no sense in which Italian is stricter than French. * [Self::dcr_allowed_scopes], [Self::dcr_allowed_redirect_hosts] and [Self::external_client_allowed_resources]. Each names per-tenant resources — this tenant&#39;s MCP servers, this tenant&#39;s callback hosts — and there is no sense in which one such list is stricter than another. A subset rule would force an organization to enumerate every tenant&#39;s resource servers in its own baseline before any tenant could name one. The model&#39;s rule is &amp;quot;a tenant may only be more restrictive&amp;quot;, which binds every field that has a restrictiveness; a field that has none cannot violate it. One cross-field interlock spans both groups and is checked on the resolved policy rather than on either input: see [validate_dcr_policy].">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta15/apiSpec/new?filename=Axiam_Sdk_Management_Models_OidcPolicy.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.OidcPolicy%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta16/apiSpec/new?filename=Axiam_Sdk_Management_Models_OidcPolicy.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.OidcPolicy%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Management_Models_OidcPolicy" data-uid="Axiam.Sdk.Management.Models.OidcPolicy" class="text-break">
-Class OidcPolicy  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L29"><i class="bi bi-code-slash"></i></a>
+Class OidcPolicy  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,19 +97,32 @@ Class OidcPolicy  <a class="header-action link-secondary" title="View source" hr
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>OpenID Connect surface controls (X7 G8, plan §4.6/§4.8). Two settings that are not password
-rules, and are here because this is the org-baseline-plus-tenant-override surface every
-other per-tenant control lives on. They are also the two settings in this model that are
-<em>not</em> of the same kind as each other, so it is worth saying which is which: *
-[<code>Self::sensitive_scopes_enabled</code>] <strong>is</strong> ordered. Releasing personal data is the
-less-restrictive direction, so it is validated disable-only — the mirror image of
-<code>mfa_enforced</code> — and a tenant can turn its organization's decision off but never on. *
-[<code>Self::default_locale</code>] is <strong>not</strong> ordered, and no ordering is invented for it. A
-language is a presentation preference; there is no sense in which Italian is stricter than
-French. [<code>validate_tenant_override</code>] therefore does not check it and
-[<code>clamp_overrides_to_org</code>] never clears it. The model's rule is &quot;a tenant may only be
-more restrictive&quot;, which binds every field that <em>has</em> a restrictiveness; a field that has
-none cannot violate it.</p>
+  <div class="markdown summary"><p>OpenID Connect surface controls (X7 G8, plan §4.6/§4.8; T21.4). Settings that are not
+password rules, here because this is the org-baseline-plus-tenant-override surface every
+other per-tenant control lives on. They are not all of the same kind as each other, and
+which is which is the whole of what [<code>validate_tenant_override</code>] and
+[<code>clamp_overrides_to_org</code>] read, so it is set out rather than inferred. <strong>Ordered</strong> — a
+tenant may be stricter than its organization and never more permissive: *
+[<code>Self::sensitive_scopes_enabled</code>], validated <strong>disable-only</strong> — the mirror image of
+<code>mfa_enforced</code>, because releasing personal data is the less-restrictive direction, so a
+tenant can turn its organization's decision off but never on. *
+[<code>Self::dynamic_registration</code>], on the ladder <code>disabled</code> →
+<code>initial_access_token</code> → <code>anonymous</code>: a tenant may move down it and never up. *
+[<code>Self::dcr_max_clients</code>] and [<code>Self::dcr_unused_client_ttl_days</code>], on the
+ordinary <code>tenant &lt;= org</code> rule — with the wrinkle that <code>0</code> on the second means
+<em>never sweep</em>, which is the longest window of all and is handled by
+[<code>dcr_ttl_strictness</code>]. <strong>Not ordered</strong>, therefore never validated against the baseline
+and never clamped: * [<code>Self::default_locale</code>]. A language is a presentation preference;
+there is no sense in which Italian is stricter than French. *
+[<code>Self::dcr_allowed_scopes</code>], [<code>Self::dcr_allowed_redirect_hosts</code>] and
+[<code>Self::external_client_allowed_resources</code>]. Each names per-tenant resources — <em>this</em>
+tenant's MCP servers, <em>this</em> tenant's callback hosts — and there is no sense in which one
+such list is stricter than another. A subset rule would force an organization to enumerate
+every tenant's resource servers in its own baseline before any tenant could name one. The
+model's rule is &quot;a tenant may only be more restrictive&quot;, which binds every field that <em>has</em>
+a restrictiveness; a field that has none cannot violate it. One cross-field interlock spans
+both groups and is checked on the resolved policy rather than on either input: see
+[<code>validate_dcr_policy</code>].</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -168,11 +181,204 @@ none cannot violate it.</p>
 </h2>
 
 
+  <a id="Axiam_Sdk_Management_Models_OidcPolicy_Cimd_" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.Cimd*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_OidcPolicy_Cimd" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.Cimd">
+  Cimd
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>T21.5 — whether a URL-shaped <code>client_id</code> is resolved by fetching the document it
+names, and on what terms. See [<code>CimdPolicy</code>]; off unless somebody turns it on (I1).
+Nested, and therefore inherited or overridden <strong>whole</strong>: the fields are terms of one
+decision, and a half-merged posture is one neither the organization nor the tenant
+wrote.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;cimd&quot;)]
+public CimdPolicy? Cimd { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.CimdPolicy.html">CimdPolicy</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_OidcPolicy_DcrAllowedRedirectHosts_" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedRedirectHosts*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_OidcPolicy_DcrAllowedRedirectHosts" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedRedirectHosts">
+  DcrAllowedRedirectHosts
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>T21.4 — hosts a self-registered client's <code>redirect_uris</code> may point at, as globs
+(<code><em>.example.com</em></code>, or <code></code> for any). The loopback hosts (<code>127.0.0.1</code>,
+<code>[::1]</code>, <code>localhost</code>) are always allowed whatever this says, because RFC 8252
+§7.3 is how every desktop MCP client receives its callback and a tenant that forbade
+them would have turned registration on for nobody.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;dcr_allowed_redirect_hosts&quot;)]
+public IReadOnlyList&lt;string&gt;? DcrAllowedRedirectHosts { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_OidcPolicy_DcrAllowedScopes_" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedScopes*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_OidcPolicy_DcrAllowedScopes" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.DcrAllowedScopes">
+  DcrAllowedScopes
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>T21.4 — the scopes a self-registered client may ask for. A <code>scope</code> a registration
+names that is not on this list is <code>invalid_client_metadata</code>; an empty list means a
+self-registered client gets no scopes at all, which is the honest default for a tenant
+that has turned registration on without deciding what it grants. May not contain
+<code>address</code> or <code>phone</code> — see this module's [<code>sensitive_scope_in_dcr_list</code>].</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;dcr_allowed_scopes&quot;)]
+public IReadOnlyList&lt;string&gt;? DcrAllowedScopes { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_OidcPolicy_DcrMaxClients_" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.DcrMaxClients*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_OidcPolicy_DcrMaxClients" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.DcrMaxClients">
+  DcrMaxClients
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>T21.4 — how many externally registered clients this tenant may hold. See
+[<code>DEFAULT_DCR_MAX_CLIENTS</code>]. <strong>Counted once per mechanism, against the same
+number</strong> (T21.8): <code>managed_by: dcr</code> rows and <code>managed_by: cimd</code> rows each have
+this many. So a tenant running both cannot have shadow rows materialised from documents
+exhaust the allowance for self-registration, or the reverse. The CIMD count is checked
+<em>before</em> the document is fetched, so a tenant at its ceiling is not an outbound
+amplifier either. It keeps its <code>dcr_</code> name because dynamic registration defined it,
+on the same precedent as [<code>Self::dcr_allowed_scopes</code>].</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;dcr_max_clients&quot;)]
+public int? DcrMaxClients { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_OidcPolicy_DcrUnusedClientTtlDays_" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.DcrUnusedClientTtlDays*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_OidcPolicy_DcrUnusedClientTtlDays" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.DcrUnusedClientTtlDays">
+  DcrUnusedClientTtlDays
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>T21.4 — how long an externally registered client survives without being used. See
+[<code>DEFAULT_DCR_UNUSED_CLIENT_TTL_DAYS</code>]. <code>0</code> disables the sweep for this
+tenant, which an operator who prunes out of band may legitimately want. <strong>Two sweeps
+read it, over different clocks</strong> (T21.8). A <code>managed_by: dcr</code> row is measured from
+its last authorization, falling back to when it was registered. A <code>managed_by:
+cimd</code> row is measured from the last time its document was <em>presented</em>, which every
+authorize, token and PAR request moves — so a document in daily use is never swept
+however old its registration is, and one nobody has presented since the window is, and
+re-materialises on the next request if it is still published. Like the ceiling, it keeps
+its <code>dcr_</code> name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;dcr_unused_client_ttl_days&quot;)]
+public int? DcrUnusedClientTtlDays { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_Models_OidcPolicy_DefaultLocale_" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.DefaultLocale*"></a>
 
   <h3 id="Axiam_Sdk_Management_Models_OidcPolicy_DefaultLocale" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.DefaultLocale">
   DefaultLocale
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The BCP 47 tag the sign-in page falls back to when the relying party's <code>ui_locales</code>
@@ -208,11 +414,87 @@ public string? DefaultLocale { get; init; }</code></pre>
 
 
 
+  <a id="Axiam_Sdk_Management_Models_OidcPolicy_DynamicRegistration_" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.DynamicRegistration*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_OidcPolicy_DynamicRegistration" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.DynamicRegistration">
+  DynamicRegistration
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>T21.4 — whether a client may register itself (RFC 7591), and on what terms.
+<code>disabled</code> unless somebody says otherwise (I1).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;dynamic_registration&quot;)]
+public string? DynamicRegistration { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_OidcPolicy_ExternalClientAllowedResources_" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.ExternalClientAllowedResources*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_OidcPolicy_ExternalClientAllowedResources" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.ExternalClientAllowedResources">
+  ExternalClientAllowedResources
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L134"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><strong>D3</strong> — the audiences an externally registered client may address. The single most
+important field on this policy, and the reason the settings handler refuses
+<code>dynamic_registration: anonymous</code> while it is empty. A client an unrelated party
+registered cannot declare its own <code>allowed_resources</code>; it inherits this list
+verbatim, so what a stranger can mint a token <em>for</em> is a decision the tenant took in
+advance rather than one the registration request makes. Empty means an externally
+registered client can obtain only today's <code>axiam:user</code> tokens — which AXIAM's own
+APIs accept. That is why the interlock exists: the empty list is not a safe default for
+an <em>open</em> registration endpoint, it is the most dangerous one. Shared with T5 (CIMD),
+which inherits the same list for the same reason.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;external_client_allowed_resources&quot;)]
+public IReadOnlyList&lt;string&gt;? ExternalClientAllowedResources { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_Models_OidcPolicy_SensitiveScopesEnabled_" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.SensitiveScopesEnabled*"></a>
 
   <h3 id="Axiam_Sdk_Management_Models_OidcPolicy_SensitiveScopesEnabled" data-uid="Axiam.Sdk.Management.Models.OidcPolicy.SensitiveScopesEnabled">
   SensitiveScopesEnabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L56"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/OidcPolicy.cs/#L149"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Whether <code>address</code> and <code>phone</code> may be registered on a client, requested at the

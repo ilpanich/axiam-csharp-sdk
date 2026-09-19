@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class CimdPolicy | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class CimdPolicy | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Whether, and on what terms, a client_id that is a URL is resolved by fetching the document it names (T21.5, draft-ietf-oauth-client-id-metadata-document). # Why this is one nested policy rather than nine fields Every field here is a term of a single decision — do we fetch a stranger&#39;s URL and make a client out of what comes back — and none of them means anything without [Self::enabled]. A tenant that states a CIMD posture states all of it; a tenant that states none inherits its organization&#39;s whole posture rather than half of one, which is the only merge that cannot produce a combination neither party wrote. The two fields that can widen, and the seven that cannot [Self::enabled] and [Self::allow_http] are ordered: a tenant may turn either off but never on, exactly as dynamic_registration may only move down its ladder. Everything else names this tenant&#39;s domains or this tenant&#39;s bounds, and there is no sense in which one tenant&#39;s list of trusted publishers is stricter than another&#39;s — the same argument [OidcPolicy] already makes for dcr_allowed_redirect_hosts. # Every bound here is a security control [Self::max_metadata_bytes], [Self::min_cache_secs] and [Self::max_cache_secs] are not tuning knobs. They are, respectively, the ceiling on a read from an attacker-chosen URL, the floor under how often that read may be repeated, and the ceiling on how long its result may be trusted. Each is clamped again in code against the three constants above, so a settings row written by hand cannot lift them.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta16/apiSpec/new?filename=Axiam_Sdk_Management_Models_CimdPolicy.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.CimdPolicy%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Management.Models.CimdPolicy">
+
+
+
+  <h1 id="Axiam_Sdk_Management_Models_CimdPolicy" data-uid="Axiam.Sdk.Management.Models.CimdPolicy" class="text-break">
+Class CimdPolicy  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/CimdPolicy.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a>.<a class="xref" href="Axiam.Sdk.Management.Models.html">Models</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Whether, and on what terms, a <code>client_id</code> that is a URL is resolved by fetching the
+document it names (T21.5, <code>draft-ietf-oauth-client-id-metadata-document</code>). # Why this
+is one nested policy rather than nine fields Every field here is a term of a single decision
+— <em>do we fetch a stranger's URL and make a client out of what comes back</em> — and none of them
+means anything without [<code>Self::enabled</code>]. A tenant that states a CIMD posture states
+all of it; a tenant that states none inherits its organization's whole posture rather than
+half of one, which is the only merge that cannot produce a combination neither party wrote.</p>
+<h1 id="the-two-fields-that-can-widen-and-the-seven-that-cannot-selfenabled-and">The two fields that can widen, and the seven that cannot [<code>Self::enabled</code>] and</h1>
+<p>[<code>Self::allow_http</code>] are <strong>ordered</strong>: a tenant may turn either off but never on,
+exactly as <code>dynamic_registration</code> may only move down its ladder. Everything else names
+<em>this tenant's</em> domains or <em>this tenant's</em> bounds, and there is no sense in which one
+tenant's list of trusted publishers is stricter than another's — the same argument
+[<code>OidcPolicy</code>] already makes for <code>dcr_allowed_redirect_hosts</code>. # Every bound here
+is a security control [<code>Self::max_metadata_bytes</code>], [<code>Self::min_cache_secs</code>] and
+[<code>Self::max_cache_secs</code>] are not tuning knobs. They are, respectively, the ceiling on a
+read from an attacker-chosen URL, the floor under how often that read may be repeated, and
+the ceiling on how long its result may be trusted. Each is clamped again in code against the
+three constants above, so a settings row written by hand cannot lift them.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record CimdPolicy : IEquatable&lt;CimdPolicy&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">CimdPolicy</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.CimdPolicy.html">CimdPolicy</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Management_Models_CimdPolicy_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+Every property is optional, so this is a SPARSE body: what you leave unset is left
+unchanged, and is omitted from the wire request entirely rather than sent as null
+(§27.4 rule 5). Naming the properties you mean to change is the whole API — there is no
+builder because C# object initializers already are one, and no way to accidentally send a
+field you did not name.
+</p>
+</div>
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_Models_CimdPolicy_AllowHttp_" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.AllowHttp*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_CimdPolicy_AllowHttp" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.AllowHttp">
+  AllowHttp
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/CimdPolicy.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Permit an <code>http://</code> <code>client_id</code> and an <code>http://</code> fetch. <strong>Development
+only, and it does more than its name says.</strong> AXIAM's shared SSRF guard couples the
+scheme rule to the address rule — the same seam that lets an integration test point a
+fetch at a loopback mock server — so a tenant that allows <code>http</code> also allows the
+first hop to resolve to a private address. Redirect hops are validated strictly whatever
+this says, and a public deployment that sets it has removed the control that makes
+<code>169.254.169.254</code> unreachable.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;allow_http&quot;)]
+public bool? AllowHttp { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_CimdPolicy_ConfidentialOnly_" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.ConfidentialOnly*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_CimdPolicy_ConfidentialOnly" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.ConfidentialOnly">
+  ConfidentialOnly
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/CimdPolicy.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Refuse a document whose <code>token_endpoint_auth_method</code> is <code>none</code>. Off by
+default, because <code>none</code> is what every MCP desktop client is. A tenant that turns it
+on accepts only <code>private_key_jwt</code> documents, which is the posture for a deployment
+whose CIMD clients are servers rather than desktops.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;confidential_only&quot;)]
+public bool? ConfidentialOnly { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_CimdPolicy_Enabled_" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.Enabled*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_CimdPolicy_Enabled" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.Enabled">
+  Enabled
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/CimdPolicy.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><strong>Off unless somebody turns it on</strong> (I1). With this <code>false</code>, a URL-shaped
+<code>client_id</code> is exactly today's unknown client: nothing is fetched, nothing is
+materialised, and the ordinary repository lookup answers as it always has.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;enabled&quot;)]
+public bool? Enabled { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_CimdPolicy_MaxCacheSecs_" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.MaxCacheSecs*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_CimdPolicy_MaxCacheSecs" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.MaxCacheSecs">
+  MaxCacheSecs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/CimdPolicy.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The ceiling on a document's cache lifetime, in seconds. Clamped to
+[<code>CIMD_MAX_CACHE_CEILING_SECS</code>].</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;max_cache_secs&quot;)]
+public long? MaxCacheSecs { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_CimdPolicy_MaxMetadataBytes_" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.MaxMetadataBytes*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_CimdPolicy_MaxMetadataBytes" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.MaxMetadataBytes">
+  MaxMetadataBytes
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/CimdPolicy.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The hard cap on how many bytes of a document are read, before it is parsed. Clamped to
+[<code>CIMD_MAX_METADATA_BYTES_CEILING</code>].</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;max_metadata_bytes&quot;)]
+public long? MaxMetadataBytes { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_CimdPolicy_MinCacheSecs_" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.MinCacheSecs*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_CimdPolicy_MinCacheSecs" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.MinCacheSecs">
+  MinCacheSecs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/CimdPolicy.cs/#L92"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The floor under a document's cache lifetime, in seconds. Clamped to
+[<code>CIMD_MIN_CACHE_FLOOR_SECS</code>].</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;min_cache_secs&quot;)]
+public long? MinCacheSecs { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_CimdPolicy_RestrictSameDomain_" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.RestrictSameDomain*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_CimdPolicy_RestrictSameDomain" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.RestrictSameDomain">
+  RestrictSameDomain
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/CimdPolicy.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Require every <code>redirect_uris</code> host in the document to equal the host of the
+<code>client_id</code> URL itself. <strong>On by default</strong>, because the document says who the client
+is and a redirect to somewhere else is the one thing a stolen or mirrored document would
+want to change. It is turned <strong>off</strong> for the desktop MCP clients, whose callbacks are on
+loopback and therefore can never share a host with a <code>https://</code> <code>client_id</code>;
+<code>docs/admin/client-id-metadata-documents.md</code> says so and says why.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;restrict_same_domain&quot;)]
+public bool? RestrictSameDomain { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_CimdPolicy_TrustedClientIdDomains_" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.TrustedClientIdDomains*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_CimdPolicy_TrustedClientIdDomains" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.TrustedClientIdDomains">
+  TrustedClientIdDomains
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/CimdPolicy.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The hosts whose documents this tenant will fetch at all, as globs
+(<code>mcp.example.com</code>, or <code><em>.example.com</em></code> for every host under one domain). <strong>An
+empty list resolves nothing</strong>, and enabling CIMD while it is empty is refused — see
+[<code>validate_cimd_policy</code>]. That is a deliberate departure from &quot;a URL is a client
+identifier, so any URL will do&quot;: the fetch is triggered by an unauthenticated request
+naming the URL, so an unrestricted list is a request-forgery primitive offered to
+strangers, bounded only by the SSRF guard's address rules. Naming the publishers a
+tenant actually fronts costs one settings field and removes the class. **<code></code> is
+refused here, and so is a wildcard over a whole top-level domain** (<code><em>.com</em></code>): both
+are the posture the empty list is refused for, spelled differently, and a control with
+no second control behind it cannot have a one-character bypass and still be the control.
+It is a floor and not a public-suffix check — <code>.github.io</code> passes, and trusting
+shared hosting stays the operator's decision, bounded by the per-tenant quota rather
+than by this field. <code>*</code> remains valid in
+[<code>CimdPolicy::trusted_redirect_domains</code>], whose entries are not fetch targets.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trusted_client_id_domains&quot;)]
+public IReadOnlyList&lt;string&gt;? TrustedClientIdDomains { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_CimdPolicy_TrustedRedirectDomains_" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.TrustedRedirectDomains*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_CimdPolicy_TrustedRedirectDomains" data-uid="Axiam.Sdk.Management.Models.CimdPolicy.TrustedRedirectDomains">
+  TrustedRedirectDomains
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/Models/CimdPolicy.cs/#L133"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The hosts a document's <code>redirect_uris</code> may point at, as globs. The loopback hosts
+(<code>127.0.0.1</code>, <code>[::1]</code>, <code>localhost</code>) are always allowed, because RFC 8252
+§7.3 is how every desktop MCP client receives its callback — so an empty list is not a
+refusal of everything, it is &quot;loopback only&quot;, which is exactly the Claude Code and VS
+Code profile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trusted_redirect_domains&quot;)]
+public IReadOnlyList&lt;string&gt;? TrustedRedirectDomains { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

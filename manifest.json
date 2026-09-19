@@ -278,6 +278,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.AspNetCore.McpEndpointExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.AspNetCore.McpEndpointExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.AspNetCore.McpEndpointExtensions",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.AspNetCore.McpEndpointExtensions.yml\" sourcestartlinenumber=\"1\"><code>ServeProtectedResourceMetadata</code> (CONTRACT.md §28.1/§28.3, §28.7's\nC# row) — the ASP.NET Core minimal-API endpoint that publishes an\n<xref href=\"Axiam.Sdk.Mcp.AxiamMcp.ProtectedResourceMetadata(Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions)\" data-throw-if-not-resolved=\"false\"></xref> document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions.yml",
       "output": {
         ".html": {
@@ -2126,6 +2140,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CimdPolicy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CimdPolicy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CimdPolicy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CimdPolicy.yml\" sourcestartlinenumber=\"1\">Whether, and on what terms, a <code>client_id</code> that is a URL is resolved by fetching the\ndocument it names (T21.5, <code>draft-ietf-oauth-client-id-metadata-document</code>). # Why this\nis one nested policy rather than nine fields Every field here is a term of a single decision\n— <em sourcefile=\"api/Axiam.Sdk.Management.Models.CimdPolicy.yml\" sourcestartlinenumber=\"4\">do we fetch a stranger's URL and make a client out of what comes back</em> — and none of them\nmeans anything without [<code>Self::enabled</code>]. A tenant that states a CIMD posture states\nall of it; a tenant that states none inherits its organization's whole posture rather than\nhalf of one, which is the only merge that cannot produce a combination neither party wrote.</p>\n<h1 id=\"the-two-fields-that-can-widen-and-the-seven-that-cannot-selfenabled-and\" sourcefile=\"api/Axiam.Sdk.Management.Models.CimdPolicy.yml\" sourcestartlinenumber=\"8\">The two fields that can widen, and the seven that cannot [<code>Self::enabled</code>] and</h1>\n<p sourcefile=\"api/Axiam.Sdk.Management.Models.CimdPolicy.yml\" sourcestartlinenumber=\"9\">[<code>Self::allow_http</code>] are <strong sourcefile=\"api/Axiam.Sdk.Management.Models.CimdPolicy.yml\" sourcestartlinenumber=\"9\">ordered</strong>: a tenant may turn either off but never on,\nexactly as <code>dynamic_registration</code> may only move down its ladder. Everything else names\n<em sourcefile=\"api/Axiam.Sdk.Management.Models.CimdPolicy.yml\" sourcestartlinenumber=\"11\">this tenant's</em> domains or <em sourcefile=\"api/Axiam.Sdk.Management.Models.CimdPolicy.yml\" sourcestartlinenumber=\"11\">this tenant's</em> bounds, and there is no sense in which one\ntenant's list of trusted publishers is stricter than another's — the same argument\n[<code>OidcPolicy</code>] already makes for <code>dcr_allowed_redirect_hosts</code>. # Every bound here\nis a security control [<code>Self::max_metadata_bytes</code>], [<code>Self::min_cache_secs</code>] and\n[<code>Self::max_cache_secs</code>] are not tuning knobs. They are, respectively, the ceiling on a\nread from an attacker-chosen URL, the floor under how often that read may be repeated, and\nthe ceiling on how long its result may be trusted. Each is clamped again in code against the\nthree constants above, so a settings row written by hand cannot lift them.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Management.Models.ClientAuthMethod.yml",
       "output": {
         ".html": {
@@ -2136,7 +2164,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.ClientAuthMethod",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ClientAuthMethod.yml\" sourcestartlinenumber=\"1\">How a client proves its identity at the token endpoint (RFC 8705 §2, OIDC Core §9 naming).\nOnly the methods AXIAM actually implements are representable. There is deliberately no\n<code>none</code> variant: every AXIAM client is confidential today (see\n<code>handle_authorization_code</code>), and adding a public-client value here before the rest of\nthe server understands one would let an operator register a client whose authentication is\nsilently skipped.</p>\n"
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ClientAuthMethod.yml\" sourcestartlinenumber=\"1\">How a client proves its identity at the token endpoint (RFC 8705 §2, OIDC Core §9 naming).\nOnly the methods AXIAM actually implements are representable. <code>None</code> — the\npublic-client value — was deliberately absent until T21.2: adding it before the rest of the\nserver understood one would have let an operator register a client whose authentication is\nsilently skipped. The server understands one now (<code>token.rs</code>'s\n<code>authenticate_client_credential</code> has an arm that accepts <em sourcefile=\"api/Axiam.Sdk.Management.Models.ClientAuthMethod.yml\" sourcestartlinenumber=\"6\">no</em> credential and refuses a\npresented one, the authorization endpoint derives its PKCE requirement from this enum, and\nthe admin API refuses the method alongside any grant or binding that contradicts it), so the\nvariant exists — and only that arm may ever treat a missing credential as success.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2319,6 +2347,34 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.CreateReactorRequest",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateReactorRequest.yml\" sourcestartlinenumber=\"1\">The CreateReactorRequest schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateRegistrationTokenRequest.yml\" sourcestartlinenumber=\"1\">Request body for [<code>create_registration_token</code>].</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateRegistrationTokenResponse.yml\" sourcestartlinenumber=\"1\">The one response that carries the handle.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2728,6 +2784,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ManagedBy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ManagedBy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ManagedBy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ManagedBy.yml\" sourcestartlinenumber=\"1\">Who created a client registration (D5, T21.4). The discriminator that separates a\nregistration an administrator made from one that arrived over an open endpoint. Three things\nread it and each would otherwise have to infer provenance from something that is not\nprovenance: * <code>axiam_oauth2::fapi</code> refuses a FAPI profile on anything but\n<a href=\"Self::Admin\" sourcefile=\"api/Axiam.Sdk.Management.Models.ManagedBy.yml\" sourcestartlinenumber=\"5\"><code>Admin</code></a> (I5) — a client nobody vetted cannot be financial-grade; * the\nauthorization endpoint forces a consent hop for every other value (D4) — an unrelated party\ngets a question put to the end user, whatever scopes it asked for; * the T21.4 sweeper\ndeletes only <a href=\"Self::Dcr\" sourcefile=\"api/Axiam.Sdk.Management.Models.ManagedBy.yml\" sourcestartlinenumber=\"8\"><code>Dcr</code></a> rows, so an administrator's client is never swept\nhowever long it sits unused. <a href=\"Self::Admin\" sourcefile=\"api/Axiam.Sdk.Management.Models.ManagedBy.yml\" sourcestartlinenumber=\"9\"><code>Admin</code></a> is the serde default and therefore\nwhat every row written before T21.4 decodes to, which is the truth: they were all created\nthrough <code>POST /oauth2-clients</code> by somebody holding <code>oauth2_clients:create</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Management.Models.MdsRefreshOutcome.yml",
       "output": {
         ".html": {
@@ -3018,7 +3088,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.OidcPolicy",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"1\">OpenID Connect surface controls (X7 G8, plan §4.6/§4.8). Two settings that are not password\nrules, and are here because this is the org-baseline-plus-tenant-override surface every\nother per-tenant control lives on. They are also the two settings in this model that are\n<em sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"4\">not</em> of the same kind as each other, so it is worth saying which is which: *\n[<code>Self::sensitive_scopes_enabled</code>] <strong sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"5\">is</strong> ordered. Releasing personal data is the\nless-restrictive direction, so it is validated disable-only — the mirror image of\n<code>mfa_enforced</code> — and a tenant can turn its organization's decision off but never on. *\n[<code>Self::default_locale</code>] is <strong sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"8\">not</strong> ordered, and no ordering is invented for it. A\nlanguage is a presentation preference; there is no sense in which Italian is stricter than\nFrench. [<code>validate_tenant_override</code>] therefore does not check it and\n[<code>clamp_overrides_to_org</code>] never clears it. The model's rule is &quot;a tenant may only be\nmore restrictive&quot;, which binds every field that <em sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"12\">has</em> a restrictiveness; a field that has\nnone cannot violate it.</p>\n"
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"1\">OpenID Connect surface controls (X7 G8, plan §4.6/§4.8; T21.4). Settings that are not\npassword rules, here because this is the org-baseline-plus-tenant-override surface every\nother per-tenant control lives on. They are not all of the same kind as each other, and\nwhich is which is the whole of what [<code>validate_tenant_override</code>] and\n[<code>clamp_overrides_to_org</code>] read, so it is set out rather than inferred. <strong sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"5\">Ordered</strong> — a\ntenant may be stricter than its organization and never more permissive: *\n[<code>Self::sensitive_scopes_enabled</code>], validated <strong sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"7\">disable-only</strong> — the mirror image of\n<code>mfa_enforced</code>, because releasing personal data is the less-restrictive direction, so a\ntenant can turn its organization's decision off but never on. *\n[<code>Self::dynamic_registration</code>], on the ladder <code>disabled</code> →\n<code>initial_access_token</code> → <code>anonymous</code>: a tenant may move down it and never up. *\n[<code>Self::dcr_max_clients</code>] and [<code>Self::dcr_unused_client_ttl_days</code>], on the\nordinary <code>tenant &lt;= org</code> rule — with the wrinkle that <code>0</code> on the second means\n<em sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"14\">never sweep</em>, which is the longest window of all and is handled by\n[<code>dcr_ttl_strictness</code>]. <strong sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"15\">Not ordered</strong>, therefore never validated against the baseline\nand never clamped: * [<code>Self::default_locale</code>]. A language is a presentation preference;\nthere is no sense in which Italian is stricter than French. *\n[<code>Self::dcr_allowed_scopes</code>], [<code>Self::dcr_allowed_redirect_hosts</code>] and\n[<code>Self::external_client_allowed_resources</code>]. Each names per-tenant resources — <em sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"19\">this</em>\ntenant's MCP servers, <em sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"20\">this</em> tenant's callback hosts — and there is no sense in which one\nsuch list is stricter than another. A subset rule would force an organization to enumerate\nevery tenant's resource servers in its own baseline before any tenant could name one. The\nmodel's rule is &quot;a tenant may only be more restrictive&quot;, which binds every field that <em sourcefile=\"api/Axiam.Sdk.Management.Models.OidcPolicy.yml\" sourcestartlinenumber=\"23\">has</em>\na restrictiveness; a field that has none cannot violate it. One cross-field interlock spans\nboth groups and is checked on the resolved policy rather than on either input: see\n[<code>validate_dcr_policy</code>].</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -3327,6 +3397,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.ReadyResponse",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ReadyResponse.yml\" sourcestartlinenumber=\"1\">The ReadyResponse schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.RegistrationTokenResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.yml\" sourcestartlinenumber=\"1\">Metadata only. The handle exists in plaintext exactly once, in\n[<code>CreateRegistrationTokenResponse</code>].</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -4488,6 +4572,104 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Mcp.AxiamBearerChallengeError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Mcp.AxiamBearerChallengeError.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Mcp.AxiamBearerChallengeError",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Mcp.AxiamBearerChallengeError.yml\" sourcestartlinenumber=\"1\">The three RFC 6750 §3.1 error codes a §28 challenge may name — the\ncomplete vocabulary <xref href=\"Axiam.Sdk.Mcp.AxiamMcp.BearerChallenge(Axiam.Sdk.Mcp.BearerChallengeOptions)\" data-throw-if-not-resolved=\"false\"></xref> accepts for\n<xref href=\"Axiam.Sdk.Mcp.BearerChallengeOptions.Error\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Mcp.AxiamMcp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Mcp.AxiamMcp.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Mcp.AxiamMcp",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Mcp.AxiamMcp.yml\" sourcestartlinenumber=\"1\">MCP resource-server helpers (CONTRACT.md §28, RFC 9728 + RFC 6750) — the\nresource-server half of the Model Context Protocol authorization handshake:\npublishing the RFC 9728 protected-resource metadata document that tells a client\nwhich authorization server guards this resource, and building the\n<code>WWW-Authenticate</code> challenge that starts the client's discovery.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Mcp.BearerChallengeOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Mcp.BearerChallengeOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Mcp.BearerChallengeOptions",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Mcp.BearerChallengeOptions.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.Mcp.AxiamMcp.BearerChallenge(Axiam.Sdk.Mcp.BearerChallengeOptions)\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md §28.1), in the\ncontract's canonical order.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Mcp.ProtectedResourceMetadata.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Mcp.ProtectedResourceMetadata.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Mcp.ProtectedResourceMetadata",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Mcp.ProtectedResourceMetadata.yml\" sourcestartlinenumber=\"1\">What <xref href=\"Axiam.Sdk.Mcp.AxiamMcp.ProtectedResourceMetadata(Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions)\" data-throw-if-not-resolved=\"false\"></xref> returns: the document, the path\nit is served at, and the URL that path resolves to (CONTRACT.md §28.1).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Mcp.ProtectedResourceMetadataDocument.yml\" sourcestartlinenumber=\"1\">The RFC 9728 §2 protected-resource metadata document (CONTRACT.md §28.2),\ncarrying <b>at most</b> the five members below, in this order, and no others.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions.yml\" sourcestartlinenumber=\"1\">Arguments to <xref href=\"Axiam.Sdk.Mcp.AxiamMcp.ProtectedResourceMetadata(Axiam.Sdk.Mcp.ProtectedResourceMetadataOptions)\" data-throw-if-not-resolved=\"false\"></xref> (CONTRACT.md\n§28.1), in the contract's canonical order.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Mcp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Mcp.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Mcp",
       "Summary": null
     },
     {

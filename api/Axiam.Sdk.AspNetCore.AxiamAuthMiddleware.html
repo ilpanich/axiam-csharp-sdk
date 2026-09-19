@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta15/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamAuthMiddleware.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamAuthMiddleware%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta16/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamAuthMiddleware.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamAuthMiddleware%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware" class="text-break">
-Class AxiamAuthMiddleware  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L71"><i class="bi bi-code-slash"></i></a>
+Class AxiamAuthMiddleware  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L80"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -191,6 +191,13 @@ browser is not, and in any same-site deployment where <code>axiam_access</code> 
 this app, the non-<code>httpOnly</code> <code>axiam_csrf</code> cookie does too. This mirrors,
 locally, the same double-submit check the AXIAM server performs on its own
 endpoints (§3).
+</li><li>
+MCP resource-server helpers (CONTRACT.md §28, opt-in via
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ResourceMetadataUrl">ResourceMetadataUrl</a>): with the option unset, none of the
+above changes — no <code>WWW-Authenticate</code> header on any response, no path exempted.
+Set, every 401 this middleware writes carries the RFC 6750 challenge, and the
+document's own path answers unauthenticated even though this middleware is normally
+mounted globally.
 </li></ul>
 </div>
 
@@ -201,24 +208,32 @@ endpoints (§3).
 
   <a id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware__ctor_" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.#ctor*"></a>
 
-  <h3 id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)">
-  AxiamAuthMiddleware(RequestDelegate)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_Microsoft_Extensions_Options_IOptions_Axiam_Sdk_AspNetCore_AxiamOptions__" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{Axiam.Sdk.AspNetCore.AxiamOptions})">
+  AxiamAuthMiddleware(RequestDelegate, IOptions&lt;AxiamOptions&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L106"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs the middleware. Registered by the ASP.NET Core pipeline
-(<code>app.UseMiddleware&lt;AxiamAuthMiddleware&gt;()</code>), which supplies <code class="paramref">next</code>.</p>
+(<code>app.UseMiddleware&lt;AxiamAuthMiddleware&gt;()</code>), which supplies
+<code class="paramref">next</code> and resolves <code class="paramref">optionsAccessor</code> from the
+root service provider exactly once, at pipeline-build time — which is what makes
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html">Build(AxiamOptions, string)</a>'s CONTRACT.md §28.5 rule 2 refusal a
+genuine startup failure rather than a surprise on the first request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AxiamAuthMiddleware(RequestDelegate next)</code></pre>
+    <pre><code class="lang-csharp hljs">public AxiamAuthMiddleware(RequestDelegate next, IOptions&lt;AxiamOptions&gt; optionsAccessor)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>next</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.requestdelegate">RequestDelegate</a></dt>
     <dd><p>The next delegate in the middleware pipeline.</p>
+</dd>
+    <dt><code>optionsAccessor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1">IOptions</a>&lt;<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html">AxiamOptions</a>&gt;</dt>
+    <dd><p>The singleton AXIAM options this app was configured
+with (<a class="xref" href="Axiam.Sdk.AspNetCore.ServiceCollectionExtensions.html#Axiam_Sdk_AspNetCore_ServiceCollectionExtensions_AddAxiam_Microsoft_Extensions_DependencyInjection_IServiceCollection_System_Action_Axiam_Sdk_AspNetCore_AxiamOptions__">AddAxiam(IServiceCollection, Action&lt;AxiamOptions&gt;)</a>).</p>
 </dd>
   </dl>
 
@@ -230,6 +245,14 @@ endpoints (§3).
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ValidationError.html">ValidationError</a></dt>
+    <dd><p><a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ResourceMetadataUrl">ResourceMetadataUrl</a> is set without
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOptions.html#Axiam_Sdk_AspNetCore_AxiamOptions_ExpectedAudience">ExpectedAudience</a> (CONTRACT.md §28.5 rule 2), or
+either is outside §28's syntax.</p>
+</dd>
+  </dl>
 
 
 
@@ -241,7 +264,7 @@ endpoints (§3).
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware_InvokeAsync_Microsoft_AspNetCore_Http_HttpContext_Axiam_Sdk_AxiamClient_Microsoft_Extensions_Options_IOptions_Axiam_Sdk_AspNetCore_AxiamOptions__" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,Axiam.Sdk.AxiamClient,Microsoft.Extensions.Options.IOptions{Axiam.Sdk.AspNetCore.AxiamOptions})">
   InvokeAsync(HttpContext, AxiamClient, IOptions&lt;AxiamOptions&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta15/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Convention-based ASP.NET Core middleware invocation. <code class="paramref">client</code> and
