@@ -60,12 +60,12 @@
          3.25.8 to match the exact protobuf-java runtime version the Java SDK pins
          (protobuf.version in ilpanich/axiam-java-sdk's pom.xml) for cross-SDK
          consistency. -->
-    <PackageReference Include="Google.Protobuf" Version="3.36.1" />
+    <PackageReference Include="Google.Protobuf" Version="3.36.2" />
     <PackageReference Include="RabbitMQ.Client" Version="7.2.2" />
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.12" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
-    <PackageReference Include="Grpc.Tools" Version="2.83.0">
+    <PackageReference Include="Grpc.Tools" Version="2.84.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
