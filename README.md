@@ -1684,6 +1684,10 @@ await client.Management.Groups.ListAsync(PageRequest.Of(50)); // sends none
   choice the TypeScript, Go and Python ports made.
 - **REST-only.** The gRPC transport acts on whatever tenant the bearer token itself
   names; no metadata key is invented for it, matching §5.2 rule 1's REST-only scope.
+- **Scoped to the configured base URL.** `X-Axiam-Tenant` never reaches a host other than
+  the client's own — the same host-isolation guard that already withholds `Authorization`
+  and `X-CSRF-Token` from a foreign-host request withholds it too, with no `/oauth2/*`
+  carve-out (that carve-out is `X-Tenant-Id`-only, per §12.1 note 2).
 - **The §17 decision memo is keyed on the acting tenant** in addition to its existing
   key, so a memoized `Allow` for the caller's own tenant is never served back for a
   different tenant acted on through the same session.

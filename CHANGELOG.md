@@ -109,6 +109,16 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
 
 ### Fixed
 
+- **`X-Axiam-Tenant` reached a host other than the client's configured base URL**
+  (CONTRACT 1.52 N5.1 (C-12)). It is a `DefaultRequestHeaders` entry on `AxiamClient`'s own
+  `HttpClient` (set at construction and by `ActingTenant()`/`ClearActingTenant()`), so —
+  unlike `X-Tenant-Id`, `Authorization` and `X-CSRF-Token`, which `AxiamHttpMessageHandler`
+  derives per request from its own state — it was already merged into the outgoing
+  request's headers by the time the handler's host-isolation guard ran, and that guard
+  never named it among the headers it strips. A foreign-host request (an off-origin
+  `/oauth2/*` endpoint a discovery document advertised, for instance) carried it. The guard
+  now withholds it on every foreign-host request, with no `/oauth2/*` carve-out — unlike
+  `X-Tenant-Id`, §12.1 note 2 says nothing that exempts the acting-tenant header.
 - **The device handle `AuthenticateDeviceAsync()` returns dropped the creating handle's
   acting tenant** (CONTRACT 1.52 N4.6 (C-12)). The returned handle's `_actingTenant` was
   hard-set to `null`, so a caller who had configured `AxiamClientOptions.ActingTenant` or
