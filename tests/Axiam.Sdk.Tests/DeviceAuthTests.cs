@@ -679,6 +679,71 @@ public sealed class DeviceAuthTests
         }
     }
 
+    // ---- N4.6 (CONTRACT 1.52 N4.6, C-12): the returned handle carries the creating
+    // handle's acting tenant on its OWN subsequent requests, not just on the device-login
+    // POST itself (the two tests above already cover that POST). §6.1 rule 6's "a device
+    // holds no login result" is about the §17/§5.2 GATE, not about the acting-tenant
+    // VALUE a caller explicitly configured or set on-client before calling
+    // AuthenticateDeviceAsync() — that value is not a login result, so it survives.
+
+    [Fact]
+    public async Task TheReturnedHandleCarriesTheCreatingHandlesActingTenant_ConfiguredAtConstruction()
+    {
+        Guid actingTenant = Guid.Parse("77777777-7777-7777-7777-777777777777");
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => DeviceTokenResponse());
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        var options = new AxiamClientOptions
+        {
+            BaseUrl = BaseUrl,
+            TenantId = TenantGuid,
+            ClientCertificatePem = DummyCertPem,
+            ClientKeyPem = DummyKeyPem,
+            ActingTenant = actingTenant,
+        };
+        using AxiamClient client = AxiamClient.CreateForTesting(BaseUrl, TenantGuid, options, handler);
+
+        using AxiamClient device = (await client.AuthenticateDeviceAsync()).Client;
+        await device.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal(actingTenant.ToString(), req.Headers.GetValues("X-Axiam-Tenant").Single());
+    }
+
+    [Fact]
+    public async Task TheReturnedHandleCarriesTheCreatingHandlesActingTenant_FromTheOnClientForm()
+    {
+        Guid actingTenant = Guid.Parse("88888888-8888-8888-8888-888888888888");
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => DeviceTokenResponse());
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+        using AxiamClient acting = client.ActingTenant(actingTenant);
+
+        using AxiamClient device = (await acting.AuthenticateDeviceAsync()).Client;
+        await device.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal(actingTenant.ToString(), req.Headers.GetValues("X-Axiam-Tenant").Single());
+    }
+
+    // I4 twin: a device login from a handle with NO acting tenant returns a handle that
+    // sends none either — pins the case the fix must not disturb (no unconditional send).
+    [Fact]
+    public async Task TheReturnedHandleHasNoActingTenant_WhenTheCreatingHandleHadNone_I4Twin()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => DeviceTokenResponse());
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+
+        using AxiamClient device = (await client.AuthenticateDeviceAsync()).Client;
+        await device.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.False(req.Headers.Contains("X-Axiam-Tenant"));
+    }
+
     private static int GetEphemeralPort()
     {
         using var socket = new System.Net.Sockets.Socket(

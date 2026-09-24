@@ -109,6 +109,18 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
 
 ### Fixed
 
+- **The device handle `AuthenticateDeviceAsync()` returns dropped the creating handle's
+  acting tenant** (CONTRACT 1.52 N4.6 (C-12)). The returned handle's `_actingTenant` was
+  hard-set to `null`, so a caller who had configured `AxiamClientOptions.ActingTenant` or
+  called `.ActingTenant(x)` before authenticating as a device lost the header on every
+  request the device handle went on to make — `Management`, `Authz`, and everything else.
+  The acting tenant a caller set is not a login result (only the §17 memo and the §5.2
+  gate start fresh/unknown for a device handle, per rule 11's "a device holds no login
+  result"), so it now survives onto the returned handle, with the same
+  `X-Axiam-Tenant` `DefaultRequestHeaders` entry the public constructor and the
+  `ActingTenant()`/`ClearActingTenant()` copy-constructor already add. Tested both the
+  `AxiamClientOptions.ActingTenant` form and the on-client `.ActingTenant(x)` form
+  (`DeviceAuthTests`); the no-acting-tenant case is pinned unchanged (I4 twin).
 - **`JwksVerifier.VerifyAsync`, and so `AxiamAuthMiddleware` (the SDK's default token-verify
   entry point) and `AxiamPolicyHandler`, accepted sender-constrained tokens as ordinary
   bearer tokens.** A token bound to a certificate (`cnf.x5t#S256`, which every §6.1

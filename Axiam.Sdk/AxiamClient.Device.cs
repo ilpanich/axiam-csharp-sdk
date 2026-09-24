@@ -214,7 +214,13 @@ public sealed partial class AxiamClient
         _jwksVerifier = source._jwksVerifier; // org-wide JWKS; harmless and efficient to share
         _telemetry = source._telemetry;
         _session = new SharedSession(); // a device holds no login result (§5.2 rule 1)
-        _actingTenant = null;
+        // CONTRACT.md §6.1 rule 11 / N4.6 (C-12, contract 1.52 draft): the acting tenant
+        // a caller configured or set on-client before calling AuthenticateDeviceAsync()
+        // is not a login result — only the §17 memo/§5.2 GATE start fresh/unknown, per
+        // the class-level remarks above. The value itself survives onto the returned
+        // handle, with the default header applied below exactly as the public
+        // constructor and the ActingTenant()/ClearActingTenant() copy-constructor do.
+        _actingTenant = source._actingTenant;
         _ownsResources = true; // a genuinely independent transport, not a view over source's
         _transportOverride = source._transportOverride;
         _staticBearerToken = deviceAccessToken;
@@ -257,6 +263,15 @@ public sealed partial class AxiamClient
             BaseAddress = _baseUrl,
             Timeout = _options.RequestTimeout,
         };
+        // §5.2 rule 1 / N4.6: the same DefaultRequestHeaders entry the public constructor
+        // and the ActingTenant() copy-constructor add — every request THIS handle makes
+        // through _httpClient (management, authz, self-service, WebAuthn, logout) carries
+        // it, with no per-call-site change needed anywhere else in this class.
+        if (_actingTenant is { } deviceActingTenant)
+        {
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation(
+                ActingTenantHeaderName, deviceActingTenant.ToString());
+        }
 
         // Mirrors the public constructor's own _anonymousPrimaryHandler/_anonymousHttpClient
         // pair exactly, `_transportOverride` gate included — a device handle's §24.1

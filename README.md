@@ -1672,7 +1672,13 @@ await client.Management.Groups.ListAsync(PageRequest.Of(50)); // sends none
   the request in every case (an attempted credential change already invalidates the
   previous state, whether or not it succeeds), and a fresh
   [`AuthenticateDeviceAsync()`](#the-mtls-device-login-contractmd-61-rules-610-contract-151)
-  handle always starts unknown too, independent of its source client's own state. This is
+  handle always starts unknown too, independent of its source client's own state — a
+  device holds no login result. The acting tenant *value* is a different thing from this
+  gate: it is not a login result, so a `.ActingTenant(x)` handle (or a client constructed
+  with `AxiamClientOptions.ActingTenant` set) that then calls `AuthenticateDeviceAsync()`
+  gets back a device handle that still sends `X-Axiam-Tenant: <x>` on every request it
+  makes — `Management`, `Authz`, everything — exactly like the handle that created it. A
+  device handle built from a client with no acting tenant set sends none, as before. This is
   tighter than the Rust reference, which also resets OPAQUE and the two setup flows to
   "unknown" rather than populating them from a response it could have trusted — the same
   choice the TypeScript, Go and Python ports made.
