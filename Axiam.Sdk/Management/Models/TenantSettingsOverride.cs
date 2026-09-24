@@ -225,6 +225,14 @@ public sealed record TenantSettingsOverride
     public bool? SensitiveScopesEnabled { get; init; }
 
     /// <summary>
+    /// S-7 — tighten-only: every entry must be covered by an organization entry. An empty list
+    /// means this tenant issues no <c>Server</c> certificate at all, which is different from an
+    /// absent field (inherit the organization's list).
+    /// </summary>
+    [JsonPropertyName("server_cert_allowed_names")]
+    public IReadOnlyList<string>? ServerCertAllowedNames { get; init; }
+
+    /// <summary>
     /// the server's webauthn_user_verification field
     /// </summary>
     [JsonPropertyName("webauthn_user_verification")]

@@ -45,6 +45,15 @@ public sealed record SignCertificateCsrRequest
     public JsonElement? Metadata { get; init; }
 
     /// <summary>
+    /// See [<c>CreateCertificateRequest::subject_alt_names</c>]. Stated here and never in the
+    /// CSR, which is still refused if it requests a <c>subjectAltName</c>. Under a CA whose key
+    /// is held by <c>vault_pki</c> a <c>Server</c> request on this path is refused; use <c>POST
+    /// /api/v1/certificates</c>.
+    /// </summary>
+    [JsonPropertyName("subject_alt_names")]
+    public IReadOnlyList<SubjectAltName>? SubjectAltNames { get; init; }
+
+    /// <summary>
     /// Validity duration in days.
     /// </summary>
     [JsonPropertyName("validity_days")]

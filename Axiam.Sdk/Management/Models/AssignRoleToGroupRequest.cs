@@ -23,6 +23,19 @@ public sealed record AssignRoleToGroupRequest
     public required Guid GroupId { get; init; }
 
     /// <summary>
+    /// Whether the assignment also reaches the descendants of <c>resource_id</c>. Omitted — the
+    /// default — or <c>true</c> is today's behaviour: a resource-scoped assignment applies at
+    /// its resource and everywhere below it. <c>false</c> applies it at <c>resource_id</c>
+    /// only, "here and no further", for allow and deny grants alike. Refused with 400 when
+    /// <c>false</c> is sent with no <c>resource_id</c> (a tenant-wide assignment has no node to
+    /// stop at) or for a role with <c>is_global: true</c> (a global role applies everywhere by
+    /// definition). The flag is part of the assignment: to change it, unassign and assign
+    /// again.
+    /// </summary>
+    [JsonPropertyName("inherit")]
+    public bool? Inherit { get; init; }
+
+    /// <summary>
     /// the server's resource_id field
     /// </summary>
     [JsonPropertyName("resource_id")]

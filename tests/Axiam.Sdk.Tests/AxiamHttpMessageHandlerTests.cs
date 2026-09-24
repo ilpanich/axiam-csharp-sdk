@@ -32,15 +32,43 @@ public class AxiamHttpMessageHandlerTests
                 Sensitive.Of("refreshed-token"), Sensitive.Of("refreshed-refresh"), DateTimeOffset.UtcNow.AddMinutes(15)));
         });
 
-    private static (HttpClient Client, RecordingHandler Inner) Build(RefreshGuard guard, CookieContainer? cookies = null)
+    private static (HttpClient Client, RecordingHandler Inner) Build(
+        RefreshGuard guard, CookieContainer? cookies = null, string? staticBearerToken = null)
     {
         var inner = new RecordingHandler();
-        var handler = new AxiamHttpMessageHandler(cookies ?? new CookieContainer(), BaseUrl, TenantId, guard)
+        var handler = new AxiamHttpMessageHandler(cookies ?? new CookieContainer(), BaseUrl, TenantId, guard, staticBearerToken)
         {
             InnerHandler = inner,
         };
         var client = new HttpClient(handler) { BaseAddress = BaseUrl };
         return (client, inner);
+    }
+
+    /// <summary>
+    /// CONTRACT.md &#167;6.1 rules 6/8 (contract 1.51): a device-credentialed handler
+    /// (<c>staticBearerToken</c> set) never attempts a reactive refresh, on ANY path —
+    /// not only the ordinary auth-endpoint exemptions. This is the direct unit-level
+    /// twin of DeviceAuthTests' end-to-end
+    /// <c>ALaterFailure_401_OnTheDeviceToken_IsAuthError_NoRefreshCall</c>: that test
+    /// cannot by itself distinguish "the guard was never invoked" from "the guard was
+    /// invoked and its (test) delegate failed immediately with no wire call" — both
+    /// produce the same AuthError with no request reaching <c>/api/v1/auth/refresh</c>.
+    /// Here the guard's delegate itself is the observable: it flips
+    /// <c>refreshAttempted</c> the moment it is CALLED, before it does anything else.
+    /// </summary>
+    [Fact]
+    public async Task StaticBearerToken_401OnAnOrdinaryPath_NeverInvokesTheRefreshGuard()
+    {
+        bool refreshAttempted = false;
+        using RefreshGuard guard = SucceedingGuard(onRefresh: () => refreshAttempted = true);
+        (HttpClient client, RecordingHandler inner) = Build(guard, staticBearerToken: "device-token");
+        inner.Responder = _ => new HttpResponseMessage(HttpStatusCode.Unauthorized);
+
+        HttpResponseMessage response = await client.GetAsync("/api/v1/resources");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.False(refreshAttempted, "a device-credentialed handler must never attempt a token refresh");
+        Assert.Equal(1, inner.CallCount); // exactly the one (failed) attempt — no retry either
     }
 
     [Fact]
@@ -274,8 +302,11 @@ public class AxiamHttpMessageHandlerTests
 
         public System.Net.Http.Headers.HttpRequestHeaders? LastRequestHeaders { get; private set; }
 
+        public int CallCount { get; private set; }
+
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            CallCount++;
             LastRequestHeaders = request.Headers;
             return Task.FromResult(Responder(request));
         }

@@ -39,6 +39,14 @@ public sealed partial class AxiamClient : IDisposable
     private const string AccessCookieName = "axiam_access";
     private const string RefreshCookieName = "axiam_refresh";
 
+    /// <summary>
+    /// CONTRACT.md &#167;5.2 rule 1: the acting-tenant header, distinct from the
+    /// unconditional <c>X-Tenant-Id</c> (&#167;5 rule 2) — "not the acting-tenant header",
+    /// as the contract's own callout puts it. REST-only, and sent only when a handle has
+    /// an acting tenant set.
+    /// </summary>
+    internal const string ActingTenantHeaderName = "X-Axiam-Tenant";
+
     private readonly TenantContext _tenant;
     private readonly AxiamClientOptions _options;
     private readonly Uri _baseUrl;
@@ -91,6 +99,103 @@ public sealed partial class AxiamClient : IDisposable
     private readonly TelemetryDispatcher _telemetry;
     private readonly DecisionMemo _decisionMemo;
 
+    /// <summary>
+    /// CONTRACT.md &#167;5.2 — what this client knows about the signed-in principal's
+    /// reach, shared across every <see cref="ActingTenant"/> handle over one session so a
+    /// tenant switch made on one handle is gated on the SAME login result the others
+    /// observed, and so a credential change on any of them clears it for all of them.
+    /// </summary>
+    /// <remarks>
+    /// A separate reference-type holder (rather than fields directly on
+    /// <see cref="AxiamClient"/>) is what makes that sharing possible: a handle built by
+    /// <see cref="ActingTenant"/> copies every other field of the client it was built
+    /// from, but needs this ONE piece of state to keep being written to and read from the
+    /// same place the original handle uses, not a snapshot frozen at the moment the new
+    /// handle was created.
+    /// </remarks>
+    private sealed class SharedSession
+    {
+        /// <summary>
+        /// <c>LoginUserInfo.organization_level</c> from the last completed login this
+        /// session observed, or <c>null</c> when no login result is held: a service
+        /// account from client credentials or the device login; an injected token; a
+        /// client that has made no credential-changing call yet; or the result of one
+        /// whose success response carries no <c>LoginUserInfo</c>/user object at all —
+        /// <c>RefreshAsync</c>, <c>LogoutAsync</c>, the WebAuthn *authentication*
+        /// ceremonies (<c>WebauthnAuthenticateFinishAsync</c>/
+        /// <c>WebauthnDiscoverableFinishAsync</c>), and the three SSO completions
+        /// (<c>SsoCompleteAsync</c>/<c>SsoCompleteOauth2Async</c>/
+        /// <c>SsoCompleteHandoffAsync</c>). <see cref="AxiamClient.LoginAsync"/>,
+        /// <c>VerifyMfaAsync</c>, <c>LoginOpaqueAsync</c>, <c>MfaSetupConfirmAsync</c> and
+        /// <c>WebauthnSetupRegisterFinishAsync</c> DO populate it — see
+        /// <c>OnCredentialChange</c>'s remarks for the full list and why the split falls
+        /// where it does. &#167;5.2 rule 1: <c>null</c> means nothing to gate on, so
+        /// <see cref="AxiamClient.ActingTenant"/> sends the header and lets the server's
+        /// <c>403</c> answer.
+        /// </summary>
+        internal volatile object? OrganizationLevelBox; // boxed bool?, for atomic volatile read/write
+
+        /// <summary>
+        /// <c>LoginUserInfo.reachable_tenant_ids</c> from the last completed login, or
+        /// <c>null</c> for "unrestricted" (&#167;5.2.3 rule 4) — including "no login result
+        /// held", which is the same absence of a restriction to check.
+        /// </summary>
+        internal volatile IReadOnlyList<Guid>? ReachableTenantIds;
+
+        internal bool? OrganizationLevel
+        {
+            get => (bool?)OrganizationLevelBox;
+            set => OrganizationLevelBox = value;
+        }
+
+        internal void Reset()
+        {
+            OrganizationLevelBox = null;
+            ReachableTenantIds = null;
+        }
+    }
+
+    private readonly SharedSession _session;
+
+    /// <summary>
+    /// The <c>CreateForTesting</c> transport override, when this client was built through
+    /// that seam; <c>null</c> in production. Reused (never re-fetched from a field that
+    /// does not exist yet) by <see cref="AuthenticateDeviceAsync"/> so the device handle
+    /// it returns talks to the SAME fake transport a test mounted, rather than falling
+    /// back to a real <see cref="HttpClientHandler"/> that would try to dial a real
+    /// socket in a unit test.
+    /// </summary>
+    private readonly HttpMessageHandler? _transportOverride;
+
+    /// <summary>
+    /// CONTRACT.md &#167;5.2 rule 1 — the tenant THIS handle acts on, distinct from the
+    /// tenant it signed in as. <c>null</c> for a handle with no acting tenant (the
+    /// ordinary case, and every client before contract 1.51).
+    /// </summary>
+    private readonly Guid? _actingTenant;
+
+    /// <summary>
+    /// CONTRACT.md &#167;6.1 rule 6 — the &#167;6.1 device credential this handle was built
+    /// with (see <see cref="AuthenticateDeviceAsync"/>'s <see cref="BuildDeviceHandle"/>),
+    /// or <c>null</c> for every ordinary handle. Read by <see cref="CurrentAccessToken"/>
+    /// so the &#167;27 management surface's own session check
+    /// (<c>ManagementTransport.RequireSession</c>) sees a device handle as holding a
+    /// credential too — it has one, just not a cookie-jar one.
+    /// </summary>
+    private readonly string? _staticBearerToken;
+
+    /// <summary>
+    /// <c>true</c> for the handle the public constructor built — the one that owns the
+    /// transport, the cookie jar, the refresh guard and the JWKS verifier, and tears them
+    /// down on <see cref="Dispose"/>. <c>false</c> for a handle <see cref="ActingTenant"/>
+    /// or <see cref="ClearActingTenant"/> built over an existing one: it owns only its own
+    /// per-handle <see cref="HttpClient"/> wrapper (built with <c>disposeHandler: false</c>,
+    /// so disposing it never tears down the shared transport) and its own OIDC discovery
+    /// state, both of which its own <see cref="Dispose"/> always cleans up regardless of
+    /// this flag.
+    /// </summary>
+    private readonly bool _ownsResources;
+
     /// <summary>§18 shutdown flag, read on every operation.</summary>
     private int _disposed;
 
@@ -130,6 +235,7 @@ public sealed partial class AxiamClient : IDisposable
     {
         ArgumentNullException.ThrowIfNull(baseUrl);
         _tenant = new TenantContext(tenantId, options?.OrgId, options?.OrgSlug); // throws ArgumentException on blank tenantId (SC#1)
+        _transportOverride = transportOverride;
 
         _baseUrl = baseUrl;
         AxiamClientOptions baseOptions = options ?? new AxiamClientOptions { BaseUrl = baseUrl, TenantId = _tenant.TenantId };
@@ -184,8 +290,28 @@ public sealed partial class AxiamClient : IDisposable
         // §17.1 rule 1: off unless the caller asked for it. §19: inert unless a
         // hook was installed.
         _telemetry = new TelemetryDispatcher(_options.TelemetryHook);
+
+        // §5.2 rule 1, construction-time form. Precedes any login, so it cannot be
+        // gated against organization_level/reachable_tenant_ids the way the on-client
+        // ActingTenant()/ClearActingTenant() forms below are — a non-organization-level
+        // principal meets the server's own 403 on its first request instead.
+        _session = new SharedSession();
+        _actingTenant = _options.ActingTenant;
+        _ownsResources = true;
+        if (_actingTenant is { } configuredActingTenant)
+        {
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation(
+                ActingTenantHeaderName, configuredActingTenant.ToString());
+        }
+
+        // §17 addendum ("For C-12" item 2): ONE memo for the whole session, SHARED by
+        // every ActingTenant()/ClearActingTenant() handle built over this one — the key
+        // itself carries the acting tenant (DecisionMemo.Key's fifth component), which is
+        // what lets sharing be safe rather than merely convenient: login/logout/refresh
+        // on ANY handle clears it for ALL of them (§17.1 rule 9), and a memoized answer
+        // for one tenant is still never returned for another.
         _decisionMemo = new DecisionMemo(_options.DecisionMemoTtl);
-        _authz = new AuthzRestClient(_httpClient, _options, _telemetry, _decisionMemo);
+        _authz = new AuthzRestClient(_httpClient, _options, _telemetry, _decisionMemo, actingTenant: _actingTenant);
 
         // §19.2 rule 6: a clamped setting is reported, not swallowed. Emitted once,
         // here, because construction is the only moment an operator can act on it.
@@ -196,6 +322,139 @@ public sealed partial class AxiamClient : IDisposable
         // clock-skew fields declared in AxiamClient.Oidc.cs from this same _options
         // instance. Kept as a separate initializer (rather than inline field
         // initializers, which cannot see _options) so this constructor stays readable.
+        InitializeOidcState();
+    }
+
+    /// <summary>
+    /// A new handle over the SAME session that acts on <paramref name="tenantId"/>
+    /// instead of whatever this handle acts on (CONTRACT.md &#167;5.2 rule 1, the
+    /// on-client form). Every <c>/api/v1</c> REST request the returned handle makes
+    /// carries <c>X-Axiam-Tenant: {tenantId}</c>, in addition to — never instead of —
+    /// the unconditional <c>X-Tenant-Id</c> (&#167;5 rule 2). gRPC is unaffected: this is
+    /// REST-only, and a gRPC call always acts on whatever tenant the bearer token names.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Returns a NEW <see cref="AxiamClient"/> rather than mutating this one. The two
+    /// share the same cookie jar, refresh guard and JWKS verifier — a refresh performed
+    /// through either handle updates the session both read from — but each has its own
+    /// <see cref="HttpClient"/> wrapper (so its own default headers) and its own &#167;17
+    /// decision memo, so a tenant switch decided on one handle can never race a request
+    /// already in flight on another, and a memoized answer for one tenant can never be
+    /// returned for another (&#167;17 addendum). Dispose the returned handle, or not — it
+    /// owns nothing the original handle's own <see cref="Dispose"/> does not already tear
+    /// down; disposing it early only releases its own lightweight wrapper early.
+    /// </para>
+    /// <para>
+    /// <b>Gating (&#167;5.2 rule 1's "gate it on what the SDK knows").</b> Once a
+    /// password/MFA/OPAQUE login has reported the principal's reach, this method refuses
+    /// client-side with <see cref="AuthzError"/> — zero wire calls — unless
+    /// <c>organization_level</c> was <c>true</c>, and refuses a tenant outside
+    /// <c>reachable_tenant_ids</c> when that field was present (&#167;5.2.3 rule 4). A
+    /// handle that holds no login result (a service account from client credentials or
+    /// the device login; an injected token) or whose last session-completing call
+    /// reported no user object at all (WebAuthn, SSO) has nothing to gate on: it sends
+    /// the header as asked and lets the server's <c>403</c> answer.
+    /// </para>
+    /// </remarks>
+    /// <param name="tenantId">The tenant to act on.</param>
+    /// <returns>A new handle over this client's session, acting on <paramref name="tenantId"/>.</returns>
+    /// <exception cref="AuthzError">
+    /// A login result is held and reports <c>organization_level: false</c>, or reports
+    /// <c>reachable_tenant_ids</c> that does not contain <paramref name="tenantId"/>.
+    /// Raised client-side, before any wire call.
+    /// </exception>
+    public AxiamClient ActingTenant(Guid tenantId)
+    {
+        EnsureNotDisposed();
+        GateActingTenant(tenantId);
+        return new AxiamClient(this, tenantId);
+    }
+
+    /// <summary>
+    /// A new handle over the SAME session that acts on no particular tenant — the
+    /// converse of <see cref="ActingTenant"/> (CONTRACT.md &#167;5.2 rule 1's "a way to
+    /// clear it"). The returned handle sends no <c>X-Axiam-Tenant</c> header at all, byte
+    /// for byte what a handle built with none ever sent.
+    /// </summary>
+    /// <returns>A new handle over this client's session, acting on no particular tenant.</returns>
+    public AxiamClient ClearActingTenant()
+    {
+        EnsureNotDisposed();
+        return new AxiamClient(this, actingTenant: null);
+    }
+
+    /// <summary>Client-side half of &#167;5.2 rule 1's gating — see <see cref="ActingTenant"/>.</summary>
+    private void GateActingTenant(Guid tenantId)
+    {
+        bool? organizationLevel = _session.OrganizationLevel;
+        if (organizationLevel is false)
+        {
+            throw new AuthzError(
+                "acting_tenant is meaningful only for an organization-level principal "
+                + "(CONTRACT.md §5.2 rule 1); the last login result reported organization_level: false");
+        }
+
+        if (_session.ReachableTenantIds is { } reachable && !reachable.Contains(tenantId))
+        {
+            throw new AuthzError(
+                $"tenant {tenantId} is outside this principal's reachable_tenant_ids (CONTRACT.md §5.2.3 rule 4)");
+        }
+        // organizationLevel is null (no login result held / a session-completing path
+        // that reported no user object) or true: nothing more to gate on client-side —
+        // send the header and let the server's 403 answer (§5.2 rule 1).
+    }
+
+    /// <summary>
+    /// Builds a handle sharing <paramref name="source"/>'s session (CONTRACT.md &#167;5.2
+    /// rule 1's on-client form) but acting on <paramref name="actingTenant"/> instead.
+    /// </summary>
+    private AxiamClient(AxiamClient source, Guid? actingTenant)
+    {
+        _tenant = source._tenant;
+        _options = source._options;
+        _baseUrl = source._baseUrl;
+        _cookieContainer = source._cookieContainer;
+        _authHandler = source._authHandler;
+        _anonymousPrimaryHandler = source._anonymousPrimaryHandler;
+        _anonymousHttpClient = source._anonymousHttpClient;
+        _refreshGuard = source._refreshGuard;
+        _jwksVerifier = source._jwksVerifier;
+        _telemetry = source._telemetry;
+        _session = source._session; // shared: one login result, one gate, for every handle
+        _transportOverride = source._transportOverride;
+        _staticBearerToken = source._staticBearerToken; // §6.1: an ActingTenant() view of a device handle is still a device handle
+        _actingTenant = actingTenant;
+        _ownsResources = false;
+
+        // A NEW HttpClient wrapper over the SAME shared _authHandler
+        // (disposeHandler: false, so disposing this handle's wrapper never tears down
+        // the shared transport/cookie jar) — the standard .NET pattern for giving
+        // several logical clients their own default headers over one physical
+        // connection pool. This is what makes the acting-tenant header per-HANDLE
+        // rather than per-transport: every request this specific AxiamClient object
+        // sends — through PostJsonAsync below, through AuthzRestClient, through
+        // ManagementApi/ManagementTransport, through the Account/Webauthn partials —
+        // goes through THIS HttpClient instance and picks up its DefaultRequestHeaders
+        // automatically, with no per-call-site change anywhere else in this class or
+        // its partials.
+        _httpClient = new HttpClient(_authHandler, disposeHandler: false)
+        {
+            BaseAddress = _baseUrl,
+            Timeout = _options.RequestTimeout,
+        };
+        if (actingTenant is { } tenantId)
+        {
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation(
+                ActingTenantHeaderName, tenantId.ToString());
+        }
+
+        // §17 addendum: the SAME memo instance as source — see the constructor comment
+        // above for why sharing it is safe (the key carries the acting tenant) and
+        // required (login/logout/refresh on any handle must clear it for every handle).
+        _decisionMemo = source._decisionMemo;
+        _authz = new AuthzRestClient(_httpClient, _options, _telemetry, _decisionMemo, actingTenant: actingTenant);
+
         InitializeOidcState();
     }
 
@@ -226,29 +485,48 @@ public sealed partial class AxiamClient : IDisposable
     internal string TenantId => _tenant.TenantId;
 
     /// <summary>Non-blocking read of the current access token from the shared cookie jar; <c>null</c> if never logged in.</summary>
-    internal string? CurrentAccessToken => ReadCookie(AccessCookieName);
+    internal string? CurrentAccessToken => _staticBearerToken ?? ReadCookie(AccessCookieName);
 
     /// <summary>
-    /// Disposes the owned <see cref="HttpClient"/> (and its handler chain) and the
-    /// <see cref="RefreshGuard"/>. Does not perform a server-side logout — call
-    /// <see cref="LogoutAsync"/> first if an active session should be terminated
-    /// server-side.
+    /// Disposes this handle's own <see cref="HttpClient"/> wrapper and OIDC discovery
+    /// state, and — for the handle the public constructor built — the shared transport's
+    /// handler chain, the <see cref="RefreshGuard"/> and the &#167;17 memo. Does not perform
+    /// a server-side logout — call <see cref="LogoutAsync"/> first if an active session
+    /// should be terminated server-side.
     /// </summary>
+    /// <remarks>
+    /// A handle built by <see cref="ActingTenant"/>/<see cref="ClearActingTenant"/> owns
+    /// only its own lightweight wrapper: disposing it never tears down the session other
+    /// handles over the same client are still using, and never clears the &#167;17 memo
+    /// those handles' decisions are cached in. Disposing the ORIGINAL handle does both —
+    /// it ends the whole session, so every handle built over it becomes unusable anyway
+    /// (their shared <see cref="HttpClient"/> chain, cookie jar and refresh guard are
+    /// gone), and clearing the memo at that point is correct rather than premature.
+    /// </remarks>
     public void Dispose()
     {
         // Idempotent (CONTRACT.md §18.1 rule 2): cleanup runs from error paths, and
         // an error path that itself throws hides the original failure. Interlocked
-        // also means a concurrent double-dispose does the work once.
+        // also means a concurrent double-dispose does the work once. Per-INSTANCE (not
+        // shared): each handle tracks its own disposed state, so disposing one handle
+        // never marks a sibling handle disposed.
         if (Interlocked.Exchange(ref _disposed, 1) != 0)
         {
             return;
         }
 
-        _decisionMemo.Clear();
+        // Own per-handle state, always: this handle's HttpClient wrapper (built with
+        // disposeHandler: true for the owning handle, false for a derived one — see the
+        // constructors) and its own OIDC discovery semaphores/cache.
         _httpClient.Dispose();
-        _anonymousHttpClient.Dispose();
-        _refreshGuard.Dispose();
         DisposeOidcState();
+
+        if (_ownsResources)
+        {
+            _decisionMemo.Clear();
+            _anonymousHttpClient.Dispose();
+            _refreshGuard.Dispose();
+        }
     }
 
     /// <summary>
@@ -265,13 +543,50 @@ public sealed partial class AxiamClient : IDisposable
         ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
 
     /// <summary>
-    /// Drops memoized decisions (CONTRACT.md §17.1 rule 9).
+    /// Drops memoized decisions (CONTRACT.md §17.1 rule 9) and resets the &#167;5.2
+    /// acting-tenant gate to "unknown".
     /// </summary>
     /// <remarks>
     /// Entries are keyed by subject rather than session, so a re-authentication as a
     /// <em>different</em> principal would otherwise inherit the previous one's decisions.
+    /// The &#167;5.2 reset is the same reasoning applied to <see cref="ActingTenant"/>'s
+    /// gate: a session-completing call whose success response carries no
+    /// <c>LoginUserInfo</c>/user object at all must not leave a STALE
+    /// <c>organization_level</c>/<c>reachable_tenant_ids</c> from whatever the previous
+    /// credential reported (&#167;5.2 rule 1's "For C-12" item 5) — this is called at the
+    /// START of every credential-changing method in this class and its partials, BEFORE
+    /// the request (an attempt already invalidates the previous state, not only a
+    /// success): <see cref="LoginAsync"/>, <see cref="VerifyMfaAsync"/>,
+    /// <see cref="LoginOpaqueAsync"/>, <see cref="RefreshAsync"/>,
+    /// <see cref="LogoutAsync"/>, <c>MfaSetupConfirmAsync</c>,
+    /// <c>WebauthnSetupRegisterFinishAsync</c>, the shared WebAuthn
+    /// <c>WebauthnFinishAsync</c> tail (both authentication ceremonies), and the three
+    /// SSO completions (<c>SsoCompleteAsync</c>, <c>SsoCompleteOauth2Async</c>,
+    /// <c>SsoCompleteHandoffAsync</c>).
+    /// <para>
+    /// Two different things then happen to the gate, and which one depends on whether the
+    /// success response carries a <c>LoginUserInfo</c>: <see cref="LoginAsync"/>,
+    /// <see cref="VerifyMfaAsync"/>, <see cref="LoginOpaqueAsync"/>,
+    /// <c>MfaSetupConfirmAsync</c> and <c>WebauthnSetupRegisterFinishAsync</c> RE-POPULATE
+    /// the gate from it afterward (via <c>ReadLoginScopeAsync</c>) — their responses are
+    /// built on the same password-login response shape, so gating on them is exact, not a
+    /// guess. <see cref="RefreshAsync"/>, <see cref="LogoutAsync"/>, the WebAuthn
+    /// *authentication* ceremonies and the SSO completions do not: their responses carry
+    /// no such object, so this reset is the LAST word — the gate simply stays "unknown"
+    /// after them, and <see cref="ActingTenant"/> sends the header and lets the server's
+    /// <c>403</c> answer. This differs from the Rust reference, which also resets OPAQUE
+    /// and the setup flows to "unknown" rather than populating them; this SDK's choice
+    /// (shared with the TypeScript, Go and Python ports) is tighter, not looser: those
+    /// responses genuinely carry a <c>LoginUserInfo</c> the server built with the same
+    /// code path password login uses, so gating on it costs nothing extra and is more
+    /// informative than deferring every one of those flows to the server's own check.
+    /// </para>
     /// </remarks>
-    private void OnCredentialChange() => _decisionMemo.Clear();
+    private void OnCredentialChange()
+    {
+        _decisionMemo.Clear();
+        _session.Reset();
+    }
 
     // ------------------------------------------------------------------
     // Auth methods (CONTRACT.md §1): LoginAsync / VerifyMfaAsync / RefreshAsync / LogoutAsync
@@ -888,6 +1203,13 @@ public sealed partial class AxiamClient : IDisposable
             || !wire.TryGetProperty("user", out JsonElement user)
             || user.ValueKind != JsonValueKind.Object)
         {
+            // No user object at all: this response tells the §5.2 gate nothing, so it
+            // stays "unknown" (null) rather than being read as "false" — §5.2 rule 1's
+            // "For C-12" item 5 (OPAQUE shares this method with the password login: the
+            // wire shape, not which endpoint produced it, decides whether the scope is
+            // known — see AxiamClient.cs's remarks on ActingTenant()).
+            _session.OrganizationLevel = null;
+            _session.ReachableTenantIds = null;
             return (false, null);
         }
 
@@ -918,6 +1240,14 @@ public sealed partial class AxiamClient : IDisposable
                 }
             }
         }
+
+        // A `user` object was present, so §5.2 rule 1's gate is now known — true, false,
+        // or (an absent field, the server-older-than-1.31 case) the field's own
+        // documented safe default, false. Every one of those is "known" for gating
+        // purposes: only the complete absence of a `user` object, handled above, is
+        // "unknown".
+        _session.OrganizationLevel = organizationLevel;
+        _session.ReachableTenantIds = reachable;
 
         if (acting is null && principal is null && orgId is null
             && principalSlug is null && reachable is null)

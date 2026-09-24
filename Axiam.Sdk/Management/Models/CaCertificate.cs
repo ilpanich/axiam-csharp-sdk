@@ -130,7 +130,9 @@ public sealed record CaCertificate
     public required CertificateStatus Status { get; init; }
 
     /// <summary>
-    /// The certificate subject (e.g., <c>CN=ACME Corp Root CA</c>).
+    /// The CA's common name, e.g. <c>ACME Corp Root CA</c>. The normalised value: a <c>CN=</c>
+    /// prefix in the request is understood and stripped, so this always says what the
+    /// certificate's subject DN says (DF-023).
     /// </summary>
     [JsonPropertyName("subject")]
     public required string Subject { get; init; }

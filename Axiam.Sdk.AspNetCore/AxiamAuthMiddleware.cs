@@ -1,10 +1,12 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Axiam.Sdk;
+using Axiam.Sdk.Auth;
 using Axiam.Sdk.AspNetCore.Mcp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -40,6 +42,14 @@ namespace Axiam.Sdk.AspNetCore;
 /// implies tenant authorization). An explicit <c>exp</c> re-check is performed here too
 /// as defense in depth, mirroring the Java filter's lines 88-91 even though
 /// <c>JwksVerifier.VerifyAsync</c> already checks <c>exp</c> internally.
+/// </description></item>
+/// <item><description>
+/// CONTRACT.md &#167;10.1 rule 9 (contract 1.51): this middleware calls
+/// <c>JwksVerifier.VerifyWithProofsAsync</c>, not the plain <c>VerifyAsync</c> — the
+/// evidence is <c>HttpContext.Connection.ClientCertificate</c>, read fresh on every
+/// request and NEVER from a header. A token carrying <c>cnf</c> (the &#167;6.1 device
+/// login mints one by default) is refused unless the presented certificate's
+/// thumbprint matches; an ordinary bearer token is unaffected either way.
 /// </description></item>
 /// <item><description>
 /// <see cref="HttpContext.User"/> is rebuilt from scratch on every request from a fresh
@@ -184,9 +194,10 @@ public sealed class AxiamAuthMiddleware
             // The COMPLETE CONTRACT.md §10.1 minimum local-verification set, in one
             // call: EdDSA-pinned signature (checked before any key lookup), a REQUIRED
             // exp, an nbf honoured when present, an asserted tenant_id, the conditional
-            // iss/aud checks, and a bounded 60 s clock skew. VerifyAsync fails closed on
-            // every one of them and returns null; it never throws on
-            // attacker-controlled input.
+            // iss/aud checks, and a bounded 60 s clock skew — plus rule 9: a token
+            // carrying cnf is not a bearer token, and is accepted only when the evidence
+            // below satisfies it. VerifyWithProofsAsync fails closed on every one of them
+            // and returns null; it never throws on attacker-controlled input.
             //
             // This middleware deliberately does NOT re-implement any subset of those
             // checks itself. A previous "defense-in-depth" exp re-check lived here and
@@ -195,7 +206,22 @@ public sealed class AxiamAuthMiddleware
             // catching it. Two partial checks are not a deeper defense; they are two
             // subsets that each look complete in isolation. One authoritative
             // implementation, exercised by the §10.1 negative-test set, is the control.
-            JsonElement? claims = await client.JwksVerifier.VerifyAsync(token, tenantId, context.RequestAborted).ConfigureAwait(false);
+            //
+            // Rule 9's evidence comes from THIS connection — HttpContext.Connection
+            // .ClientCertificate — and from nowhere else. A caller-supplied header is
+            // exactly the forgeable input §10.1 rule 9 detail 2 forbids; there is no
+            // header read anywhere in this method. A request presenting no client
+            // certificate at all yields PresentedProofs.None(), which is precisely rule
+            // 9's "cnf present, no evidence -> reject" row: this middleware verifies no
+            // DPoP proof (that is a separate, opt-in obligation — CONTRACT.md §21.7 — no
+            // AxiamAuthMiddleware caller has asked for), so a jkt-bound token is refused
+            // here on the same terms as an unevidenced certificate-bound one.
+            X509Certificate2? peerCertificate = context.Connection.ClientCertificate;
+            PresentedProofs proofs = peerCertificate is null
+                ? PresentedProofs.None()
+                : PresentedProofs.Certificate(JwksVerifier.CertificateThumbprintS256(peerCertificate.RawData));
+
+            JsonElement? claims = await client.JwksVerifier.VerifyWithProofsAsync(token, tenantId, proofs, context.RequestAborted).ConfigureAwait(false);
             if (claims is null)
             {
                 await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "invalid or expired token", challengeFor401).ConfigureAwait(false);

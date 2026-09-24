@@ -309,6 +309,159 @@ def discriminated(schema: Any) -> tuple[str, list[tuple[str, Any]]] | None:
     return (tag or "", arms)
 
 
+def single_key_union(schema: Any) -> list[tuple[str, Any]] | None:
+    """Detect an EXTERNALLY-tagged union: each ``oneOf`` arm is an object with
+    exactly one property, named in that arm's own ``required`` list, and no
+    other discriminator. ``SubjectAltName`` (contract 1.51, S-7) is the case
+    this exists for: ``{"dns": "..."}`` or ``{"ip": "..."}"``, never a common
+    ``type``-style tag field, and never an empty object.
+
+    Returns ``[(key, value_schema), ...]`` in ``oneOf`` order, or ``None`` when
+    the schema is not this shape (including the tag-discriminated shape
+    :func:`discriminated` already handles, which this function never matches
+    because a tag arm always carries more than one property once the tag
+    itself is counted).
+    """
+    variants = schema.get("oneOf")
+    if not isinstance(variants, list) or len(variants) < 2:
+        return None
+    arms: list[tuple[str, Any]] = []
+    for variant in variants:
+        if not isinstance(variant, dict) or "$ref" in variant or "allOf" in variant:
+            return None
+        props = variant.get("properties") or {}
+        required = variant.get("required") or []
+        if len(props) != 1 or len(required) != 1:
+            return None
+        (key, value_schema), = props.items()
+        if key not in required:
+            return None
+        arms.append((key, value_schema))
+    # Every arm must name a DIFFERENT key -- otherwise this is not a
+    # discriminating union at all, and reading a payload back would be
+    # ambiguous about which arm produced it.
+    if len({k for k, _ in arms}) != len(arms):
+        return None
+    return arms
+
+
+def _json_read_expr(cs_type_name: str, element_var: str) -> str:
+    """How to pull a ``cs_type_name`` value out of the ``JsonElement`` named
+    ``element_var`` inside a hand-written converter."""
+    if cs_type_name == "string":
+        return f"{element_var}.GetString()!"
+    if cs_type_name == "Guid":
+        return f"{element_var}.GetGuid()"
+    if cs_type_name in ("int", "long", "double"):
+        getters = {"int": "GetInt32", "long": "GetInt64", "double": "GetDouble"}
+        return f"{element_var}.{getters[cs_type_name]}()"
+    if cs_type_name == "bool":
+        return f"{element_var}.GetBoolean()"
+    return f"JsonSerializer.Deserialize<{cs_type_name}>({element_var}.GetRawText(), options)!"
+
+
+def _json_write_stmt(cs_type_name: str, wire_key: str, value_expr: str) -> str:
+    """How to write a ``cs_type_name`` value under ``wire_key`` inside a
+    hand-written converter."""
+    if cs_type_name == "string":
+        return f'writer.WriteString("{wire_key}", {value_expr})'
+    if cs_type_name == "Guid":
+        return f'writer.WriteString("{wire_key}", {value_expr})'
+    if cs_type_name in ("int", "long"):
+        return f'writer.WriteNumber("{wire_key}", {value_expr})'
+    if cs_type_name == "double":
+        return f'writer.WriteNumber("{wire_key}", {value_expr})'
+    if cs_type_name == "bool":
+        return f'writer.WriteBoolean("{wire_key}", {value_expr})'
+    return (f'writer.WritePropertyName("{wire_key}"); '
+            f'JsonSerializer.Serialize(writer, {value_expr}, options)')
+
+
+def emit_single_key_union(name: str, schema: Any, arms: list[tuple[str, Any]]) -> str:
+    """An externally-tagged ``oneOf`` -- a closed set of single-member shapes,
+    each written and read as ``{"key": value}`` and NEVER as ``{}``.
+
+    This is the shape :func:`emit_union` cannot produce: that function tags on
+    a shared discriminator PROPERTY (``{"type": "x", ...fields}``); this one
+    tags on which key is PRESENT, with no field of its own. Getting this wrong
+    -- treating it as an ordinary object schema with no properties, which is
+    what happens with no special case at all -- emits an EMPTY record that
+    serializes as ``{}`` on every arm, which is indistinguishable from every
+    other arm and satisfies no server that reads this field (contract 1.51,
+    S-7 rule 1: ``SubjectAltName`` MUST serialize as ``{"dns": ...}`` /
+    ``{"ip": ...}``).
+    """
+    type_name = pascal(name)
+    variants = [(key, pascal(key), value_schema) for key, value_schema in arms]
+
+    keys_quoted = ", ".join(f'"{k}"' for k, _, _ in variants)
+    keys_quoted_cs_literal = ", ".join(f'\\"{k}\\"' for k, _, _ in variants)
+    factory_calls = ", ".join(f"<c>{type_name}.{v}(...)</c>" for _, v, _ in variants)
+    lines = xmldoc(
+        escape(schema.get("description") or f"A {type_name} value.")
+        + "\n\nAn externally tagged union: the wire shape names exactly one member, as "
+          f'<c>{{"{variants[0][0]}": ...}}</c>, and never as <c>{{}}</c>. There is no shared '
+          f"discriminator field -- which key is present <em>is</em> the tag -- so this type "
+          f"is never constructed directly; use one of its static factory methods "
+          f"({factory_calls}).")
+    lines.append(f"[JsonConverter(typeof({type_name}Converter))]")
+    lines.append(f"public abstract record {type_name}")
+    lines.append("{")
+    lines.append(f"    private {type_name}() {{ }}")
+    for key, variant, value_schema in variants:
+        cstype = cs_type(value_schema)
+        arm_type = f"{variant}Arm"
+        lines.append("")
+        lines.extend(inline_xmldoc(f"The <c>{key}</c> arm of {type_name}.", "    "))
+        lines.append(f"    public sealed record {arm_type}({cstype} Value) : {type_name};")
+        lines.append("")
+        lines.extend(inline_xmldoc(f"Builds the <c>{key}</c> arm of {type_name}.", "    "))
+        lines.append(f"    public static {type_name} {variant}({cstype} value) => new {arm_type}(value);")
+    lines.append("}")
+    lines.append("")
+    lines.extend(xmldoc(
+        f"Wire converter for {type_name}. Writes exactly one member "
+        f"({keys_quoted}) and reads whichever one the payload carries; a payload naming "
+        f"none of them, or naming one with a JSON <c>null</c> value, is refused rather than "
+        f"read as an empty/unset {type_name} -- there is no such value."))
+    lines.append(f"internal sealed class {type_name}Converter : JsonConverter<{type_name}>")
+    lines.append("{")
+    lines.append(f"    /// <inheritdoc/>")
+    lines.append(f"    public override {type_name} Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)")
+    lines.append("    {")
+    lines.append("        using JsonDocument doc = JsonDocument.ParseValue(ref reader);")
+    lines.append("        JsonElement root = doc.RootElement;")
+    for key, variant, value_schema in variants:
+        cstype = cs_type(value_schema)
+        el = f"{camel(key)}El"
+        lines.append(f'        if (root.TryGetProperty("{key}", out JsonElement {el}) && {el}.ValueKind != JsonValueKind.Null)')
+        lines.append("        {")
+        lines.append(f"            return {type_name}.{variant}({_json_read_expr(cstype, el)});")
+        lines.append("        }")
+        lines.append("")
+
+    lines.append(f'        throw new JsonException("{type_name} must carry exactly one of: {keys_quoted_cs_literal}");')
+    lines.append("    }")
+    lines.append("")
+    lines.append(f"    /// <inheritdoc/>")
+    lines.append(f"    public override void Write(Utf8JsonWriter writer, {type_name} value, JsonSerializerOptions options)")
+    lines.append("    {")
+    lines.append("        writer.WriteStartObject();")
+    lines.append("        switch (value)")
+    lines.append("        {")
+    for key, variant, value_schema in variants:
+        cstype = cs_type(value_schema)
+        lines.append(f"            case {type_name}.{variant}Arm v:")
+        lines.append(f"                {_json_write_stmt(cstype, key, 'v.Value')};")
+        lines.append("                break;")
+    lines.append(f'            default: throw new JsonException("unreachable {type_name} arm");')
+    lines.append("        }")
+    lines.append("        writer.WriteEndObject();")
+    lines.append("    }")
+    lines.append("}")
+    return header("\n".join(lines), MODELS_NAMESPACE)
+
+
 def sensitive_map() -> dict[str, set[str]]:
     """Which fields of which schemas carry a secret, per the registry."""
     out: dict[str, set[str]] = {}
@@ -532,11 +685,29 @@ def field_list(schema_name: str, secrets: set[str]) -> tuple[list[dict[str, Any]
         }
     fields = []
     for wire in sorted(props):
+        # contract 1.51, S-10 rule 3: the RESPONSE-side `inherit` -- plain
+        # `"type": "boolean"` in the schema, never `["boolean", "null"]` --
+        # means "absent reads as true", on the role-side listings where the
+        # schema (accurately, for a 1.51+ server) marks it `required` AND on
+        # the subject-side `RoleAssignment` where it is not. Emitting either
+        # shape through the generic paths below is wrong in a different way
+        # for each: `required bool` makes System.Text.Json THROW when an
+        # older server omits it (never "fails", the rule says, and a thrown
+        # exception is exactly a failure); a plain non-required `bool` with
+        # no explicit default reads a missing field as C#'s bool default,
+        # `false` -- the one reading the rule explicitly forbids. A REQUEST-
+        # side `inherit` (`AssignRoleTo*Request`) is schema-typed
+        # `["boolean", "null"]` and is deliberately left on the generic path
+        # below, which already produces the nullable `bool?` §5.2/§27.6.1
+        # want there (omitted from the wire unless explicitly `false`).
+        raw_type = props[wire].get("type")
+        is_response_side_inherit = wire == "inherit" and raw_type == "boolean"
         fields.append({
             "wire": wire,
             "name": prop(wire),
             "type": "Sensitive<string>" if wire in secrets else cs_type(props[wire]),
-            "required": wire in required,
+            "required": False if is_response_side_inherit else wire in required,
+            "default_literal": "true" if is_response_side_inherit else None,
             "doc": props[wire].get("description") or f"the server's {wire} field",
             "secret": wire in secrets,
         })
@@ -641,6 +812,10 @@ def emit_record(name: str, secrets: set[str], replacement: bool) -> str:
             body.append(f'    private readonly {f["type"]}? {field};')
         elif f["required"]:
             body.append(f'    public required {f["type"]} {f["name"]} {{ get; init; }}')
+        elif f.get("default_literal") is not None:
+            # S-10 rule 3: absent on the wire reads as this default (never
+            # nullable, never `required`) -- see field_list's comment.
+            body.append(f'    public {f["type"]} {f["name"]} {{ get; init; }} = {f["default_literal"]};')
         else:
             body.append(f'    public {f["type"]}? {f["name"]} {{ get; init; }}')
     body.append("}")
@@ -711,6 +886,10 @@ def emit_models() -> dict[str, str]:
         union = discriminated(schema)
         if union:
             files.update(emit_union(name, schema, union[0], union[1]))
+            continue
+        single_key = single_key_union(schema)
+        if single_key:
+            files[f"{MODELS_DIR}/{pascal(name)}.cs"] = emit_single_key_union(name, schema, single_key)
             continue
         files[f"{MODELS_DIR}/{pascal(name)}.cs"] = emit_record(
             name, secrets.get(name, set()), name in replacements)

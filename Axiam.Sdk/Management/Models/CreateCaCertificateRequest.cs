@@ -48,7 +48,9 @@ public sealed record CreateCaCertificateRequest
     public required KeyAlgorithm KeyAlgorithm { get; init; }
 
     /// <summary>
-    /// the server's subject field
+    /// The CA's common name, e.g. <c>ACME Corp Root CA</c>. A **common name**, not a
+    /// distinguished name. A single <c>CN=</c> prefix is accepted and stripped; anything else
+    /// containing <c>=</c> — <c>O=Acme, CN=ACME Corp Root CA</c> — is refused with <c>400</c>.
     /// </summary>
     [JsonPropertyName("subject")]
     public required string Subject { get; init; }

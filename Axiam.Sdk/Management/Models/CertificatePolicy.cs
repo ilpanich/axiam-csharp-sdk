@@ -27,4 +27,18 @@ public sealed record CertificatePolicy
     /// </summary>
     [JsonPropertyName("max_cert_validity_days")]
     public required int MaxCertValidityDays { get; init; }
+
+    /// <summary>
+    /// The names a <c>Server</c> certificate may be issued for (S-7, DF-001): DNS suffixes
+    /// (<c>.lakeside.internal</c>, strictly below), exact hosts (<c>lakeside.internal</c>) and
+    /// IP prefixes (<c>10.0.0.0/8</c>, <c>fd00::/8</c>). See
+    /// [<c>crate::models::server_names</c>] for the matching rules. **Empty by default, and
+    /// empty refuses every <c>Server</c> request** (I1). A certificate for a name, signed under
+    /// the organization root, is trusted by every relying party that trusts that root, so the
+    /// list is written where the root is owned. A tenant override may only remove an entry or
+    /// narrow one; when the baseline later shrinks, the tenant's effective list is the
+    /// intersection of the two.
+    /// </summary>
+    [JsonPropertyName("server_cert_allowed_names")]
+    public IReadOnlyList<string>? ServerCertAllowedNames { get; init; }
 }

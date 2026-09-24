@@ -145,7 +145,7 @@ public sealed class ManagementManifestTests : ManagementTestBase
                 },
                 Groups = new[]
                 {
-                    new ManagementManifest.GroupSpec("staff", "Staff", "All", new[] { "ghost" }),
+                    new ManagementManifest.GroupSpec("staff", "Staff", "All", new ManagementManifest.RoleBinding[] { "ghost" }),
                 },
             }));
 
@@ -203,6 +203,16 @@ public sealed class ManagementManifestTests : ManagementTestBase
             Assert.Throws<NetworkError>(() =>
                 ManagementManifest.Builder()
                     .ChildResource("archive", "archive", "collection", "docs").Build()).Message,
+            StringComparison.Ordinal);
+        // §27.6.1 additions, contract 1.51: GroupRole and AssignServiceAccountRole check
+        // their forward reference exactly like the pre-1.51 calls above.
+        Assert.Contains("no Group(...) call has declared yet",
+            Assert.Throws<NetworkError>(() =>
+                ManagementManifest.Builder().GroupRole("staff", "editor").Build()).Message,
+            StringComparison.Ordinal);
+        Assert.Contains("no ServiceAccount(...) call has declared yet",
+            Assert.Throws<NetworkError>(() =>
+                ManagementManifest.Builder().AssignServiceAccountRole("ctl", "editor").Build()).Message,
             StringComparison.Ordinal);
     }
 
@@ -454,7 +464,14 @@ public sealed class ManagementManifestTests : ManagementTestBase
             $$"""[{"group":{{GroupBody(groupDescription)}},"resource_id":null}]""");
         Mount("GET", "/api/v1/groups", 200, PageWith(GroupBody(groupDescription)));
         Mount("GET", $"/api/v1/groups/{GroupId}/members", 200, PageWith(UserBody(email)));
+        // §27.6.1 item 2: reconciliation reads the SUBJECT-side listing (what roles does
+        // THIS group/user hold), not only the role-side one above — inherit omitted
+        // entirely, exactly the shape a pre-1.51 server sends, which must decode true.
+        Mount("GET", $"/api/v1/groups/{GroupId}/roles", 200,
+            $$"""[{"role":{{RoleBody(RoleId, "Editor", roleDescription)}},"resource_id":null}]""");
         Mount("GET", "/api/v1/users", 200, PageWith(UserBody(email)));
+        Mount("GET", $"/api/v1/users/{MemberId}/roles", 200,
+            $$"""[{"role":{{RoleBody(RoleId, "Editor", roleDescription)}},"resource_id":null}]""");
     }
 
     /// <summary>

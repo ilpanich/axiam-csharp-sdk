@@ -652,6 +652,15 @@ public sealed partial class AxiamClient
     /// </remarks>
     public async Task<SsoCompleteResult> SsoCompleteAsync(SsoCompleteParams @params, CancellationToken cancellationToken = default)
     {
+        // CONTRACT.md §5.2 rule 1 "For C-12" item 5: this establishes a session,
+        // possibly as a different principal than whatever this client last held — the
+        // same reasoning LoginAsync/VerifyMfaAsync/etc. already apply to their own
+        // OnCredentialChange() call, at the same point (before the request, so an
+        // ATTEMPT already invalidates the previous state, not only a success). The
+        // federation success response carries no LoginUserInfo, so unlike LoginAsync
+        // this leaves the §5.2 gate at "unknown" rather than repopulating it — see
+        // OnCredentialChange's remarks.
+        OnCredentialChange();
         ArgumentNullException.ThrowIfNull(@params);
 
         var body = new Dictionary<string, object?> { ["state"] = @params.State, ["code"] = @params.Code };
@@ -878,6 +887,9 @@ public sealed partial class AxiamClient
     /// <returns>The established session's identifiers and post-login destination.</returns>
     public async Task<SsoCompleteResult> SsoCompleteOauth2Async(SsoCompleteOauth2Params @params, CancellationToken cancellationToken = default)
     {
+        // §5.2 rule 1 "For C-12" item 5 — see SsoCompleteAsync's remark; the same
+        // reasoning applies to every session-establishing federation completion.
+        OnCredentialChange();
         ArgumentNullException.ThrowIfNull(@params);
 
         var body = new Dictionary<string, object?> { ["state"] = @params.State, ["code"] = @params.Code };
@@ -910,6 +922,9 @@ public sealed partial class AxiamClient
     /// <returns>The established session's identifiers and post-login destination.</returns>
     public async Task<SsoCompleteResult> SsoCompleteHandoffAsync(SsoCompleteHandoffParams @params, CancellationToken cancellationToken = default)
     {
+        // §5.2 rule 1 "For C-12" item 5 — see SsoCompleteAsync's remark; the same
+        // reasoning applies to every session-establishing federation completion.
+        OnCredentialChange();
         ArgumentNullException.ThrowIfNull(@params);
 
         var body = new Dictionary<string, object?> { ["code"] = @params.Code };

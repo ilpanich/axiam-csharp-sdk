@@ -7,6 +7,165 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1, §6.1 rules
+6–10, §10.1 rule 9, §27.6.1, §27.13). The vendored `CONTRACT.md`, `sdks/openapi.json`,
+`management-registry.json` and `proto/` come from axiam `56fbe44`.
+
+### Added
+
+- **Acting tenant** (§5.2 rule 1). `AxiamClient.ActingTenant(Guid)` returns a new handle
+  over the same session that sends `X-Axiam-Tenant` on every REST request;
+  `ClearActingTenant()` returns one that sends none.
+  - A `Guid`, never a slug — the server ignores a value that fails to parse and answers
+    for the caller's own tenant.
+  - The header is sent **only when set**; a client that never calls `ActingTenant` is
+    byte-for-byte what it was before this release.
+  - The acting tenant belongs to the *handle*, not the session, so two handles over the
+    same login can act on two different tenants concurrently without racing each other's
+    header.
+  - Gated client-side once a login result is known: refuses (`AuthzError`, no wire call)
+    unless the principal is `OrganizationLevel`, and refuses a tenant outside
+    `ReachableTenantIds` when the server reported one. Ungated for a handle that has
+    never completed a call whose response carried that information — see the "Acting on
+    another tenant" README section for exactly which calls do and don't populate it (not
+    every credential-changing call does).
+  - The §17 decision memo is now keyed on the acting tenant in addition to its existing
+    key.
+  - REST-only: gRPC acts on the token's own tenant; no metadata key is invented for it.
+- **`AxiamClient.AuthenticateDeviceAsync()`**, the mTLS device login (§6.1 rules 6–10). It
+  is `POST /api/v1/auth/device` with no body and returns a fresh `AxiamClient` plus
+  `DeviceToken { AccessToken: Sensitive<string>, TokenType, ExpiresIn }`.
+  - Throws `AuthError` with **zero wire calls** on a client built with no client
+    certificate configured.
+  - The returned handle's bearer credential comes from the device token, on a fresh
+    cookie jar — the original session's cookie is withheld, never leaked onto the new
+    handle, since the server reads the `axiam_access` cookie first and a leftover session
+    would otherwise silently win.
+  - No refresh: a `401` on the login call itself, or on any later call through the
+    returned handle, is surfaced as-is and never sent to the refresh guard. A `429` is a
+    `NetworkError`, not an `AuthError`, and is not retried.
+  - New example: `examples/DeviceMtlsProvisioning`.
+- **gRPC `ValidateTokenAsync` / `IntrospectTokenAsync`** (§1.1.1, §10.3) on the new
+  `Grpc/TokenGrpcClient.cs`.
+  - Every response field is modelled, including `CnfClaim` as a nullable message type —
+    absent and empty (`{}`) stay distinct, which `TokenGrpcClientTests` pins.
+  - `TokenStatusHelper` classifies `Inactive` / `Bearer` / `SenderConstrained` /
+    `Unverifiable`, read from `cnf`, never from `token_type`.
+  - `VerifyPossession(PresentedProofs)` applies §10.1 rule 9's table; an empty `CnfClaim`
+    is refused, not treated as absent.
+  - The inspected token is a required, separate `Sensitive<string>` parameter from the
+    caller's own bearer credential. With no caller session the call fails with zero wire
+    calls. A token belonging to another tenant comes back with `Valid: false` — not an
+    exception.
+- **`JwksVerifier.VerifyWithProofsAsync(token, tenantId, PresentedProofs, ct)`**, the full
+  §10.1 rule set applied *with* rule-9 evidence. `Auth/SenderConstraintRule.Verify` is the
+  one implementation of the rule-9 table, shared between local JSON-claims verification
+  and the gRPC path's proto-based one, so the two cannot drift on the table's nine rows.
+- **Manifest additions** (§27.6.1, §27.5 rule 5).
+  - `ManagementManifest.ResourceSpec.Metadata` (`JsonElement?`), compared as the whole
+    JSON object via `ManifestApi.JsonElementDeepEquals`.
+  - `ManagementManifest.RoleBinding(Role, Resource?, Inherit = true)`, implicitly
+    convertible from a bare role key, on `GroupSpec`, `UserSpec` and
+    `ServiceAccountSpec`. `Inherit` is sent only when `false`. One role bound twice to
+    one subject is refused before any request. A changed binding is unassign-then-assign,
+    carries the server's `tenant_scope` across, and restores the previous binding when
+    the re-assign fails (`StepOutcome.RestoreSucceeded`).
+  - `ManagementManifest.ServiceAccountSpec(Key, Name, Description?, Roles?)`. Reconciled
+    by name; an ambiguous name fails `PlanAsync`/`ApplyAsync` before any write. A
+    `Create` carries the one-time `ClientSecret` on `StepOutcome.CreatedServiceAccount`
+    (and `ApplyReport.CreatedServiceAccounts()`), kept even when a later action of the
+    same apply fails. `ApplyAsync` never rotates one.
+  - `ManifestBuilder` gains `Resource(..., metadata:)`, `GroupRole`/`AssignRole`/
+    `AssignServiceAccountRole`'s `resourceKey`/`inherit` parameters, and
+    `ServiceAccount`/`AssignServiceAccountRole`.
+  - `webhooks` stays unimplemented in the manifest — contract 1.51 names it without
+    specifying a shape, and no consumer of this SDK has asked for it.
+- **Contract 1.51 model changes** (§27.13), from the regenerated `Models/` surface:
+  - `CertificateType.Server`;
+  - `SubjectAltName` (externally-tagged `Dns`/`Ip` union) and `SubjectAltNames` on the
+    leaf certificate-issuance requests;
+  - `ServerCertAllowedNames` on the certificate-policy and settings DTOs;
+  - `Inherit` on the three assign requests and on every role-assignment listing
+    (`RoleAssignment`, `RoleUserAssignment`, `RoleGroupAssignment`,
+    `RoleServiceAccountAssignment`), decoding an **absent** `inherit` as `true` — the
+    value every assignment written before the field existed already has.
+
+### Changed
+
+- **A manifest binding of a plain role key over a server assignment that is
+  resource-scoped is now an `Update`, not a match.** Before contract 1.51, presence
+  alone was compared; §27.6.1 defines the plain shape as "no resource", so the next
+  `ApplyAsync` re-binds it tenant-wide. `ManifestAdditionsTests.
+  APlainBindingOverAScopedAssignmentIsAnUpdate` pins the new reading.
+- `ManifestApi.ReadAsync` now reads the **subject-side** role-binding listings
+  (`GroupsApi.ListRolesAsync`/`UsersApi.ListRolesAsync`/`ServiceAccountsApi.ListRolesAsync`)
+  instead of the role-side ones, since reconciling a subject's two-shape bindings needs
+  that subject's own list. Each read is gated on the subject's manifest spec actually
+  stating `Roles`, so a manifest that never mentions roles for a subject costs no extra
+  request.
+- `scripts/gen_management.py` now emits an externally-tagged `oneOf` as a proper union
+  type (see Fixed), and gives a response-side `inherit` boolean a `true` default rather
+  than treating it as `required`.
+
+### Fixed
+
+- **`JwksVerifier.VerifyAsync`, and so `AxiamAuthMiddleware` (the SDK's default token-verify
+  entry point) and `AxiamPolicyHandler`, accepted sender-constrained tokens as ordinary
+  bearer tokens.** A token bound to a certificate (`cnf.x5t#S256`, which every §6.1
+  device token now carries) or to a DPoP key (`cnf.jkt`) was admitted with no proof of
+  possession checked, against §10.1 rule 9. `VerifyAsync` now refuses any token carrying
+  `cnf`, because it has no evidence to check it against. See Breaking.
+- **The generator emitted `SubjectAltName` as a record with no fields.** It compiled and
+  serialized as `{}`, which the server refuses on every certificate-issuance request that
+  named one. It is now an externally-tagged union (`SubjectAltName.Dns(string)` /
+  `SubjectAltName.Ip(string)`) with a custom `System.Text.Json` converter, pinned by
+  `Contract151ModelsTests`' round-trip tests.
+  - **In this SDK specifically**, decoding an unrecognised discriminant threw rather than
+    falling back to a safe default, which would have taken down an entire response for
+    one field the caller may not have read.
+- **The three role-side assignment listings, and now the subject-side ones this release
+  adds, would have failed to decode `inherit`'s absence** against a server that predates
+  it. The manifest's `ReadAsync` reads exactly these to plan. Absent now decodes as
+  `true` — the reading every pre-1.51 assignment already has — rather than failing the
+  whole response or silently reading as `false`.
+- **None of the three SSO/federation completions (`SsoCompleteAsync`,
+  `SsoCompleteOauth2Async`, `SsoCompleteHandoffAsync`) reset the §5.2 acting-tenant gate
+  or the §17 decision memo.** Each establishes a session, possibly as a *different*
+  principal than whatever this client last held, but — unlike every other
+  credential-changing method (`LoginAsync`, `VerifyMfaAsync`, `RefreshAsync`,
+  `LogoutAsync`, `LoginOpaqueAsync`, `MfaSetupConfirmAsync`, the WebAuthn
+  ceremony-completion methods) — none of them called `OnCredentialChange()`. After a
+  restrictive login (`organization_level: false`) followed by an SSO completion as a
+  different (organization-level) principal, `ActingTenant(x)` still refused on the
+  *previous* principal's report, and the decision memo could still answer from the
+  previous principal's cached decisions. All three now call `OnCredentialChange()` at the
+  same point (before the request) every other credential-changing method does.
+
+### Breaking
+
+- **A guard built directly on `JwksVerifier.VerifyAsync`, or the ASP.NET Core middleware
+  pipeline (`AxiamAuthMiddleware`/`AxiamPolicyHandler`), now answers `401` to a
+  certificate- or DPoP-bound token for which it has no evidence.** To accept device
+  tokens, either route the request through `AxiamAuthMiddleware` (which now supplies
+  `PresentedProofs` from `HttpContext.Connection.ClientCertificate` automatically), or
+  call `VerifyWithProofsAsync` yourself with the connection's evidence — **never** from a
+  header, which is exactly what an attacker without the private key can also send. An
+  unbound token (no `cnf`) is unaffected.
+- `GroupSpec.Roles` and `UserSpec.Roles` are `IReadOnlyList<RoleBinding>?`, not
+  `IReadOnlyList<string>?`. `Roles = new[] { "editor" }` no longer compiles as a bare
+  array literal (C#'s array-literal type inference does not reach through
+  `RoleBinding`'s implicit conversion) — write `new ManagementManifest.RoleBinding[] {
+  "editor" }`, or build the same manifest through `ManifestBuilder`, which is
+  unaffected.
+- `ManagementManifest` gains `ServiceAccounts`; `ManagementManifest.ResourceSpec` gains a
+  trailing `Metadata` parameter. Existing positional-record construction still compiles
+  (both are optional, defaulted), but a caller pattern-matching on `ResourceSpec`'s
+  exact arity should switch to named construction.
+- `ManagementPlan`'s `PlanTarget` enum, and `ManagementPlan`'s `Kind`-adjacent
+  `ApplyStatus`/`StepOutcome` types, gain new members/fields (`ServiceAccount`,
+  `ServiceAccountRole`, `StepOutcome.RestoreSucceeded`, `StepOutcome.CreatedServiceAccount`).
+  A `switch` over `PlanTarget` with no default arm needs one.
+
 ## [1.0.0-beta16] - 2026-09-19
 
 ### Added

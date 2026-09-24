@@ -43,6 +43,10 @@ public enum CertificateType
     [WireName("Device")]
     Device,
 
+    /// <summary>The server's <c>Server</c> value.</summary>
+    [WireName("Server")]
+    Server,
+
     /// <summary>
     /// A value this SDK’s copy of the spec does not list.
     /// </summary>

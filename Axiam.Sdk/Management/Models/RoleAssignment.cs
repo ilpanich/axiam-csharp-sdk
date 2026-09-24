@@ -17,6 +17,14 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record RoleAssignment
 {
     /// <summary>
+    /// Whether the assignment reaches the descendants of <c>resource_id</c> as well as the
+    /// resource itself (<c>true</c>, the default, and the value of every assignment written
+    /// before the field existed) or applies at that resource only (<c>false</c>).
+    /// </summary>
+    [JsonPropertyName("inherit")]
+    public bool Inherit { get; init; } = true;
+
+    /// <summary>
     /// <c>None</c> means the role was assigned globally (no resource scope).
     /// </summary>
     [JsonPropertyName("resource_id")]

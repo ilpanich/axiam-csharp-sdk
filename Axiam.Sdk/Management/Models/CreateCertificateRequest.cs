@@ -47,6 +47,16 @@ public sealed record CreateCertificateRequest
     public required string Subject { get; init; }
 
     /// <summary>
+    /// The names a <c>Server</c> certificate is issued for, as <c>[{"dns":
+    /// "api.lakeside.internal"}, {"ip": "10.0.0.5"}]</c>. Required for <c>cert_type: Server</c>
+    /// and refused for every other type. Each name, and the common name, must be admitted by
+    /// the tenant's effective <c>server_cert_allowed_names</c>, which is empty — refusing every
+    /// <c>Server</c> request — until an organization administrator lists names.
+    /// </summary>
+    [JsonPropertyName("subject_alt_names")]
+    public IReadOnlyList<SubjectAltName>? SubjectAltNames { get; init; }
+
+    /// <summary>
     /// Validity duration in days.
     /// </summary>
     [JsonPropertyName("validity_days")]

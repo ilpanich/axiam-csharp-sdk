@@ -238,7 +238,7 @@ public sealed class ManagementCoreTests : ManagementTestBase
                 {
                     new ManagementManifest.UserSpec(
                         "alice", "alice", "a@example.test", null,
-                        Roles: new[] { "ghost-role" }, Groups: new[] { "ghost-group" }),
+                        Roles: new ManagementManifest.RoleBinding[] { "ghost-role" }, Groups: new[] { "ghost-group" }),
                 },
             }));
 
