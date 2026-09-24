@@ -196,11 +196,86 @@ public sealed class JwksVerifier
     /// a mandatory <c>tenant_id</c> asserted against <paramref name="expectedTenantId"/>,
     /// and the conditional <c>iss</c>/<c>aud</c> checks when this verifier was configured
     /// with an expectation — all under <see cref="ClockSkewLeeway"/>.
-    /// Returns the decoded claims payload on success; returns <c>null</c> for ANY failure.
-    /// Never throws on malformed or attacker-controlled input — see the type-level remarks
-    /// for the fail-closed contract.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <b>Rule 9, and it is the documented guard entry point.</b> This method has NO
+    /// transport evidence to check a sender constraint against, so — per CONTRACT.md
+    /// &#167;10.1 rule 9's own table — it refuses ANY token carrying <c>cnf</c>, whatever
+    /// method it names: "a different certificate, or none" is exactly this case. A
+    /// resource server that needs to accept a bound token (the &#167;6.1 device login
+    /// mints certificate-bound tokens by default) calls
+    /// <see cref="VerifyWithProofsAsync"/> instead, supplying the evidence from ITS OWN
+    /// connection. Until this method enforced rule 9, a token lifted off a device and
+    /// replayed as a bearer credential was accepted here like any other — the defect
+    /// CONTRACT.md &#167;10.1 rule 9's compatibility note calls out, closed in contract
+    /// 1.51 (Breaking: a caller that previously accepted bound tokens through this method
+    /// with no evidence now gets <c>null</c>/401 for them).
+    /// </para>
+    /// <para>
+    /// Returns the decoded claims payload on success; returns <c>null</c> for ANY
+    /// failure. Never throws on malformed or attacker-controlled input — see the
+    /// type-level remarks for the fail-closed contract.
+    /// </para>
+    /// </remarks>
     public async Task<JsonElement?> VerifyAsync(string jwt, string expectedTenantId, CancellationToken cancellationToken = default)
+    {
+        JsonElement? claims = await VerifyCoreAsync(jwt, expectedTenantId, cancellationToken).ConfigureAwait(false);
+        if (claims is not { } resolved)
+        {
+            return null;
+        }
+
+        // Rule 9, no-evidence case: ANY cnf at all is refused here — see the remarks
+        // above. VerifyTokenBinding with PresentedProofs.None() is exactly this rule
+        // (cnf absent -> accept; cnf present, no proofs -> refuse on every row), so the
+        // no-evidence and full-evidence paths cannot silently drift apart.
+        return VerifyTokenBinding(resolved, PresentedProofs.None()) ? resolved : null;
+    }
+
+    /// <summary>
+    /// The FULL CONTRACT.md &#167;10.1 rule 9, with evidence (contract 1.51). Applies
+    /// every rule <see cref="VerifyAsync"/> does, and additionally verifies a sender
+    /// constraint against <paramref name="proofs"/> — the certificate and/or DPoP key the
+    /// CALLER proved possession of on THIS connection and request — rather than refusing
+    /// every bound token outright.
+    /// </summary>
+    /// <remarks>
+    /// This is the entry point for a resource server that accepts &#167;6.1 device
+    /// (certificate-bound) or &#167;21.7 DPoP-bound tokens. Under ASP.NET Core the
+    /// certificate evidence comes from <c>HttpContext.Connection.ClientCertificate</c>
+    /// (via <see cref="CertificateThumbprintS256"/>) — NEVER from a request header, which
+    /// is exactly what <see cref="VerifyTokenBinding"/>'s own remarks already require of
+    /// <paramref name="proofs"/>.
+    /// </remarks>
+    /// <param name="jwt">The token to verify.</param>
+    /// <param name="expectedTenantId">The tenant this token must belong to.</param>
+    /// <param name="proofs">What the caller proved on this connection and request.</param>
+    /// <param name="cancellationToken">Cancels the JWKS fetch, if one is needed.</param>
+    /// <returns>The decoded claims on success (including when the token is unbound, or
+    /// bound and the matching proof(s) are present); <c>null</c> for ANY failure,
+    /// including a bound token whose constraint <paramref name="proofs"/> does not
+    /// satisfy.</returns>
+    public async Task<JsonElement?> VerifyWithProofsAsync(
+        string jwt, string expectedTenantId, PresentedProofs proofs, CancellationToken cancellationToken = default)
+    {
+        JsonElement? claims = await VerifyCoreAsync(jwt, expectedTenantId, cancellationToken).ConfigureAwait(false);
+        if (claims is not { } resolved)
+        {
+            return null;
+        }
+
+        return VerifyTokenBinding(resolved, proofs) ? resolved : null;
+    }
+
+    /// <summary>
+    /// Rules 1&#8211;8 and &#167;10.4 — everything <see cref="VerifyAsync"/> and
+    /// <see cref="VerifyWithProofsAsync"/> share. Rule 9 is deliberately NOT applied
+    /// here: it needs evidence (or the deliberate absence of any, for
+    /// <see cref="VerifyAsync"/>'s case), which only the two public callers know how to
+    /// supply.
+    /// </summary>
+    private async Task<JsonElement?> VerifyCoreAsync(string jwt, string expectedTenantId, CancellationToken cancellationToken)
     {
         try
         {
