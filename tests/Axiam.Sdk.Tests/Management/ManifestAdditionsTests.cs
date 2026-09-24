@@ -508,6 +508,33 @@ public sealed class ManifestAdditionsTests
         Assert.Equal(before, Mark(fake));
     }
 
+    // ---- N6.2 (CONTRACT 1.52, C-12): "An object binding requires resource. inherit
+    // without a resource is refused client-side." Not in c12-findings.md's C# section, but
+    // the identical defect the C++ SDK had (management_manifest.cpp's validate() accepting
+    // {role, nullopt, false}) — this SDK's builder exposes the same shape
+    // (`GroupRole(groupKey, roleKey, resourceKey: null, inherit: false)`), and, before this
+    // fix, ManifestValidation only refused inherit: false on a GLOBAL role with no
+    // resource, not a non-global one.
+
+    [Fact]
+    public async Task ANonGlobalRoleBoundWithInheritFalseAndNoResourceIsRefusedClientSide()
+    {
+        var fake = new TenantFake();
+        using AxiamClient client = BuildClient(fake);
+        int before = Mark(fake);
+        ManagementManifest manifest = ManagementManifest.Builder()
+            .Role("resident", "Resident", "Lives here") // NOT global
+            .Group("g", "G", "G")
+            .GroupRole("g", "resident", resourceKey: null, inherit: false)
+            .Build();
+
+        NetworkError thrown = await Assert.ThrowsAsync<NetworkError>(
+            () => client.Management.Manifest.PlanAsync(manifest));
+
+        Assert.Contains("inherit: false", thrown.Message, StringComparison.Ordinal);
+        Assert.Equal(before, Mark(fake)); // zero wire calls
+    }
+
     /// <summary>A plain binding whose server assignment is scoped is an <c>Update</c>: the
     /// string shape means "no resource" (&#167;27.6.1 item 2).</summary>
     [Fact]

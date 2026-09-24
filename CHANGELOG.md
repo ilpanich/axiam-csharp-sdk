@@ -109,6 +109,16 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
 
 ### Fixed
 
+- **A non-global role bound with `inherit: false` and no resource was accepted and sent to
+  the wire** (CONTRACT 1.52 N6.2 (C-12) — "An object binding requires resource. inherit
+  without a resource is refused client-side" — not in c12-findings.md's C# section, but
+  the identical defect the C++ SDK had). `ManifestValidation.RoleBindings` only refused
+  `inherit: false` with no resource when the bound role was GLOBAL; a non-global role in
+  the same shape (reachable through the public builder,
+  `GroupRole(groupKey, roleKey, resourceKey: null, inherit: false)`, e.g.) passed
+  validation and reached `AssignAsync` as `inherit: false` with no `resource_id` — a
+  binding `inherit` cannot mean anything for, since there is no resource hierarchy for it
+  to withhold. Now refused client-side, zero wire calls, like the global case already was.
 - **A later session-establishing call performed on a device handle itself never actually
   took effect** (CONTRACT 1.52 N4.4 (C-12) — "held until replaced" — not in
   c12-findings.md's C# section, but the identical architectural gap N4.4 caught in the
