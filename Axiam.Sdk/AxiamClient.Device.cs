@@ -102,8 +102,13 @@ public sealed partial class AxiamClient
         // wrapped in AxiamHttpMessageHandler, so — unlike that handler's derivation of
         // X-Tenant-Id (§5 rule 2, unconditional on every request) — it must be added here
         // by hand, exactly as PostAnonymousRawJsonAsync does for the §24.1 pair.
+        // ApplyAnonymousTenantHeaders also adds X-Axiam-Tenant when THIS handle has an
+        // acting tenant (§5.2 rule 1: sent on every REST request when set, and a handle
+        // performing a device login typically holds no login result yet — nothing to
+        // gate the header on, so it is sent as asked and the server's 403 answers if the
+        // certificate's principal cannot use it).
         using var request = new HttpRequestMessage(HttpMethod.Post, DeviceAuthPath);
-        request.Headers.TryAddWithoutValidation("X-Tenant-Id", _tenant.TenantId);
+        ApplyAnonymousTenantHeaders(request);
         HttpResponseMessage response;
         try
         {

@@ -154,6 +154,16 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   permanently-empty-jar transport, built from the same client-certificate/CA/TLS
   configuration as `_httpClient`), with `X-Tenant-Id` added by hand since that transport
   is never wrapped in `AxiamHttpMessageHandler`.
+  - **Send-back on that same fix:** moving the login POST to `_anonymousHttpClient`
+    dropped `X-Axiam-Tenant` for a handle with an acting tenant set (the configured
+    `AxiamClientOptions.ActingTenant`, or an `ActingTenant(id)` handle) — the header is
+    attached to `_httpClient.DefaultRequestHeaders` per handle, and
+    `_anonymousHttpClient` is a single instance SHARED across every acting-tenant handle
+    built over one client, so it was never a candidate for a per-handle default header
+    in the first place. CONTRACT.md §5.2 rule 1 sends the header on every REST request
+    when set, gated on nothing when no login result is held yet — exactly a device
+    login's own shape. Now applied per-request from the calling handle's own acting
+    tenant via a small shared helper (`ApplyAnonymousTenantHeaders`).
 
 ### Breaking
 
