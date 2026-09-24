@@ -715,4 +715,114 @@ public class WebauthnTests
         // which the spec refuses to distinguish.
         Assert.Contains("cancelled or timed out", WebauthnFailure.Cancelled.Message());
     }
+
+    // ---- Send-back on the device-auth fix: PostAnonymousRawJsonAsync owes X-Axiam-Tenant
+    // too (CONTRACT.md §5.2.2 rule 4) -----------------------------------------------------
+    //
+    // PostAnonymousRawJsonAsync already applies X-Tenant-Id by hand since it bypasses
+    // AxiamHttpMessageHandler (which derives it for every request through _httpClient).
+    // §5.2.2 rule 4 is explicit that a self-service/setup call is NOT exempt from sending
+    // the acting-tenant header — an SDK "MUST NOT work around that by clearing or
+    // rewriting X-Axiam-Tenant" — so the same by-hand treatment applies to it. Real
+    // loopback (no RoutingHandler/CreateForTesting fake transport, no client certificate
+    // needed for WebAuthn), so this exercises the actual HttpRequestMessage the transport
+    // sends, matching DeviceAuthTests.cs's own boundary for the anonymous transport.
+
+    [Fact]
+    public async Task WebauthnSetupRegisterStart_CarriesXAxiamTenant_WhenSet()
+    {
+        const string actingTenant = "77777777-7777-7777-7777-777777777777";
+        using var listener = new HttpListener();
+        string prefix = $"http://127.0.0.1:{GetEphemeralPort()}/";
+        listener.Prefixes.Add(prefix);
+        listener.Start();
+
+        string? actingTenantHeader = "not observed";
+        var serverTask = Task.Run(async () =>
+        {
+            HttpListenerContext ctx = await listener.GetContextAsync();
+            actingTenantHeader = ctx.Request.Headers["X-Axiam-Tenant"];
+            byte[] body = Encoding.UTF8.GetBytes($$"""{"challenge":{},"state_token":"{{StateToken}}"}""");
+            ctx.Response.ContentType = "application/json";
+            ctx.Response.ContentLength64 = body.Length;
+            await ctx.Response.OutputStream.WriteAsync(body);
+            ctx.Response.OutputStream.Close();
+        });
+
+        try
+        {
+            using var client = new AxiamClient(
+                new Uri(prefix),
+                TenantGuid,
+                new AxiamClientOptions
+                {
+                    BaseUrl = new Uri(prefix),
+                    TenantId = TenantGuid,
+                    ActingTenant = Guid.Parse(actingTenant),
+                });
+
+            await client.WebauthnSetupRegisterStartAsync(Sensitive.Of(SetupToken));
+            await serverTask;
+
+            Assert.Equal(actingTenant, actingTenantHeader);
+        }
+        finally
+        {
+            listener.Stop();
+            listener.Close();
+        }
+    }
+
+    [Fact]
+    public async Task WebauthnSetupRegisterStart_OmitsXAxiamTenant_WhenUnset_I4Twin()
+    {
+        using var listener = new HttpListener();
+        string prefix = $"http://127.0.0.1:{GetEphemeralPort()}/";
+        listener.Prefixes.Add(prefix);
+        listener.Start();
+
+        string? actingTenantHeader = "not observed";
+        var serverTask = Task.Run(async () =>
+        {
+            HttpListenerContext ctx = await listener.GetContextAsync();
+            actingTenantHeader = ctx.Request.Headers["X-Axiam-Tenant"];
+            byte[] body = Encoding.UTF8.GetBytes($$"""{"challenge":{},"state_token":"{{StateToken}}"}""");
+            ctx.Response.ContentType = "application/json";
+            ctx.Response.ContentLength64 = body.Length;
+            await ctx.Response.OutputStream.WriteAsync(body);
+            ctx.Response.OutputStream.Close();
+        });
+
+        try
+        {
+            using var client = new AxiamClient(
+                new Uri(prefix),
+                TenantGuid,
+                new AxiamClientOptions
+                {
+                    BaseUrl = new Uri(prefix),
+                    TenantId = TenantGuid,
+                });
+            // No acting tenant configured — the already-correct case, pinned so the fix
+            // cannot over-reach into sending the header unconditionally.
+
+            await client.WebauthnSetupRegisterStartAsync(Sensitive.Of(SetupToken));
+            await serverTask;
+
+            Assert.True(string.IsNullOrEmpty(actingTenantHeader));
+        }
+        finally
+        {
+            listener.Stop();
+            listener.Close();
+        }
+    }
+
+    private static int GetEphemeralPort()
+    {
+        using var socket = new System.Net.Sockets.Socket(
+            System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
+        socket.Bind(new IPEndPoint(IPAddress.Loopback, 0));
+        return ((IPEndPoint)socket.LocalEndPoint!).Port;
+    }
 }

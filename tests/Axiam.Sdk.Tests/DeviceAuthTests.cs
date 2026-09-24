@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
@@ -269,6 +270,407 @@ public sealed class DeviceAuthTests
                 string.IsNullOrEmpty(cookieHeaderOnResourcesCall)
                 || !cookieHeaderOnResourcesCall.Contains("STALE-SESSION-TOKEN", StringComparison.Ordinal),
                 $"the device handle sent the original session's stale cookie: '{cookieHeaderOnResourcesCall}'");
+        }
+        finally
+        {
+            listener.Stop();
+            listener.Close();
+        }
+    }
+
+    // ---- Real pipeline: the device-login POST itself withholds the prior session -------
+    //
+    // The test above (TheDeviceHandleNeverSendsTheOriginalSessionsStaleCookie) only
+    // inspects the SECOND request — the returned device handle's own follow-up call. It
+    // never asserts on the device-auth POST's own headers, so it does not catch a leak on
+    // that first call. CONTRACT.md §6.1 rules 6-10: a client that already holds a cookie
+    // session must send neither that session's `Cookie` header nor the derived
+    // `Authorization: Bearer` header on `POST /api/v1/auth/device` itself. Same real
+    // loopback/real CookieContainer boundary as the test above — a fake transport above
+    // HttpClientHandler's cookie layer would prove nothing here (the axiam-typescript-sdk
+    // C-8 lesson).
+    [Fact]
+    public async Task TheDeviceLoginPostItselfWithholdsThePriorSessionsCookieAndAuthorization()
+    {
+        using var listener = new HttpListener();
+        string prefix = $"http://127.0.0.1:{GetEphemeralPort()}/";
+        listener.Prefixes.Add(prefix);
+        listener.Start();
+
+        string? cookieHeaderOnDeviceLogin = "not observed";
+        string? authHeaderOnDeviceLogin = "not observed";
+        string? tenantHeaderOnDeviceLogin = "not observed";
+        var serverTask = Task.Run(async () =>
+        {
+            HttpListenerContext ctx = await listener.GetContextAsync();
+            cookieHeaderOnDeviceLogin = ctx.Request.Headers["Cookie"];
+            authHeaderOnDeviceLogin = ctx.Request.Headers["Authorization"];
+            tenantHeaderOnDeviceLogin = ctx.Request.Headers["X-Tenant-Id"];
+            byte[] body = Encoding.UTF8.GetBytes(
+                """{"access_token":"device-token-xyz","token_type":"Bearer","expires_in":900}""");
+            ctx.Response.ContentType = "application/json";
+            ctx.Response.ContentLength64 = body.Length;
+            await ctx.Response.OutputStream.WriteAsync(body);
+            ctx.Response.OutputStream.Close();
+        });
+
+        try
+        {
+            (byte[] certPem, byte[] keyPem) = RealClientCertPemPair();
+            using var original = new AxiamClient(
+                new Uri(prefix),
+                TenantGuid,
+                new AxiamClientOptions
+                {
+                    BaseUrl = new Uri(prefix),
+                    TenantId = TenantGuid,
+                    ClientCertificatePem = certPem,
+                    ClientKeyPem = keyPem,
+                });
+
+            // Seed a STALE session cookie directly into the ORIGINAL client's real cookie
+            // jar — the exact shape a caller who logged in earlier, then switched to a
+            // device credential, would have sitting in memory.
+            FieldInfo field = typeof(AxiamClient).GetField("_cookieContainer", BindingFlags.NonPublic | BindingFlags.Instance)!;
+            var container = (CookieContainer)field.GetValue(original)!;
+            container.Add(new Uri(prefix), new Cookie("axiam_access", "STALE-SESSION-TOKEN"));
+
+            using AxiamClient device = (await original.AuthenticateDeviceAsync()).Client;
+            await serverTask;
+
+            Assert.True(
+                string.IsNullOrEmpty(cookieHeaderOnDeviceLogin),
+                $"the device-login POST itself sent the original session's cookie: '{cookieHeaderOnDeviceLogin}'");
+            Assert.True(
+                string.IsNullOrEmpty(authHeaderOnDeviceLogin),
+                $"the device-login POST itself sent an Authorization header: '{authHeaderOnDeviceLogin}'");
+            // §5 rule 2: X-Tenant-Id stays unconditional even though the request no longer
+            // runs through AxiamHttpMessageHandler (which normally derives it).
+            Assert.Equal(TenantGuid, tenantHeaderOnDeviceLogin);
+        }
+        finally
+        {
+            listener.Stop();
+            listener.Close();
+        }
+    }
+
+    // ---- A refused device login leaves the original handle's session exactly as it was --
+
+    [Fact]
+    public async Task ARefusedDeviceLogin_401_LeavesTheOriginalSessionsCookieIntact_AndNextRequestStillSendsIt()
+    {
+        using var listener = new HttpListener();
+        string prefix = $"http://127.0.0.1:{GetEphemeralPort()}/";
+        listener.Prefixes.Add(prefix);
+        listener.Start();
+
+        string? cookieHeaderOnFollowUpCall = "not observed";
+        var serverTask = Task.Run(async () =>
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                HttpListenerContext ctx = await listener.GetContextAsync();
+                if (ctx.Request.Url!.AbsolutePath == "/api/v1/auth/device")
+                {
+                    byte[] body401 = Encoding.UTF8.GetBytes(
+                        """{"error":"authentication_failed","message":"unknown or untrusted certificate"}""");
+                    ctx.Response.StatusCode = 401;
+                    ctx.Response.ContentType = "application/json";
+                    ctx.Response.ContentLength64 = body401.Length;
+                    await ctx.Response.OutputStream.WriteAsync(body401);
+                    ctx.Response.OutputStream.Close();
+                }
+                else
+                {
+                    cookieHeaderOnFollowUpCall = ctx.Request.Headers["Cookie"];
+                    byte[] body = Encoding.UTF8.GetBytes("""{"items":[],"total":0}""");
+                    ctx.Response.ContentType = "application/json";
+                    ctx.Response.ContentLength64 = body.Length;
+                    await ctx.Response.OutputStream.WriteAsync(body);
+                    ctx.Response.OutputStream.Close();
+                }
+            }
+        });
+
+        try
+        {
+            (byte[] certPem, byte[] keyPem) = RealClientCertPemPair();
+            using var original = new AxiamClient(
+                new Uri(prefix),
+                TenantGuid,
+                new AxiamClientOptions
+                {
+                    BaseUrl = new Uri(prefix),
+                    TenantId = TenantGuid,
+                    ClientCertificatePem = certPem,
+                    ClientKeyPem = keyPem,
+                });
+
+            FieldInfo field = typeof(AxiamClient).GetField("_cookieContainer", BindingFlags.NonPublic | BindingFlags.Instance)!;
+            var container = (CookieContainer)field.GetValue(original)!;
+            container.Add(new Uri(prefix), new Cookie("axiam_access", "ORIGINAL-SESSION-TOKEN"));
+
+            await Assert.ThrowsAsync<AuthError>(() => original.AuthenticateDeviceAsync());
+
+            // The jar itself is untouched by the refusal — the same cookie is still there.
+            CookieCollection stillThere = container.GetCookies(new Uri(prefix));
+            Assert.Contains(stillThere.Cast<Cookie>(), c => c.Name == "axiam_access" && c.Value == "ORIGINAL-SESSION-TOKEN");
+
+            // And the original handle's own transport still sends it on an ordinary request.
+            await original.Management.Resources.ListAsync();
+            await serverTask;
+
+            Assert.False(string.IsNullOrEmpty(cookieHeaderOnFollowUpCall), "expected the original session's cookie on the follow-up call");
+            Assert.Contains("ORIGINAL-SESSION-TOKEN", cookieHeaderOnFollowUpCall);
+        }
+        finally
+        {
+            listener.Stop();
+            listener.Close();
+        }
+    }
+
+    // ---- I4 twin: a client with no prior session is unaffected ------------------------
+
+    [Fact]
+    public async Task TheDeviceLoginPostFromAClientWithNoPriorSession_IsUnaffected_I4Twin()
+    {
+        using var listener = new HttpListener();
+        string prefix = $"http://127.0.0.1:{GetEphemeralPort()}/";
+        listener.Prefixes.Add(prefix);
+        listener.Start();
+
+        string? cookieHeaderOnDeviceLogin = "not observed";
+        string? authHeaderOnDeviceLogin = "not observed";
+        string? cookieHeaderOnFollowUpCall = "not observed";
+        string? authHeaderOnFollowUpCall = "not observed";
+        var serverTask = Task.Run(async () =>
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                HttpListenerContext ctx = await listener.GetContextAsync();
+                if (ctx.Request.Url!.AbsolutePath == "/api/v1/auth/device")
+                {
+                    cookieHeaderOnDeviceLogin = ctx.Request.Headers["Cookie"];
+                    authHeaderOnDeviceLogin = ctx.Request.Headers["Authorization"];
+                    byte[] body = Encoding.UTF8.GetBytes(
+                        """{"access_token":"device-token-xyz","token_type":"Bearer","expires_in":900}""");
+                    ctx.Response.ContentType = "application/json";
+                    ctx.Response.ContentLength64 = body.Length;
+                    await ctx.Response.OutputStream.WriteAsync(body);
+                    ctx.Response.OutputStream.Close();
+                }
+                else
+                {
+                    cookieHeaderOnFollowUpCall = ctx.Request.Headers["Cookie"];
+                    authHeaderOnFollowUpCall = ctx.Request.Headers["Authorization"];
+                    byte[] body = Encoding.UTF8.GetBytes("""{"items":[],"total":0}""");
+                    ctx.Response.ContentType = "application/json";
+                    ctx.Response.ContentLength64 = body.Length;
+                    await ctx.Response.OutputStream.WriteAsync(body);
+                    ctx.Response.OutputStream.Close();
+                }
+            }
+        });
+
+        try
+        {
+            (byte[] certPem, byte[] keyPem) = RealClientCertPemPair();
+            using var original = new AxiamClient(
+                new Uri(prefix),
+                TenantGuid,
+                new AxiamClientOptions
+                {
+                    BaseUrl = new Uri(prefix),
+                    TenantId = TenantGuid,
+                    ClientCertificatePem = certPem,
+                    ClientKeyPem = keyPem,
+                });
+            // No prior session: the cookie jar starts empty — this is the case that was
+            // already right; the fix must not disturb it.
+
+            using AxiamClient device = (await original.AuthenticateDeviceAsync()).Client;
+            await device.Management.Resources.ListAsync();
+            await serverTask;
+
+            Assert.True(string.IsNullOrEmpty(cookieHeaderOnDeviceLogin));
+            Assert.True(string.IsNullOrEmpty(authHeaderOnDeviceLogin));
+            Assert.True(string.IsNullOrEmpty(cookieHeaderOnFollowUpCall));
+            Assert.Equal("Bearer device-token-xyz", authHeaderOnFollowUpCall);
+        }
+        finally
+        {
+            listener.Stop();
+            listener.Close();
+        }
+    }
+
+    // ---- Send-back: the device-login POST also owes X-Axiam-Tenant when set -----------
+    //
+    // CONTRACT.md §5.2 rule 1: the acting-tenant header is sent on every REST request
+    // when this handle has one set — §5 rule 2's X-Tenant-Id is not a substitute, and
+    // routing the login over the anonymous transport (this file's earlier fix) must not
+    // silently drop it. `_anonymousHttpClient` is SHARED across every `ActingTenant()`
+    // handle built over one client (see AxiamClient.cs's copy-constructor), so the header
+    // cannot be a `DefaultRequestHeaders` entry on it the way it is on `_httpClient`; it
+    // is applied per-request from the CALLING handle's own `_actingTenant` field instead
+    // (`ApplyAnonymousTenantHeaders`). Real loopback, same boundary as the tests above.
+
+    [Fact]
+    public async Task TheDeviceLoginPostCarriesXAxiamTenant_WhenConfiguredAtConstruction()
+    {
+        const string actingTenant = "55555555-5555-5555-5555-555555555555";
+        using var listener = new HttpListener();
+        string prefix = $"http://127.0.0.1:{GetEphemeralPort()}/";
+        listener.Prefixes.Add(prefix);
+        listener.Start();
+
+        string? cookieHeaderOnDeviceLogin = "not observed";
+        string? authHeaderOnDeviceLogin = "not observed";
+        string? actingTenantHeaderOnDeviceLogin = "not observed";
+        var serverTask = Task.Run(async () =>
+        {
+            HttpListenerContext ctx = await listener.GetContextAsync();
+            cookieHeaderOnDeviceLogin = ctx.Request.Headers["Cookie"];
+            authHeaderOnDeviceLogin = ctx.Request.Headers["Authorization"];
+            actingTenantHeaderOnDeviceLogin = ctx.Request.Headers["X-Axiam-Tenant"];
+            byte[] body = Encoding.UTF8.GetBytes(
+                """{"access_token":"device-token-xyz","token_type":"Bearer","expires_in":900}""");
+            ctx.Response.ContentType = "application/json";
+            ctx.Response.ContentLength64 = body.Length;
+            await ctx.Response.OutputStream.WriteAsync(body);
+            ctx.Response.OutputStream.Close();
+        });
+
+        try
+        {
+            (byte[] certPem, byte[] keyPem) = RealClientCertPemPair();
+            using var original = new AxiamClient(
+                new Uri(prefix),
+                TenantGuid,
+                new AxiamClientOptions
+                {
+                    BaseUrl = new Uri(prefix),
+                    TenantId = TenantGuid,
+                    ClientCertificatePem = certPem,
+                    ClientKeyPem = keyPem,
+                    ActingTenant = Guid.Parse(actingTenant),
+                });
+
+            using AxiamClient device = (await original.AuthenticateDeviceAsync()).Client;
+            await serverTask;
+
+            Assert.True(string.IsNullOrEmpty(cookieHeaderOnDeviceLogin));
+            Assert.True(string.IsNullOrEmpty(authHeaderOnDeviceLogin));
+            Assert.Equal(actingTenant, actingTenantHeaderOnDeviceLogin);
+        }
+        finally
+        {
+            listener.Stop();
+            listener.Close();
+        }
+    }
+
+    [Fact]
+    public async Task TheDeviceLoginPostCarriesXAxiamTenant_FromAnActingTenantHandle()
+    {
+        const string actingTenant = "66666666-6666-6666-6666-666666666666";
+        using var listener = new HttpListener();
+        string prefix = $"http://127.0.0.1:{GetEphemeralPort()}/";
+        listener.Prefixes.Add(prefix);
+        listener.Start();
+
+        string? cookieHeaderOnDeviceLogin = "not observed";
+        string? authHeaderOnDeviceLogin = "not observed";
+        string? actingTenantHeaderOnDeviceLogin = "not observed";
+        var serverTask = Task.Run(async () =>
+        {
+            HttpListenerContext ctx = await listener.GetContextAsync();
+            cookieHeaderOnDeviceLogin = ctx.Request.Headers["Cookie"];
+            authHeaderOnDeviceLogin = ctx.Request.Headers["Authorization"];
+            actingTenantHeaderOnDeviceLogin = ctx.Request.Headers["X-Axiam-Tenant"];
+            byte[] body = Encoding.UTF8.GetBytes(
+                """{"access_token":"device-token-xyz","token_type":"Bearer","expires_in":900}""");
+            ctx.Response.ContentType = "application/json";
+            ctx.Response.ContentLength64 = body.Length;
+            await ctx.Response.OutputStream.WriteAsync(body);
+            ctx.Response.OutputStream.Close();
+        });
+
+        try
+        {
+            (byte[] certPem, byte[] keyPem) = RealClientCertPemPair();
+            using var original = new AxiamClient(
+                new Uri(prefix),
+                TenantGuid,
+                new AxiamClientOptions
+                {
+                    BaseUrl = new Uri(prefix),
+                    TenantId = TenantGuid,
+                    ClientCertificatePem = certPem,
+                    ClientKeyPem = keyPem,
+                });
+            // No login result held yet: ActingTenant() is ungated (§5.2 rule 1 — "nothing
+            // to gate on ... sends the header as asked"), exactly the shape a device-login
+            // caller has.
+            using AxiamClient acting = original.ActingTenant(Guid.Parse(actingTenant));
+
+            using AxiamClient device = (await acting.AuthenticateDeviceAsync()).Client;
+            await serverTask;
+
+            Assert.True(string.IsNullOrEmpty(cookieHeaderOnDeviceLogin));
+            Assert.True(string.IsNullOrEmpty(authHeaderOnDeviceLogin));
+            Assert.Equal(actingTenant, actingTenantHeaderOnDeviceLogin);
+        }
+        finally
+        {
+            listener.Stop();
+            listener.Close();
+        }
+    }
+
+    [Fact]
+    public async Task TheDeviceLoginPostFromAClientWithNoActingTenant_OmitsXAxiamTenant_I4Twin()
+    {
+        using var listener = new HttpListener();
+        string prefix = $"http://127.0.0.1:{GetEphemeralPort()}/";
+        listener.Prefixes.Add(prefix);
+        listener.Start();
+
+        string? actingTenantHeaderOnDeviceLogin = "not observed";
+        var serverTask = Task.Run(async () =>
+        {
+            HttpListenerContext ctx = await listener.GetContextAsync();
+            actingTenantHeaderOnDeviceLogin = ctx.Request.Headers["X-Axiam-Tenant"];
+            byte[] body = Encoding.UTF8.GetBytes(
+                """{"access_token":"device-token-xyz","token_type":"Bearer","expires_in":900}""");
+            ctx.Response.ContentType = "application/json";
+            ctx.Response.ContentLength64 = body.Length;
+            await ctx.Response.OutputStream.WriteAsync(body);
+            ctx.Response.OutputStream.Close();
+        });
+
+        try
+        {
+            (byte[] certPem, byte[] keyPem) = RealClientCertPemPair();
+            using var original = new AxiamClient(
+                new Uri(prefix),
+                TenantGuid,
+                new AxiamClientOptions
+                {
+                    BaseUrl = new Uri(prefix),
+                    TenantId = TenantGuid,
+                    ClientCertificatePem = certPem,
+                    ClientKeyPem = keyPem,
+                });
+            // No ActingTenant configured or set — the already-correct case, pinned so the
+            // fix cannot over-reach into sending the header unconditionally.
+
+            using AxiamClient device = (await original.AuthenticateDeviceAsync()).Client;
+            await serverTask;
+
+            Assert.True(string.IsNullOrEmpty(actingTenantHeaderOnDeviceLogin));
         }
         finally
         {

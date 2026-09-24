@@ -140,6 +140,39 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   *previous* principal's report, and the decision memo could still answer from the
   previous principal's cached decisions. All three now call `OnCredentialChange()` at the
   same point (before the request) every other credential-changing method does.
+- **`AuthenticateDeviceAsync()`'s own `POST /api/v1/auth/device` carried a prior session's
+  cookie and derived `Authorization` header, on a client that had one.** The call ran over
+  `_httpClient` — the same transport whose `CookieContainer` and
+  `AxiamHttpMessageHandler` belong to this client's own session — so a caller that logged
+  in earlier and then switched to a certificate for the device login sent both the stale
+  `axiam_access` cookie and the `Authorization: Bearer` header
+  `AxiamHttpMessageHandler` derives from it on the login request itself (CONTRACT.md
+  §6.1 rules 6–10). The server reads `axiam_access` before `Authorization`, so the login
+  could be evaluated against the earlier principal instead of the certificate presenting
+  it. The *returned handle*'s own fresh cookie jar was never affected — only the login
+  POST itself leaked. It now runs over `_anonymousHttpClient` (§24.1's existing
+  permanently-empty-jar transport, built from the same client-certificate/CA/TLS
+  configuration as `_httpClient`), with `X-Tenant-Id` added by hand since that transport
+  is never wrapped in `AxiamHttpMessageHandler`.
+  - **Send-back on that same fix:** moving the login POST to `_anonymousHttpClient`
+    dropped `X-Axiam-Tenant` for a handle with an acting tenant set (the configured
+    `AxiamClientOptions.ActingTenant`, or an `ActingTenant(id)` handle) — the header is
+    attached to `_httpClient.DefaultRequestHeaders` per handle, and
+    `_anonymousHttpClient` is a single instance SHARED across every acting-tenant handle
+    built over one client, so it was never a candidate for a per-handle default header
+    in the first place. CONTRACT.md §5.2 rule 1 sends the header on every REST request
+    when set, gated on nothing when no login result is held yet — exactly a device
+    login's own shape. Now applied per-request from the calling handle's own acting
+    tenant via a small shared helper (`ApplyAnonymousTenantHeaders`).
+- **`PostAnonymousRawJsonAsync` — the §24.1 WebAuthn setup pair's transport
+  (`WebauthnSetupRegisterStartAsync`/`WebauthnSetupRegisterFinishAsync`) — had the same
+  gap, pre-existing before the device-login fix above.** It already applied `X-Tenant-Id`
+  by hand for the same reason (it bypasses `AxiamHttpMessageHandler`), but never applied
+  `X-Axiam-Tenant`. CONTRACT.md §5.2.2 rule 4 is explicit that a self-service/setup call
+  is *not* exempt from sending the acting-tenant header — "an SDK MUST NOT work around
+  that by clearing or rewriting `X-Axiam-Tenant`" — so a handle with an acting tenant set
+  silently dropped it on both setup calls. Now uses the same `ApplyAnonymousTenantHeaders`
+  helper the device login uses.
 
 ### Breaking
 

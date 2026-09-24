@@ -406,6 +406,33 @@ public sealed partial class AxiamClient : IDisposable
     }
 
     /// <summary>
+    /// CONTRACT.md &#167;5 rule 2 (the unconditional <c>X-Tenant-Id</c>) and &#167;5.2 rule 1
+    /// (<c>X-Axiam-Tenant</c>, sent only when THIS handle has an acting tenant) — applied
+    /// by hand to a request that runs over <see cref="_anonymousHttpClient"/>. That
+    /// transport is never wrapped in <see cref="Rest.AxiamHttpMessageHandler"/> (which
+    /// derives both headers for every request through <c>_httpClient</c>), and it is
+    /// SHARED across every <see cref="ActingTenant"/> handle built over one client (see
+    /// the copy-constructor below), so it cannot carry a per-handle default header the way
+    /// <c>_httpClient</c>'s own <c>DefaultRequestHeaders</c> does — this handle's own
+    /// <see cref="_actingTenant"/> field is read fresh on every call instead. Shared by
+    /// <see cref="AuthenticateDeviceAsync"/> and <c>PostAnonymousRawJsonAsync</c> (the
+    /// &#167;24.1 WebAuthn setup pair) so the two anonymous-transport call sites cannot
+    /// drift on which headers "anonymous" withholds (session cookie, derived
+    /// <c>Authorization</c>) and which it still owes: &#167;5.2.2 rule 4 is explicit that a
+    /// self-service/setup call is not exempt from sending the acting-tenant header, and an
+    /// SDK "MUST NOT work around that by clearing or rewriting" it.
+    /// </summary>
+    /// <param name="request">The outgoing request, before it is sent over <c>_anonymousHttpClient</c>.</param>
+    private void ApplyAnonymousTenantHeaders(HttpRequestMessage request)
+    {
+        request.Headers.TryAddWithoutValidation("X-Tenant-Id", _tenant.TenantId);
+        if (_actingTenant is { } tenantId)
+        {
+            request.Headers.TryAddWithoutValidation(ActingTenantHeaderName, tenantId.ToString());
+        }
+    }
+
+    /// <summary>
     /// Builds a handle sharing <paramref name="source"/>'s session (CONTRACT.md &#167;5.2
     /// rule 1's on-client form) but acting on <paramref name="actingTenant"/> instead.
     /// </summary>
