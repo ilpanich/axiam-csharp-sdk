@@ -20,15 +20,19 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to **contract 1.50**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
-§22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates, the §1.1 gRPC-only `get_user_info` operation,
-contract 1.3, the §12 OIDC/SSO relying-party helpers, contract 1.4, the §13 webhook signature
-verifier, T-145, the §20 UMA 2.0 Protection API and ticket grant, contract 1.10, the §22 reactor
-runtime, contract 1.19, the §23 OPAQUE (RFC 9807) login path, contract 1.26, the §24 WebAuthn
-relying-party layer, the §25 account-lifecycle operations and §26 Pushed Authorization Requests,
-contract 1.28, §23.4 rule 7's `mode`-driven password-login fallback, contract 1.29, and the §27
-Management API — all 162 operations across 24 namespaces with the §27.6 declarative layer — and
-the §28 MCP resource-server helpers, contract 1.48).
+This SDK conforms to **contract 1.51**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
+§22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates and the §6.1 rules 6–10
+mTLS device login, the §1.1 gRPC-only `get_user_info` operation and the §1.1.1 gRPC
+`validate_token`/`introspect_token` operations, contract 1.3, the §12 OIDC/SSO relying-party
+helpers, contract 1.4, the §13 webhook signature verifier, T-145, the §20 UMA 2.0 Protection API
+and ticket grant, contract 1.10, the §22 reactor runtime, contract 1.19, the §23 OPAQUE (RFC 9807)
+login path, contract 1.26, the §24 WebAuthn relying-party layer, the §25 account-lifecycle
+operations and §26 Pushed Authorization Requests, contract 1.28, §23.4 rule 7's `mode`-driven
+password-login fallback, contract 1.29, the §5.2 rule 1 acting tenant, contract 1.51, the §10.1
+rule 9 sender-constrained-token check, contract 1.51, and the §27 Management API — all 162
+operations across 24 namespaces with the §27.6 declarative layer, including the §27.6.1 resource
+metadata, two-shape role bindings and service accounts, contract 1.51 — and the §28 MCP
+resource-server helpers, contract 1.48).
 
 §12.7, §14, §15, §20, §22, §23, §24, §25, §26 and §27 are named rather than folded into the range
 because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
@@ -41,12 +45,35 @@ instead — see [WebAuthn / passkeys](#webauthn--passkeys-axiamsdkwebauthn-contr
 
 See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract.
 
+### Contract 1.51 — what this SDK ships, and what it declines
+
+| Contract 1.51 item | Status here |
+|---|---|
+| §1.1.1 `ValidateTokenAsync` / `IntrospectTokenAsync` (gRPC) | **Shipped**: `Grpc/TokenGrpcClient.cs`. Every response field, `Cnf` optional, `Status()` / `VerifyPossession()` for §10.3 rules 1–4 |
+| §5.2 rule 1 acting tenant (SHOULD) | **Shipped**: `AxiamClient.ActingTenant(Guid)` / `ClearActingTenant()`. REST-only; gRPC acts on the token's tenant |
+| §6.1 rules 6–10 `AuthenticateDeviceAsync()` | **Shipped**. Rule 7 is enforced as a runtime check (`AuthError`, zero wire calls) rather than in the type system — C# has no typestate short of splitting `AxiamClient` into two public types for the sake of one operation, which would ripple through every builder method |
+| §10.1 rule 9 at the default verify entry point | **Shipped, as a fix** — see Breaking below: `JwksVerifier.VerifyAsync` / `AxiamAuthMiddleware` refuse a bound token without evidence; `VerifyWithProofsAsync` accepts it given the connection's certificate |
+| §27.6.1 `ResourceSpec.Metadata` | **Shipped**, whole-object equality via `ManifestApi.JsonElementDeepEquals` |
+| §27.6.1 two-shape role binding, `RoleBinding.Inherit` | **Shipped** on `GroupSpec`, `UserSpec` and `ServiceAccountSpec` |
+| §27.6.1 `ServiceAccountSpec`, §27.5 rule 5 | **Shipped**; the one-time `client_secret` is on `StepOutcome.CreatedServiceAccount` |
+| §27.13 `CertificateType.Server`, `SubjectAltName`, `inherit` on assignments | **Shipped** via the regenerated `Models/` surface; unrecognised enum values still decode to `Unknown` rather than throwing |
+| §27.6 `webhooks` in the manifest | **Declined**: the contract names it without specifying a shape, and no consumer of this SDK has asked for it |
+
+**The manifest, in §27.10's terms.** This SDK is in the full tier: resources (nested), scopes,
+permissions, roles, role grants, groups, users, service accounts, resource metadata, and
+group/user/service-account role bindings in both shapes. `webhooks` is not implemented.
+`ManagementManifest.Builder()` — the same fluent builder this SDK has always shipped, extended
+with `Resource(..., metadata:)`, `GroupRole`/`AssignRole`/`AssignServiceAccountRole`'s
+`resourceKey`/`inherit` parameters, and `ServiceAccount`/`AssignServiceAccountRole` — is this SDK's
+declarative form; there is no separate code-generation attribute to decline.
+
 ### §1–§13 conformance checklist
 
 | § | Requirement | Where implemented |
 |---|---|---|
 | §1 | PascalCase method map (`Login`/`VerifyMfa`/`Refresh`/`Logout`/`CheckAccess`/`Can`/`BatchCheck`) | `AxiamClient.LoginAsync`/`VerifyMfaAsync`/`RefreshAsync`/`LogoutAsync`; `AuthzRestClient.CheckAccessAsync`/`CanAsync`/`BatchCheckAsync`; `Grpc/AxiamGrpcAuthzClient.CheckAccessAsync`/`BatchCheckAsync` |
 | §1.1 | gRPC-only `GetUserInfoAsync` (`axiam.v1.UserInfoService/GetUserInfo`) — empty request, identity from the bearer token; returns typed `UserInfo { Sub, TenantId, OrgId, Email?, PreferredUsername? }` (scope-gated optionals); reuses the same channel/interceptor/refresh machinery as `CheckAccess`; no REST substitution | `Grpc/AxiamGrpcAuthzClient.GetUserInfoAsync`, `Grpc/UserInfo.cs` |
+| §1.1.1 | gRPC-only `TokenGrpcClient.ValidateTokenAsync`/`IntrospectTokenAsync` — full response modelling including `CnfClaim`, `TokenStatusHelper` classifying `Inactive`/`Bearer`/`SenderConstrained`/`Unverifiable`, `VerifyPossession(PresentedProofs)` applying §10.1 rule 9/§10.3; no caller session, zero wire calls | `Grpc/TokenGrpcClient.cs`, exercised by `tests/Axiam.Sdk.Tests/TokenGrpcClientTests.cs` |
 | §2 | `AuthError`/`AuthzError`/`NetworkError` taxonomy + HTTP/gRPC status mapping | `Core/ErrorMapper.cs`, `Core/AuthError.cs`, `Core/AuthzError.cs`, `Core/NetworkError.cs` |
 | §3 | Non-browser CSRF: capture `X-CSRF-Token` response header, echo on state-changing requests | `Rest/AxiamHttpMessageHandler.cs` |
 | §4 | Persistent cookie jar (`HttpClientHandler { UseCookies = true, CookieContainer = new() }`) | `Rest/AxiamHttpClientFactory.cs` |
@@ -57,7 +84,7 @@ See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract
 | §8 | AMQP HMAC-SHA256 verify-before-handler, constant-time compare, NEW-4 replay protection (`key_version`/`nonce`/`issued_at`) | `Amqp/Hmac.cs`, `Amqp/AxiamAmqpConsumer.cs`, `Amqp/ReplayGuard.cs` |
 | §9 | `SemaphoreSlim(1,1)` single-flight refresh, one guard across REST + gRPC | `Auth/RefreshGuard.cs` (shared by `AxiamClient` and `Grpc/AuthInterceptor.cs`) |
 | §10 | `app.UseMiddleware<AxiamAuthMiddleware>()` + `ClaimsPrincipal` injection + policy-based `[Authorize]` | `Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
-| §10.1 | Complete minimum local-verification set: EdDSA-pinned signature (before key lookup), **required** `exp`, honoured `nbf`, asserted `tenant_id`, conditional `iss`/`aud`, named 60s clock skew — all fail-closed | `Auth/JwksVerifier.VerifyAsync`/`ApplyClaimPolicy`, exercised by `tests/Axiam.Sdk.Tests/Contract101LocalVerificationTests.cs` |
+| §10.1 | Complete minimum local-verification set: EdDSA-pinned signature (before key lookup), **required** `exp`, honoured `nbf`, asserted `tenant_id`, conditional `iss`/`aud`, named 60s clock skew, **rule 9** sender-constrained-token check at the default entry point — all fail-closed | `Auth/JwksVerifier.VerifyAsync`/`VerifyWithProofsAsync`/`ApplyClaimPolicy`, `Auth/SenderConstraintRule.cs`, exercised by `tests/Axiam.Sdk.Tests/Contract101LocalVerificationTests.cs` and `tests/Axiam.Sdk.Tests/Rule9EntryPointTests.cs` |
 | §10.4 | Optional session-revocation feed poller — off by default, never on the request path once warm, never fails closed, only ever rejects, and never matches a token with no `sid` | `Auth/RevocationFeed.cs` + the `revocationFeed` argument to `Auth/JwksVerifier`, exercised by `tests/Axiam.Sdk.Tests/RevocationFeedTests.cs` |
 | §11 | Declarative `[AxiamAccess(action, resource)]` authorization attribute with scope + route-param resolution; `require_auth`/`require_role` as framework-native `[Authorize]`/`[Authorize(Roles = ...)]` | `Axiam.Sdk.AspNetCore/AxiamAccessAttribute.cs`, `AxiamRequirement.cs`, `AxiamPolicyHandler.cs`/`AxiamPolicyProvider.cs` |
 | §12 | OIDC/SSO relying-party helpers: `OidcDiscoverAsync`/`OidcBegin`/`OidcExchangeAsync`/`OidcRefreshAsync`/`LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync`/`SsoStartAsync`/`SsoCompleteAsync`/`SsoProvidersAsync`/`SsoStartOauth2Async`/`SsoCompleteOauth2Async`/`SsoCompleteHandoffAsync`; `MapAxiamOidcLogin` ASP.NET Core glue | `AxiamClient.Oidc.cs`, `Auth/Oidc/*.cs`, `Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs` |
@@ -80,6 +107,33 @@ unparseable, or of the wrong JSON type is a rejection, never a skipped check.
 | 5 | `iss` | Checked **only** when `ExpectedIssuer` is configured. Unset by default. |
 | 6 | `aud` | Checked **only** when `ExpectedAudience` is configured. Unset by default; accepts both the single-string and array forms. |
 | 7 | clock skew | `JwksVerifier.ClockSkewLeeway` — a named 60-second constant applied to rules 2 and 3. Deliberately **not** operator-configurable. |
+| 8 | subject of the decision | The guard decides on the caller's own credential and no other — a failure is a rejection, never a fall back to the SDK client's own session. |
+| 9 | `cnf` sender-constrained token (**fixed in contract 1.51**) | `VerifyAsync(token, tenantId, ...)` — the middleware's default entry point — applies rule 9 with **no evidence at all**, so it **refuses** any token carrying `cnf`. `VerifyWithProofsAsync(token, tenantId, proofs, ...)` accepts one given the connection's evidence, per the rule's table (`Auth/SenderConstraintRule.Verify`). |
+
+**Rule 9 in practice.** Every §6.1 device token (`AuthenticateDeviceAsync`) is
+certificate-bound, and a DPoP-bound token carries `cnf.jkt`. Before this fix,
+`VerifyAsync` treated both as ordinary bearer tokens; now it refuses them, because it has
+nothing to check the binding against. `AxiamAuthMiddleware` builds the evidence from the
+connection the ASP.NET Core host itself terminated TLS on — **never from a header**,
+since a header is exactly what an attacker without the private key can also send:
+
+```csharp
+// Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs
+var proofs = new PresentedProofs(
+    certificateThumbprintS256: context.Connection.ClientCertificate is { } cert
+        ? JwksVerifier.CertificateThumbprintS256(cert)
+        : null,
+    dpopThumbprint: null);
+ClaimsPrincipal principal = await client.JwksVerifier
+    .VerifyWithProofsAsync(token, tenantId, proofs, cancellationToken);
+```
+
+A deployment that never populates `HttpContext.Connection.ClientCertificate` — no
+client-certificate listener configured on the Kestrel/IIS/reverse-proxy layer — refuses
+every bound token, which is the fail-closed reading detail 3 requires: no evidence means
+no possession proof, never an assumed pass. An **unbound** token (no `cnf` at all) is
+unaffected by any of this. See [Breaking](CHANGELOG.md) in the changelog for what this
+means for a caller who built a guard directly on `VerifyAsync`.
 
 This SDK uses **no JWT library**: there is no `System.IdentityModel.Tokens.Jwt`,
 `JwtSecurityTokenHandler`, or `TokenValidationParameters` anywhere in the dependency
@@ -458,6 +512,40 @@ Notes:
   serialized, or exposed via a public getter beyond the options object it is set on.
 - On `Axiam.Sdk.AspNetCore`, the same two properties exist on `AxiamOptions` and flow
   through to the shared `AxiamClient`.
+
+### The mTLS device login (CONTRACT.md §6.1 rules 6–10, contract 1.51)
+
+`AuthenticateDeviceAsync()` is `POST /api/v1/auth/device` with **no body** — the caller's
+identity is entirely the certificate presented at the TLS handshake, configured exactly
+as above:
+
+```csharp
+using AxiamClient client = new(baseUrl, "acme", new AxiamClientOptions
+{
+    ClientCertificatePem = File.ReadAllBytes("device-cert.pem"),
+    ClientKeyPem = File.ReadAllBytes("device-key.pem"),
+});
+
+(AxiamClient device, DeviceToken token) = await client.AuthenticateDeviceAsync();
+// device.Management... — a fresh handle carrying the device's bearer credential.
+```
+
+- **Unreachable without a certificate.** On a client built with neither
+  `ClientCertificatePem` nor `ClientKeyPem`, this throws `AuthError` **before any request
+  is sent** — a zero-wire-call guarantee a test pins (`AxiamHttpMessageHandlerTests`
+  and `DeviceAuthTests`' `I4Twin`-suffixed cases assert it both ways: reachable only
+  when a certificate is configured, unreachable otherwise).
+- **The returned handle withholds the original session's cookie.** `DeviceToken.AccessToken`
+  (a `Sensitive<string>`) is adopted as a static `Authorization: Bearer` credential on a
+  fresh `AxiamClient`; the cookie jar is a new, empty one, never the caller's — the server
+  reads the `axiam_access` cookie first, so a leftover session on the same handler chain
+  would otherwise silently win over the device token.
+- **No refresh.** A `401` on the device-login call itself, or on any later call made
+  through the returned handle, is surfaced as-is and never routed to the refresh guard —
+  there is no refresh token to redeem. A `429` is a `NetworkError`, not an `AuthError`, and
+  is not retried (§6.1 rule 10).
+- Worked end to end, combined with the declarative manifest, in
+  [`examples/DeviceMtlsProvisioning`](examples/DeviceMtlsProvisioning).
 
 ### RFC 8705 §5 `mtls_endpoint_aliases` (contract 1.40, CONTRACT.md §21.3 rule 2)
 
@@ -1539,6 +1627,42 @@ one tenant, and changing the header for one of those produces a `403` — so a U
 switch to everyone has turned a distinction the server made into a failure the user discovers.
 `false` against a server older than contract 1.31, which is the safe reading of absent.
 
+#### Acting on another tenant (§5.2 rule 1, contract 1.51)
+
+The supported way to exercise that reach is `AxiamClient.ActingTenant(Guid)` — it sends
+`X-Axiam-Tenant`, a separate header from the `X-Tenant-ID` that names the session's own
+tenant, on every REST request of the handle it returns:
+
+```csharp
+using AxiamClient client = new(new Uri("https://iam.example.com"), "organization", options);
+await client.LoginAsync("root@acme.example", password);
+
+using AxiamClient prod = client.ActingTenant(prodTenantId);  // refused client-side unless OrganizationLevel
+await prod.Management.Groups.ListAsync(PageRequest.Of(50));  // sends X-Axiam-Tenant: <prodTenantId>
+await client.Management.Groups.ListAsync(PageRequest.Of(50)); // sends none
+```
+
+- **A `Guid`, never a slug.** The server ignores a value that fails to parse and answers
+  for the caller's own tenant; there is no string overload to invite one.
+- **Sent only when set.** A client that never calls `ActingTenant` behaves exactly as it
+  did before contract 1.51 — the wire is unchanged for every existing caller.
+- **The acting tenant belongs to the handle**, not the underlying session.
+  `ActingTenant(Guid)` returns a new `AxiamClient` sharing the same session (cookies,
+  refresh guard, decision memo), so two handles can act on two different tenants from
+  concurrent code without racing each other's header. `ClearActingTenant()` on a handle
+  returns one that sends none again.
+- **Gated client-side once a login result is known.** After a password or MFA login,
+  `ActingTenant` refuses — `AuthzError`, no wire call — unless
+  `LoginResult.OrganizationLevel` is `true`, and refuses a tenant id outside
+  `LoginResult.ReachableTenantIds` when the server reported one. A handle built before any
+  login result exists (or via `CreateForTesting`) is ungated locally; the server's own
+  `403` is the backstop either way.
+- **REST-only.** The gRPC transport acts on whatever tenant the bearer token itself
+  names; no metadata key is invented for it, matching §5.2 rule 1's REST-only scope.
+- **The §17 decision memo is keyed on the acting tenant** in addition to its existing
+  key, so a memoized `Allow` for the caller's own tenant is never served back for a
+  different tenant acted on through the same session.
+
 #### Signing one in (§5.2.1)
 
 The reserved tenant has a fixed slug, `organization`, the same in every deployment — so signing in
@@ -1760,6 +1884,46 @@ if (!plan.IsConverged)
   rollback would be a second unreviewed batch of writes issued at exactly the moment the tenant is
   in an unknown state.
 - **Applying twice is applying once.** A converged tenant plans nothing and takes no writes.
+
+**§27.6.1 additions (contract 1.51): resource metadata, two-shape role bindings, service
+accounts.**
+
+```csharp
+ManagementManifest manifest = ManagementManifest.Builder()
+    .Resource("docs", "documents", "collection", metadata: JsonDocument.Parse("""{"region":"eu"}""").RootElement)
+    .Role("reviewer", "Reviewer", "Reviews documents")
+    .Group("staff", "Staff", "Everyone")
+    .GroupRole("staff", "reviewer", "docs", inherit: false) // resource-scoped, does not cascade
+    .ServiceAccount("bot", "review-bot", "Automated reviewer")
+    .AssignServiceAccountRole("bot", "reviewer", "docs")
+    .Build();
+
+ApplyReport report = await client.Management.Manifest.ApplyAsync(manifest);
+Sensitive<string> secret = report.CreatedServiceAccounts().Single().ClientSecret; // one-time
+```
+
+- **`ResourceSpec`'s optional `Metadata`** is sent on Create, and on Update when it is
+  stated and differs from the server's value — JSON value equality of the *whole* object,
+  never a key-by-key merge. A stated `{}` matches what the server stores for none; an
+  unstated `Metadata` is silent whatever the server currently holds.
+- **`RoleBinding(Role, Resource?, Inherit = true)`** is a group's, user's or service
+  account's role entry — implicitly convertible from a bare role key, so every existing
+  `Roles = new[] { "editor" }`-shaped call keeps compiling. `Inherit` reaches the wire
+  **only as `false`**; an inheriting binding's request body is byte-for-byte what it was
+  before contract 1.51. One role bound twice to one subject — plain and resource-scoped
+  both count — is refused before any request, since the server keys an assignment on
+  `(subject, role)` alone. Changing a binding's resource or `Inherit` is unassign then
+  assign (there is no update endpoint); the server binding's `tenant_scope` is carried
+  across, and a failed re-assign restores the previous binding, reported on
+  `StepOutcome.RestoreSucceeded`.
+- **`ServiceAccountSpec(Key, Name, Description?, Roles?)`** is reconciled by `Name` — the
+  server does not enforce it unique, so a name matching more than one existing account
+  fails `PlanAsync`/`ApplyAsync` client-side before any write. A `Create` outcome's
+  one-time `ClientSecret` is on `StepOutcome.CreatedServiceAccount` and
+  `ApplyReport.CreatedServiceAccounts()`, kept even when a *later* action of the same
+  apply fails — it is the only place this credential is ever retrievable. `ApplyAsync`
+  never rotates one. Accounts and their bindings are reconciled **last**, after every
+  other namespace (§27.6 rule 5), and read only when the manifest names at least one.
 
 Worked end to end in [`examples/ManagementManifest`](examples/ManagementManifest), and combined with
 §6.1 mTLS for a full device provisioning lifecycle in
