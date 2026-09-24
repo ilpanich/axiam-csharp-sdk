@@ -109,6 +109,26 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
 
 ### Fixed
 
+- **A gRPC `UNAUTHENTICATED` on a device credential was routed through the refresh guard,
+  replacing the server's own message with the guard's internal one** (CONTRACT 1.52 N4.5
+  (C-12) — "Never refreshed, on either transport… It surfaces the server's message, never
+  the refresh guard's" — not in c12-findings.md's C# section). The REST transport
+  (`AxiamHttpMessageHandler`) already checks `staticBearerToken is not null` and skips its
+  reactive-refresh branch entirely for a device-credentialed handle, so the server's own
+  `401` body surfaces untouched; the gRPC `AuthInterceptor` had no equivalent check — any
+  `UNAUTHENTICATED`, on any credential, was unconditionally routed through
+  `RefreshGuard.RefreshIfNeededAsync`. For a device handle that guard's delegate is built
+  to always throw (there is no refresh token to spend), so the caller received THAT
+  internal exception's message ("unreachable: a device-credentialed handle never attempts
+  a token refresh…") instead of the server's actual `UNAUTHENTICATED` detail, and gRPC's
+  gate `_refreshGuard` was invoked at all even though "never refreshed" is what it says
+  right on its own `AuthenticateDeviceAsync` remarks.
+  - Added `AxiamClient.HasStaticBearerToken` (internal) and a new `AuthInterceptor`
+    constructor parameter, `refreshExempt` (default `false`, so every existing caller is
+    unaffected), wired from `AxiamGrpcAuthzClient`/`TokenGrpcClient`. When `true`, an
+    `UNAUTHENTICATED` is never caught by the refresh-and-retry branch at all — it
+    propagates to the caller's own `ErrorMapper.FromGrpcStatus` mapping, exactly like a
+    non-device credential's second (post-retry) failure already does.
 - **A malformed `200` on the device login was adopted as an empty-string bearer
   credential** (CONTRACT 1.52 N4.2 (C-12) — "A refused or malformed device login changes
   no client state" — not in c12-findings.md's C# section, but the identical defect the

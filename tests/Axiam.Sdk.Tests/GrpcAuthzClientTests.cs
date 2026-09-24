@@ -244,6 +244,42 @@ public class GrpcAuthzClientTests
         Assert.Equal(1, refresh.Count); // exactly one shared-guard refresh — non-vacuous single-flight
     }
 
+    // ---- N4.5 (CONTRACT 1.52, C-12): never refreshed on a device credential, on either
+    // transport — "It surfaces the server's message, never the refresh guard's." The REST
+    // transport (AxiamHttpMessageHandler) checks `_staticBearerToken is not null` and
+    // skips the reactive-refresh branch ENTIRELY for a device-credentialed handle, so the
+    // server's own 401 body surfaces untouched. AuthInterceptor.HandleResponseAsync has no
+    // such check: it unconditionally calls `_refreshGuard.RefreshIfNeededAsync` on ANY
+    // UNAUTHENTICATED. For a device handle, that guard's delegate is built to always throw
+    // (AxiamClient.Device.cs: "unreachable: a device-credentialed handle never attempts a
+    // token refresh") — so a gRPC UNAUTHENTICATED on the device credential replaced the
+    // server's own status/message with the refresh guard's internal one instead.
+
+    [Fact]
+    public async Task CheckAccessAsync_Unauthenticated_OnADeviceCredential_SurfacesTheServersMessage_NoRefreshAttempt()
+    {
+        int callCount = 0;
+        var invoker = new FakeCallInvoker(handleCheck: (_, _) =>
+        {
+            Interlocked.Increment(ref callCount);
+            throw new RpcException(new Status(StatusCode.Unauthenticated, "device token expired"));
+        });
+        // Mirrors AxiamClient.Device.cs's own RefreshGuard construction for a device
+        // handle EXACTLY: no refresh token exists, so the delegate always throws rather
+        // than ever attempting an HTTP call.
+        using var deviceGuard = new RefreshGuard(_ => throw new AuthError(
+            "unreachable: a device-credentialed handle never attempts a token refresh (CONTRACT.md §6.1 rule 6)"));
+        string deviceJwt = MintUnverifiedJwt("device-subject", "tenant-1");
+
+        using AxiamGrpcAuthzClient client = BuildClient(invoker, deviceGuard, "tenant-1", () => deviceJwt, refreshExempt: true);
+
+        AuthError ex = await Assert.ThrowsAsync<AuthError>(() => client.CheckAccessAsync("documents:read", "doc-42"));
+
+        Assert.Contains("device token expired", ex.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("unreachable", ex.Message, StringComparison.Ordinal);
+        Assert.Equal(1, callCount); // no retry — never refreshed
+    }
+
     [Fact]
     public async Task BatchCheckAsync_PreservesOrder()
     {
@@ -342,9 +378,10 @@ public class GrpcAuthzClientTests
     // ------------------------------------------------------------------
 
     private static AxiamGrpcAuthzClient BuildClient(
-        FakeCallInvoker fakeInvoker, RefreshGuard guard, string tenantId, Func<string?> tokenAccessor, JwksVerifier? jwksVerifier = null)
+        FakeCallInvoker fakeInvoker, RefreshGuard guard, string tenantId, Func<string?> tokenAccessor,
+        JwksVerifier? jwksVerifier = null, bool refreshExempt = false)
     {
-        var interceptor = new AuthInterceptor(tokenAccessor, tenantId, guard);
+        var interceptor = new AuthInterceptor(tokenAccessor, tenantId, guard, refreshExempt);
         CallInvoker invoker = fakeInvoker.Intercept(interceptor);
         return new AxiamGrpcAuthzClient(invoker, jwksVerifier, tokenAccessor, tenantId);
     }

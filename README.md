@@ -552,6 +552,11 @@ using AxiamClient client = new(baseUrl, "acme", new AxiamClientOptions
   is not retried (§6.1 rule 10).
 - **A malformed `200`** — one with no `access_token`, or a blank one — is refused with
   `NetworkError` and builds no handle; it is never adopted as an empty-string credential.
+- **gRPC too.** `AxiamGrpcAuthzClient`/`TokenGrpcClient` built from the returned handle
+  send the device token as `authorization` metadata on every call, exactly like the REST
+  transport's `Authorization: Bearer`, and an `UNAUTHENTICATED` on it is likewise never
+  routed through the refresh guard — it surfaces the server's own status/message, never
+  the guard's.
 - **Held until replaced.** `LogoutAsync()` clears the device credential; any later
   session-establishing call made ON the returned handle itself — `LoginAsync`,
   `VerifyMfaAsync`, `LoginOpaqueAsync`, `MfaSetupConfirmAsync`, a WebAuthn ceremony

@@ -43,6 +43,7 @@ public sealed class AuthInterceptor : Interceptor
     private readonly Func<string?> _tokenAccessor;
     private readonly string _tenantId;
     private readonly RefreshGuard _refreshGuard;
+    private readonly bool _refreshExempt;
 
     /// <param name="tokenAccessor">
     /// A non-blocking accessor for the currently cached access token (<c>null</c> when
@@ -60,12 +61,24 @@ public sealed class AuthInterceptor : Interceptor
     /// The SAME <see cref="RefreshGuard"/> instance the client's REST transport uses
     /// (D-10's "one guard across REST + gRPC on one client") — never a second instance.
     /// </param>
-    public AuthInterceptor(Func<string?> tokenAccessor, string tenantId, RefreshGuard refreshGuard)
+    /// <param name="refreshExempt">
+    /// CONTRACT.md &#167;6.1 rule 6 / N4.5 (C-12, contract 1.52 draft) — <c>true</c> for a
+    /// device-credentialed client (<see cref="AxiamClient.HasStaticBearerToken"/>), where
+    /// no refresh token exists to spend. When <c>true</c>, an <c>UNAUTHENTICATED</c>
+    /// response is never routed through <paramref name="refreshGuard"/> at all: it
+    /// propagates to the caller as-is, carrying the SERVER's own status/message rather
+    /// than the refresh guard's ("it surfaces the server's message, never the refresh
+    /// guard's"). Mirrors the REST <see cref="Rest.AxiamHttpMessageHandler"/>'s own
+    /// <c>staticBearerToken is not null</c> exemption. Defaults to <c>false</c> — every
+    /// caller before this parameter existed is unaffected.
+    /// </param>
+    public AuthInterceptor(Func<string?> tokenAccessor, string tenantId, RefreshGuard refreshGuard, bool refreshExempt = false)
     {
         _tokenAccessor = tokenAccessor ?? throw new ArgumentNullException(nameof(tokenAccessor));
         ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
         _tenantId = tenantId;
         _refreshGuard = refreshGuard ?? throw new ArgumentNullException(nameof(refreshGuard));
+        _refreshExempt = refreshExempt;
     }
 
     /// <summary>
@@ -103,7 +116,7 @@ public sealed class AuthInterceptor : Interceptor
         {
             return await call.ResponseAsync.ConfigureAwait(false);
         }
-        catch (RpcException ex) when (ex.StatusCode == StatusCode.Unauthenticated)
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.Unauthenticated && !_refreshExempt)
         {
             // Exactly ONE refresh through the SHARED RefreshGuard (D-10) — never a second
             // guard instance. If the refresh itself throws, that exception propagates

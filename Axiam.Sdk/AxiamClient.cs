@@ -518,6 +518,18 @@ public sealed partial class AxiamClient : IDisposable
     internal string? CurrentAccessToken => _staticBearerToken ?? ReadCookie(AccessCookieName);
 
     /// <summary>
+    /// CONTRACT.md &#167;6.1 rule 6 / N4.5 (C-12, contract 1.52 draft) — <c>true</c> for a
+    /// handle built by <see cref="AuthenticateDeviceAsync"/>, where no refresh token
+    /// exists. Read by the gRPC transports (<see cref="Grpc.AxiamGrpcAuthzClient"/>,
+    /// <see cref="Grpc.TokenGrpcClient"/>) so their shared <see cref="Grpc.AuthInterceptor"/>
+    /// can skip the reactive UNAUTHENTICATED&#8594;refresh&#8594;retry entirely for a
+    /// device credential, exactly as <see cref="Rest.AxiamHttpMessageHandler"/> already
+    /// does for REST via its own <c>staticBearerToken is not null</c> check — "never
+    /// refreshed, on either transport" means both transports check for it, not just REST.
+    /// </summary>
+    internal bool HasStaticBearerToken => _staticBearerToken is not null;
+
+    /// <summary>
     /// Disposes this handle's own <see cref="HttpClient"/> wrapper and OIDC discovery
     /// state, and — for the handle the public constructor built — the shared transport's
     /// handler chain, the <see cref="RefreshGuard"/> and the &#167;17 memo. Does not perform
