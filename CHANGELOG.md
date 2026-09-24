@@ -109,6 +109,15 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
 
 ### Fixed
 
+- **A role-binding rebind whose restore also failed discarded the restore's own error**
+  (CONTRACT 1.52 N6.3 (C-12) — "The outcome is reported as data, naming whether the
+  restore succeeded and, when it did not, the restore's own error. It is not only a
+  message." — not in c12-findings.md's C# section). `RebindAsync` caught the restore's
+  exception only to set a `bool restored = false`; the exception's own message (`ex2.Message`)
+  was never captured anywhere, so `StepOutcome` had no way to report it — a caller could
+  learn a restore failed, but never why. Added `StepOutcome.RestoreError` (a new `string?`,
+  `null` unless `RestoreSucceeded: false`) and threaded the restore's `Exception.Message`
+  through `BindingUpdateFailedException` to populate it.
 - **A non-global role bound with `inherit: false` and no resource was accepted and sent to
   the wire** (CONTRACT 1.52 N6.2 (C-12) — "An object binding requires resource. inherit
   without a resource is refused client-side" — not in c12-findings.md's C# section, but

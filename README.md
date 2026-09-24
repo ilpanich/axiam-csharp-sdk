@@ -1966,7 +1966,9 @@ Sensitive<string> secret = report.CreatedServiceAccounts().Single().ClientSecret
   `(subject, role)` alone. Changing a binding's resource or `Inherit` is unassign then
   assign (there is no update endpoint); the server binding's `tenant_scope` is carried
   across, and a failed re-assign restores the previous binding, reported on
-  `StepOutcome.RestoreSucceeded`.
+  `StepOutcome.RestoreSucceeded` — and, when the restore itself also fails,
+  `StepOutcome.RestoreError` carries the restore's own error as data, not only folded
+  into `StepOutcome.Message`'s prose.
 - **`ServiceAccountSpec(Key, Name, Description?, Roles?)`** is reconciled by `Name` — the
   server does not enforce it unique, so a name matching more than one existing account
   fails `PlanAsync`/`ApplyAsync` client-side before any write. A `Create` outcome's

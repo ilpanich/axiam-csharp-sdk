@@ -118,6 +118,13 @@ public enum ApplyStatus
 /// binding); <c>false</c> when it also failed (the subject holds NEITHER the old nor the
 /// new binding — <see cref="Message"/> says so).
 /// </param>
+/// <param name="RestoreError">
+/// CONTRACT 1.52 N6.3 (C-12): the restore's OWN error, reported as data rather than only
+/// folded into <see cref="Message"/>'s prose — a caller inspecting the outcome
+/// programmatically can read it without parsing text. <c>null</c> whenever
+/// <see cref="RestoreSucceeded"/> is <c>null</c> or <c>true</c>; set alongside
+/// <c>RestoreSucceeded: false</c>.
+/// </param>
 /// <param name="CreatedServiceAccount">
 /// CONTRACT.md &#167;27.5 rule 5 (contract 1.51): on a <see cref="ApplyStatus.Created"/>
 /// outcome for a <c>ServiceAccountSpec</c>, the response <c>apply</c> received —
@@ -130,7 +137,8 @@ public sealed record StepOutcome(
     ApplyStatus Status,
     string? Message = null,
     bool? RestoreSucceeded = null,
-    Models.ServiceAccountCreatedResponse? CreatedServiceAccount = null);
+    Models.ServiceAccountCreatedResponse? CreatedServiceAccount = null,
+    string? RestoreError = null);
 
 /// <summary>One planned step, paired with what became of it.</summary>
 /// <param name="Action">The step as it was planned.</param>
