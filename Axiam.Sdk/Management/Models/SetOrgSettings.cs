@@ -225,6 +225,13 @@ public sealed record SetOrgSettings
     public bool? SensitiveScopesEnabled { get; init; }
 
     /// <summary>
+    /// S-7 — defaulted to empty, so an API client written before the field lands on "no
+    /// <c>Server</c> certificate is issued" (I1).
+    /// </summary>
+    [JsonPropertyName("server_cert_allowed_names")]
+    public IReadOnlyList<string>? ServerCertAllowedNames { get; init; }
+
+    /// <summary>
     /// the server's webauthn_user_verification field
     /// </summary>
     [JsonPropertyName("webauthn_user_verification")]

@@ -248,6 +248,9 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new TenantSettingsOverride { SensitiveScopesEnabled = true },
             "sensitive_scopes_enabled");
         AssertKeys(
+            new TenantSettingsOverride { ServerCertAllowedNames = Array.Empty<string>() },
+            "server_cert_allowed_names");
+        AssertKeys(
             new TenantSettingsOverride { WebauthnUserVerification = "example" },
             "webauthn_user_verification");
         AssertKeys(
@@ -286,6 +289,7 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 RequireSymbols = true,
                 RequireUppercase = true,
                 SensitiveScopesEnabled = true,
+                ServerCertAllowedNames = Array.Empty<string>(),
                 WebauthnUserVerification = "example",
             },
             "access_token_lifetime_secs", "admin_notifications_enabled", "cimd",
@@ -298,7 +302,7 @@ public sealed class ManagementSparseBodiesGeneratedTests
             "mfa_challenge_lifetime_secs", "mfa_enforced", "min_length", "opaque_ksf",
             "opaque_mode", "opaque_suite", "password_history_count", "refresh_token_lifetime_secs",
             "require_digits", "require_lowercase", "require_symbols", "require_uppercase",
-            "sensitive_scopes_enabled", "webauthn_user_verification");
+            "sensitive_scopes_enabled", "server_cert_allowed_names", "webauthn_user_verification");
         AssertKeys(new TenantSettingsOverride());
     }
 

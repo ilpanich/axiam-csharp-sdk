@@ -29,7 +29,9 @@ public sealed record CreateIntermediateCaRequest
     public required Guid ParentCaId { get; init; }
 
     /// <summary>
-    /// Subject for the signing CA, e.g. <c>CN=ACME R&amp;D Signing CA</c>.
+    /// The signing CA's common name, e.g. <c>ACME R&amp;D Signing CA</c>. A **common name**,
+    /// not a distinguished name. A single <c>CN=</c> prefix is accepted and stripped; anything
+    /// else containing <c>=</c> is refused with <c>400</c>.
     /// </summary>
     [JsonPropertyName("subject")]
     public required string Subject { get; init; }

@@ -421,7 +421,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Roles_ListUsers()
     {
-        string body = "[{\"user\": {\"created_at\": \"2026-08-26T00:00:00Z\", \"email\": \"example\", \"email_verified\": true, \"failed_login_attempts\": 1, \"id\": \"11111111-1111-4111-8111-111111111111\", \"is_locked\": true, \"metadata\": null, \"mfa_enabled\": true, \"status\": \"Active\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"username\": \"example\"}}]";
+        string body = "[{\"inherit\": true, \"user\": {\"created_at\": \"2026-08-26T00:00:00Z\", \"email\": \"example\", \"email_verified\": true, \"failed_login_attempts\": 1, \"id\": \"11111111-1111-4111-8111-111111111111\", \"is_locked\": true, \"metadata\": null, \"mfa_enabled\": true, \"status\": \"Active\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"username\": \"example\"}}]";
         Mount("GET", $"/api/v1/roles/{ExampleId}/users", 200, body);
         var result = await Client.Management.Roles.ListUsersAsync(roleId: ExampleId);
         string item = JsonDocument.Parse(body).RootElement[0].GetRawText();
@@ -450,7 +450,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Roles_ListGroups()
     {
-        string body = "[{\"group\": {\"created_at\": \"2026-08-26T00:00:00Z\", \"description\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"metadata\": null, \"name\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\"}}]";
+        string body = "[{\"group\": {\"created_at\": \"2026-08-26T00:00:00Z\", \"description\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"metadata\": null, \"name\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\"}, \"inherit\": true}]";
         Mount("GET", $"/api/v1/roles/{ExampleId}/groups", 200, body);
         var result = await Client.Management.Roles.ListGroupsAsync(roleId: ExampleId);
         string item = JsonDocument.Parse(body).RootElement[0].GetRawText();
@@ -508,7 +508,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Roles_ListServiceAccounts()
     {
-        string body = "[{\"service_account\": {\"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"status\": \"Active\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\"}}]";
+        string body = "[{\"inherit\": true, \"service_account\": {\"client_id\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"status\": \"Active\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\"}}]";
         Mount("GET", $"/api/v1/roles/{ExampleId}/service-accounts", 200, body);
         var result = await Client.Management.Roles.ListServiceAccountsAsync(roleId: ExampleId);
         string item = JsonDocument.Parse(body).RootElement[0].GetRawText();
