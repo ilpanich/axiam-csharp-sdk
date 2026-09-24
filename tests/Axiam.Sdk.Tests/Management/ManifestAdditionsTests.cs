@@ -186,6 +186,60 @@ public sealed class ManifestAdditionsTests
         Assert.True((await client.Management.Manifest.PlanAsync(changed)).IsConverged);
     }
 
+    /// <summary>
+    /// Exercises every branch of <c>ManifestApi.JsonElementDeepEquals</c> that the
+    /// single-key metadata objects above never reach: a value-kind mismatch (string vs.
+    /// number), an object with a different key COUNT (not just different values), array
+    /// comparison (order-sensitive, unlike object members), and the scalar
+    /// true/false/null default arm.
+    /// </summary>
+    [Fact]
+    public async Task MetadataComparisonCoversValueKindMismatchArraysAndScalars()
+    {
+        var fake = new TenantFake();
+        using AxiamClient client = BuildClient(fake);
+        fake.SeedResource("kind-mismatch", new JsonObject { ["v"] = JsonValue.Create("1") });
+        fake.SeedResource("extra-key", new JsonObject { ["a"] = JsonValue.Create(1) });
+        fake.SeedResource("same-array", new JsonObject
+        {
+            ["tags"] = new JsonArray(JsonValue.Create("a"), JsonValue.Create("b")),
+        });
+        fake.SeedResource("reordered-array", new JsonObject
+        {
+            ["tags"] = new JsonArray(JsonValue.Create("a"), JsonValue.Create("b")),
+        });
+        fake.SeedResource("same-scalars", new JsonObject
+        {
+            ["on"] = JsonValue.Create(true),
+            ["off"] = JsonValue.Create(false),
+            ["nothing"] = null,
+        });
+
+        ManagementPlan plan = await client.Management.Manifest.PlanAsync(ManagementManifest.Builder()
+            // Value-kind mismatch: server has a STRING "1", manifest states a NUMBER 1.
+            .Resource("km", "kind-mismatch", "site", JsonDocument.Parse("""{"v":1}""").RootElement)
+            // Same key count is not required for a match to matter — this one differs by
+            // an extra key already covered by ManagementManifestTests; here we check the
+            // narrower "same value, extra key" shape sends as Update too.
+            .Resource("ek", "extra-key", "site", JsonDocument.Parse("""{"a":1,"b":2}""").RootElement)
+            // Arrays: identical order compares equal.
+            .Resource("sa", "same-array", "site", JsonDocument.Parse("""{"tags":["a","b"]}""").RootElement)
+            // Arrays: same elements, different order is DRIFT (order-sensitive).
+            .Resource("ra", "reordered-array", "site", JsonDocument.Parse("""{"tags":["b","a"]}""").RootElement)
+            // Scalars: true/false/null round-trip as equal via the default arm.
+            .Resource("ss", "same-scalars", "site", JsonDocument.Parse("""{"on":true,"off":false,"nothing":null}""").RootElement)
+            .Build());
+
+        Dictionary<string, PlanChange> byKey = plan.Actions
+            .Where(a => a.Target == PlanTarget.Resource)
+            .ToDictionary(a => a.Key, a => a.Change);
+        Assert.Equal(PlanChange.Update, byKey["km"]); // value-kind mismatch is drift
+        Assert.Equal(PlanChange.Update, byKey["ek"]); // extra key is drift
+        Assert.Equal(PlanChange.NoChange, byKey["sa"]); // identical array is not drift
+        Assert.Equal(PlanChange.Update, byKey["ra"]); // reordered array IS drift
+        Assert.Equal(PlanChange.NoChange, byKey["ss"]); // true/false/null round-trip
+    }
+
     /// <summary>A stated <c>{}</c> equals what the server stores for none; an unstated
     /// metadata is silent whatever the server holds (&#167;27.6 rule 3).</summary>
     [Fact]
@@ -337,6 +391,40 @@ public sealed class ManifestAdditionsTests
     }
 
     /// <summary>
+    /// When BOTH the re-assign and the restore assign fail, the outcome says the restore
+    /// failed too — the subject is left holding neither binding, and the caller is told
+    /// so rather than reading a false "restore succeeded".
+    /// </summary>
+    [Fact]
+    public async Task AFailedReassignmentWhoseRestoreAlsoFailsReportsBothFailures()
+    {
+        var fake = new TenantFake();
+        using AxiamClient client = BuildClient(fake);
+        Guid oldSite = fake.SeedResource("site-1");
+        fake.SeedResource("site-2");
+        Guid role = fake.SeedRole("Concierge", isGlobal: false);
+        Guid user = fake.SeedUser("ann");
+        fake.SeedAssignment(new Assignment("users", role, user, oldSite, true, null));
+        fake.RefuseAllAssigns = true; // both the new assign AND the restore assign fail
+
+        ManagementManifest manifest = ManagementManifest.Builder()
+            .Resource("s1", "site-1", "site")
+            .Resource("s2", "site-2", "site")
+            .Role("concierge", "Concierge", "Concierge")
+            .User("ann", "ann", "ann@example.test")
+            .AssignRole("ann", "concierge", "s2")
+            .Build();
+
+        ApplyReport report = await client.Management.Manifest.ApplyAsync(manifest);
+
+        AppliedStep step = report.Steps.Single(s => s.Action.Target == PlanTarget.UserRole);
+        Assert.Equal(ApplyStatus.Failed, step.Outcome.Status);
+        Assert.Equal(false, step.Outcome.RestoreSucceeded);
+        Assert.Contains("FAILED", step.Outcome.Message, StringComparison.Ordinal);
+        Assert.Empty(fake.Assignments); // neither the old nor the new binding survives
+    }
+
+    /// <summary>
     /// One role bound twice to one subject is a state the server cannot hold — rejected
     /// with zero wire calls, naming the subject and the role. Asserts the SPECIFIC message
     /// content and the specific zero-calls count, per the Go-port lesson: a test whose only
@@ -376,6 +464,28 @@ public sealed class ManifestAdditionsTests
             .Build();
 
         await Assert.ThrowsAsync<NetworkError>(() => client.Management.Manifest.PlanAsync(mixed));
+        Assert.Equal(before, Mark(fake));
+    }
+
+    /// <summary>A binding naming a resource key no <c>Resource(...)</c> spec declares is
+    /// refused before any request, naming the subject, role and resource.</summary>
+    [Fact]
+    public async Task ARoleBindingNamingADanglingResourceIsRefused()
+    {
+        var fake = new TenantFake();
+        using AxiamClient client = BuildClient(fake);
+        int before = Mark(fake);
+        ManagementManifest manifest = ManagementManifest.Builder()
+            .Role("resident", "Resident", "Lives here")
+            .User("ann", "ann", "ann@example.test")
+            .AssignRole("ann", "resident", "ghost-resource")
+            .Build();
+
+        NetworkError thrown = await Assert.ThrowsAsync<NetworkError>(
+            () => client.Management.Manifest.PlanAsync(manifest));
+
+        Assert.Contains("'ghost-resource'", thrown.Message, StringComparison.Ordinal);
+        Assert.Contains("which no resource declares", thrown.Message, StringComparison.Ordinal);
         Assert.Equal(before, Mark(fake));
     }
 
@@ -639,6 +749,10 @@ public sealed class ManifestAdditionsTests
         /// <summary>Refuses an assign that names this resource, with a 400 — the fault the
         /// binding-update restore is tested against.</summary>
         internal Guid? RefuseAssignAt;
+
+        /// <summary>Refuses EVERY assign, regardless of resource — used to prove the
+        /// restore-also-fails branch of a rebind (RestoreSucceeded: false).</summary>
+        internal bool RefuseAllAssigns;
 
         private static JsonNode Str(string s) => JsonValue.Create(s)!;
 
@@ -906,7 +1020,7 @@ public sealed class ManifestAdditionsTests
                     };
                     Guid subject = Guid.Parse(body![subjectField]!.GetValue<string>());
                     Guid? resourceId = NodeGuid(body["resource_id"]);
-                    if (resourceId is not null && resourceId == RefuseAssignAt)
+                    if (RefuseAllAssigns || (resourceId is not null && resourceId == RefuseAssignAt))
                     {
                         return Text(400, "resource refuses this assignment");
                     }

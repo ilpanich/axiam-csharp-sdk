@@ -204,6 +204,16 @@ public sealed class ManagementManifestTests : ManagementTestBase
                 ManagementManifest.Builder()
                     .ChildResource("archive", "archive", "collection", "docs").Build()).Message,
             StringComparison.Ordinal);
+        // §27.6.1 additions, contract 1.51: GroupRole and AssignServiceAccountRole check
+        // their forward reference exactly like the pre-1.51 calls above.
+        Assert.Contains("no Group(...) call has declared yet",
+            Assert.Throws<NetworkError>(() =>
+                ManagementManifest.Builder().GroupRole("staff", "editor").Build()).Message,
+            StringComparison.Ordinal);
+        Assert.Contains("no ServiceAccount(...) call has declared yet",
+            Assert.Throws<NetworkError>(() =>
+                ManagementManifest.Builder().AssignServiceAccountRole("ctl", "editor").Build()).Message,
+            StringComparison.Ordinal);
     }
 
     private void MountTenantWithOneRole(string description)

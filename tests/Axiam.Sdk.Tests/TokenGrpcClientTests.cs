@@ -1,6 +1,9 @@
+using System.Net.Http;
+using Axiam.Sdk;
 using Axiam.Sdk.Auth;
 using Axiam.Sdk.Core;
 using Axiam.Sdk.Grpc;
+using Axiam.Sdk.Options;
 using Axiam.V1;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
@@ -191,6 +194,10 @@ public class TokenGrpcClientTests
         Assert.Equal("res-1", result.Permissions[0].ResourceId);
         Assert.Equal(new[] { "read", "write" }, result.Permissions[0].ResourceScopes);
         Assert.Equal(3000, result.Permissions[0].Exp);
+        // §10.3 rule 2: TokenIntrospection.Status()/VerifyPossession share the same
+        // rule TokenValidation's do — an unbound (no Cnf) active token is Bearer.
+        Assert.Equal(TokenStatus.Bearer, result.Status());
+        Assert.True(result.VerifyPossession(PresentedProofs.None()));
     }
 
     // ---- UNAUTHENTICATED (the CALLER's own token) drives one shared-guard refresh ------
@@ -216,6 +223,70 @@ public class TokenGrpcClientTests
         Assert.True(result.Valid);
         Assert.Equal(2, attempt);
         Assert.Equal(1, refresh.Count);
+    }
+
+    // ---- A non-auth RpcException is mapped through the §2 taxonomy, not rethrown raw --
+
+    [Fact]
+    public async Task ValidateTokenAsync_ANonAuthRpcException_IsMappedThroughErrorMapper()
+    {
+        var invoker = new FakeCallInvoker(handleValidate: _ =>
+            throw new RpcException(new Status(StatusCode.PermissionDenied, "not allowed")));
+        TokenGrpcClient client = BuildClient(invoker, tokenAccessor: () => CallerToken);
+
+        AuthzError thrown = await Assert.ThrowsAsync<AuthzError>(() => client.ValidateTokenAsync(Sensitive.Of("t")));
+
+        Assert.Contains("not allowed", thrown.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task IntrospectTokenAsync_ANonAuthRpcException_IsMappedThroughErrorMapper()
+    {
+        var invoker = new FakeCallInvoker(handleIntrospect: _ =>
+            throw new RpcException(new Status(StatusCode.PermissionDenied, "not allowed")));
+        TokenGrpcClient client = BuildClient(invoker, tokenAccessor: () => CallerToken);
+
+        AuthzError thrown = await Assert.ThrowsAsync<AuthzError>(() => client.IntrospectTokenAsync(Sensitive.Of("t")));
+
+        Assert.Contains("not allowed", thrown.Message, StringComparison.Ordinal);
+    }
+
+    // ---- public (real GrpcChannel) constructor + dispose, mirroring AxiamGrpcAuthzClient's own ----
+
+    [Fact]
+    public void PublicConstructor_BuildsOverSharedClientSession_AndDisposesCleanly()
+    {
+        using AxiamClient rest = BuildRestClient();
+        var grpc = new TokenGrpcClient(rest);
+        grpc.Dispose(); // owns and shuts down the real (lazily-connected) channel
+    }
+
+    [Fact]
+    public void PublicConstructor_WithExplicitGrpcTarget_Constructs()
+    {
+        using AxiamClient rest = BuildRestClient();
+        using var grpc = new TokenGrpcClient(rest, new Uri("https://grpc.axiam.test:5001"));
+        Assert.NotNull(grpc);
+    }
+
+    [Fact]
+    public void PublicConstructor_NullClient_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => new TokenGrpcClient(null!));
+    }
+
+    private static readonly Uri BaseUrl = new("https://axiam.test");
+
+    private static AxiamClient BuildRestClient()
+    {
+        var options = new AxiamClientOptions { BaseUrl = BaseUrl, TenantId = "tenant-1" };
+        return AxiamClient.CreateForTesting(BaseUrl, "tenant-1", options, new NoopHandler());
+    }
+
+    private sealed class NoopHandler : HttpMessageHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
+            Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK));
     }
 
     // ---- Helpers -------------------------------------------------------------------
