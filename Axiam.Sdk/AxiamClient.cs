@@ -336,12 +336,14 @@ public sealed partial class AxiamClient : IDisposable
     /// <remarks>
     /// <para>
     /// Returns a NEW <see cref="AxiamClient"/> rather than mutating this one. The two
-    /// share the same cookie jar, refresh guard and JWKS verifier — a refresh performed
-    /// through either handle updates the session both read from — but each has its own
-    /// <see cref="HttpClient"/> wrapper (so its own default headers) and its own &#167;17
-    /// decision memo, so a tenant switch decided on one handle can never race a request
-    /// already in flight on another, and a memoized answer for one tenant can never be
-    /// returned for another (&#167;17 addendum). Dispose the returned handle, or not — it
+    /// share the same cookie jar, refresh guard, JWKS verifier and &#167;17 decision memo —
+    /// a refresh performed through either handle updates the session both read from, and
+    /// a login/logout/refresh on either clears the memo for both (&#167;17 addendum) — but
+    /// each has its own <see cref="HttpClient"/> wrapper (so its own default headers), so
+    /// a tenant switch decided on one handle can never race a request already in flight
+    /// on another, and the memo's own key (which carries the acting tenant) is what stops
+    /// a memoized answer for one tenant from ever being returned for another, not a
+    /// separate memo per handle. Dispose the returned handle, or not — it
     /// owns nothing the original handle's own <see cref="Dispose"/> does not already tear
     /// down; disposing it early only releases its own lightweight wrapper early.
     /// </para>

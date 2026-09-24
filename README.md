@@ -21,10 +21,11 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 ## Contract conformance
 
 This SDK conforms to **contract 1.51**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
-§22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates and the §6.1 rules 6–10
-mTLS device login, the §1.1 gRPC-only `get_user_info` operation and the §1.1.1 gRPC
-`validate_token`/`introspect_token` operations, contract 1.3, the §12 OIDC/SSO relying-party
-helpers, contract 1.4, the §13 webhook signature verifier, T-145, the §20 UMA 2.0 Protection API
+§21, §22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates and the §6.1 rules 6–10
+mTLS device login, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, and the §1.1.1 gRPC
+`validate_token`/`introspect_token` operations, contract 1.51, the §12 OIDC/SSO relying-party
+helpers, contract 1.4, the §13 webhook signature verifier, T-145, the §21 RFC 8705 `mtls_endpoint_aliases`
+preference and PAR-only-client refusal, contract 1.40/1.43, the §20 UMA 2.0 Protection API
 and ticket grant, contract 1.10, the §22 reactor runtime, contract 1.19, the §23 OPAQUE (RFC 9807)
 login path, contract 1.26, the §24 WebAuthn relying-party layer, the §25 account-lifecycle
 operations and §26 Pushed Authorization Requests, contract 1.28, §23.4 rule 7's `mode`-driven
@@ -34,8 +35,8 @@ operations across 24 namespaces with the §27.6 declarative layer, including the
 metadata, two-shape role bindings and service accounts, contract 1.51 — and the §28 MCP
 resource-server helpers, contract 1.48).
 
-§12.7, §14, §15, §20, §22, §23, §24, §25, §26 and §27 are named rather than folded into the range
-because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
+§12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27 and §28 are named rather than
+folded into the range because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
 statement that was true when written into a different claim without anyone editing it.
 
 §24.6b — the linked-API ceremony helper — is **deliberately absent**. A server or CLI runtime has no
@@ -94,9 +95,10 @@ declarative form; there is no separate code-generation attribute to decline.
 ## Local token verification (CONTRACT.md §10.1)
 
 `AxiamAuthMiddleware` verifies access tokens locally through one implementation,
-`JwksVerifier.VerifyAsync`, which applies the **complete** §10.1 minimum
-local-verification set. Every rule fails closed — a required claim that is absent,
-unparseable, or of the wrong JSON type is a rejection, never a skipped check.
+`JwksVerifier.VerifyWithProofsAsync` — its actual entry point, built from the connection
+evidence the ASP.NET Core host itself terminated TLS on — which applies the **complete**
+§10.1 minimum local-verification set. Every rule fails closed — a required claim that is
+absent, unparseable, or of the wrong JSON type is a rejection, never a skipped check.
 
 | # | Claim | What the verifier does |
 |---|---|---|
@@ -108,7 +110,7 @@ unparseable, or of the wrong JSON type is a rejection, never a skipped check.
 | 6 | `aud` | Checked **only** when `ExpectedAudience` is configured. Unset by default; accepts both the single-string and array forms. |
 | 7 | clock skew | `JwksVerifier.ClockSkewLeeway` — a named 60-second constant applied to rules 2 and 3. Deliberately **not** operator-configurable. |
 | 8 | subject of the decision | The guard decides on the caller's own credential and no other — a failure is a rejection, never a fall back to the SDK client's own session. |
-| 9 | `cnf` sender-constrained token (**fixed in contract 1.51**) | `VerifyAsync(token, tenantId, ...)` — the middleware's default entry point — applies rule 9 with **no evidence at all**, so it **refuses** any token carrying `cnf`. `VerifyWithProofsAsync(token, tenantId, proofs, ...)` accepts one given the connection's evidence, per the rule's table (`Auth/SenderConstraintRule.Verify`). |
+| 9 | `cnf` sender-constrained token (**fixed in contract 1.51**) | `VerifyWithProofsAsync(token, tenantId, proofs, ...)` — the middleware's actual entry point — accepts a bound token given the connection's evidence, per the rule's table (`Auth/SenderConstraintRule.Verify`). `VerifyAsync(token, tenantId, ...)`, the plain overload a caller reaches for directly with no evidence parameter, applies rule 9 with **no evidence at all**, so it **refuses** any token carrying `cnf` (N1: a guard that cannot obtain transport evidence refuses every bound token). |
 
 **Rule 9 in practice.** Every §6.1 device token (`AuthenticateDeviceAsync`) is
 certificate-bound, and a DPoP-bound token carries `cnf.jkt`. Before this fix,
@@ -1650,6 +1652,19 @@ await client.Management.Groups.ListAsync(PageRequest.Of(50)); // sends none
   for the caller's own tenant; there is no string overload to invite one.
 - **Sent only when set.** A client that never calls `ActingTenant` behaves exactly as it
   did before contract 1.51 — the wire is unchanged for every existing caller.
+- **There is also a construction-time form**, `AxiamClientOptions.ActingTenant`: set it
+  and the client built from those options sends `X-Axiam-Tenant` from its very first
+  request, precisely as if `.ActingTenant(x)` had been called immediately — this precedes
+  any login, so it is ungated client-side (a non-organization-level principal meets the
+  server's own `403` on its first request instead, exactly like the on-client form before
+  a login result is known).
+  ```csharp
+  using AxiamClient client = new(baseUrl, "acme", new AxiamClientOptions
+  {
+      ActingTenant = prodTenantId,
+  });
+  await client.Management.Groups.ListAsync(PageRequest.Of(50)); // sends X-Axiam-Tenant: <prodTenantId>
+  ```
 - **The acting tenant belongs to the handle**, not the underlying session.
   `ActingTenant(Guid)` returns a new `AxiamClient` sharing the same session (cookies,
   refresh guard, decision memo), so two handles can act on two different tenants from
