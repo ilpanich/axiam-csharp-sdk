@@ -623,7 +623,7 @@ public sealed class JwksVerifier
         // guard adopts this rule.
         if (!claims.TryGetProperty("cnf", out JsonElement cnf) || cnf.ValueKind == JsonValueKind.Null)
         {
-            return true;
+            return SenderConstraintRule.Verify(cnfPresent: false, null, null, proofs);
         }
 
         if (cnf.ValueKind != JsonValueKind.Object)
@@ -631,56 +631,20 @@ public sealed class JwksVerifier
             return false;
         }
 
-        string? expectedCert = cnf.TryGetProperty("x5t#S256", out JsonElement certEl) &&
-                               certEl.ValueKind == JsonValueKind.String
+        string? x5tS256 = cnf.TryGetProperty("x5t#S256", out JsonElement certEl) &&
+                          certEl.ValueKind == JsonValueKind.String
             ? certEl.GetString()
             : null;
-        string? expectedJkt = cnf.TryGetProperty("jkt", out JsonElement jktEl) &&
-                              jktEl.ValueKind == JsonValueKind.String
+        string? jkt = cnf.TryGetProperty("jkt", out JsonElement jktEl) &&
+                     jktEl.ValueKind == JsonValueKind.String
             ? jktEl.GetString()
             : null;
 
-        if (string.IsNullOrEmpty(expectedCert))
-        {
-            expectedCert = null;
-        }
-
-        if (string.IsNullOrEmpty(expectedJkt))
-        {
-            expectedJkt = null;
-        }
-
-        if (expectedCert is null && expectedJkt is null)
-        {
-            return false;
-        }
-
-        // Each arm that applies must pass. Two independent checks rather than a switch on
-        // the pair, precisely so "both named" needs no case of its own — it is simply where
-        // both run.
-        if (expectedCert is not null)
-        {
-            if (string.IsNullOrEmpty(proofs.CertificateThumbprint) ||
-                !CryptographicOperations.FixedTimeEquals(
-                    Encoding.ASCII.GetBytes(expectedCert),
-                    Encoding.ASCII.GetBytes(proofs.CertificateThumbprint)))
-            {
-                return false;
-            }
-        }
-
-        if (expectedJkt is not null)
-        {
-            if (string.IsNullOrEmpty(proofs.DpopThumbprint) ||
-                !CryptographicOperations.FixedTimeEquals(
-                    Encoding.ASCII.GetBytes(expectedJkt),
-                    Encoding.ASCII.GetBytes(proofs.DpopThumbprint)))
-            {
-                return false;
-            }
-        }
-
-        return true;
+        // §10.3 rule 1 / detail 4: the SAME rule-9 table CONTRACT.md §10.3 requires the
+        // gRPC path (Grpc.TokenGrpcClient) to apply — shared here rather than
+        // re-derived, so local verification and gRPC validation cannot disagree about
+        // whether a token is a bearer token.
+        return SenderConstraintRule.Verify(cnfPresent: true, x5tS256, jkt, proofs);
     }
 
     /// <summary>
