@@ -41,7 +41,16 @@ public sealed partial class AxiamClient
     /// carries the device token as <c>Authorization: Bearer</c>; there is no cookie for
     /// the server's cookie-before-header read order to prefer instead. The &#167;17
     /// decision memo and the &#167;5.2 acting-tenant gate both start fresh/unknown on the
-    /// returned handle, matching "a device holds no login result."
+    /// returned handle, matching "a device holds no login result." The SAME withholding
+    /// applies to the login POST itself: it runs over <see cref="_anonymousHttpClient"/>
+    /// (&#167;24.1's anonymous transport, own permanently-empty cookie jar, never wrapped in
+    /// <see cref="Rest.AxiamHttpMessageHandler"/>) rather than <c>_httpClient</c>, so it
+    /// carries neither <c>this</c> client's <c>Cookie</c> header nor the
+    /// <c>Authorization: Bearer</c> header <see cref="Rest.AxiamHttpMessageHandler"/> would
+    /// otherwise derive from an existing session's <c>axiam_access</c> cookie — the server
+    /// reads <c>axiam_access</c> before <c>Authorization</c>, so either one reaching the
+    /// wire could evaluate this call against the PRIOR principal instead of the
+    /// certificate presenting it.
     /// </para>
     /// <para>
     /// <b>No refresh, ever</b> (&#167;6.1 rule 6/8). There is no refresh token — the
@@ -81,15 +90,24 @@ public sealed partial class AxiamClient
                 + "and never reached the network.");
         }
 
-        // No request body at all — not even `{}` (§6.1 rule 6). Runs over THIS client's
-        // own transport, whose primary handler already presents the configured client
-        // certificate (§6.1 rule 4): the mTLS handshake is what authenticates this call,
-        // not anything in the request itself.
+        // No request body at all — not even `{}` (§6.1 rule 6). Runs over the ANONYMOUS
+        // transport (_anonymousHttpClient, §24.1's own permanently-empty-jar client), NOT
+        // `_httpClient` — a client that already holds a cookie session must not let that
+        // session's `Cookie` header or its derived `Authorization: Bearer` reach this
+        // call; the mTLS handshake alone is what authenticates it (§6.1 rule 4).
+        // `_anonymousHttpClient`'s primary handler is built from the SAME
+        // CustomCaPem/ClientCertificatePem/ClientKeyPem/TLS policy as `_httpClient`'s (see
+        // the constructor), so the certificate this call needs to present is unaffected —
+        // only the session-derived headers are withheld. `_anonymousHttpClient` is never
+        // wrapped in AxiamHttpMessageHandler, so — unlike that handler's derivation of
+        // X-Tenant-Id (§5 rule 2, unconditional on every request) — it must be added here
+        // by hand, exactly as PostAnonymousRawJsonAsync does for the §24.1 pair.
         using var request = new HttpRequestMessage(HttpMethod.Post, DeviceAuthPath);
+        request.Headers.TryAddWithoutValidation("X-Tenant-Id", _tenant.TenantId);
         HttpResponseMessage response;
         try
         {
-            response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            response = await _anonymousHttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
         catch (HttpRequestException ex)
         {

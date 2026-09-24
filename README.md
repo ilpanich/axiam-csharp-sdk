@@ -535,11 +535,15 @@ using AxiamClient client = new(baseUrl, "acme", new AxiamClientOptions
   is sent** — a zero-wire-call guarantee a test pins (`AxiamHttpMessageHandlerTests`
   and `DeviceAuthTests`' `I4Twin`-suffixed cases assert it both ways: reachable only
   when a certificate is configured, unreachable otherwise).
-- **The returned handle withholds the original session's cookie.** `DeviceToken.AccessToken`
-  (a `Sensitive<string>`) is adopted as a static `Authorization: Bearer` credential on a
-  fresh `AxiamClient`; the cookie jar is a new, empty one, never the caller's — the server
-  reads the `axiam_access` cookie first, so a leftover session on the same handler chain
-  would otherwise silently win over the device token.
+- **Neither the login call nor the returned handle carries the original session.** The
+  `POST /api/v1/auth/device` request itself runs over an anonymous transport that shares
+  this client's certificate/CA/TLS configuration but none of its cookie jar or derived
+  `Authorization` header, so an existing session's `axiam_access` cookie never reaches
+  that request either — the server reads `axiam_access` before `Authorization`, so either
+  one reaching the wire could evaluate the login against the earlier principal instead of
+  the certificate presenting it. `DeviceToken.AccessToken` (a `Sensitive<string>`) is then
+  adopted as a static `Authorization: Bearer` credential on a fresh `AxiamClient`, with its
+  own new, empty cookie jar, never the caller's.
 - **No refresh.** A `401` on the device-login call itself, or on any later call made
   through the returned handle, is surfaced as-is and never routed to the refresh guard —
   there is no refresh token to redeem. A `429` is a `NetworkError`, not an `AuthError`, and

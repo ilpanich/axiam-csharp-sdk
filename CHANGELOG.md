@@ -140,6 +140,20 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   *previous* principal's report, and the decision memo could still answer from the
   previous principal's cached decisions. All three now call `OnCredentialChange()` at the
   same point (before the request) every other credential-changing method does.
+- **`AuthenticateDeviceAsync()`'s own `POST /api/v1/auth/device` carried a prior session's
+  cookie and derived `Authorization` header, on a client that had one.** The call ran over
+  `_httpClient` — the same transport whose `CookieContainer` and
+  `AxiamHttpMessageHandler` belong to this client's own session — so a caller that logged
+  in earlier and then switched to a certificate for the device login sent both the stale
+  `axiam_access` cookie and the `Authorization: Bearer` header
+  `AxiamHttpMessageHandler` derives from it on the login request itself (CONTRACT.md
+  §6.1 rules 6–10). The server reads `axiam_access` before `Authorization`, so the login
+  could be evaluated against the earlier principal instead of the certificate presenting
+  it. The *returned handle*'s own fresh cookie jar was never affected — only the login
+  POST itself leaked. It now runs over `_anonymousHttpClient` (§24.1's existing
+  permanently-empty-jar transport, built from the same client-certificate/CA/TLS
+  configuration as `_httpClient`), with `X-Tenant-Id` added by hand since that transport
+  is never wrapped in `AxiamHttpMessageHandler`.
 
 ### Breaking
 
