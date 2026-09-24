@@ -93,6 +93,7 @@ public sealed partial class AxiamClient
     {
         EnsureNotDisposed();
         OnCredentialChange();
+        ReleaseDeviceCredential();
         ArgumentException.ThrowIfNullOrWhiteSpace(totpCode);
 
         var body = new Dictionary<string, object?>

@@ -124,9 +124,12 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
     /// (which, for a device-credentialed handle, is a fresh, empty
     /// <see cref="CookieContainer"/> anyway — see <see cref="AxiamClient.AuthenticateDeviceAsync"/>).
     /// <c>null</c> — the default, and every handler before contract 1.51 — means "read the
-    /// bearer token from the cookie jar", unchanged.
+    /// bearer token from the cookie jar", unchanged. Mutable (not <c>readonly</c>): N4.4
+    /// (C-12, contract 1.52 draft) — "held until replaced" — <see cref="ReleaseStaticBearerToken"/>
+    /// clears it once a later session-establishing call succeeds this handle's device
+    /// credential, so this handler falls back to the cookie jar again.
     /// </summary>
-    private readonly string? _staticBearerToken;
+    private volatile string? _staticBearerToken;
 
     /// <summary>Constructs the handler. Register as the outermost link of the client's
     /// <see cref="HttpClient"/> handler chain, with the SDK's cookie-jar/TLS handler
@@ -164,6 +167,17 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
     /// captured automatically by the shared <see cref="CookieContainer"/>.
     /// </summary>
     internal void ResetCsrfToken() => _csrfToken = null;
+
+    /// <summary>
+    /// CONTRACT.md &#167;6.1 rule 11 / N4.4 (C-12, contract 1.52 draft) — "held until
+    /// replaced": releases this handler's device credential (if any) so
+    /// <see cref="ApplyHeaders"/> falls back to reading the cookie jar again, exactly as a
+    /// handler that was never device-credentialed does. Called by <c>AxiamClient</c> at
+    /// the start of every session-establishing call except <c>RefreshAsync</c> ("refresh
+    /// does not clear it") — see that class's <c>ReleaseDeviceCredential</c>. A no-op when
+    /// no static bearer token was set.
+    /// </summary>
+    internal void ReleaseStaticBearerToken() => _staticBearerToken = null;
 
     /// <summary>
     /// Applies tenant/auth/CSRF headers (&#167;3/&#167;5), sends the request, and on a

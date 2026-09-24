@@ -744,6 +744,63 @@ public sealed class DeviceAuthTests
         Assert.False(req.Headers.Contains("X-Axiam-Tenant"));
     }
 
+    // ---- N4.4 (CONTRACT 1.52, C-12), "held until replaced": a later session-establishing
+    // call on the device handle ITSELF replaces the device credential — not found in
+    // c12-findings.md for C#, but the exact same architectural gap CONTRACT 1.52 N4.4
+    // caught in Kotlin (AxiamClient.kt's onCredentialChange/AuthHeaderInterceptor): this
+    // handler's own OnCredentialChange() cleared the §17 memo/§5.2 gate but never touched
+    // `_staticBearerToken`, and AxiamHttpMessageHandler.ApplyHeaders always preferred a
+    // set staticBearerToken over the cookie jar — so a login performed ON the device
+    // handle never actually took effect on the wire, forever.
+
+    [Fact]
+    public async Task LoginAsync_OnADeviceHandle_ReleasesTheDeviceCredential_SoTheNewSessionCookieIsUsed()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => DeviceTokenResponse());
+        handler.Map("/api/v1/auth/login", _ => JsonOk("""{"user":{"organization_level":false}}"""));
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+        using AxiamClient device = (await client.AuthenticateDeviceAsync()).Client;
+
+        await device.LoginAsync("user@example.com", "hunter2");
+        // The fake transport is not an HttpClientHandler, so it does not process the
+        // login response's Set-Cookie itself (mirrors AxiamClientAuthFlowTests.SeedCookie)
+        // — seed what a real one would have captured directly into the device handle's
+        // own (real, shared) cookie jar.
+        FieldInfo field = typeof(AxiamClient).GetField("_cookieContainer", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        var container = (CookieContainer)field.GetValue(device)!;
+        container.Add(BaseUrl, new Cookie("axiam_access", "NEW-SESSION-TOKEN"));
+
+        handler.Requests.Clear();
+        await device.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal("Bearer NEW-SESSION-TOKEN", req.Headers.GetValues("Authorization").Single());
+    }
+
+    // I4 twin: an ordinary (non-device) handle's LoginAsync is unaffected by the fix —
+    // exercised continuously by the rest of the suite (e.g. AxiamClientAuthFlowTests), and
+    // pinned here at the same call site/boundary as the test above.
+    [Fact]
+    public async Task LoginAsync_OnAnOrdinaryHandle_StillUsesTheNewSessionCookie_I4Twin()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/login", _ => JsonOk("""{"user":{"organization_level":false}}"""));
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient client = Client(handler, certPem: null, keyPem: null);
+
+        await client.LoginAsync("user@example.com", "hunter2");
+        FieldInfo field = typeof(AxiamClient).GetField("_cookieContainer", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        var container = (CookieContainer)field.GetValue(client)!;
+        container.Add(BaseUrl, new Cookie("axiam_access", "NEW-SESSION-TOKEN"));
+
+        await client.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal("Bearer NEW-SESSION-TOKEN", req.Headers.GetValues("Authorization").Single());
+    }
+
     private static int GetEphemeralPort()
     {
         using var socket = new System.Net.Sockets.Socket(

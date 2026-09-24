@@ -550,6 +550,13 @@ using AxiamClient client = new(baseUrl, "acme", new AxiamClientOptions
   through the returned handle, is surfaced as-is and never routed to the refresh guard —
   there is no refresh token to redeem. A `429` is a `NetworkError`, not an `AuthError`, and
   is not retried (§6.1 rule 10).
+- **Held until replaced.** `LogoutAsync()` clears the device credential; any later
+  session-establishing call made ON the returned handle itself — `LoginAsync`,
+  `VerifyMfaAsync`, `LoginOpaqueAsync`, `MfaSetupConfirmAsync`, a WebAuthn ceremony
+  completion, or an SSO completion — replaces it, and the session that call establishes is
+  what every subsequent request on that handle uses from then on. `RefreshAsync` does
+  not clear it (there is nothing to refresh a device credential with, so it is unaffected
+  either way).
 - Worked end to end, combined with the declarative manifest, in
   [`examples/DeviceMtlsProvisioning`](examples/DeviceMtlsProvisioning).
 

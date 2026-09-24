@@ -180,9 +180,10 @@ public sealed partial class AxiamClient : IDisposable
     /// or <c>null</c> for every ordinary handle. Read by <see cref="CurrentAccessToken"/>
     /// so the &#167;27 management surface's own session check
     /// (<c>ManagementTransport.RequireSession</c>) sees a device handle as holding a
-    /// credential too — it has one, just not a cookie-jar one.
+    /// credential too — it has one, just not a cookie-jar one. Mutable: N4.4's "held
+    /// until replaced" — see <see cref="ReleaseDeviceCredential"/>.
     /// </summary>
-    private readonly string? _staticBearerToken;
+    private volatile string? _staticBearerToken;
 
     /// <summary>
     /// <c>true</c> for the handle the public constructor built — the one that owns the
@@ -617,6 +618,30 @@ public sealed partial class AxiamClient : IDisposable
         _session.Reset();
     }
 
+    /// <summary>
+    /// CONTRACT.md &#167;6.1 rule 11 / N4.4 (C-12, contract 1.52 draft) — "held until
+    /// replaced": releases this handle's device credential (if any), so it falls back to
+    /// the cookie jar exactly like a handle that was never device-credentialed. Called
+    /// immediately after <see cref="OnCredentialChange"/>, at the same point in every
+    /// method that calls it, EXCEPT <see cref="RefreshAsync"/> — "refresh does not clear
+    /// it" is the one call in that list this method is deliberately not called from. A
+    /// no-op for a handle that was never device-credentialed (<see cref="_staticBearerToken"/>
+    /// already <c>null</c>), so calling it unconditionally is safe everywhere else.
+    /// </summary>
+    /// <remarks>
+    /// Before this existed, a device handle's own <c>LoginAsync</c>/<c>VerifyMfaAsync</c>/
+    /// etc. established a new cookie session that was silently never used —
+    /// <c>AxiamHttpMessageHandler.ApplyHeaders</c> always preferred a set
+    /// <c>staticBearerToken</c> over the cookie jar, and nothing ever cleared it. Mirrors
+    /// the same fix the Kotlin SDK needed for the identical gap
+    /// (<c>AxiamClient.kt</c>'s <c>onCredentialChange</c>/<c>AuthHeaderInterceptor</c>).
+    /// </remarks>
+    private void ReleaseDeviceCredential()
+    {
+        _staticBearerToken = null;
+        _authHandler.ReleaseStaticBearerToken();
+    }
+
     // ------------------------------------------------------------------
     // Auth methods (CONTRACT.md §1): LoginAsync / VerifyMfaAsync / RefreshAsync / LogoutAsync
     // All async-only + CancellationToken + ConfigureAwait(false) throughout (D-10).
@@ -631,6 +656,7 @@ public sealed partial class AxiamClient : IDisposable
     {
         EnsureNotDisposed();
         OnCredentialChange();
+        ReleaseDeviceCredential();
         ArgumentException.ThrowIfNullOrWhiteSpace(email);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
 
@@ -720,6 +746,7 @@ public sealed partial class AxiamClient : IDisposable
     {
         EnsureNotDisposed();
         OnCredentialChange();
+        ReleaseDeviceCredential();
         ArgumentException.ThrowIfNullOrWhiteSpace(totpCode);
 
         var body = new Dictionary<string, object?>
@@ -766,6 +793,7 @@ public sealed partial class AxiamClient : IDisposable
     {
         EnsureNotDisposed();
         OnCredentialChange();
+        ReleaseDeviceCredential();
         string? access = ReadCookie(AccessCookieName);
         if (access is null)
         {
@@ -953,6 +981,7 @@ public sealed partial class AxiamClient : IDisposable
     {
         EnsureNotDisposed();
         OnCredentialChange();
+        ReleaseDeviceCredential();
         ArgumentException.ThrowIfNullOrWhiteSpace(usernameOrEmail);
         ArgumentNullException.ThrowIfNull(password);
 

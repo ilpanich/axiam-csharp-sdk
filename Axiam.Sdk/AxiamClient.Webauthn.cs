@@ -263,6 +263,7 @@ public sealed partial class AxiamClient
         // §17.1 rule 9 / §24.3 rule 4: memo entries are keyed by subject, and this call
         // changes the subject — exactly as MfaSetupConfirmAsync's own call to this does.
         OnCredentialChange();
+        ReleaseDeviceCredential();
         ArgumentException.ThrowIfNullOrWhiteSpace(credentialName);
 
         string body = WebauthnFinishBody(
@@ -334,6 +335,7 @@ public sealed partial class AxiamClient
         // §17.1 rule 9 / §24.3 rule 4: memo entries are keyed by subject, and this call
         // changes the subject.
         OnCredentialChange();
+        ReleaseDeviceCredential();
 
         string body = WebauthnFinishBody(stateToken, response, operation);
         using HttpResponseMessage http =

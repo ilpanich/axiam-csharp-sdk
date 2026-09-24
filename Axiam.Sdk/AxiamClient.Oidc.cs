@@ -661,6 +661,7 @@ public sealed partial class AxiamClient
         // this leaves the §5.2 gate at "unknown" rather than repopulating it — see
         // OnCredentialChange's remarks.
         OnCredentialChange();
+        ReleaseDeviceCredential();
         ArgumentNullException.ThrowIfNull(@params);
 
         var body = new Dictionary<string, object?> { ["state"] = @params.State, ["code"] = @params.Code };
@@ -890,6 +891,7 @@ public sealed partial class AxiamClient
         // §5.2 rule 1 "For C-12" item 5 — see SsoCompleteAsync's remark; the same
         // reasoning applies to every session-establishing federation completion.
         OnCredentialChange();
+        ReleaseDeviceCredential();
         ArgumentNullException.ThrowIfNull(@params);
 
         var body = new Dictionary<string, object?> { ["state"] = @params.State, ["code"] = @params.Code };
@@ -925,6 +927,7 @@ public sealed partial class AxiamClient
         // §5.2 rule 1 "For C-12" item 5 — see SsoCompleteAsync's remark; the same
         // reasoning applies to every session-establishing federation completion.
         OnCredentialChange();
+        ReleaseDeviceCredential();
         ArgumentNullException.ThrowIfNull(@params);
 
         var body = new Dictionary<string, object?> { ["code"] = @params.Code };

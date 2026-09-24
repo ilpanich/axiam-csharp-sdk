@@ -109,6 +109,20 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
 
 ### Fixed
 
+- **A later session-establishing call performed on a device handle itself never actually
+  took effect** (CONTRACT 1.52 N4.4 (C-12) — "held until replaced" — not in
+  c12-findings.md's C# section, but the identical architectural gap N4.4 caught in the
+  Kotlin SDK). `AxiamHttpMessageHandler.ApplyHeaders` always preferred a set
+  `staticBearerToken` over reading the cookie jar, and `AxiamClient.OnCredentialChange()`
+  (called at the top of `LoginAsync`, `VerifyMfaAsync`, `LogoutAsync`, `LoginOpaqueAsync`,
+  `MfaSetupConfirmAsync`, the WebAuthn ceremony-completion methods, and all three SSO
+  completions) never cleared it. A device handle that then called, say, `LoginAsync()`
+  would establish a real cookie session server-side, but every subsequent request that
+  handle made kept silently sending the OLD device token forever — the new session was
+  never used. `AxiamClient` now releases the device credential (on both itself and the
+  shared `AxiamHttpMessageHandler`) at the same point `OnCredentialChange()` already runs,
+  in every one of those methods except `RefreshAsync` (N4.4: "refresh does not clear it").
+  A no-op for a handle that was never device-credentialed.
 - **`X-Axiam-Tenant` reached a host other than the client's configured base URL**
   (CONTRACT 1.52 N5.1 (C-12)). It is a `DefaultRequestHeaders` entry on `AxiamClient`'s own
   `HttpClient` (set at construction and by `ActingTenant()`/`ClearActingTenant()`), so —
