@@ -37,11 +37,28 @@ public sealed class ManifestApi
         CreateResource, UpdateResource, CreateScope,
         CreatePermission, UpdatePermission,
         CreateRole, UpdateRole, GrantPermission,
-        CreateGroup, UpdateGroup, AssignRoleToGroup,
-        CreateUser, UpdateUser, AssignRoleToUser, AddGroupMember,
+        CreateGroup, UpdateGroup, AssignRoleToGroup, UpdateRoleOnGroup,
+        CreateUser, UpdateUser, AssignRoleToUser, UpdateRoleOnUser, AddGroupMember,
+        CreateServiceAccount, UpdateServiceAccount, AssignRoleToServiceAccount, UpdateRoleOnServiceAccount,
     }
 
+    /// <summary>Which server API a <see cref="Kind.AssignRoleToGroup"/>-family step targets —
+    /// shared plumbing for the three subject kinds a &#167;27.6.1 role binding can bind to.</summary>
+    private enum SubjectKind { Group, User, ServiceAccount }
+
     private sealed record Step(PlannedAction Action, Kind Kind, string Key, object? Spec, string? Related);
+
+    /// <summary>
+    /// A subject's CURRENT role binding, as the &#167;27 subject-side listing
+    /// (<c>RoleAssignment</c>) reports it — used to reconcile against a manifest
+    /// <see cref="ManagementManifest.RoleBinding"/> by its natural key, the role alone.
+    /// </summary>
+    private sealed record CurrentBinding(Guid RoleId, Guid? ResourceId, bool Inherit, IReadOnlyList<Guid>? TenantScope);
+
+    /// <summary>The <c>Spec</c> of an <c>UpdateRoleOn*</c> step: what the manifest wants,
+    /// paired with what the server currently holds (needed to unassign it, and to
+    /// restore it if the assign half fails — CONTRACT.md &#167;27.6.1 item 2).</summary>
+    private sealed record RebindSpec(ManagementManifest.RoleBinding Wanted, CurrentBinding Current);
 
     private sealed class Snapshot
     {
@@ -50,10 +67,12 @@ public sealed class ManifestApi
         internal IReadOnlyList<Role> Roles { get; set; } = Array.Empty<Role>();
         internal IReadOnlyList<Group> Groups { get; set; } = Array.Empty<Group>();
         internal IReadOnlyList<UserResponse> Users { get; set; } = Array.Empty<UserResponse>();
+        internal IReadOnlyList<ServiceAccountResponse> ServiceAccounts { get; set; } = Array.Empty<ServiceAccountResponse>();
         internal Dictionary<Guid, IReadOnlyList<Scope>> Scopes { get; } = new();
         internal Dictionary<Guid, IReadOnlyList<Guid>> RoleGrants { get; } = new();
-        internal Dictionary<Guid, IReadOnlyList<Guid>> RoleUsers { get; } = new();
-        internal Dictionary<Guid, IReadOnlyList<Guid>> RoleGroups { get; } = new();
+        internal Dictionary<Guid, IReadOnlyList<CurrentBinding>> GroupRoleBindings { get; } = new();
+        internal Dictionary<Guid, IReadOnlyList<CurrentBinding>> UserRoleBindings { get; } = new();
+        internal Dictionary<Guid, IReadOnlyList<CurrentBinding>> ServiceAccountRoleBindings { get; } = new();
         internal Dictionary<Guid, IReadOnlyList<Guid>> GroupMembers { get; } = new();
     }
 
@@ -65,6 +84,29 @@ public sealed class ManifestApi
         internal Dictionary<string, Guid> Roles { get; } = new(StringComparer.Ordinal);
         internal Dictionary<string, Guid> Groups { get; } = new(StringComparer.Ordinal);
         internal Dictionary<string, Guid> Users { get; } = new(StringComparer.Ordinal);
+        internal Dictionary<string, Guid> ServiceAccounts { get; } = new(StringComparer.Ordinal);
+
+        /// <summary>§27.5 rule 5: the one-time <c>client_secret</c> response of every
+        /// service account this apply created, keyed by manifest key — read back by
+        /// <see cref="ExecuteAsync"/> to attach to that step's <see cref="StepOutcome"/>.</summary>
+        internal Dictionary<string, ServiceAccountCreatedResponse> CreatedServiceAccounts { get; } = new(StringComparer.Ordinal);
+    }
+
+    /// <summary>
+    /// CONTRACT.md &#167;27.6.1 item 2 (contract 1.51): thrown by <see cref="RunAsync"/>
+    /// when a role-binding UPDATE's assign half fails after its unassign half already
+    /// succeeded — carries whether the restore (re-assigning the previous binding)
+    /// succeeded, so <see cref="ExecuteAsync"/> can attach it to the step's outcome.
+    /// </summary>
+    private sealed class BindingUpdateFailedException : NetworkError
+    {
+        internal bool RestoreSucceeded { get; }
+
+        internal BindingUpdateFailedException(string message, bool restoreSucceeded)
+            : base(message, null)
+        {
+            RestoreSucceeded = restoreSucceeded;
+        }
     }
 
     /// <summary>
@@ -83,6 +125,7 @@ public sealed class ManifestApi
     {
         ManifestValidation.Validate(manifest);
         Snapshot snapshot = await ReadAsync(manifest, cancellationToken).ConfigureAwait(false);
+        RequireUnambiguousServiceAccountNames(manifest, snapshot);
         List<Step> steps = Derive(manifest, snapshot, new Resolved());
         return new ManagementPlan(steps.Select(s => s.Action).ToList());
     }
@@ -104,6 +147,7 @@ public sealed class ManifestApi
         ManifestValidation.Validate(manifest);
         var resolved = new Resolved();
         Snapshot snapshot = await ReadAsync(manifest, cancellationToken).ConfigureAwait(false);
+        RequireUnambiguousServiceAccountNames(manifest, snapshot);
         List<Step> steps = Derive(manifest, snapshot, resolved);
         RequirePasswords(steps);
         return await ExecuteAsync(steps, resolved, cancellationToken).ConfigureAwait(false);
@@ -118,6 +162,11 @@ public sealed class ManifestApi
             Roles = await _api.Roles.ListAllAsync(start: PlanPage, cancellationToken: token).ConfigureAwait(false),
             Groups = await _api.Groups.ListAllAsync(start: PlanPage, cancellationToken: token).ConfigureAwait(false),
             Users = await _api.Users.ListAllAsync(start: PlanPage, cancellationToken: token).ConfigureAwait(false),
+            // Read only when the manifest names a service account, so a manifest without
+            // one makes no new request (§27.6.1 item 3).
+            ServiceAccounts = manifest.ServiceAccounts.Count > 0
+                ? await _api.ServiceAccounts.ListAllAsync(start: PlanPage, cancellationToken: token).ConfigureAwait(false)
+                : Array.Empty<ServiceAccountResponse>(),
         };
 
         // Only the resources, roles and groups the manifest could match: a tenant with a
@@ -134,21 +183,78 @@ public sealed class ManifestApi
         {
             snapshot.RoleGrants[role.Id] = (await _api.Roles.ListPermissionsAsync(role.Id, token)
                 .ConfigureAwait(false)).Select(g => g.Permission.Id).ToList();
-            snapshot.RoleUsers[role.Id] = (await _api.Roles.ListUsersAsync(role.Id, token)
-                .ConfigureAwait(false)).Select(a => a.User.Id).ToList();
-            snapshot.RoleGroups[role.Id] = (await _api.Roles.ListGroupsAsync(role.Id, token)
-                .ConfigureAwait(false)).Select(a => a.Group.Id).ToList();
         }
 
         var wantedGroups = manifest.Groups.Select(g => g.Name).ToHashSet(StringComparer.Ordinal);
+        // Only a group whose manifest spec actually STATES roles costs a role-binding
+        // read — a manifest section that never mentions roles for a subject makes no new
+        // request for them, the same "only what could match" discipline the resource/
+        // role/group reads above already apply.
+        var groupsWithRoles = manifest.Groups.Where(g => (g.Roles?.Count ?? 0) > 0)
+            .Select(g => g.Name).ToHashSet(StringComparer.Ordinal);
         foreach (Group group in snapshot.Groups.Where(g => wantedGroups.Contains(g.Name)))
         {
             snapshot.GroupMembers[group.Id] = (await _api.Groups
                 .ListMembersAllAsync(group.Id, start: PlanPage, cancellationToken: token)
                 .ConfigureAwait(false)).Select(u => u.Id).ToList();
+            if (groupsWithRoles.Contains(group.Name))
+            {
+                snapshot.GroupRoleBindings[group.Id] = ToCurrentBindings(
+                    await _api.Groups.ListRolesAsync(group.Id, token).ConfigureAwait(false));
+            }
+        }
+
+        var wantedUsers = manifest.Users.Select(u => u.Username).ToHashSet(StringComparer.Ordinal);
+        var usersWithRoles = manifest.Users.Where(u => (u.Roles?.Count ?? 0) > 0)
+            .Select(u => u.Username).ToHashSet(StringComparer.Ordinal);
+        foreach (UserResponse user in snapshot.Users.Where(u => wantedUsers.Contains(u.Username)))
+        {
+            if (usersWithRoles.Contains(user.Username))
+            {
+                snapshot.UserRoleBindings[user.Id] = ToCurrentBindings(
+                    await _api.Users.ListRolesAsync(user.Id, token).ConfigureAwait(false));
+            }
+        }
+
+        var wantedServiceAccounts = manifest.ServiceAccounts.Select(a => a.Name).ToHashSet(StringComparer.Ordinal);
+        var serviceAccountsWithRoles = manifest.ServiceAccounts.Where(a => (a.Roles?.Count ?? 0) > 0)
+            .Select(a => a.Name).ToHashSet(StringComparer.Ordinal);
+        foreach (ServiceAccountResponse account in snapshot.ServiceAccounts.Where(a => wantedServiceAccounts.Contains(a.Name)))
+        {
+            if (serviceAccountsWithRoles.Contains(account.Name))
+            {
+                snapshot.ServiceAccountRoleBindings[account.Id] = ToCurrentBindings(
+                    await _api.ServiceAccounts.ListRolesAsync(account.Id, token).ConfigureAwait(false));
+            }
         }
 
         return snapshot;
+    }
+
+    private static IReadOnlyList<CurrentBinding> ToCurrentBindings(IReadOnlyList<RoleAssignment> assignments) =>
+        assignments.Select(a => new CurrentBinding(a.Role.Id, a.ResourceId, a.Inherit, a.TenantScope)).ToList();
+
+    /// <summary>
+    /// §27.6.1 item 3: a stated service-account name matching more than one EXISTING
+    /// account fails PlanAsync/ApplyAsync before any write — picking one would reconcile
+    /// an arbitrary account, since the server does not keep names unique.
+    /// </summary>
+    private static void RequireUnambiguousServiceAccountNames(ManagementManifest manifest, Snapshot snapshot)
+    {
+        var ambiguous = manifest.ServiceAccounts
+            .Select(a => a.Name)
+            .Distinct(StringComparer.Ordinal)
+            .Where(name => snapshot.ServiceAccounts.Count(a => a.Name == name) > 1)
+            .ToList();
+        if (ambiguous.Count > 0)
+        {
+            throw NetworkError.FromMessage(
+                "this manifest cannot be reconciled:\n  - " + string.Join("\n  - ", ambiguous.Select(
+                    name => $"service account name '{name}' matches more than one existing account; " +
+                            "the server does not enforce names unique, so reconciling by name would pick one arbitrarily")) +
+                "\n\nNothing was sent: §27.6 rule 1 refuses a manifest before the first request " +
+                "rather than part-way through an apply.");
+        }
     }
 
     private static List<Step> Derive(ManagementManifest m, Snapshot snap, Resolved res)
@@ -174,7 +280,13 @@ public sealed class ManifestApi
             if (existing is not null)
             {
                 res.Resources[key] = existing.Id;
-                bool drifted = existing.ResourceType != spec.ResourceType;
+                // §27.6.1 item 1: JSON value equality of the WHOLE object, never a
+                // key-by-key merge — and only when the manifest STATES metadata at all
+                // (rule 3's silence-means-unstated). A stated {} matches what the server
+                // returns for none (an empty object, never absent, per the model).
+                bool metadataDrifted = spec.Metadata is { } wanted
+                    && !JsonElementDeepEquals(wanted, existing.Metadata);
+                bool drifted = existing.ResourceType != spec.ResourceType || metadataDrifted;
                 outSteps.Add(MakeStep(
                     drifted ? PlanChange.Update : PlanChange.NoChange, PlanTarget.Resource, key,
                     summary, drifted ? Kind.UpdateResource : Kind.Noop, spec, null));
@@ -290,18 +402,14 @@ public sealed class ManifestApi
 
         foreach (ManagementManifest.GroupSpec group in m.Groups)
         {
-            foreach (string roleKey in group.Roles ?? Array.Empty<string>())
-            {
-                string summary = $"role '{roleKey}' on group '{group.Name}'";
-                bool already = res.Roles.TryGetValue(roleKey, out Guid roleId) &&
-                               res.Groups.TryGetValue(group.Key, out Guid groupId) &&
-                               snap.RoleGroups.TryGetValue(roleId, out IReadOnlyList<Guid>? held) &&
-                               held.Contains(groupId);
-                outSteps.Add(MakeStep(
-                    already ? PlanChange.NoChange : PlanChange.Create, PlanTarget.GroupRole,
-                    group.Key, summary, already ? Kind.Noop : Kind.AssignRoleToGroup,
-                    roleKey, group.Key));
-            }
+            IReadOnlyList<CurrentBinding> current =
+                res.Groups.TryGetValue(group.Key, out Guid groupId) &&
+                snap.GroupRoleBindings.TryGetValue(groupId, out IReadOnlyList<CurrentBinding>? found)
+                    ? found
+                    : Array.Empty<CurrentBinding>();
+            DeriveRoleBindingSteps(
+                outSteps, group.Roles, group.Key, $"group '{group.Name}'", current, res,
+                PlanTarget.GroupRole, Kind.AssignRoleToGroup, Kind.UpdateRoleOnGroup);
         }
 
         foreach (ManagementManifest.UserSpec spec in m.Users)
@@ -325,18 +433,14 @@ public sealed class ManifestApi
 
         foreach (ManagementManifest.UserSpec user in m.Users)
         {
-            foreach (string roleKey in user.Roles ?? Array.Empty<string>())
-            {
-                string summary = $"role '{roleKey}' on user '{user.Username}'";
-                bool already = res.Roles.TryGetValue(roleKey, out Guid roleId) &&
-                               res.Users.TryGetValue(user.Key, out Guid userId) &&
-                               snap.RoleUsers.TryGetValue(roleId, out IReadOnlyList<Guid>? held) &&
-                               held.Contains(userId);
-                outSteps.Add(MakeStep(
-                    already ? PlanChange.NoChange : PlanChange.Create, PlanTarget.UserRole,
-                    user.Key, summary, already ? Kind.Noop : Kind.AssignRoleToUser,
-                    roleKey, user.Key));
-            }
+            IReadOnlyList<CurrentBinding> current =
+                res.Users.TryGetValue(user.Key, out Guid userId) &&
+                snap.UserRoleBindings.TryGetValue(userId, out IReadOnlyList<CurrentBinding>? found)
+                    ? found
+                    : Array.Empty<CurrentBinding>();
+            DeriveRoleBindingSteps(
+                outSteps, user.Roles, user.Key, $"user '{user.Username}'", current, res,
+                PlanTarget.UserRole, Kind.AssignRoleToUser, Kind.UpdateRoleOnUser);
         }
 
         foreach (ManagementManifest.UserSpec user in m.Users)
@@ -355,6 +459,41 @@ public sealed class ManifestApi
             }
         }
 
+        // §27.6 rule 5 / §27.6.1 item 3: service accounts and their role bindings are
+        // ordered LAST — after every other namespace, including users.
+        foreach (ManagementManifest.ServiceAccountSpec spec in m.ServiceAccounts)
+        {
+            string summary = $"service account '{spec.Name}'";
+            ServiceAccountResponse? found = snap.ServiceAccounts.FirstOrDefault(a => a.Name == spec.Name);
+            if (found is not null)
+            {
+                res.ServiceAccounts[spec.Key] = found.Id;
+                // §27.6.1 item 3: description is the only field Update reconciles;
+                // status is not a manifest field in contract 1.51.
+                bool drifted = spec.Description is { } wanted && wanted != (found.Description ?? string.Empty);
+                outSteps.Add(MakeStep(
+                    drifted ? PlanChange.Update : PlanChange.NoChange, PlanTarget.ServiceAccount, spec.Key,
+                    summary, drifted ? Kind.UpdateServiceAccount : Kind.Noop, spec, null));
+            }
+            else
+            {
+                outSteps.Add(MakeStep(PlanChange.Create, PlanTarget.ServiceAccount, spec.Key, summary,
+                    Kind.CreateServiceAccount, spec, null));
+            }
+        }
+
+        foreach (ManagementManifest.ServiceAccountSpec spec in m.ServiceAccounts)
+        {
+            IReadOnlyList<CurrentBinding> current =
+                res.ServiceAccounts.TryGetValue(spec.Key, out Guid accountId) &&
+                snap.ServiceAccountRoleBindings.TryGetValue(accountId, out IReadOnlyList<CurrentBinding>? found)
+                    ? found
+                    : Array.Empty<CurrentBinding>();
+            DeriveRoleBindingSteps(
+                outSteps, spec.Roles, spec.Key, $"service account '{spec.Name}'", current, res,
+                PlanTarget.ServiceAccountRole, Kind.AssignRoleToServiceAccount, Kind.UpdateRoleOnServiceAccount);
+        }
+
         return outSteps;
     }
 
@@ -362,6 +501,111 @@ public sealed class ManifestApi
         PlanChange change, PlanTarget target, string key, string summary,
         Kind kind, object? spec, string? related)
         => new(new PlannedAction(change, target, key, summary), kind, key, spec, related);
+
+    /// <summary>
+    /// CONTRACT.md &#167;27.6.1 item 2 (contract 1.51): reconciles one subject's
+    /// &#167;27.6.1 role bindings — group, user or service account alike, which is why
+    /// this is shared rather than written three times. Natural key is <c>Role</c> alone;
+    /// <c>Resource</c>/<c>Inherit</c> are fields, so a binding that changed either is an
+    /// UPDATE (unassign, then assign — there is no update endpoint), never a second
+    /// create the server would refuse with 409.
+    /// </summary>
+    private static void DeriveRoleBindingSteps(
+        List<Step> outSteps,
+        IReadOnlyList<ManagementManifest.RoleBinding>? bindings,
+        string subjectKey,
+        string subjectLabel,
+        IReadOnlyList<CurrentBinding> current,
+        Resolved res,
+        PlanTarget target,
+        Kind assignKind,
+        Kind updateKind)
+    {
+        foreach (ManagementManifest.RoleBinding binding in bindings ?? Array.Empty<ManagementManifest.RoleBinding>())
+        {
+            string scopeNote = binding.Resource is { } r ? $" at resource '{r}'" : string.Empty;
+            string inheritNote = binding.Inherit ? string.Empty : ", inherit: false";
+            string summary = $"role '{binding.Role}' on {subjectLabel}{scopeNote}{inheritNote}";
+
+            // Every Role/Resource KEY is already guaranteed to resolve to a KNOWN
+            // MANIFEST entry by ManifestValidation.Validate (run before Derive is ever
+            // called) — but its SERVER id may not exist yet: PlanAsync/ApplyAsync are
+            // computing this BEFORE the role (and/or resource) has necessarily been
+            // created, when it is itself pending in this very run. Either dependency
+            // being unresolved means the server cannot already hold this exact binding
+            // (it cannot hold a binding to a role, or scoped to a resource, that does
+            // not exist), so this is unconditionally a Create — never a lookup against
+            // `current` with a placeholder id that could accidentally collide.
+            if (!res.Roles.TryGetValue(binding.Role, out Guid roleId) ||
+                (binding.Resource is { } pendingResource && !res.Resources.TryGetValue(pendingResource, out _)))
+            {
+                outSteps.Add(MakeStep(PlanChange.Create, target, subjectKey, summary, assignKind, binding, subjectKey));
+                continue;
+            }
+
+            Guid? resourceId = binding.Resource is { } resKey ? res.Resources[resKey] : null;
+
+            CurrentBinding? match = current.FirstOrDefault(c => c.RoleId == roleId);
+            if (match is null)
+            {
+                outSteps.Add(MakeStep(PlanChange.Create, target, subjectKey, summary, assignKind, binding, subjectKey));
+            }
+            else if (match.ResourceId == resourceId && match.Inherit == binding.Inherit)
+            {
+                outSteps.Add(MakeStep(PlanChange.NoChange, target, subjectKey, summary, Kind.Noop, binding, subjectKey));
+            }
+            else
+            {
+                outSteps.Add(MakeStep(
+                    PlanChange.Update, target, subjectKey, summary, updateKind,
+                    new RebindSpec(binding, match), subjectKey));
+            }
+        }
+    }
+
+    /// <summary>
+    /// §27.6.1 item 1: JSON value equality — order-independent for object members,
+    /// order-SENSITIVE for array elements (RFC 8259 arrays are ordered; objects are not).
+    /// Never a key-by-key merge: two objects with the same keys but different values are
+    /// unequal, and so are two objects where one simply has an extra key.
+    /// </summary>
+    private static bool JsonElementDeepEquals(System.Text.Json.JsonElement a, System.Text.Json.JsonElement b)
+    {
+        if (a.ValueKind != b.ValueKind)
+        {
+            return false;
+        }
+
+        switch (a.ValueKind)
+        {
+            case System.Text.Json.JsonValueKind.Object:
+                var aProps = a.EnumerateObject().ToDictionary(p => p.Name, p => p.Value, StringComparer.Ordinal);
+                var bProps = b.EnumerateObject().ToDictionary(p => p.Name, p => p.Value, StringComparer.Ordinal);
+                if (aProps.Count != bProps.Count)
+                {
+                    return false;
+                }
+                return aProps.All(kv => bProps.TryGetValue(kv.Key, out System.Text.Json.JsonElement bv)
+                                          && JsonElementDeepEquals(kv.Value, bv));
+
+            case System.Text.Json.JsonValueKind.Array:
+                System.Text.Json.JsonElement[] aItems = a.EnumerateArray().ToArray();
+                System.Text.Json.JsonElement[] bItems = b.EnumerateArray().ToArray();
+                return aItems.Length == bItems.Length
+                       && aItems.Zip(bItems, JsonElementDeepEquals).All(eq => eq);
+
+            case System.Text.Json.JsonValueKind.String:
+                return a.GetString() == b.GetString();
+
+            case System.Text.Json.JsonValueKind.Number:
+                // Raw text compare first (catches "1" vs "1.0" as the SAME server-round-tripped
+                // value only when the bytes agree; falls back to numeric compare so 1 == 1.0).
+                return a.GetRawText() == b.GetRawText() || a.GetDouble() == b.GetDouble();
+
+            default: // True, False, Null, Undefined — ValueKind equality (checked above) is enough.
+                return true;
+        }
+    }
 
     /// <summary>
     /// Refuses, before any request, when a user must be created with no password.
@@ -412,8 +656,12 @@ public sealed class ManifestApi
             // part-reconciled" when the truth is "this code is wrong".
             catch (Exception ex) when (ex is AuthError or AuthzError or NetworkError)
             {
-                applied.Add(new AppliedStep(
-                    step.Action, new StepOutcome(ApplyStatus.Failed, ex.Message)));
+                // §27.6.1 item 2: a role-binding rebind's assign half failing carries
+                // whether the restore of the previous binding succeeded.
+                StepOutcome outcome = ex is BindingUpdateFailedException rebindFailure
+                    ? new StepOutcome(ApplyStatus.Failed, ex.Message, RestoreSucceeded: rebindFailure.RestoreSucceeded)
+                    : new StepOutcome(ApplyStatus.Failed, ex.Message);
+                applied.Add(new AppliedStep(step.Action, outcome));
                 stopped = true;
                 continue;
             }
@@ -421,7 +669,14 @@ public sealed class ManifestApi
             ApplyStatus status = step.Kind.ToString().StartsWith("Update", StringComparison.Ordinal)
                 ? ApplyStatus.Updated
                 : ApplyStatus.Created;
-            applied.Add(new AppliedStep(step.Action, new StepOutcome(status)));
+            // §27.5 rule 5: the one-time client_secret rides on THIS action's own
+            // Created outcome, even when a later action of the same apply fails — kept
+            // here rather than dropped because rule 3's "once" is literal.
+            ServiceAccountCreatedResponse? createdServiceAccount =
+                step.Kind == Kind.CreateServiceAccount && res.CreatedServiceAccounts.TryGetValue(step.Key, out var csa)
+                    ? csa
+                    : null;
+            applied.Add(new AppliedStep(step.Action, new StepOutcome(status, CreatedServiceAccount: createdServiceAccount)));
         }
 
         return new ApplyReport(applied);
@@ -440,6 +695,7 @@ public sealed class ManifestApi
                         Name = spec.Name,
                         ParentId = spec.Parent is { } p ? res.Resources[p] : null,
                         ResourceType = spec.ResourceType,
+                        Metadata = spec.Metadata,
                     }, token).ConfigureAwait(false);
                 res.Resources[s.Key] = created.Id;
                 break;
@@ -450,8 +706,8 @@ public sealed class ManifestApi
                 var spec = (ManagementManifest.ResourceSpec)s.Spec!;
                 await _api.Resources.UpdateAsync(
                     res.Resources[s.Key],
-                    new UpdateResourceRequest { ResourceType = spec.ResourceType }, token)
-                    .ConfigureAwait(false);
+                    new UpdateResourceRequest { ResourceType = spec.ResourceType, Metadata = spec.Metadata },
+                    token).ConfigureAwait(false);
                 break;
             }
 
@@ -548,10 +804,16 @@ public sealed class ManifestApi
             }
 
             case Kind.AssignRoleToGroup:
-                await _api.Roles.AssignToGroupAsync(
-                    res.Roles[(string)s.Spec!],
-                    new AssignRoleToGroupRequest { GroupId = res.Groups[s.Related!] }, token)
+            {
+                var binding = (ManagementManifest.RoleBinding)s.Spec!;
+                await AssignAsync(SubjectKind.Group, res.Roles[binding.Role], res.Groups[s.Related!],
+                    binding.Resource is { } r ? res.Resources[r] : null, binding.Inherit, tenantScope: null, token)
                     .ConfigureAwait(false);
+                break;
+            }
+
+            case Kind.UpdateRoleOnGroup:
+                await RebindAsync(SubjectKind.Group, res.Groups[s.Related!], (RebindSpec)s.Spec!, res, token).ConfigureAwait(false);
                 break;
 
             case Kind.CreateUser:
@@ -578,10 +840,16 @@ public sealed class ManifestApi
             }
 
             case Kind.AssignRoleToUser:
-                await _api.Roles.AssignToUserAsync(
-                    res.Roles[(string)s.Spec!],
-                    new AssignRoleToUserRequest { UserId = res.Users[s.Related!] }, token)
+            {
+                var binding = (ManagementManifest.RoleBinding)s.Spec!;
+                await AssignAsync(SubjectKind.User, res.Roles[binding.Role], res.Users[s.Related!],
+                    binding.Resource is { } r ? res.Resources[r] : null, binding.Inherit, tenantScope: null, token)
                     .ConfigureAwait(false);
+                break;
+            }
+
+            case Kind.UpdateRoleOnUser:
+                await RebindAsync(SubjectKind.User, res.Users[s.Related!], (RebindSpec)s.Spec!, res, token).ConfigureAwait(false);
                 break;
 
             case Kind.AddGroupMember:
@@ -591,10 +859,128 @@ public sealed class ManifestApi
                     .ConfigureAwait(false);
                 break;
 
+            case Kind.CreateServiceAccount:
+            {
+                var spec = (ManagementManifest.ServiceAccountSpec)s.Spec!;
+                ServiceAccountCreatedResponse created = await _api.ServiceAccounts.CreateAsync(
+                    new CreateServiceAccountRequest { Name = spec.Name, Description = spec.Description }, token)
+                    .ConfigureAwait(false);
+                res.ServiceAccounts[s.Key] = created.Id;
+                // §27.5 rule 5: the one-time client_secret. ExecuteAsync reads this back
+                // to attach it to this action's own outcome.
+                res.CreatedServiceAccounts[s.Key] = created;
+                break;
+            }
+
+            case Kind.UpdateServiceAccount:
+            {
+                var spec = (ManagementManifest.ServiceAccountSpec)s.Spec!;
+                await _api.ServiceAccounts.UpdateAsync(
+                    res.ServiceAccounts[s.Key], new UpdateServiceAccount { Description = spec.Description }, token)
+                    .ConfigureAwait(false);
+                break;
+            }
+
+            case Kind.AssignRoleToServiceAccount:
+            {
+                var binding = (ManagementManifest.RoleBinding)s.Spec!;
+                await AssignAsync(SubjectKind.ServiceAccount, res.Roles[binding.Role], res.ServiceAccounts[s.Related!],
+                    binding.Resource is { } r ? res.Resources[r] : null, binding.Inherit, tenantScope: null, token)
+                    .ConfigureAwait(false);
+                break;
+            }
+
+            case Kind.UpdateRoleOnServiceAccount:
+                await RebindAsync(SubjectKind.ServiceAccount, res.ServiceAccounts[s.Related!], (RebindSpec)s.Spec!, res, token)
+                    .ConfigureAwait(false);
+                break;
+
             case Kind.Noop:
             default:
                 // Never reached: ExecuteAsync short-circuits a no-op before here.
                 break;
+        }
+    }
+
+    /// <summary>
+    /// CONTRACT.md &#167;27.6.1 item 2: assigns one role to one subject, whichever kind it
+    /// is — the single call site every <c>AssignRoleTo*</c> step and the assign half of
+    /// every rebind goes through, so the three subject kinds cannot drift on how
+    /// <c>inherit</c>/<c>tenant_scope</c> are carried.
+    /// </summary>
+    private Task AssignAsync(
+        SubjectKind kind, Guid roleId, Guid subjectId, Guid? resourceId, bool inherit,
+        IReadOnlyList<Guid>? tenantScope, CancellationToken token)
+    {
+        // §27.6.1 item 2: inherit reaches the wire ONLY as false, so an inheritable
+        // binding's body stays byte-for-byte a pre-1.51 body.
+        bool? wireInherit = inherit ? null : false;
+        return kind switch
+        {
+            SubjectKind.Group => _api.Roles.AssignToGroupAsync(roleId, new AssignRoleToGroupRequest
+            {
+                GroupId = subjectId, ResourceId = resourceId, Inherit = wireInherit, TenantScope = tenantScope,
+            }, token),
+            SubjectKind.User => _api.Roles.AssignToUserAsync(roleId, new AssignRoleToUserRequest
+            {
+                UserId = subjectId, ResourceId = resourceId, Inherit = wireInherit, TenantScope = tenantScope,
+            }, token),
+            SubjectKind.ServiceAccount => _api.Roles.AssignToServiceAccountAsync(roleId, new AssignRoleToServiceAccountRequest
+            {
+                ServiceAccountId = subjectId, ResourceId = resourceId, Inherit = wireInherit, TenantScope = tenantScope,
+            }, token),
+            _ => throw new ArgumentOutOfRangeException(nameof(kind)),
+        };
+    }
+
+    private Task UnassignAsync(SubjectKind kind, Guid roleId, Guid subjectId, Guid? resourceId, CancellationToken token) =>
+        kind switch
+        {
+            SubjectKind.Group => _api.Roles.UnassignFromGroupAsync(roleId, subjectId, resourceId?.ToString(), token),
+            SubjectKind.User => _api.Roles.UnassignFromUserAsync(roleId, subjectId, resourceId?.ToString(), token),
+            SubjectKind.ServiceAccount => _api.Roles.UnassignFromServiceAccountAsync(roleId, subjectId, resourceId?.ToString(), token),
+            _ => throw new ArgumentOutOfRangeException(nameof(kind)),
+        };
+
+    /// <summary>
+    /// CONTRACT.md &#167;27.6.1 item 2: an UPDATE of a role binding is unassign, then
+    /// assign — there is no update endpoint, and the two calls are not atomic. If the
+    /// assign half fails, re-assigns the PREVIOUS binding (same resource, same
+    /// <c>inherit</c>, same <c>tenant_scope</c> — carried across so an
+    /// organization-level account's reach is never silently widened) and throws
+    /// <see cref="BindingUpdateFailedException"/> naming whether that restore succeeded.
+    /// If the UNASSIGN itself fails, nothing has changed yet, so it propagates as-is —
+    /// there is nothing to restore.
+    /// </summary>
+    private async Task RebindAsync(SubjectKind kind, Guid subjectId, RebindSpec rebind, Resolved res, CancellationToken token)
+    {
+        Guid roleId = res.Roles[rebind.Wanted.Role];
+        Guid? newResourceId = rebind.Wanted.Resource is { } r ? res.Resources[r] : null;
+
+        await UnassignAsync(kind, roleId, subjectId, rebind.Current.ResourceId, token).ConfigureAwait(false);
+
+        try
+        {
+            await AssignAsync(kind, roleId, subjectId, newResourceId, rebind.Wanted.Inherit, rebind.Current.TenantScope, token)
+                .ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is AuthError or AuthzError or NetworkError)
+        {
+            bool restored;
+            try
+            {
+                await AssignAsync(kind, roleId, subjectId, rebind.Current.ResourceId, rebind.Current.Inherit, rebind.Current.TenantScope, token)
+                    .ConfigureAwait(false);
+                restored = true;
+            }
+            catch (Exception ex2) when (ex2 is AuthError or AuthzError or NetworkError)
+            {
+                restored = false;
+            }
+
+            throw new BindingUpdateFailedException(
+                $"{ex.Message} (rebind restore {(restored ? "succeeded — the subject still holds its previous binding" : "FAILED — the subject now holds NEITHER the previous nor the new binding")})",
+                restored);
         }
     }
 }

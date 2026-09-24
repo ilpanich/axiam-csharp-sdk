@@ -45,6 +45,12 @@ public enum PlanTarget
 
     /// <summary>A user's membership of a group.</summary>
     GroupMember,
+
+    /// <summary>A service account (CONTRACT.md &#167;27.6.1 item 3, contract 1.51).</summary>
+    ServiceAccount,
+
+    /// <summary>A role held by a service account.</summary>
+    ServiceAccountRole,
 }
 
 /// <summary>One step of a plan.</summary>
@@ -103,7 +109,28 @@ public enum ApplyStatus
 /// <summary>What became of one step, and why.</summary>
 /// <param name="Status">What happened.</param>
 /// <param name="Message">The server's explanation, present only on <see cref="ApplyStatus.Failed"/>.</param>
-public sealed record StepOutcome(ApplyStatus Status, string? Message = null);
+/// <param name="RestoreSucceeded">
+/// CONTRACT.md &#167;27.6.1 item 2 (contract 1.51): a role-binding UPDATE is unassign then
+/// assign, not atomic. When the assign half fails, the SDK re-assigns the PREVIOUS
+/// binding (same resource, same <c>inherit</c>, same <c>tenant_scope</c>) before
+/// reporting the step failed. <c>null</c> for every step that is not this kind of
+/// failure; <c>true</c> when the restore succeeded (the subject still holds its old
+/// binding); <c>false</c> when it also failed (the subject holds NEITHER the old nor the
+/// new binding — <see cref="Message"/> says so).
+/// </param>
+/// <param name="CreatedServiceAccount">
+/// CONTRACT.md &#167;27.5 rule 5 (contract 1.51): on a <see cref="ApplyStatus.Created"/>
+/// outcome for a <c>ServiceAccountSpec</c>, the response <c>apply</c> received —
+/// <c>client_secret</c> included, and the ONLY time it is ever returned. Kept here even
+/// when a LATER action of the same apply fails (&#167;27.6 rule 7's "every attempted
+/// action's outcome"), because it is the only place this credential is retrievable.
+/// <c>null</c> for every other step.
+/// </param>
+public sealed record StepOutcome(
+    ApplyStatus Status,
+    string? Message = null,
+    bool? RestoreSucceeded = null,
+    Models.ServiceAccountCreatedResponse? CreatedServiceAccount = null);
 
 /// <summary>One planned step, paired with what became of it.</summary>
 /// <param name="Action">The step as it was planned.</param>
@@ -142,4 +169,16 @@ public sealed class ApplyReport
     /// <summary>How many steps actually wrote something.</summary>
     public int ChangedCount => Steps.Count(s =>
         s.Outcome.Status is ApplyStatus.Created or ApplyStatus.Updated);
+
+    /// <summary>
+    /// Every service account this apply created, with the one-time <c>client_secret</c>
+    /// (CONTRACT.md &#167;27.5 rule 5, contract 1.51) — never rotated, never returned
+    /// again by any later <c>get</c>/<c>list</c>. Present even when a later action of
+    /// this same apply failed.
+    /// </summary>
+    public IReadOnlyList<Models.ServiceAccountCreatedResponse> CreatedServiceAccounts() =>
+        Steps
+            .Where(s => s.Action.Target == PlanTarget.ServiceAccount && s.Outcome.CreatedServiceAccount is not null)
+            .Select(s => s.Outcome.CreatedServiceAccount!)
+            .ToList();
 }

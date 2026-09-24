@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Axiam.Sdk.Core;
 
 namespace Axiam.Sdk.Management;
@@ -40,6 +41,19 @@ public sealed record ManagementManifest
     /// <summary>The users, with their roles and group memberships.</summary>
     public IReadOnlyList<UserSpec> Users { get; init; } = Array.Empty<UserSpec>();
 
+    /// <summary>
+    /// The service accounts, with their roles (CONTRACT.md &#167;27.6.1, contract 1.51).
+    /// </summary>
+    /// <remarks>
+    /// Reconciled by <see cref="ServiceAccountSpec.Name"/> — the server does not enforce
+    /// it unique (only <c>client_id</c> is indexed), so a stated name matching more than
+    /// one existing account fails <c>PlanAsync</c>/<c>ApplyAsync</c> client-side, before
+    /// any write. A <c>Create</c> action's outcome carries the one-time
+    /// <c>client_secret</c> (&#167;27.5 rule 5), kept even when a LATER action of the same
+    /// apply fails — see <see cref="ApplyReport.CreatedServiceAccounts"/>.
+    /// </remarks>
+    public IReadOnlyList<ServiceAccountSpec> ServiceAccounts { get; init; } = Array.Empty<ServiceAccountSpec>();
+
     /// <summary>A manifest that describes nothing, and therefore changes nothing.</summary>
     /// <returns>An empty manifest.</returns>
     public static ManagementManifest Empty() => new();
@@ -54,12 +68,20 @@ public sealed record ManagementManifest
     /// <param name="ResourceType">The resource's type.</param>
     /// <param name="Parent">The Key of this resource's parent, or <c>null</c> for a root.</param>
     /// <param name="Scopes">The scopes that should exist under this resource.</param>
+    /// <param name="Metadata">
+    /// An optional JSON object (CONTRACT.md &#167;27.6.1 item 1, contract 1.51). Sent on
+    /// <c>Create</c>, and on <c>Update</c> when stated and it differs from the server's
+    /// value — compared by JSON value equality of the WHOLE object, never a key-by-key
+    /// merge, so a stated <c>{}</c> matches what the server stores for none and an
+    /// unstated <see cref="Metadata"/> is silent (never an assertion to clear it).
+    /// </param>
     public sealed record ResourceSpec(
         string Key,
         string Name,
         string ResourceType,
         string? Parent = null,
-        IReadOnlyList<ScopeSpec>? Scopes = null);
+        IReadOnlyList<ScopeSpec>? Scopes = null,
+        JsonElement? Metadata = null);
 
     /// <summary>One scope beneath a resource.</summary>
     /// <param name="Key">Manifest-local identifier, referenced by a grant's scope list.</param>
@@ -106,12 +128,13 @@ public sealed record ManagementManifest
     /// <param name="Key">Manifest-local identifier.</param>
     /// <param name="Name">The group's name.</param>
     /// <param name="Description">What the group is for.</param>
-    /// <param name="Roles">The RoleSpec keys this group should hold.</param>
+    /// <param name="Roles">The roles this group should hold — a role key, or a
+    /// <see cref="RoleBinding"/> naming a resource and/or <c>inherit</c>.</param>
     public sealed record GroupSpec(
         string Key,
         string Name,
         string Description,
-        IReadOnlyList<string>? Roles = null);
+        IReadOnlyList<RoleBinding>? Roles = null);
 
     /// <summary>One user, with their roles and group memberships.</summary>
     /// <param name="Key">Manifest-local identifier.</param>
@@ -122,15 +145,80 @@ public sealed record ManagementManifest
     /// manifest that mentions a password is not a request to reset one, so reconciling
     /// against an existing user never sends it (&#167;27.6 rule 3).
     /// </param>
-    /// <param name="Roles">The RoleSpec keys this user should hold directly.</param>
+    /// <param name="Roles">The roles this user should hold directly — a role key, or a
+    /// <see cref="RoleBinding"/> naming a resource and/or <c>inherit</c>.</param>
     /// <param name="Groups">The GroupSpec keys this user should belong to.</param>
     public sealed record UserSpec(
         string Key,
         string Username,
         string Email,
         Sensitive<string>? InitialPassword = null,
-        IReadOnlyList<string>? Roles = null,
+        IReadOnlyList<RoleBinding>? Roles = null,
         IReadOnlyList<string>? Groups = null);
+
+    /// <summary>
+    /// One service account, and the roles it holds (CONTRACT.md &#167;27.6.1 item 3,
+    /// contract 1.51).
+    /// </summary>
+    /// <param name="Key">Manifest-local identifier.</param>
+    /// <param name="Name">
+    /// The account's name — the natural key <c>ApplyAsync</c>/<c>PlanAsync</c> reconcile
+    /// by. The server does NOT enforce it unique (only <c>client_id</c> is indexed): a
+    /// stated name matching more than one existing account fails client-side before any
+    /// write, rather than picking one.
+    /// </param>
+    /// <param name="Description">What the account is for. The only field <c>Update</c>
+    /// reconciles — <c>status</c> is not a manifest field in contract 1.51.</param>
+    /// <param name="Roles">The roles this account should hold — a role key, or a
+    /// <see cref="RoleBinding"/> naming a resource and/or <c>inherit</c>. Group
+    /// membership of a service account is not a manifest field in contract 1.51.</param>
+    public sealed record ServiceAccountSpec(
+        string Key,
+        string Name,
+        string? Description = null,
+        IReadOnlyList<RoleBinding>? Roles = null);
+
+    /// <summary>
+    /// One role binding on a group, user or service account (CONTRACT.md &#167;27.6.1
+    /// item 2, contract 1.51) — either shape a manifest's <c>roles[]</c> entry can take.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Implicitly convertible from a bare role key (<c>(RoleBinding)"editor"</c>, and
+    /// every call site in this SDK that used to take a <c>string</c> role key still
+    /// compiles unchanged) — the plain shape every SDK had before contract 1.51: no
+    /// resource, and so no inheritance question.
+    /// </para>
+    /// <para>
+    /// The natural key within one subject's <see cref="ManagementManifest.GroupSpec.Roles"/>/
+    /// <see cref="ManagementManifest.UserSpec.Roles"/>/
+    /// <see cref="ManagementManifest.ServiceAccountSpec.Roles"/> is <see cref="Role"/>
+    /// alone — the server keys an assignment on <c>(subject, role)</c> with no resource
+    /// component (<c>has_role</c> is <c>UNIQUE(in, out)</c>), so one role bound twice to
+    /// one subject — plain and scoped included — describes a state the server cannot
+    /// hold. <c>PlanAsync</c>/<c>ApplyAsync</c> reject that before any request, naming the
+    /// subject and the role (&#167;27.6.1's normative rule).
+    /// </para>
+    /// </remarks>
+    /// <param name="Role">The <see cref="RoleSpec"/> key being bound.</param>
+    /// <param name="Resource">
+    /// The <see cref="ResourceSpec"/> key this binding is scoped to, or <c>null</c> for a
+    /// plain (unscoped) binding.
+    /// </param>
+    /// <param name="Inherit">
+    /// Whether the binding also reaches the descendants of <see cref="Resource"/>.
+    /// Defaults to <c>true</c>, and reaches the wire ONLY as <c>false</c> — an inheritable
+    /// binding's request body stays byte-for-byte a pre-1.51 body. A global role
+    /// (<see cref="RoleSpec.Global"/>) bound with <c>Inherit: false</c> is refused by the
+    /// server with <c>400</c> (a global role ignores resource scope); this is checked
+    /// client-side too, before any request.
+    /// </param>
+    public sealed record RoleBinding(string Role, string? Resource = null, bool Inherit = true)
+    {
+        /// <summary>A bare role key becomes the plain (unscoped, inheritable) shape.</summary>
+        /// <param name="roleKey">The <see cref="RoleSpec"/> key.</param>
+        public static implicit operator RoleBinding(string roleKey) => new(roleKey);
+    }
 }
 
 /// <summary>
@@ -151,20 +239,24 @@ public sealed class ManifestBuilder
     private readonly List<ManagementManifest.RoleSpec> _roles = new();
     private readonly Dictionary<string, List<ManagementManifest.GrantSpec>> _grants = new(StringComparer.Ordinal);
     private readonly List<ManagementManifest.GroupSpec> _groups = new();
-    private readonly Dictionary<string, List<string>> _groupRoles = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<ManagementManifest.RoleBinding>> _groupRoles = new(StringComparer.Ordinal);
     private readonly List<ManagementManifest.UserSpec> _users = new();
-    private readonly Dictionary<string, List<string>> _userRoles = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<ManagementManifest.RoleBinding>> _userRoles = new(StringComparer.Ordinal);
     private readonly Dictionary<string, List<string>> _userGroups = new(StringComparer.Ordinal);
+    private readonly List<ManagementManifest.ServiceAccountSpec> _serviceAccounts = new();
+    private readonly Dictionary<string, List<ManagementManifest.RoleBinding>> _serviceAccountRoles = new(StringComparer.Ordinal);
     private readonly List<string> _problems = new();
 
     /// <summary>Declares a root resource.</summary>
     /// <param name="key">Manifest-local identifier.</param>
     /// <param name="name">The resource's name.</param>
     /// <param name="resourceType">The resource's type.</param>
+    /// <param name="metadata">An optional JSON object (&#167;27.6.1 item 1).</param>
     /// <returns>This builder.</returns>
-    public ManifestBuilder Resource(string key, string name, string resourceType)
+    public ManifestBuilder Resource(
+        string key, string name, string resourceType, System.Text.Json.JsonElement? metadata = null)
     {
-        _resources.Add(new ManagementManifest.ResourceSpec(key, name, resourceType));
+        _resources.Add(new ManagementManifest.ResourceSpec(key, name, resourceType, Metadata: metadata));
         return this;
     }
 
@@ -173,8 +265,11 @@ public sealed class ManifestBuilder
     /// <param name="name">The resource's name.</param>
     /// <param name="resourceType">The resource's type.</param>
     /// <param name="parentKey">The key of an already-declared resource.</param>
+    /// <param name="metadata">An optional JSON object (&#167;27.6.1 item 1).</param>
     /// <returns>This builder.</returns>
-    public ManifestBuilder ChildResource(string key, string name, string resourceType, string parentKey)
+    public ManifestBuilder ChildResource(
+        string key, string name, string resourceType, string parentKey,
+        System.Text.Json.JsonElement? metadata = null)
     {
         if (!_resources.Any(r => r.Key == parentKey))
         {
@@ -183,7 +278,7 @@ public sealed class ManifestBuilder
             return this;
         }
 
-        _resources.Add(new ManagementManifest.ResourceSpec(key, name, resourceType, parentKey));
+        _resources.Add(new ManagementManifest.ResourceSpec(key, name, resourceType, parentKey, Metadata: metadata));
         return this;
     }
 
@@ -259,7 +354,8 @@ public sealed class ManifestBuilder
         return this;
     }
 
-    /// <summary>Declares a group, optionally holding roles.</summary>
+    /// <summary>Declares a group, optionally holding roles (the plain, unscoped shape —
+    /// use <see cref="GroupRole"/> for a resource-scoped or <c>inherit: false</c> one).</summary>
     /// <param name="key">Manifest-local identifier.</param>
     /// <param name="name">The group's name.</param>
     /// <param name="description">What it is for.</param>
@@ -276,6 +372,32 @@ public sealed class ManifestBuilder
         return this;
     }
 
+    /// <summary>
+    /// Binds a role to the group named by <paramref name="groupKey"/> (CONTRACT.md
+    /// &#167;27.6.1 item 2, contract 1.51) — the general form, for a resource-scoped or
+    /// <c>inherit: false</c> binding; <see cref="Group"/>'s trailing <c>roleKeys</c> is
+    /// the shorthand for the plain shape.
+    /// </summary>
+    /// <param name="groupKey">The group receiving the binding.</param>
+    /// <param name="roleKey">The role being bound.</param>
+    /// <param name="resourceKey">The resource this binding is scoped to, or <c>null</c>
+    /// for a plain (unscoped) binding.</param>
+    /// <param name="inherit">Whether the binding also reaches the descendants of
+    /// <paramref name="resourceKey"/>. Defaults to <c>true</c>.</param>
+    /// <returns>This builder.</returns>
+    public ManifestBuilder GroupRole(string groupKey, string roleKey, string? resourceKey = null, bool inherit = true)
+    {
+        if (!_groups.Any(g => g.Key == groupKey))
+        {
+            _problems.Add($"GroupRole names group '{groupKey}', " +
+                          "which no Group(...) call has declared yet");
+            return this;
+        }
+
+        Add(_groupRoles, groupKey, new ManagementManifest.RoleBinding(roleKey, resourceKey, inherit));
+        return this;
+    }
+
     /// <summary>Declares a user.</summary>
     /// <param name="key">Manifest-local identifier.</param>
     /// <param name="username">The user's username.</param>
@@ -289,11 +411,20 @@ public sealed class ManifestBuilder
         return this;
     }
 
-    /// <summary>Assigns a role to the user named by <paramref name="userKey"/>.</summary>
+    /// <summary>
+    /// Binds a role to the user named by <paramref name="userKey"/>. Omit
+    /// <paramref name="resourceKey"/> for the plain (unscoped) shape every SDK had before
+    /// contract 1.51; supply it (with an optional <paramref name="inherit"/>) for the
+    /// &#167;27.6.1 item 2 resource-scoped shape.
+    /// </summary>
     /// <param name="userKey">The user receiving the role.</param>
     /// <param name="roleKey">The role being assigned.</param>
+    /// <param name="resourceKey">The resource this binding is scoped to, or <c>null</c>
+    /// for a plain (unscoped) binding.</param>
+    /// <param name="inherit">Whether the binding also reaches the descendants of
+    /// <paramref name="resourceKey"/>. Defaults to <c>true</c>.</param>
     /// <returns>This builder.</returns>
-    public ManifestBuilder AssignRole(string userKey, string roleKey)
+    public ManifestBuilder AssignRole(string userKey, string roleKey, string? resourceKey = null, bool inherit = true)
     {
         if (!_users.Any(u => u.Key == userKey))
         {
@@ -302,7 +433,7 @@ public sealed class ManifestBuilder
             return this;
         }
 
-        Add(_userRoles, userKey, roleKey);
+        Add(_userRoles, userKey, new ManagementManifest.RoleBinding(roleKey, resourceKey, inherit));
         return this;
     }
 
@@ -320,6 +451,43 @@ public sealed class ManifestBuilder
         }
 
         Add(_userGroups, userKey, groupKey);
+        return this;
+    }
+
+    /// <summary>
+    /// Declares a service account (CONTRACT.md &#167;27.6.1 item 3, contract 1.51).
+    /// </summary>
+    /// <param name="key">Manifest-local identifier.</param>
+    /// <param name="name">The account's name — the natural key reconciliation matches
+    /// by. Not server-enforced unique; an ambiguous match fails before any write.</param>
+    /// <param name="description">What the account is for.</param>
+    /// <returns>This builder.</returns>
+    public ManifestBuilder ServiceAccount(string key, string name, string? description = null)
+    {
+        _serviceAccounts.Add(new ManagementManifest.ServiceAccountSpec(key, name, description));
+        return this;
+    }
+
+    /// <summary>Binds a role to the service account named by <paramref name="serviceAccountKey"/>.
+    /// Same plain/resource-scoped shapes as <see cref="AssignRole"/>.</summary>
+    /// <param name="serviceAccountKey">The service account receiving the role.</param>
+    /// <param name="roleKey">The role being bound.</param>
+    /// <param name="resourceKey">The resource this binding is scoped to, or <c>null</c>
+    /// for a plain (unscoped) binding.</param>
+    /// <param name="inherit">Whether the binding also reaches the descendants of
+    /// <paramref name="resourceKey"/>. Defaults to <c>true</c>.</param>
+    /// <returns>This builder.</returns>
+    public ManifestBuilder AssignServiceAccountRole(
+        string serviceAccountKey, string roleKey, string? resourceKey = null, bool inherit = true)
+    {
+        if (!_serviceAccounts.Any(a => a.Key == serviceAccountKey))
+        {
+            _problems.Add($"AssignServiceAccountRole names service account '{serviceAccountKey}', " +
+                          "which no ServiceAccount(...) call has declared yet");
+            return this;
+        }
+
+        Add(_serviceAccountRoles, serviceAccountKey, new ManagementManifest.RoleBinding(roleKey, resourceKey, inherit));
         return this;
     }
 
@@ -352,6 +520,9 @@ public sealed class ManifestBuilder
                     Roles = Get(_userRoles, u.Key),
                     Groups = Get(_userGroups, u.Key),
                 })
+                .ToList(),
+            ServiceAccounts = _serviceAccounts
+                .Select(a => a with { Roles = Get(_serviceAccountRoles, a.Key) })
                 .ToList(),
         };
     }
