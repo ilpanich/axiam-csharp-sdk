@@ -25,8 +25,10 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
     header.
   - Gated client-side once a login result is known: refuses (`AuthzError`, no wire call)
     unless the principal is `OrganizationLevel`, and refuses a tenant outside
-    `ReachableTenantIds` when the server reported one. Ungated for a handle built before
-    any login result exists.
+    `ReachableTenantIds` when the server reported one. Ungated for a handle that has
+    never completed a call whose response carried that information — see the "Acting on
+    another tenant" README section for exactly which calls do and don't populate it (not
+    every credential-changing call does).
   - The §17 decision memo is now keyed on the acting tenant in addition to its existing
     key.
   - REST-only: gRPC acts on the token's own tenant; no metadata key is invented for it.
@@ -126,6 +128,18 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   it. The manifest's `ReadAsync` reads exactly these to plan. Absent now decodes as
   `true` — the reading every pre-1.51 assignment already has — rather than failing the
   whole response or silently reading as `false`.
+- **None of the three SSO/federation completions (`SsoCompleteAsync`,
+  `SsoCompleteOauth2Async`, `SsoCompleteHandoffAsync`) reset the §5.2 acting-tenant gate
+  or the §17 decision memo.** Each establishes a session, possibly as a *different*
+  principal than whatever this client last held, but — unlike every other
+  credential-changing method (`LoginAsync`, `VerifyMfaAsync`, `RefreshAsync`,
+  `LogoutAsync`, `LoginOpaqueAsync`, `MfaSetupConfirmAsync`, the WebAuthn
+  ceremony-completion methods) — none of them called `OnCredentialChange()`. After a
+  restrictive login (`organization_level: false`) followed by an SSO completion as a
+  different (organization-level) principal, `ActingTenant(x)` still refused on the
+  *previous* principal's report, and the decision memo could still answer from the
+  previous principal's cached decisions. All three now call `OnCredentialChange()` at the
+  same point (before the request) every other credential-changing method does.
 
 ### Breaking
 

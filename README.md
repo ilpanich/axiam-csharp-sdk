@@ -1651,12 +1651,27 @@ await client.Management.Groups.ListAsync(PageRequest.Of(50)); // sends none
   refresh guard, decision memo), so two handles can act on two different tenants from
   concurrent code without racing each other's header. `ClearActingTenant()` on a handle
   returns one that sends none again.
-- **Gated client-side once a login result is known.** After a password or MFA login,
-  `ActingTenant` refuses — `AuthzError`, no wire call — unless
-  `LoginResult.OrganizationLevel` is `true`, and refuses a tenant id outside
-  `LoginResult.ReachableTenantIds` when the server reported one. A handle built before any
-  login result exists (or via `CreateForTesting`) is ungated locally; the server's own
-  `403` is the backstop either way.
+- **Gated client-side once a login result is known.** `ActingTenant` refuses —
+  `AuthzError`, no wire call — unless the last-known `organization_level` is `true`, and
+  refuses a tenant id outside `reachable_tenant_ids` when the server reported one. A
+  handle that has never completed a call carrying that information is ungated locally;
+  the server's own `403` is the backstop either way.
+  <br>What "known" means is exact, not "any login": `LoginAsync`, `VerifyMfaAsync`,
+  `LoginOpaqueAsync`, `MfaSetupConfirmAsync` and the WebAuthn *registration*-completion
+  method populate it, because their success responses carry a `LoginUserInfo` built on
+  the same server code path a password login uses. `RefreshAsync`, `LogoutAsync`, the
+  WebAuthn *authentication* ceremonies, and all three SSO/federation completions
+  (`SsoCompleteAsync`/`SsoCompleteOauth2Async`/`SsoCompleteHandoffAsync`) reset it to
+  "unknown" instead and leave it there — their responses carry no such object, so there
+  is nothing truthful to populate it with, and every one of them may complete as a
+  *different* principal than whatever this client last held. The reset happens **before**
+  the request in every case (an attempted credential change already invalidates the
+  previous state, whether or not it succeeds), and a fresh
+  [`AuthenticateDeviceAsync()`](#the-mtls-device-login-contractmd-61-rules-610-contract-151)
+  handle always starts unknown too, independent of its source client's own state. This is
+  tighter than the Rust reference, which also resets OPAQUE and the two setup flows to
+  "unknown" rather than populating them from a response it could have trusted — the same
+  choice the TypeScript, Go and Python ports made.
 - **REST-only.** The gRPC transport acts on whatever tenant the bearer token itself
   names; no metadata key is invented for it, matching §5.2 rule 1's REST-only scope.
 - **The §17 decision memo is keyed on the acting tenant** in addition to its existing
