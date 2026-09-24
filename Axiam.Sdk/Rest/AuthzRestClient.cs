@@ -59,7 +59,8 @@ public sealed class AuthzRestClient
         AxiamClientOptions? options = null,
         TelemetryDispatcher? telemetry = null,
         DecisionMemo? memo = null,
-        Func<double>? jitter = null)
+        Func<double>? jitter = null,
+        Guid? actingTenant = null)
     {
         _http = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         _options = options ?? new AxiamClientOptions
@@ -70,7 +71,18 @@ public sealed class AuthzRestClient
         _telemetry = telemetry ?? new TelemetryDispatcher(null);
         _memo = memo ?? new DecisionMemo(TimeSpan.Zero);
         _jitter = jitter ?? Random.Shared.NextDouble;
+        _actingTenant = actingTenant;
     }
+
+    /// <summary>
+    /// CONTRACT.md &#167;5.2 rule 1 / &#167;17 addendum: the acting tenant of the
+    /// <see cref="AxiamClient"/> handle this instance belongs to, folded into the &#167;17
+    /// memo key so a memoized answer for one tenant is never returned for another. The
+    /// memo itself may be SHARED across every handle of one session (constructed once,
+    /// on the client's original handle, and passed to every <c>ActingTenant</c> handle
+    /// built over it) — this is what makes sharing it safe.
+    /// </summary>
+    private readonly Guid? _actingTenant;
 
     /// <summary>A single authorization check request item for <see cref="BatchCheckAsync"/>.</summary>
     /// <param name="Action">The action to check (e.g. <c>"users:get"</c>).</param>
@@ -148,7 +160,7 @@ public sealed class AuthzRestClient
     {
         // §17: consult the memo first. Disabled by default, in which case this is
         // one dictionary lookup that always misses.
-        string key = DecisionMemo.Key(subjectId, resourceId, action, scope);
+        string key = DecisionMemo.Key(subjectId, resourceId, action, scope, _actingTenant);
         if (_memo.Get(key) is { } memoized)
         {
             return memoized;

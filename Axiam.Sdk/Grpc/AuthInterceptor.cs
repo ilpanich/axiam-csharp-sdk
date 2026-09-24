@@ -12,6 +12,13 @@ namespace Axiam.Sdk.Grpc;
 /// </summary>
 /// <remarks>
 /// <para>
+/// CONTRACT.md &#167;5.2 rule 1 (contract 1.51): the &#167;5.2 acting-tenant mechanism
+/// (<see cref="AxiamClient.ActingTenant"/>) is REST-only. This interceptor sends no
+/// acting-tenant metadata of any kind — a gRPC call always acts on whatever tenant the
+/// bearer token itself names, decided by the server's own interceptor from
+/// <c>authorization</c> alone, never from a metadata key this SDK would have to invent.
+/// </para>
+/// <para>
 /// The token accessor is a caller-supplied, non-blocking <see cref="Func{TResult}"/>
 /// (mirrors the Java <c>AuthClientInterceptor</c>'s <c>Supplier&lt;String&gt;</c> and Go
 /// <c>interceptor.go</c>'s <c>TokenFunc</c>) — this class NEVER calls

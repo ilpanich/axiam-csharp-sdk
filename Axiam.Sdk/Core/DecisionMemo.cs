@@ -120,17 +120,21 @@ internal sealed class DecisionMemo
     }
 
     /// <summary>
-    /// Builds the &#167;17.1 rule 3 key: all four components, absent distinguished from
-    /// present.
+    /// Builds the &#167;17.1 rule 3 key: the four components the contract names, plus the
+    /// &#167;5.2 acting tenant (contract 1.51's "For C-12" item 2 — the memo predates a
+    /// session being able to ask the same question of two tenants; without this
+    /// component a memoized answer for tenant A would be served, unchanged, for tenant
+    /// B within the TTL). Every component is absent-distinguished from present.
     /// </summary>
-    internal static string Key(Guid? subjectId, Guid resourceId, string action, string? scope)
+    internal static string Key(Guid? subjectId, Guid resourceId, string action, string? scope, Guid? actingTenant = null)
     {
         // Plain concatenation: the separator is what makes this unambiguous, and a
         // hand-rolled span build would trade clarity for nothing on a path that
         // already costs an HTTP round trip when it misses.
         string subject = subjectId?.ToString() ?? Absent.ToString();
         string scopePart = scope ?? Absent.ToString();
-        return string.Join(Separator, subject, resourceId.ToString(), action, scopePart);
+        string tenantPart = actingTenant?.ToString() ?? Absent.ToString();
+        return string.Join(Separator, subject, resourceId.ToString(), action, scopePart, tenantPart);
     }
 
     /// <summary>A live decision for <paramref name="key"/>, if memoized and unexpired.</summary>

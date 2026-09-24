@@ -34,6 +34,35 @@ public sealed record AxiamClientOptions
     public string? OrgSlug { get; init; }
 
     /// <summary>
+    /// The tenant this client acts on, distinct from the tenant it signs in as
+    /// (CONTRACT.md &#167;5.2 rule 1, contract 1.51). Meaningful only for an
+    /// organization-level principal: it is sent as <c>X-Axiam-Tenant</c> on every
+    /// <c>/api/v1</c> REST request this client makes, in addition to — never instead of
+    /// — the unconditional <c>X-Tenant-Id</c> header (&#167;5 rule 2). <c>null</c> (the
+    /// default) sends no header at all, byte for byte what a client built before
+    /// contract 1.51 sends.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This is the <b>construction-time</b> form (&#167;5.2 rule 1's per-language table:
+    /// "at construction"). It precedes any login, so it cannot be gated against
+    /// <c>organization_level</c>/<c>reachable_tenant_ids</c> the way
+    /// <see cref="AxiamClient.ActingTenant"/> — the on-client form, called after a login
+    /// result is held — is: a non-organization-level principal that logs in against a
+    /// client configured this way will simply meet the server's own <c>403</c> on its
+    /// first request. It is REST-only: the gRPC channel this client's transport builds
+    /// sends no acting-tenant metadata, whatever this option says.
+    /// </para>
+    /// <para>
+    /// It is a <see cref="Guid"/>, never a string, so a caller cannot hand this a slug —
+    /// the server silently ignores a header value that does not parse as a UUID and
+    /// answers for the caller's own tenant instead, which would make a slug typo look
+    /// like success against the wrong tenant.
+    /// </para>
+    /// </remarks>
+    public Guid? ActingTenant { get; init; }
+
+    /// <summary>
     /// PEM-encoded custom CA certificate bytes — the ONLY TLS escape hatch (CONTRACT.md
     /// &#167;6/SC#4): an ADDITIVE chain-trust-store entry alongside the system trust
     /// store, never a bypass. <c>null</c> (the default) uses the system trust store only.
