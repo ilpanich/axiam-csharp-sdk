@@ -109,6 +109,16 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
 
 ### Fixed
 
+- **A malformed `200` on the device login was adopted as an empty-string bearer
+  credential** (CONTRACT 1.52 N4.2 (C-12) — "A refused or malformed device login changes
+  no client state" — not in c12-findings.md's C# section, but the identical defect the
+  C++ SDK had, storing an empty token and setting `device_session = true`).
+  `AuthenticateDeviceAsync()` read `access_token` with `ReadString`, whose "absent means
+  empty string" reading is correct for an optional field but was applied here to a
+  REQUIRED one: a `200` with no `access_token` (or an empty one) built and returned a
+  device handle carrying `""` as its bearer credential, reporting success. Now refused
+  with `NetworkError` before any state changes — no device handle is built, matching the
+  already-refused shape a `401`/other non-`200` status gets.
 - **A role-binding rebind whose restore also failed discarded the restore's own error**
   (CONTRACT 1.52 N6.3 (C-12) — "The outcome is reported as data, naming whether the
   restore succeeded and, when it did not, the restore's own error. It is not only a

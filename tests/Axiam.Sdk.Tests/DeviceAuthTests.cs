@@ -86,6 +86,50 @@ public sealed class DeviceAuthTests
         Assert.Equal(900, token.ExpiresIn);
     }
 
+    // ---- N4.2 (CONTRACT 1.52, C-12): a malformed 200 changes no client state -----------
+    //
+    // "A refused or malformed device login changes no client state." Not in
+    // c12-findings.md's C# section, but the identical defect the C++ SDK had
+    // (client.cpp storing an empty token and setting device_session = true for a
+    // malformed 200). ReadString(wire, "access_token") returns "" — silently, no
+    // exception — when the field is absent, so a malformed 200 was adopted as a device
+    // handle with an EMPTY bearer credential and reported as success.
+
+    [Fact]
+    public async Task AMalformed200WithNoAccessToken_IsRefused_NotAdoptedAsAnEmptyCredential()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => JsonOk("""{"token_type":"Bearer","expires_in":900}"""));
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+
+        await Assert.ThrowsAsync<NetworkError>(() => client.AuthenticateDeviceAsync());
+    }
+
+    [Fact]
+    public async Task AMalformed200WithABlankAccessToken_IsRefused()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => JsonOk("""{"access_token":"","token_type":"Bearer","expires_in":900}"""));
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+
+        await Assert.ThrowsAsync<NetworkError>(() => client.AuthenticateDeviceAsync());
+    }
+
+    // I4 twin: a well-formed 200 (the case every other test in this file already
+    // exercises) is unaffected.
+    [Fact]
+    public async Task AWellFormed200_IsStillAdopted_I4Twin()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => DeviceTokenResponse());
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+
+        var (device, token) = await client.AuthenticateDeviceAsync();
+        using AxiamClient _ = device;
+
+        Assert.Equal("device-token-abc", token.AccessToken.Reveal());
+    }
+
     // ---- §6.1 rule 6: no request body, adoption as a bearer credential -----------------
 
     [Fact]

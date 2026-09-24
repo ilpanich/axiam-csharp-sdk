@@ -550,6 +550,8 @@ using AxiamClient client = new(baseUrl, "acme", new AxiamClientOptions
   through the returned handle, is surfaced as-is and never routed to the refresh guard —
   there is no refresh token to redeem. A `429` is a `NetworkError`, not an `AuthError`, and
   is not retried (§6.1 rule 10).
+- **A malformed `200`** — one with no `access_token`, or a blank one — is refused with
+  `NetworkError` and builds no handle; it is never adopted as an empty-string credential.
 - **Held until replaced.** `LogoutAsync()` clears the device credential; any later
   session-establishing call made ON the returned handle itself — `LoginAsync`,
   `VerifyMfaAsync`, `LoginOpaqueAsync`, `MfaSetupConfirmAsync`, a WebAuthn ceremony

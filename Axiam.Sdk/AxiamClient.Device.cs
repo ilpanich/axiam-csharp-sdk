@@ -144,6 +144,20 @@ public sealed partial class AxiamClient
 
             JsonElement wire = await ReadJsonAsync(response, cancellationToken).ConfigureAwait(false);
             string accessToken = ReadString(wire, "access_token");
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                // N4.2 (CONTRACT 1.52, C-12): "A refused or malformed device login
+                // changes no client state." A 200 with no (or a blank) access_token is
+                // malformed — ReadString's own "absent means empty string" reading, which
+                // is right for an optional field, would otherwise silently adopt an EMPTY
+                // bearer credential as though the login had succeeded. NetworkError, not
+                // AuthError: this is a malformed response shape, not the server's
+                // considered refusal of the certificate (§16, matching every other
+                // malformed-body site in this SDK).
+                throw NetworkError.FromException(
+                    new InvalidOperationException("device authentication response carried no access_token"),
+                    "device authentication succeeded with a malformed response body");
+            }
             string tokenType = wire.TryGetProperty("token_type", out JsonElement typeEl) && typeEl.ValueKind == JsonValueKind.String
                 ? typeEl.GetString() ?? "Bearer"
                 : "Bearer";
