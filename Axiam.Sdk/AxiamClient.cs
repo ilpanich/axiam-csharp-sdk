@@ -149,11 +149,31 @@ public sealed partial class AxiamClient : IDisposable
     private readonly SharedSession _session;
 
     /// <summary>
+    /// The <c>CreateForTesting</c> transport override, when this client was built through
+    /// that seam; <c>null</c> in production. Reused (never re-fetched from a field that
+    /// does not exist yet) by <see cref="AuthenticateDeviceAsync"/> so the device handle
+    /// it returns talks to the SAME fake transport a test mounted, rather than falling
+    /// back to a real <see cref="HttpClientHandler"/> that would try to dial a real
+    /// socket in a unit test.
+    /// </summary>
+    private readonly HttpMessageHandler? _transportOverride;
+
+    /// <summary>
     /// CONTRACT.md &#167;5.2 rule 1 — the tenant THIS handle acts on, distinct from the
     /// tenant it signed in as. <c>null</c> for a handle with no acting tenant (the
     /// ordinary case, and every client before contract 1.51).
     /// </summary>
     private readonly Guid? _actingTenant;
+
+    /// <summary>
+    /// CONTRACT.md &#167;6.1 rule 6 — the &#167;6.1 device credential this handle was built
+    /// with (see <see cref="AuthenticateDeviceAsync"/>'s <see cref="BuildDeviceHandle"/>),
+    /// or <c>null</c> for every ordinary handle. Read by <see cref="CurrentAccessToken"/>
+    /// so the &#167;27 management surface's own session check
+    /// (<c>ManagementTransport.RequireSession</c>) sees a device handle as holding a
+    /// credential too — it has one, just not a cookie-jar one.
+    /// </summary>
+    private readonly string? _staticBearerToken;
 
     /// <summary>
     /// <c>true</c> for the handle the public constructor built — the one that owns the
@@ -206,6 +226,7 @@ public sealed partial class AxiamClient : IDisposable
     {
         ArgumentNullException.ThrowIfNull(baseUrl);
         _tenant = new TenantContext(tenantId, options?.OrgId, options?.OrgSlug); // throws ArgumentException on blank tenantId (SC#1)
+        _transportOverride = transportOverride;
 
         _baseUrl = baseUrl;
         AxiamClientOptions baseOptions = options ?? new AxiamClientOptions { BaseUrl = baseUrl, TenantId = _tenant.TenantId };
@@ -392,6 +413,8 @@ public sealed partial class AxiamClient : IDisposable
         _jwksVerifier = source._jwksVerifier;
         _telemetry = source._telemetry;
         _session = source._session; // shared: one login result, one gate, for every handle
+        _transportOverride = source._transportOverride;
+        _staticBearerToken = source._staticBearerToken; // §6.1: an ActingTenant() view of a device handle is still a device handle
         _actingTenant = actingTenant;
         _ownsResources = false;
 
@@ -453,7 +476,7 @@ public sealed partial class AxiamClient : IDisposable
     internal string TenantId => _tenant.TenantId;
 
     /// <summary>Non-blocking read of the current access token from the shared cookie jar; <c>null</c> if never logged in.</summary>
-    internal string? CurrentAccessToken => ReadCookie(AccessCookieName);
+    internal string? CurrentAccessToken => _staticBearerToken ?? ReadCookie(AccessCookieName);
 
     /// <summary>
     /// Disposes this handle's own <see cref="HttpClient"/> wrapper and OIDC discovery

@@ -157,7 +157,7 @@ async Task RunAsync(string name)
             $"no identity for '{name}' in {identityDir}/; provision it first");
     }
 
-    using var deviceClient = new AxiamClient(
+    using var identityClient = new AxiamClient(
         new Uri(baseUrl),
         tenant,
         new AxiamClientOptions
@@ -167,6 +167,14 @@ async Task RunAsync(string name)
             ClientCertificatePem = await File.ReadAllBytesAsync(certPath),
             ClientKeyPem = await File.ReadAllBytesAsync(keyPath),
         });
+
+    // CONTRACT.md §6.1 rules 6-10 (contract 1.51): AuthenticateDeviceAsync() is the mTLS
+    // device login. It costs one TLS handshake (the certificate presented above) and
+    // returns a handle already carrying the resulting access token — there is no refresh
+    // token, so a device re-authenticates the same way the next time it needs to.
+    var deviceLogin = await identityClient.AuthenticateDeviceAsync();
+    using AxiamClient deviceClient = deviceLogin.Client;
+    Console.WriteLine($"{name} authenticated; token expires in {deviceLogin.Token.ExpiresIn}s");
 
     bool allowed = await deviceClient.Authz.CanAsync("telemetry:publish", Guid.Empty);
     Console.WriteLine($"{name} may publish telemetry: {allowed}");

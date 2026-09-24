@@ -61,11 +61,19 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
     private const string OAuth2IntrospectPath = "/oauth2/introspect";
     private const string OAuth2RevokePath = "/oauth2/revoke";
 
+    /// <summary>
+    /// CONTRACT.md &#167;6.1 rules 6/8: "this IS the login" — a 401 on
+    /// <c>POST /api/v1/auth/device</c> itself is an authentication outcome, exactly like
+    /// <see cref="LoginPath"/>'s, never routed through the &#167;9 refresh guard.
+    /// </summary>
+    private const string DeviceAuthPath = "/api/v1/auth/device";
+
     private static readonly HashSet<string> ReactiveRefreshExemptPaths =
         new(StringComparer.Ordinal)
         {
             RefreshPath, LoginPath, MfaVerifyPath, LogoutPath,
             OAuth2TokenPath, OAuth2IntrospectPath, OAuth2RevokePath,
+            DeviceAuthPath,
         };
 
     private const string AccessCookieName = "axiam_access";
@@ -95,23 +103,44 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
 
     private volatile string? _csrfToken;
 
+    /// <summary>
+    /// CONTRACT.md &#167;6.1 rule 6 — when set, EVERY request this handler sends carries
+    /// this token as <c>Authorization: Bearer</c>, and reads NOTHING from the cookie jar
+    /// (which, for a device-credentialed handle, is a fresh, empty
+    /// <see cref="CookieContainer"/> anyway — see <see cref="AxiamClient.AuthenticateDeviceAsync"/>).
+    /// <c>null</c> — the default, and every handler before contract 1.51 — means "read the
+    /// bearer token from the cookie jar", unchanged.
+    /// </summary>
+    private readonly string? _staticBearerToken;
+
     /// <summary>Constructs the handler. Register as the outermost link of the client's
     /// <see cref="HttpClient"/> handler chain, with the SDK's cookie-jar/TLS handler
     /// (<c>AxiamHttpClientFactory.CreatePrimaryHandler</c>) as <see cref="DelegatingHandler.InnerHandler"/>.</summary>
     /// <param name="cookieContainer">The shared cookie jar (&#167;4) this handler reads
-    /// <c>axiam_access</c>/<c>axiam_csrf</c> from.</param>
+    /// <c>axiam_access</c>/<c>axiam_csrf</c> from, unless <paramref name="staticBearerToken"/>
+    /// is set.</param>
     /// <param name="baseUri">The AXIAM server's base URL — also used for the host-isolation
     /// guard (3A) that withholds tenant/auth/CSRF headers from cross-origin requests.</param>
     /// <param name="tenantId">The client's configured tenant identifier, injected as
     /// <c>X-Tenant-Id</c> on every same-origin request (&#167;5).</param>
     /// <param name="refreshGuard">The shared single-flight refresh guard (&#167;9) this
-    /// handler drives on a reactive 401.</param>
-    public AxiamHttpMessageHandler(CookieContainer cookieContainer, Uri baseUri, string tenantId, RefreshGuard refreshGuard)
+    /// handler drives on a reactive 401. For a device-credentialed handle this SHOULD be a
+    /// guard whose delegate always fails — CONTRACT.md &#167;6.1 rule 6: "with no refresh
+    /// token, the §9 guard has nothing to spend."</param>
+    /// <param name="staticBearerToken">
+    /// CONTRACT.md &#167;6.1 rule 6/8 — a fixed bearer credential (a device token) to send
+    /// on every request instead of reading <c>axiam_access</c> from the cookie jar.
+    /// <c>null</c> (the default) is every handler's behaviour before contract 1.51:
+    /// unchanged.
+    /// </param>
+    public AxiamHttpMessageHandler(
+        CookieContainer cookieContainer, Uri baseUri, string tenantId, RefreshGuard refreshGuard, string? staticBearerToken = null)
     {
         _cookieContainer = cookieContainer ?? throw new ArgumentNullException(nameof(cookieContainer));
         _baseUri = baseUri ?? throw new ArgumentNullException(nameof(baseUri));
         _tenantId = tenantId ?? throw new ArgumentNullException(nameof(tenantId));
         _refreshGuard = refreshGuard ?? throw new ArgumentNullException(nameof(refreshGuard));
+        _staticBearerToken = staticBearerToken;
     }
 
     /// <summary>
@@ -138,9 +167,13 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
         bool isRetry = request.Options.TryGetValue(RetryMarkerKey, out bool retried) && retried;
         // Refresh itself must never recursively re-enter the guard (deadlock), and
         // login/MFA/logout 401s are domain outcomes, not expired-token signals — all are
-        // exempt from the reactive refresh branch below (WR-03).
+        // exempt from the reactive refresh branch below (WR-03). A device-credentialed
+        // handle (§6.1 rule 6) is exempt on EVERY path: there is no refresh token to
+        // spend, so a 401 here is surfaced as-is rather than sent through a refresh
+        // attempt that could only ever fail.
         string? path = request.RequestUri?.AbsolutePath;
-        bool isRefreshExemptCall = path is not null && ReactiveRefreshExemptPaths.Contains(path);
+        bool isRefreshExemptCall = _staticBearerToken is not null
+            || (path is not null && ReactiveRefreshExemptPaths.Contains(path));
 
         // Buffer the body up front (needed to build a single retry-clone below; every
         // request body this SDK sends is a small, fully-materialized JSON payload, not
@@ -266,7 +299,7 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
             return;
         }
 
-        string? access = overrideAccessToken ?? ReadAccessTokenFromCookieJar();
+        string? access = overrideAccessToken ?? _staticBearerToken ?? ReadAccessTokenFromCookieJar();
         if (access is not null)
         {
             request.Headers.Remove(AuthorizationHeaderName);
