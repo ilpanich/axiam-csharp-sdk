@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Axiam.Sdk;
+using Axiam.Sdk.Auth.Oidc;
 using Axiam.Sdk.Core;
 using Axiam.Sdk.Options;
 using Xunit;
@@ -219,6 +220,138 @@ public sealed class ActingTenantTests
         using AxiamClient acting = original.ActingTenant(OtherTenant);
         await acting.Management.Resources.ListAsync();
         Assert.Contains(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+    }
+
+    // ---- An SSO completion resets the gate too (§5.2 rule 1 "For C-12" item 5) --------
+    //
+    // Each of the three federation completions establishes a session, possibly as a
+    // DIFFERENT principal than whatever this client last held — the same reasoning
+    // LoginAsync/LogoutAsync already apply. None of their success responses carries a
+    // LoginUserInfo/user object, so the gate lands on "unknown" (not repopulated),
+    // exactly like LogoutAsync above.
+
+    [Fact]
+    public async Task SsoCompleteAsync_ResetsTheGate_APreviouslyRefusedTenantIsNoLongerRefusedClientSide()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/login", _ => LoginResponse(organizationLevel: false));
+        handler.Map("/api/v1/auth/federation/oidc/callback", _ => JsonOk(
+            """{"user_id":"11111111-1111-1111-1111-111111111111","session_id":"22222222-2222-2222-2222-222222222222","expires_in":900,"redirect_uri":"https://app.example/dashboard"}"""));
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient original = Client(handler);
+        await original.LoginAsync("alice@example.com", "pw");
+        SeedAccessTokenCookie(original);
+        Assert.Throws<AuthzError>(() => original.ActingTenant(OtherTenant));
+
+        await original.SsoCompleteAsync(new SsoCompleteParams { State = "fed-state", Code = "fed-code" });
+
+        using AxiamClient acting = original.ActingTenant(OtherTenant);
+        await acting.Management.Resources.ListAsync();
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal(OtherTenant.ToString(), req.Headers.GetValues("X-Axiam-Tenant").Single());
+    }
+
+    [Fact]
+    public async Task SsoCompleteOauth2Async_ResetsTheGate_APreviouslyRefusedTenantIsNoLongerRefusedClientSide()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/login", _ => LoginResponse(organizationLevel: false));
+        handler.Map("/api/v1/auth/federation/oauth2/callback", _ => JsonOk(
+            """{"user_id":"11111111-1111-1111-1111-111111111111","session_id":"22222222-2222-2222-2222-222222222222","expires_in":900,"redirect_uri":"https://app.example/dashboard"}"""));
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient original = Client(handler);
+        await original.LoginAsync("alice@example.com", "pw");
+        SeedAccessTokenCookie(original);
+        Assert.Throws<AuthzError>(() => original.ActingTenant(OtherTenant));
+
+        await original.SsoCompleteOauth2Async(new SsoCompleteOauth2Params { State = "fed-state", Code = "fed-code" });
+
+        using AxiamClient acting = original.ActingTenant(OtherTenant);
+        await acting.Management.Resources.ListAsync();
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal(OtherTenant.ToString(), req.Headers.GetValues("X-Axiam-Tenant").Single());
+    }
+
+    [Fact]
+    public async Task SsoCompleteHandoffAsync_ResetsTheGate_APreviouslyRefusedTenantIsNoLongerRefusedClientSide()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/login", _ => LoginResponse(organizationLevel: false));
+        handler.Map("/api/v1/auth/federation/handoff", _ => JsonOk(
+            """{"user_id":"11111111-1111-1111-1111-111111111111","session_id":"22222222-2222-2222-2222-222222222222","expires_in":900,"redirect_uri":"https://app.example/dashboard"}"""));
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient original = Client(handler);
+        await original.LoginAsync("alice@example.com", "pw");
+        SeedAccessTokenCookie(original);
+        Assert.Throws<AuthzError>(() => original.ActingTenant(OtherTenant));
+
+        await original.SsoCompleteHandoffAsync(new SsoCompleteHandoffParams { Code = "fed-code" });
+
+        using AxiamClient acting = original.ActingTenant(OtherTenant);
+        await acting.Management.Resources.ListAsync();
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal(OtherTenant.ToString(), req.Headers.GetValues("X-Axiam-Tenant").Single());
+    }
+
+    /// <summary>
+    /// I4 twin of the three tests above: the reset happens BEFORE the wire call (exactly
+    /// where every other credential-changing method places it — see
+    /// <c>OnCredentialChange</c>'s remarks), so an SSO completion that itself FAILS has
+    /// already reset the gate by the time its exception propagates. This documents what
+    /// the code actually does (an attempt already invalidates the previous state, not
+    /// only a success) rather than assuming "failure leaves the gate untouched".
+    /// </summary>
+    [Fact]
+    public async Task SsoCompleteAsync_ResetsTheGateEvenWhenTheCompletionItselfFails()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/login", _ => LoginResponse(organizationLevel: false));
+        handler.Map("/api/v1/auth/federation/oidc/callback", _ => new HttpResponseMessage(HttpStatusCode.Unauthorized));
+        using AxiamClient original = Client(handler);
+        await original.LoginAsync("alice@example.com", "pw");
+        Assert.Throws<AuthzError>(() => original.ActingTenant(OtherTenant));
+
+        await Assert.ThrowsAsync<AuthError>(
+            () => original.SsoCompleteAsync(new SsoCompleteParams { State = "fed-state", Code = "fed-code" }));
+
+        // The gate was already reset before the failing request was even sent — it does
+        // NOT still refuse on the stale organization_level:false.
+        using AxiamClient acting = original.ActingTenant(OtherTenant);
+        Assert.NotNull(acting);
+    }
+
+    // ---- Device login: the returned handle's gate starts unknown, independent of the --
+    // ---- source client's own (possibly restrictive) prior login -----------------------
+
+    [Fact]
+    public async Task AuthenticateDeviceAsync_TheReturnedHandlesGateStartsUnknown_EvenWhenTheSourceWasRestrictivelyLoggedIn()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/login", _ => LoginResponse(organizationLevel: false));
+        handler.Map("/api/v1/auth/device", _ => JsonOk("""{"access_token":"device-token","token_type":"Bearer","expires_in":900}"""));
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        var options = new AxiamClientOptions
+        {
+            BaseUrl = BaseUrl,
+            TenantId = TenantGuid,
+            ClientCertificatePem = System.Text.Encoding.ASCII.GetBytes(
+                "-----BEGIN CERTIFICATE-----\nMIIBkTCB+wIJAKZ0000000000MA0GCSqGSIb3DQEBCwUAMBQxEjAQBgNVBAMMCWxv\n-----END CERTIFICATE-----\n"),
+            ClientKeyPem = System.Text.Encoding.ASCII.GetBytes(
+                "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIA==\n-----END PRIVATE KEY-----\n"),
+        };
+        using AxiamClient source = Client(handler, options);
+        await source.LoginAsync("alice@example.com", "pw"); // organization_level: false, on the SOURCE
+        Assert.Throws<AuthzError>(() => source.ActingTenant(OtherTenant)); // the source itself is gated
+
+        var deviceResult = await source.AuthenticateDeviceAsync();
+        using AxiamClient device = deviceResult.Client;
+
+        // The device handle's own gate is a FRESH SharedSession (never source's), so it
+        // is unknown, not "organization_level: false" — ActingTenant on it is allowed.
+        using AxiamClient acting = device.ActingTenant(OtherTenant);
+        await acting.Management.Resources.ListAsync();
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal(OtherTenant.ToString(), req.Headers.GetValues("X-Axiam-Tenant").Single());
     }
 
     // ---- §17 addendum: a memoized decision for one tenant is not served for another ---

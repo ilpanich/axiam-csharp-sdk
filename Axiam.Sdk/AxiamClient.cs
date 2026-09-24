@@ -117,10 +117,19 @@ public sealed partial class AxiamClient : IDisposable
     {
         /// <summary>
         /// <c>LoginUserInfo.organization_level</c> from the last completed login this
-        /// session observed, or <c>null</c> when no login result is held (a service
-        /// account from client credentials or the device login; an injected token; or a
-        /// session-completing path that reports no user object at all — WebAuthn, SSO).
-        /// &#167;5.2 rule 1: <c>null</c> means nothing to gate on, so
+        /// session observed, or <c>null</c> when no login result is held: a service
+        /// account from client credentials or the device login; an injected token; a
+        /// client that has made no credential-changing call yet; or the result of one
+        /// whose success response carries no <c>LoginUserInfo</c>/user object at all —
+        /// <c>RefreshAsync</c>, <c>LogoutAsync</c>, the WebAuthn *authentication*
+        /// ceremonies (<c>WebauthnAuthenticateFinishAsync</c>/
+        /// <c>WebauthnDiscoverableFinishAsync</c>), and the three SSO completions
+        /// (<c>SsoCompleteAsync</c>/<c>SsoCompleteOauth2Async</c>/
+        /// <c>SsoCompleteHandoffAsync</c>). <see cref="AxiamClient.LoginAsync"/>,
+        /// <c>VerifyMfaAsync</c>, <c>LoginOpaqueAsync</c>, <c>MfaSetupConfirmAsync</c> and
+        /// <c>WebauthnSetupRegisterFinishAsync</c> DO populate it — see
+        /// <c>OnCredentialChange</c>'s remarks for the full list and why the split falls
+        /// where it does. &#167;5.2 rule 1: <c>null</c> means nothing to gate on, so
         /// <see cref="AxiamClient.ActingTenant"/> sends the header and lets the server's
         /// <c>403</c> answer.
         /// </summary>
@@ -541,13 +550,37 @@ public sealed partial class AxiamClient : IDisposable
     /// Entries are keyed by subject rather than session, so a re-authentication as a
     /// <em>different</em> principal would otherwise inherit the previous one's decisions.
     /// The &#167;5.2 reset is the same reasoning applied to <see cref="ActingTenant"/>'s
-    /// gate: a session-completing call that reports no user object at all (WebAuthn, SSO)
-    /// must not leave a STALE <c>organization_level</c>/<c>reachable_tenant_ids</c> from
-    /// whatever the previous credential reported (&#167;5.2 rule 1's "For C-12" item 5) —
-    /// this is called at the start of every credential-changing method in this class and
-    /// its partials (login, MFA verify, OPAQUE login, refresh, logout, password change,
-    /// WebAuthn authentication), so "no user object reported" and "no call happened yet"
-    /// converge on the same "unknown" state rather than on a leftover value.
+    /// gate: a session-completing call whose success response carries no
+    /// <c>LoginUserInfo</c>/user object at all must not leave a STALE
+    /// <c>organization_level</c>/<c>reachable_tenant_ids</c> from whatever the previous
+    /// credential reported (&#167;5.2 rule 1's "For C-12" item 5) — this is called at the
+    /// START of every credential-changing method in this class and its partials, BEFORE
+    /// the request (an attempt already invalidates the previous state, not only a
+    /// success): <see cref="LoginAsync"/>, <see cref="VerifyMfaAsync"/>,
+    /// <see cref="LoginOpaqueAsync"/>, <see cref="RefreshAsync"/>,
+    /// <see cref="LogoutAsync"/>, <c>MfaSetupConfirmAsync</c>,
+    /// <c>WebauthnSetupRegisterFinishAsync</c>, the shared WebAuthn
+    /// <c>WebauthnFinishAsync</c> tail (both authentication ceremonies), and the three
+    /// SSO completions (<c>SsoCompleteAsync</c>, <c>SsoCompleteOauth2Async</c>,
+    /// <c>SsoCompleteHandoffAsync</c>).
+    /// <para>
+    /// Two different things then happen to the gate, and which one depends on whether the
+    /// success response carries a <c>LoginUserInfo</c>: <see cref="LoginAsync"/>,
+    /// <see cref="VerifyMfaAsync"/>, <see cref="LoginOpaqueAsync"/>,
+    /// <c>MfaSetupConfirmAsync</c> and <c>WebauthnSetupRegisterFinishAsync</c> RE-POPULATE
+    /// the gate from it afterward (via <c>ReadLoginScopeAsync</c>) — their responses are
+    /// built on the same password-login response shape, so gating on them is exact, not a
+    /// guess. <see cref="RefreshAsync"/>, <see cref="LogoutAsync"/>, the WebAuthn
+    /// *authentication* ceremonies and the SSO completions do not: their responses carry
+    /// no such object, so this reset is the LAST word — the gate simply stays "unknown"
+    /// after them, and <see cref="ActingTenant"/> sends the header and lets the server's
+    /// <c>403</c> answer. This differs from the Rust reference, which also resets OPAQUE
+    /// and the setup flows to "unknown" rather than populating them; this SDK's choice
+    /// (shared with the TypeScript, Go and Python ports) is tighter, not looser: those
+    /// responses genuinely carry a <c>LoginUserInfo</c> the server built with the same
+    /// code path password login uses, so gating on it costs nothing extra and is more
+    /// informative than deferring every one of those flows to the server's own check.
+    /// </para>
     /// </remarks>
     private void OnCredentialChange()
     {
