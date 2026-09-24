@@ -570,15 +570,23 @@ public sealed partial class AxiamClient
     /// Still applies &#167;5's <c>X-Tenant-Id</c> (unconditional, rule 2 admits no
     /// exceptions) by hand, since that responsibility normally belongs to
     /// <see cref="AxiamHttpMessageHandler"/> and this path deliberately does not go through
-    /// it. No CSRF header is added: &#167;3 rule 3 already says to omit it when no
-    /// <c>axiam_csrf</c> cookie exists yet, which is always true of a jar that starts empty
-    /// and is never written to before this request.
+    /// it. It also applies &#167;5.2 rule 1's <c>X-Axiam-Tenant</c> the same way, when this
+    /// handle has an acting tenant set: &#167;5.2.2 rule 4 is explicit that a self-service or
+    /// setup call is NOT exempt from sending it — "an SDK MUST NOT work around that by
+    /// clearing or rewriting X-Axiam-Tenant" — so bypassing <c>AxiamHttpMessageHandler</c>
+    /// for the session/Authorization withholding above must not silently drop it too.
+    /// Both headers go through the same <see cref="AxiamClient.ApplyAnonymousTenantHeaders"/>
+    /// helper <see cref="AxiamClient.AuthenticateDeviceAsync"/> uses, so the two
+    /// anonymous-transport call sites cannot drift on this. No CSRF header is added:
+    /// &#167;3 rule 3 already says to omit it when no <c>axiam_csrf</c> cookie exists yet,
+    /// which is always true of a jar that starts empty and is never written to before this
+    /// request.
     /// </remarks>
     private async Task<HttpResponseMessage> PostAnonymousRawJsonAsync(string path, string json, CancellationToken cancellationToken)
     {
         var content = new StringContent(json, Encoding.UTF8, "application/json");
         var request = new HttpRequestMessage(HttpMethod.Post, path) { Content = content };
-        request.Headers.TryAddWithoutValidation("X-Tenant-Id", _tenant.TenantId);
+        ApplyAnonymousTenantHeaders(request);
         try
         {
             return await _anonymousHttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);

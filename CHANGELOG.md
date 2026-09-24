@@ -164,6 +164,15 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
     when set, gated on nothing when no login result is held yet — exactly a device
     login's own shape. Now applied per-request from the calling handle's own acting
     tenant via a small shared helper (`ApplyAnonymousTenantHeaders`).
+- **`PostAnonymousRawJsonAsync` — the §24.1 WebAuthn setup pair's transport
+  (`WebauthnSetupRegisterStartAsync`/`WebauthnSetupRegisterFinishAsync`) — had the same
+  gap, pre-existing before the device-login fix above.** It already applied `X-Tenant-Id`
+  by hand for the same reason (it bypasses `AxiamHttpMessageHandler`), but never applied
+  `X-Axiam-Tenant`. CONTRACT.md §5.2.2 rule 4 is explicit that a self-service/setup call
+  is *not* exempt from sending the acting-tenant header — "an SDK MUST NOT work around
+  that by clearing or rewriting `X-Axiam-Tenant`" — so a handle with an acting tenant set
+  silently dropped it on both setup calls. Now uses the same `ApplyAnonymousTenantHeaders`
+  helper the device login uses.
 
 ### Breaking
 
