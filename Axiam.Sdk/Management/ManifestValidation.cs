@@ -152,6 +152,17 @@ internal static class ManifestValidation
                              "inherit: false on a global role, which the server refuses with 400 " +
                              "(a global role applies everywhere and ignores resource scope)");
             }
+            else if (!binding.Inherit && binding.Resource is null)
+            {
+                // N6.2 (CONTRACT 1.52, C-12): "An object binding requires resource. inherit
+                // without a resource is refused client-side." inherit is only meaningful
+                // scoped to a resource — without one there is no hierarchy for it to
+                // withhold; the `else` above already covers the global-role case with its
+                // own, more specific message.
+                problems.Add($"{subjectDescription}'s binding of role '{binding.Role}' sets " +
+                             "inherit: false with no resource — inherit only means something " +
+                             "scoped to a resource (CONTRACT.md §27.6.1 item 2)");
+            }
         }
 
         foreach (var group in (bindings ?? Array.Empty<ManagementManifest.RoleBinding>())

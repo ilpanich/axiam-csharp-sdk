@@ -86,6 +86,50 @@ public sealed class DeviceAuthTests
         Assert.Equal(900, token.ExpiresIn);
     }
 
+    // ---- N4.2 (CONTRACT 1.52, C-12): a malformed 200 changes no client state -----------
+    //
+    // "A refused or malformed device login changes no client state." Not in
+    // c12-findings.md's C# section, but the identical defect the C++ SDK had
+    // (client.cpp storing an empty token and setting device_session = true for a
+    // malformed 200). ReadString(wire, "access_token") returns "" — silently, no
+    // exception — when the field is absent, so a malformed 200 was adopted as a device
+    // handle with an EMPTY bearer credential and reported as success.
+
+    [Fact]
+    public async Task AMalformed200WithNoAccessToken_IsRefused_NotAdoptedAsAnEmptyCredential()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => JsonOk("""{"token_type":"Bearer","expires_in":900}"""));
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+
+        await Assert.ThrowsAsync<NetworkError>(() => client.AuthenticateDeviceAsync());
+    }
+
+    [Fact]
+    public async Task AMalformed200WithABlankAccessToken_IsRefused()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => JsonOk("""{"access_token":"","token_type":"Bearer","expires_in":900}"""));
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+
+        await Assert.ThrowsAsync<NetworkError>(() => client.AuthenticateDeviceAsync());
+    }
+
+    // I4 twin: a well-formed 200 (the case every other test in this file already
+    // exercises) is unaffected.
+    [Fact]
+    public async Task AWellFormed200_IsStillAdopted_I4Twin()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => DeviceTokenResponse());
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+
+        var (device, token) = await client.AuthenticateDeviceAsync();
+        using AxiamClient _ = device;
+
+        Assert.Equal("device-token-abc", token.AccessToken.Reveal());
+    }
+
     // ---- §6.1 rule 6: no request body, adoption as a bearer credential -----------------
 
     [Fact]
@@ -677,6 +721,158 @@ public sealed class DeviceAuthTests
             listener.Stop();
             listener.Close();
         }
+    }
+
+    // ---- N4.6 (CONTRACT 1.52 N4.6, C-12): the returned handle carries the creating
+    // handle's acting tenant on its OWN subsequent requests, not just on the device-login
+    // POST itself (the two tests above already cover that POST). §6.1 rule 6's "a device
+    // holds no login result" is about the §17/§5.2 GATE, not about the acting-tenant
+    // VALUE a caller explicitly configured or set on-client before calling
+    // AuthenticateDeviceAsync() — that value is not a login result, so it survives.
+
+    [Fact]
+    public async Task TheReturnedHandleCarriesTheCreatingHandlesActingTenant_ConfiguredAtConstruction()
+    {
+        Guid actingTenant = Guid.Parse("77777777-7777-7777-7777-777777777777");
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => DeviceTokenResponse());
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        var options = new AxiamClientOptions
+        {
+            BaseUrl = BaseUrl,
+            TenantId = TenantGuid,
+            ClientCertificatePem = DummyCertPem,
+            ClientKeyPem = DummyKeyPem,
+            ActingTenant = actingTenant,
+        };
+        using AxiamClient client = AxiamClient.CreateForTesting(BaseUrl, TenantGuid, options, handler);
+
+        using AxiamClient device = (await client.AuthenticateDeviceAsync()).Client;
+        await device.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal(actingTenant.ToString(), req.Headers.GetValues("X-Axiam-Tenant").Single());
+    }
+
+    [Fact]
+    public async Task TheReturnedHandleCarriesTheCreatingHandlesActingTenant_FromTheOnClientForm()
+    {
+        Guid actingTenant = Guid.Parse("88888888-8888-8888-8888-888888888888");
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => DeviceTokenResponse());
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+        using AxiamClient acting = client.ActingTenant(actingTenant);
+
+        using AxiamClient device = (await acting.AuthenticateDeviceAsync()).Client;
+        await device.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal(actingTenant.ToString(), req.Headers.GetValues("X-Axiam-Tenant").Single());
+    }
+
+    // I4 twin: a device login from a handle with NO acting tenant returns a handle that
+    // sends none either — pins the case the fix must not disturb (no unconditional send).
+    [Fact]
+    public async Task TheReturnedHandleHasNoActingTenant_WhenTheCreatingHandleHadNone_I4Twin()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => DeviceTokenResponse());
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+
+        using AxiamClient device = (await client.AuthenticateDeviceAsync()).Client;
+        await device.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.False(req.Headers.Contains("X-Axiam-Tenant"));
+    }
+
+    // ---- N4.4 (CONTRACT 1.52, C-12), "held until replaced": a later session-establishing
+    // call on the device handle ITSELF replaces the device credential — not found in
+    // c12-findings.md for C#, but the exact same architectural gap CONTRACT 1.52 N4.4
+    // caught in Kotlin (AxiamClient.kt's onCredentialChange/AuthHeaderInterceptor): this
+    // handler's own OnCredentialChange() cleared the §17 memo/§5.2 gate but never touched
+    // `_staticBearerToken`, and AxiamHttpMessageHandler.ApplyHeaders always preferred a
+    // set staticBearerToken over the cookie jar — so a login performed ON the device
+    // handle never actually took effect on the wire, forever.
+
+    [Fact]
+    public async Task LoginAsync_OnADeviceHandle_ReleasesTheDeviceCredential_SoTheNewSessionCookieIsUsed()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => DeviceTokenResponse());
+        handler.Map("/api/v1/auth/login", _ => JsonOk("""{"user":{"organization_level":false}}"""));
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+        using AxiamClient device = (await client.AuthenticateDeviceAsync()).Client;
+
+        await device.LoginAsync("user@example.com", "hunter2");
+        // The fake transport is not an HttpClientHandler, so it does not process the
+        // login response's Set-Cookie itself (mirrors AxiamClientAuthFlowTests.SeedCookie)
+        // — seed what a real one would have captured directly into the device handle's
+        // own (real, shared) cookie jar.
+        FieldInfo field = typeof(AxiamClient).GetField("_cookieContainer", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        var container = (CookieContainer)field.GetValue(device)!;
+        container.Add(BaseUrl, new Cookie("axiam_access", "NEW-SESSION-TOKEN"));
+
+        handler.Requests.Clear();
+        await device.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal("Bearer NEW-SESSION-TOKEN", req.Headers.GetValues("Authorization").Single());
+    }
+
+    // I4 twin: an ordinary (non-device) handle's LoginAsync is unaffected by the fix —
+    // exercised continuously by the rest of the suite (e.g. AxiamClientAuthFlowTests), and
+    // pinned here at the same call site/boundary as the test above.
+    [Fact]
+    public async Task LoginAsync_OnAnOrdinaryHandle_StillUsesTheNewSessionCookie_I4Twin()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/login", _ => JsonOk("""{"user":{"organization_level":false}}"""));
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient client = Client(handler, certPem: null, keyPem: null);
+
+        await client.LoginAsync("user@example.com", "hunter2");
+        FieldInfo field = typeof(AxiamClient).GetField("_cookieContainer", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        var container = (CookieContainer)field.GetValue(client)!;
+        container.Add(BaseUrl, new Cookie("axiam_access", "NEW-SESSION-TOKEN"));
+
+        await client.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal("Bearer NEW-SESSION-TOKEN", req.Headers.GetValues("Authorization").Single());
+    }
+
+    // Twin: a REFUSED later login establishes no session, so it must leave the device
+    // credential exactly as it was (CONTRACT 1.52 N4.4, "any later session-establishing
+    // call replaces it" — a refused call is not a session-establishing one). Rust
+    // (absorb_session_cookies), C++ and Kotlin all release only on the success path;
+    // Kotlin pins this with "a refused later login leaves the device credential in
+    // place". Releasing unconditionally at the top of LoginAsync (this SDK's earlier
+    // shape) would leave a device handle with NO usable credential at all after a
+    // rejected password.
+    [Fact]
+    public async Task ARefusedLoginAsync_401_OnADeviceHandle_LeavesTheDeviceCredentialInPlace()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => DeviceTokenResponse());
+        handler.Map("/api/v1/auth/login", _ => new HttpResponseMessage(HttpStatusCode.Unauthorized)
+        {
+            Content = new StringContent("""{"error":"invalid_credentials"}""", Encoding.UTF8, "application/json"),
+        });
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+        using AxiamClient device = (await client.AuthenticateDeviceAsync()).Client;
+
+        await Assert.ThrowsAsync<AuthError>(() => device.LoginAsync("user@example.com", "wrong-password"));
+
+        handler.Requests.Clear();
+        await device.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal("Bearer device-token-abc", req.Headers.GetValues("Authorization").Single());
     }
 
     private static int GetEphemeralPort()

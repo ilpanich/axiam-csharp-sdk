@@ -82,6 +82,21 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
     private const string TenantHeaderName = "X-Tenant-Id";
     private const string AuthorizationHeaderName = "Authorization";
 
+    /// <summary>
+    /// CONTRACT.md &#167;5.2 rule 1 / N5.1 (C-12, contract 1.52 draft): "An SDK MUST NOT
+    /// send it, or X-Tenant-Id, or any credential, to a host other than its configured
+    /// base URL." Unlike <see cref="TenantHeaderName"/>/<see cref="AuthorizationHeaderName"/>/
+    /// <see cref="CsrfHeaderName"/>, which <see cref="ApplyHeaders"/> derives per request
+    /// from this handler's own state, <c>X-Axiam-Tenant</c> is a <c>DefaultRequestHeaders</c>
+    /// entry on <c>AxiamClient</c>'s own <see cref="HttpClient"/> (see that class's
+    /// constructor and its <c>ActingTenant()</c>/<c>ClearActingTenant()</c>
+    /// copy-constructor) — already merged into <c>request.Headers</c> by the time this
+    /// handler's <see cref="SendAsync"/> runs. The host-isolation guard below must strip
+    /// it explicitly for a foreign-host request, with no <c>/oauth2/*</c> carve-out: F-15's
+    /// carve-out (&#167;12.1 note 2) is <see cref="TenantHeaderName"/>-only.
+    /// </summary>
+    private const string ActingTenantHeaderName = "X-Axiam-Tenant";
+
     private static readonly HashSet<string> StateChangingMethods =
         new(StringComparer.OrdinalIgnoreCase) { "POST", "PUT", "PATCH", "DELETE" };
 
@@ -109,9 +124,12 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
     /// (which, for a device-credentialed handle, is a fresh, empty
     /// <see cref="CookieContainer"/> anyway — see <see cref="AxiamClient.AuthenticateDeviceAsync"/>).
     /// <c>null</c> — the default, and every handler before contract 1.51 — means "read the
-    /// bearer token from the cookie jar", unchanged.
+    /// bearer token from the cookie jar", unchanged. Mutable (not <c>readonly</c>): N4.4
+    /// (C-12, contract 1.52 draft) — "held until replaced" — <see cref="ReleaseStaticBearerToken"/>
+    /// clears it once a later session-establishing call succeeds this handle's device
+    /// credential, so this handler falls back to the cookie jar again.
     /// </summary>
-    private readonly string? _staticBearerToken;
+    private volatile string? _staticBearerToken;
 
     /// <summary>Constructs the handler. Register as the outermost link of the client's
     /// <see cref="HttpClient"/> handler chain, with the SDK's cookie-jar/TLS handler
@@ -149,6 +167,17 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
     /// captured automatically by the shared <see cref="CookieContainer"/>.
     /// </summary>
     internal void ResetCsrfToken() => _csrfToken = null;
+
+    /// <summary>
+    /// CONTRACT.md &#167;6.1 rule 11 / N4.4 (C-12, contract 1.52 draft) — "held until
+    /// replaced": releases this handler's device credential (if any) so
+    /// <see cref="ApplyHeaders"/> falls back to reading the cookie jar again, exactly as a
+    /// handler that was never device-credentialed does. Called by <c>AxiamClient</c> at
+    /// the start of every session-establishing call except <c>RefreshAsync</c> ("refresh
+    /// does not clear it") — see that class's <c>ReleaseDeviceCredential</c>. A no-op when
+    /// no static bearer token was set.
+    /// </summary>
+    internal void ReleaseStaticBearerToken() => _staticBearerToken = null;
 
     /// <summary>
     /// Applies tenant/auth/CSRF headers (&#167;3/&#167;5), sends the request, and on a
@@ -284,6 +313,16 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
         // foreign host, so a request that is BOTH foreign-host AND an
         // /oauth2/* discovery-document URL still gets the tenant header, but
         // returns before Authorization/CSRF are ever considered.
+        if (isForeignHost)
+        {
+            // N5.1: X-Axiam-Tenant rides in on request.Headers as a DefaultRequestHeaders
+            // entry (see the field's remarks) — strip it before either foreign-host branch
+            // below can return, so neither the plain "withhold everything" path nor the
+            // /oauth2/* X-Tenant-Id carve-out lets it leak. Removing a header that was
+            // never present is a no-op.
+            request.Headers.Remove(ActingTenantHeaderName);
+        }
+
         if (isForeignHost && !IsOAuth2DiscoveryPath(request))
         {
             return;
@@ -295,7 +334,8 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
         if (isForeignHost)
         {
             // Reached only for a foreign-host /oauth2/* URL: tenant header is
-            // applied above; Authorization/CSRF stay same-origin only (3A).
+            // applied above; Authorization/CSRF stay same-origin only (3A);
+            // X-Axiam-Tenant was already stripped above (no /oauth2/* carve-out for it).
             return;
         }
 

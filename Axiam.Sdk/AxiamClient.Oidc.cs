@@ -670,6 +670,8 @@ public sealed partial class AxiamClient
             throw ErrorMapper.FromHttpResponse(response, "sso_complete failed");
         }
 
+        // N4.4: only reached once the call has actually succeeded and adopted a session.
+        ReleaseDeviceCredential();
         SsoLoginSuccessResponseWire wire = await ReadOidcJsonAsync<SsoLoginSuccessResponseWire>(response, cancellationToken).ConfigureAwait(false);
         return new SsoCompleteResult(wire.UserId, wire.SessionId, wire.ExpiresIn, wire.RedirectUri);
     }
@@ -949,6 +951,9 @@ public sealed partial class AxiamClient
             throw ErrorMapper.FromHttpResponse(response, $"{operation} failed");
         }
 
+        // N4.4: only reached once the call has actually succeeded and adopted a session —
+        // shared by both SsoCompleteOauth2Async and SsoCompleteHandoffAsync.
+        ReleaseDeviceCredential();
         SsoLoginSuccessResponseWire wire =
             await ReadOidcJsonAsync<SsoLoginSuccessResponseWire>(response, cancellationToken).ConfigureAwait(false);
         return new SsoCompleteResult(wire.UserId, wire.SessionId, wire.ExpiresIn, wire.RedirectUri);

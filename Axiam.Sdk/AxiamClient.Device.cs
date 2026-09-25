@@ -144,6 +144,20 @@ public sealed partial class AxiamClient
 
             JsonElement wire = await ReadJsonAsync(response, cancellationToken).ConfigureAwait(false);
             string accessToken = ReadString(wire, "access_token");
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                // N4.2 (CONTRACT 1.52, C-12): "A refused or malformed device login
+                // changes no client state." A 200 with no (or a blank) access_token is
+                // malformed — ReadString's own "absent means empty string" reading, which
+                // is right for an optional field, would otherwise silently adopt an EMPTY
+                // bearer credential as though the login had succeeded. NetworkError, not
+                // AuthError: this is a malformed response shape, not the server's
+                // considered refusal of the certificate (§16, matching every other
+                // malformed-body site in this SDK).
+                throw NetworkError.FromException(
+                    new InvalidOperationException("device authentication response carried no access_token"),
+                    "device authentication succeeded with a malformed response body");
+            }
             string tokenType = wire.TryGetProperty("token_type", out JsonElement typeEl) && typeEl.ValueKind == JsonValueKind.String
                 ? typeEl.GetString() ?? "Bearer"
                 : "Bearer";
@@ -214,7 +228,13 @@ public sealed partial class AxiamClient
         _jwksVerifier = source._jwksVerifier; // org-wide JWKS; harmless and efficient to share
         _telemetry = source._telemetry;
         _session = new SharedSession(); // a device holds no login result (§5.2 rule 1)
-        _actingTenant = null;
+        // CONTRACT.md §6.1 rule 11 / N4.6 (C-12, contract 1.52 draft): the acting tenant
+        // a caller configured or set on-client before calling AuthenticateDeviceAsync()
+        // is not a login result — only the §17 memo/§5.2 GATE start fresh/unknown, per
+        // the class-level remarks above. The value itself survives onto the returned
+        // handle, with the default header applied below exactly as the public
+        // constructor and the ActingTenant()/ClearActingTenant() copy-constructor do.
+        _actingTenant = source._actingTenant;
         _ownsResources = true; // a genuinely independent transport, not a view over source's
         _transportOverride = source._transportOverride;
         _staticBearerToken = deviceAccessToken;
@@ -257,6 +277,15 @@ public sealed partial class AxiamClient
             BaseAddress = _baseUrl,
             Timeout = _options.RequestTimeout,
         };
+        // §5.2 rule 1 / N4.6: the same DefaultRequestHeaders entry the public constructor
+        // and the ActingTenant() copy-constructor add — every request THIS handle makes
+        // through _httpClient (management, authz, self-service, WebAuthn, logout) carries
+        // it, with no per-call-site change needed anywhere else in this class.
+        if (_actingTenant is { } deviceActingTenant)
+        {
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation(
+                ActingTenantHeaderName, deviceActingTenant.ToString());
+        }
 
         // Mirrors the public constructor's own _anonymousPrimaryHandler/_anonymousHttpClient
         // pair exactly, `_transportOverride` gate included — a device handle's §24.1

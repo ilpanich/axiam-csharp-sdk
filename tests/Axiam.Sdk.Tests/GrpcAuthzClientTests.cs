@@ -3,9 +3,11 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
+using Axiam.Sdk;
 using Axiam.Sdk.Auth;
 using Axiam.Sdk.Core;
 using Axiam.Sdk.Grpc;
+using Axiam.Sdk.Options;
 using Axiam.Sdk.Tests.Fixtures;
 using Axiam.V1;
 using Grpc.Core;
@@ -244,6 +246,123 @@ public class GrpcAuthzClientTests
         Assert.Equal(1, refresh.Count); // exactly one shared-guard refresh — non-vacuous single-flight
     }
 
+    // ---- N4.5 (CONTRACT 1.52, C-12): never refreshed on a device credential, on either
+    // transport — "It surfaces the server's message, never the refresh guard's." The REST
+    // transport (AxiamHttpMessageHandler) checks `_staticBearerToken is not null` and
+    // skips the reactive-refresh branch ENTIRELY for a device-credentialed handle, so the
+    // server's own 401 body surfaces untouched. AuthInterceptor.HandleResponseAsync has no
+    // such check: it unconditionally calls `_refreshGuard.RefreshIfNeededAsync` on ANY
+    // UNAUTHENTICATED. For a device handle, that guard's delegate is built to always throw
+    // (AxiamClient.Device.cs: "unreachable: a device-credentialed handle never attempts a
+    // token refresh") — so a gRPC UNAUTHENTICATED on the device credential replaced the
+    // server's own status/message with the refresh guard's internal one instead.
+
+    [Fact]
+    public async Task CheckAccessAsync_Unauthenticated_OnADeviceCredential_SurfacesTheServersMessage_NoRefreshAttempt()
+    {
+        int callCount = 0;
+        var invoker = new FakeCallInvoker(handleCheck: (_, _) =>
+        {
+            Interlocked.Increment(ref callCount);
+            throw new RpcException(new Status(StatusCode.Unauthenticated, "device token expired"));
+        });
+        // Mirrors AxiamClient.Device.cs's own RefreshGuard construction for a device
+        // handle EXACTLY: no refresh token exists, so the delegate always throws rather
+        // than ever attempting an HTTP call.
+        using var deviceGuard = new RefreshGuard(_ => throw new AuthError(
+            "unreachable: a device-credentialed handle never attempts a token refresh (CONTRACT.md §6.1 rule 6)"));
+        string deviceJwt = MintUnverifiedJwt("device-subject", "tenant-1");
+
+        using AxiamGrpcAuthzClient client = BuildClient(invoker, deviceGuard, "tenant-1", () => deviceJwt, refreshExempt: true);
+
+        AuthError ex = await Assert.ThrowsAsync<AuthError>(() => client.CheckAccessAsync("documents:read", "doc-42"));
+
+        Assert.Contains("device token expired", ex.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("unreachable", ex.Message, StringComparison.Ordinal);
+        Assert.Equal(1, callCount); // no retry — never refreshed
+    }
+
+    // ---- N4.5 follow-up: refreshExempt is evaluated PER CALL, not captured once at
+    // construction. AxiamGrpcAuthzClient's production constructor used to pass
+    // `refreshExempt: client.HasStaticBearerToken` — a `bool`, read once, when the gRPC
+    // client was built. A gRPC client built from a device handle BEFORE a later LoginAsync()
+    // on that same handle released the device credential (N4.4) would keep skipping the
+    // refresh guard forever, even after the handle had moved on to a real cookie session
+    // that DOES have a refresh token to spend. AuthInterceptor now takes a `Func<bool>`
+    // and re-evaluates it on every UNAUTHENTICATED, so the SAME interceptor instance
+    // tracks the handle's credential live.
+
+    [Fact]
+    public async Task CheckAccessAsync_Unauthenticated_RefreshExemptIsEvaluatedPerCall_NotCapturedAtConstruction()
+    {
+        var restHandler = new RoutingHandler();
+        restHandler.Map("/api/v1/auth/device", _ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(
+                """{"access_token":"device-token-abc","token_type":"Bearer","expires_in":900}""",
+                Encoding.UTF8, "application/json"),
+        });
+        restHandler.Map("/api/v1/auth/login", _ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent("""{"user":{"organization_level":false}}""", Encoding.UTF8, "application/json"),
+        });
+        byte[] certPem = Encoding.ASCII.GetBytes(
+            "-----BEGIN CERTIFICATE-----\nMIIBkTCB+wIJAKZ0000000000MA0GCSqGSIb3DQEBCwUAMBQxEjAQBgNVBAMMCWxv\n-----END CERTIFICATE-----\n");
+        byte[] keyPem = Encoding.ASCII.GetBytes(
+            "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIA==\n-----END PRIVATE KEY-----\n");
+        var baseUrl = new Uri("https://axiam.test");
+        const string tenantGuid = "22222222-2222-2222-2222-222222222222";
+        var options = new AxiamClientOptions
+        {
+            BaseUrl = baseUrl,
+            TenantId = tenantGuid,
+            ClientCertificatePem = certPem,
+            ClientKeyPem = keyPem,
+        };
+        using AxiamClient original = AxiamClient.CreateForTesting(baseUrl, tenantGuid, options, restHandler);
+        using AxiamClient device = (await original.AuthenticateDeviceAsync()).Client;
+        Assert.True(device.HasStaticBearerToken);
+
+        int callCount = 0;
+        var invoker = new FakeCallInvoker(handleCheck: (_, _) =>
+        {
+            int n = Interlocked.Increment(ref callCount);
+            // Calls 1 and 2 are UNAUTHENTICATED (round 1's only attempt, round 2's first
+            // attempt); call 3 (round 2's retry, after a successful refresh) succeeds.
+            if (n <= 2)
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "token expired"));
+            }
+            return new CheckAccessResponse { Allowed = true };
+        });
+        using var refresh = new RefreshCounter();
+        string jwt = MintUnverifiedJwt("device-subject", tenantGuid);
+        // Built ONCE, while the handle is still device-credentialed — the interceptor
+        // must not freeze that fact for the rest of its lifetime.
+        var interceptor = new AuthInterceptor(() => jwt, tenantGuid, refresh.Guard, () => device.HasStaticBearerToken);
+        CallInvoker interceptedInvoker = invoker.Intercept(interceptor);
+        using var grpcClient = new AxiamGrpcAuthzClient(interceptedInvoker, null, () => jwt, tenantGuid);
+
+        // Round 1: still device-credentialed — never refreshed, exactly like the test above.
+        await Assert.ThrowsAsync<AuthError>(() => grpcClient.CheckAccessAsync("documents:read", "doc-1"));
+        Assert.Equal(0, refresh.Count);
+        Assert.Equal(1, callCount);
+
+        // A later LoginAsync() on the SAME handle succeeds and releases the device
+        // credential (N4.4) — HasStaticBearerToken flips to false.
+        await device.LoginAsync("user@example.com", "hunter2");
+        Assert.False(device.HasStaticBearerToken);
+
+        // Round 2, same interceptor instance: refreshExempt() now reads false, so
+        // UNAUTHENTICATED is routed through the refresh guard again, and the retry
+        // succeeds.
+        bool allowed = await grpcClient.CheckAccessAsync("documents:read", "doc-1");
+
+        Assert.True(allowed);
+        Assert.Equal(1, refresh.Count);
+        Assert.Equal(3, callCount); // round 1 (1) + round 2's attempt + retry (2 more)
+    }
+
     [Fact]
     public async Task BatchCheckAsync_PreservesOrder()
     {
@@ -342,9 +461,10 @@ public class GrpcAuthzClientTests
     // ------------------------------------------------------------------
 
     private static AxiamGrpcAuthzClient BuildClient(
-        FakeCallInvoker fakeInvoker, RefreshGuard guard, string tenantId, Func<string?> tokenAccessor, JwksVerifier? jwksVerifier = null)
+        FakeCallInvoker fakeInvoker, RefreshGuard guard, string tenantId, Func<string?> tokenAccessor,
+        JwksVerifier? jwksVerifier = null, bool refreshExempt = false)
     {
-        var interceptor = new AuthInterceptor(tokenAccessor, tenantId, guard);
+        var interceptor = new AuthInterceptor(tokenAccessor, tenantId, guard, refreshExempt);
         CallInvoker invoker = fakeInvoker.Intercept(interceptor);
         return new AxiamGrpcAuthzClient(invoker, jwksVerifier, tokenAccessor, tenantId);
     }

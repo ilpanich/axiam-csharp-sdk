@@ -382,6 +382,7 @@ public sealed class ManifestAdditionsTests
         Assert.Equal(ApplyStatus.Failed, step.Outcome.Status);
         Assert.Contains("refuses", step.Outcome.Message, StringComparison.Ordinal);
         Assert.Equal(true, step.Outcome.RestoreSucceeded);
+        Assert.Null(step.Outcome.RestoreError); // N6.3 twin: no restore error when the restore succeeded
         Assert.False(report.IsComplete);
 
         Assignment held = fake.Assignments.Single(a => a.Subject == user);
@@ -393,7 +394,10 @@ public sealed class ManifestAdditionsTests
     /// <summary>
     /// When BOTH the re-assign and the restore assign fail, the outcome says the restore
     /// failed too — the subject is left holding neither binding, and the caller is told
-    /// so rather than reading a false "restore succeeded".
+    /// so rather than reading a false "restore succeeded". N6.3 (CONTRACT 1.52, C-12): the
+    /// restore's own error is reported AS DATA (<see cref="StepOutcome.RestoreError"/>),
+    /// not only folded into <see cref="StepOutcome.Message"/> — a caller inspecting the
+    /// outcome programmatically must be able to read it without parsing prose.
     /// </summary>
     [Fact]
     public async Task AFailedReassignmentWhoseRestoreAlsoFailsReportsBothFailures()
@@ -421,6 +425,9 @@ public sealed class ManifestAdditionsTests
         Assert.Equal(ApplyStatus.Failed, step.Outcome.Status);
         Assert.Equal(false, step.Outcome.RestoreSucceeded);
         Assert.Contains("FAILED", step.Outcome.Message, StringComparison.Ordinal);
+        // N6.3: the restore's OWN error is data, not only a message.
+        Assert.NotNull(step.Outcome.RestoreError);
+        Assert.Contains("resource refuses this assignment", step.Outcome.RestoreError, StringComparison.Ordinal);
         Assert.Empty(fake.Assignments); // neither the old nor the new binding survives
     }
 
@@ -506,6 +513,33 @@ public sealed class ManifestAdditionsTests
 
         await Assert.ThrowsAsync<NetworkError>(() => client.Management.Manifest.PlanAsync(manifest));
         Assert.Equal(before, Mark(fake));
+    }
+
+    // ---- N6.2 (CONTRACT 1.52, C-12): "An object binding requires resource. inherit
+    // without a resource is refused client-side." Not in c12-findings.md's C# section, but
+    // the identical defect the C++ SDK had (management_manifest.cpp's validate() accepting
+    // {role, nullopt, false}) — this SDK's builder exposes the same shape
+    // (`GroupRole(groupKey, roleKey, resourceKey: null, inherit: false)`), and, before this
+    // fix, ManifestValidation only refused inherit: false on a GLOBAL role with no
+    // resource, not a non-global one.
+
+    [Fact]
+    public async Task ANonGlobalRoleBoundWithInheritFalseAndNoResourceIsRefusedClientSide()
+    {
+        var fake = new TenantFake();
+        using AxiamClient client = BuildClient(fake);
+        int before = Mark(fake);
+        ManagementManifest manifest = ManagementManifest.Builder()
+            .Role("resident", "Resident", "Lives here") // NOT global
+            .Group("g", "G", "G")
+            .GroupRole("g", "resident", resourceKey: null, inherit: false)
+            .Build();
+
+        NetworkError thrown = await Assert.ThrowsAsync<NetworkError>(
+            () => client.Management.Manifest.PlanAsync(manifest));
+
+        Assert.Contains("inherit: false", thrown.Message, StringComparison.Ordinal);
+        Assert.Equal(before, Mark(fake)); // zero wire calls
     }
 
     /// <summary>A plain binding whose server assignment is scoped is an <c>Update</c>: the

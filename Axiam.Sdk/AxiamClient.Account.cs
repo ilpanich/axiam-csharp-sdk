@@ -105,6 +105,8 @@ public sealed partial class AxiamClient
         {
             throw ErrorMapper.FromHttpResponse(http, "MfaSetupConfirmAsync failed");
         }
+        // N4.4: only reached once the call has actually succeeded and adopted a session.
+        ReleaseDeviceCredential();
         (bool organizationLevel, PrincipalScope? scope) =
             await ReadLoginScopeAsync(http, cancellationToken).ConfigureAwait(false);
         return new LoginResult(false, OrganizationLevel: organizationLevel, Scope: scope);

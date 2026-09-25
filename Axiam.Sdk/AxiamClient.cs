@@ -180,9 +180,10 @@ public sealed partial class AxiamClient : IDisposable
     /// or <c>null</c> for every ordinary handle. Read by <see cref="CurrentAccessToken"/>
     /// so the &#167;27 management surface's own session check
     /// (<c>ManagementTransport.RequireSession</c>) sees a device handle as holding a
-    /// credential too — it has one, just not a cookie-jar one.
+    /// credential too — it has one, just not a cookie-jar one. Mutable: N4.4's "held
+    /// until replaced" — see <see cref="ReleaseDeviceCredential"/>.
     /// </summary>
-    private readonly string? _staticBearerToken;
+    private volatile string? _staticBearerToken;
 
     /// <summary>
     /// <c>true</c> for the handle the public constructor built — the one that owns the
@@ -336,12 +337,14 @@ public sealed partial class AxiamClient : IDisposable
     /// <remarks>
     /// <para>
     /// Returns a NEW <see cref="AxiamClient"/> rather than mutating this one. The two
-    /// share the same cookie jar, refresh guard and JWKS verifier — a refresh performed
-    /// through either handle updates the session both read from — but each has its own
-    /// <see cref="HttpClient"/> wrapper (so its own default headers) and its own &#167;17
-    /// decision memo, so a tenant switch decided on one handle can never race a request
-    /// already in flight on another, and a memoized answer for one tenant can never be
-    /// returned for another (&#167;17 addendum). Dispose the returned handle, or not — it
+    /// share the same cookie jar, refresh guard, JWKS verifier and &#167;17 decision memo —
+    /// a refresh performed through either handle updates the session both read from, and
+    /// a login/logout/refresh on either clears the memo for both (&#167;17 addendum) — but
+    /// each has its own <see cref="HttpClient"/> wrapper (so its own default headers), so
+    /// a tenant switch decided on one handle can never race a request already in flight
+    /// on another, and the memo's own key (which carries the acting tenant) is what stops
+    /// a memoized answer for one tenant from ever being returned for another, not a
+    /// separate memo per handle. Dispose the returned handle, or not — it
     /// owns nothing the original handle's own <see cref="Dispose"/> does not already tear
     /// down; disposing it early only releases its own lightweight wrapper early.
     /// </para>
@@ -515,6 +518,18 @@ public sealed partial class AxiamClient : IDisposable
     internal string? CurrentAccessToken => _staticBearerToken ?? ReadCookie(AccessCookieName);
 
     /// <summary>
+    /// CONTRACT.md &#167;6.1 rule 6 / N4.5 (C-12, contract 1.52 draft) — <c>true</c> for a
+    /// handle built by <see cref="AuthenticateDeviceAsync"/>, where no refresh token
+    /// exists. Read by the gRPC transports (<see cref="Grpc.AxiamGrpcAuthzClient"/>,
+    /// <see cref="Grpc.TokenGrpcClient"/>) so their shared <see cref="Grpc.AuthInterceptor"/>
+    /// can skip the reactive UNAUTHENTICATED&#8594;refresh&#8594;retry entirely for a
+    /// device credential, exactly as <see cref="Rest.AxiamHttpMessageHandler"/> already
+    /// does for REST via its own <c>staticBearerToken is not null</c> check — "never
+    /// refreshed, on either transport" means both transports check for it, not just REST.
+    /// </summary>
+    internal bool HasStaticBearerToken => _staticBearerToken is not null;
+
+    /// <summary>
     /// Disposes this handle's own <see cref="HttpClient"/> wrapper and OIDC discovery
     /// state, and — for the handle the public constructor built — the shared transport's
     /// handler chain, the <see cref="RefreshGuard"/> and the &#167;17 memo. Does not perform
@@ -615,6 +630,52 @@ public sealed partial class AxiamClient : IDisposable
         _session.Reset();
     }
 
+    /// <summary>
+    /// CONTRACT.md &#167;6.1 rule 11 / N4.4 (C-12, contract 1.52 draft) — "held until
+    /// replaced": releases this handle's device credential (if any), so it falls back to
+    /// the cookie jar exactly like a handle that was never device-credentialed. Called
+    /// once the call has actually SUCCEEDED and adopted a new session — after the status
+    /// check, not up front alongside <see cref="OnCredentialChange"/> — in every
+    /// session-establishing method: <see cref="LoginAsync"/>, <see cref="VerifyMfaAsync"/>,
+    /// <see cref="LoginOpaqueAsync"/>, <c>MfaSetupConfirmAsync</c>, the WebAuthn
+    /// ceremony-completion methods, and the three SSO/federation completions (the latter
+    /// two of those funnel through the shared <c>CompleteFederationSessionAsync</c>, so
+    /// there is exactly one call site for both). <see cref="RefreshAsync"/> never calls it
+    /// ("refresh does not clear it"). <see cref="LogoutAsync"/> is the one exception to
+    /// "only on success": it releases unconditionally, at the top, because logout clears
+    /// the credential whatever the server answers. A no-op for a handle that was never
+    /// device-credentialed (<see cref="_staticBearerToken"/> already <c>null</c>).
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Before this existed, a device handle's own <c>LoginAsync</c>/<c>VerifyMfaAsync</c>/
+    /// etc. established a new cookie session that was silently never used —
+    /// <c>AxiamHttpMessageHandler.ApplyHeaders</c> always preferred a set
+    /// <c>staticBearerToken</c> over the cookie jar, and nothing ever cleared it. Mirrors
+    /// the same fix the Kotlin SDK needed for the identical gap
+    /// (<c>AxiamClient.kt</c>'s <c>onCredentialChange</c>/<c>AuthHeaderInterceptor</c>).
+    /// </para>
+    /// <para>
+    /// Releasing unconditionally up front (this method's first shape) over-reached: a
+    /// REFUSED later call establishes no session, so it must leave the device credential
+    /// exactly as it was — otherwise a rejected password left a device handle with no
+    /// usable credential at all. Rust (<c>absorb_session_cookies</c>), C++ and Kotlin all
+    /// release only on the success path; Kotlin pins it with "a refused later login leaves
+    /// the device credential in place" — this SDK's own twin,
+    /// <c>ARefusedLoginAsync_401_OnADeviceHandle_LeavesTheDeviceCredentialInPlace</c>
+    /// (<c>DeviceAuthTests</c>), is the same pin. <see cref="OnCredentialChange"/> itself
+    /// stays where it always was — resetting the &#167;17 memo/&#167;5.2 gate on a mere ATTEMPT,
+    /// not only a success, is this SDK's own established, conforming choice (see that
+    /// method's remarks), and is a different concern from which CREDENTIAL a handle ends
+    /// up presenting on the wire.
+    /// </para>
+    /// </remarks>
+    private void ReleaseDeviceCredential()
+    {
+        _staticBearerToken = null;
+        _authHandler.ReleaseStaticBearerToken();
+    }
+
     // ------------------------------------------------------------------
     // Auth methods (CONTRACT.md §1): LoginAsync / VerifyMfaAsync / RefreshAsync / LogoutAsync
     // All async-only + CancellationToken + ConfigureAwait(false) throughout (D-10).
@@ -643,6 +704,11 @@ public sealed partial class AxiamClient : IDisposable
 
         if (response.StatusCode == HttpStatusCode.OK)
         {
+            // N4.4: only a call that actually establishes a session replaces the device
+            // credential — a 202 (MFA challenge) or a 403 (MFA setup required) below is
+            // not that, and neither is a refused (any other status) call, which throws
+            // out of this method without ever reaching here.
+            ReleaseDeviceCredential();
             (bool organizationLevel, PrincipalScope? scope) =
                 await ReadLoginScopeAsync(response, cancellationToken).ConfigureAwait(false);
             return new LoginResult(false, OrganizationLevel: organizationLevel, Scope: scope);
@@ -732,6 +798,8 @@ public sealed partial class AxiamClient : IDisposable
             throw ErrorMapper.FromHttpResponse(response, "MFA verification failed");
         }
 
+        // N4.4: only reached once the call has actually succeeded and adopted a session.
+        ReleaseDeviceCredential();
         (bool organizationLevel, PrincipalScope? scope) =
             await ReadLoginScopeAsync(response, cancellationToken).ConfigureAwait(false);
         return new LoginResult(false, OrganizationLevel: organizationLevel, Scope: scope);
@@ -764,6 +832,7 @@ public sealed partial class AxiamClient : IDisposable
     {
         EnsureNotDisposed();
         OnCredentialChange();
+        ReleaseDeviceCredential();
         string? access = ReadCookie(AccessCookieName);
         if (access is null)
         {
@@ -1030,6 +1099,8 @@ public sealed partial class AxiamClient : IDisposable
             return new LoginResult(true, Sensitive.Of(ReadString(wire, "challenge_token")));
         }
 
+        // N4.4: a real 200 — a session was actually adopted.
+        ReleaseDeviceCredential();
         (bool organizationLevel, PrincipalScope? scope) =
             await ReadLoginScopeAsync(response, cancellationToken).ConfigureAwait(false);
         return new LoginResult(false, OrganizationLevel: organizationLevel, Scope: scope);

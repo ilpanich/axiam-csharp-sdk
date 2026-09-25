@@ -109,6 +109,109 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
 
 ### Fixed
 
+- **A gRPC `UNAUTHENTICATED` on a device credential was routed through the refresh guard,
+  replacing the server's own message with the guard's internal one** (CONTRACT 1.52 N4.5
+  (C-12) — "Never refreshed, on either transport… It surfaces the server's message, never
+  the refresh guard's" — not in c12-findings.md's C# section). The REST transport
+  (`AxiamHttpMessageHandler`) already checks `staticBearerToken is not null` and skips its
+  reactive-refresh branch entirely for a device-credentialed handle, so the server's own
+  `401` body surfaces untouched; the gRPC `AuthInterceptor` had no equivalent check — any
+  `UNAUTHENTICATED`, on any credential, was unconditionally routed through
+  `RefreshGuard.RefreshIfNeededAsync`. For a device handle that guard's delegate is built
+  to always throw (there is no refresh token to spend), so the caller received THAT
+  internal exception's message ("unreachable: a device-credentialed handle never attempts
+  a token refresh…") instead of the server's actual `UNAUTHENTICATED` detail, and gRPC's
+  gate `_refreshGuard` was invoked at all even though "never refreshed" is what it says
+  right on its own `AuthenticateDeviceAsync` remarks.
+  - Added `AxiamClient.HasStaticBearerToken` (internal) and a new `AuthInterceptor`
+    constructor parameter, `refreshExempt` (`null`/omitted reads as always `false`, so
+    every existing caller is unaffected), wired from
+    `AxiamGrpcAuthzClient`/`TokenGrpcClient`. When it reads `true`, an `UNAUTHENTICATED`
+    is never caught by the refresh-and-retry branch at all — it propagates to the
+    caller's own `ErrorMapper.FromGrpcStatus` mapping, exactly like a non-device
+    credential's second (post-retry) failure already does.
+  - **Follow-up:** `refreshExempt` is a `Func<bool>`, re-evaluated on every
+    `UNAUTHENTICATED`, not a `bool` read once when the gRPC client is built — a gRPC
+    client built from a device handle before a later `LoginAsync()` on that SAME handle
+    released the device credential (N4.4) would otherwise keep skipping the refresh
+    guard forever, even once the handle held a real cookie session with a refresh token
+    to spend. `AxiamGrpcAuthzClient`/`TokenGrpcClient` now pass
+    `() => client.HasStaticBearerToken` rather than a snapshot. A `bool`-taking
+    constructor overload remains for source compatibility, wrapping the value in a
+    constant delegate.
+- **A malformed `200` on the device login was adopted as an empty-string bearer
+  credential** (CONTRACT 1.52 N4.2 (C-12) — "A refused or malformed device login changes
+  no client state" — not in c12-findings.md's C# section, but the identical defect the
+  C++ SDK had, storing an empty token and setting `device_session = true`).
+  `AuthenticateDeviceAsync()` read `access_token` with `ReadString`, whose "absent means
+  empty string" reading is correct for an optional field but was applied here to a
+  REQUIRED one: a `200` with no `access_token` (or an empty one) built and returned a
+  device handle carrying `""` as its bearer credential, reporting success. Now refused
+  with `NetworkError` before any state changes — no device handle is built, matching the
+  already-refused shape a `401`/other non-`200` status gets.
+- **A role-binding rebind whose restore also failed discarded the restore's own error**
+  (CONTRACT 1.52 N6.3 (C-12) — "The outcome is reported as data, naming whether the
+  restore succeeded and, when it did not, the restore's own error. It is not only a
+  message." — not in c12-findings.md's C# section). `RebindAsync` caught the restore's
+  exception only to set a `bool restored = false`; the exception's own message (`ex2.Message`)
+  was never captured anywhere, so `StepOutcome` had no way to report it — a caller could
+  learn a restore failed, but never why. Added `StepOutcome.RestoreError` (a new `string?`,
+  `null` unless `RestoreSucceeded: false`) and threaded the restore's `Exception.Message`
+  through `BindingUpdateFailedException` to populate it.
+- **A non-global role bound with `inherit: false` and no resource was accepted and sent to
+  the wire** (CONTRACT 1.52 N6.2 (C-12) — "An object binding requires resource. inherit
+  without a resource is refused client-side" — not in c12-findings.md's C# section, but
+  the identical defect the C++ SDK had). `ManifestValidation.RoleBindings` only refused
+  `inherit: false` with no resource when the bound role was GLOBAL; a non-global role in
+  the same shape (reachable through the public builder,
+  `GroupRole(groupKey, roleKey, resourceKey: null, inherit: false)`, e.g.) passed
+  validation and reached `AssignAsync` as `inherit: false` with no `resource_id` — a
+  binding `inherit` cannot mean anything for, since there is no resource hierarchy for it
+  to withhold. Now refused client-side, zero wire calls, like the global case already was.
+- **A later session-establishing call performed on a device handle itself never actually
+  took effect** (CONTRACT 1.52 N4.4 (C-12) — "held until replaced" — not in
+  c12-findings.md's C# section, but the identical architectural gap N4.4 caught in the
+  Kotlin SDK). `AxiamHttpMessageHandler.ApplyHeaders` always preferred a set
+  `staticBearerToken` over reading the cookie jar, and `AxiamClient.OnCredentialChange()`
+  (called at the top of `LoginAsync`, `VerifyMfaAsync`, `LogoutAsync`, `LoginOpaqueAsync`,
+  `MfaSetupConfirmAsync`, the WebAuthn ceremony-completion methods, and all three SSO
+  completions) never cleared it. A device handle that then called, say, `LoginAsync()`
+  would establish a real cookie session server-side, but every subsequent request that
+  handle made kept silently sending the OLD device token forever — the new session was
+  never used. `AxiamClient` now releases the device credential (on both itself and the
+  shared `AxiamHttpMessageHandler`) once each of those methods has actually SUCCEEDED and
+  adopted the new session — after its status check, not up front alongside
+  `OnCredentialChange()` — so a REFUSED later call (a rejected password, an invalid TOTP,
+  a failed SSO exchange…) leaves the device credential exactly as it was: it established
+  no session, so there is nothing to replace it with. `RefreshAsync` never releases it
+  ("refresh does not clear it"); `LogoutAsync` is the one exception to "only on success" —
+  it still releases unconditionally, because logout clears the credential whatever the
+  server answers. A no-op for a handle that was never device-credentialed. Mirrors Rust
+  (`absorb_session_cookies`), C++ and Kotlin, which all release only on the success path —
+  Kotlin's own regression test for this is literally titled "a refused later login leaves
+  the device credential in place".
+- **`X-Axiam-Tenant` reached a host other than the client's configured base URL**
+  (CONTRACT 1.52 N5.1 (C-12)). It is a `DefaultRequestHeaders` entry on `AxiamClient`'s own
+  `HttpClient` (set at construction and by `ActingTenant()`/`ClearActingTenant()`), so —
+  unlike `X-Tenant-Id`, `Authorization` and `X-CSRF-Token`, which `AxiamHttpMessageHandler`
+  derives per request from its own state — it was already merged into the outgoing
+  request's headers by the time the handler's host-isolation guard ran, and that guard
+  never named it among the headers it strips. A foreign-host request (an off-origin
+  `/oauth2/*` endpoint a discovery document advertised, for instance) carried it. The guard
+  now withholds it on every foreign-host request, with no `/oauth2/*` carve-out — unlike
+  `X-Tenant-Id`, §12.1 note 2 says nothing that exempts the acting-tenant header.
+- **The device handle `AuthenticateDeviceAsync()` returns dropped the creating handle's
+  acting tenant** (CONTRACT 1.52 N4.6 (C-12)). The returned handle's `_actingTenant` was
+  hard-set to `null`, so a caller who had configured `AxiamClientOptions.ActingTenant` or
+  called `.ActingTenant(x)` before authenticating as a device lost the header on every
+  request the device handle went on to make — `Management`, `Authz`, and everything else.
+  The acting tenant a caller set is not a login result (only the §17 memo and the §5.2
+  gate start fresh/unknown for a device handle, per rule 11's "a device holds no login
+  result"), so it now survives onto the returned handle, with the same
+  `X-Axiam-Tenant` `DefaultRequestHeaders` entry the public constructor and the
+  `ActingTenant()`/`ClearActingTenant()` copy-constructor already add. Tested both the
+  `AxiamClientOptions.ActingTenant` form and the on-client `.ActingTenant(x)` form
+  (`DeviceAuthTests`); the no-acting-tenant case is pinned unchanged (I4 twin).
 - **`JwksVerifier.VerifyAsync`, and so `AxiamAuthMiddleware` (the SDK's default token-verify
   entry point) and `AxiamPolicyHandler`, accepted sender-constrained tokens as ordinary
   bearer tokens.** A token bound to a certificate (`cnf.x5t#S256`, which every §6.1

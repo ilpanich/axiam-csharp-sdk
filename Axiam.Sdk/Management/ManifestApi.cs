@@ -102,10 +102,17 @@ public sealed class ManifestApi
     {
         internal bool RestoreSucceeded { get; }
 
-        internal BindingUpdateFailedException(string message, bool restoreSucceeded)
+        /// <summary>
+        /// N6.3 (CONTRACT 1.52, C-12): the restore's own error, when the restore itself
+        /// also failed — <c>null</c> when <see cref="RestoreSucceeded"/> is <c>true</c>.
+        /// </summary>
+        internal string? RestoreError { get; }
+
+        internal BindingUpdateFailedException(string message, bool restoreSucceeded, string? restoreError = null)
             : base(message, null)
         {
             RestoreSucceeded = restoreSucceeded;
+            RestoreError = restoreError;
         }
     }
 
@@ -659,7 +666,10 @@ public sealed class ManifestApi
                 // §27.6.1 item 2: a role-binding rebind's assign half failing carries
                 // whether the restore of the previous binding succeeded.
                 StepOutcome outcome = ex is BindingUpdateFailedException rebindFailure
-                    ? new StepOutcome(ApplyStatus.Failed, ex.Message, RestoreSucceeded: rebindFailure.RestoreSucceeded)
+                    ? new StepOutcome(
+                        ApplyStatus.Failed, ex.Message,
+                        RestoreSucceeded: rebindFailure.RestoreSucceeded,
+                        RestoreError: rebindFailure.RestoreError)
                     : new StepOutcome(ApplyStatus.Failed, ex.Message);
                 applied.Add(new AppliedStep(step.Action, outcome));
                 stopped = true;
@@ -967,6 +977,7 @@ public sealed class ManifestApi
         catch (Exception ex) when (ex is AuthError or AuthzError or NetworkError)
         {
             bool restored;
+            string? restoreError = null;
             try
             {
                 await AssignAsync(kind, roleId, subjectId, rebind.Current.ResourceId, rebind.Current.Inherit, rebind.Current.TenantScope, token)
@@ -976,11 +987,15 @@ public sealed class ManifestApi
             catch (Exception ex2) when (ex2 is AuthError or AuthzError or NetworkError)
             {
                 restored = false;
+                // N6.3: the restore's own error, kept as DATA (not only folded into the
+                // thrown exception's message prose below).
+                restoreError = ex2.Message;
             }
 
             throw new BindingUpdateFailedException(
                 $"{ex.Message} (rebind restore {(restored ? "succeeded — the subject still holds its previous binding" : "FAILED — the subject now holds NEITHER the previous nor the new binding")})",
-                restored);
+                restored,
+                restoreError);
         }
     }
 }

@@ -140,6 +140,67 @@ public class AxiamHttpMessageHandlerTests
         Assert.False(inner.LastRequestHeaders!.Contains("X-Tenant-Id"));
     }
 
+    // ---- N5.1 (CONTRACT 1.52, C-12): X-Axiam-Tenant is a per-handle DefaultRequestHeaders
+    // entry on AxiamClient's own HttpClient (AxiamClient.cs's constructor and its
+    // ActingTenant()/ClearActingTenant() copy-constructor), so — unlike X-Tenant-Id,
+    // Authorization and X-CSRF-Token, which ApplyHeaders derives per request from this
+    // handler's own state — it is already merged into request.Headers by the time
+    // ApplyHeaders runs, and ApplyHeaders' host-isolation guard never named it among the
+    // headers it strips. "An SDK MUST NOT send it ... to a host other than its configured
+    // base URL" (§5.2 rule 1): a foreign-host request must not carry it, exactly like
+    // Authorization and X-CSRF-Token, with no /oauth2/* carve-out (F-15's carve-out is
+    // scoped to X-Tenant-Id only).
+
+    [Fact]
+    public async Task ForeignHostRequest_WithholdsXAxiamTenant_EvenThoughItIsADefaultRequestHeader()
+    {
+        using RefreshGuard guard = SucceedingGuard();
+        (HttpClient client, RecordingHandler inner) = Build(guard);
+        // Mirrors how AxiamClient itself attaches the acting-tenant header: a
+        // DefaultRequestHeaders entry on the SAME HttpClient every request (same-origin
+        // or not) goes through — see AxiamClient.cs's constructor/copy-constructor.
+        client.DefaultRequestHeaders.TryAddWithoutValidation("X-Axiam-Tenant", "11111111-1111-1111-1111-111111111111");
+        inner.Responder = _ => new HttpResponseMessage(HttpStatusCode.OK);
+
+        await client.GetAsync("https://evil.example/steal");
+
+        Assert.False(inner.LastRequestHeaders!.Contains("X-Axiam-Tenant"));
+    }
+
+    [Fact]
+    public async Task ForeignHostOAuth2TokenRequest_StillWithholdsXAxiamTenant_NoCarveOut()
+    {
+        // The F-15 carve-out (ForeignHostOAuth2TokenRequest_StillInjectsTenantHeader_
+        // ButWithholdsAuthAndCsrf, above) is X-Tenant-Id-only — §12.1 note 2 says nothing
+        // about the acting-tenant header, and §5.2 rule 1's own host guard has no
+        // /oauth2/* exception.
+        using RefreshGuard guard = SucceedingGuard();
+        (HttpClient client, RecordingHandler inner) = Build(guard);
+        client.DefaultRequestHeaders.TryAddWithoutValidation("X-Axiam-Tenant", "11111111-1111-1111-1111-111111111111");
+        inner.Responder = _ => new HttpResponseMessage(HttpStatusCode.OK);
+
+        await client.PostAsync(
+            "https://foreign-idp.example/oauth2/token",
+            new StringContent("grant_type=refresh_token", Encoding.UTF8, "application/x-www-form-urlencoded"));
+
+        Assert.Equal(TenantId, inner.LastRequestHeaders!.GetValues("X-Tenant-Id").Single());
+        Assert.False(inner.LastRequestHeaders.Contains("X-Axiam-Tenant"));
+    }
+
+    // I4 twin: the already-correct same-origin case must keep sending it.
+    [Fact]
+    public async Task SameOriginRequest_StillSendsXAxiamTenant_I4Twin()
+    {
+        using RefreshGuard guard = SucceedingGuard();
+        (HttpClient client, RecordingHandler inner) = Build(guard);
+        client.DefaultRequestHeaders.TryAddWithoutValidation("X-Axiam-Tenant", "11111111-1111-1111-1111-111111111111");
+        inner.Responder = _ => new HttpResponseMessage(HttpStatusCode.OK);
+
+        await client.GetAsync("/api/v1/whatever");
+
+        Assert.Equal("11111111-1111-1111-1111-111111111111", inner.LastRequestHeaders!.GetValues("X-Axiam-Tenant").Single());
+    }
+
     [Fact]
     public async Task AccessCookiePresent_InjectsBearerAuthorization()
     {

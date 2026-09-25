@@ -43,6 +43,7 @@ public sealed class AuthInterceptor : Interceptor
     private readonly Func<string?> _tokenAccessor;
     private readonly string _tenantId;
     private readonly RefreshGuard _refreshGuard;
+    private readonly Func<bool> _refreshExempt;
 
     /// <param name="tokenAccessor">
     /// A non-blocking accessor for the currently cached access token (<c>null</c> when
@@ -60,12 +61,42 @@ public sealed class AuthInterceptor : Interceptor
     /// The SAME <see cref="RefreshGuard"/> instance the client's REST transport uses
     /// (D-10's "one guard across REST + gRPC on one client") — never a second instance.
     /// </param>
-    public AuthInterceptor(Func<string?> tokenAccessor, string tenantId, RefreshGuard refreshGuard)
+    /// <param name="refreshExempt">
+    /// CONTRACT.md &#167;6.1 rule 6 / N4.5 (C-12, contract 1.52 draft) — a non-blocking
+    /// accessor, read on EVERY <c>UNAUTHENTICATED</c> (never cached), that returns
+    /// <c>true</c> while the owning <see cref="AxiamClient"/> is device-credentialed
+    /// (<see cref="AxiamClient.HasStaticBearerToken"/>), where no refresh token exists to
+    /// spend. When it reads <c>true</c>, that <c>UNAUTHENTICATED</c> is never routed
+    /// through <paramref name="refreshGuard"/> at all: it propagates to the caller as-is,
+    /// carrying the SERVER's own status/message rather than the refresh guard's ("it
+    /// surfaces the server's message, never the refresh guard's"). Mirrors the REST
+    /// <see cref="Rest.AxiamHttpMessageHandler"/>'s own <c>staticBearerToken is not null</c>
+    /// exemption. A <c>Func&lt;bool&gt;</c>, not a <c>bool</c> read once at construction:
+    /// N4.4 can release a handle's device credential well after its gRPC client was
+    /// built, and that SAME long-lived interceptor instance must track it live rather
+    /// than freezing whatever was true the moment it was built. <c>null</c> (the default)
+    /// reads as always <c>false</c> — every caller before this parameter existed is
+    /// unaffected.
+    /// </param>
+    public AuthInterceptor(Func<string?> tokenAccessor, string tenantId, RefreshGuard refreshGuard, Func<bool>? refreshExempt = null)
     {
         _tokenAccessor = tokenAccessor ?? throw new ArgumentNullException(nameof(tokenAccessor));
         ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
         _tenantId = tenantId;
         _refreshGuard = refreshGuard ?? throw new ArgumentNullException(nameof(refreshGuard));
+        _refreshExempt = refreshExempt ?? (static () => false);
+    }
+
+    /// <summary>
+    /// Source-compatible overload for a caller that still passes a plain <c>bool</c> (read
+    /// once, at construction) rather than the live <see cref="Func{TResult}"/> the other
+    /// constructor takes. Wraps the value in a constant delegate and defers to it — new
+    /// code should prefer the <c>Func&lt;bool&gt;</c> overload so the exemption can track a
+    /// credential that changes after this interceptor is built (N4.4).
+    /// </summary>
+    public AuthInterceptor(Func<string?> tokenAccessor, string tenantId, RefreshGuard refreshGuard, bool refreshExempt)
+        : this(tokenAccessor, tenantId, refreshGuard, () => refreshExempt)
+    {
     }
 
     /// <summary>
@@ -103,7 +134,7 @@ public sealed class AuthInterceptor : Interceptor
         {
             return await call.ResponseAsync.ConfigureAwait(false);
         }
-        catch (RpcException ex) when (ex.StatusCode == StatusCode.Unauthenticated)
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.Unauthenticated && !_refreshExempt())
         {
             // Exactly ONE refresh through the SHARED RefreshGuard (D-10) — never a second
             // guard instance. If the refresh itself throws, that exception propagates

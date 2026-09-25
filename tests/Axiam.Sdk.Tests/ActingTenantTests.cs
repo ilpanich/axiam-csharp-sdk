@@ -177,6 +177,43 @@ public sealed class ActingTenantTests
         Assert.Equal(OtherTenant.ToString(), req.Headers.GetValues("X-Axiam-Tenant").Single());
     }
 
+    // ---- N5.6 (CONTRACT 1.52, C-12), "Every SDK — N5.6, check explicitly" -------------
+    //
+    // Tenant ids compare as UUIDs, never as strings — case and formatting MUST NOT decide
+    // reach. Three SDKs (Swift, PHP, TypeScript) and Python compared reachable_tenant_ids
+    // as strings, and test fixtures using all-digit UUIDs (where case cannot differ) hid
+    // it twice. This SDK's gate (AxiamClient.cs's GateActingTenant) already uses a typed
+    // comparison: `_session.ReachableTenantIds` is `IReadOnlyList<Guid>` (parsed via
+    // `Guid.TryParse`, AxiamClient.cs's ReadLoginScopeAsync), and the check is
+    // `List<Guid>.Contains(Guid tenantId)` — structural equality on 128-bit values, with
+    // no string comparison anywhere in the path. This test pins that: a UUID with hex
+    // letters (a-f), where a naive string compare WOULD see a mismatch, upper-case on the
+    // wire (deliberately adversarial — a real AXIAM server sends lower-case, but nothing
+    // requires it, and RFC 4122 treats hex case as insignificant) against the SAME value
+    // the caller holds — case is not even an observable property of a `Guid` value, only
+    // of a string, which is exactly why the typed comparison conforms unconditionally.
+
+    [Fact]
+    public async Task ActingTenant_ReachComparisonIsCaseInsensitive_TypedGuidComparisonConforms()
+    {
+        Guid tenant = Guid.Parse("aabbccdd-eeff-40ab-8cde-1234567890ab");
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/login", _ => JsonOk(
+            $"{{\"user\":{{\"id\":\"{Guid.NewGuid()}\",\"organization_level\":true,\"reachable_tenant_ids\":[\"{tenant.ToString().ToUpperInvariant()}\"]}}}}"));
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient original = Client(handler);
+        await original.LoginAsync("alice@example.com", "pw");
+        SeedAccessTokenCookie(original); // the fake transport does not process Set-Cookie
+
+        // Must NOT throw AuthzError even though the server's reachable_tenant_ids entry
+        // was upper-case and the caller's Guid is whatever case-agnostic CLR value it is.
+        using AxiamClient acting = original.ActingTenant(tenant);
+        await acting.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal(tenant.ToString(), req.Headers.GetValues("X-Axiam-Tenant").Single());
+    }
+
     [Fact]
     public async Task ActingTenant_IsNotGatedWhenNoLoginResultIsHeld_SendsTheHeaderAndLetsTheServerAnswer()
     {
