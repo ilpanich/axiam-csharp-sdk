@@ -124,11 +124,21 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   gate `_refreshGuard` was invoked at all even though "never refreshed" is what it says
   right on its own `AuthenticateDeviceAsync` remarks.
   - Added `AxiamClient.HasStaticBearerToken` (internal) and a new `AuthInterceptor`
-    constructor parameter, `refreshExempt` (default `false`, so every existing caller is
-    unaffected), wired from `AxiamGrpcAuthzClient`/`TokenGrpcClient`. When `true`, an
-    `UNAUTHENTICATED` is never caught by the refresh-and-retry branch at all — it
-    propagates to the caller's own `ErrorMapper.FromGrpcStatus` mapping, exactly like a
-    non-device credential's second (post-retry) failure already does.
+    constructor parameter, `refreshExempt` (`null`/omitted reads as always `false`, so
+    every existing caller is unaffected), wired from
+    `AxiamGrpcAuthzClient`/`TokenGrpcClient`. When it reads `true`, an `UNAUTHENTICATED`
+    is never caught by the refresh-and-retry branch at all — it propagates to the
+    caller's own `ErrorMapper.FromGrpcStatus` mapping, exactly like a non-device
+    credential's second (post-retry) failure already does.
+  - **Follow-up:** `refreshExempt` is a `Func<bool>`, re-evaluated on every
+    `UNAUTHENTICATED`, not a `bool` read once when the gRPC client is built — a gRPC
+    client built from a device handle before a later `LoginAsync()` on that SAME handle
+    released the device credential (N4.4) would otherwise keep skipping the refresh
+    guard forever, even once the handle held a real cookie session with a refresh token
+    to spend. `AxiamGrpcAuthzClient`/`TokenGrpcClient` now pass
+    `() => client.HasStaticBearerToken` rather than a snapshot. A `bool`-taking
+    constructor overload remains for source compatibility, wrapping the value in a
+    constant delegate.
 - **A malformed `200` on the device login was adopted as an empty-string bearer
   credential** (CONTRACT 1.52 N4.2 (C-12) — "A refused or malformed device login changes
   no client state" — not in c12-findings.md's C# section, but the identical defect the

@@ -64,7 +64,11 @@ public sealed class AxiamGrpcAuthzClient : IDisposable
         _tenantId = client.TenantId;
         _jwksVerifier = client.JwksVerifier;
 
-        var interceptor = new AuthInterceptor(_tokenAccessor, _tenantId, client.RefreshGuard, refreshExempt: client.HasStaticBearerToken);
+        // A Func<bool>, not a bool snapshot: N4.4 can release `client`'s device credential
+        // (a later LoginAsync() succeeding) well after this gRPC client is built, and this
+        // interceptor is long-lived — it must read the CURRENT state on every
+        // UNAUTHENTICATED, not whatever was true the moment it was constructed.
+        var interceptor = new AuthInterceptor(_tokenAccessor, _tenantId, client.RefreshGuard, refreshExempt: () => client.HasStaticBearerToken);
         // §6.1: forward the same mTLS client identity the REST transport uses so both
         // transports of this one AxiamClient present the same client certificate.
         _ownedChannel = AxiamGrpcChannel.Create(grpcTarget ?? client.BaseUrl, client.CustomCaPem, client.ClientCertificatePem, client.ClientKeyPem);

@@ -555,8 +555,11 @@ using AxiamClient client = new(baseUrl, "acme", new AxiamClientOptions
 - **gRPC too.** `AxiamGrpcAuthzClient`/`TokenGrpcClient` built from the returned handle
   send the device token as `authorization` metadata on every call, exactly like the REST
   transport's `Authorization: Bearer`, and an `UNAUTHENTICATED` on it is likewise never
-  routed through the refresh guard — it surfaces the server's own status/message, never
-  the guard's.
+  routed through the refresh guard while the handle is still device-credentialed — it
+  surfaces the server's own status/message, never the guard's. This is tracked live, not
+  fixed at the moment the gRPC client was built: a gRPC client built from a device handle
+  starts refreshing normally again the moment a later `LoginAsync()` on that same handle
+  succeeds and releases the device credential (see "Held until replaced" below).
 - **Held until replaced.** `LogoutAsync()` clears the device credential unconditionally.
   Any later session-establishing call made ON the returned handle itself — `LoginAsync`,
   `VerifyMfaAsync`, `LoginOpaqueAsync`, `MfaSetupConfirmAsync`, a WebAuthn ceremony
