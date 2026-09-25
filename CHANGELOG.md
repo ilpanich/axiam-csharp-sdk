@@ -7,11 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta17] - 2026-09-25
 Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1, §6.1 rules
 6–10, §10.1 rule 9, §27.6.1, §27.13). The vendored `CONTRACT.md`, `sdks/openapi.json`,
 `management-registry.json` and `proto/` come from axiam `56fbe44`.
 
 ### Added
+
+- Metadata, two-shape role bindings, service accounts (CONTRACT §27.6.1, contract 1.51)
+
+- Validate_token / introspect_token (CONTRACT §1.1.1, §10.3, contract 1.51)
+
+- Authenticate_device(), the mTLS device login (CONTRACT §6.1 rules 6-10)
+
+- Acting tenant, X-Axiam-Tenant (CONTRACT §5.2 rule 1, contract 1.51)
+
+- Re-vendor contract 1.51 and regenerate the §27 surface
 
 - **Acting tenant** (§5.2 rule 1). `AxiamClient.ActingTenant(Guid)` returns a new handle
   over the same session that sends `X-Axiam-Tenant` on every REST request;
@@ -32,6 +43,7 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   - The §17 decision memo is now keyed on the acting tenant in addition to its existing
     key.
   - REST-only: gRPC acts on the token's own tenant; no metadata key is invented for it.
+
 - **`AxiamClient.AuthenticateDeviceAsync()`**, the mTLS device login (§6.1 rules 6–10). It
   is `POST /api/v1/auth/device` with no body and returns a fresh `AxiamClient` plus
   `DeviceToken { AccessToken: Sensitive<string>, TokenType, ExpiresIn }`.
@@ -45,6 +57,7 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
     returned handle, is surfaced as-is and never sent to the refresh guard. A `429` is a
     `NetworkError`, not an `AuthError`, and is not retried.
   - New example: `examples/DeviceMtlsProvisioning`.
+
 - **gRPC `ValidateTokenAsync` / `IntrospectTokenAsync`** (§1.1.1, §10.3) on the new
   `Grpc/TokenGrpcClient.cs`.
   - Every response field is modelled, including `CnfClaim` as a nullable message type —
@@ -57,10 +70,12 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
     caller's own bearer credential. With no caller session the call fails with zero wire
     calls. A token belonging to another tenant comes back with `Valid: false` — not an
     exception.
+
 - **`JwksVerifier.VerifyWithProofsAsync(token, tenantId, PresentedProofs, ct)`**, the full
   §10.1 rule set applied *with* rule-9 evidence. `Auth/SenderConstraintRule.Verify` is the
   one implementation of the rule-9 table, shared between local JSON-claims verification
   and the gRPC path's proto-based one, so the two cannot drift on the table's nine rows.
+
 - **Manifest additions** (§27.6.1, §27.5 rule 5).
   - `ManagementManifest.ResourceSpec.Metadata` (`JsonElement?`), compared as the whole
     JSON object via `ManifestApi.JsonElementDeepEquals`.
@@ -80,6 +95,7 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
     `ServiceAccount`/`AssignServiceAccountRole`.
   - `webhooks` stays unimplemented in the manifest — contract 1.51 names it without
     specifying a shape, and no consumer of this SDK has asked for it.
+
 - **Contract 1.51 model changes** (§27.13), from the regenerated `Models/` surface:
   - `CertificateType.Server`;
   - `SubjectAltName` (externally-tagged `Dns`/`Ip` union) and `SubjectAltNames` on the
@@ -92,27 +108,72 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
 
 ### Changed
 
+- Re-vendor CONTRACT.md at contract 1.52
+
+- Say LogoutAsync() does not clear a handle's acting tenant
+
+- Pin N5.6's case-insensitive reach comparison; fix a stale remark and README gaps
+
+- Correct which credential-changing calls populate the §5.2 gate
+
+- Cover the contract-1.51 branches coverage.yml's 96% floor missed
+
+- README conformance at contract 1.51, CHANGELOG for the whole port
+
+- Bump the minor-patch group with 3 updates
+
 - **CONTRACT.md re-vendored at contract 1.52.** Copied byte for byte from axiam `80bc7aa`
   (sha256 `c7954eec…`), the merge of the C-12 cross-SDK conformance review
   (ilpanich/axiam#500). 1.52 changes no wire behaviour: it writes rules N1–N6, which
   this SDK's C-12 fixes (#97) already implement. The README's conformance line
   moves to 1.52.
+
 - **A manifest binding of a plain role key over a server assignment that is
   resource-scoped is now an `Update`, not a match.** Before contract 1.51, presence
   alone was compared; §27.6.1 defines the plain shape as "no resource", so the next
   `ApplyAsync` re-binds it tenant-wide. `ManifestAdditionsTests.
   APlainBindingOverAScopedAssignmentIsAnUpdate` pins the new reading.
+
 - `ManifestApi.ReadAsync` now reads the **subject-side** role-binding listings
   (`GroupsApi.ListRolesAsync`/`UsersApi.ListRolesAsync`/`ServiceAccountsApi.ListRolesAsync`)
   instead of the role-side ones, since reconciling a subject's two-shape bindings needs
   that subject's own list. Each read is gated on the subject's manifest spec actually
   stating `Roles`, so a manifest that never mentions roles for a subject costs no extra
   request.
+
 - `scripts/gen_management.py` now emits an externally-tagged `oneOf` as a proper union
   type (see Fixed), and gives a response-side `inherit` boolean a `true` default rather
   than treating it as `required`.
 
 ### Fixed
+
+- Evaluate the device-credential refresh exemption per call, not at construction
+
+- Release the device credential only once the call succeeds
+
+- Never route a device credential's UNAUTHENTICATED through the refresh guard
+
+- Refuse a malformed 200 rather than adopt an empty-string credential
+
+- Report a failed rebind's restore error as data, not only inside a message
+
+- Refuse a non-global role bound with inherit: false and no resource
+
+- Release the device credential on a later session-establishing call
+
+- Withhold X-Axiam-Tenant from foreign-host requests
+
+- Carry the creating handle's acting tenant onto the device handle
+
+- Send X-Axiam-Tenant on the §24.1 setup pair when set (§5.2.2 rule 4)
+
+- Send X-Axiam-Tenant on the device-login POST when set
+
+- Withhold the prior session's cookie/Authorization from the device-login POST
+
+- An SSO completion resets the §5.2 gate and the decision memo
+
+- JwksVerifier enforces §10.1 rule 9 at its default entry point (contract 1.51)
 
 - **A gRPC `UNAUTHENTICATED` on a device credential was routed through the refresh guard,
   replacing the server's own message with the guard's internal one** (CONTRACT 1.52 N4.5
@@ -144,6 +205,7 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
     `() => client.HasStaticBearerToken` rather than a snapshot. A `bool`-taking
     constructor overload remains for source compatibility, wrapping the value in a
     constant delegate.
+
 - **A malformed `200` on the device login was adopted as an empty-string bearer
   credential** (CONTRACT 1.52 N4.2 (C-12) — "A refused or malformed device login changes
   no client state" — not in c12-findings.md's C# section, but the identical defect the
@@ -154,6 +216,7 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   device handle carrying `""` as its bearer credential, reporting success. Now refused
   with `NetworkError` before any state changes — no device handle is built, matching the
   already-refused shape a `401`/other non-`200` status gets.
+
 - **A role-binding rebind whose restore also failed discarded the restore's own error**
   (CONTRACT 1.52 N6.3 (C-12) — "The outcome is reported as data, naming whether the
   restore succeeded and, when it did not, the restore's own error. It is not only a
@@ -163,6 +226,7 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   learn a restore failed, but never why. Added `StepOutcome.RestoreError` (a new `string?`,
   `null` unless `RestoreSucceeded: false`) and threaded the restore's `Exception.Message`
   through `BindingUpdateFailedException` to populate it.
+
 - **A non-global role bound with `inherit: false` and no resource was accepted and sent to
   the wire** (CONTRACT 1.52 N6.2 (C-12) — "An object binding requires resource. inherit
   without a resource is refused client-side" — not in c12-findings.md's C# section, but
@@ -173,6 +237,7 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   validation and reached `AssignAsync` as `inherit: false` with no `resource_id` — a
   binding `inherit` cannot mean anything for, since there is no resource hierarchy for it
   to withhold. Now refused client-side, zero wire calls, like the global case already was.
+
 - **A later session-establishing call performed on a device handle itself never actually
   took effect** (CONTRACT 1.52 N4.4 (C-12) — "held until replaced" — not in
   c12-findings.md's C# section, but the identical architectural gap N4.4 caught in the
@@ -195,6 +260,7 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   (`absorb_session_cookies`), C++ and Kotlin, which all release only on the success path —
   Kotlin's own regression test for this is literally titled "a refused later login leaves
   the device credential in place".
+
 - **`X-Axiam-Tenant` reached a host other than the client's configured base URL**
   (CONTRACT 1.52 N5.1 (C-12)). It is a `DefaultRequestHeaders` entry on `AxiamClient`'s own
   `HttpClient` (set at construction and by `ActingTenant()`/`ClearActingTenant()`), so —
@@ -205,6 +271,7 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   `/oauth2/*` endpoint a discovery document advertised, for instance) carried it. The guard
   now withholds it on every foreign-host request, with no `/oauth2/*` carve-out — unlike
   `X-Tenant-Id`, §12.1 note 2 says nothing that exempts the acting-tenant header.
+
 - **The device handle `AuthenticateDeviceAsync()` returns dropped the creating handle's
   acting tenant** (CONTRACT 1.52 N4.6 (C-12)). The returned handle's `_actingTenant` was
   hard-set to `null`, so a caller who had configured `AxiamClientOptions.ActingTenant` or
@@ -217,12 +284,14 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   `ActingTenant()`/`ClearActingTenant()` copy-constructor already add. Tested both the
   `AxiamClientOptions.ActingTenant` form and the on-client `.ActingTenant(x)` form
   (`DeviceAuthTests`); the no-acting-tenant case is pinned unchanged (I4 twin).
+
 - **`JwksVerifier.VerifyAsync`, and so `AxiamAuthMiddleware` (the SDK's default token-verify
   entry point) and `AxiamPolicyHandler`, accepted sender-constrained tokens as ordinary
   bearer tokens.** A token bound to a certificate (`cnf.x5t#S256`, which every §6.1
   device token now carries) or to a DPoP key (`cnf.jkt`) was admitted with no proof of
   possession checked, against §10.1 rule 9. `VerifyAsync` now refuses any token carrying
   `cnf`, because it has no evidence to check it against. See Breaking.
+
 - **The generator emitted `SubjectAltName` as a record with no fields.** It compiled and
   serialized as `{}`, which the server refuses on every certificate-issuance request that
   named one. It is now an externally-tagged union (`SubjectAltName.Dns(string)` /
@@ -231,11 +300,13 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   - **In this SDK specifically**, decoding an unrecognised discriminant threw rather than
     falling back to a safe default, which would have taken down an entire response for
     one field the caller may not have read.
+
 - **The three role-side assignment listings, and now the subject-side ones this release
   adds, would have failed to decode `inherit`'s absence** against a server that predates
   it. The manifest's `ReadAsync` reads exactly these to plan. Absent now decodes as
   `true` — the reading every pre-1.51 assignment already has — rather than failing the
   whole response or silently reading as `false`.
+
 - **None of the three SSO/federation completions (`SsoCompleteAsync`,
   `SsoCompleteOauth2Async`, `SsoCompleteHandoffAsync`) reset the §5.2 acting-tenant gate
   or the §17 decision memo.** Each establishes a session, possibly as a *different*
@@ -248,6 +319,7 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   *previous* principal's report, and the decision memo could still answer from the
   previous principal's cached decisions. All three now call `OnCredentialChange()` at the
   same point (before the request) every other credential-changing method does.
+
 - **`AuthenticateDeviceAsync()`'s own `POST /api/v1/auth/device` carried a prior session's
   cookie and derived `Authorization` header, on a client that had one.** The call ran over
   `_httpClient` — the same transport whose `CookieContainer` and
@@ -272,6 +344,7 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
     when set, gated on nothing when no login result is held yet — exactly a device
     login's own shape. Now applied per-request from the calling handle's own acting
     tenant via a small shared helper (`ApplyAnonymousTenantHeaders`).
+
 - **`PostAnonymousRawJsonAsync` — the §24.1 WebAuthn setup pair's transport
   (`WebauthnSetupRegisterStartAsync`/`WebauthnSetupRegisterFinishAsync`) — had the same
   gap, pre-existing before the device-login fix above.** It already applied `X-Tenant-Id`
@@ -292,16 +365,19 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   call `VerifyWithProofsAsync` yourself with the connection's evidence — **never** from a
   header, which is exactly what an attacker without the private key can also send. An
   unbound token (no `cnf`) is unaffected.
+
 - `GroupSpec.Roles` and `UserSpec.Roles` are `IReadOnlyList<RoleBinding>?`, not
   `IReadOnlyList<string>?`. `Roles = new[] { "editor" }` no longer compiles as a bare
   array literal (C#'s array-literal type inference does not reach through
   `RoleBinding`'s implicit conversion) — write `new ManagementManifest.RoleBinding[] {
   "editor" }`, or build the same manifest through `ManifestBuilder`, which is
   unaffected.
+
 - `ManagementManifest` gains `ServiceAccounts`; `ManagementManifest.ResourceSpec` gains a
   trailing `Metadata` parameter. Existing positional-record construction still compiles
   (both are optional, defaulted), but a caller pattern-matching on `ResourceSpec`'s
   exact arity should switch to named construction.
+
 - `ManagementPlan`'s `PlanTarget` enum, and `ManagementPlan`'s `Kind`-adjacent
   `ApplyStatus`/`StepOutcome` types, gain new members/fields (`ServiceAccount`,
   `ServiceAccountRole`, `StepOutcome.RestoreSucceeded`, `StepOutcome.CreatedServiceAccount`).
