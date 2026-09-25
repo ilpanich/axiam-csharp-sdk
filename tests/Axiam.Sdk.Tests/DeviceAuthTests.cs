@@ -845,6 +845,36 @@ public sealed class DeviceAuthTests
         Assert.Equal("Bearer NEW-SESSION-TOKEN", req.Headers.GetValues("Authorization").Single());
     }
 
+    // Twin: a REFUSED later login establishes no session, so it must leave the device
+    // credential exactly as it was (CONTRACT 1.52 N4.4, "any later session-establishing
+    // call replaces it" — a refused call is not a session-establishing one). Rust
+    // (absorb_session_cookies), C++ and Kotlin all release only on the success path;
+    // Kotlin pins this with "a refused later login leaves the device credential in
+    // place". Releasing unconditionally at the top of LoginAsync (this SDK's earlier
+    // shape) would leave a device handle with NO usable credential at all after a
+    // rejected password.
+    [Fact]
+    public async Task ARefusedLoginAsync_401_OnADeviceHandle_LeavesTheDeviceCredentialInPlace()
+    {
+        using var handler = new RoutingHandler();
+        handler.Map("/api/v1/auth/device", _ => DeviceTokenResponse());
+        handler.Map("/api/v1/auth/login", _ => new HttpResponseMessage(HttpStatusCode.Unauthorized)
+        {
+            Content = new StringContent("""{"error":"invalid_credentials"}""", Encoding.UTF8, "application/json"),
+        });
+        handler.Map("/api/v1/resources", _ => JsonOk("""{"items":[],"total":0}"""));
+        using AxiamClient client = Client(handler, DummyCertPem, DummyKeyPem);
+        using AxiamClient device = (await client.AuthenticateDeviceAsync()).Client;
+
+        await Assert.ThrowsAsync<AuthError>(() => device.LoginAsync("user@example.com", "wrong-password"));
+
+        handler.Requests.Clear();
+        await device.Management.Resources.ListAsync();
+
+        HttpRequestMessage req = Assert.Single(handler.Requests, r => r.RequestUri!.AbsolutePath == "/api/v1/resources");
+        Assert.Equal("Bearer device-token-abc", req.Headers.GetValues("Authorization").Single());
+    }
+
     private static int GetEphemeralPort()
     {
         using var socket = new System.Net.Sockets.Socket(

@@ -661,7 +661,6 @@ public sealed partial class AxiamClient
         // this leaves the §5.2 gate at "unknown" rather than repopulating it — see
         // OnCredentialChange's remarks.
         OnCredentialChange();
-        ReleaseDeviceCredential();
         ArgumentNullException.ThrowIfNull(@params);
 
         var body = new Dictionary<string, object?> { ["state"] = @params.State, ["code"] = @params.Code };
@@ -671,6 +670,8 @@ public sealed partial class AxiamClient
             throw ErrorMapper.FromHttpResponse(response, "sso_complete failed");
         }
 
+        // N4.4: only reached once the call has actually succeeded and adopted a session.
+        ReleaseDeviceCredential();
         SsoLoginSuccessResponseWire wire = await ReadOidcJsonAsync<SsoLoginSuccessResponseWire>(response, cancellationToken).ConfigureAwait(false);
         return new SsoCompleteResult(wire.UserId, wire.SessionId, wire.ExpiresIn, wire.RedirectUri);
     }
@@ -891,7 +892,6 @@ public sealed partial class AxiamClient
         // §5.2 rule 1 "For C-12" item 5 — see SsoCompleteAsync's remark; the same
         // reasoning applies to every session-establishing federation completion.
         OnCredentialChange();
-        ReleaseDeviceCredential();
         ArgumentNullException.ThrowIfNull(@params);
 
         var body = new Dictionary<string, object?> { ["state"] = @params.State, ["code"] = @params.Code };
@@ -927,7 +927,6 @@ public sealed partial class AxiamClient
         // §5.2 rule 1 "For C-12" item 5 — see SsoCompleteAsync's remark; the same
         // reasoning applies to every session-establishing federation completion.
         OnCredentialChange();
-        ReleaseDeviceCredential();
         ArgumentNullException.ThrowIfNull(@params);
 
         var body = new Dictionary<string, object?> { ["code"] = @params.Code };
@@ -952,6 +951,9 @@ public sealed partial class AxiamClient
             throw ErrorMapper.FromHttpResponse(response, $"{operation} failed");
         }
 
+        // N4.4: only reached once the call has actually succeeded and adopted a session —
+        // shared by both SsoCompleteOauth2Async and SsoCompleteHandoffAsync.
+        ReleaseDeviceCredential();
         SsoLoginSuccessResponseWire wire =
             await ReadOidcJsonAsync<SsoLoginSuccessResponseWire>(response, cancellationToken).ConfigureAwait(false);
         return new SsoCompleteResult(wire.UserId, wire.SessionId, wire.ExpiresIn, wire.RedirectUri);

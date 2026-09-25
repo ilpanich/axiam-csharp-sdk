@@ -263,7 +263,6 @@ public sealed partial class AxiamClient
         // §17.1 rule 9 / §24.3 rule 4: memo entries are keyed by subject, and this call
         // changes the subject — exactly as MfaSetupConfirmAsync's own call to this does.
         OnCredentialChange();
-        ReleaseDeviceCredential();
         ArgumentException.ThrowIfNullOrWhiteSpace(credentialName);
 
         string body = WebauthnFinishBody(
@@ -290,6 +289,8 @@ public sealed partial class AxiamClient
         AdoptAnonymousCookies();
         _authHandler.CaptureCsrfToken(http);
 
+        // N4.4: only reached once the call has actually succeeded and adopted a session.
+        ReleaseDeviceCredential();
         (bool organizationLevel, PrincipalScope? scope) =
             await ReadLoginScopeAsync(http, cancellationToken).ConfigureAwait(false);
         return new LoginResult(false, OrganizationLevel: organizationLevel, Scope: scope);
@@ -335,7 +336,6 @@ public sealed partial class AxiamClient
         // §17.1 rule 9 / §24.3 rule 4: memo entries are keyed by subject, and this call
         // changes the subject.
         OnCredentialChange();
-        ReleaseDeviceCredential();
 
         string body = WebauthnFinishBody(stateToken, response, operation);
         using HttpResponseMessage http =
@@ -345,6 +345,8 @@ public sealed partial class AxiamClient
             throw ErrorMapper.FromHttpResponse(http, $"{operation} failed");
         }
 
+        // N4.4: only reached once the call has actually succeeded and adopted a session.
+        ReleaseDeviceCredential();
         JsonElement wire = await ReadJsonAsync(http, cancellationToken).ConfigureAwait(false);
         return new WebauthnLoginResult(
             Sensitive.Of(ReadString(wire, "access_token")),

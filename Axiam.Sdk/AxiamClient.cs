@@ -634,19 +634,41 @@ public sealed partial class AxiamClient : IDisposable
     /// CONTRACT.md &#167;6.1 rule 11 / N4.4 (C-12, contract 1.52 draft) — "held until
     /// replaced": releases this handle's device credential (if any), so it falls back to
     /// the cookie jar exactly like a handle that was never device-credentialed. Called
-    /// immediately after <see cref="OnCredentialChange"/>, at the same point in every
-    /// method that calls it, EXCEPT <see cref="RefreshAsync"/> — "refresh does not clear
-    /// it" is the one call in that list this method is deliberately not called from. A
-    /// no-op for a handle that was never device-credentialed (<see cref="_staticBearerToken"/>
-    /// already <c>null</c>), so calling it unconditionally is safe everywhere else.
+    /// once the call has actually SUCCEEDED and adopted a new session — after the status
+    /// check, not up front alongside <see cref="OnCredentialChange"/> — in every
+    /// session-establishing method: <see cref="LoginAsync"/>, <see cref="VerifyMfaAsync"/>,
+    /// <see cref="LoginOpaqueAsync"/>, <c>MfaSetupConfirmAsync</c>, the WebAuthn
+    /// ceremony-completion methods, and the three SSO/federation completions (the latter
+    /// two of those funnel through the shared <c>CompleteFederationSessionAsync</c>, so
+    /// there is exactly one call site for both). <see cref="RefreshAsync"/> never calls it
+    /// ("refresh does not clear it"). <see cref="LogoutAsync"/> is the one exception to
+    /// "only on success": it releases unconditionally, at the top, because logout clears
+    /// the credential whatever the server answers. A no-op for a handle that was never
+    /// device-credentialed (<see cref="_staticBearerToken"/> already <c>null</c>).
     /// </summary>
     /// <remarks>
+    /// <para>
     /// Before this existed, a device handle's own <c>LoginAsync</c>/<c>VerifyMfaAsync</c>/
     /// etc. established a new cookie session that was silently never used —
     /// <c>AxiamHttpMessageHandler.ApplyHeaders</c> always preferred a set
     /// <c>staticBearerToken</c> over the cookie jar, and nothing ever cleared it. Mirrors
     /// the same fix the Kotlin SDK needed for the identical gap
     /// (<c>AxiamClient.kt</c>'s <c>onCredentialChange</c>/<c>AuthHeaderInterceptor</c>).
+    /// </para>
+    /// <para>
+    /// Releasing unconditionally up front (this method's first shape) over-reached: a
+    /// REFUSED later call establishes no session, so it must leave the device credential
+    /// exactly as it was — otherwise a rejected password left a device handle with no
+    /// usable credential at all. Rust (<c>absorb_session_cookies</c>), C++ and Kotlin all
+    /// release only on the success path; Kotlin pins it with "a refused later login leaves
+    /// the device credential in place" — this SDK's own twin,
+    /// <c>ARefusedLoginAsync_401_OnADeviceHandle_LeavesTheDeviceCredentialInPlace</c>
+    /// (<c>DeviceAuthTests</c>), is the same pin. <see cref="OnCredentialChange"/> itself
+    /// stays where it always was — resetting the &#167;17 memo/&#167;5.2 gate on a mere ATTEMPT,
+    /// not only a success, is this SDK's own established, conforming choice (see that
+    /// method's remarks), and is a different concern from which CREDENTIAL a handle ends
+    /// up presenting on the wire.
+    /// </para>
     /// </remarks>
     private void ReleaseDeviceCredential()
     {
@@ -668,7 +690,6 @@ public sealed partial class AxiamClient : IDisposable
     {
         EnsureNotDisposed();
         OnCredentialChange();
-        ReleaseDeviceCredential();
         ArgumentException.ThrowIfNullOrWhiteSpace(email);
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
 
@@ -683,6 +704,11 @@ public sealed partial class AxiamClient : IDisposable
 
         if (response.StatusCode == HttpStatusCode.OK)
         {
+            // N4.4: only a call that actually establishes a session replaces the device
+            // credential — a 202 (MFA challenge) or a 403 (MFA setup required) below is
+            // not that, and neither is a refused (any other status) call, which throws
+            // out of this method without ever reaching here.
+            ReleaseDeviceCredential();
             (bool organizationLevel, PrincipalScope? scope) =
                 await ReadLoginScopeAsync(response, cancellationToken).ConfigureAwait(false);
             return new LoginResult(false, OrganizationLevel: organizationLevel, Scope: scope);
@@ -758,7 +784,6 @@ public sealed partial class AxiamClient : IDisposable
     {
         EnsureNotDisposed();
         OnCredentialChange();
-        ReleaseDeviceCredential();
         ArgumentException.ThrowIfNullOrWhiteSpace(totpCode);
 
         var body = new Dictionary<string, object?>
@@ -773,6 +798,8 @@ public sealed partial class AxiamClient : IDisposable
             throw ErrorMapper.FromHttpResponse(response, "MFA verification failed");
         }
 
+        // N4.4: only reached once the call has actually succeeded and adopted a session.
+        ReleaseDeviceCredential();
         (bool organizationLevel, PrincipalScope? scope) =
             await ReadLoginScopeAsync(response, cancellationToken).ConfigureAwait(false);
         return new LoginResult(false, OrganizationLevel: organizationLevel, Scope: scope);
@@ -993,7 +1020,6 @@ public sealed partial class AxiamClient : IDisposable
     {
         EnsureNotDisposed();
         OnCredentialChange();
-        ReleaseDeviceCredential();
         ArgumentException.ThrowIfNullOrWhiteSpace(usernameOrEmail);
         ArgumentNullException.ThrowIfNull(password);
 
@@ -1073,6 +1099,8 @@ public sealed partial class AxiamClient : IDisposable
             return new LoginResult(true, Sensitive.Of(ReadString(wire, "challenge_token")));
         }
 
+        // N4.4: a real 200 — a session was actually adopted.
+        ReleaseDeviceCredential();
         (bool organizationLevel, PrincipalScope? scope) =
             await ReadLoginScopeAsync(response, cancellationToken).ConfigureAwait(false);
         return new LoginResult(false, OrganizationLevel: organizationLevel, Scope: scope);

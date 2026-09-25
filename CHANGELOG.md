@@ -169,9 +169,17 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
   would establish a real cookie session server-side, but every subsequent request that
   handle made kept silently sending the OLD device token forever — the new session was
   never used. `AxiamClient` now releases the device credential (on both itself and the
-  shared `AxiamHttpMessageHandler`) at the same point `OnCredentialChange()` already runs,
-  in every one of those methods except `RefreshAsync` (N4.4: "refresh does not clear it").
-  A no-op for a handle that was never device-credentialed.
+  shared `AxiamHttpMessageHandler`) once each of those methods has actually SUCCEEDED and
+  adopted the new session — after its status check, not up front alongside
+  `OnCredentialChange()` — so a REFUSED later call (a rejected password, an invalid TOTP,
+  a failed SSO exchange…) leaves the device credential exactly as it was: it established
+  no session, so there is nothing to replace it with. `RefreshAsync` never releases it
+  ("refresh does not clear it"); `LogoutAsync` is the one exception to "only on success" —
+  it still releases unconditionally, because logout clears the credential whatever the
+  server answers. A no-op for a handle that was never device-credentialed. Mirrors Rust
+  (`absorb_session_cookies`), C++ and Kotlin, which all release only on the success path —
+  Kotlin's own regression test for this is literally titled "a refused later login leaves
+  the device credential in place".
 - **`X-Axiam-Tenant` reached a host other than the client's configured base URL**
   (CONTRACT 1.52 N5.1 (C-12)). It is a `DefaultRequestHeaders` entry on `AxiamClient`'s own
   `HttpClient` (set at construction and by `ActingTenant()`/`ClearActingTenant()`), so —

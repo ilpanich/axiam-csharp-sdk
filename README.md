@@ -557,13 +557,14 @@ using AxiamClient client = new(baseUrl, "acme", new AxiamClientOptions
   transport's `Authorization: Bearer`, and an `UNAUTHENTICATED` on it is likewise never
   routed through the refresh guard — it surfaces the server's own status/message, never
   the guard's.
-- **Held until replaced.** `LogoutAsync()` clears the device credential; any later
-  session-establishing call made ON the returned handle itself — `LoginAsync`,
+- **Held until replaced.** `LogoutAsync()` clears the device credential unconditionally.
+  Any later session-establishing call made ON the returned handle itself — `LoginAsync`,
   `VerifyMfaAsync`, `LoginOpaqueAsync`, `MfaSetupConfirmAsync`, a WebAuthn ceremony
-  completion, or an SSO completion — replaces it, and the session that call establishes is
-  what every subsequent request on that handle uses from then on. `RefreshAsync` does
-  not clear it (there is nothing to refresh a device credential with, so it is unaffected
-  either way).
+  completion, or an SSO completion — replaces it **only once that call has actually
+  succeeded**: a refused one (a rejected password, an invalid TOTP code, a failed SSO
+  exchange) establishes no session, so it leaves the device credential exactly as it was,
+  and the handle keeps working with it. `RefreshAsync` does not clear it (there is nothing
+  to refresh a device credential with, so it is unaffected either way).
 - Worked end to end, combined with the declarative manifest, in
   [`examples/DeviceMtlsProvisioning`](examples/DeviceMtlsProvisioning).
 
