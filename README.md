@@ -1683,7 +1683,10 @@ await client.Management.Groups.ListAsync(PageRequest.Of(50)); // sends none
   `ActingTenant(Guid)` returns a new `AxiamClient` sharing the same session (cookies,
   refresh guard, decision memo), so two handles can act on two different tenants from
   concurrent code without racing each other's header. `ClearActingTenant()` on a handle
-  returns one that sends none again.
+  returns one that sends none again. `LogoutAsync()` does **not** clear a handle's acting
+  tenant — it is baked into that specific `AxiamClient` object at construction, not part
+  of the shared session `LogoutAsync()` resets; the SAME handle, if reused after another
+  `LoginAsync()`, keeps sending `X-Axiam-Tenant` for whichever tenant it was built with.
 - **Gated client-side once a login result is known.** `ActingTenant` refuses —
   `AuthzError`, no wire call — unless the last-known `organization_level` is `true`, and
   refuses a tenant id outside `reachable_tenant_ids` when the server reported one. A
