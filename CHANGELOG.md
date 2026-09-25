@@ -92,6 +92,11 @@ Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1
 
 ### Changed
 
+- **CONTRACT.md re-vendored at contract 1.52.** Copied byte for byte from axiam `80bc7aa`
+  (sha256 `c7954eec…`), the merge of the C-12 cross-SDK conformance review
+  (ilpanich/axiam#500). 1.52 changes no wire behaviour: it writes rules N1–N6, which
+  this SDK's C-12 fixes (#97) already implement. The README's conformance line
+  moves to 1.52.
 - **A manifest binding of a plain role key over a server assignment that is
   resource-scoped is now an `Update`, not a match.** Before contract 1.51, presence
   alone was compared; §27.6.1 defines the plain shape as "no resource", so the next
