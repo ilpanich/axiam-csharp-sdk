@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta16/apiSpec/new?filename=Axiam_Sdk_Management_ManagementManifest_GroupSpec.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.ManagementManifest.GroupSpec%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta17/apiSpec/new?filename=Axiam_Sdk_Management_ManagementManifest_GroupSpec.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.ManagementManifest.GroupSpec%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,11 +89,11 @@
 
 
   <h1 id="Axiam_Sdk_Management_ManagementManifest_GroupSpec" data-uid="Axiam.Sdk.Management.ManagementManifest.GroupSpec" class="text-break">
-Class ManagementManifest.GroupSpec  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L110"><i class="bi bi-code-slash"></i></a>
+Class ManagementManifest.GroupSpec  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L133"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
@@ -158,9 +158,9 @@ Class ManagementManifest.GroupSpec  <a class="header-action link-secondary" titl
 
   <a id="Axiam_Sdk_Management_ManagementManifest_GroupSpec__ctor_" data-uid="Axiam.Sdk.Management.ManagementManifest.GroupSpec.#ctor*"></a>
 
-  <h3 id="Axiam_Sdk_Management_ManagementManifest_GroupSpec__ctor_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_System_String__" data-uid="Axiam.Sdk.Management.ManagementManifest.GroupSpec.#ctor(System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String})">
-  GroupSpec(string, string, string, IReadOnlyList&lt;string&gt;?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_GroupSpec__ctor_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_Axiam_Sdk_Management_ManagementManifest_RoleBinding__" data-uid="Axiam.Sdk.Management.ManagementManifest.GroupSpec.#ctor(System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Management.ManagementManifest.RoleBinding})">
+  GroupSpec(string, string, string, IReadOnlyList&lt;RoleBinding&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L133"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>One group, and the roles it holds.</p>
@@ -168,7 +168,7 @@ Class ManagementManifest.GroupSpec  <a class="header-action link-secondary" titl
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GroupSpec(string Key, string Name, string Description, IReadOnlyList&lt;string&gt;? Roles = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public GroupSpec(string Key, string Name, string Description, IReadOnlyList&lt;ManagementManifest.RoleBinding&gt;? Roles = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -182,8 +182,9 @@ Class ManagementManifest.GroupSpec  <a class="header-action link-secondary" titl
     <dt><code>Description</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd><p>What the group is for.</p>
 </dd>
-    <dt><code>Roles</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
-    <dd><p>The RoleSpec keys this group should hold.</p>
+    <dt><code>Roles</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.html">ManagementManifest</a>.<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleBinding.html">RoleBinding</a>&gt;</dt>
+    <dd><p>The roles this group should hold — a role key, or a
+<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleBinding.html">ManagementManifest.RoleBinding</a> naming a resource and/or <code>inherit</code>.</p>
 </dd>
   </dl>
 
@@ -206,7 +207,7 @@ Class ManagementManifest.GroupSpec  <a class="header-action link-secondary" titl
 
   <h3 id="Axiam_Sdk_Management_ManagementManifest_GroupSpec_Description" data-uid="Axiam.Sdk.Management.ManagementManifest.GroupSpec.Description">
   Description
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L113"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L136"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>What the group is for.</p>
@@ -238,7 +239,7 @@ Class ManagementManifest.GroupSpec  <a class="header-action link-secondary" titl
 
   <h3 id="Axiam_Sdk_Management_ManagementManifest_GroupSpec_Key" data-uid="Axiam.Sdk.Management.ManagementManifest.GroupSpec.Key">
   Key
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L111"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L134"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Manifest-local identifier.</p>
@@ -270,7 +271,7 @@ Class ManagementManifest.GroupSpec  <a class="header-action link-secondary" titl
 
   <h3 id="Axiam_Sdk_Management_ManagementManifest_GroupSpec_Name" data-uid="Axiam.Sdk.Management.ManagementManifest.GroupSpec.Name">
   Name
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L135"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The group's name.</p>
@@ -302,15 +303,16 @@ Class ManagementManifest.GroupSpec  <a class="header-action link-secondary" titl
 
   <h3 id="Axiam_Sdk_Management_ManagementManifest_GroupSpec_Roles" data-uid="Axiam.Sdk.Management.ManagementManifest.GroupSpec.Roles">
   Roles
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L137"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The RoleSpec keys this group should hold.</p>
+  <div class="markdown level1 summary"><p>The roles this group should hold — a role key, or a
+<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleBinding.html">ManagementManifest.RoleBinding</a> naming a resource and/or <code>inherit</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;string&gt;? Roles { get; init; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;ManagementManifest.RoleBinding&gt;? Roles { get; init; }</code></pre>
   </div>
 
 
@@ -319,7 +321,7 @@ Class ManagementManifest.GroupSpec  <a class="header-action link-secondary" titl
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.html">ManagementManifest</a>.<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleBinding.html">RoleBinding</a>&gt;</dt>
     <dd></dd>
   </dl>
 

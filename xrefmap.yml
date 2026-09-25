@@ -1266,6 +1266,70 @@ references:
   commentId: N:Axiam.Sdk.Auth
   fullName: Axiam.Sdk.Auth
   nameWithType: Axiam.Sdk.Auth
+- uid: Axiam.Sdk.Auth.DeviceToken
+  name: DeviceToken
+  href: api/Axiam.Sdk.Auth.DeviceToken.html
+  commentId: T:Axiam.Sdk.Auth.DeviceToken
+  fullName: Axiam.Sdk.Auth.DeviceToken
+  nameWithType: DeviceToken
+- uid: Axiam.Sdk.Auth.DeviceToken.#ctor(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.Int32)
+  name: DeviceToken(Sensitive<string>, string, int)
+  href: api/Axiam.Sdk.Auth.DeviceToken.html#Axiam_Sdk_Auth_DeviceToken__ctor_Axiam_Sdk_Core_Sensitive_System_String__System_String_System_Int32_
+  commentId: M:Axiam.Sdk.Auth.DeviceToken.#ctor(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.Int32)
+  name.vb: New(Sensitive(Of String), String, Integer)
+  fullName: Axiam.Sdk.Auth.DeviceToken.DeviceToken(Axiam.Sdk.Core.Sensitive<string>, string, int)
+  fullName.vb: Axiam.Sdk.Auth.DeviceToken.New(Axiam.Sdk.Core.Sensitive(Of String), String, Integer)
+  nameWithType: DeviceToken.DeviceToken(Sensitive<string>, string, int)
+  nameWithType.vb: DeviceToken.New(Sensitive(Of String), String, Integer)
+- uid: Axiam.Sdk.Auth.DeviceToken.#ctor*
+  name: DeviceToken
+  href: api/Axiam.Sdk.Auth.DeviceToken.html#Axiam_Sdk_Auth_DeviceToken__ctor_
+  commentId: Overload:Axiam.Sdk.Auth.DeviceToken.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Auth.DeviceToken.DeviceToken
+  fullName.vb: Axiam.Sdk.Auth.DeviceToken.New
+  nameWithType: DeviceToken.DeviceToken
+  nameWithType.vb: DeviceToken.New
+- uid: Axiam.Sdk.Auth.DeviceToken.AccessToken
+  name: AccessToken
+  href: api/Axiam.Sdk.Auth.DeviceToken.html#Axiam_Sdk_Auth_DeviceToken_AccessToken
+  commentId: P:Axiam.Sdk.Auth.DeviceToken.AccessToken
+  fullName: Axiam.Sdk.Auth.DeviceToken.AccessToken
+  nameWithType: DeviceToken.AccessToken
+- uid: Axiam.Sdk.Auth.DeviceToken.AccessToken*
+  name: AccessToken
+  href: api/Axiam.Sdk.Auth.DeviceToken.html#Axiam_Sdk_Auth_DeviceToken_AccessToken_
+  commentId: Overload:Axiam.Sdk.Auth.DeviceToken.AccessToken
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.DeviceToken.AccessToken
+  nameWithType: DeviceToken.AccessToken
+- uid: Axiam.Sdk.Auth.DeviceToken.ExpiresIn
+  name: ExpiresIn
+  href: api/Axiam.Sdk.Auth.DeviceToken.html#Axiam_Sdk_Auth_DeviceToken_ExpiresIn
+  commentId: P:Axiam.Sdk.Auth.DeviceToken.ExpiresIn
+  fullName: Axiam.Sdk.Auth.DeviceToken.ExpiresIn
+  nameWithType: DeviceToken.ExpiresIn
+- uid: Axiam.Sdk.Auth.DeviceToken.ExpiresIn*
+  name: ExpiresIn
+  href: api/Axiam.Sdk.Auth.DeviceToken.html#Axiam_Sdk_Auth_DeviceToken_ExpiresIn_
+  commentId: Overload:Axiam.Sdk.Auth.DeviceToken.ExpiresIn
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.DeviceToken.ExpiresIn
+  nameWithType: DeviceToken.ExpiresIn
+- uid: Axiam.Sdk.Auth.DeviceToken.TokenType
+  name: TokenType
+  href: api/Axiam.Sdk.Auth.DeviceToken.html#Axiam_Sdk_Auth_DeviceToken_TokenType
+  commentId: P:Axiam.Sdk.Auth.DeviceToken.TokenType
+  fullName: Axiam.Sdk.Auth.DeviceToken.TokenType
+  nameWithType: DeviceToken.TokenType
+- uid: Axiam.Sdk.Auth.DeviceToken.TokenType*
+  name: TokenType
+  href: api/Axiam.Sdk.Auth.DeviceToken.html#Axiam_Sdk_Auth_DeviceToken_TokenType_
+  commentId: Overload:Axiam.Sdk.Auth.DeviceToken.TokenType
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.DeviceToken.TokenType
+  nameWithType: DeviceToken.TokenType
 - uid: Axiam.Sdk.Auth.DpopVerifier
   name: DpopVerifier
   href: api/Axiam.Sdk.Auth.DpopVerifier.html
@@ -1719,6 +1783,22 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.JwksVerifier.VerifyTokenBinding
   nameWithType: JwksVerifier.VerifyTokenBinding
+- uid: Axiam.Sdk.Auth.JwksVerifier.VerifyWithProofsAsync(System.String,System.String,Axiam.Sdk.Auth.PresentedProofs,System.Threading.CancellationToken)
+  name: VerifyWithProofsAsync(string, string, PresentedProofs, CancellationToken)
+  href: api/Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier_VerifyWithProofsAsync_System_String_System_String_Axiam_Sdk_Auth_PresentedProofs_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Auth.JwksVerifier.VerifyWithProofsAsync(System.String,System.String,Axiam.Sdk.Auth.PresentedProofs,System.Threading.CancellationToken)
+  name.vb: VerifyWithProofsAsync(String, String, PresentedProofs, CancellationToken)
+  fullName: Axiam.Sdk.Auth.JwksVerifier.VerifyWithProofsAsync(string, string, Axiam.Sdk.Auth.PresentedProofs, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Auth.JwksVerifier.VerifyWithProofsAsync(String, String, Axiam.Sdk.Auth.PresentedProofs, System.Threading.CancellationToken)
+  nameWithType: JwksVerifier.VerifyWithProofsAsync(string, string, PresentedProofs, CancellationToken)
+  nameWithType.vb: JwksVerifier.VerifyWithProofsAsync(String, String, PresentedProofs, CancellationToken)
+- uid: Axiam.Sdk.Auth.JwksVerifier.VerifyWithProofsAsync*
+  name: VerifyWithProofsAsync
+  href: api/Axiam.Sdk.Auth.JwksVerifier.html#Axiam_Sdk_Auth_JwksVerifier_VerifyWithProofsAsync_
+  commentId: Overload:Axiam.Sdk.Auth.JwksVerifier.VerifyWithProofsAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.JwksVerifier.VerifyWithProofsAsync
+  nameWithType: JwksVerifier.VerifyWithProofsAsync
 - uid: Axiam.Sdk.Auth.LoginResult
   name: LoginResult
   href: api/Axiam.Sdk.Auth.LoginResult.html
@@ -5676,6 +5756,19 @@ references:
   commentId: F:Axiam.Sdk.AxiamClient.AccessTokenType
   fullName: Axiam.Sdk.AxiamClient.AccessTokenType
   nameWithType: AxiamClient.AccessTokenType
+- uid: Axiam.Sdk.AxiamClient.ActingTenant(System.Guid)
+  name: ActingTenant(Guid)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_ActingTenant_System_Guid_
+  commentId: M:Axiam.Sdk.AxiamClient.ActingTenant(System.Guid)
+  fullName: Axiam.Sdk.AxiamClient.ActingTenant(System.Guid)
+  nameWithType: AxiamClient.ActingTenant(Guid)
+- uid: Axiam.Sdk.AxiamClient.ActingTenant*
+  name: ActingTenant
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_ActingTenant_
+  commentId: Overload:Axiam.Sdk.AxiamClient.ActingTenant
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.ActingTenant
+  nameWithType: AxiamClient.ActingTenant
 - uid: Axiam.Sdk.AxiamClient.Audit
   name: Audit
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_Audit
@@ -5689,6 +5782,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.Audit
   nameWithType: AxiamClient.Audit
+- uid: Axiam.Sdk.AxiamClient.AuthenticateDeviceAsync(System.Threading.CancellationToken)
+  name: AuthenticateDeviceAsync(CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_AuthenticateDeviceAsync_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.AuthenticateDeviceAsync(System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.AuthenticateDeviceAsync(System.Threading.CancellationToken)
+  nameWithType: AxiamClient.AuthenticateDeviceAsync(CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.AuthenticateDeviceAsync*
+  name: AuthenticateDeviceAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_AuthenticateDeviceAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.AuthenticateDeviceAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.AuthenticateDeviceAsync
+  nameWithType: AxiamClient.AuthenticateDeviceAsync
 - uid: Axiam.Sdk.AxiamClient.Authz
   name: Authz
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_Authz
@@ -5728,6 +5834,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.Certificates
   nameWithType: AxiamClient.Certificates
+- uid: Axiam.Sdk.AxiamClient.ClearActingTenant
+  name: ClearActingTenant()
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_ClearActingTenant
+  commentId: M:Axiam.Sdk.AxiamClient.ClearActingTenant
+  fullName: Axiam.Sdk.AxiamClient.ClearActingTenant()
+  nameWithType: AxiamClient.ClearActingTenant()
+- uid: Axiam.Sdk.AxiamClient.ClearActingTenant*
+  name: ClearActingTenant
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_ClearActingTenant_
+  commentId: Overload:Axiam.Sdk.AxiamClient.ClearActingTenant
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.ClearActingTenant
+  nameWithType: AxiamClient.ClearActingTenant
 - uid: Axiam.Sdk.AxiamClient.ConfirmPasswordResetAsync(Axiam.Sdk.Account.PasswordResetConfirmation,System.Threading.CancellationToken)
   name: ConfirmPasswordResetAsync(PasswordResetConfirmation, CancellationToken)
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_ConfirmPasswordResetAsync_Axiam_Sdk_Account_PasswordResetConfirmation_System_Threading_CancellationToken_
@@ -7959,15 +8078,24 @@ references:
   commentId: T:Axiam.Sdk.Grpc.AuthInterceptor
   fullName: Axiam.Sdk.Grpc.AuthInterceptor
   nameWithType: AuthInterceptor
-- uid: Axiam.Sdk.Grpc.AuthInterceptor.#ctor(System.Func{System.String},System.String,Axiam.Sdk.Auth.RefreshGuard)
-  name: AuthInterceptor(Func<string?>, string, RefreshGuard)
-  href: api/Axiam.Sdk.Grpc.AuthInterceptor.html#Axiam_Sdk_Grpc_AuthInterceptor__ctor_System_Func_System_String__System_String_Axiam_Sdk_Auth_RefreshGuard_
-  commentId: M:Axiam.Sdk.Grpc.AuthInterceptor.#ctor(System.Func{System.String},System.String,Axiam.Sdk.Auth.RefreshGuard)
-  name.vb: New(Func(Of String), String, RefreshGuard)
-  fullName: Axiam.Sdk.Grpc.AuthInterceptor.AuthInterceptor(System.Func<string?>, string, Axiam.Sdk.Auth.RefreshGuard)
-  fullName.vb: Axiam.Sdk.Grpc.AuthInterceptor.New(System.Func(Of String), String, Axiam.Sdk.Auth.RefreshGuard)
-  nameWithType: AuthInterceptor.AuthInterceptor(Func<string?>, string, RefreshGuard)
-  nameWithType.vb: AuthInterceptor.New(Func(Of String), String, RefreshGuard)
+- uid: Axiam.Sdk.Grpc.AuthInterceptor.#ctor(System.Func{System.String},System.String,Axiam.Sdk.Auth.RefreshGuard,System.Boolean)
+  name: AuthInterceptor(Func<string?>, string, RefreshGuard, bool)
+  href: api/Axiam.Sdk.Grpc.AuthInterceptor.html#Axiam_Sdk_Grpc_AuthInterceptor__ctor_System_Func_System_String__System_String_Axiam_Sdk_Auth_RefreshGuard_System_Boolean_
+  commentId: M:Axiam.Sdk.Grpc.AuthInterceptor.#ctor(System.Func{System.String},System.String,Axiam.Sdk.Auth.RefreshGuard,System.Boolean)
+  name.vb: New(Func(Of String), String, RefreshGuard, Boolean)
+  fullName: Axiam.Sdk.Grpc.AuthInterceptor.AuthInterceptor(System.Func<string?>, string, Axiam.Sdk.Auth.RefreshGuard, bool)
+  fullName.vb: Axiam.Sdk.Grpc.AuthInterceptor.New(System.Func(Of String), String, Axiam.Sdk.Auth.RefreshGuard, Boolean)
+  nameWithType: AuthInterceptor.AuthInterceptor(Func<string?>, string, RefreshGuard, bool)
+  nameWithType.vb: AuthInterceptor.New(Func(Of String), String, RefreshGuard, Boolean)
+- uid: Axiam.Sdk.Grpc.AuthInterceptor.#ctor(System.Func{System.String},System.String,Axiam.Sdk.Auth.RefreshGuard,System.Func{System.Boolean})
+  name: AuthInterceptor(Func<string?>, string, RefreshGuard, Func<bool>?)
+  href: api/Axiam.Sdk.Grpc.AuthInterceptor.html#Axiam_Sdk_Grpc_AuthInterceptor__ctor_System_Func_System_String__System_String_Axiam_Sdk_Auth_RefreshGuard_System_Func_System_Boolean__
+  commentId: M:Axiam.Sdk.Grpc.AuthInterceptor.#ctor(System.Func{System.String},System.String,Axiam.Sdk.Auth.RefreshGuard,System.Func{System.Boolean})
+  name.vb: New(Func(Of String), String, RefreshGuard, Func(Of Boolean))
+  fullName: Axiam.Sdk.Grpc.AuthInterceptor.AuthInterceptor(System.Func<string?>, string, Axiam.Sdk.Auth.RefreshGuard, System.Func<bool>?)
+  fullName.vb: Axiam.Sdk.Grpc.AuthInterceptor.New(System.Func(Of String), String, Axiam.Sdk.Auth.RefreshGuard, System.Func(Of Boolean))
+  nameWithType: AuthInterceptor.AuthInterceptor(Func<string?>, string, RefreshGuard, Func<bool>?)
+  nameWithType.vb: AuthInterceptor.New(Func(Of String), String, RefreshGuard, Func(Of Boolean))
 - uid: Axiam.Sdk.Grpc.AuthInterceptor.#ctor*
   name: AuthInterceptor
   href: api/Axiam.Sdk.Grpc.AuthInterceptor.html#Axiam_Sdk_Grpc_AuthInterceptor__ctor_
@@ -8208,6 +8336,596 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Grpc.AxiamGrpcChannel.Create
   nameWithType: AxiamGrpcChannel.Create
+- uid: Axiam.Sdk.Grpc.RptPermission
+  name: RptPermission
+  href: api/Axiam.Sdk.Grpc.RptPermission.html
+  commentId: T:Axiam.Sdk.Grpc.RptPermission
+  fullName: Axiam.Sdk.Grpc.RptPermission
+  nameWithType: RptPermission
+- uid: Axiam.Sdk.Grpc.RptPermission.#ctor(System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Int64)
+  name: RptPermission(string, IReadOnlyList<string>, long)
+  href: api/Axiam.Sdk.Grpc.RptPermission.html#Axiam_Sdk_Grpc_RptPermission__ctor_System_String_System_Collections_Generic_IReadOnlyList_System_String__System_Int64_
+  commentId: M:Axiam.Sdk.Grpc.RptPermission.#ctor(System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Int64)
+  name.vb: New(String, IReadOnlyList(Of String), Long)
+  fullName: Axiam.Sdk.Grpc.RptPermission.RptPermission(string, System.Collections.Generic.IReadOnlyList<string>, long)
+  fullName.vb: Axiam.Sdk.Grpc.RptPermission.New(String, System.Collections.Generic.IReadOnlyList(Of String), Long)
+  nameWithType: RptPermission.RptPermission(string, IReadOnlyList<string>, long)
+  nameWithType.vb: RptPermission.New(String, IReadOnlyList(Of String), Long)
+- uid: Axiam.Sdk.Grpc.RptPermission.#ctor*
+  name: RptPermission
+  href: api/Axiam.Sdk.Grpc.RptPermission.html#Axiam_Sdk_Grpc_RptPermission__ctor_
+  commentId: Overload:Axiam.Sdk.Grpc.RptPermission.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Grpc.RptPermission.RptPermission
+  fullName.vb: Axiam.Sdk.Grpc.RptPermission.New
+  nameWithType: RptPermission.RptPermission
+  nameWithType.vb: RptPermission.New
+- uid: Axiam.Sdk.Grpc.RptPermission.Exp
+  name: Exp
+  href: api/Axiam.Sdk.Grpc.RptPermission.html#Axiam_Sdk_Grpc_RptPermission_Exp
+  commentId: P:Axiam.Sdk.Grpc.RptPermission.Exp
+  fullName: Axiam.Sdk.Grpc.RptPermission.Exp
+  nameWithType: RptPermission.Exp
+- uid: Axiam.Sdk.Grpc.RptPermission.Exp*
+  name: Exp
+  href: api/Axiam.Sdk.Grpc.RptPermission.html#Axiam_Sdk_Grpc_RptPermission_Exp_
+  commentId: Overload:Axiam.Sdk.Grpc.RptPermission.Exp
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.RptPermission.Exp
+  nameWithType: RptPermission.Exp
+- uid: Axiam.Sdk.Grpc.RptPermission.ResourceId
+  name: ResourceId
+  href: api/Axiam.Sdk.Grpc.RptPermission.html#Axiam_Sdk_Grpc_RptPermission_ResourceId
+  commentId: P:Axiam.Sdk.Grpc.RptPermission.ResourceId
+  fullName: Axiam.Sdk.Grpc.RptPermission.ResourceId
+  nameWithType: RptPermission.ResourceId
+- uid: Axiam.Sdk.Grpc.RptPermission.ResourceId*
+  name: ResourceId
+  href: api/Axiam.Sdk.Grpc.RptPermission.html#Axiam_Sdk_Grpc_RptPermission_ResourceId_
+  commentId: Overload:Axiam.Sdk.Grpc.RptPermission.ResourceId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.RptPermission.ResourceId
+  nameWithType: RptPermission.ResourceId
+- uid: Axiam.Sdk.Grpc.RptPermission.ResourceScopes
+  name: ResourceScopes
+  href: api/Axiam.Sdk.Grpc.RptPermission.html#Axiam_Sdk_Grpc_RptPermission_ResourceScopes
+  commentId: P:Axiam.Sdk.Grpc.RptPermission.ResourceScopes
+  fullName: Axiam.Sdk.Grpc.RptPermission.ResourceScopes
+  nameWithType: RptPermission.ResourceScopes
+- uid: Axiam.Sdk.Grpc.RptPermission.ResourceScopes*
+  name: ResourceScopes
+  href: api/Axiam.Sdk.Grpc.RptPermission.html#Axiam_Sdk_Grpc_RptPermission_ResourceScopes_
+  commentId: Overload:Axiam.Sdk.Grpc.RptPermission.ResourceScopes
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.RptPermission.ResourceScopes
+  nameWithType: RptPermission.ResourceScopes
+- uid: Axiam.Sdk.Grpc.TokenCnf
+  name: TokenCnf
+  href: api/Axiam.Sdk.Grpc.TokenCnf.html
+  commentId: T:Axiam.Sdk.Grpc.TokenCnf
+  fullName: Axiam.Sdk.Grpc.TokenCnf
+  nameWithType: TokenCnf
+- uid: Axiam.Sdk.Grpc.TokenCnf.#ctor(System.String,System.String)
+  name: TokenCnf(string, string)
+  href: api/Axiam.Sdk.Grpc.TokenCnf.html#Axiam_Sdk_Grpc_TokenCnf__ctor_System_String_System_String_
+  commentId: M:Axiam.Sdk.Grpc.TokenCnf.#ctor(System.String,System.String)
+  name.vb: New(String, String)
+  fullName: Axiam.Sdk.Grpc.TokenCnf.TokenCnf(string, string)
+  fullName.vb: Axiam.Sdk.Grpc.TokenCnf.New(String, String)
+  nameWithType: TokenCnf.TokenCnf(string, string)
+  nameWithType.vb: TokenCnf.New(String, String)
+- uid: Axiam.Sdk.Grpc.TokenCnf.#ctor*
+  name: TokenCnf
+  href: api/Axiam.Sdk.Grpc.TokenCnf.html#Axiam_Sdk_Grpc_TokenCnf__ctor_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenCnf.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Grpc.TokenCnf.TokenCnf
+  fullName.vb: Axiam.Sdk.Grpc.TokenCnf.New
+  nameWithType: TokenCnf.TokenCnf
+  nameWithType.vb: TokenCnf.New
+- uid: Axiam.Sdk.Grpc.TokenCnf.Jkt
+  name: Jkt
+  href: api/Axiam.Sdk.Grpc.TokenCnf.html#Axiam_Sdk_Grpc_TokenCnf_Jkt
+  commentId: P:Axiam.Sdk.Grpc.TokenCnf.Jkt
+  fullName: Axiam.Sdk.Grpc.TokenCnf.Jkt
+  nameWithType: TokenCnf.Jkt
+- uid: Axiam.Sdk.Grpc.TokenCnf.Jkt*
+  name: Jkt
+  href: api/Axiam.Sdk.Grpc.TokenCnf.html#Axiam_Sdk_Grpc_TokenCnf_Jkt_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenCnf.Jkt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenCnf.Jkt
+  nameWithType: TokenCnf.Jkt
+- uid: Axiam.Sdk.Grpc.TokenCnf.X5tS256
+  name: X5tS256
+  href: api/Axiam.Sdk.Grpc.TokenCnf.html#Axiam_Sdk_Grpc_TokenCnf_X5tS256
+  commentId: P:Axiam.Sdk.Grpc.TokenCnf.X5tS256
+  fullName: Axiam.Sdk.Grpc.TokenCnf.X5tS256
+  nameWithType: TokenCnf.X5tS256
+- uid: Axiam.Sdk.Grpc.TokenCnf.X5tS256*
+  name: X5tS256
+  href: api/Axiam.Sdk.Grpc.TokenCnf.html#Axiam_Sdk_Grpc_TokenCnf_X5tS256_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenCnf.X5tS256
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenCnf.X5tS256
+  nameWithType: TokenCnf.X5tS256
+- uid: Axiam.Sdk.Grpc.TokenGrpcClient
+  name: TokenGrpcClient
+  href: api/Axiam.Sdk.Grpc.TokenGrpcClient.html
+  commentId: T:Axiam.Sdk.Grpc.TokenGrpcClient
+  fullName: Axiam.Sdk.Grpc.TokenGrpcClient
+  nameWithType: TokenGrpcClient
+- uid: Axiam.Sdk.Grpc.TokenGrpcClient.#ctor(Axiam.Sdk.AxiamClient,System.Uri)
+  name: TokenGrpcClient(AxiamClient, Uri?)
+  href: api/Axiam.Sdk.Grpc.TokenGrpcClient.html#Axiam_Sdk_Grpc_TokenGrpcClient__ctor_Axiam_Sdk_AxiamClient_System_Uri_
+  commentId: M:Axiam.Sdk.Grpc.TokenGrpcClient.#ctor(Axiam.Sdk.AxiamClient,System.Uri)
+  name.vb: New(AxiamClient, Uri)
+  fullName: Axiam.Sdk.Grpc.TokenGrpcClient.TokenGrpcClient(Axiam.Sdk.AxiamClient, System.Uri?)
+  fullName.vb: Axiam.Sdk.Grpc.TokenGrpcClient.New(Axiam.Sdk.AxiamClient, System.Uri)
+  nameWithType: TokenGrpcClient.TokenGrpcClient(AxiamClient, Uri?)
+  nameWithType.vb: TokenGrpcClient.New(AxiamClient, Uri)
+- uid: Axiam.Sdk.Grpc.TokenGrpcClient.#ctor*
+  name: TokenGrpcClient
+  href: api/Axiam.Sdk.Grpc.TokenGrpcClient.html#Axiam_Sdk_Grpc_TokenGrpcClient__ctor_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenGrpcClient.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Grpc.TokenGrpcClient.TokenGrpcClient
+  fullName.vb: Axiam.Sdk.Grpc.TokenGrpcClient.New
+  nameWithType: TokenGrpcClient.TokenGrpcClient
+  nameWithType.vb: TokenGrpcClient.New
+- uid: Axiam.Sdk.Grpc.TokenGrpcClient.Dispose
+  name: Dispose()
+  href: api/Axiam.Sdk.Grpc.TokenGrpcClient.html#Axiam_Sdk_Grpc_TokenGrpcClient_Dispose
+  commentId: M:Axiam.Sdk.Grpc.TokenGrpcClient.Dispose
+  fullName: Axiam.Sdk.Grpc.TokenGrpcClient.Dispose()
+  nameWithType: TokenGrpcClient.Dispose()
+- uid: Axiam.Sdk.Grpc.TokenGrpcClient.Dispose*
+  name: Dispose
+  href: api/Axiam.Sdk.Grpc.TokenGrpcClient.html#Axiam_Sdk_Grpc_TokenGrpcClient_Dispose_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenGrpcClient.Dispose
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenGrpcClient.Dispose
+  nameWithType: TokenGrpcClient.Dispose
+- uid: Axiam.Sdk.Grpc.TokenGrpcClient.IntrospectTokenAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)
+  name: IntrospectTokenAsync(Sensitive<string>, CancellationToken)
+  href: api/Axiam.Sdk.Grpc.TokenGrpcClient.html#Axiam_Sdk_Grpc_TokenGrpcClient_IntrospectTokenAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Grpc.TokenGrpcClient.IntrospectTokenAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)
+  name.vb: IntrospectTokenAsync(Sensitive(Of String), CancellationToken)
+  fullName: Axiam.Sdk.Grpc.TokenGrpcClient.IntrospectTokenAsync(Axiam.Sdk.Core.Sensitive<string>, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Grpc.TokenGrpcClient.IntrospectTokenAsync(Axiam.Sdk.Core.Sensitive(Of String), System.Threading.CancellationToken)
+  nameWithType: TokenGrpcClient.IntrospectTokenAsync(Sensitive<string>, CancellationToken)
+  nameWithType.vb: TokenGrpcClient.IntrospectTokenAsync(Sensitive(Of String), CancellationToken)
+- uid: Axiam.Sdk.Grpc.TokenGrpcClient.IntrospectTokenAsync*
+  name: IntrospectTokenAsync
+  href: api/Axiam.Sdk.Grpc.TokenGrpcClient.html#Axiam_Sdk_Grpc_TokenGrpcClient_IntrospectTokenAsync_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenGrpcClient.IntrospectTokenAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenGrpcClient.IntrospectTokenAsync
+  nameWithType: TokenGrpcClient.IntrospectTokenAsync
+- uid: Axiam.Sdk.Grpc.TokenGrpcClient.ValidateTokenAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)
+  name: ValidateTokenAsync(Sensitive<string>, CancellationToken)
+  href: api/Axiam.Sdk.Grpc.TokenGrpcClient.html#Axiam_Sdk_Grpc_TokenGrpcClient_ValidateTokenAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Grpc.TokenGrpcClient.ValidateTokenAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)
+  name.vb: ValidateTokenAsync(Sensitive(Of String), CancellationToken)
+  fullName: Axiam.Sdk.Grpc.TokenGrpcClient.ValidateTokenAsync(Axiam.Sdk.Core.Sensitive<string>, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Grpc.TokenGrpcClient.ValidateTokenAsync(Axiam.Sdk.Core.Sensitive(Of String), System.Threading.CancellationToken)
+  nameWithType: TokenGrpcClient.ValidateTokenAsync(Sensitive<string>, CancellationToken)
+  nameWithType.vb: TokenGrpcClient.ValidateTokenAsync(Sensitive(Of String), CancellationToken)
+- uid: Axiam.Sdk.Grpc.TokenGrpcClient.ValidateTokenAsync*
+  name: ValidateTokenAsync
+  href: api/Axiam.Sdk.Grpc.TokenGrpcClient.html#Axiam_Sdk_Grpc_TokenGrpcClient_ValidateTokenAsync_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenGrpcClient.ValidateTokenAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenGrpcClient.ValidateTokenAsync
+  nameWithType: TokenGrpcClient.ValidateTokenAsync
+- uid: Axiam.Sdk.Grpc.TokenIntrospection
+  name: TokenIntrospection
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html
+  commentId: T:Axiam.Sdk.Grpc.TokenIntrospection
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection
+  nameWithType: TokenIntrospection
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.#ctor(System.Boolean,System.String,System.String,System.String,System.String,System.Int64,System.Int64,System.String,System.String,System.String,System.String,Axiam.Sdk.Grpc.TokenCnf,System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Grpc.RptPermission},System.String)
+  name: TokenIntrospection(bool, string, string, string, string, long, long, string, string, string, string, TokenCnf?, IReadOnlyList<RptPermission>, string)
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection__ctor_System_Boolean_System_String_System_String_System_String_System_String_System_Int64_System_Int64_System_String_System_String_System_String_System_String_Axiam_Sdk_Grpc_TokenCnf_System_Collections_Generic_IReadOnlyList_Axiam_Sdk_Grpc_RptPermission__System_String_
+  commentId: M:Axiam.Sdk.Grpc.TokenIntrospection.#ctor(System.Boolean,System.String,System.String,System.String,System.String,System.Int64,System.Int64,System.String,System.String,System.String,System.String,Axiam.Sdk.Grpc.TokenCnf,System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Grpc.RptPermission},System.String)
+  name.vb: New(Boolean, String, String, String, String, Long, Long, String, String, String, String, TokenCnf, IReadOnlyList(Of RptPermission), String)
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.TokenIntrospection(bool, string, string, string, string, long, long, string, string, string, string, Axiam.Sdk.Grpc.TokenCnf?, System.Collections.Generic.IReadOnlyList<Axiam.Sdk.Grpc.RptPermission>, string)
+  fullName.vb: Axiam.Sdk.Grpc.TokenIntrospection.New(Boolean, String, String, String, String, Long, Long, String, String, String, String, Axiam.Sdk.Grpc.TokenCnf, System.Collections.Generic.IReadOnlyList(Of Axiam.Sdk.Grpc.RptPermission), String)
+  nameWithType: TokenIntrospection.TokenIntrospection(bool, string, string, string, string, long, long, string, string, string, string, TokenCnf?, IReadOnlyList<RptPermission>, string)
+  nameWithType.vb: TokenIntrospection.New(Boolean, String, String, String, String, Long, Long, String, String, String, String, TokenCnf, IReadOnlyList(Of RptPermission), String)
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.#ctor*
+  name: TokenIntrospection
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection__ctor_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.TokenIntrospection
+  fullName.vb: Axiam.Sdk.Grpc.TokenIntrospection.New
+  nameWithType: TokenIntrospection.TokenIntrospection
+  nameWithType.vb: TokenIntrospection.New
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Active
+  name: Active
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Active
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.Active
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Active
+  nameWithType: TokenIntrospection.Active
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Active*
+  name: Active
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Active_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.Active
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Active
+  nameWithType: TokenIntrospection.Active
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.ClientId
+  name: ClientId
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_ClientId
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.ClientId
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.ClientId
+  nameWithType: TokenIntrospection.ClientId
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.ClientId*
+  name: ClientId
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_ClientId_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.ClientId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.ClientId
+  nameWithType: TokenIntrospection.ClientId
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Cnf
+  name: Cnf
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Cnf
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.Cnf
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Cnf
+  nameWithType: TokenIntrospection.Cnf
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Cnf*
+  name: Cnf
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Cnf_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.Cnf
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Cnf
+  nameWithType: TokenIntrospection.Cnf
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Exp
+  name: Exp
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Exp
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.Exp
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Exp
+  nameWithType: TokenIntrospection.Exp
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Exp*
+  name: Exp
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Exp_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.Exp
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Exp
+  nameWithType: TokenIntrospection.Exp
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.ExtExchangeIss
+  name: ExtExchangeIss
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_ExtExchangeIss
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.ExtExchangeIss
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.ExtExchangeIss
+  nameWithType: TokenIntrospection.ExtExchangeIss
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.ExtExchangeIss*
+  name: ExtExchangeIss
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_ExtExchangeIss_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.ExtExchangeIss
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.ExtExchangeIss
+  nameWithType: TokenIntrospection.ExtExchangeIss
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Iat
+  name: Iat
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Iat
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.Iat
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Iat
+  nameWithType: TokenIntrospection.Iat
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Iat*
+  name: Iat
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Iat_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.Iat
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Iat
+  nameWithType: TokenIntrospection.Iat
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Iss
+  name: Iss
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Iss
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.Iss
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Iss
+  nameWithType: TokenIntrospection.Iss
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Iss*
+  name: Iss
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Iss_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.Iss
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Iss
+  nameWithType: TokenIntrospection.Iss
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Jti
+  name: Jti
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Jti
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.Jti
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Jti
+  nameWithType: TokenIntrospection.Jti
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Jti*
+  name: Jti
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Jti_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.Jti
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Jti
+  nameWithType: TokenIntrospection.Jti
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.OrgId
+  name: OrgId
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_OrgId
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.OrgId
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.OrgId
+  nameWithType: TokenIntrospection.OrgId
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.OrgId*
+  name: OrgId
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_OrgId_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.OrgId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.OrgId
+  nameWithType: TokenIntrospection.OrgId
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Permissions
+  name: Permissions
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Permissions
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.Permissions
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Permissions
+  nameWithType: TokenIntrospection.Permissions
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Permissions*
+  name: Permissions
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Permissions_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.Permissions
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Permissions
+  nameWithType: TokenIntrospection.Permissions
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Scope
+  name: Scope
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Scope
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.Scope
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Scope
+  nameWithType: TokenIntrospection.Scope
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Scope*
+  name: Scope
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Scope_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.Scope
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Scope
+  nameWithType: TokenIntrospection.Scope
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Status
+  name: Status()
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Status
+  commentId: M:Axiam.Sdk.Grpc.TokenIntrospection.Status
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Status()
+  nameWithType: TokenIntrospection.Status()
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Status*
+  name: Status
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Status_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.Status
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Status
+  nameWithType: TokenIntrospection.Status
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Sub
+  name: Sub
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Sub
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.Sub
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Sub
+  nameWithType: TokenIntrospection.Sub
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.Sub*
+  name: Sub
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Sub_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.Sub
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.Sub
+  nameWithType: TokenIntrospection.Sub
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.TenantId
+  name: TenantId
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_TenantId
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.TenantId
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.TenantId
+  nameWithType: TokenIntrospection.TenantId
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.TenantId*
+  name: TenantId
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_TenantId_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.TenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.TenantId
+  nameWithType: TokenIntrospection.TenantId
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.TokenType
+  name: TokenType
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_TokenType
+  commentId: P:Axiam.Sdk.Grpc.TokenIntrospection.TokenType
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.TokenType
+  nameWithType: TokenIntrospection.TokenType
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.TokenType*
+  name: TokenType
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_TokenType_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.TokenType
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.TokenType
+  nameWithType: TokenIntrospection.TokenType
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.VerifyPossession(Axiam.Sdk.Auth.PresentedProofs)
+  name: VerifyPossession(PresentedProofs)
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_VerifyPossession_Axiam_Sdk_Auth_PresentedProofs_
+  commentId: M:Axiam.Sdk.Grpc.TokenIntrospection.VerifyPossession(Axiam.Sdk.Auth.PresentedProofs)
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.VerifyPossession(Axiam.Sdk.Auth.PresentedProofs)
+  nameWithType: TokenIntrospection.VerifyPossession(PresentedProofs)
+- uid: Axiam.Sdk.Grpc.TokenIntrospection.VerifyPossession*
+  name: VerifyPossession
+  href: api/Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_VerifyPossession_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenIntrospection.VerifyPossession
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenIntrospection.VerifyPossession
+  nameWithType: TokenIntrospection.VerifyPossession
+- uid: Axiam.Sdk.Grpc.TokenStatus
+  name: TokenStatus
+  href: api/Axiam.Sdk.Grpc.TokenStatus.html
+  commentId: T:Axiam.Sdk.Grpc.TokenStatus
+  fullName: Axiam.Sdk.Grpc.TokenStatus
+  nameWithType: TokenStatus
+- uid: Axiam.Sdk.Grpc.TokenStatus.Bearer
+  name: Bearer
+  href: api/Axiam.Sdk.Grpc.TokenStatus.html#Axiam_Sdk_Grpc_TokenStatus_Bearer
+  commentId: F:Axiam.Sdk.Grpc.TokenStatus.Bearer
+  fullName: Axiam.Sdk.Grpc.TokenStatus.Bearer
+  nameWithType: TokenStatus.Bearer
+- uid: Axiam.Sdk.Grpc.TokenStatus.Inactive
+  name: Inactive
+  href: api/Axiam.Sdk.Grpc.TokenStatus.html#Axiam_Sdk_Grpc_TokenStatus_Inactive
+  commentId: F:Axiam.Sdk.Grpc.TokenStatus.Inactive
+  fullName: Axiam.Sdk.Grpc.TokenStatus.Inactive
+  nameWithType: TokenStatus.Inactive
+- uid: Axiam.Sdk.Grpc.TokenStatus.SenderConstrained
+  name: SenderConstrained
+  href: api/Axiam.Sdk.Grpc.TokenStatus.html#Axiam_Sdk_Grpc_TokenStatus_SenderConstrained
+  commentId: F:Axiam.Sdk.Grpc.TokenStatus.SenderConstrained
+  fullName: Axiam.Sdk.Grpc.TokenStatus.SenderConstrained
+  nameWithType: TokenStatus.SenderConstrained
+- uid: Axiam.Sdk.Grpc.TokenStatus.Unverifiable
+  name: Unverifiable
+  href: api/Axiam.Sdk.Grpc.TokenStatus.html#Axiam_Sdk_Grpc_TokenStatus_Unverifiable
+  commentId: F:Axiam.Sdk.Grpc.TokenStatus.Unverifiable
+  fullName: Axiam.Sdk.Grpc.TokenStatus.Unverifiable
+  nameWithType: TokenStatus.Unverifiable
+- uid: Axiam.Sdk.Grpc.TokenValidation
+  name: TokenValidation
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html
+  commentId: T:Axiam.Sdk.Grpc.TokenValidation
+  fullName: Axiam.Sdk.Grpc.TokenValidation
+  nameWithType: TokenValidation
+- uid: Axiam.Sdk.Grpc.TokenValidation.#ctor(System.Boolean,System.String,System.String,System.String,System.Int64,Axiam.Sdk.Grpc.TokenCnf,System.String)
+  name: TokenValidation(bool, string, string, string, long, TokenCnf?, string)
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation__ctor_System_Boolean_System_String_System_String_System_String_System_Int64_Axiam_Sdk_Grpc_TokenCnf_System_String_
+  commentId: M:Axiam.Sdk.Grpc.TokenValidation.#ctor(System.Boolean,System.String,System.String,System.String,System.Int64,Axiam.Sdk.Grpc.TokenCnf,System.String)
+  name.vb: New(Boolean, String, String, String, Long, TokenCnf, String)
+  fullName: Axiam.Sdk.Grpc.TokenValidation.TokenValidation(bool, string, string, string, long, Axiam.Sdk.Grpc.TokenCnf?, string)
+  fullName.vb: Axiam.Sdk.Grpc.TokenValidation.New(Boolean, String, String, String, Long, Axiam.Sdk.Grpc.TokenCnf, String)
+  nameWithType: TokenValidation.TokenValidation(bool, string, string, string, long, TokenCnf?, string)
+  nameWithType.vb: TokenValidation.New(Boolean, String, String, String, Long, TokenCnf, String)
+- uid: Axiam.Sdk.Grpc.TokenValidation.#ctor*
+  name: TokenValidation
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation__ctor_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenValidation.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Grpc.TokenValidation.TokenValidation
+  fullName.vb: Axiam.Sdk.Grpc.TokenValidation.New
+  nameWithType: TokenValidation.TokenValidation
+  nameWithType.vb: TokenValidation.New
+- uid: Axiam.Sdk.Grpc.TokenValidation.Cnf
+  name: Cnf
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_Cnf
+  commentId: P:Axiam.Sdk.Grpc.TokenValidation.Cnf
+  fullName: Axiam.Sdk.Grpc.TokenValidation.Cnf
+  nameWithType: TokenValidation.Cnf
+- uid: Axiam.Sdk.Grpc.TokenValidation.Cnf*
+  name: Cnf
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_Cnf_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenValidation.Cnf
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenValidation.Cnf
+  nameWithType: TokenValidation.Cnf
+- uid: Axiam.Sdk.Grpc.TokenValidation.Exp
+  name: Exp
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_Exp
+  commentId: P:Axiam.Sdk.Grpc.TokenValidation.Exp
+  fullName: Axiam.Sdk.Grpc.TokenValidation.Exp
+  nameWithType: TokenValidation.Exp
+- uid: Axiam.Sdk.Grpc.TokenValidation.Exp*
+  name: Exp
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_Exp_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenValidation.Exp
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenValidation.Exp
+  nameWithType: TokenValidation.Exp
+- uid: Axiam.Sdk.Grpc.TokenValidation.OrgId
+  name: OrgId
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_OrgId
+  commentId: P:Axiam.Sdk.Grpc.TokenValidation.OrgId
+  fullName: Axiam.Sdk.Grpc.TokenValidation.OrgId
+  nameWithType: TokenValidation.OrgId
+- uid: Axiam.Sdk.Grpc.TokenValidation.OrgId*
+  name: OrgId
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_OrgId_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenValidation.OrgId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenValidation.OrgId
+  nameWithType: TokenValidation.OrgId
+- uid: Axiam.Sdk.Grpc.TokenValidation.Status
+  name: Status()
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_Status
+  commentId: M:Axiam.Sdk.Grpc.TokenValidation.Status
+  fullName: Axiam.Sdk.Grpc.TokenValidation.Status()
+  nameWithType: TokenValidation.Status()
+- uid: Axiam.Sdk.Grpc.TokenValidation.Status*
+  name: Status
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_Status_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenValidation.Status
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenValidation.Status
+  nameWithType: TokenValidation.Status
+- uid: Axiam.Sdk.Grpc.TokenValidation.SubjectId
+  name: SubjectId
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_SubjectId
+  commentId: P:Axiam.Sdk.Grpc.TokenValidation.SubjectId
+  fullName: Axiam.Sdk.Grpc.TokenValidation.SubjectId
+  nameWithType: TokenValidation.SubjectId
+- uid: Axiam.Sdk.Grpc.TokenValidation.SubjectId*
+  name: SubjectId
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_SubjectId_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenValidation.SubjectId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenValidation.SubjectId
+  nameWithType: TokenValidation.SubjectId
+- uid: Axiam.Sdk.Grpc.TokenValidation.TenantId
+  name: TenantId
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_TenantId
+  commentId: P:Axiam.Sdk.Grpc.TokenValidation.TenantId
+  fullName: Axiam.Sdk.Grpc.TokenValidation.TenantId
+  nameWithType: TokenValidation.TenantId
+- uid: Axiam.Sdk.Grpc.TokenValidation.TenantId*
+  name: TenantId
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_TenantId_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenValidation.TenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenValidation.TenantId
+  nameWithType: TokenValidation.TenantId
+- uid: Axiam.Sdk.Grpc.TokenValidation.TokenType
+  name: TokenType
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_TokenType
+  commentId: P:Axiam.Sdk.Grpc.TokenValidation.TokenType
+  fullName: Axiam.Sdk.Grpc.TokenValidation.TokenType
+  nameWithType: TokenValidation.TokenType
+- uid: Axiam.Sdk.Grpc.TokenValidation.TokenType*
+  name: TokenType
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_TokenType_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenValidation.TokenType
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenValidation.TokenType
+  nameWithType: TokenValidation.TokenType
+- uid: Axiam.Sdk.Grpc.TokenValidation.Valid
+  name: Valid
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_Valid
+  commentId: P:Axiam.Sdk.Grpc.TokenValidation.Valid
+  fullName: Axiam.Sdk.Grpc.TokenValidation.Valid
+  nameWithType: TokenValidation.Valid
+- uid: Axiam.Sdk.Grpc.TokenValidation.Valid*
+  name: Valid
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_Valid_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenValidation.Valid
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenValidation.Valid
+  nameWithType: TokenValidation.Valid
+- uid: Axiam.Sdk.Grpc.TokenValidation.VerifyPossession(Axiam.Sdk.Auth.PresentedProofs)
+  name: VerifyPossession(PresentedProofs)
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_VerifyPossession_Axiam_Sdk_Auth_PresentedProofs_
+  commentId: M:Axiam.Sdk.Grpc.TokenValidation.VerifyPossession(Axiam.Sdk.Auth.PresentedProofs)
+  fullName: Axiam.Sdk.Grpc.TokenValidation.VerifyPossession(Axiam.Sdk.Auth.PresentedProofs)
+  nameWithType: TokenValidation.VerifyPossession(PresentedProofs)
+- uid: Axiam.Sdk.Grpc.TokenValidation.VerifyPossession*
+  name: VerifyPossession
+  href: api/Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_VerifyPossession_
+  commentId: Overload:Axiam.Sdk.Grpc.TokenValidation.VerifyPossession
+  isSpec: "True"
+  fullName: Axiam.Sdk.Grpc.TokenValidation.VerifyPossession
+  nameWithType: TokenValidation.VerifyPossession
 - uid: Axiam.Sdk.Grpc.UserInfo
   name: UserInfo
   href: api/Axiam.Sdk.Grpc.UserInfo.html
@@ -8393,6 +9111,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ApplyReport.ChangedCount
   nameWithType: ApplyReport.ChangedCount
+- uid: Axiam.Sdk.Management.ApplyReport.CreatedServiceAccounts
+  name: CreatedServiceAccounts()
+  href: api/Axiam.Sdk.Management.ApplyReport.html#Axiam_Sdk_Management_ApplyReport_CreatedServiceAccounts
+  commentId: M:Axiam.Sdk.Management.ApplyReport.CreatedServiceAccounts
+  fullName: Axiam.Sdk.Management.ApplyReport.CreatedServiceAccounts()
+  nameWithType: ApplyReport.CreatedServiceAccounts()
+- uid: Axiam.Sdk.Management.ApplyReport.CreatedServiceAccounts*
+  name: CreatedServiceAccounts
+  href: api/Axiam.Sdk.Management.ApplyReport.html#Axiam_Sdk_Management_ApplyReport_CreatedServiceAccounts_
+  commentId: Overload:Axiam.Sdk.Management.ApplyReport.CreatedServiceAccounts
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ApplyReport.CreatedServiceAccounts
+  nameWithType: ApplyReport.CreatedServiceAccounts
 - uid: Axiam.Sdk.Management.ApplyReport.Failure
   name: Failure
   href: api/Axiam.Sdk.Management.ApplyReport.html#Axiam_Sdk_Management_ApplyReport_Failure
@@ -9821,15 +10552,15 @@ references:
   commentId: T:Axiam.Sdk.Management.ManagementManifest.GroupSpec
   fullName: Axiam.Sdk.Management.ManagementManifest.GroupSpec
   nameWithType: ManagementManifest.GroupSpec
-- uid: Axiam.Sdk.Management.ManagementManifest.GroupSpec.#ctor(System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String})
-  name: GroupSpec(string, string, string, IReadOnlyList<string>?)
-  href: api/Axiam.Sdk.Management.ManagementManifest.GroupSpec.html#Axiam_Sdk_Management_ManagementManifest_GroupSpec__ctor_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_System_String__
-  commentId: M:Axiam.Sdk.Management.ManagementManifest.GroupSpec.#ctor(System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String})
-  name.vb: New(String, String, String, IReadOnlyList(Of String))
-  fullName: Axiam.Sdk.Management.ManagementManifest.GroupSpec.GroupSpec(string, string, string, System.Collections.Generic.IReadOnlyList<string>?)
-  fullName.vb: Axiam.Sdk.Management.ManagementManifest.GroupSpec.New(String, String, String, System.Collections.Generic.IReadOnlyList(Of String))
-  nameWithType: ManagementManifest.GroupSpec.GroupSpec(string, string, string, IReadOnlyList<string>?)
-  nameWithType.vb: ManagementManifest.GroupSpec.New(String, String, String, IReadOnlyList(Of String))
+- uid: Axiam.Sdk.Management.ManagementManifest.GroupSpec.#ctor(System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Management.ManagementManifest.RoleBinding})
+  name: GroupSpec(string, string, string, IReadOnlyList<RoleBinding>?)
+  href: api/Axiam.Sdk.Management.ManagementManifest.GroupSpec.html#Axiam_Sdk_Management_ManagementManifest_GroupSpec__ctor_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_Axiam_Sdk_Management_ManagementManifest_RoleBinding__
+  commentId: M:Axiam.Sdk.Management.ManagementManifest.GroupSpec.#ctor(System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Management.ManagementManifest.RoleBinding})
+  name.vb: New(String, String, String, IReadOnlyList(Of RoleBinding))
+  fullName: Axiam.Sdk.Management.ManagementManifest.GroupSpec.GroupSpec(string, string, string, System.Collections.Generic.IReadOnlyList<Axiam.Sdk.Management.ManagementManifest.RoleBinding>?)
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.GroupSpec.New(String, String, String, System.Collections.Generic.IReadOnlyList(Of Axiam.Sdk.Management.ManagementManifest.RoleBinding))
+  nameWithType: ManagementManifest.GroupSpec.GroupSpec(string, string, string, IReadOnlyList<ManagementManifest.RoleBinding>?)
+  nameWithType.vb: ManagementManifest.GroupSpec.New(String, String, String, IReadOnlyList(Of ManagementManifest.RoleBinding))
 - uid: Axiam.Sdk.Management.ManagementManifest.GroupSpec.#ctor*
   name: GroupSpec
   href: api/Axiam.Sdk.Management.ManagementManifest.GroupSpec.html#Axiam_Sdk_Management_ManagementManifest_GroupSpec__ctor_
@@ -9988,15 +10719,15 @@ references:
   commentId: T:Axiam.Sdk.Management.ManagementManifest.ResourceSpec
   fullName: Axiam.Sdk.Management.ManagementManifest.ResourceSpec
   nameWithType: ManagementManifest.ResourceSpec
-- uid: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.#ctor(System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Management.ManagementManifest.ScopeSpec})
-  name: ResourceSpec(string, string, string, string?, IReadOnlyList<ScopeSpec>?)
-  href: api/Axiam.Sdk.Management.ManagementManifest.ResourceSpec.html#Axiam_Sdk_Management_ManagementManifest_ResourceSpec__ctor_System_String_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_Axiam_Sdk_Management_ManagementManifest_ScopeSpec__
-  commentId: M:Axiam.Sdk.Management.ManagementManifest.ResourceSpec.#ctor(System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Management.ManagementManifest.ScopeSpec})
-  name.vb: New(String, String, String, String, IReadOnlyList(Of ScopeSpec))
-  fullName: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.ResourceSpec(string, string, string, string?, System.Collections.Generic.IReadOnlyList<Axiam.Sdk.Management.ManagementManifest.ScopeSpec>?)
-  fullName.vb: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.New(String, String, String, String, System.Collections.Generic.IReadOnlyList(Of Axiam.Sdk.Management.ManagementManifest.ScopeSpec))
-  nameWithType: ManagementManifest.ResourceSpec.ResourceSpec(string, string, string, string?, IReadOnlyList<ManagementManifest.ScopeSpec>?)
-  nameWithType.vb: ManagementManifest.ResourceSpec.New(String, String, String, String, IReadOnlyList(Of ManagementManifest.ScopeSpec))
+- uid: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.#ctor(System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Management.ManagementManifest.ScopeSpec},System.Nullable{System.Text.Json.JsonElement})
+  name: ResourceSpec(string, string, string, string?, IReadOnlyList<ScopeSpec>?, JsonElement?)
+  href: api/Axiam.Sdk.Management.ManagementManifest.ResourceSpec.html#Axiam_Sdk_Management_ManagementManifest_ResourceSpec__ctor_System_String_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_Axiam_Sdk_Management_ManagementManifest_ScopeSpec__System_Nullable_System_Text_Json_JsonElement__
+  commentId: M:Axiam.Sdk.Management.ManagementManifest.ResourceSpec.#ctor(System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Management.ManagementManifest.ScopeSpec},System.Nullable{System.Text.Json.JsonElement})
+  name.vb: New(String, String, String, String, IReadOnlyList(Of ScopeSpec), JsonElement?)
+  fullName: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.ResourceSpec(string, string, string, string?, System.Collections.Generic.IReadOnlyList<Axiam.Sdk.Management.ManagementManifest.ScopeSpec>?, System.Text.Json.JsonElement?)
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.New(String, String, String, String, System.Collections.Generic.IReadOnlyList(Of Axiam.Sdk.Management.ManagementManifest.ScopeSpec), System.Text.Json.JsonElement?)
+  nameWithType: ManagementManifest.ResourceSpec.ResourceSpec(string, string, string, string?, IReadOnlyList<ManagementManifest.ScopeSpec>?, JsonElement?)
+  nameWithType.vb: ManagementManifest.ResourceSpec.New(String, String, String, String, IReadOnlyList(Of ManagementManifest.ScopeSpec), JsonElement?)
 - uid: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.#ctor*
   name: ResourceSpec
   href: api/Axiam.Sdk.Management.ManagementManifest.ResourceSpec.html#Axiam_Sdk_Management_ManagementManifest_ResourceSpec__ctor_
@@ -10020,6 +10751,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.Key
   nameWithType: ManagementManifest.ResourceSpec.Key
+- uid: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.Metadata
+  name: Metadata
+  href: api/Axiam.Sdk.Management.ManagementManifest.ResourceSpec.html#Axiam_Sdk_Management_ManagementManifest_ResourceSpec_Metadata
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.ResourceSpec.Metadata
+  fullName: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.Metadata
+  nameWithType: ManagementManifest.ResourceSpec.Metadata
+- uid: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.Metadata*
+  name: Metadata
+  href: api/Axiam.Sdk.Management.ManagementManifest.ResourceSpec.html#Axiam_Sdk_Management_ManagementManifest_ResourceSpec_Metadata_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.ResourceSpec.Metadata
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.Metadata
+  nameWithType: ManagementManifest.ResourceSpec.Metadata
 - uid: Axiam.Sdk.Management.ManagementManifest.ResourceSpec.Name
   name: Name
   href: api/Axiam.Sdk.Management.ManagementManifest.ResourceSpec.html#Axiam_Sdk_Management_ManagementManifest_ResourceSpec_Name
@@ -10085,6 +10829,89 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ManagementManifest.Resources
   nameWithType: ManagementManifest.Resources
+- uid: Axiam.Sdk.Management.ManagementManifest.RoleBinding
+  name: ManagementManifest.RoleBinding
+  href: api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.html
+  commentId: T:Axiam.Sdk.Management.ManagementManifest.RoleBinding
+  fullName: Axiam.Sdk.Management.ManagementManifest.RoleBinding
+  nameWithType: ManagementManifest.RoleBinding
+- uid: Axiam.Sdk.Management.ManagementManifest.RoleBinding.#ctor(System.String,System.String,System.Boolean)
+  name: RoleBinding(string, string?, bool)
+  href: api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding__ctor_System_String_System_String_System_Boolean_
+  commentId: M:Axiam.Sdk.Management.ManagementManifest.RoleBinding.#ctor(System.String,System.String,System.Boolean)
+  name.vb: New(String, String, Boolean)
+  fullName: Axiam.Sdk.Management.ManagementManifest.RoleBinding.RoleBinding(string, string?, bool)
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.RoleBinding.New(String, String, Boolean)
+  nameWithType: ManagementManifest.RoleBinding.RoleBinding(string, string?, bool)
+  nameWithType.vb: ManagementManifest.RoleBinding.New(String, String, Boolean)
+- uid: Axiam.Sdk.Management.ManagementManifest.RoleBinding.#ctor*
+  name: RoleBinding
+  href: api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding__ctor_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.RoleBinding.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Management.ManagementManifest.RoleBinding.RoleBinding
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.RoleBinding.New
+  nameWithType: ManagementManifest.RoleBinding.RoleBinding
+  nameWithType.vb: ManagementManifest.RoleBinding.New
+- uid: Axiam.Sdk.Management.ManagementManifest.RoleBinding.Inherit
+  name: Inherit
+  href: api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding_Inherit
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.RoleBinding.Inherit
+  fullName: Axiam.Sdk.Management.ManagementManifest.RoleBinding.Inherit
+  nameWithType: ManagementManifest.RoleBinding.Inherit
+- uid: Axiam.Sdk.Management.ManagementManifest.RoleBinding.Inherit*
+  name: Inherit
+  href: api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding_Inherit_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.RoleBinding.Inherit
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.RoleBinding.Inherit
+  nameWithType: ManagementManifest.RoleBinding.Inherit
+- uid: Axiam.Sdk.Management.ManagementManifest.RoleBinding.Resource
+  name: Resource
+  href: api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding_Resource
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.RoleBinding.Resource
+  fullName: Axiam.Sdk.Management.ManagementManifest.RoleBinding.Resource
+  nameWithType: ManagementManifest.RoleBinding.Resource
+- uid: Axiam.Sdk.Management.ManagementManifest.RoleBinding.Resource*
+  name: Resource
+  href: api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding_Resource_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.RoleBinding.Resource
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.RoleBinding.Resource
+  nameWithType: ManagementManifest.RoleBinding.Resource
+- uid: Axiam.Sdk.Management.ManagementManifest.RoleBinding.Role
+  name: Role
+  href: api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding_Role
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.RoleBinding.Role
+  fullName: Axiam.Sdk.Management.ManagementManifest.RoleBinding.Role
+  nameWithType: ManagementManifest.RoleBinding.Role
+- uid: Axiam.Sdk.Management.ManagementManifest.RoleBinding.Role*
+  name: Role
+  href: api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding_Role_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.RoleBinding.Role
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.RoleBinding.Role
+  nameWithType: ManagementManifest.RoleBinding.Role
+- uid: Axiam.Sdk.Management.ManagementManifest.RoleBinding.op_Implicit(System.String)~Axiam.Sdk.Management.ManagementManifest.RoleBinding
+  name: implicit operator RoleBinding(string)
+  href: api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding_op_Implicit_System_String__Axiam_Sdk_Management_ManagementManifest_RoleBinding
+  commentId: M:Axiam.Sdk.Management.ManagementManifest.RoleBinding.op_Implicit(System.String)~Axiam.Sdk.Management.ManagementManifest.RoleBinding
+  name.vb: CType(String)
+  fullName: Axiam.Sdk.Management.ManagementManifest.RoleBinding.implicit operator Axiam.Sdk.Management.ManagementManifest.RoleBinding(string)
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.RoleBinding.CType(String)
+  nameWithType: ManagementManifest.RoleBinding.implicit operator ManagementManifest.RoleBinding(string)
+  nameWithType.vb: ManagementManifest.RoleBinding.CType(String)
+- uid: Axiam.Sdk.Management.ManagementManifest.RoleBinding.op_Implicit*
+  name: implicit operator
+  href: api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding_op_Implicit_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.RoleBinding.op_Implicit
+  isSpec: "True"
+  name.vb: CType
+  fullName: Axiam.Sdk.Management.ManagementManifest.RoleBinding.implicit operator
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.RoleBinding.CType
+  nameWithType: ManagementManifest.RoleBinding.implicit operator
+  nameWithType.vb: ManagementManifest.RoleBinding.CType
 - uid: Axiam.Sdk.Management.ManagementManifest.RoleSpec
   name: ManagementManifest.RoleSpec
   href: api/Axiam.Sdk.Management.ManagementManifest.RoleSpec.html
@@ -10252,21 +11079,111 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ManagementManifest.ScopeSpec.Name
   nameWithType: ManagementManifest.ScopeSpec.Name
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec
+  name: ManagementManifest.ServiceAccountSpec
+  href: api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html
+  commentId: T:Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec
+  nameWithType: ManagementManifest.ServiceAccountSpec
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.#ctor(System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Management.ManagementManifest.RoleBinding})
+  name: ServiceAccountSpec(string, string, string?, IReadOnlyList<RoleBinding>?)
+  href: api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccountSpec__ctor_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_Axiam_Sdk_Management_ManagementManifest_RoleBinding__
+  commentId: M:Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.#ctor(System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Management.ManagementManifest.RoleBinding})
+  name.vb: New(String, String, String, IReadOnlyList(Of RoleBinding))
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.ServiceAccountSpec(string, string, string?, System.Collections.Generic.IReadOnlyList<Axiam.Sdk.Management.ManagementManifest.RoleBinding>?)
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.New(String, String, String, System.Collections.Generic.IReadOnlyList(Of Axiam.Sdk.Management.ManagementManifest.RoleBinding))
+  nameWithType: ManagementManifest.ServiceAccountSpec.ServiceAccountSpec(string, string, string?, IReadOnlyList<ManagementManifest.RoleBinding>?)
+  nameWithType.vb: ManagementManifest.ServiceAccountSpec.New(String, String, String, IReadOnlyList(Of ManagementManifest.RoleBinding))
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.#ctor*
+  name: ServiceAccountSpec
+  href: api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccountSpec__ctor_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.ServiceAccountSpec
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.New
+  nameWithType: ManagementManifest.ServiceAccountSpec.ServiceAccountSpec
+  nameWithType.vb: ManagementManifest.ServiceAccountSpec.New
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Description
+  name: Description
+  href: api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccountSpec_Description
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Description
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Description
+  nameWithType: ManagementManifest.ServiceAccountSpec.Description
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Description*
+  name: Description
+  href: api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccountSpec_Description_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Description
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Description
+  nameWithType: ManagementManifest.ServiceAccountSpec.Description
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Key
+  name: Key
+  href: api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccountSpec_Key
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Key
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Key
+  nameWithType: ManagementManifest.ServiceAccountSpec.Key
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Key*
+  name: Key
+  href: api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccountSpec_Key_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Key
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Key
+  nameWithType: ManagementManifest.ServiceAccountSpec.Key
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Name
+  name: Name
+  href: api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccountSpec_Name
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Name
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Name
+  nameWithType: ManagementManifest.ServiceAccountSpec.Name
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Name*
+  name: Name
+  href: api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccountSpec_Name_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Name
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Name
+  nameWithType: ManagementManifest.ServiceAccountSpec.Name
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Roles
+  name: Roles
+  href: api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccountSpec_Roles
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Roles
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Roles
+  nameWithType: ManagementManifest.ServiceAccountSpec.Roles
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Roles*
+  name: Roles
+  href: api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccountSpec_Roles_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Roles
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.Roles
+  nameWithType: ManagementManifest.ServiceAccountSpec.Roles
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccounts
+  name: ServiceAccounts
+  href: api/Axiam.Sdk.Management.ManagementManifest.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccounts
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.ServiceAccounts
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccounts
+  nameWithType: ManagementManifest.ServiceAccounts
+- uid: Axiam.Sdk.Management.ManagementManifest.ServiceAccounts*
+  name: ServiceAccounts
+  href: api/Axiam.Sdk.Management.ManagementManifest.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccounts_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.ServiceAccounts
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.ServiceAccounts
+  nameWithType: ManagementManifest.ServiceAccounts
 - uid: Axiam.Sdk.Management.ManagementManifest.UserSpec
   name: ManagementManifest.UserSpec
   href: api/Axiam.Sdk.Management.ManagementManifest.UserSpec.html
   commentId: T:Axiam.Sdk.Management.ManagementManifest.UserSpec
   fullName: Axiam.Sdk.Management.ManagementManifest.UserSpec
   nameWithType: ManagementManifest.UserSpec
-- uid: Axiam.Sdk.Management.ManagementManifest.UserSpec.#ctor(System.String,System.String,System.String,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String})
-  name: UserSpec(string, string, string, Sensitive<string>?, IReadOnlyList<string>?, IReadOnlyList<string>?)
-  href: api/Axiam.Sdk.Management.ManagementManifest.UserSpec.html#Axiam_Sdk_Management_ManagementManifest_UserSpec__ctor_System_String_System_String_System_String_System_Nullable_Axiam_Sdk_Core_Sensitive_System_String___System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__
-  commentId: M:Axiam.Sdk.Management.ManagementManifest.UserSpec.#ctor(System.String,System.String,System.String,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String})
-  name.vb: New(String, String, String, Sensitive(Of String)?, IReadOnlyList(Of String), IReadOnlyList(Of String))
-  fullName: Axiam.Sdk.Management.ManagementManifest.UserSpec.UserSpec(string, string, string, Axiam.Sdk.Core.Sensitive<string>?, System.Collections.Generic.IReadOnlyList<string>?, System.Collections.Generic.IReadOnlyList<string>?)
-  fullName.vb: Axiam.Sdk.Management.ManagementManifest.UserSpec.New(String, String, String, Axiam.Sdk.Core.Sensitive(Of String)?, System.Collections.Generic.IReadOnlyList(Of String), System.Collections.Generic.IReadOnlyList(Of String))
-  nameWithType: ManagementManifest.UserSpec.UserSpec(string, string, string, Sensitive<string>?, IReadOnlyList<string>?, IReadOnlyList<string>?)
-  nameWithType.vb: ManagementManifest.UserSpec.New(String, String, String, Sensitive(Of String)?, IReadOnlyList(Of String), IReadOnlyList(Of String))
+- uid: Axiam.Sdk.Management.ManagementManifest.UserSpec.#ctor(System.String,System.String,System.String,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Management.ManagementManifest.RoleBinding},System.Collections.Generic.IReadOnlyList{System.String})
+  name: UserSpec(string, string, string, Sensitive<string>?, IReadOnlyList<RoleBinding>?, IReadOnlyList<string>?)
+  href: api/Axiam.Sdk.Management.ManagementManifest.UserSpec.html#Axiam_Sdk_Management_ManagementManifest_UserSpec__ctor_System_String_System_String_System_String_System_Nullable_Axiam_Sdk_Core_Sensitive_System_String___System_Collections_Generic_IReadOnlyList_Axiam_Sdk_Management_ManagementManifest_RoleBinding__System_Collections_Generic_IReadOnlyList_System_String__
+  commentId: M:Axiam.Sdk.Management.ManagementManifest.UserSpec.#ctor(System.String,System.String,System.String,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}},System.Collections.Generic.IReadOnlyList{Axiam.Sdk.Management.ManagementManifest.RoleBinding},System.Collections.Generic.IReadOnlyList{System.String})
+  name.vb: New(String, String, String, Sensitive(Of String)?, IReadOnlyList(Of RoleBinding), IReadOnlyList(Of String))
+  fullName: Axiam.Sdk.Management.ManagementManifest.UserSpec.UserSpec(string, string, string, Axiam.Sdk.Core.Sensitive<string>?, System.Collections.Generic.IReadOnlyList<Axiam.Sdk.Management.ManagementManifest.RoleBinding>?, System.Collections.Generic.IReadOnlyList<string>?)
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.UserSpec.New(String, String, String, Axiam.Sdk.Core.Sensitive(Of String)?, System.Collections.Generic.IReadOnlyList(Of Axiam.Sdk.Management.ManagementManifest.RoleBinding), System.Collections.Generic.IReadOnlyList(Of String))
+  nameWithType: ManagementManifest.UserSpec.UserSpec(string, string, string, Sensitive<string>?, IReadOnlyList<ManagementManifest.RoleBinding>?, IReadOnlyList<string>?)
+  nameWithType.vb: ManagementManifest.UserSpec.New(String, String, String, Sensitive(Of String)?, IReadOnlyList(Of ManagementManifest.RoleBinding), IReadOnlyList(Of String))
 - uid: Axiam.Sdk.Management.ManagementManifest.UserSpec.#ctor*
   name: UserSpec
   href: api/Axiam.Sdk.Management.ManagementManifest.UserSpec.html#Axiam_Sdk_Management_ManagementManifest_UserSpec__ctor_
@@ -10486,15 +11403,15 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ManifestBuilder.AddToGroup
   nameWithType: ManifestBuilder.AddToGroup
-- uid: Axiam.Sdk.Management.ManifestBuilder.AssignRole(System.String,System.String)
-  name: AssignRole(string, string)
-  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_AssignRole_System_String_System_String_
-  commentId: M:Axiam.Sdk.Management.ManifestBuilder.AssignRole(System.String,System.String)
-  name.vb: AssignRole(String, String)
-  fullName: Axiam.Sdk.Management.ManifestBuilder.AssignRole(string, string)
-  fullName.vb: Axiam.Sdk.Management.ManifestBuilder.AssignRole(String, String)
-  nameWithType: ManifestBuilder.AssignRole(string, string)
-  nameWithType.vb: ManifestBuilder.AssignRole(String, String)
+- uid: Axiam.Sdk.Management.ManifestBuilder.AssignRole(System.String,System.String,System.String,System.Boolean)
+  name: AssignRole(string, string, string?, bool)
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_AssignRole_System_String_System_String_System_String_System_Boolean_
+  commentId: M:Axiam.Sdk.Management.ManifestBuilder.AssignRole(System.String,System.String,System.String,System.Boolean)
+  name.vb: AssignRole(String, String, String, Boolean)
+  fullName: Axiam.Sdk.Management.ManifestBuilder.AssignRole(string, string, string?, bool)
+  fullName.vb: Axiam.Sdk.Management.ManifestBuilder.AssignRole(String, String, String, Boolean)
+  nameWithType: ManifestBuilder.AssignRole(string, string, string?, bool)
+  nameWithType.vb: ManifestBuilder.AssignRole(String, String, String, Boolean)
 - uid: Axiam.Sdk.Management.ManifestBuilder.AssignRole*
   name: AssignRole
   href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_AssignRole_
@@ -10502,6 +11419,22 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ManifestBuilder.AssignRole
   nameWithType: ManifestBuilder.AssignRole
+- uid: Axiam.Sdk.Management.ManifestBuilder.AssignServiceAccountRole(System.String,System.String,System.String,System.Boolean)
+  name: AssignServiceAccountRole(string, string, string?, bool)
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_AssignServiceAccountRole_System_String_System_String_System_String_System_Boolean_
+  commentId: M:Axiam.Sdk.Management.ManifestBuilder.AssignServiceAccountRole(System.String,System.String,System.String,System.Boolean)
+  name.vb: AssignServiceAccountRole(String, String, String, Boolean)
+  fullName: Axiam.Sdk.Management.ManifestBuilder.AssignServiceAccountRole(string, string, string?, bool)
+  fullName.vb: Axiam.Sdk.Management.ManifestBuilder.AssignServiceAccountRole(String, String, String, Boolean)
+  nameWithType: ManifestBuilder.AssignServiceAccountRole(string, string, string?, bool)
+  nameWithType.vb: ManifestBuilder.AssignServiceAccountRole(String, String, String, Boolean)
+- uid: Axiam.Sdk.Management.ManifestBuilder.AssignServiceAccountRole*
+  name: AssignServiceAccountRole
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_AssignServiceAccountRole_
+  commentId: Overload:Axiam.Sdk.Management.ManifestBuilder.AssignServiceAccountRole
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManifestBuilder.AssignServiceAccountRole
+  nameWithType: ManifestBuilder.AssignServiceAccountRole
 - uid: Axiam.Sdk.Management.ManifestBuilder.Build
   name: Build()
   href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_Build
@@ -10515,15 +11448,15 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ManifestBuilder.Build
   nameWithType: ManifestBuilder.Build
-- uid: Axiam.Sdk.Management.ManifestBuilder.ChildResource(System.String,System.String,System.String,System.String)
-  name: ChildResource(string, string, string, string)
-  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_ChildResource_System_String_System_String_System_String_System_String_
-  commentId: M:Axiam.Sdk.Management.ManifestBuilder.ChildResource(System.String,System.String,System.String,System.String)
-  name.vb: ChildResource(String, String, String, String)
-  fullName: Axiam.Sdk.Management.ManifestBuilder.ChildResource(string, string, string, string)
-  fullName.vb: Axiam.Sdk.Management.ManifestBuilder.ChildResource(String, String, String, String)
-  nameWithType: ManifestBuilder.ChildResource(string, string, string, string)
-  nameWithType.vb: ManifestBuilder.ChildResource(String, String, String, String)
+- uid: Axiam.Sdk.Management.ManifestBuilder.ChildResource(System.String,System.String,System.String,System.String,System.Nullable{System.Text.Json.JsonElement})
+  name: ChildResource(string, string, string, string, JsonElement?)
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_ChildResource_System_String_System_String_System_String_System_String_System_Nullable_System_Text_Json_JsonElement__
+  commentId: M:Axiam.Sdk.Management.ManifestBuilder.ChildResource(System.String,System.String,System.String,System.String,System.Nullable{System.Text.Json.JsonElement})
+  name.vb: ChildResource(String, String, String, String, JsonElement?)
+  fullName: Axiam.Sdk.Management.ManifestBuilder.ChildResource(string, string, string, string, System.Text.Json.JsonElement?)
+  fullName.vb: Axiam.Sdk.Management.ManifestBuilder.ChildResource(String, String, String, String, System.Text.Json.JsonElement?)
+  nameWithType: ManifestBuilder.ChildResource(string, string, string, string, JsonElement?)
+  nameWithType.vb: ManifestBuilder.ChildResource(String, String, String, String, JsonElement?)
 - uid: Axiam.Sdk.Management.ManifestBuilder.ChildResource*
   name: ChildResource
   href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_ChildResource_
@@ -10579,6 +11512,22 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ManifestBuilder.Group
   nameWithType: ManifestBuilder.Group
+- uid: Axiam.Sdk.Management.ManifestBuilder.GroupRole(System.String,System.String,System.String,System.Boolean)
+  name: GroupRole(string, string, string?, bool)
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_GroupRole_System_String_System_String_System_String_System_Boolean_
+  commentId: M:Axiam.Sdk.Management.ManifestBuilder.GroupRole(System.String,System.String,System.String,System.Boolean)
+  name.vb: GroupRole(String, String, String, Boolean)
+  fullName: Axiam.Sdk.Management.ManifestBuilder.GroupRole(string, string, string?, bool)
+  fullName.vb: Axiam.Sdk.Management.ManifestBuilder.GroupRole(String, String, String, Boolean)
+  nameWithType: ManifestBuilder.GroupRole(string, string, string?, bool)
+  nameWithType.vb: ManifestBuilder.GroupRole(String, String, String, Boolean)
+- uid: Axiam.Sdk.Management.ManifestBuilder.GroupRole*
+  name: GroupRole
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_GroupRole_
+  commentId: Overload:Axiam.Sdk.Management.ManifestBuilder.GroupRole
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManifestBuilder.GroupRole
+  nameWithType: ManifestBuilder.GroupRole
 - uid: Axiam.Sdk.Management.ManifestBuilder.Permission(System.String,System.String,System.String)
   name: Permission(string, string, string)
   href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_Permission_System_String_System_String_System_String_
@@ -10595,15 +11544,15 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ManifestBuilder.Permission
   nameWithType: ManifestBuilder.Permission
-- uid: Axiam.Sdk.Management.ManifestBuilder.Resource(System.String,System.String,System.String)
-  name: Resource(string, string, string)
-  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_Resource_System_String_System_String_System_String_
-  commentId: M:Axiam.Sdk.Management.ManifestBuilder.Resource(System.String,System.String,System.String)
-  name.vb: Resource(String, String, String)
-  fullName: Axiam.Sdk.Management.ManifestBuilder.Resource(string, string, string)
-  fullName.vb: Axiam.Sdk.Management.ManifestBuilder.Resource(String, String, String)
-  nameWithType: ManifestBuilder.Resource(string, string, string)
-  nameWithType.vb: ManifestBuilder.Resource(String, String, String)
+- uid: Axiam.Sdk.Management.ManifestBuilder.Resource(System.String,System.String,System.String,System.Nullable{System.Text.Json.JsonElement})
+  name: Resource(string, string, string, JsonElement?)
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_Resource_System_String_System_String_System_String_System_Nullable_System_Text_Json_JsonElement__
+  commentId: M:Axiam.Sdk.Management.ManifestBuilder.Resource(System.String,System.String,System.String,System.Nullable{System.Text.Json.JsonElement})
+  name.vb: Resource(String, String, String, JsonElement?)
+  fullName: Axiam.Sdk.Management.ManifestBuilder.Resource(string, string, string, System.Text.Json.JsonElement?)
+  fullName.vb: Axiam.Sdk.Management.ManifestBuilder.Resource(String, String, String, System.Text.Json.JsonElement?)
+  nameWithType: ManifestBuilder.Resource(string, string, string, JsonElement?)
+  nameWithType.vb: ManifestBuilder.Resource(String, String, String, JsonElement?)
 - uid: Axiam.Sdk.Management.ManifestBuilder.Resource*
   name: Resource
   href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_Resource_
@@ -10643,6 +11592,22 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ManifestBuilder.Scope
   nameWithType: ManifestBuilder.Scope
+- uid: Axiam.Sdk.Management.ManifestBuilder.ServiceAccount(System.String,System.String,System.String)
+  name: ServiceAccount(string, string, string?)
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_ServiceAccount_System_String_System_String_System_String_
+  commentId: M:Axiam.Sdk.Management.ManifestBuilder.ServiceAccount(System.String,System.String,System.String)
+  name.vb: ServiceAccount(String, String, String)
+  fullName: Axiam.Sdk.Management.ManifestBuilder.ServiceAccount(string, string, string?)
+  fullName.vb: Axiam.Sdk.Management.ManifestBuilder.ServiceAccount(String, String, String)
+  nameWithType: ManifestBuilder.ServiceAccount(string, string, string?)
+  nameWithType.vb: ManifestBuilder.ServiceAccount(String, String, String)
+- uid: Axiam.Sdk.Management.ManifestBuilder.ServiceAccount*
+  name: ServiceAccount
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_ServiceAccount_
+  commentId: Overload:Axiam.Sdk.Management.ManifestBuilder.ServiceAccount
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManifestBuilder.ServiceAccount
+  nameWithType: ManifestBuilder.ServiceAccount
 - uid: Axiam.Sdk.Management.ManifestBuilder.User(System.String,System.String,System.String,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}})
   name: User(string, string, string, Sensitive<string>?)
   href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_User_System_String_System_String_System_String_System_Nullable_Axiam_Sdk_Core_Sensitive_System_String___
@@ -10771,6 +11736,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.GroupId
   nameWithType: AssignRoleToGroupRequest.GroupId
+- uid: Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.Inherit
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.html#Axiam_Sdk_Management_Models_AssignRoleToGroupRequest_Inherit
+  commentId: P:Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.Inherit
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.Inherit
+  nameWithType: AssignRoleToGroupRequest.Inherit
+- uid: Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.Inherit*
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.html#Axiam_Sdk_Management_Models_AssignRoleToGroupRequest_Inherit_
+  commentId: Overload:Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.Inherit
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.Inherit
+  nameWithType: AssignRoleToGroupRequest.Inherit
 - uid: Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.ResourceId
   name: ResourceId
   href: api/Axiam.Sdk.Management.Models.AssignRoleToGroupRequest.html#Axiam_Sdk_Management_Models_AssignRoleToGroupRequest_ResourceId
@@ -10803,6 +11781,19 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest
   fullName: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest
   nameWithType: AssignRoleToServiceAccountRequest
+- uid: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.Inherit
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.html#Axiam_Sdk_Management_Models_AssignRoleToServiceAccountRequest_Inherit
+  commentId: P:Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.Inherit
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.Inherit
+  nameWithType: AssignRoleToServiceAccountRequest.Inherit
+- uid: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.Inherit*
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.html#Axiam_Sdk_Management_Models_AssignRoleToServiceAccountRequest_Inherit_
+  commentId: Overload:Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.Inherit
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.Inherit
+  nameWithType: AssignRoleToServiceAccountRequest.Inherit
 - uid: Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.ResourceId
   name: ResourceId
   href: api/Axiam.Sdk.Management.Models.AssignRoleToServiceAccountRequest.html#Axiam_Sdk_Management_Models_AssignRoleToServiceAccountRequest_ResourceId
@@ -10848,6 +11839,19 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.AssignRoleToUserRequest
   fullName: Axiam.Sdk.Management.Models.AssignRoleToUserRequest
   nameWithType: AssignRoleToUserRequest
+- uid: Axiam.Sdk.Management.Models.AssignRoleToUserRequest.Inherit
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToUserRequest.html#Axiam_Sdk_Management_Models_AssignRoleToUserRequest_Inherit
+  commentId: P:Axiam.Sdk.Management.Models.AssignRoleToUserRequest.Inherit
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToUserRequest.Inherit
+  nameWithType: AssignRoleToUserRequest.Inherit
+- uid: Axiam.Sdk.Management.Models.AssignRoleToUserRequest.Inherit*
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.AssignRoleToUserRequest.html#Axiam_Sdk_Management_Models_AssignRoleToUserRequest_Inherit_
+  commentId: Overload:Axiam.Sdk.Management.Models.AssignRoleToUserRequest.Inherit
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.AssignRoleToUserRequest.Inherit
+  nameWithType: AssignRoleToUserRequest.Inherit
 - uid: Axiam.Sdk.Management.Models.AssignRoleToUserRequest.ResourceId
   name: ResourceId
   href: api/Axiam.Sdk.Management.Models.AssignRoleToUserRequest.html#Axiam_Sdk_Management_Models_AssignRoleToUserRequest_ResourceId
@@ -11560,6 +12564,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.CertificatePolicy.MaxCertValidityDays
   nameWithType: CertificatePolicy.MaxCertValidityDays
+- uid: Axiam.Sdk.Management.Models.CertificatePolicy.ServerCertAllowedNames
+  name: ServerCertAllowedNames
+  href: api/Axiam.Sdk.Management.Models.CertificatePolicy.html#Axiam_Sdk_Management_Models_CertificatePolicy_ServerCertAllowedNames
+  commentId: P:Axiam.Sdk.Management.Models.CertificatePolicy.ServerCertAllowedNames
+  fullName: Axiam.Sdk.Management.Models.CertificatePolicy.ServerCertAllowedNames
+  nameWithType: CertificatePolicy.ServerCertAllowedNames
+- uid: Axiam.Sdk.Management.Models.CertificatePolicy.ServerCertAllowedNames*
+  name: ServerCertAllowedNames
+  href: api/Axiam.Sdk.Management.Models.CertificatePolicy.html#Axiam_Sdk_Management_Models_CertificatePolicy_ServerCertAllowedNames_
+  commentId: Overload:Axiam.Sdk.Management.Models.CertificatePolicy.ServerCertAllowedNames
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CertificatePolicy.ServerCertAllowedNames
+  nameWithType: CertificatePolicy.ServerCertAllowedNames
 - uid: Axiam.Sdk.Management.Models.CertificateStatus
   name: CertificateStatus
   href: api/Axiam.Sdk.Management.Models.CertificateStatus.html
@@ -11602,6 +12619,12 @@ references:
   commentId: F:Axiam.Sdk.Management.Models.CertificateType.Device
   fullName: Axiam.Sdk.Management.Models.CertificateType.Device
   nameWithType: CertificateType.Device
+- uid: Axiam.Sdk.Management.Models.CertificateType.Server
+  name: Server
+  href: api/Axiam.Sdk.Management.Models.CertificateType.html#Axiam_Sdk_Management_Models_CertificateType_Server
+  commentId: F:Axiam.Sdk.Management.Models.CertificateType.Server
+  fullName: Axiam.Sdk.Management.Models.CertificateType.Server
+  nameWithType: CertificateType.Server
 - uid: Axiam.Sdk.Management.Models.CertificateType.Service
   name: Service
   href: api/Axiam.Sdk.Management.Models.CertificateType.html#Axiam_Sdk_Management_Models_CertificateType_Service
@@ -12173,6 +13196,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.CreateCertificateRequest.Subject
   nameWithType: CreateCertificateRequest.Subject
+- uid: Axiam.Sdk.Management.Models.CreateCertificateRequest.SubjectAltNames
+  name: SubjectAltNames
+  href: api/Axiam.Sdk.Management.Models.CreateCertificateRequest.html#Axiam_Sdk_Management_Models_CreateCertificateRequest_SubjectAltNames
+  commentId: P:Axiam.Sdk.Management.Models.CreateCertificateRequest.SubjectAltNames
+  fullName: Axiam.Sdk.Management.Models.CreateCertificateRequest.SubjectAltNames
+  nameWithType: CreateCertificateRequest.SubjectAltNames
+- uid: Axiam.Sdk.Management.Models.CreateCertificateRequest.SubjectAltNames*
+  name: SubjectAltNames
+  href: api/Axiam.Sdk.Management.Models.CreateCertificateRequest.html#Axiam_Sdk_Management_Models_CreateCertificateRequest_SubjectAltNames_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateCertificateRequest.SubjectAltNames
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateCertificateRequest.SubjectAltNames
+  nameWithType: CreateCertificateRequest.SubjectAltNames
 - uid: Axiam.Sdk.Management.Models.CreateCertificateRequest.ValidityDays
   name: ValidityDays
   href: api/Axiam.Sdk.Management.Models.CreateCertificateRequest.html#Axiam_Sdk_Management_Models_CreateCertificateRequest_ValidityDays
@@ -18592,6 +19628,19 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.RoleAssignment
   fullName: Axiam.Sdk.Management.Models.RoleAssignment
   nameWithType: RoleAssignment
+- uid: Axiam.Sdk.Management.Models.RoleAssignment.Inherit
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.RoleAssignment.html#Axiam_Sdk_Management_Models_RoleAssignment_Inherit
+  commentId: P:Axiam.Sdk.Management.Models.RoleAssignment.Inherit
+  fullName: Axiam.Sdk.Management.Models.RoleAssignment.Inherit
+  nameWithType: RoleAssignment.Inherit
+- uid: Axiam.Sdk.Management.Models.RoleAssignment.Inherit*
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.RoleAssignment.html#Axiam_Sdk_Management_Models_RoleAssignment_Inherit_
+  commentId: Overload:Axiam.Sdk.Management.Models.RoleAssignment.Inherit
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RoleAssignment.Inherit
+  nameWithType: RoleAssignment.Inherit
 - uid: Axiam.Sdk.Management.Models.RoleAssignment.ResourceId
   name: ResourceId
   href: api/Axiam.Sdk.Management.Models.RoleAssignment.html#Axiam_Sdk_Management_Models_RoleAssignment_ResourceId
@@ -18650,6 +19699,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.RoleGroupAssignment.Group
   nameWithType: RoleGroupAssignment.Group
+- uid: Axiam.Sdk.Management.Models.RoleGroupAssignment.Inherit
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.RoleGroupAssignment.html#Axiam_Sdk_Management_Models_RoleGroupAssignment_Inherit
+  commentId: P:Axiam.Sdk.Management.Models.RoleGroupAssignment.Inherit
+  fullName: Axiam.Sdk.Management.Models.RoleGroupAssignment.Inherit
+  nameWithType: RoleGroupAssignment.Inherit
+- uid: Axiam.Sdk.Management.Models.RoleGroupAssignment.Inherit*
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.RoleGroupAssignment.html#Axiam_Sdk_Management_Models_RoleGroupAssignment_Inherit_
+  commentId: Overload:Axiam.Sdk.Management.Models.RoleGroupAssignment.Inherit
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RoleGroupAssignment.Inherit
+  nameWithType: RoleGroupAssignment.Inherit
 - uid: Axiam.Sdk.Management.Models.RoleGroupAssignment.ResourceId
   name: ResourceId
   href: api/Axiam.Sdk.Management.Models.RoleGroupAssignment.html#Axiam_Sdk_Management_Models_RoleGroupAssignment_ResourceId
@@ -18682,6 +19744,19 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.RoleServiceAccountAssignment
   fullName: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment
   nameWithType: RoleServiceAccountAssignment
+- uid: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.Inherit
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.html#Axiam_Sdk_Management_Models_RoleServiceAccountAssignment_Inherit
+  commentId: P:Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.Inherit
+  fullName: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.Inherit
+  nameWithType: RoleServiceAccountAssignment.Inherit
+- uid: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.Inherit*
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.html#Axiam_Sdk_Management_Models_RoleServiceAccountAssignment_Inherit_
+  commentId: Overload:Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.Inherit
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.Inherit
+  nameWithType: RoleServiceAccountAssignment.Inherit
 - uid: Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.ResourceId
   name: ResourceId
   href: api/Axiam.Sdk.Management.Models.RoleServiceAccountAssignment.html#Axiam_Sdk_Management_Models_RoleServiceAccountAssignment_ResourceId
@@ -18727,6 +19802,19 @@ references:
   commentId: T:Axiam.Sdk.Management.Models.RoleUserAssignment
   fullName: Axiam.Sdk.Management.Models.RoleUserAssignment
   nameWithType: RoleUserAssignment
+- uid: Axiam.Sdk.Management.Models.RoleUserAssignment.Inherit
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.RoleUserAssignment.html#Axiam_Sdk_Management_Models_RoleUserAssignment_Inherit
+  commentId: P:Axiam.Sdk.Management.Models.RoleUserAssignment.Inherit
+  fullName: Axiam.Sdk.Management.Models.RoleUserAssignment.Inherit
+  nameWithType: RoleUserAssignment.Inherit
+- uid: Axiam.Sdk.Management.Models.RoleUserAssignment.Inherit*
+  name: Inherit
+  href: api/Axiam.Sdk.Management.Models.RoleUserAssignment.html#Axiam_Sdk_Management_Models_RoleUserAssignment_Inherit_
+  commentId: Overload:Axiam.Sdk.Management.Models.RoleUserAssignment.Inherit
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.RoleUserAssignment.Inherit
+  nameWithType: RoleUserAssignment.Inherit
 - uid: Axiam.Sdk.Management.Models.RoleUserAssignment.ResourceId
   name: ResourceId
   href: api/Axiam.Sdk.Management.Models.RoleUserAssignment.html#Axiam_Sdk_Management_Models_RoleUserAssignment_ResourceId
@@ -20169,6 +21257,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SetOrgSettings.SensitiveScopesEnabled
   nameWithType: SetOrgSettings.SensitiveScopesEnabled
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.ServerCertAllowedNames
+  name: ServerCertAllowedNames
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_ServerCertAllowedNames
+  commentId: P:Axiam.Sdk.Management.Models.SetOrgSettings.ServerCertAllowedNames
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.ServerCertAllowedNames
+  nameWithType: SetOrgSettings.ServerCertAllowedNames
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.ServerCertAllowedNames*
+  name: ServerCertAllowedNames
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_ServerCertAllowedNames_
+  commentId: Overload:Axiam.Sdk.Management.Models.SetOrgSettings.ServerCertAllowedNames
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.ServerCertAllowedNames
+  nameWithType: SetOrgSettings.ServerCertAllowedNames
 - uid: Axiam.Sdk.Management.Models.SetOrgSettings.WebauthnUserVerification
   name: WebauthnUserVerification
   href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_WebauthnUserVerification
@@ -20283,6 +21384,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.Metadata
   nameWithType: SignCertificateCsrRequest.Metadata
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.SubjectAltNames
+  name: SubjectAltNames
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_SubjectAltNames
+  commentId: P:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.SubjectAltNames
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.SubjectAltNames
+  nameWithType: SignCertificateCsrRequest.SubjectAltNames
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.SubjectAltNames*
+  name: SubjectAltNames
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_SubjectAltNames_
+  commentId: Overload:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.SubjectAltNames
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.SubjectAltNames
+  nameWithType: SignCertificateCsrRequest.SubjectAltNames
 - uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.ValidityDays
   name: ValidityDays
   href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_ValidityDays
@@ -20483,6 +21597,120 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SmtpConfig.Username
   nameWithType: SmtpConfig.Username
+- uid: Axiam.Sdk.Management.Models.SubjectAltName
+  name: SubjectAltName
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.html
+  commentId: T:Axiam.Sdk.Management.Models.SubjectAltName
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName
+  nameWithType: SubjectAltName
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.Dns(System.String)
+  name: Dns(string)
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.html#Axiam_Sdk_Management_Models_SubjectAltName_Dns_System_String_
+  commentId: M:Axiam.Sdk.Management.Models.SubjectAltName.Dns(System.String)
+  name.vb: Dns(String)
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.Dns(string)
+  fullName.vb: Axiam.Sdk.Management.Models.SubjectAltName.Dns(String)
+  nameWithType: SubjectAltName.Dns(string)
+  nameWithType.vb: SubjectAltName.Dns(String)
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.Dns*
+  name: Dns
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.html#Axiam_Sdk_Management_Models_SubjectAltName_Dns_
+  commentId: Overload:Axiam.Sdk.Management.Models.SubjectAltName.Dns
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.Dns
+  nameWithType: SubjectAltName.Dns
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.DnsArm
+  name: SubjectAltName.DnsArm
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.html
+  commentId: T:Axiam.Sdk.Management.Models.SubjectAltName.DnsArm
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.DnsArm
+  nameWithType: SubjectAltName.DnsArm
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.#ctor(System.String)
+  name: DnsArm(string)
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.html#Axiam_Sdk_Management_Models_SubjectAltName_DnsArm__ctor_System_String_
+  commentId: M:Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.#ctor(System.String)
+  name.vb: New(String)
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.DnsArm(string)
+  fullName.vb: Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.New(String)
+  nameWithType: SubjectAltName.DnsArm.DnsArm(string)
+  nameWithType.vb: SubjectAltName.DnsArm.New(String)
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.#ctor*
+  name: DnsArm
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.html#Axiam_Sdk_Management_Models_SubjectAltName_DnsArm__ctor_
+  commentId: Overload:Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.DnsArm
+  fullName.vb: Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.New
+  nameWithType: SubjectAltName.DnsArm.DnsArm
+  nameWithType.vb: SubjectAltName.DnsArm.New
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.Value
+  name: Value
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.html#Axiam_Sdk_Management_Models_SubjectAltName_DnsArm_Value
+  commentId: P:Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.Value
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.Value
+  nameWithType: SubjectAltName.DnsArm.Value
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.Value*
+  name: Value
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.html#Axiam_Sdk_Management_Models_SubjectAltName_DnsArm_Value_
+  commentId: Overload:Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.Value
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.Value
+  nameWithType: SubjectAltName.DnsArm.Value
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.Ip(System.String)
+  name: Ip(string)
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.html#Axiam_Sdk_Management_Models_SubjectAltName_Ip_System_String_
+  commentId: M:Axiam.Sdk.Management.Models.SubjectAltName.Ip(System.String)
+  name.vb: Ip(String)
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.Ip(string)
+  fullName.vb: Axiam.Sdk.Management.Models.SubjectAltName.Ip(String)
+  nameWithType: SubjectAltName.Ip(string)
+  nameWithType.vb: SubjectAltName.Ip(String)
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.Ip*
+  name: Ip
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.html#Axiam_Sdk_Management_Models_SubjectAltName_Ip_
+  commentId: Overload:Axiam.Sdk.Management.Models.SubjectAltName.Ip
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.Ip
+  nameWithType: SubjectAltName.Ip
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.IpArm
+  name: SubjectAltName.IpArm
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.IpArm.html
+  commentId: T:Axiam.Sdk.Management.Models.SubjectAltName.IpArm
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.IpArm
+  nameWithType: SubjectAltName.IpArm
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.IpArm.#ctor(System.String)
+  name: IpArm(string)
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.IpArm.html#Axiam_Sdk_Management_Models_SubjectAltName_IpArm__ctor_System_String_
+  commentId: M:Axiam.Sdk.Management.Models.SubjectAltName.IpArm.#ctor(System.String)
+  name.vb: New(String)
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.IpArm.IpArm(string)
+  fullName.vb: Axiam.Sdk.Management.Models.SubjectAltName.IpArm.New(String)
+  nameWithType: SubjectAltName.IpArm.IpArm(string)
+  nameWithType.vb: SubjectAltName.IpArm.New(String)
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.IpArm.#ctor*
+  name: IpArm
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.IpArm.html#Axiam_Sdk_Management_Models_SubjectAltName_IpArm__ctor_
+  commentId: Overload:Axiam.Sdk.Management.Models.SubjectAltName.IpArm.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.IpArm.IpArm
+  fullName.vb: Axiam.Sdk.Management.Models.SubjectAltName.IpArm.New
+  nameWithType: SubjectAltName.IpArm.IpArm
+  nameWithType.vb: SubjectAltName.IpArm.New
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.IpArm.Value
+  name: Value
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.IpArm.html#Axiam_Sdk_Management_Models_SubjectAltName_IpArm_Value
+  commentId: P:Axiam.Sdk.Management.Models.SubjectAltName.IpArm.Value
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.IpArm.Value
+  nameWithType: SubjectAltName.IpArm.Value
+- uid: Axiam.Sdk.Management.Models.SubjectAltName.IpArm.Value*
+  name: Value
+  href: api/Axiam.Sdk.Management.Models.SubjectAltName.IpArm.html#Axiam_Sdk_Management_Models_SubjectAltName_IpArm_Value_
+  commentId: Overload:Axiam.Sdk.Management.Models.SubjectAltName.IpArm.Value
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SubjectAltName.IpArm.Value
+  nameWithType: SubjectAltName.IpArm.Value
 - uid: Axiam.Sdk.Management.Models.Tenant
   name: Tenant
   href: api/Axiam.Sdk.Management.Models.Tenant.html
@@ -21065,6 +22293,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.SensitiveScopesEnabled
   nameWithType: TenantSettingsOverride.SensitiveScopesEnabled
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.ServerCertAllowedNames
+  name: ServerCertAllowedNames
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_ServerCertAllowedNames
+  commentId: P:Axiam.Sdk.Management.Models.TenantSettingsOverride.ServerCertAllowedNames
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.ServerCertAllowedNames
+  nameWithType: TenantSettingsOverride.ServerCertAllowedNames
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.ServerCertAllowedNames*
+  name: ServerCertAllowedNames
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_ServerCertAllowedNames_
+  commentId: Overload:Axiam.Sdk.Management.Models.TenantSettingsOverride.ServerCertAllowedNames
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.ServerCertAllowedNames
+  nameWithType: TenantSettingsOverride.ServerCertAllowedNames
 - uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.WebauthnUserVerification
   name: WebauthnUserVerification
   href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_WebauthnUserVerification
@@ -23893,6 +25134,18 @@ references:
   commentId: F:Axiam.Sdk.Management.PlanTarget.Scope
   fullName: Axiam.Sdk.Management.PlanTarget.Scope
   nameWithType: PlanTarget.Scope
+- uid: Axiam.Sdk.Management.PlanTarget.ServiceAccount
+  name: ServiceAccount
+  href: api/Axiam.Sdk.Management.PlanTarget.html#Axiam_Sdk_Management_PlanTarget_ServiceAccount
+  commentId: F:Axiam.Sdk.Management.PlanTarget.ServiceAccount
+  fullName: Axiam.Sdk.Management.PlanTarget.ServiceAccount
+  nameWithType: PlanTarget.ServiceAccount
+- uid: Axiam.Sdk.Management.PlanTarget.ServiceAccountRole
+  name: ServiceAccountRole
+  href: api/Axiam.Sdk.Management.PlanTarget.html#Axiam_Sdk_Management_PlanTarget_ServiceAccountRole
+  commentId: F:Axiam.Sdk.Management.PlanTarget.ServiceAccountRole
+  fullName: Axiam.Sdk.Management.PlanTarget.ServiceAccountRole
+  nameWithType: PlanTarget.ServiceAccountRole
 - uid: Axiam.Sdk.Management.PlanTarget.User
   name: User
   href: api/Axiam.Sdk.Management.PlanTarget.html#Axiam_Sdk_Management_PlanTarget_User
@@ -25001,15 +26254,15 @@ references:
   commentId: T:Axiam.Sdk.Management.StepOutcome
   fullName: Axiam.Sdk.Management.StepOutcome
   nameWithType: StepOutcome
-- uid: Axiam.Sdk.Management.StepOutcome.#ctor(Axiam.Sdk.Management.ApplyStatus,System.String)
-  name: StepOutcome(ApplyStatus, string?)
-  href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome__ctor_Axiam_Sdk_Management_ApplyStatus_System_String_
-  commentId: M:Axiam.Sdk.Management.StepOutcome.#ctor(Axiam.Sdk.Management.ApplyStatus,System.String)
-  name.vb: New(ApplyStatus, String)
-  fullName: Axiam.Sdk.Management.StepOutcome.StepOutcome(Axiam.Sdk.Management.ApplyStatus, string?)
-  fullName.vb: Axiam.Sdk.Management.StepOutcome.New(Axiam.Sdk.Management.ApplyStatus, String)
-  nameWithType: StepOutcome.StepOutcome(ApplyStatus, string?)
-  nameWithType.vb: StepOutcome.New(ApplyStatus, String)
+- uid: Axiam.Sdk.Management.StepOutcome.#ctor(Axiam.Sdk.Management.ApplyStatus,System.String,System.Nullable{System.Boolean},Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse,System.String)
+  name: StepOutcome(ApplyStatus, string?, bool?, ServiceAccountCreatedResponse?, string?)
+  href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome__ctor_Axiam_Sdk_Management_ApplyStatus_System_String_System_Nullable_System_Boolean__Axiam_Sdk_Management_Models_ServiceAccountCreatedResponse_System_String_
+  commentId: M:Axiam.Sdk.Management.StepOutcome.#ctor(Axiam.Sdk.Management.ApplyStatus,System.String,System.Nullable{System.Boolean},Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse,System.String)
+  name.vb: New(ApplyStatus, String, Boolean?, ServiceAccountCreatedResponse, String)
+  fullName: Axiam.Sdk.Management.StepOutcome.StepOutcome(Axiam.Sdk.Management.ApplyStatus, string?, bool?, Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse?, string?)
+  fullName.vb: Axiam.Sdk.Management.StepOutcome.New(Axiam.Sdk.Management.ApplyStatus, String, Boolean?, Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse, String)
+  nameWithType: StepOutcome.StepOutcome(ApplyStatus, string?, bool?, ServiceAccountCreatedResponse?, string?)
+  nameWithType.vb: StepOutcome.New(ApplyStatus, String, Boolean?, ServiceAccountCreatedResponse, String)
 - uid: Axiam.Sdk.Management.StepOutcome.#ctor*
   name: StepOutcome
   href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome__ctor_
@@ -25020,6 +26273,19 @@ references:
   fullName.vb: Axiam.Sdk.Management.StepOutcome.New
   nameWithType: StepOutcome.StepOutcome
   nameWithType.vb: StepOutcome.New
+- uid: Axiam.Sdk.Management.StepOutcome.CreatedServiceAccount
+  name: CreatedServiceAccount
+  href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_CreatedServiceAccount
+  commentId: P:Axiam.Sdk.Management.StepOutcome.CreatedServiceAccount
+  fullName: Axiam.Sdk.Management.StepOutcome.CreatedServiceAccount
+  nameWithType: StepOutcome.CreatedServiceAccount
+- uid: Axiam.Sdk.Management.StepOutcome.CreatedServiceAccount*
+  name: CreatedServiceAccount
+  href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_CreatedServiceAccount_
+  commentId: Overload:Axiam.Sdk.Management.StepOutcome.CreatedServiceAccount
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.StepOutcome.CreatedServiceAccount
+  nameWithType: StepOutcome.CreatedServiceAccount
 - uid: Axiam.Sdk.Management.StepOutcome.Message
   name: Message
   href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_Message
@@ -25033,6 +26299,32 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.StepOutcome.Message
   nameWithType: StepOutcome.Message
+- uid: Axiam.Sdk.Management.StepOutcome.RestoreError
+  name: RestoreError
+  href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_RestoreError
+  commentId: P:Axiam.Sdk.Management.StepOutcome.RestoreError
+  fullName: Axiam.Sdk.Management.StepOutcome.RestoreError
+  nameWithType: StepOutcome.RestoreError
+- uid: Axiam.Sdk.Management.StepOutcome.RestoreError*
+  name: RestoreError
+  href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_RestoreError_
+  commentId: Overload:Axiam.Sdk.Management.StepOutcome.RestoreError
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.StepOutcome.RestoreError
+  nameWithType: StepOutcome.RestoreError
+- uid: Axiam.Sdk.Management.StepOutcome.RestoreSucceeded
+  name: RestoreSucceeded
+  href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_RestoreSucceeded
+  commentId: P:Axiam.Sdk.Management.StepOutcome.RestoreSucceeded
+  fullName: Axiam.Sdk.Management.StepOutcome.RestoreSucceeded
+  nameWithType: StepOutcome.RestoreSucceeded
+- uid: Axiam.Sdk.Management.StepOutcome.RestoreSucceeded*
+  name: RestoreSucceeded
+  href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_RestoreSucceeded_
+  commentId: Overload:Axiam.Sdk.Management.StepOutcome.RestoreSucceeded
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.StepOutcome.RestoreSucceeded
+  nameWithType: StepOutcome.RestoreSucceeded
 - uid: Axiam.Sdk.Management.StepOutcome.Status
   name: Status
   href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_Status
@@ -26296,6 +27588,19 @@ references:
   commentId: T:Axiam.Sdk.Options.AxiamClientOptions
   fullName: Axiam.Sdk.Options.AxiamClientOptions
   nameWithType: AxiamClientOptions
+- uid: Axiam.Sdk.Options.AxiamClientOptions.ActingTenant
+  name: ActingTenant
+  href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_ActingTenant
+  commentId: P:Axiam.Sdk.Options.AxiamClientOptions.ActingTenant
+  fullName: Axiam.Sdk.Options.AxiamClientOptions.ActingTenant
+  nameWithType: AxiamClientOptions.ActingTenant
+- uid: Axiam.Sdk.Options.AxiamClientOptions.ActingTenant*
+  name: ActingTenant
+  href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_ActingTenant_
+  commentId: Overload:Axiam.Sdk.Options.AxiamClientOptions.ActingTenant
+  isSpec: "True"
+  fullName: Axiam.Sdk.Options.AxiamClientOptions.ActingTenant
+  nameWithType: AxiamClientOptions.ActingTenant
 - uid: Axiam.Sdk.Options.AxiamClientOptions.BaseUrl
   name: BaseUrl
   href: api/Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_BaseUrl
@@ -28061,15 +29366,15 @@ references:
   commentId: T:Axiam.Sdk.Rest.AxiamHttpMessageHandler
   fullName: Axiam.Sdk.Rest.AxiamHttpMessageHandler
   nameWithType: AxiamHttpMessageHandler
-- uid: Axiam.Sdk.Rest.AxiamHttpMessageHandler.#ctor(System.Net.CookieContainer,System.Uri,System.String,Axiam.Sdk.Auth.RefreshGuard)
-  name: AxiamHttpMessageHandler(CookieContainer, Uri, string, RefreshGuard)
-  href: api/Axiam.Sdk.Rest.AxiamHttpMessageHandler.html#Axiam_Sdk_Rest_AxiamHttpMessageHandler__ctor_System_Net_CookieContainer_System_Uri_System_String_Axiam_Sdk_Auth_RefreshGuard_
-  commentId: M:Axiam.Sdk.Rest.AxiamHttpMessageHandler.#ctor(System.Net.CookieContainer,System.Uri,System.String,Axiam.Sdk.Auth.RefreshGuard)
-  name.vb: New(CookieContainer, Uri, String, RefreshGuard)
-  fullName: Axiam.Sdk.Rest.AxiamHttpMessageHandler.AxiamHttpMessageHandler(System.Net.CookieContainer, System.Uri, string, Axiam.Sdk.Auth.RefreshGuard)
-  fullName.vb: Axiam.Sdk.Rest.AxiamHttpMessageHandler.New(System.Net.CookieContainer, System.Uri, String, Axiam.Sdk.Auth.RefreshGuard)
-  nameWithType: AxiamHttpMessageHandler.AxiamHttpMessageHandler(CookieContainer, Uri, string, RefreshGuard)
-  nameWithType.vb: AxiamHttpMessageHandler.New(CookieContainer, Uri, String, RefreshGuard)
+- uid: Axiam.Sdk.Rest.AxiamHttpMessageHandler.#ctor(System.Net.CookieContainer,System.Uri,System.String,Axiam.Sdk.Auth.RefreshGuard,System.String)
+  name: AxiamHttpMessageHandler(CookieContainer, Uri, string, RefreshGuard, string?)
+  href: api/Axiam.Sdk.Rest.AxiamHttpMessageHandler.html#Axiam_Sdk_Rest_AxiamHttpMessageHandler__ctor_System_Net_CookieContainer_System_Uri_System_String_Axiam_Sdk_Auth_RefreshGuard_System_String_
+  commentId: M:Axiam.Sdk.Rest.AxiamHttpMessageHandler.#ctor(System.Net.CookieContainer,System.Uri,System.String,Axiam.Sdk.Auth.RefreshGuard,System.String)
+  name.vb: New(CookieContainer, Uri, String, RefreshGuard, String)
+  fullName: Axiam.Sdk.Rest.AxiamHttpMessageHandler.AxiamHttpMessageHandler(System.Net.CookieContainer, System.Uri, string, Axiam.Sdk.Auth.RefreshGuard, string?)
+  fullName.vb: Axiam.Sdk.Rest.AxiamHttpMessageHandler.New(System.Net.CookieContainer, System.Uri, String, Axiam.Sdk.Auth.RefreshGuard, String)
+  nameWithType: AxiamHttpMessageHandler.AxiamHttpMessageHandler(CookieContainer, Uri, string, RefreshGuard, string?)
+  nameWithType.vb: AxiamHttpMessageHandler.New(CookieContainer, Uri, String, RefreshGuard, String)
 - uid: Axiam.Sdk.Rest.AxiamHttpMessageHandler.#ctor*
   name: AxiamHttpMessageHandler
   href: api/Axiam.Sdk.Rest.AxiamHttpMessageHandler.html#Axiam_Sdk_Rest_AxiamHttpMessageHandler__ctor_

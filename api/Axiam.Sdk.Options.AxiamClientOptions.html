@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta16/apiSpec/new?filename=Axiam_Sdk_Options_AxiamClientOptions.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Options.AxiamClientOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta17/apiSpec/new?filename=Axiam_Sdk_Options_AxiamClientOptions.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Options.AxiamClientOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,11 +89,11 @@
 
 
   <h1 id="Axiam_Sdk_Options_AxiamClientOptions" data-uid="Axiam.Sdk.Options.AxiamClientOptions" class="text-break">
-Class AxiamClientOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L15"><i class="bi bi-code-slash"></i></a>
+Class AxiamClientOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L15"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Options.html">Options</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Options.html">Options</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
@@ -163,11 +163,67 @@ supplied at all.</p>
 </h2>
 
 
+  <a id="Axiam_Sdk_Options_AxiamClientOptions_ActingTenant_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.ActingTenant*"></a>
+
+  <h3 id="Axiam_Sdk_Options_AxiamClientOptions_ActingTenant" data-uid="Axiam.Sdk.Options.AxiamClientOptions.ActingTenant">
+  ActingTenant
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The tenant this client acts on, distinct from the tenant it signs in as
+(CONTRACT.md §5.2 rule 1, contract 1.51). Meaningful only for an
+organization-level principal: it is sent as <code>X-Axiam-Tenant</code> on every
+<code>/api/v1</code> REST request this client makes, in addition to — never instead of
+— the unconditional <code>X-Tenant-Id</code> header (§5 rule 2). <code>null</code> (the
+default) sends no header at all, byte for byte what a client built before
+contract 1.51 sends.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Guid? ActingTenant { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Options_AxiamClientOptions_ActingTenant_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+This is the <b>construction-time</b> form (§5.2 rule 1's per-language table:
+"at construction"). It precedes any login, so it cannot be gated against
+<code>organization_level</code>/<code>reachable_tenant_ids</code> the way
+<a class="xref" href="Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_ActingTenant_System_Guid_">ActingTenant(Guid)</a> — the on-client form, called after a login
+result is held — is: a non-organization-level principal that logs in against a
+client configured this way will simply meet the server's own <code>403</code> on its
+first request. It is REST-only: the gRPC channel this client's transport builds
+sends no acting-tenant metadata, whatever this option says.
+</p>
+<p>
+It is a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>, never a string, so a caller cannot hand this a slug —
+the server silently ignores a header value that does not parse as a UUID and
+answers for the caller's own tenant instead, which would make a slug typo look
+like success against the wrong tenant.
+</p>
+</div>
+
+
+
+
   <a id="Axiam_Sdk_Options_AxiamClientOptions_BaseUrl_" data-uid="Axiam.Sdk.Options.AxiamClientOptions.BaseUrl*"></a>
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_BaseUrl" data-uid="Axiam.Sdk.Options.AxiamClientOptions.BaseUrl">
   BaseUrl
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Reserved for the future DI/options-pattern registration path (D-07,
@@ -201,7 +257,7 @@ own <code>baseUrl</code> parameter as the source of truth, never this field.</p>
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_ClientCertificatePem" data-uid="Axiam.Sdk.Options.AxiamClientOptions.ClientCertificatePem">
   ClientCertificatePem
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>PEM-encoded client-certificate chain presented for mutual-TLS (mTLS) client
@@ -242,7 +298,7 @@ verification (§6.1 rule 2); this is a separate code path from
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_ClientKeyPem" data-uid="Axiam.Sdk.Options.AxiamClientOptions.ClientKeyPem">
   ClientKeyPem
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L65"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L94"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>PEM-encoded private key (PKCS#8 or PKCS#1) matching <a class="xref" href="Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_ClientCertificatePem">ClientCertificatePem</a>,
@@ -279,7 +335,7 @@ with an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argu
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_ConnectTimeout" data-uid="Axiam.Sdk.Options.AxiamClientOptions.ConnectTimeout">
   ConnectTimeout
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L92"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L121"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>TCP connect timeout for the SDK-owned <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a>.</p>
@@ -311,7 +367,7 @@ with an <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argu
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_CustomCaPem" data-uid="Axiam.Sdk.Options.AxiamClientOptions.CustomCaPem">
   CustomCaPem
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L70"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>PEM-encoded custom CA certificate bytes — the ONLY TLS escape hatch (CONTRACT.md
@@ -345,7 +401,7 @@ store, never a bypass. <code>null</code> (the default) uses the system trust sto
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_DecisionMemoTtl" data-uid="Axiam.Sdk.Options.AxiamClientOptions.DecisionMemoTtl">
   DecisionMemoTtl
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L165"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L194"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enables the CONTRACT.md §17 client-side decision memo.
@@ -396,7 +452,7 @@ never memoized, and the memo is cleared on any credential change.
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_ExpectedAudience" data-uid="Axiam.Sdk.Options.AxiamClientOptions.ExpectedAudience">
   ExpectedAudience
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L89"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L118"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The <code>aud</code> value local token verification requires (CONTRACT.md §10.1
@@ -434,7 +490,7 @@ different audience.</p>
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_ExpectedIssuer" data-uid="Axiam.Sdk.Options.AxiamClientOptions.ExpectedIssuer">
   ExpectedIssuer
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L107"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The <code>iss</code> claim value local token verification requires (CONTRACT.md
@@ -470,7 +526,7 @@ hardcoded AXIAM issuer anywhere in this SDK; supply your deployment's own issuer
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_JwksCacheTtl" data-uid="Axiam.Sdk.Options.AxiamClientOptions.JwksCacheTtl">
   JwksCacheTtl
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L98"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>How long a fetched JWKS document is trusted before <code>JwksVerifier</code>
@@ -503,7 +559,7 @@ forces a refetch.</p>
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_MaxRetryAttempts" data-uid="Axiam.Sdk.Options.AxiamClientOptions.MaxRetryAttempts">
   MaxRetryAttempts
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L117"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L146"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Attempt cap for the CONTRACT.md §16 bounded read-only retry policy.
@@ -552,7 +608,7 @@ Use <a class="xref" href="Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Op
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_OidcClientId" data-uid="Axiam.Sdk.Options.AxiamClientOptions.OidcClientId">
   OidcClientId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L187"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L216"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The relying party's OAuth2 <code>client_id</code> (CONTRACT.md §12.1), used on every
@@ -588,7 +644,7 @@ per-call argument (§12 T1 reference judgment call 21).</p>
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_OidcClientSecret" data-uid="Axiam.Sdk.Options.AxiamClientOptions.OidcClientSecret">
   OidcClientSecret
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L196"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L225"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A confidential client's <code>client_secret</code> (CONTRACT.md §12.1). Omit for a
@@ -624,7 +680,7 @@ call (§12.1 note 4 — a public client cannot call them). Held behind
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_OidcClockSkewSeconds" data-uid="Axiam.Sdk.Options.AxiamClientOptions.OidcClockSkewSeconds">
   OidcClockSkewSeconds
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L211"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L240"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The permitted ID-token clock skew, in seconds, for the <code>exp</code>/<code>iat</code>/
@@ -659,7 +715,7 @@ to the 60-second default rather than being honored.</p>
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_OidcDiscoveryTtl" data-uid="Axiam.Sdk.Options.AxiamClientOptions.OidcDiscoveryTtl">
   OidcDiscoveryTtl
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L203"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L232"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The OIDC discovery-document cache TTL. Floored at 5 minutes per CONTRACT.md
@@ -693,7 +749,7 @@ default (5 minutes) already satisfies the floor.</p>
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_OrgId" data-uid="Axiam.Sdk.Options.AxiamClientOptions.OrgId">
   OrgId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Organization UUID resolved by the real AXIAM login/refresh endpoints
@@ -727,7 +783,7 @@ with <a class="xref" href="Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_O
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_OrgSlug" data-uid="Axiam.Sdk.Options.AxiamClientOptions.OrgSlug">
   OrgSlug
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Organization slug. Mutually exclusive with <a class="xref" href="Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_OrgId">OrgId</a> — set at
@@ -760,7 +816,7 @@ most one.</p>
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_RequestTimeout" data-uid="Axiam.Sdk.Options.AxiamClientOptions.RequestTimeout">
   RequestTimeout
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L95"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L124"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Overall per-request timeout for the SDK-owned <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a>.</p>
@@ -792,7 +848,7 @@ most one.</p>
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_RetryBaseDelay" data-uid="Axiam.Sdk.Options.AxiamClientOptions.RetryBaseDelay">
   RetryBaseDelay
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L152"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Base delay for the §16 backoff. Defaults to 200ms; a larger value is clamped
@@ -825,7 +881,7 @@ down to it, for the reason given on <a class="xref" href="Axiam.Sdk.Options.Axia
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_RetryEnabled" data-uid="Axiam.Sdk.Options.AxiamClientOptions.RetryEnabled">
   RetryEnabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L170"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enables the CONTRACT.md §16 bounded read-only retry policy.
@@ -864,7 +920,7 @@ this SDK does not — but it is not a way to make failures quieter: a transient
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_RetryMaxDelay" data-uid="Axiam.Sdk.Options.AxiamClientOptions.RetryMaxDelay">
   RetryMaxDelay
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L129"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L158"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Ceiling on any single §16 backoff. Defaults to 5s; a larger value is clamped
@@ -897,7 +953,7 @@ down to it, for the reason given on <a class="xref" href="Axiam.Sdk.Options.Axia
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_TelemetryHook" data-uid="Axiam.Sdk.Options.AxiamClientOptions.TelemetryHook">
   TelemetryHook
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L178"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L207"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Installs a CONTRACT.md §19 telemetry sink.</p>
@@ -937,7 +993,7 @@ not block.</p>
 
   <h3 id="Axiam_Sdk_Options_AxiamClientOptions_TenantId" data-uid="Axiam.Sdk.Options.AxiamClientOptions.TenantId">
   TenantId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Options/AxiamClientOptions.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Options/AxiamClientOptions.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Reserved for the future DI/options-pattern registration path (D-07,

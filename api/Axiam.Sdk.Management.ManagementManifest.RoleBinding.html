@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ManagementManifest.RoleBinding | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ManagementManifest.RoleBinding | AXIAM .NET SDK ">
+      
+      <meta name="description" content="One role binding on a group, user or service account (CONTRACT.md &#167;27.6.1 item 2, contract 1.51) — either shape a manifest&#39;s roles[] entry can take.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta17/apiSpec/new?filename=Axiam_Sdk_Management_ManagementManifest_RoleBinding.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.ManagementManifest.RoleBinding%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Management.ManagementManifest.RoleBinding">
+
+
+
+  <h1 id="Axiam_Sdk_Management_ManagementManifest_RoleBinding" data-uid="Axiam.Sdk.Management.ManagementManifest.RoleBinding" class="text-break">
+Class ManagementManifest.RoleBinding  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L216"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>One role binding on a group, user or service account (CONTRACT.md §27.6.1
+item 2, contract 1.51) — either shape a manifest's <code>roles[]</code> entry can take.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record ManagementManifest.RoleBinding : IEquatable&lt;ManagementManifest.RoleBinding&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ManagementManifest.RoleBinding</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.html">ManagementManifest</a>.<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleBinding.html">RoleBinding</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Management_ManagementManifest_RoleBinding_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+Implicitly convertible from a bare role key (<code>(RoleBinding)"editor"</code>, and
+every call site in this SDK that used to take a <code>string</code> role key still
+compiles unchanged) — the plain shape every SDK had before contract 1.51: no
+resource, and so no inheritance question.
+</p>
+<p>
+The natural key within one subject's <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.GroupSpec.html#Axiam_Sdk_Management_ManagementManifest_GroupSpec_Roles">Roles</a>/
+<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.UserSpec.html#Axiam_Sdk_Management_ManagementManifest_UserSpec_Roles">Roles</a>/
+<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccountSpec_Roles">Roles</a> is <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding_Role">Role</a>
+alone — the server keys an assignment on <code>(subject, role)</code> with no resource
+component (<code>has_role</code> is <code>UNIQUE(in, out)</code>), so one role bound twice to
+one subject — plain and scoped included — describes a state the server cannot
+hold. <code>PlanAsync</code>/<code>ApplyAsync</code> reject that before any request, naming the
+subject and the role (§27.6.1's normative rule).
+</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_RoleBinding__ctor_" data-uid="Axiam.Sdk.Management.ManagementManifest.RoleBinding.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_RoleBinding__ctor_System_String_System_String_System_Boolean_" data-uid="Axiam.Sdk.Management.ManagementManifest.RoleBinding.#ctor(System.String,System.String,System.Boolean)">
+  RoleBinding(string, string?, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L216"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>One role binding on a group, user or service account (CONTRACT.md §27.6.1
+item 2, contract 1.51) — either shape a manifest's <code>roles[]</code> entry can take.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RoleBinding(string Role, string? Resource = null, bool Inherit = true)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>Role</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleSpec.html">ManagementManifest.RoleSpec</a> key being bound.</p>
+</dd>
+    <dt><code>Resource</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.ResourceSpec.html">ManagementManifest.ResourceSpec</a> key this binding is scoped to, or <code>null</code> for a
+plain (unscoped) binding.</p>
+</dd>
+    <dt><code>Inherit</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Whether the binding also reaches the descendants of <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding_Resource">Resource</a>.
+Defaults to <code>true</code>, and reaches the wire ONLY as <code>false</code> — an inheritable
+binding's request body stays byte-for-byte a pre-1.51 body. A global role
+(<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleSpec.html#Axiam_Sdk_Management_ManagementManifest_RoleSpec_Global">Global</a>) bound with <code>Inherit: false</code> is refused by the
+server with <code>400</code> (a global role ignores resource scope); this is checked
+client-side too, before any request.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_ManagementManifest_RoleBinding__ctor_System_String_System_String_System_Boolean__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Implicitly convertible from a bare role key (<code>(RoleBinding)"editor"</code>, and
+every call site in this SDK that used to take a <code>string</code> role key still
+compiles unchanged) — the plain shape every SDK had before contract 1.51: no
+resource, and so no inheritance question.
+</p>
+<p>
+The natural key within one subject's <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.GroupSpec.html#Axiam_Sdk_Management_ManagementManifest_GroupSpec_Roles">Roles</a>/
+<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.UserSpec.html#Axiam_Sdk_Management_ManagementManifest_UserSpec_Roles">Roles</a>/
+<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html#Axiam_Sdk_Management_ManagementManifest_ServiceAccountSpec_Roles">Roles</a> is <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding_Role">Role</a>
+alone — the server keys an assignment on <code>(subject, role)</code> with no resource
+component (<code>has_role</code> is <code>UNIQUE(in, out)</code>), so one role bound twice to
+one subject — plain and scoped included — describes a state the server cannot
+hold. <code>PlanAsync</code>/<code>ApplyAsync</code> reject that before any request, naming the
+subject and the role (§27.6.1's normative rule).
+</p>
+</div>
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_RoleBinding_Inherit_" data-uid="Axiam.Sdk.Management.ManagementManifest.RoleBinding.Inherit*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_RoleBinding_Inherit" data-uid="Axiam.Sdk.Management.ManagementManifest.RoleBinding.Inherit">
+  Inherit
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L216"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether the binding also reaches the descendants of <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleBinding.html#Axiam_Sdk_Management_ManagementManifest_RoleBinding_Resource">Resource</a>.
+Defaults to <code>true</code>, and reaches the wire ONLY as <code>false</code> — an inheritable
+binding's request body stays byte-for-byte a pre-1.51 body. A global role
+(<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleSpec.html#Axiam_Sdk_Management_ManagementManifest_RoleSpec_Global">Global</a>) bound with <code>Inherit: false</code> is refused by the
+server with <code>400</code> (a global role ignores resource scope); this is checked
+client-side too, before any request.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Inherit { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_RoleBinding_Resource_" data-uid="Axiam.Sdk.Management.ManagementManifest.RoleBinding.Resource*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_RoleBinding_Resource" data-uid="Axiam.Sdk.Management.ManagementManifest.RoleBinding.Resource">
+  Resource
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L216"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.ResourceSpec.html">ManagementManifest.ResourceSpec</a> key this binding is scoped to, or <code>null</code> for a
+plain (unscoped) binding.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Resource { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_RoleBinding_Role_" data-uid="Axiam.Sdk.Management.ManagementManifest.RoleBinding.Role*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_RoleBinding_Role" data-uid="Axiam.Sdk.Management.ManagementManifest.RoleBinding.Role">
+  Role
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L216"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleSpec.html">ManagementManifest.RoleSpec</a> key being bound.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Role { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_RoleBinding_op_Implicit_" data-uid="Axiam.Sdk.Management.ManagementManifest.RoleBinding.op_Implicit*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_RoleBinding_op_Implicit_System_String__Axiam_Sdk_Management_ManagementManifest_RoleBinding" data-uid="Axiam.Sdk.Management.ManagementManifest.RoleBinding.op_Implicit(System.String)~Axiam.Sdk.Management.ManagementManifest.RoleBinding">
+  implicit operator RoleBinding(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L220"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A bare role key becomes the plain (unscoped, inheritable) shape.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator ManagementManifest.RoleBinding(string roleKey)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>roleKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleSpec.html">ManagementManifest.RoleSpec</a> key.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManagementManifest.html">ManagementManifest</a>.<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.RoleBinding.html">RoleBinding</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

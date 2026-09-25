@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta16/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamAuthMiddleware.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamAuthMiddleware%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta17/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamAuthMiddleware.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamAuthMiddleware%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,11 +89,11 @@
 
 
   <h1 id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware" class="text-break">
-Class AxiamAuthMiddleware  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L80"><i class="bi bi-code-slash"></i></a>
+Class AxiamAuthMiddleware  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L90"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.AspNetCore.html">AspNetCore</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.AspNetCore.html">AspNetCore</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.AspNetCore.dll</dd></dl>
   </div>
 
@@ -169,6 +169,13 @@ implies tenant authorization). An explicit <code>exp</code> re-check is performe
 as defense in depth, mirroring the Java filter's lines 88-91 even though
 <code>JwksVerifier.VerifyAsync</code> already checks <code>exp</code> internally.
 </li><li>
+CONTRACT.md §10.1 rule 9 (contract 1.51): this middleware calls
+<code>JwksVerifier.VerifyWithProofsAsync</code>, not the plain <code>VerifyAsync</code> — the
+evidence is <code>HttpContext.Connection.ClientCertificate</code>, read fresh on every
+request and NEVER from a header. A token carrying <code>cnf</code> (the §6.1 device
+login mints one by default) is refused unless the presented certificate's
+thumbprint matches; an ordinary bearer token is unaffected either way.
+</li><li>
 <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.httpcontext.user">User</a> is rebuilt from scratch on every request from a fresh
 <code>VerifyAsync</code> call — it is NEVER cached beyond the current request, and never
 beyond the token's own remaining TTL (§10).
@@ -210,7 +217,7 @@ mounted globally.
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_Microsoft_Extensions_Options_IOptions_Axiam_Sdk_AspNetCore_AxiamOptions__" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{Axiam.Sdk.AspNetCore.AxiamOptions})">
   AxiamAuthMiddleware(RequestDelegate, IOptions&lt;AxiamOptions&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L106"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L116"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs the middleware. Registered by the ASP.NET Core pipeline
@@ -264,7 +271,7 @@ either is outside §28's syntax.</p>
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamAuthMiddleware_InvokeAsync_Microsoft_AspNetCore_Http_HttpContext_Axiam_Sdk_AxiamClient_Microsoft_Extensions_Options_IOptions_Axiam_Sdk_AspNetCore_AxiamOptions__" data-uid="Axiam.Sdk.AspNetCore.AxiamAuthMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,Axiam.Sdk.AxiamClient,Microsoft.Extensions.Options.IOptions{Axiam.Sdk.AspNetCore.AxiamOptions})">
   InvokeAsync(HttpContext, AxiamClient, IOptions&lt;AxiamOptions&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L120"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk.AspNetCore/AxiamAuthMiddleware.cs/#L130"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Convention-based ASP.NET Core middleware invocation. <code class="paramref">client</code> and

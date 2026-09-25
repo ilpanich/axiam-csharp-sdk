@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class DeviceToken | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class DeviceToken | AXIAM .NET SDK ">
+      
+      <meta name="description" content="The result of AxiamClient.AuthenticateDeviceAsync — the &#167;6.1 mTLS device login, POST /api/v1/auth/device (CONTRACT.md &#167;6.1 rule 6, contract 1.51).">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta17/apiSpec/new?filename=Axiam_Sdk_Auth_DeviceToken.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.DeviceToken%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Auth.DeviceToken">
+
+
+
+  <h1 id="Axiam_Sdk_Auth_DeviceToken" data-uid="Axiam.Sdk.Auth.DeviceToken" class="text-break">
+Class DeviceToken  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/DeviceToken.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Auth.html">Auth</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>The result of <code>AxiamClient.AuthenticateDeviceAsync</code> — the §6.1 mTLS device
+login, <code>POST /api/v1/auth/device</code> (CONTRACT.md §6.1 rule 6, contract 1.51).</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record DeviceToken : IEquatable&lt;DeviceToken&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">DeviceToken</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Auth.DeviceToken.html">DeviceToken</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Auth_DeviceToken_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+There is no refresh token: <a class="xref" href="Axiam.Sdk.Auth.DeviceToken.html#Axiam_Sdk_Auth_DeviceToken_ExpiresIn">ExpiresIn</a> is the whole lifetime of the
+credential, and a device re-authenticates by calling
+<code>AuthenticateDeviceAsync</code> again, which costs one TLS handshake — cheaper than the
+server-side state a refresh token would need. This is a server decision (D-6 of the
+dogfooding remediation plan), not an SDK omission.
+</p>
+<p>
+<a class="xref" href="Axiam.Sdk.Auth.DeviceToken.html#Axiam_Sdk_Auth_DeviceToken_AccessToken">AccessToken</a> is certificate-bound (CONTRACT.md §10.1 rule 9, §6.1
+rule 9): it carries <code>cnf.x5t#S256</code> naming the certificate this client presented,
+and is usable only on a connection presenting that same certificate. The handle
+<code>AuthenticateDeviceAsync</code> returns already satisfies that — it is built over the
+SAME client-certificate identity this client was constructed with.
+</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Axiam_Sdk_Auth_DeviceToken__ctor_" data-uid="Axiam.Sdk.Auth.DeviceToken.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_DeviceToken__ctor_Axiam_Sdk_Core_Sensitive_System_String__System_String_System_Int32_" data-uid="Axiam.Sdk.Auth.DeviceToken.#ctor(Axiam.Sdk.Core.Sensitive{System.String},System.String,System.Int32)">
+  DeviceToken(Sensitive&lt;string&gt;, string, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/DeviceToken.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The result of <code>AxiamClient.AuthenticateDeviceAsync</code> — the §6.1 mTLS device
+login, <code>POST /api/v1/auth/device</code> (CONTRACT.md §6.1 rule 6, contract 1.51).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DeviceToken(Sensitive&lt;string&gt; AccessToken, string TokenType, int ExpiresIn)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>AccessToken</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The device's bearer credential. <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a> (§7): never appears in
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">ToString()</a>, JSON serialization or a log call.</p>
+</dd>
+    <dt><code>TokenType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Always <code>&quot;Bearer&quot;</code> — including for this certificate-bound
+token. CONTRACT.md §1.1.1 rule 5: an SDK MUST decide boundness from <code>cnf</code>
+alone, never from this field.</p>
+</dd>
+    <dt><code>ExpiresIn</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The access token's lifetime in seconds (server default 900).</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Auth_DeviceToken__ctor_Axiam_Sdk_Core_Sensitive_System_String__System_String_System_Int32__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+There is no refresh token: <a class="xref" href="Axiam.Sdk.Auth.DeviceToken.html#Axiam_Sdk_Auth_DeviceToken_ExpiresIn">ExpiresIn</a> is the whole lifetime of the
+credential, and a device re-authenticates by calling
+<code>AuthenticateDeviceAsync</code> again, which costs one TLS handshake — cheaper than the
+server-side state a refresh token would need. This is a server decision (D-6 of the
+dogfooding remediation plan), not an SDK omission.
+</p>
+<p>
+<a class="xref" href="Axiam.Sdk.Auth.DeviceToken.html#Axiam_Sdk_Auth_DeviceToken_AccessToken">AccessToken</a> is certificate-bound (CONTRACT.md §10.1 rule 9, §6.1
+rule 9): it carries <code>cnf.x5t#S256</code> naming the certificate this client presented,
+and is usable only on a connection presenting that same certificate. The handle
+<code>AuthenticateDeviceAsync</code> returns already satisfies that — it is built over the
+SAME client-certificate identity this client was constructed with.
+</p>
+</div>
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Auth_DeviceToken_AccessToken_" data-uid="Axiam.Sdk.Auth.DeviceToken.AccessToken*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_DeviceToken_AccessToken" data-uid="Axiam.Sdk.Auth.DeviceToken.AccessToken">
+  AccessToken
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/DeviceToken.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The device's bearer credential. <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a> (§7): never appears in
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">ToString()</a>, JSON serialization or a log call.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Sensitive&lt;string&gt; AccessToken { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Auth_DeviceToken_ExpiresIn_" data-uid="Axiam.Sdk.Auth.DeviceToken.ExpiresIn*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_DeviceToken_ExpiresIn" data-uid="Axiam.Sdk.Auth.DeviceToken.ExpiresIn">
+  ExpiresIn
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/DeviceToken.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The access token's lifetime in seconds (server default 900).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int ExpiresIn { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Auth_DeviceToken_TokenType_" data-uid="Axiam.Sdk.Auth.DeviceToken.TokenType*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_DeviceToken_TokenType" data-uid="Axiam.Sdk.Auth.DeviceToken.TokenType">
+  TokenType
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/DeviceToken.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Always <code>&quot;Bearer&quot;</code> — including for this certificate-bound
+token. CONTRACT.md §1.1.1 rule 5: an SDK MUST decide boundness from <code>cnf</code>
+alone, never from this field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string TokenType { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

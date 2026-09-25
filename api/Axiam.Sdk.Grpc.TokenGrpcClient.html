@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class TokenGrpcClient | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class TokenGrpcClient | AXIAM .NET SDK ">
+      
+      <meta name="description" content="validate_token/introspect_token (CONTRACT.md &#167;1.1.1, &#167;10.3, contract 1.51) — axiam.v1.TokenService. Built exactly like : the shared long-lived channel, the same  the REST-sharing session uses, and UNAUTHENTICATED-&amp;gt;single-flight-refresh-&amp;gt;one-retry via the SAME  — never a second guard instance.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta17/apiSpec/new?filename=Axiam_Sdk_Grpc_TokenGrpcClient.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Grpc.TokenGrpcClient%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Grpc.TokenGrpcClient">
+
+
+
+  <h1 id="Axiam_Sdk_Grpc_TokenGrpcClient" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient" class="text-break">
+Class TokenGrpcClient  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L127"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Grpc.html">Grpc</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p><code>validate_token</code>/<code>introspect_token</code> (CONTRACT.md §1.1.1, §10.3,
+contract 1.51) — <code>axiam.v1.TokenService</code>. Built exactly like
+<a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.html">AxiamGrpcAuthzClient</a>: the shared long-lived channel, the same
+<a class="xref" href="Axiam.Sdk.Grpc.AuthInterceptor.html">AuthInterceptor</a> the REST-sharing session uses, and
+UNAUTHENTICATED-&gt;single-flight-refresh-&gt;one-retry via the SAME
+<a class="xref" href="Axiam.Sdk.Auth.RefreshGuard.html">RefreshGuard</a> — never a second guard instance.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class TokenGrpcClient : IDisposable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">TokenGrpcClient</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Grpc_TokenGrpcClient_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>CONTRACT.md §1.1.1 rule 1: two credentials travel on one call, and this class keeps
+them apart structurally. The CALLER's token authenticates the RPC itself, through the
+interceptor exactly as every other gRPC call on this channel is authenticated — this
+class never reads it directly. The INSPECTED token is a required
+<a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive&lt;T&gt;</a> parameter of <a class="xref" href="Axiam.Sdk.Grpc.TokenGrpcClient.html#Axiam_Sdk_Grpc_TokenGrpcClient_ValidateTokenAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_">ValidateTokenAsync(Sensitive&lt;string&gt;, CancellationToken)</a>/
+<a class="xref" href="Axiam.Sdk.Grpc.TokenGrpcClient.html#Axiam_Sdk_Grpc_TokenGrpcClient_IntrospectTokenAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_">IntrospectTokenAsync(Sensitive&lt;string&gt;, CancellationToken)</a> and travels in the request message; it has no
+default, so it can never silently fall back to the caller's own token.</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Axiam_Sdk_Grpc_TokenGrpcClient__ctor_" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Grpc_TokenGrpcClient__ctor_Axiam_Sdk_AxiamClient_System_Uri_" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient.#ctor(Axiam.Sdk.AxiamClient,System.Uri)">
+  TokenGrpcClient(AxiamClient, Uri?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Constructs the token gRPC transport from <code class="paramref">client</code>'s exposed
+internal seam, sharing its session exactly as <a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.html">AxiamGrpcAuthzClient</a>
+does — this constructor never modifies <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a> itself.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TokenGrpcClient(AxiamClient client, Uri? grpcTarget = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>client</code> <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a></dt>
+    <dd><p>The already-constructed REST <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a> whose
+session (RefreshGuard/tenant/token) this gRPC transport shares.</p>
+</dd>
+    <dt><code>grpcTarget</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
+    <dd><p>The gRPC endpoint. Defaults to <code class="paramref">client</code>'s own REST
+<code>BaseUrl</code> when omitted.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Grpc_TokenGrpcClient_Dispose_" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient.Dispose*"></a>
+
+  <h3 id="Axiam_Sdk_Grpc_TokenGrpcClient_Dispose" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient.Dispose">
+  Dispose()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L264"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The channel is shut down with the client — a no-op when this instance was
+built over a caller-owned <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-beta17/src/Grpc.Core.Api/CallInvoker.cs">CallInvoker</a> (the internal test seam).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Grpc_TokenGrpcClient_IntrospectTokenAsync_" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient.IntrospectTokenAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Grpc_TokenGrpcClient_IntrospectTokenAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient.IntrospectTokenAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)">
+  IntrospectTokenAsync(Sensitive&lt;string&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L230"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>IntrospectToken</code> (CONTRACT.md §1.1.1, §10.3): the RFC 7662 field set,
+including UMA permissions and X4 cross-domain provenance. Same
+precondition/UNAUTHENTICATED/single-flight-retry behaviour as
+<a class="xref" href="Axiam.Sdk.Grpc.TokenGrpcClient.html#Axiam_Sdk_Grpc_TokenGrpcClient_ValidateTokenAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_">ValidateTokenAsync(Sensitive&lt;string&gt;, CancellationToken)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;TokenIntrospection&gt; IntrospectTokenAsync(Sensitive&lt;string&gt; accessToken, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>accessToken</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The token being inspected.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the in-flight RPC.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Grpc.TokenIntrospection.html">TokenIntrospection</a>&gt;</dt>
+    <dd><p>Every field the response message defines.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
+    <dd><p>No active session on this <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a> (no wire call), or a terminal
+gRPC <code>UNAUTHENTICATED</code>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_Grpc_TokenGrpcClient_ValidateTokenAsync_" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient.ValidateTokenAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Grpc_TokenGrpcClient_ValidateTokenAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient.ValidateTokenAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)">
+  ValidateTokenAsync(Sensitive&lt;string&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L192"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>ValidateToken</code> (CONTRACT.md §1.1.1, §10.3): a lighter-weight check
+than <a class="xref" href="Axiam.Sdk.Grpc.TokenGrpcClient.html#Axiam_Sdk_Grpc_TokenGrpcClient_IntrospectTokenAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_">IntrospectTokenAsync(Sensitive&lt;string&gt;, CancellationToken)</a> — signature, expiry and tenant, plus the
+§10.1 rule 9 confirmation. On <code>UNAUTHENTICATED</code> (the CALLER's own token
+having expired), the shared <code>AuthInterceptor</code> drives exactly one shared-guard
+refresh and retries once (§9.3) before this method ever observes a terminal
+failure.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;TokenValidation&gt; ValidateTokenAsync(Sensitive&lt;string&gt; accessToken, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>accessToken</code> <a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The token being inspected — secret material, and a
+DIFFERENT credential from whichever one authenticates this call.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the in-flight RPC.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Grpc.TokenValidation.html">TokenValidation</a>&gt;</dt>
+    <dd><p>Every field the response message defines.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
+    <dd><p>No active session on this <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a> (no wire call, §1.1.1 rule
+2), or a terminal gRPC <code>UNAUTHENTICATED</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

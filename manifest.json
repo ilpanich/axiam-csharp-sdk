@@ -1,4 +1,5 @@
 {
+  "docfx_version": "2.81.0+ba844df625370a6bd7c1ecab0d0ec4d1d9128ac4",
   "source_base_path": "/home/runner/work/axiam-csharp-sdk/axiam-csharp-sdk",
   "xrefmap": "xrefmap.yml",
   "files": [
@@ -345,6 +346,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.AspNetCore",
       "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.DeviceToken.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.DeviceToken.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.DeviceToken",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.DeviceToken.yml\" sourcestartlinenumber=\"1\">The result of <code>AxiamClient.AuthenticateDeviceAsync</code> — the §6.1 mTLS device\nlogin, <code>POST /api/v1/auth/device</code> (CONTRACT.md §6.1 rule 6, contract 1.51).</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1538,6 +1553,90 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Grpc.RptPermission.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Grpc.RptPermission.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Grpc.RptPermission",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Grpc.RptPermission.yml\" sourcestartlinenumber=\"1\">A UMA 2.0 permission carried by an RPT (X2), from <xref href=\"Axiam.Sdk.Grpc.TokenIntrospection.Permissions\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Grpc.TokenCnf.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Grpc.TokenCnf.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Grpc.TokenCnf",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Grpc.TokenCnf.yml\" sourcestartlinenumber=\"1\">The §10.3 sender-constraint, modelled once (RFC 8705 §3 / RFC 9449 §6). Both\nmembers are the raw proto3 string default (<code>&quot;&quot;</code>) rather than <code>null</code> when\nunset on the wire — CONTRACT.md §1.1.1 rule 3 requires the distinction between\n&quot;no <code>cnf</code> at all&quot; (<xref href=\"Axiam.Sdk.Grpc.TokenValidation.Cnf\" data-throw-if-not-resolved=\"false\"></xref>/<xref href=\"Axiam.Sdk.Grpc.TokenIntrospection.Cnf\" data-throw-if-not-resolved=\"false\"></xref>\nitself <code>null</code>) and &quot;a <code>cnf</code> naming neither method&quot; (this record present with\nboth members empty) to survive into the typed value.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Grpc.TokenGrpcClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Grpc.TokenGrpcClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Grpc.TokenGrpcClient",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Grpc.TokenGrpcClient.yml\" sourcestartlinenumber=\"1\"><code>validate_token</code>/<code>introspect_token</code> (CONTRACT.md §1.1.1, §10.3,\ncontract 1.51) — <code>axiam.v1.TokenService</code>. Built exactly like\n<xref href=\"Axiam.Sdk.Grpc.AxiamGrpcAuthzClient\" data-throw-if-not-resolved=\"false\"></xref>: the shared long-lived channel, the same\n<xref href=\"Axiam.Sdk.Grpc.AuthInterceptor\" data-throw-if-not-resolved=\"false\"></xref> the REST-sharing session uses, and\nUNAUTHENTICATED-&gt;single-flight-refresh-&gt;one-retry via the SAME\n<xref href=\"Axiam.Sdk.Auth.RefreshGuard\" data-throw-if-not-resolved=\"false\"></xref> — never a second guard instance.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Grpc.TokenIntrospection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Grpc.TokenIntrospection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Grpc.TokenIntrospection",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Grpc.TokenIntrospection.yml\" sourcestartlinenumber=\"1\"><code>axiam.v1.TokenService/IntrospectToken</code>'s typed response (CONTRACT.md §1.1.1\nrule 3): the RFC 7662 field set, <xref href=\"Axiam.Sdk.Grpc.TokenIntrospection.Cnf\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"Axiam.Sdk.Grpc.TokenIntrospection.Permissions\" data-throw-if-not-resolved=\"false\"></xref>/\n<xref href=\"Axiam.Sdk.Grpc.TokenIntrospection.ExtExchangeIss\" data-throw-if-not-resolved=\"false\"></xref> included.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Grpc.TokenStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Grpc.TokenStatus.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Grpc.TokenStatus",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Grpc.TokenStatus.yml\" sourcestartlinenumber=\"1\">CONTRACT.md §10.3 rule 2's four-way answer to &quot;is this token usable as\npresented?&quot; — deliberately NOT reducible to <code>valid</code>/<code>active</code> alone (that is\nthe whole point of §10.3): a caller that only checks the boolean has converted a\nsender-constrained token back into a bearer token.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Grpc.TokenValidation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Grpc.TokenValidation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Grpc.TokenValidation",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Grpc.TokenValidation.yml\" sourcestartlinenumber=\"1\"><code>axiam.v1.TokenService/ValidateToken</code>'s typed response (CONTRACT.md §1.1.1\nrule 3): every field the message defines, <xref href=\"Axiam.Sdk.Grpc.TokenValidation.Cnf\" data-throw-if-not-resolved=\"false\"></xref> included.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Grpc.UserInfo.yml",
       "output": {
         ".html": {
@@ -1790,6 +1889,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest.RoleBinding",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.RoleBinding.yml\" sourcestartlinenumber=\"1\">One role binding on a group, user or service account (CONTRACT.md §27.6.1\nitem 2, contract 1.51) — either shape a manifest's <code>roles[]</code> entry can take.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.RoleSpec.yml",
       "output": {
         ".html": {
@@ -1815,6 +1928,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.ManagementManifest.ScopeSpec",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.ScopeSpec.yml\" sourcestartlinenumber=\"1\">One scope beneath a resource.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.ServiceAccountSpec.yml\" sourcestartlinenumber=\"1\">One service account, and the roles it holds (CONTRACT.md §27.6.1 item 3,\ncontract 1.51).</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -3761,6 +3888,48 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.SmtpConfig",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SmtpConfig.yml\" sourcestartlinenumber=\"1\">SMTP-specific configuration. <code>password</code> is write-only (D-01):\n<code>#[serde(skip_serializing)]</code> means it is never emitted in a GET/serialized response. On\nthe write path (D-02), <code>#[serde(default)]</code> lets a caller omit the field entirely\n(deserializing to <code>&quot;&quot;</code>); an empty string is the sentinel for &quot;no new secret supplied —\npreserve whatever is already stored&quot; (see <code>SurrealEmailConfigRepository::\nset_org_config</code>). A non-empty value is a real secret to encrypt+replace.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SubjectAltName.DnsArm",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.yml\" sourcestartlinenumber=\"1\">The <code>dns</code> arm of SubjectAltName.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SubjectAltName.IpArm.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SubjectAltName.IpArm.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SubjectAltName.IpArm",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SubjectAltName.IpArm.yml\" sourcestartlinenumber=\"1\">The <code>ip</code> arm of SubjectAltName.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.SubjectAltName.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.SubjectAltName.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.SubjectAltName",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SubjectAltName.yml\" sourcestartlinenumber=\"1\">A name to put in a <code>Server</code> certificate's <code>subjectAltName</code>. Stated explicitly in\nthe request, never read from a CSR: a CSR asking for a <code>subjectAltName</code> extension is\nstill refused. URI and e-mail names are not offered — nothing in AXIAM consumes them yet.</p>\n"
     },
     {
       "type": "ManagedReference",

@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta16/apiSpec/new?filename=Axiam_Sdk_Management_ManifestBuilder.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.ManifestBuilder%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta17/apiSpec/new?filename=Axiam_Sdk_Management_ManifestBuilder.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.ManifestBuilder%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,11 +89,11 @@
 
 
   <h1 id="Axiam_Sdk_Management_ManifestBuilder" data-uid="Axiam.Sdk.Management.ManifestBuilder" class="text-break">
-Class ManifestBuilder  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L146"><i class="bi bi-code-slash"></i></a>
+Class ManifestBuilder  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L234"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Axiam.html">Axiam</a>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
@@ -161,7 +161,7 @@ problem at once rather than the first (§27.6 rule 1).</p>
 
   <h3 id="Axiam_Sdk_Management_ManifestBuilder_AddToGroup_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.AddToGroup(System.String,System.String)">
   AddToGroup(string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L313"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L444"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Puts a user into the group named by <code class="paramref">groupKey</code>.</p>
@@ -201,17 +201,20 @@ problem at once rather than the first (§27.6 rule 1).</p>
 
   <a id="Axiam_Sdk_Management_ManifestBuilder_AssignRole_" data-uid="Axiam.Sdk.Management.ManifestBuilder.AssignRole*"></a>
 
-  <h3 id="Axiam_Sdk_Management_ManifestBuilder_AssignRole_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.AssignRole(System.String,System.String)">
-  AssignRole(string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L296"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_AssignRole_System_String_System_String_System_String_System_Boolean_" data-uid="Axiam.Sdk.Management.ManifestBuilder.AssignRole(System.String,System.String,System.String,System.Boolean)">
+  AssignRole(string, string, string?, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L427"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Assigns a role to the user named by <code class="paramref">userKey</code>.</p>
+  <div class="markdown level1 summary"><p>Binds a role to the user named by <code class="paramref">userKey</code>. Omit
+<code class="paramref">resourceKey</code> for the plain (unscoped) shape every SDK had before
+contract 1.51; supply it (with an optional <code class="paramref">inherit</code>) for the
+§27.6.1 item 2 resource-scoped shape.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ManifestBuilder AssignRole(string userKey, string roleKey)</code></pre>
+    <pre><code class="lang-csharp hljs">public ManifestBuilder AssignRole(string userKey, string roleKey, string? resourceKey = null, bool inherit = true)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -221,6 +224,65 @@ problem at once rather than the first (§27.6 rule 1).</p>
 </dd>
     <dt><code>roleKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd><p>The role being assigned.</p>
+</dd>
+    <dt><code>resourceKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The resource this binding is scoped to, or <code>null</code>
+for a plain (unscoped) binding.</p>
+</dd>
+    <dt><code>inherit</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Whether the binding also reaches the descendants of
+<code class="paramref">resourceKey</code>. Defaults to <code>true</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManifestBuilder_AssignServiceAccountRole_" data-uid="Axiam.Sdk.Management.ManifestBuilder.AssignServiceAccountRole*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_AssignServiceAccountRole_System_String_System_String_System_String_System_Boolean_" data-uid="Axiam.Sdk.Management.ManifestBuilder.AssignServiceAccountRole(System.String,System.String,System.String,System.Boolean)">
+  AssignServiceAccountRole(string, string, string?, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L480"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Binds a role to the service account named by <code class="paramref">serviceAccountKey</code>.
+Same plain/resource-scoped shapes as <a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_AssignRole_System_String_System_String_System_String_System_Boolean_">AssignRole(string, string, string?, bool)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder AssignServiceAccountRole(string serviceAccountKey, string roleKey, string? resourceKey = null, bool inherit = true)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>serviceAccountKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The service account receiving the role.</p>
+</dd>
+    <dt><code>roleKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The role being bound.</p>
+</dd>
+    <dt><code>resourceKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The resource this binding is scoped to, or <code>null</code>
+for a plain (unscoped) binding.</p>
+</dd>
+    <dt><code>inherit</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Whether the binding also reaches the descendants of
+<code class="paramref">resourceKey</code>. Defaults to <code>true</code>.</p>
 </dd>
   </dl>
 
@@ -245,7 +307,7 @@ problem at once rather than the first (§27.6 rule 1).</p>
 
   <h3 id="Axiam_Sdk_Management_ManifestBuilder_Build" data-uid="Axiam.Sdk.Management.ManifestBuilder.Build">
   Build()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L331"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L499"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Assembles the manifest, or throws if any back-reference is dangling.</p>
@@ -282,9 +344,9 @@ problem at once rather than the first (§27.6 rule 1).</p>
 
   <a id="Axiam_Sdk_Management_ManifestBuilder_ChildResource_" data-uid="Axiam.Sdk.Management.ManifestBuilder.ChildResource*"></a>
 
-  <h3 id="Axiam_Sdk_Management_ManifestBuilder_ChildResource_System_String_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.ChildResource(System.String,System.String,System.String,System.String)">
-  ChildResource(string, string, string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L177"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_ChildResource_System_String_System_String_System_String_System_String_System_Nullable_System_Text_Json_JsonElement__" data-uid="Axiam.Sdk.Management.ManifestBuilder.ChildResource(System.String,System.String,System.String,System.String,System.Nullable{System.Text.Json.JsonElement})">
+  ChildResource(string, string, string, string, JsonElement?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L270"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Declares a resource beneath <code class="paramref">parentKey</code>.</p>
@@ -292,7 +354,7 @@ problem at once rather than the first (§27.6 rule 1).</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ManifestBuilder ChildResource(string key, string name, string resourceType, string parentKey)</code></pre>
+    <pre><code class="lang-csharp hljs">public ManifestBuilder ChildResource(string key, string name, string resourceType, string parentKey, JsonElement? metadata = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -308,6 +370,9 @@ problem at once rather than the first (§27.6 rule 1).</p>
 </dd>
     <dt><code>parentKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd><p>The key of an already-declared resource.</p>
+</dd>
+    <dt><code>metadata</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonelement">JsonElement</a>?</dt>
+    <dd><p>An optional JSON object (§27.6.1 item 1).</p>
 </dd>
   </dl>
 
@@ -332,7 +397,7 @@ problem at once rather than the first (§27.6 rule 1).</p>
 
   <h3 id="Axiam_Sdk_Management_ManifestBuilder_GlobalRole_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.GlobalRole(System.String,System.String,System.String)">
   GlobalRole(string, string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L236"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L331"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Declares a role that applies across every resource.</p>
@@ -377,7 +442,7 @@ problem at once rather than the first (§27.6 rule 1).</p>
 
   <h3 id="Axiam_Sdk_Management_ManifestBuilder_Grant_System_String_System_String_System_String_System_String___" data-uid="Axiam.Sdk.Management.ManifestBuilder.Grant(System.String,System.String,System.String,System.String[])">
   Grant(string, string, string?, params string[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L248"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L343"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Grants a permission to the role named by <code class="paramref">roleKey</code>.</p>
@@ -425,10 +490,11 @@ problem at once rather than the first (§27.6 rule 1).</p>
 
   <h3 id="Axiam_Sdk_Management_ManifestBuilder_Group_System_String_System_String_System_String_System_String___" data-uid="Axiam.Sdk.Management.ManifestBuilder.Group(System.String,System.String,System.String,System.String[])">
   Group(string, string, string, params string[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L268"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L364"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Declares a group, optionally holding roles.</p>
+  <div class="markdown level1 summary"><p>Declares a group, optionally holding roles (the plain, unscoped shape —
+use <a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_GroupRole_System_String_System_String_System_String_System_Boolean_">GroupRole(string, string, string?, bool)</a> for a resource-scoped or <code>inherit: false</code> one).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -469,11 +535,64 @@ problem at once rather than the first (§27.6 rule 1).</p>
 
 
 
+  <a id="Axiam_Sdk_Management_ManifestBuilder_GroupRole_" data-uid="Axiam.Sdk.Management.ManifestBuilder.GroupRole*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_GroupRole_System_String_System_String_System_String_System_Boolean_" data-uid="Axiam.Sdk.Management.ManifestBuilder.GroupRole(System.String,System.String,System.String,System.Boolean)">
+  GroupRole(string, string, string?, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L388"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Binds a role to the group named by <code class="paramref">groupKey</code> (CONTRACT.md
+§27.6.1 item 2, contract 1.51) — the general form, for a resource-scoped or
+<code>inherit: false</code> binding; <a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_Group_System_String_System_String_System_String_System_String___">Group(string, string, string, params string[])</a>'s trailing <code>roleKeys</code> is
+the shorthand for the plain shape.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder GroupRole(string groupKey, string roleKey, string? resourceKey = null, bool inherit = true)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>groupKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The group receiving the binding.</p>
+</dd>
+    <dt><code>roleKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The role being bound.</p>
+</dd>
+    <dt><code>resourceKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The resource this binding is scoped to, or <code>null</code>
+for a plain (unscoped) binding.</p>
+</dd>
+    <dt><code>inherit</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Whether the binding also reaches the descendants of
+<code class="paramref">resourceKey</code>. Defaults to <code>true</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_ManifestBuilder_Permission_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Permission*"></a>
 
   <h3 id="Axiam_Sdk_Management_ManifestBuilder_Permission_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Permission(System.String,System.String,System.String)">
   Permission(string, string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L214"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L309"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Declares a permission.</p>
@@ -516,9 +635,9 @@ problem at once rather than the first (§27.6 rule 1).</p>
 
   <a id="Axiam_Sdk_Management_ManifestBuilder_Resource_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Resource*"></a>
 
-  <h3 id="Axiam_Sdk_Management_ManifestBuilder_Resource_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Resource(System.String,System.String,System.String)">
-  Resource(string, string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L165"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_Resource_System_String_System_String_System_String_System_Nullable_System_Text_Json_JsonElement__" data-uid="Axiam.Sdk.Management.ManifestBuilder.Resource(System.String,System.String,System.String,System.Nullable{System.Text.Json.JsonElement})">
+  Resource(string, string, string, JsonElement?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L256"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Declares a root resource.</p>
@@ -526,7 +645,7 @@ problem at once rather than the first (§27.6 rule 1).</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ManifestBuilder Resource(string key, string name, string resourceType)</code></pre>
+    <pre><code class="lang-csharp hljs">public ManifestBuilder Resource(string key, string name, string resourceType, JsonElement? metadata = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -539,6 +658,9 @@ problem at once rather than the first (§27.6 rule 1).</p>
 </dd>
     <dt><code>resourceType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd><p>The resource's type.</p>
+</dd>
+    <dt><code>metadata</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonelement">JsonElement</a>?</dt>
+    <dd><p>An optional JSON object (§27.6.1 item 1).</p>
 </dd>
   </dl>
 
@@ -563,7 +685,7 @@ problem at once rather than the first (§27.6 rule 1).</p>
 
   <h3 id="Axiam_Sdk_Management_ManifestBuilder_Role_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Role(System.String,System.String,System.String)">
   Role(string, string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L225"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L320"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Declares a role.</p>
@@ -608,7 +730,7 @@ problem at once rather than the first (§27.6 rule 1).</p>
 
   <h3 id="Axiam_Sdk_Management_ManifestBuilder_Scope_System_String_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.Scope(System.String,System.String,System.String,System.String)">
   Scope(string, string, string, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L196"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L291"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Declares a scope beneath <code class="paramref">resourceKey</code>.</p>
@@ -652,11 +774,57 @@ problem at once rather than the first (§27.6 rule 1).</p>
 
 
 
+  <a id="Axiam_Sdk_Management_ManifestBuilder_ServiceAccount_" data-uid="Axiam.Sdk.Management.ManifestBuilder.ServiceAccount*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManifestBuilder_ServiceAccount_System_String_System_String_System_String_" data-uid="Axiam.Sdk.Management.ManifestBuilder.ServiceAccount(System.String,System.String,System.String)">
+  ServiceAccount(string, string, string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L465"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Declares a service account (CONTRACT.md §27.6.1 item 3, contract 1.51).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManifestBuilder ServiceAccount(string key, string name, string? description = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Manifest-local identifier.</p>
+</dd>
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The account's name — the natural key reconciliation matches
+by. Not server-enforced unique; an ambiguous match fails before any write.</p>
+</dd>
+    <dt><code>description</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>What the account is for.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ManifestBuilder.html">ManifestBuilder</a></dt>
+    <dd><p>This builder.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_ManifestBuilder_User_" data-uid="Axiam.Sdk.Management.ManifestBuilder.User*"></a>
 
   <h3 id="Axiam_Sdk_Management_ManifestBuilder_User_System_String_System_String_System_String_System_Nullable_Axiam_Sdk_Core_Sensitive_System_String___" data-uid="Axiam.Sdk.Management.ManifestBuilder.User(System.String,System.String,System.String,System.Nullable{Axiam.Sdk.Core.Sensitive{System.String}})">
   User(string, string, string, Sensitive&lt;string&gt;?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta16/Axiam.Sdk/Management/ManagementManifest.cs/#L285"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/ManagementManifest.cs/#L407"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Declares a user.</p>

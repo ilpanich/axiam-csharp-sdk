@@ -105,7 +105,7 @@ refresh-and-retry (§9, D-10) that drives the EXACT SAME shared
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.html">AxiamGrpcAuthzClient</a></dt>
       <dd><p>gRPC authorization transport (CONTRACT.md §1/§2/§5/§9, D-10).
-Wraps ONE long-lived <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-beta16/src/Grpc.Net.Client/GrpcChannel.cs">GrpcChannel</a> (via <a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcChannel.html">AxiamGrpcChannel</a> —
+Wraps ONE long-lived <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.0.0-beta17/src/Grpc.Net.Client/GrpcChannel.cs">GrpcChannel</a> (via <a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcChannel.html">AxiamGrpcChannel</a> —
 strict TLS, §6) intercepted by an <a class="xref" href="Axiam.Sdk.Grpc.AuthInterceptor.html">AuthInterceptor</a> that shares
 the EXACT SAME <a class="xref" href="Axiam.Sdk.Auth.RefreshGuard.html">RefreshGuard</a>/session <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a>'s REST
 transport uses — never a second guard instance.</p>
@@ -128,11 +128,60 @@ bypass. The channel is disposed by whichever component constructs it
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Grpc.RptPermission.html">RptPermission</a></dt>
+      <dd><p>A UMA 2.0 permission carried by an RPT (X2), from <a class="xref" href="Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Permissions">Permissions</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Grpc.TokenCnf.html">TokenCnf</a></dt>
+      <dd><p>The §10.3 sender-constraint, modelled once (RFC 8705 §3 / RFC 9449 §6). Both
+members are the raw proto3 string default (<code>&quot;&quot;</code>) rather than <code>null</code> when
+unset on the wire — CONTRACT.md §1.1.1 rule 3 requires the distinction between
+&quot;no <code>cnf</code> at all&quot; (<a class="xref" href="Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_Cnf">Cnf</a>/<a class="xref" href="Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Cnf">Cnf</a>
+itself <code>null</code>) and &quot;a <code>cnf</code> naming neither method&quot; (this record present with
+both members empty) to survive into the typed value.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Grpc.TokenGrpcClient.html">TokenGrpcClient</a></dt>
+      <dd><p><code>validate_token</code>/<code>introspect_token</code> (CONTRACT.md §1.1.1, §10.3,
+contract 1.51) — <code>axiam.v1.TokenService</code>. Built exactly like
+<a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.html">AxiamGrpcAuthzClient</a>: the shared long-lived channel, the same
+<a class="xref" href="Axiam.Sdk.Grpc.AuthInterceptor.html">AuthInterceptor</a> the REST-sharing session uses, and
+UNAUTHENTICATED-&gt;single-flight-refresh-&gt;one-retry via the SAME
+<a class="xref" href="Axiam.Sdk.Auth.RefreshGuard.html">RefreshGuard</a> — never a second guard instance.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Grpc.TokenIntrospection.html">TokenIntrospection</a></dt>
+      <dd><p><code>axiam.v1.TokenService/IntrospectToken</code>'s typed response (CONTRACT.md §1.1.1
+rule 3): the RFC 7662 field set, <a class="xref" href="Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Cnf">Cnf</a> and <a class="xref" href="Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_Permissions">Permissions</a>/
+<a class="xref" href="Axiam.Sdk.Grpc.TokenIntrospection.html#Axiam_Sdk_Grpc_TokenIntrospection_ExtExchangeIss">ExtExchangeIss</a> included.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Grpc.TokenValidation.html">TokenValidation</a></dt>
+      <dd><p><code>axiam.v1.TokenService/ValidateToken</code>'s typed response (CONTRACT.md §1.1.1
+rule 3): every field the message defines, <a class="xref" href="Axiam.Sdk.Grpc.TokenValidation.html#Axiam_Sdk_Grpc_TokenValidation_Cnf">Cnf</a> included.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Grpc.UserInfo.html">UserInfo</a></dt>
       <dd><p>The authenticated caller's OIDC-style identity claims, returned by
 <a class="xref" href="Axiam.Sdk.Grpc.AxiamGrpcAuthzClient.html#Axiam_Sdk_Grpc_AxiamGrpcAuthzClient_GetUserInfoAsync_System_Threading_CancellationToken_">GetUserInfoAsync(CancellationToken)</a> (CONTRACT.md §1.1). The typed
 SDK-facing projection of the wire <code>axiam.v1.GetUserInfoResponse</code> — the low-latency
 gRPC counterpart of the server's REST <code>GET /oauth2/userinfo</code> endpoint.</p>
+</dd>
+    </dl>
+    <h3 id="enums">
+Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Grpc.TokenStatus.html">TokenStatus</a></dt>
+      <dd><p>CONTRACT.md §10.3 rule 2's four-way answer to &quot;is this token usable as
+presented?&quot; — deliberately NOT reducible to <code>valid</code>/<code>active</code> alone (that is
+the whole point of §10.3): a caller that only checks the boolean has converted a
+sender-constrained token back into a bearer token.</p>
 </dd>
     </dl>
 

@@ -765,6 +765,23 @@ set_org_config</code>). A non-empty value is a real secret to encrypt+replace.</
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SubjectAltName.html">SubjectAltName</a></dt>
+      <dd><p>A name to put in a <code>Server</code> certificate's <code>subjectAltName</code>. Stated explicitly in
+the request, never read from a CSR: a CSR asking for a <code>subjectAltName</code> extension is
+still refused. URI and e-mail names are not offered — nothing in AXIAM consumes them yet.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SubjectAltName.DnsArm.html">SubjectAltName.DnsArm</a></dt>
+      <dd><p>The <code>dns</code> arm of SubjectAltName.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SubjectAltName.IpArm.html">SubjectAltName.IpArm</a></dt>
+      <dd><p>The <code>ip</code> arm of SubjectAltName.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.Tenant.html">Tenant</a></dt>
       <dd><p>A tenant is an isolated context within an organization. Each tenant has its own set of
 users, roles, permissions, resources, certificates, and configuration. Tenants can represent
