@@ -65,6 +65,164 @@ IMPLICIT_TENANT_NAMESPACES = {
 # serialized -- an SDK never sends a value it does not know.
 OPEN_UNIONS = {"ScimTargetAuth", "ScimTargetScope"}
 
+# Members where an explicit JSON `null` is a different request -- or a different
+# answer -- from an absent member (§27.4 rule 5, "null is not absent"). §30.2 names
+# two on `UpdateDirectoryConfig`, where `null` clears the value and absence keeps
+# it; §29.8 test 8 asks the same of `SamlIdpInfo`'s two credential ids, where a
+# null slot must stay distinct from a member the server stopped sending. They are
+# typed `JsonNullable<T>?`: `null` omits the key, `JsonNullable<T>.Null` is JSON
+# `null`. A name list rather than a schema rule, because the export spells every
+# optional member `["string", "null"]` and cannot say which ones `null` clears.
+EXPLICIT_NULL_FIELDS = {
+    ("UpdateDirectoryConfig", "group_base_dn"),
+    ("UpdateDirectoryConfig", "group_filter"),
+    ("SamlIdpInfo", "active_credential_id"),
+    ("SamlIdpInfo", "next_credential_id"),
+}
+
+# Call-site documentation the contract makes an SDK repeat (§29.3, §30.3, §31.3,
+# §32.2), keyed by the registry's canonical operation name. Written in a small
+# markdown dialect (**bold**, `code`) that `note_xml` turns into XML doc markup.
+CALL_SITE_NOTES: dict[str, str] = {
+    "directory.set": (
+        "**Moving the connection requires the secret again** (§30.3 rule 2): a "
+        "`SetAsync` that changes `url`, `start_tls`, `bind_dn` or `trust_anchors_pem` "
+        "without `bind_secret` is refused `400` and changes nothing. The SDK holds "
+        "no copy of the secret and cannot re-send one for you. `bind_secret` is "
+        "required while the tenant has no configuration; otherwise absent keeps the "
+        "stored secret. Every other optional member left out is **reset to its "
+        "default**. An enabled directory and an effective `opaque_mode = required` "
+        "never coexist (`409`); without the deployment's directory key a write "
+        "carrying a secret is `503`."
+    ),
+    "directory.update": (
+        "**Moving the connection requires the secret again** (§30.3 rule 2): an "
+        "`UpdateAsync` that changes `url`, `start_tls`, `bind_dn` or `trust_anchors_pem` "
+        "without `bind_secret` is refused `400` and changes nothing; the SDK holds no "
+        "copy of the secret to re-send. A member left unset (`null`) is not sent and "
+        "stays as stored; `GroupBaseDn` / `GroupFilter` set to `JsonNullable<string>.Null` "
+        "are sent as `null` and clear the value. An enabled directory and an effective "
+        "`opaque_mode = required` never coexist (`409`)."
+    ),
+    "directory.delete": (
+        "**Deleting stops the directory, and only that** (§30.3 rule 5): directory "
+        "accounts can no longer sign in with a password -- there is no fallback to a "
+        "local hash -- and the sync stops. Sessions, refresh tokens and passkeys those "
+        "accounts already hold keep working until they expire or the accounts are "
+        "deactivated. There is no unlink: a linked account stays a directory account."
+    ),
+    "directory.link_account": (
+        "**Signs the account's owner out everywhere** (§30.3 rule 6): linking "
+        "deletes the account's WebAuthn credentials and federation links, revokes "
+        "its `User` certificates, all its sessions and its OAuth2 refresh tokens "
+        "(TOTP is kept). The entry is found by the account's own username; a repeat "
+        "on an already-linked account answers `was_already_linked` and repeats the "
+        "revocations."
+    ),
+    "saml.create_service_provider": (
+        "`sp_signing_cert_pem` must be RSA (2048 bits or more) or ECDSA on P-256, "
+        "P-384 or P-521; an **ECDSA certificate verifies HTTP-POST requests only** -- "
+        "the HTTP-Redirect binding is RSA-only (§29.3 rule 2). `encrypt_assertions: "
+        "true` is refused while encryption is unimplemented. `entity_id` is unique "
+        "per tenant (`409`) and immutable once created."
+    ),
+    "saml.update_service_provider": (
+        "An omitted member takes its **default**, not its stored value: `enabled` "
+        "and `sign_responses` default to `true`, `name_id_format` to `persistent`, "
+        "the other flags to `false`, certificates and `slo_url` / `slo_binding` to "
+        "null, the lists to empty (§29.2). Start from `GetServiceProviderAsync` "
+        "(`ManagementReplacements.ToInput` turns its result into this body). "
+        "`entity_id` is immutable: changing it is `400` -- register a new service "
+        "provider instead (§29.3 rule 3). An ECDSA `sp_signing_cert_pem` verifies "
+        "HTTP-POST requests only; HTTP-Redirect is RSA-only."
+    ),
+    "saml.delete_service_provider": (
+        "Ends no session: users already signed in to the SP stay signed in there "
+        "until their SP session ends (§29.3 rule 5)."
+    ),
+    "saml.parse_sp_metadata": (
+        "**Parses and stores nothing** (§29.3 rule 6): the result is a draft to "
+        "review and pass to `CreateServiceProviderAsync`. Exactly one of "
+        "`metadata_xml` and `metadata_url` must be set (build the body with "
+        "`ParseSamlSpMetadata.FromUrl` or `ParseSamlSpMetadata.FromXml`); both or "
+        "neither is refused locally with a `ValidationError`, before any request. "
+        "The metadata's own signature is not evaluated. `503` in a server built "
+        "without SAML."
+    ),
+    "saml.issue_idp_credential": (
+        "Generates an RSA-4096 key on the server, which takes seconds; the key is "
+        "never returned. An occupied slot is `409` (§29.3 rule 7)."
+    ),
+    "saml.promote_idp_credential": (
+        "`credential_id` must be the tenant's current `next` credential; in one "
+        "transaction the old `active` is retired -- its key destroyed -- and `next` "
+        "becomes `active` (§29.3 rule 7)."
+    ),
+    "saml.retire_idp_credential": (
+        "**Retiring the `active` credential with no successor stops SAML sign-on "
+        "for the whole tenant at once** (§29.3 rule 7) -- it is the incident "
+        "response to a leaked key. The key is destroyed. The safe rotation is: issue "
+        "into `next`, wait until every SP has refreshed the metadata, then promote."
+    ),
+    "ssf.update_stream": (
+        "An omitted optional member takes its default (§32.2) -- **except "
+        "`authorization_header`, which absent keeps the stored one** -- unless the "
+        "update moves `endpoint_url` to another scheme, host or port while a header "
+        "is stored: then it must carry `authorization_header` again or "
+        "`clear_authorization_header: true`, else `400` (§32.3 rule 5). An update "
+        "overtaken by the receiver's own write is `409`: read the stream again."
+    ),
+    "scim_targets.create": (
+        "`credential` is required here (§31.3 rule 2). It is write-only: no "
+        "response ever carries it, and the SDK keeps no copy."
+    ),
+    "scim_targets.update": (
+        "**The credential is bound to its URL** (§31.3 rule 2): absent `credential` "
+        "keeps the stored one -- except that changing `base_url` of a bearer "
+        "target, `auth.token_url` or `base_url` of a client-credentials target, or "
+        "`auth.type`, without `credential` in the same write is refused `400` and "
+        "changes nothing. The SDK holds no credential to re-send. Every other member "
+        "left out takes its default. An update overtaken by another administrator's "
+        "write is `409` (§31.3 rule 4): reload, then retry yourself."
+    ),
+    "scim_targets.delete": (
+        "**Deprovisions nothing downstream** (§31.3 rule 8): the users and groups "
+        "AXIAM created in the service provider stay there, and AXIAM no longer knows "
+        "them. To remove them, set `deprovision` to `delete`, let AXIAM push, and "
+        "only then delete the target."
+    ),
+    "scim_targets.reconcile": (
+        "Starts a reconciliation in the background and answers `202`; its outcome "
+        "is on the target's `state` (§31.3 rule 7). `409` while a run holds the "
+        "claim, within five minutes of the last one, or for a disabled target."
+    ),
+}
+
+# Local checks a generated operation runs before any I/O: canonical name -> a
+# `ManagementChecks` method taking the request body (hand-written, never I/O).
+PRECHECKS: dict[str, str] = {
+    "saml.parse_sp_metadata": "ParseSpMetadataExactlyOne",
+}
+
+# The body the generated surface test sends to an operation with a PRECHECK --
+# the minimal body every other case uses would be refused locally.
+PRECHECK_TEST_BODIES: dict[str, str] = {
+    "saml.parse_sp_metadata": 'ParseSamlSpMetadata.FromUrl("https://sp.example/metadata")',
+}
+
+# Models generated `partial`, so a hand-written file can add factories to them
+# (`ParseSamlSpMetadata.FromUrl` / `FromXml`, Axiam.Sdk/Management/ManagementChecks.cs).
+PARTIAL_RECORDS = {"ParseSamlSpMetadata"}
+
+
+def note_xml(text: str) -> str:
+    """A CALL_SITE_NOTES entry as XML doc markup: escaped, **bold**, `code`."""
+    out = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    out = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", out)
+    out = re.sub(r"`([^`]+)`", r"<c>\1</c>", out)
+    return out.replace(" -- ", " &#8212; ").replace("§", "&#167;")
+
+
 # Schema names that would collide with a type this SDK already exports from its
 # package root. The generated surface is re-exported, so a duplicate name makes
 # one of the two unreachable.
@@ -615,7 +773,7 @@ COLLIDING_MODELS = {
 def header(rendered: str, namespace: str, extra: list[str] | None = None) -> str:
     """The banner, usings and file-scoped namespace for one generated file."""
     usings = {"System.Text.Json", "System.Text.Json.Serialization"}
-    if "WireEnumConverter<" in rendered or "WireName(" in rendered:
+    if "WireEnumConverter<" in rendered or "WireName(" in rendered or "JsonNullable<" in rendered:
         usings.add("Axiam.Sdk.Management")
     if "Sensitive<" in rendered:
         usings.add("Axiam.Sdk.Core")
@@ -724,11 +882,15 @@ def field_list(schema_name: str, secrets: set[str]) -> tuple[list[dict[str, Any]
         fields.append({
             "wire": wire,
             "name": prop(wire),
-            "type": "Sensitive<string>" if wire in secrets else cs_type(props[wire]),
+            "type": ("Sensitive<string>" if wire in secrets
+                     else f"JsonNullable<{cs_type(props[wire])}>"
+                     if (schema_name, wire) in EXPLICIT_NULL_FIELDS
+                     else cs_type(props[wire])),
             "required": False if is_response_side_inherit else wire in required,
             "default_literal": "true" if is_response_side_inherit else None,
             "doc": props[wire].get("description") or f"the server's {wire} field",
             "secret": wire in secrets,
+            "explicit_null": (schema_name, wire) in EXPLICIT_NULL_FIELDS,
         })
     return fields, required, description
 
@@ -806,7 +968,8 @@ def emit_record(name: str, secrets: set[str], replacement: bool) -> str:
         body.append(f"public sealed record {type_name}();")
         return header("\n".join(body), MODELS_NAMESPACE)
 
-    body.append(f"public sealed record {type_name}")
+    partial = " partial" if name in PARTIAL_RECORDS else ""
+    body.append(f"public sealed{partial} record {type_name}")
     body.append("{")
     for i, f in enumerate(fields):
         if i:
@@ -815,6 +978,10 @@ def emit_record(name: str, secrets: set[str], replacement: bool) -> str:
         if f["secret"]:
             doc += (" -- SECRET: redacted from ToString and from every rendering except the "
                     "one request body it is sent in.")
+        if f.get("explicit_null"):
+            doc += (" -- THREE states (&#167;27.4 rule 5, null is not absent): <c>null</c> "
+                    "(unset) is an absent member, <c>JsonNullable.Null</c> is an explicit JSON "
+                    "<c>null</c>, anything else a value.")
         body.extend(xmldoc(doc, "    "))
         body.append(f'    [JsonPropertyName("{f["wire"]}")]')
         if f["name"] in OMIT_WHEN_EMPTY and not f["required"]:
@@ -1116,7 +1283,7 @@ def spec_description(op: dict[str, Any]) -> str | None:
     return escape(text) if text else None
 
 
-def operation_doc(op: dict[str, Any], method_name: str) -> str:
+def operation_doc(namespace: str, opname: str, op: dict[str, Any], method_name: str) -> str:
     """The doc body for one generated operation."""
     prose = spec_description(op)
     route = f"<c>{op['method']} {escape(op['path'])}</c>"
@@ -1134,6 +1301,9 @@ def operation_doc(op: dict[str, Any], method_name: str) -> str:
             "\n\nA REPLACEMENT, not a patch: every field of the body is written, so read the "
             "current value first and carry over the parts you mean to keep "
             "(&#167;27.4 rule 5).")
+    canonical = f"{namespace}.{opname}"
+    if canonical in CALL_SITE_NOTES:
+        lines.append("\n\n" + note_xml(CALL_SITE_NOTES[canonical]))
     if op["method"] != "GET":
         lines.append(
             "\n\nNot retried: &#167;27.4 rule 8 makes every write on this surface "
@@ -1155,7 +1325,7 @@ def emit_operation(namespace: str, opname: str, op: dict[str, Any]) -> list[str]
         else '<returns>a task that completes when the server has answered</returns>' if shape == "unit"
         else '<returns>the server response</returns>')
 
-    lines = xmldoc(operation_doc(op, method_name), "    ", tags)
+    lines = xmldoc(operation_doc(namespace, opname, op, method_name), "    ", tags)
     signature = ", ".join(f'{p["type"]} {p["name"]}{p["default"]}' for p in params)
     declared = "Task" if shape == "unit" else f"Task<{ret}>"
     lines.append(f"    public async {declared} {method_name}Async({signature})")
@@ -1185,6 +1355,8 @@ def emit_operation(namespace: str, opname: str, op: dict[str, Any]) -> list[str]
         else:
             lines.append(f"        Dictionary<string, string?> query = {base};")
 
+    if canonical in PRECHECKS:
+        lines.append(f"        ManagementChecks.{PRECHECKS[canonical]}(body);")
     if op["request_schema"]:
         lines.append(f'        string payload = ManagementSupport.EncodeBody("{canonical}", body);')
 
@@ -1469,6 +1641,14 @@ def literal_for(name: str, secrets: set[str], depth: int = 0) -> str:
     return f"new {type_name} {{ {', '.join(args)} }}"
 
 
+def op_name_of(namespace: str, op: dict[str, Any]) -> str:
+    """The registry's operation name for ``op`` within ``namespace``."""
+    for name, candidate in REGISTRY["namespaces"][namespace]["operations"].items():
+        if candidate is op:
+            return name
+    raise KeyError(op["path"])
+
+
 def call_arguments(namespace: str, op: dict[str, Any],
                    secrets: dict[str, set[str]]) -> tuple[list[str], str]:
     """The arguments the conformance case passes, and the path it must reach."""
@@ -1486,7 +1666,9 @@ def call_arguments(namespace: str, op: dict[str, Any],
         route = route.replace("{" + param + "}", "{ExampleId}")
     if op["request_schema"]:
         schema = op["request_schema"].lstrip("[]")
-        args.append(f"body: {literal_for(schema, secrets.get(schema, set()))}")
+        canonical = f"{namespace}.{op_name_of(namespace, op)}"
+        body = PRECHECK_TEST_BODIES.get(canonical) or literal_for(schema, secrets.get(schema, set()))
+        args.append(f"body: {body}")
     _, other = split_query(op)
     for query in other:
         args.append(f"{arg(query).lstrip('@')}: null")
@@ -1626,7 +1808,7 @@ def sparse_models() -> list[tuple[str, list[dict[str, Any]]]]:
     return out
 
 
-def sparse_literal(schema: Any, wire: str, secrets: set[str]) -> str:
+def sparse_literal(schema: Any, wire: str, secrets: set[str], model: str = "") -> str:
     """A NON-null C# literal for a sparse property.
 
     ``cs_literal`` is allowed to answer ``null`` -- it fills optional components of a
@@ -1636,6 +1818,10 @@ def sparse_literal(schema: Any, wire: str, secrets: set[str]) -> str:
     """
     if wire in secrets:
         return 'Sensitive<string>.Wrap("example")'
+    if (model, wire) in EXPLICIT_NULL_FIELDS:
+        inner = cs_type(schema)
+        value = sparse_literal(schema, wire, secrets)
+        return f"JsonNullable<{inner}>.Of({value})"
     ref = schema["$ref"].split("/")[-1] if "$ref" in schema else nullable_ref(schema)
     if ref and ref in SCHEMAS:
         return literal_for(ref, set())
@@ -1687,7 +1873,7 @@ def emit_sparse_test() -> str:
         lines.append(f"    public void {type_name}SendsOnlyWhatWasSet()")
         lines.append("    {")
         for f in fields:
-            literal = sparse_literal(props[f["wire"]], f["wire"], model_secrets)
+            literal = sparse_literal(props[f["wire"]], f["wire"], model_secrets, name)
             lines.append(f"        AssertKeys(")
             lines.append(f"            new {type_name} {{ {f['name']} = {literal} }},")
             lines.append(f'            "{f["wire"]}");')
@@ -1695,7 +1881,7 @@ def emit_sparse_test() -> str:
         lines.append(f"            new {type_name}")
         lines.append("            {")
         for f in fields:
-            literal = sparse_literal(props[f["wire"]], f["wire"], model_secrets)
+            literal = sparse_literal(props[f["wire"]], f["wire"], model_secrets, name)
             lines.append(f"                {f['name']} = {literal},")
         lines.append("            },")
         row: list[str] = []
@@ -1705,6 +1891,12 @@ def emit_sparse_test() -> str:
                 lines.append("            " + " ".join(row))
                 row = []
         lines.append(f"        AssertKeys(new {type_name}());")
+        for f in fields:
+            if f.get("explicit_null"):
+                inner = f["type"][len("JsonNullable<"):-1]
+                lines.append("        // §27.4 rule 5: an explicit null is sent as null, not omitted.")
+                lines.append(f"        AssertJson(new {type_name} {{ {f['name']} = JsonNullable<{inner}>.Null }},")
+                lines.append(f'            "{{\\"{f["wire"]}\\":null}}");')
         lines.append("    }")
         lines.append("")
 
@@ -1719,6 +1911,16 @@ def emit_sparse_test() -> str:
     lines.append("            .GetMethods()")
     lines.append('            .Count(m => m.Name.EndsWith("SendsOnlyWhatWasSet", StringComparison.Ordinal));')
     lines.append(f"        Assert.Equal({len(models)}, cases);")
+    lines.append("    }")
+    lines.append("")
+    lines.extend(xmldoc(
+        "Asserts the encoded body is exactly <paramref name=\"expected\"/>.", "    ",
+        ['<param name="body">the request body to render.</param>',
+         '<param name="expected">the exact JSON text.</param>',
+         '<typeparam name="T">the body type.</typeparam>']))
+    lines.append("    private static void AssertJson<T>(T body, string expected)")
+    lines.append("    {")
+    lines.append('        Assert.Equal(expected, ManagementSupport.EncodeBody("test", body));')
     lines.append("    }")
     lines.append("")
     lines.extend(xmldoc(

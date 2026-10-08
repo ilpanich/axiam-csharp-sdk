@@ -7,6 +7,7 @@
 #nullable enable
 
 using Axiam.Sdk.Core;
+using Axiam.Sdk.Management;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -55,16 +56,20 @@ public sealed record UpdateDirectoryConfig
     public bool? Enabled { get; init; }
 
     /// <summary>
-    /// Explicit <c>null</c> clears it.
+    /// Explicit <c>null</c> clears it. -- THREE states (&#167;27.4 rule 5, null is not absent):
+    /// <c>null</c> (unset) is an absent member, <c>JsonNullable.Null</c> is an explicit JSON
+    /// <c>null</c>, anything else a value.
     /// </summary>
     [JsonPropertyName("group_base_dn")]
-    public string? GroupBaseDn { get; init; }
+    public JsonNullable<string>? GroupBaseDn { get; init; }
 
     /// <summary>
-    /// Explicit <c>null</c> clears it.
+    /// Explicit <c>null</c> clears it. -- THREE states (&#167;27.4 rule 5, null is not absent):
+    /// <c>null</c> (unset) is an absent member, <c>JsonNullable.Null</c> is an explicit JSON
+    /// <c>null</c>, anything else a value.
     /// </summary>
     [JsonPropertyName("group_filter")]
-    public string? GroupFilter { get; init; }
+    public JsonNullable<string>? GroupFilter { get; init; }
 
     /// <summary>
     /// Replaces the whole table when present.

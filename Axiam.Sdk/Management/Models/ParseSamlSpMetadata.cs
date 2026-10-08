@@ -23,7 +23,7 @@ namespace Axiam.Sdk.Management.Models;
 /// field you did not name.
 /// </para>
 /// </remarks>
-public sealed record ParseSamlSpMetadata
+public sealed partial record ParseSamlSpMetadata
 {
     /// <summary>
     /// An <c>https</c> URL the server fetches the document from, once, through its SSRF guard.

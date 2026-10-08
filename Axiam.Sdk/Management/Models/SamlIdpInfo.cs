@@ -6,6 +6,7 @@
 
 #nullable enable
 
+using Axiam.Sdk.Management;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -18,10 +19,12 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record SamlIdpInfo
 {
     /// <summary>
-    /// The <c>active</c> credential, or null.
+    /// The <c>active</c> credential, or null. -- THREE states (&#167;27.4 rule 5, null is not
+    /// absent): <c>null</c> (unset) is an absent member, <c>JsonNullable.Null</c> is an
+    /// explicit JSON <c>null</c>, anything else a value.
     /// </summary>
     [JsonPropertyName("active_credential_id")]
-    public Guid? ActiveCredentialId { get; init; }
+    public JsonNullable<Guid>? ActiveCredentialId { get; init; }
 
     /// <summary>
     /// The IdP's entity id (the metadata URL itself).
@@ -43,10 +46,12 @@ public sealed record SamlIdpInfo
     public required string MetadataUrl { get; init; }
 
     /// <summary>
-    /// The <c>next</c> credential, or null.
+    /// The <c>next</c> credential, or null. -- THREE states (&#167;27.4 rule 5, null is not
+    /// absent): <c>null</c> (unset) is an absent member, <c>JsonNullable.Null</c> is an
+    /// explicit JSON <c>null</c>, anything else a value.
     /// </summary>
     [JsonPropertyName("next_credential_id")]
-    public Guid? NextCredentialId { get; init; }
+    public JsonNullable<Guid>? NextCredentialId { get; init; }
 
     /// <summary>
     /// Whether this server build serves SAML at all (it was built with the <c>saml</c>

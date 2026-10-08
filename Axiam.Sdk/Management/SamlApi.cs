@@ -124,6 +124,13 @@ public sealed class SamlApi
     /// </summary>
     /// <remarks>
     /// <para>
+    /// <c>sp_signing_cert_pem</c> must be RSA (2048 bits or more) or ECDSA on P-256, P-384 or
+    /// P-521; an <b>ECDSA certificate verifies HTTP-POST requests only</b> &#8212; the
+    /// HTTP-Redirect binding is RSA-only (&#167;29.3 rule 2). <c>encrypt_assertions: true</c>
+    /// is refused while encryption is unimplemented. <c>entity_id</c> is unique per tenant
+    /// (<c>409</c>) and immutable once created.
+    /// </para>
+    /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
     /// </para>
@@ -177,6 +184,16 @@ public sealed class SamlApi
     /// value first and carry over the parts you mean to keep (&#167;27.4 rule 5).
     /// </para>
     /// <para>
+    /// An omitted member takes its <b>default</b>, not its stored value: <c>enabled</c> and
+    /// <c>sign_responses</c> default to <c>true</c>, <c>name_id_format</c> to
+    /// <c>persistent</c>, the other flags to <c>false</c>, certificates and <c>slo_url</c> /
+    /// <c>slo_binding</c> to null, the lists to empty (&#167;29.2). Start from
+    /// <c>GetServiceProviderAsync</c> (<c>ManagementReplacements.ToInput</c> turns its result
+    /// into this body). <c>entity_id</c> is immutable: changing it is <c>400</c> &#8212;
+    /// register a new service provider instead (&#167;29.3 rule 3). An ECDSA
+    /// <c>sp_signing_cert_pem</c> verifies HTTP-POST requests only; HTTP-Redirect is RSA-only.
+    /// </para>
+    /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
     /// </para>
@@ -209,6 +226,10 @@ public sealed class SamlApi
     /// <remarks>
     /// <para>
     /// Issues <c>DELETE /api/v1/tenants/{tenant_id}/saml/service-providers/{sp_id}</c>.
+    /// </para>
+    /// <para>
+    /// Ends no session: users already signed in to the SP stay signed in there until their SP
+    /// session ends (&#167;29.3 rule 5).
     /// </para>
     /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
@@ -248,6 +269,14 @@ public sealed class SamlApi
     /// Issues <c>POST /api/v1/tenants/{tenant_id}/saml/parse-sp-metadata</c>.
     /// </para>
     /// <para>
+    /// <b>Parses and stores nothing</b> (&#167;29.3 rule 6): the result is a draft to review
+    /// and pass to <c>CreateServiceProviderAsync</c>. Exactly one of <c>metadata_xml</c> and
+    /// <c>metadata_url</c> must be set (build the body with <c>ParseSamlSpMetadata.FromUrl</c>
+    /// or <c>ParseSamlSpMetadata.FromXml</c>); both or neither is refused locally with a
+    /// <c>ValidationError</c>, before any request. The metadata's own signature is not
+    /// evaluated. <c>503</c> in a server built without SAML.
+    /// </para>
+    /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
     /// </para>
@@ -259,6 +288,7 @@ public sealed class SamlApi
     {
         Guid tenantId = ManagementSupport.ResolveTenant(_transport, _scope, "saml.parse_sp_metadata");
         string path = $"/api/v1/tenants/{tenantId}/saml/parse-sp-metadata";
+        ManagementChecks.ParseSpMetadataExactlyOne(body);
         string payload = ManagementSupport.EncodeBody("saml.parse_sp_metadata", body);
         JsonElement? node = await _transport.SendAsync(
             "saml.parse_sp_metadata",
@@ -300,6 +330,10 @@ public sealed class SamlApi
     /// Issues <c>POST /api/v1/tenants/{tenant_id}/saml/idp-credentials</c>.
     /// </para>
     /// <para>
+    /// Generates an RSA-4096 key on the server, which takes seconds; the key is never returned.
+    /// An occupied slot is <c>409</c> (&#167;29.3 rule 7).
+    /// </para>
+    /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
     /// </para>
@@ -334,6 +368,11 @@ public sealed class SamlApi
     /// /api/v1/tenants/{tenant_id}/saml/idp-credentials/{credential_id}/promote</c>.
     /// </para>
     /// <para>
+    /// <c>credential_id</c> must be the tenant's current <c>next</c> credential; in one
+    /// transaction the old <c>active</c> is retired &#8212; its key destroyed &#8212; and
+    /// <c>next</c> becomes <c>active</c> (&#167;29.3 rule 7).
+    /// </para>
+    /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
     /// </para>
@@ -366,6 +405,12 @@ public sealed class SamlApi
     /// <para>
     /// Issues <c>POST
     /// /api/v1/tenants/{tenant_id}/saml/idp-credentials/{credential_id}/retire</c>.
+    /// </para>
+    /// <para>
+    /// <b>Retiring the <c>active</c> credential with no successor stops SAML sign-on for the
+    /// whole tenant at once</b> (&#167;29.3 rule 7) &#8212; it is the incident response to a
+    /// leaked key. The key is destroyed. The safe rotation is: issue into <c>next</c>, wait
+    /// until every SP has refreshed the metadata, then promote.
     /// </para>
     /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including

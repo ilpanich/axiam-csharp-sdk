@@ -81,6 +81,17 @@ public sealed class DirectoryApi
     /// value first and carry over the parts you mean to keep (&#167;27.4 rule 5).
     /// </para>
     /// <para>
+    /// <b>Moving the connection requires the secret again</b> (&#167;30.3 rule 2): a
+    /// <c>SetAsync</c> that changes <c>url</c>, <c>start_tls</c>, <c>bind_dn</c> or
+    /// <c>trust_anchors_pem</c> without <c>bind_secret</c> is refused <c>400</c> and changes
+    /// nothing. The SDK holds no copy of the secret and cannot re-send one for you.
+    /// <c>bind_secret</c> is required while the tenant has no configuration; otherwise absent
+    /// keeps the stored secret. Every other optional member left out is <b>reset to its
+    /// default</b>. An enabled directory and an effective <c>opaque_mode = required</c> never
+    /// coexist (<c>409</c>); without the deployment's directory key a write carrying a secret
+    /// is <c>503</c>.
+    /// </para>
+    /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
     /// </para>
@@ -111,6 +122,16 @@ public sealed class DirectoryApi
     /// <para>
     /// A SPARSE update: the properties you leave unset are omitted from the wire body entirely
     /// and left unchanged (&#167;27.4 rule 5).
+    /// </para>
+    /// <para>
+    /// <b>Moving the connection requires the secret again</b> (&#167;30.3 rule 2): an
+    /// <c>UpdateAsync</c> that changes <c>url</c>, <c>start_tls</c>, <c>bind_dn</c> or
+    /// <c>trust_anchors_pem</c> without <c>bind_secret</c> is refused <c>400</c> and changes
+    /// nothing; the SDK holds no copy of the secret to re-send. A member left unset
+    /// (<c>null</c>) is not sent and stays as stored; <c>GroupBaseDn</c> / <c>GroupFilter</c>
+    /// set to <c>JsonNullable&lt;string&gt;.Null</c> are sent as <c>null</c> and clear the
+    /// value. An enabled directory and an effective <c>opaque_mode = required</c> never coexist
+    /// (<c>409</c>).
     /// </para>
     /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
@@ -147,6 +168,13 @@ public sealed class DirectoryApi
     /// Issues <c>DELETE /api/v1/tenants/{tenant_id}/directory</c>.
     /// </para>
     /// <para>
+    /// <b>Deleting stops the directory, and only that</b> (&#167;30.3 rule 5): directory
+    /// accounts can no longer sign in with a password &#8212; there is no fallback to a local
+    /// hash &#8212; and the sync stops. Sessions, refresh tokens and passkeys those accounts
+    /// already hold keep working until they expire or the accounts are deactivated. There is no
+    /// unlink: a linked account stays a directory account.
+    /// </para>
+    /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
     /// </para>
@@ -178,6 +206,13 @@ public sealed class DirectoryApi
     /// <remarks>
     /// <para>
     /// Issues <c>POST /api/v1/tenants/{tenant_id}/directory/links</c>.
+    /// </para>
+    /// <para>
+    /// <b>Signs the account's owner out everywhere</b> (&#167;30.3 rule 6): linking deletes the
+    /// account's WebAuthn credentials and federation links, revokes its <c>User</c>
+    /// certificates, all its sessions and its OAuth2 refresh tokens (TOTP is kept). The entry
+    /// is found by the account's own username; a repeat on an already-linked account answers
+    /// <c>was_already_linked</c> and repeats the revocations.
     /// </para>
     /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including

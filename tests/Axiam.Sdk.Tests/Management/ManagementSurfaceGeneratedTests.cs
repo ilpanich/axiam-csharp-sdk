@@ -1495,7 +1495,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     {
         string body = "{\"service_provider\": {\"acs_urls\": [], \"display_name\": \"example\", \"entity_id\": \"example\"}, \"warnings\": []}";
         Mount("POST", $"/api/v1/tenants/{TenantId}/saml/parse-sp-metadata", 200, body);
-        var result = await Client.Management.Saml.ParseSpMetadataAsync(body: new ParseSamlSpMetadata {  });
+        var result = await Client.Management.Saml.ParseSpMetadataAsync(body: ParseSamlSpMetadata.FromUrl("https://sp.example/metadata"));
         AssertDecodedEveryField(result, body);
     }
 

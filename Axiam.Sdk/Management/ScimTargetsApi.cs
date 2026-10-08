@@ -83,6 +83,10 @@ public sealed class ScimTargetsApi
     /// </summary>
     /// <remarks>
     /// <para>
+    /// <c>credential</c> is required here (&#167;31.3 rule 2). It is write-only: no response
+    /// ever carries it, and the SDK keeps no copy.
+    /// </para>
+    /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
     /// </para>
@@ -138,6 +142,15 @@ public sealed class ScimTargetsApi
     /// value first and carry over the parts you mean to keep (&#167;27.4 rule 5).
     /// </para>
     /// <para>
+    /// <b>The credential is bound to its URL</b> (&#167;31.3 rule 2): absent <c>credential</c>
+    /// keeps the stored one &#8212; except that changing <c>base_url</c> of a bearer target,
+    /// <c>auth.token_url</c> or <c>base_url</c> of a client-credentials target, or
+    /// <c>auth.type</c>, without <c>credential</c> in the same write is refused <c>400</c> and
+    /// changes nothing. The SDK holds no credential to re-send. Every other member left out
+    /// takes its default. An update overtaken by another administrator's write is <c>409</c>
+    /// (&#167;31.3 rule 4): reload, then retry yourself.
+    /// </para>
+    /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
     /// </para>
@@ -170,6 +183,12 @@ public sealed class ScimTargetsApi
     /// Issues <c>DELETE /api/v1/scim-targets/{id}</c>.
     /// </para>
     /// <para>
+    /// <b>Deprovisions nothing downstream</b> (&#167;31.3 rule 8): the users and groups AXIAM
+    /// created in the service provider stay there, and AXIAM no longer knows them. To remove
+    /// them, set <c>deprovision</c> to <c>delete</c>, let AXIAM push, and only then delete the
+    /// target.
+    /// </para>
+    /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
     /// </para>
@@ -196,6 +215,11 @@ public sealed class ScimTargetsApi
     /// <remarks>
     /// <para>
     /// Issues <c>POST /api/v1/scim-targets/{id}/reconcile</c>.
+    /// </para>
+    /// <para>
+    /// Starts a reconciliation in the background and answers <c>202</c>; its outcome is on the
+    /// target's <c>state</c> (&#167;31.3 rule 7). <c>409</c> while a run holds the claim,
+    /// within five minutes of the last one, or for a disabled target.
     /// </para>
     /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including

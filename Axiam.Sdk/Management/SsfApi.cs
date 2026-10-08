@@ -150,6 +150,14 @@ public sealed class SsfApi
     /// value first and carry over the parts you mean to keep (&#167;27.4 rule 5).
     /// </para>
     /// <para>
+    /// An omitted optional member takes its default (&#167;32.2) &#8212; <b>except
+    /// <c>authorization_header</c>, which absent keeps the stored one</b> &#8212; unless the
+    /// update moves <c>endpoint_url</c> to another scheme, host or port while a header is
+    /// stored: then it must carry <c>authorization_header</c> again or
+    /// <c>clear_authorization_header: true</c>, else <c>400</c> (&#167;32.3 rule 5). An update
+    /// overtaken by the receiver's own write is <c>409</c>: read the stream again.
+    /// </para>
+    /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
     /// </para>

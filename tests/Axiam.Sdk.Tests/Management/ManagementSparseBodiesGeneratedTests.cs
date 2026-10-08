@@ -395,10 +395,10 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new UpdateDirectoryConfig { Enabled = true },
             "enabled");
         AssertKeys(
-            new UpdateDirectoryConfig { GroupBaseDn = "example" },
+            new UpdateDirectoryConfig { GroupBaseDn = JsonNullable<string>.Of("example") },
             "group_base_dn");
         AssertKeys(
-            new UpdateDirectoryConfig { GroupFilter = "example" },
+            new UpdateDirectoryConfig { GroupFilter = JsonNullable<string>.Of("example") },
             "group_filter");
         AssertKeys(
             new UpdateDirectoryConfig { GroupMappings = Array.Empty<GroupMapping>() },
@@ -440,8 +440,8 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 BindDn = "example",
                 BindSecret = Sensitive<string>.Wrap("example"),
                 Enabled = true,
-                GroupBaseDn = "example",
-                GroupFilter = "example",
+                GroupBaseDn = JsonNullable<string>.Of("example"),
+                GroupFilter = JsonNullable<string>.Of("example"),
                 GroupMappings = Array.Empty<GroupMapping>(),
                 GroupMemberAttribute = "example",
                 GroupNestingDepth = 1,
@@ -459,6 +459,12 @@ public sealed class ManagementSparseBodiesGeneratedTests
             "jit_provisioning", "kind", "start_tls", "sync_interval_secs",
             "trust_anchors_pem", "url", "user_attribute_map", "user_filter");
         AssertKeys(new UpdateDirectoryConfig());
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateDirectoryConfig { GroupBaseDn = JsonNullable<string>.Null },
+            "{\"group_base_dn\":null}");
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateDirectoryConfig { GroupFilter = JsonNullable<string>.Null },
+            "{\"group_filter\":null}");
     }
 
     /// <summary>
@@ -1049,6 +1055,17 @@ public sealed class ManagementSparseBodiesGeneratedTests
             .GetMethods()
             .Count(m => m.Name.EndsWith("SendsOnlyWhatWasSet", StringComparison.Ordinal));
         Assert.Equal(21, cases);
+    }
+
+    /// <summary>
+    /// Asserts the encoded body is exactly <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="body">the request body to render.</param>
+    /// <param name="expected">the exact JSON text.</param>
+    /// <typeparam name="T">the body type.</typeparam>
+    private static void AssertJson<T>(T body, string expected)
+    {
+        Assert.Equal(expected, ManagementSupport.EncodeBody("test", body));
     }
 
     /// <summary>
