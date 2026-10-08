@@ -106,7 +106,11 @@ public class NetworkError : Exception
         // only a sanitized status-code summary (no header values, safe or otherwise)
         // survives past this method, satisfying the §2 MUST for a non-null cause chain.
         var inner = new SanitizedCause($"HTTP {(int)response.StatusCode}");
-        return new NetworkError(message, inner) { RetryAfter = ParseRetryAfter(response) };
+        return new NetworkError(message, inner)
+        {
+            RetryAfter = ParseRetryAfter(response),
+            HttpStatus = (int)response.StatusCode,
+        };
     }
 
     /// <summary>
@@ -127,6 +131,18 @@ public class NetworkError : Exception
     /// </para>
     /// </remarks>
     public TimeSpan? RetryAfter { get; init; }
+
+    /// <summary>
+    /// The HTTP status this error was built from, or <c>null</c> for a transport failure
+    /// or a locally raised error.
+    /// </summary>
+    /// <remarks>
+    /// Internal: it exists so a retry predicate can tell a <c>5xx</c>/<c>408</c>/<c>429</c>
+    /// (transient) from another <c>4xx</c> that &#167;2 also folds into this type — a
+    /// bodiless <c>400</c> is a <see cref="NetworkError"/> but sending the same bytes again
+    /// earns the same answer (CONTRACT.md &#167;28.12.2 rule 5, &#167;32.7, &#167;33.7).
+    /// </remarks>
+    internal int? HttpStatus { get; init; }
 
     /// <summary>
     /// Reads <c>Retry-After</c> as a duration, <c>null</c> when absent or unusable.
