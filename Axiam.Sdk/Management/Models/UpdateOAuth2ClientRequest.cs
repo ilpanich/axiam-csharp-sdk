@@ -39,11 +39,35 @@ public sealed record UpdateOAuth2ClientRequest
     public AuthnRequestParamsMode? AuthnRequestParams { get; init; }
 
     /// <summary>
+    /// G-7 — see the create DTO. <c>""</c> clears.
+    /// </summary>
+    [JsonPropertyName("backchannel_authentication_request_signing_alg")]
+    public string? BackchannelAuthenticationRequestSigningAlg { get; init; }
+
+    /// <summary>
+    /// G-7 — see the create DTO. <c>""</c> clears.
+    /// </summary>
+    [JsonPropertyName("backchannel_client_notification_endpoint")]
+    public string? BackchannelClientNotificationEndpoint { get; init; }
+
+    /// <summary>
     /// Pass an empty string to clear a previously registered URI — the one edit an operator
     /// makes when an RP is decommissioned.
     /// </summary>
     [JsonPropertyName("backchannel_logout_uri")]
     public string? BackchannelLogoutUri { get; init; }
+
+    /// <summary>
+    /// G-7 — see the create DTO. <c>""</c> clears.
+    /// </summary>
+    [JsonPropertyName("backchannel_token_delivery_mode")]
+    public string? BackchannelTokenDeliveryMode { get; init; }
+
+    /// <summary>
+    /// G-7 — <c>true</c> refused, as on create.
+    /// </summary>
+    [JsonPropertyName("backchannel_user_code_parameter")]
+    public bool? BackchannelUserCodeParameter { get; init; }
 
     /// <summary>
     /// X7.3 — see [<c>CreateOAuth2ClientRequest::browser_sso</c>].

@@ -1368,6 +1368,292 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
         AssertDecodedEveryField(result, body);
     }
 
+    /// <summary>Exercises directory.get.</summary>
+    [Fact]
+    public async Task Directory_Get()
+    {
+        string body = "{\"base_dn\": \"example\", \"bind_dn\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"enabled\": true, \"group_mappings\": [], \"group_member_attribute\": \"example\", \"group_nesting_depth\": 1, \"id\": \"11111111-1111-4111-8111-111111111111\", \"jit_provisioning\": true, \"kind\": \"open_ldap\", \"start_tls\": true, \"sync_interval_secs\": 1, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"trust_anchors_pem\": [], \"updated_at\": \"2026-08-26T00:00:00Z\", \"url\": \"example\", \"user_attribute_map\": {\"display_name\": \"example\", \"email\": \"example\", \"external_id\": \"example\", \"username\": \"example\"}, \"user_filter\": \"example\"}";
+        Mount("GET", $"/api/v1/tenants/{TenantId}/directory", 200, body);
+        var result = await Client.Management.Directory.GetAsync();
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises directory.set.</summary>
+    [Fact]
+    public async Task Directory_Set()
+    {
+        string body = "{\"base_dn\": \"example\", \"bind_dn\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"enabled\": true, \"group_mappings\": [], \"group_member_attribute\": \"example\", \"group_nesting_depth\": 1, \"id\": \"11111111-1111-4111-8111-111111111111\", \"jit_provisioning\": true, \"kind\": \"open_ldap\", \"start_tls\": true, \"sync_interval_secs\": 1, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"trust_anchors_pem\": [], \"updated_at\": \"2026-08-26T00:00:00Z\", \"url\": \"example\", \"user_attribute_map\": {\"display_name\": \"example\", \"email\": \"example\", \"external_id\": \"example\", \"username\": \"example\"}, \"user_filter\": \"example\"}";
+        Mount("PUT", $"/api/v1/tenants/{TenantId}/directory", 200, body);
+        var result = await Client.Management.Directory.SetAsync(body: new SetDirectoryConfig { BaseDn = "example", BindDn = "example", BindSecret = Sensitive<string>.Wrap("example"), Enabled = true, Kind = DirectoryKind.OpenLdap, StartTls = true, Url = "example", UserFilter = "example" });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises directory.update.</summary>
+    [Fact]
+    public async Task Directory_Update()
+    {
+        string body = "{\"base_dn\": \"example\", \"bind_dn\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"enabled\": true, \"group_mappings\": [], \"group_member_attribute\": \"example\", \"group_nesting_depth\": 1, \"id\": \"11111111-1111-4111-8111-111111111111\", \"jit_provisioning\": true, \"kind\": \"open_ldap\", \"start_tls\": true, \"sync_interval_secs\": 1, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"trust_anchors_pem\": [], \"updated_at\": \"2026-08-26T00:00:00Z\", \"url\": \"example\", \"user_attribute_map\": {\"display_name\": \"example\", \"email\": \"example\", \"external_id\": \"example\", \"username\": \"example\"}, \"user_filter\": \"example\"}";
+        Mount("PATCH", $"/api/v1/tenants/{TenantId}/directory", 200, body);
+        var result = await Client.Management.Directory.UpdateAsync(body: new UpdateDirectoryConfig { BindSecret = Sensitive<string>.Wrap("example") });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises directory.delete.</summary>
+    [Fact]
+    public async Task Directory_Delete()
+    {
+        string body = "";
+        Mount("DELETE", $"/api/v1/tenants/{TenantId}/directory", 204, body);
+        await Client.Management.Directory.DeleteAsync();
+    }
+
+    /// <summary>Exercises directory.link_account.</summary>
+    [Fact]
+    public async Task Directory_LinkAccount()
+    {
+        string body = "{\"certificates_revoked\": 1, \"directory_external_id\": \"example\", \"user_id\": \"11111111-1111-4111-8111-111111111111\", \"was_already_linked\": true, \"webauthn_credentials_deleted\": 1}";
+        Mount("POST", $"/api/v1/tenants/{TenantId}/directory/links", 200, body);
+        var result = await Client.Management.Directory.LinkAccountAsync(body: new LinkDirectoryAccount { UserId = ExampleId });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises directory.get_sync_status.</summary>
+    [Fact]
+    public async Task Directory_GetSyncStatus()
+    {
+        string body = "{\"full_required\": true, \"has_watermark\": true}";
+        Mount("GET", $"/api/v1/tenants/{TenantId}/directory/sync-status", 200, body);
+        var result = await Client.Management.Directory.GetSyncStatusAsync();
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises saml.get_idp.</summary>
+    [Fact]
+    public async Task Saml_GetIdp()
+    {
+        string body = "{\"entity_id\": \"example\", \"metadata_served\": true, \"metadata_url\": \"example\", \"saml_available\": true, \"saml_idp_enabled\": true, \"slo_url\": \"example\", \"sso_url\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\"}";
+        Mount("GET", $"/api/v1/tenants/{TenantId}/saml/idp", 200, body);
+        var result = await Client.Management.Saml.GetIdpAsync();
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises saml.list_service_providers.</summary>
+    [Fact]
+    public async Task Saml_ListServiceProviders()
+    {
+        string body = "{\"items\": [{\"acs_urls\": [], \"allow_idp_initiated\": true, \"allowed_groups\": [], \"attribute_mappings\": [], \"created_at\": \"2026-08-26T00:00:00Z\", \"display_name\": \"example\", \"enabled\": true, \"encrypt_assertions\": true, \"entity_id\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"name_id_format\": \"persistent\", \"sign_responses\": true, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"want_authn_requests_signed\": true}], \"total\": 1, \"offset\": 0, \"limit\": 200}";
+        Mount("GET", $"/api/v1/tenants/{TenantId}/saml/service-providers", 200, body);
+        var result = await Client.Management.Saml.ListServiceProvidersAsync(page: PageRequest.Of(50));
+        string item = JsonDocument.Parse(body).RootElement.GetProperty("items")[0].GetRawText();
+        AssertDecodedEveryField(result.Items[0], item);
+        await Client.Management.Saml.ListServiceProvidersAllAsync(start: PageRequest.Of(50));
+        await Client.Management.Saml.ListServiceProvidersAllAsync();
+    }
+
+    /// <summary>Exercises saml.create_service_provider.</summary>
+    [Fact]
+    public async Task Saml_CreateServiceProvider()
+    {
+        string body = "{\"acs_urls\": [], \"allow_idp_initiated\": true, \"allowed_groups\": [], \"attribute_mappings\": [], \"created_at\": \"2026-08-26T00:00:00Z\", \"display_name\": \"example\", \"enabled\": true, \"encrypt_assertions\": true, \"entity_id\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"name_id_format\": \"persistent\", \"sign_responses\": true, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"want_authn_requests_signed\": true}";
+        Mount("POST", $"/api/v1/tenants/{TenantId}/saml/service-providers", 201, body);
+        var result = await Client.Management.Saml.CreateServiceProviderAsync(body: new SamlServiceProviderInput { AcsUrls = Array.Empty<AcsEndpoint>(), DisplayName = "example", EntityId = "example" });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises saml.get_service_provider.</summary>
+    [Fact]
+    public async Task Saml_GetServiceProvider()
+    {
+        string body = "{\"acs_urls\": [], \"allow_idp_initiated\": true, \"allowed_groups\": [], \"attribute_mappings\": [], \"created_at\": \"2026-08-26T00:00:00Z\", \"display_name\": \"example\", \"enabled\": true, \"encrypt_assertions\": true, \"entity_id\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"name_id_format\": \"persistent\", \"sign_responses\": true, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"want_authn_requests_signed\": true}";
+        Mount("GET", $"/api/v1/tenants/{TenantId}/saml/service-providers/{ExampleId}", 200, body);
+        var result = await Client.Management.Saml.GetServiceProviderAsync(spId: ExampleId);
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises saml.update_service_provider.</summary>
+    [Fact]
+    public async Task Saml_UpdateServiceProvider()
+    {
+        string body = "{\"acs_urls\": [], \"allow_idp_initiated\": true, \"allowed_groups\": [], \"attribute_mappings\": [], \"created_at\": \"2026-08-26T00:00:00Z\", \"display_name\": \"example\", \"enabled\": true, \"encrypt_assertions\": true, \"entity_id\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"name_id_format\": \"persistent\", \"sign_responses\": true, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"want_authn_requests_signed\": true}";
+        Mount("PUT", $"/api/v1/tenants/{TenantId}/saml/service-providers/{ExampleId}", 200, body);
+        var result = await Client.Management.Saml.UpdateServiceProviderAsync(spId: ExampleId, body: new SamlServiceProviderInput { AcsUrls = Array.Empty<AcsEndpoint>(), DisplayName = "example", EntityId = "example" });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises saml.delete_service_provider.</summary>
+    [Fact]
+    public async Task Saml_DeleteServiceProvider()
+    {
+        string body = "";
+        Mount("DELETE", $"/api/v1/tenants/{TenantId}/saml/service-providers/{ExampleId}", 204, body);
+        await Client.Management.Saml.DeleteServiceProviderAsync(spId: ExampleId);
+    }
+
+    /// <summary>Exercises saml.parse_sp_metadata.</summary>
+    [Fact]
+    public async Task Saml_ParseSpMetadata()
+    {
+        string body = "{\"service_provider\": {\"acs_urls\": [], \"display_name\": \"example\", \"entity_id\": \"example\"}, \"warnings\": []}";
+        Mount("POST", $"/api/v1/tenants/{TenantId}/saml/parse-sp-metadata", 200, body);
+        var result = await Client.Management.Saml.ParseSpMetadataAsync(body: new ParseSamlSpMetadata {  });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises saml.list_idp_credentials.</summary>
+    [Fact]
+    public async Task Saml_ListIdpCredentials()
+    {
+        string body = "[{\"certificate_pem\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"fingerprint\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"issuer_ca_id\": \"11111111-1111-4111-8111-111111111111\", \"not_after\": \"2026-08-26T00:00:00Z\", \"not_before\": \"2026-08-26T00:00:00Z\", \"serial\": \"example\", \"status\": \"active\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\"}]";
+        Mount("GET", $"/api/v1/tenants/{TenantId}/saml/idp-credentials", 200, body);
+        var result = await Client.Management.Saml.ListIdpCredentialsAsync();
+        string item = JsonDocument.Parse(body).RootElement[0].GetRawText();
+        AssertDecodedEveryField(result[0], item);
+    }
+
+    /// <summary>Exercises saml.issue_idp_credential.</summary>
+    [Fact]
+    public async Task Saml_IssueIdpCredential()
+    {
+        string body = "{\"certificate_pem\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"fingerprint\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"issuer_ca_id\": \"11111111-1111-4111-8111-111111111111\", \"not_after\": \"2026-08-26T00:00:00Z\", \"not_before\": \"2026-08-26T00:00:00Z\", \"serial\": \"example\", \"status\": \"active\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\"}";
+        Mount("POST", $"/api/v1/tenants/{TenantId}/saml/idp-credentials", 201, body);
+        var result = await Client.Management.Saml.IssueIdpCredentialAsync(body: new IssueSamlIdpCredential { IssuerCaId = ExampleId, Slot = SamlIdpSlot.Active });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises saml.promote_idp_credential.</summary>
+    [Fact]
+    public async Task Saml_PromoteIdpCredential()
+    {
+        string body = "{\"active\": {\"certificate_pem\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"fingerprint\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"issuer_ca_id\": \"11111111-1111-4111-8111-111111111111\", \"not_after\": \"2026-08-26T00:00:00Z\", \"not_before\": \"2026-08-26T00:00:00Z\", \"serial\": \"example\", \"status\": \"active\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\"}}";
+        Mount("POST", $"/api/v1/tenants/{TenantId}/saml/idp-credentials/{ExampleId}/promote", 200, body);
+        var result = await Client.Management.Saml.PromoteIdpCredentialAsync(credentialId: ExampleId);
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises saml.retire_idp_credential.</summary>
+    [Fact]
+    public async Task Saml_RetireIdpCredential()
+    {
+        string body = "{\"certificate_pem\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"fingerprint\": \"example\", \"id\": \"11111111-1111-4111-8111-111111111111\", \"issuer_ca_id\": \"11111111-1111-4111-8111-111111111111\", \"not_after\": \"2026-08-26T00:00:00Z\", \"not_before\": \"2026-08-26T00:00:00Z\", \"serial\": \"example\", \"status\": \"active\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\"}";
+        Mount("POST", $"/api/v1/tenants/{TenantId}/saml/idp-credentials/{ExampleId}/retire", 200, body);
+        var result = await Client.Management.Saml.RetireIdpCredentialAsync(credentialId: ExampleId);
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises ssf.list_streams.</summary>
+    [Fact]
+    public async Task Ssf_ListStreams()
+    {
+        string body = "{\"items\": [{\"audience\": \"example\", \"authorization_header_set\": true, \"created_at\": \"2026-08-26T00:00:00Z\", \"delivery_method\": \"push\", \"events_allowed\": [], \"events_delivered\": [], \"events_requested\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"receiver_client_id\": \"example\", \"status\": \"enabled\", \"status_actor\": \"admin\", \"subject_format\": \"iss_sub\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"transmitter_active\": true, \"updated_at\": \"2026-08-26T00:00:00Z\"}], \"total\": 1, \"offset\": 0, \"limit\": 200}";
+        Mount("GET", $"/api/v1/tenants/{TenantId}/ssf/streams", 200, body);
+        var result = await Client.Management.Ssf.ListStreamsAsync(page: PageRequest.Of(50));
+        string item = JsonDocument.Parse(body).RootElement.GetProperty("items")[0].GetRawText();
+        AssertDecodedEveryField(result.Items[0], item);
+        await Client.Management.Ssf.ListStreamsAllAsync(start: PageRequest.Of(50));
+        await Client.Management.Ssf.ListStreamsAllAsync();
+    }
+
+    /// <summary>Exercises ssf.create_stream.</summary>
+    [Fact]
+    public async Task Ssf_CreateStream()
+    {
+        string body = "{\"audience\": \"example\", \"authorization_header_set\": true, \"created_at\": \"2026-08-26T00:00:00Z\", \"delivery_method\": \"push\", \"events_allowed\": [], \"events_delivered\": [], \"events_requested\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"receiver_client_id\": \"example\", \"status\": \"enabled\", \"status_actor\": \"admin\", \"subject_format\": \"iss_sub\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"transmitter_active\": true, \"updated_at\": \"2026-08-26T00:00:00Z\"}";
+        Mount("POST", $"/api/v1/tenants/{TenantId}/ssf/streams", 201, body);
+        var result = await Client.Management.Ssf.CreateStreamAsync(body: new SsfStreamInput { Audience = "example", AuthorizationHeader = Sensitive<string>.Wrap("example"), DeliveryMethod = SsfDeliveryMethod.Push, EventsAllowed = Array.Empty<SsfEventType>(), ReceiverClientId = "example" });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises ssf.get_stream.</summary>
+    [Fact]
+    public async Task Ssf_GetStream()
+    {
+        string body = "{\"audience\": \"example\", \"authorization_header_set\": true, \"created_at\": \"2026-08-26T00:00:00Z\", \"delivery_method\": \"push\", \"events_allowed\": [], \"events_delivered\": [], \"events_requested\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"receiver_client_id\": \"example\", \"status\": \"enabled\", \"status_actor\": \"admin\", \"subject_format\": \"iss_sub\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"transmitter_active\": true, \"updated_at\": \"2026-08-26T00:00:00Z\"}";
+        Mount("GET", $"/api/v1/tenants/{TenantId}/ssf/streams/{ExampleId}", 200, body);
+        var result = await Client.Management.Ssf.GetStreamAsync(streamId: ExampleId);
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises ssf.update_stream.</summary>
+    [Fact]
+    public async Task Ssf_UpdateStream()
+    {
+        string body = "{\"audience\": \"example\", \"authorization_header_set\": true, \"created_at\": \"2026-08-26T00:00:00Z\", \"delivery_method\": \"push\", \"events_allowed\": [], \"events_delivered\": [], \"events_requested\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"receiver_client_id\": \"example\", \"status\": \"enabled\", \"status_actor\": \"admin\", \"subject_format\": \"iss_sub\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"transmitter_active\": true, \"updated_at\": \"2026-08-26T00:00:00Z\"}";
+        Mount("PUT", $"/api/v1/tenants/{TenantId}/ssf/streams/{ExampleId}", 200, body);
+        var result = await Client.Management.Ssf.UpdateStreamAsync(streamId: ExampleId, body: new SsfStreamInput { Audience = "example", AuthorizationHeader = Sensitive<string>.Wrap("example"), DeliveryMethod = SsfDeliveryMethod.Push, EventsAllowed = Array.Empty<SsfEventType>(), ReceiverClientId = "example" });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises ssf.delete_stream.</summary>
+    [Fact]
+    public async Task Ssf_DeleteStream()
+    {
+        string body = "";
+        Mount("DELETE", $"/api/v1/tenants/{TenantId}/ssf/streams/{ExampleId}", 204, body);
+        await Client.Management.Ssf.DeleteStreamAsync(streamId: ExampleId);
+    }
+
+    /// <summary>Exercises scim_targets.list.</summary>
+    [Fact]
+    public async Task ScimTargets_List()
+    {
+        string body = "{\"items\": [{\"auth\": {\"type\": \"bearer\"}, \"base_url\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"deprovision\": \"deactivate\", \"enabled\": true, \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"push_groups\": true, \"scope\": {\"type\": \"all_users\"}, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"user_name_from\": \"username\"}], \"total\": 1, \"offset\": 0, \"limit\": 200}";
+        Mount("GET", $"/api/v1/scim-targets", 200, body);
+        var result = await Client.Management.ScimTargets.ListAsync(page: PageRequest.Of(50));
+        string item = JsonDocument.Parse(body).RootElement.GetProperty("items")[0].GetRawText();
+        AssertDecodedEveryField(result.Items[0], item);
+        await Client.Management.ScimTargets.ListAllAsync(start: PageRequest.Of(50));
+        await Client.Management.ScimTargets.ListAllAsync();
+    }
+
+    /// <summary>Exercises scim_targets.create.</summary>
+    [Fact]
+    public async Task ScimTargets_Create()
+    {
+        string body = "{\"auth\": {\"type\": \"bearer\"}, \"base_url\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"deprovision\": \"deactivate\", \"enabled\": true, \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"push_groups\": true, \"scope\": {\"type\": \"all_users\"}, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"user_name_from\": \"username\"}";
+        Mount("POST", $"/api/v1/scim-targets", 201, body);
+        var result = await Client.Management.ScimTargets.CreateAsync(body: new ScimTargetInput { Auth = new ScimTargetAuthBearer {  }, BaseUrl = "example", Credential = Sensitive<string>.Wrap("example"), Name = "example", Scope = new ScimTargetScopeAllUsers {  } });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises scim_targets.get.</summary>
+    [Fact]
+    public async Task ScimTargets_Get()
+    {
+        string body = "{\"auth\": {\"type\": \"bearer\"}, \"base_url\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"deprovision\": \"deactivate\", \"enabled\": true, \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"push_groups\": true, \"scope\": {\"type\": \"all_users\"}, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"user_name_from\": \"username\"}";
+        Mount("GET", $"/api/v1/scim-targets/{ExampleId}", 200, body);
+        var result = await Client.Management.ScimTargets.GetAsync(id: ExampleId);
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises scim_targets.update.</summary>
+    [Fact]
+    public async Task ScimTargets_Update()
+    {
+        string body = "{\"auth\": {\"type\": \"bearer\"}, \"base_url\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"deprovision\": \"deactivate\", \"enabled\": true, \"id\": \"11111111-1111-4111-8111-111111111111\", \"name\": \"example\", \"push_groups\": true, \"scope\": {\"type\": \"all_users\"}, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"user_name_from\": \"username\"}";
+        Mount("PUT", $"/api/v1/scim-targets/{ExampleId}", 200, body);
+        var result = await Client.Management.ScimTargets.UpdateAsync(id: ExampleId, body: new ScimTargetInput { Auth = new ScimTargetAuthBearer {  }, BaseUrl = "example", Credential = Sensitive<string>.Wrap("example"), Name = "example", Scope = new ScimTargetScopeAllUsers {  } });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises scim_targets.delete.</summary>
+    [Fact]
+    public async Task ScimTargets_Delete()
+    {
+        string body = "";
+        Mount("DELETE", $"/api/v1/scim-targets/{ExampleId}", 204, body);
+        await Client.Management.ScimTargets.DeleteAsync(id: ExampleId);
+    }
+
+    /// <summary>Exercises scim_targets.reconcile.</summary>
+    [Fact]
+    public async Task ScimTargets_Reconcile()
+    {
+        string body = "{\"status\": \"example\", \"target_id\": \"11111111-1111-4111-8111-111111111111\"}";
+        Mount("POST", $"/api/v1/scim-targets/{ExampleId}/reconcile", 202, body);
+        var result = await Client.Management.ScimTargets.ReconcileAsync(id: ExampleId);
+        AssertDecodedEveryField(result, body);
+    }
+
     /// <summary>Exercises settings.get_org.</summary>
     [Fact]
     public async Task Settings_GetOrg()
@@ -1656,7 +1942,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     [Fact]
     public async Task Platform_Health()
     {
-        string body = "{\"status\": \"example\"}";
+        string body = "{\"profile\": \"example\", \"status\": \"example\"}";
         Mount("GET", $"/health", 200, body);
         var result = await Client.Management.Platform.HealthAsync();
         AssertDecodedEveryField(result, body);
@@ -1773,6 +2059,54 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     }
 
     /// <summary>
+    /// &#167;27.4 rule 3: directory.ForTenant(...) reaches the named scope, and leaves the
+    /// handle it came from alone.
+    /// </summary>
+    [Fact]
+    public async Task Directory_ForTenant_ChangesThePath()
+    {
+        var scoped = Mount("GET", $"/api/v1/tenants/{OverrideId}/directory", 200, "{\"base_dn\": \"example\", \"bind_dn\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"enabled\": true, \"group_mappings\": [], \"group_member_attribute\": \"example\", \"group_nesting_depth\": 1, \"id\": \"11111111-1111-4111-8111-111111111111\", \"jit_provisioning\": true, \"kind\": \"open_ldap\", \"start_tls\": true, \"sync_interval_secs\": 1, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"trust_anchors_pem\": [], \"updated_at\": \"2026-08-26T00:00:00Z\", \"url\": \"example\", \"user_attribute_map\": {\"display_name\": \"example\", \"email\": \"example\", \"external_id\": \"example\", \"username\": \"example\"}, \"user_filter\": \"example\"}");
+        var inherited = Mount("GET", $"/api/v1/tenants/{TenantId}/directory", 200, "{\"base_dn\": \"example\", \"bind_dn\": \"example\", \"created_at\": \"2026-08-26T00:00:00Z\", \"enabled\": true, \"group_mappings\": [], \"group_member_attribute\": \"example\", \"group_nesting_depth\": 1, \"id\": \"11111111-1111-4111-8111-111111111111\", \"jit_provisioning\": true, \"kind\": \"open_ldap\", \"start_tls\": true, \"sync_interval_secs\": 1, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"trust_anchors_pem\": [], \"updated_at\": \"2026-08-26T00:00:00Z\", \"url\": \"example\", \"user_attribute_map\": {\"display_name\": \"example\", \"email\": \"example\", \"external_id\": \"example\", \"username\": \"example\"}, \"user_filter\": \"example\"}");
+        var handle = Client.Management.Directory;
+        await handle.ForTenant(OverrideId).GetAsync();
+        await handle.GetAsync();
+        Assert.Equal(1, scoped.Calls);
+        Assert.Equal(1, inherited.Calls);
+    }
+
+    /// <summary>
+    /// &#167;27.4 rule 3: saml.ForTenant(...) reaches the named scope, and leaves the handle it
+    /// came from alone.
+    /// </summary>
+    [Fact]
+    public async Task Saml_ForTenant_ChangesThePath()
+    {
+        var scoped = Mount("GET", $"/api/v1/tenants/{OverrideId}/saml/idp", 200, "{\"entity_id\": \"example\", \"metadata_served\": true, \"metadata_url\": \"example\", \"saml_available\": true, \"saml_idp_enabled\": true, \"slo_url\": \"example\", \"sso_url\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\"}");
+        var inherited = Mount("GET", $"/api/v1/tenants/{TenantId}/saml/idp", 200, "{\"entity_id\": \"example\", \"metadata_served\": true, \"metadata_url\": \"example\", \"saml_available\": true, \"saml_idp_enabled\": true, \"slo_url\": \"example\", \"sso_url\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\"}");
+        var handle = Client.Management.Saml;
+        await handle.ForTenant(OverrideId).GetIdpAsync();
+        await handle.GetIdpAsync();
+        Assert.Equal(1, scoped.Calls);
+        Assert.Equal(1, inherited.Calls);
+    }
+
+    /// <summary>
+    /// &#167;27.4 rule 3: ssf.ForTenant(...) reaches the named scope, and leaves the handle it
+    /// came from alone.
+    /// </summary>
+    [Fact]
+    public async Task Ssf_ForTenant_ChangesThePath()
+    {
+        var scoped = Mount("GET", $"/api/v1/tenants/{OverrideId}/ssf/streams", 200, "{\"items\": [{\"audience\": \"example\", \"authorization_header_set\": true, \"created_at\": \"2026-08-26T00:00:00Z\", \"delivery_method\": \"push\", \"events_allowed\": [], \"events_delivered\": [], \"events_requested\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"receiver_client_id\": \"example\", \"status\": \"enabled\", \"status_actor\": \"admin\", \"subject_format\": \"iss_sub\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"transmitter_active\": true, \"updated_at\": \"2026-08-26T00:00:00Z\"}], \"total\": 1, \"offset\": 0, \"limit\": 200}");
+        var inherited = Mount("GET", $"/api/v1/tenants/{TenantId}/ssf/streams", 200, "{\"items\": [{\"audience\": \"example\", \"authorization_header_set\": true, \"created_at\": \"2026-08-26T00:00:00Z\", \"delivery_method\": \"push\", \"events_allowed\": [], \"events_delivered\": [], \"events_requested\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"receiver_client_id\": \"example\", \"status\": \"enabled\", \"status_actor\": \"admin\", \"subject_format\": \"iss_sub\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"transmitter_active\": true, \"updated_at\": \"2026-08-26T00:00:00Z\"}], \"total\": 1, \"offset\": 0, \"limit\": 200}");
+        var handle = Client.Management.Ssf;
+        await handle.ForTenant(OverrideId).ListStreamsAsync(page: PageRequest.Of(50));
+        await handle.ListStreamsAsync(page: PageRequest.Of(50));
+        Assert.Equal(1, scoped.Calls);
+        Assert.Equal(1, inherited.Calls);
+    }
+
+    /// <summary>
     /// &#167;27.4 rule 3: settings.InOrg(...) reaches the named scope, and leaves the handle it
     /// came from alone.
     /// </summary>
@@ -1821,7 +2155,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
     }
 
     /// <summary>
-    /// &#167;27.9: a partial regeneration must fail here, not ship 140 of 147.
+    /// &#167;27.9: a partial regeneration must fail here, not ship part of the registry.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -1851,6 +2185,12 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "certificates.list",
             "certificates.revoke",
             "certificates.sign_csr",
+            "directory.delete",
+            "directory.get",
+            "directory.get_sync_status",
+            "directory.link_account",
+            "directory.set",
+            "directory.update",
             "email_config.delete_org",
             "email_config.delete_tenant",
             "email_config.get_org",
@@ -1947,6 +2287,23 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "roles.unassign_from_service_account",
             "roles.unassign_from_user",
             "roles.update",
+            "saml.create_service_provider",
+            "saml.delete_service_provider",
+            "saml.get_idp",
+            "saml.get_service_provider",
+            "saml.issue_idp_credential",
+            "saml.list_idp_credentials",
+            "saml.list_service_providers",
+            "saml.parse_sp_metadata",
+            "saml.promote_idp_credential",
+            "saml.retire_idp_credential",
+            "saml.update_service_provider",
+            "scim_targets.create",
+            "scim_targets.delete",
+            "scim_targets.get",
+            "scim_targets.list",
+            "scim_targets.reconcile",
+            "scim_targets.update",
             "scim_tokens.create",
             "scim_tokens.list",
             "scim_tokens.revoke",
@@ -1971,6 +2328,11 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "settings.set_effective",
             "settings.set_org",
             "settings.set_tenant_override",
+            "ssf.create_stream",
+            "ssf.delete_stream",
+            "ssf.get_stream",
+            "ssf.list_streams",
+            "ssf.update_stream",
             "tenants.create",
             "tenants.delete",
             "tenants.export_audit",
@@ -1997,7 +2359,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "webhooks.list",
             "webhooks.update",
         };
-        Assert.Equal(162, exercised.Length);
+        Assert.Equal(190, exercised.Length);
         Assert.Equal(ExpectedSurface(), exercised);
     }
 }

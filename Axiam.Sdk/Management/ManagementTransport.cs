@@ -12,10 +12,10 @@ namespace Axiam.Sdk.Management;
 /// </summary>
 /// <remarks>
 /// &#167;27.8 is explicit that the generated layer MUST sit on the SDK's existing
-/// request path and MUST NOT build its own. That is what this class is: 147 generated
+/// request path and MUST NOT build its own. That is what this class is: 190 generated
 /// operations all funnel into <see cref="SendAsync"/>, so they inherit &#167;3 (CSRF),
 /// &#167;4 (the cookie jar), &#167;5 (the tenant header), &#167;6 (TLS), &#167;16 (retry)
-/// and &#167;19 (telemetry) by construction rather than by 147 opportunities to forget
+/// and &#167;19 (telemetry) by construction rather than by 190 opportunities to forget
 /// one — the first four because every request goes through the same decorated
 /// <see cref="HttpClient"/> the rest of the SDK uses.
 /// </remarks>
@@ -83,7 +83,7 @@ internal sealed class ManagementTransport
         RequireSession(operation);
 
         // §27.4 rule 8: every GET here is read-only and therefore retry-eligible under
-        // §16.2; every POST, PUT and DELETE is not — including the ones that look
+        // §16.2; every POST, PUT, PATCH and DELETE is not — including the ones that look
         // idempotent. certificates.generate twice mints two certificates.
         if (method != HttpMethod.Get)
         {
@@ -107,7 +107,7 @@ internal sealed class ManagementTransport
     /// §27.4 rule 1: no session means no wire call.
     /// </summary>
     /// <remarks>
-    /// Refused here, once, rather than in 147 generated operations — and refused BEFORE
+    /// Refused here, once, rather than in 190 generated operations — and refused BEFORE
     /// the socket, so an unauthenticated caller gets a message naming the missing
     /// session instead of a 401 they have to interpret.
     /// </remarks>

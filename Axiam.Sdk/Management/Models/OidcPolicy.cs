@@ -21,15 +21,18 @@ namespace Axiam.Sdk.Management.Models;
 /// [<c>Self::sensitive_scopes_enabled</c>], validated **disable-only** — the mirror image of
 /// <c>mfa_enforced</c>, because releasing personal data is the less-restrictive direction, so a
 /// tenant can turn its organization's decision off but never on. *
-/// [<c>Self::dynamic_registration</c>], on the ladder <c>disabled</c> →
-/// <c>initial_access_token</c> → <c>anonymous</c>: a tenant may move down it and never up. *
-/// [<c>Self::dcr_max_clients</c>] and [<c>Self::dcr_unused_client_ttl_days</c>], on the
-/// ordinary <c>tenant &lt;= org</c> rule — with the wrinkle that <c>0</c> on the second means
-/// *never sweep*, which is the longest window of all and is handled by
-/// [<c>dcr_ttl_strictness</c>]. **Not ordered**, therefore never validated against the baseline
-/// and never clamped: * [<c>Self::default_locale</c>]. A language is a presentation preference;
-/// there is no sense in which Italian is stricter than French. *
-/// [<c>Self::dcr_allowed_scopes</c>], [<c>Self::dcr_allowed_redirect_hosts</c>] and
+/// [<c>Self::saml_idp_enabled</c>], validated **disable-only** exactly like
+/// [<c>Self::sensitive_scopes_enabled</c>] (D-20): a tenant may turn its organization's
+/// <c>true</c> off and never its <c>false</c> on. * [<c>Self::ssf_enabled</c>], validated
+/// **disable-only** the same way (D-45). * [<c>Self::dynamic_registration</c>], on the ladder
+/// <c>disabled</c> → <c>initial_access_token</c> → <c>anonymous</c>: a tenant may move down it
+/// and never up. * [<c>Self::dcr_max_clients</c>] and
+/// [<c>Self::dcr_unused_client_ttl_days</c>], on the ordinary <c>tenant &lt;= org</c> rule —
+/// with the wrinkle that <c>0</c> on the second means *never sweep*, which is the longest
+/// window of all and is handled by [<c>dcr_ttl_strictness</c>]. **Not ordered**, therefore
+/// never validated against the baseline and never clamped: * [<c>Self::default_locale</c>]. A
+/// language is a presentation preference; there is no sense in which Italian is stricter than
+/// French. * [<c>Self::dcr_allowed_scopes</c>], [<c>Self::dcr_allowed_redirect_hosts</c>] and
 /// [<c>Self::external_client_allowed_resources</c>]. Each names per-tenant resources — *this*
 /// tenant's MCP servers, *this* tenant's callback hosts — and there is no sense in which one
 /// such list is stricter than another. A subset rule would force an organization to enumerate
@@ -135,6 +138,24 @@ public sealed record OidcPolicy
     public IReadOnlyList<string>? ExternalClientAllowedResources { get; init; }
 
     /// <summary>
+    /// G-2 / D-20 — whether this tenant may act as a SAML 2.0 identity provider: publish IdP
+    /// metadata and accept <c>AuthnRequest</c>s on <c>/saml/v2/{tenant}/{metadata,sso,slo}</c>.
+    /// **Off unless an organization turns it on.** A SAML IdP issues assertions that other
+    /// systems accept as proof of identity, so a deployment that has never decided to be one
+    /// issues none, and the three endpoints answer <c>404</c> as if they did not exist. The
+    /// switch lives on this policy, beside the other OpenID Provider surface controls, because
+    /// the SSO endpoint is the same browser login hop and OP session with a different wire
+    /// format. **Disable-only**, with the shape of [<c>Self::sensitive_scopes_enabled</c>]: a
+    /// tenant may turn its organization's <c>true</c> off but never its <c>false</c> on,
+    /// because the decision to issue identity assertions on behalf of the organization's
+    /// tenants is the organization's. A deployment built without the <c>saml</c> feature
+    /// answers <c>404</c> whatever this says; the setting is a capability, not a grant (each SP
+    /// must still be registered, and <c>allow_idp_initiated</c> is its own opt-in).
+    /// </summary>
+    [JsonPropertyName("saml_idp_enabled")]
+    public bool? SamlIdpEnabled { get; init; }
+
+    /// <summary>
     /// Whether <c>address</c> and <c>phone</c> may be registered on a client, requested at the
     /// authorization endpoint, and released at UserInfo (X7 G8). **Off unless an organization
     /// turns it on.** The two scopes release a postal address and a telephone number —
@@ -148,4 +169,24 @@ public sealed record OidcPolicy
     /// </summary>
     [JsonPropertyName("sensitive_scopes_enabled")]
     public required bool SensitiveScopesEnabled { get; init; }
+
+    /// <summary>
+    /// G-5 / D-45 — whether the tenant is a Shared Signals Framework transmitter: its
+    /// <c>/.well-known/ssf-configuration</c> is served, its receivers can use the stream
+    /// management API, and events are signed and transmitted on its streams. Default
+    /// **<c>false</c>**. **Disable-only**, with the shape of [<c>Self::saml_idp_enabled</c>]:
+    /// sending security events about the organization's users to third parties is the
+    /// organization's decision. Streams can be registered while it is off; they carry nothing
+    /// until it is on.
+    /// </summary>
+    [JsonPropertyName("ssf_enabled")]
+    public bool? SsfEnabled { get; init; }
+
+    /// <summary>
+    /// **Read-only**, D-55: set on a settings response when <c>ssf_enabled</c> is on but the
+    /// transmitter is inactive anyway, saying why — the deployment holds more than one tenant
+    /// and serves no per-tenant issuers. Never stored.
+    /// </summary>
+    [JsonPropertyName("ssf_inactive_reason")]
+    public string? SsfInactiveReason { get; init; }
 }

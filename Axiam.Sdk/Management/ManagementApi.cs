@@ -12,7 +12,7 @@ using System.Text.Json.Serialization;
 namespace Axiam.Sdk.Management;
 
 /// <summary>
-/// The CONTRACT.md &#167;27 management API: 147 operations across 24 namespaces.
+/// The CONTRACT.md &#167;27 management API: 190 operations across 28 namespaces.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -21,8 +21,8 @@ namespace Axiam.Sdk.Management;
 /// </para>
 /// <para>
 /// The namespaces are grouped behind this one accessor rather than added to AxiamClient
-/// directly: &#167;27.2's own argument for handles is that a flat surface of 147 methods buries
-/// the twenty a given caller needs, and hanging 24 more members off AxiamClient would do to it
+/// directly: &#167;27.2's own argument for handles is that a flat surface of 190 methods buries
+/// the twenty a given caller needs, and hanging 28 more members off AxiamClient would do to it
 /// exactly what the handles exist to prevent.
 /// </para>
 /// </remarks>
@@ -204,6 +204,46 @@ public sealed class ManagementApi
     /// </para>
     /// </remarks>
     public EmailConfigApi EmailConfig => new(_transport, new NamespaceScope());
+
+    /// <summary>
+    /// The directory operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1).
+    /// </para>
+    /// </remarks>
+    public DirectoryApi Directory => new(_transport, new NamespaceScope());
+
+    /// <summary>
+    /// The saml operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1).
+    /// </para>
+    /// </remarks>
+    public SamlApi Saml => new(_transport, new NamespaceScope());
+
+    /// <summary>
+    /// The ssf operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1).
+    /// </para>
+    /// </remarks>
+    public SsfApi Ssf => new(_transport, new NamespaceScope());
+
+    /// <summary>
+    /// The scim_targets operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1).
+    /// </para>
+    /// </remarks>
+    public ScimTargetsApi ScimTargets => new(_transport, new NamespaceScope());
 
     /// <summary>
     /// The settings operations.

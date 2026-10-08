@@ -238,6 +238,50 @@ public sealed partial class AxiamClient
     public EmailConfigApi EmailConfig => Management.EmailConfig;
 
     /// <summary>
+    /// The directory (CONTRACT.md &#167;30) operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Directory</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public DirectoryApi Directory => Management.Directory;
+
+    /// <summary>
+    /// The saml (CONTRACT.md &#167;29) operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Saml</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public SamlApi Saml => Management.Saml;
+
+    /// <summary>
+    /// The ssf (CONTRACT.md &#167;32) operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Ssf</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public SsfApi Ssf => Management.Ssf;
+
+    /// <summary>
+    /// The scim_targets (CONTRACT.md &#167;31) operations.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.ScimTargets</c> (&#167;27.2 rule 4).
+    /// </para>
+    /// </remarks>
+    public ScimTargetsApi ScimTargets => Management.ScimTargets;
+
+    /// <summary>
     /// The settings operations.
     /// </summary>
     /// <remarks>

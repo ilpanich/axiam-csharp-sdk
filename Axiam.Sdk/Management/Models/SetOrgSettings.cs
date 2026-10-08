@@ -219,6 +219,13 @@ public sealed record SetOrgSettings
     public required bool RequireUppercase { get; init; }
 
     /// <summary>
+    /// G-2 / D-20 — defaulted, so an API client written before the SAML identity provider
+    /// existed lands on <c>false</c>, which is what every deployment did before (I1).
+    /// </summary>
+    [JsonPropertyName("saml_idp_enabled")]
+    public bool? SamlIdpEnabled { get; init; }
+
+    /// <summary>
     /// the server's sensitive_scopes_enabled field
     /// </summary>
     [JsonPropertyName("sensitive_scopes_enabled")]
@@ -230,6 +237,13 @@ public sealed record SetOrgSettings
     /// </summary>
     [JsonPropertyName("server_cert_allowed_names")]
     public IReadOnlyList<string>? ServerCertAllowedNames { get; init; }
+
+    /// <summary>
+    /// G-5 / D-45 — defaulted, so an API client written before the SSF transmitter existed
+    /// lands on <c>false</c>, which is what every deployment did before (I1).
+    /// </summary>
+    [JsonPropertyName("ssf_enabled")]
+    public bool? SsfEnabled { get; init; }
 
     /// <summary>
     /// the server's webauthn_user_verification field

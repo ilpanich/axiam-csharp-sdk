@@ -99,6 +99,10 @@ public enum NotificationEventType
     [WireName("service_account_deleted")]
     ServiceAccountDeleted,
 
+    /// <summary>The server's <c>scim_delivery_failed</c> value.</summary>
+    [WireName("scim_delivery_failed")]
+    ScimDeliveryFailed,
+
     /// <summary>
     /// A value this SDK’s copy of the spec does not list.
     /// </summary>
