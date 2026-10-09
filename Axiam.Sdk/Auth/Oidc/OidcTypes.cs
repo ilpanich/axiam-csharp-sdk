@@ -18,9 +18,9 @@ namespace Axiam.Sdk.Auth.Oidc;
 // NOT secrets (§12.3 rule 2) and are plain strings.
 
 /// <summary>
-/// RFC 8705 &#167;5 <c>mtls_endpoint_aliases</c> — the six endpoints re-based on the host
+/// RFC 8705 &#167;5 <c>mtls_endpoint_aliases</c> — the seven endpoints re-based on the host
 /// that performs the mutual-TLS handshake (wire schema <c>MtlsEndpointAliases</c>,
-/// contract 1.40).
+/// contract 1.40; the seventh, <c>backchannel_authentication_endpoint</c>, contract 1.58).
 /// </summary>
 /// <remarks>
 /// <para>
@@ -30,7 +30,7 @@ namespace Axiam.Sdk.Auth.Oidc;
 /// both runs two, and this object names the second.
 /// </para>
 /// <para>
-/// Only these six are ever aliased. <c>authorization_endpoint</c> and
+/// Only these seven are ever aliased. <c>authorization_endpoint</c> and
 /// <c>end_session_endpoint</c> are front-channel and <c>jwks_uri</c> is public key
 /// material, so CONTRACT.md &#167;21.3 rule 2 forbids synthesising an alias for any of
 /// them — sending a browser to an mTLS host raises a native certificate-chooser dialog
@@ -38,7 +38,7 @@ namespace Axiam.Sdk.Auth.Oidc;
 /// &#167;12.4 rule 3 still compares <c>iss</c> against it by exact string.
 /// </para>
 /// <para>
-/// <strong>Every property is nullable</strong>, though the server's schema marks all six
+/// <strong>Every property is nullable</strong>, though the server's schema marks all of them
 /// required. AXIAM builds them from one path through a shared macro and so always
 /// publishes the complete set, but RFC 8705 &#167;5 permits an OP to alias fewer, and the
 /// shape of this member must never be why a client stops working — the same principle
@@ -53,13 +53,17 @@ namespace Axiam.Sdk.Auth.Oidc;
 /// <param name="IntrospectionEndpoint">RFC 7662 &#167;2.1 — authenticates the caller.</param>
 /// <param name="DeviceAuthorizationEndpoint">RFC 8628 &#167;3.1 — authenticates the client.</param>
 /// <param name="PushedAuthorizationRequestEndpoint">RFC 9126 &#167;2 — authenticates the client.</param>
+/// <param name="BackchannelAuthenticationEndpoint">CIBA Core &#167;7 (CONTRACT.md &#167;33, &#167;21.3.1 as amended
+/// by contract 1.58) — authenticates the client; a <c>tls_client_auth</c> CIBA client has no other way to
+/// present its certificate on a two-listener deployment.</param>
 public sealed record MtlsEndpointAliases(
     [property: JsonPropertyName("token_endpoint")] string? TokenEndpoint = null,
     [property: JsonPropertyName("userinfo_endpoint")] string? UserinfoEndpoint = null,
     [property: JsonPropertyName("revocation_endpoint")] string? RevocationEndpoint = null,
     [property: JsonPropertyName("introspection_endpoint")] string? IntrospectionEndpoint = null,
     [property: JsonPropertyName("device_authorization_endpoint")] string? DeviceAuthorizationEndpoint = null,
-    [property: JsonPropertyName("pushed_authorization_request_endpoint")] string? PushedAuthorizationRequestEndpoint = null);
+    [property: JsonPropertyName("pushed_authorization_request_endpoint")] string? PushedAuthorizationRequestEndpoint = null,
+    [property: JsonPropertyName("backchannel_authentication_endpoint")] string? BackchannelAuthenticationEndpoint = null);
 
 /// <summary>
 /// The OIDC Discovery 1.0 metadata document served by
@@ -83,6 +87,11 @@ public sealed record MtlsEndpointAliases(
 /// this SDK accepts today. The same reasoning is why
 /// <see cref="DeviceAuthorizationEndpoint"/>, <see cref="EndSessionEndpoint"/> and
 /// <see cref="MtlsEndpointAliases"/> are nullable next to them.
+/// </para>
+/// <para>
+/// The four CIBA members (contract 1.58, &#167;21.5, &#167;33) are optional: an absent
+/// <see cref="BackchannelAuthenticationEndpoint"/> means the server does not support CIBA, and
+/// the delivery modes and the user-code flag describe the server, never a client's registration.
 /// </para>
 /// <para>
 /// This record deliberately models a <i>curated subset</i> of the metadata document, not
@@ -114,7 +123,11 @@ public sealed record OidcConfiguration(
     [property: JsonPropertyName("backchannel_logout_session_supported")] bool BackchannelLogoutSessionSupported = false,
     [property: JsonPropertyName("mtls_endpoint_aliases")] MtlsEndpointAliases? MtlsEndpointAliases = null,
     [property: JsonPropertyName("code_challenge_methods_supported")] IReadOnlyList<string>? CodeChallengeMethodsSupported = null,
-    [property: JsonPropertyName("token_endpoint_auth_signing_alg_values_supported")] IReadOnlyList<string>? TokenEndpointAuthSigningAlgValuesSupported = null);
+    [property: JsonPropertyName("token_endpoint_auth_signing_alg_values_supported")] IReadOnlyList<string>? TokenEndpointAuthSigningAlgValuesSupported = null,
+    [property: JsonPropertyName("backchannel_authentication_endpoint")] string? BackchannelAuthenticationEndpoint = null,
+    [property: JsonPropertyName("backchannel_token_delivery_modes_supported")] IReadOnlyList<string>? BackchannelTokenDeliveryModesSupported = null,
+    [property: JsonPropertyName("backchannel_authentication_request_signing_alg_values_supported")] IReadOnlyList<string>? BackchannelAuthenticationRequestSigningAlgValuesSupported = null,
+    [property: JsonPropertyName("backchannel_user_code_parameter_supported")] bool? BackchannelUserCodeParameterSupported = null);
 
 /// <summary>
 /// The result of <see cref="AxiamClient.OidcBegin"/> — everything the caller needs to start

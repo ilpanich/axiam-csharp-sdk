@@ -62,6 +62,12 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
     private const string OAuth2RevokePath = "/oauth2/revoke";
 
     /// <summary>
+    /// CONTRACT.md &#167;33.4: a <c>401</c> from the CIBA backchannel authentication endpoint is a
+    /// client-authentication answer, never a session expiry.
+    /// </summary>
+    private const string OAuth2BcAuthorizePath = "/oauth2/bc-authorize";
+
+    /// <summary>
     /// CONTRACT.md &#167;6.1 rules 6/8: "this IS the login" — a 401 on
     /// <c>POST /api/v1/auth/device</c> itself is an authentication outcome, exactly like
     /// <see cref="LoginPath"/>'s, never routed through the &#167;9 refresh guard.
@@ -72,7 +78,7 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
         new(StringComparer.Ordinal)
         {
             RefreshPath, LoginPath, MfaVerifyPath, LogoutPath,
-            OAuth2TokenPath, OAuth2IntrospectPath, OAuth2RevokePath,
+            OAuth2TokenPath, OAuth2IntrospectPath, OAuth2RevokePath, OAuth2BcAuthorizePath,
             DeviceAuthPath,
         };
 

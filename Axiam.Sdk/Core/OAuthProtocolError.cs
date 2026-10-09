@@ -29,6 +29,18 @@ public sealed class OAuthProtocolError : AuthError
     public string ErrorDescription { get; }
 
     /// <summary>
+    /// Whether this is the <c>access_denied</c> answer — at a CIBA or device poll, the user
+    /// refused (CONTRACT.md &#167;33.4, &#167;14.2 rule 3). Distinct from <see cref="IsExpiredToken"/>.
+    /// </summary>
+    public bool IsAccessDenied => Error == "access_denied";
+
+    /// <summary>
+    /// Whether this is the <c>expired_token</c> answer — at a CIBA or device poll, nobody decided
+    /// in time; also raised locally when a polling loop reaches its deadline (&#167;33.7 rule 4).
+    /// </summary>
+    public bool IsExpiredToken => Error == "expired_token";
+
+    /// <summary>
     /// Constructs an <see cref="OAuthProtocolError"/> from the two <c>OAuth2ErrorResponse</c>
     /// wire fields. <see cref="Exception.Message"/> is built as exactly
     /// <c>"&lt;error&gt;: &lt;error_description&gt;"</c> (CONTRACT.md &#167;2 construction rules,
