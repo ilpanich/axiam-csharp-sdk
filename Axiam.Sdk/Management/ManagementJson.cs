@@ -84,8 +84,8 @@ internal static class ManagementJson
     /// &#167;27.4 rule 5 its teeth: a sparse body's components all default to
     /// <c>null</c>, so a property the caller never named is absent from the JSON
     /// entirely rather than sent as <c>null</c> — which the server reads as "clear this
-    /// field". A replacement body has no nullable components, so every one of its
-    /// fields is written.
+    /// field". A replacement body omits an unset optional member just the same, which the
+    /// server reads as that member's default (&#167;27.4 rule 5, &#167;34.2 P12.6).
     /// </remarks>
     internal static readonly JsonSerializerOptions Wire = Build(exposeSecrets: true);
 

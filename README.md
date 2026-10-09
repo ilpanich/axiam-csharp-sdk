@@ -2065,11 +2065,12 @@ SamlSpMetadataDraft draft = await client.Saml.ParseSpMetadataAsync(
     ParseSamlSpMetadata.FromUrl("https://sp.example/metadata"));   // or FromXml(...)
 SamlServiceProvider sp = await client.Saml.CreateServiceProviderAsync(draft.ServiceProvider);
 
-// Read-modify-write for the replacements: ToInput() carries every member over, the secret absent
-// (absent keeps the stored one).
+// Read-modify-write for the replacements: ToInput() carries every member the read carried over.
 SamlServiceProvider read = await client.Saml.GetServiceProviderAsync(sp.Id);
 await client.Saml.UpdateServiceProviderAsync(sp.Id, read.ToInput() with { DisplayName = "Payroll (EU)" });
 
+// The SCIM target's credential and the SSF stream's push header are left absent, which keeps the
+// stored one.
 ScimTargetResponse target = await client.ScimTargets.GetAsync(targetId);
 await client.ScimTargets.UpdateAsync(targetId, target.ToInput() with { Enabled = false });
 

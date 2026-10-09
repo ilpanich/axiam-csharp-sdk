@@ -807,6 +807,17 @@ def enum_member(value: str) -> str:
     return f"_{ident}" if ident[:1].isdigit() else ident
 
 
+def sparse_update_schemas() -> set[str]:
+    """The request bodies of the sparse updates (§27.4 rule 5) -- the only bodies whose
+    unset members the server leaves unchanged."""
+    out: set[str] = set()
+    for ns in REGISTRY["namespaces"].values():
+        for op in ns["operations"].values():
+            if op["update_style"] == "sparse" and op["request_schema"]:
+                out.add(op["request_schema"].lstrip("[]"))
+    return out
+
+
 def replacement_schemas() -> set[str]:
     """The request bodies whose PUT replaces rather than patches (§27.4 rule 5)."""
     out: set[str] = set()
@@ -949,19 +960,32 @@ def emit_record(name: str, secrets: set[str], replacement: bool) -> str:
     all_optional = bool(fields) and not required
 
     text = escape(description or f"The {type_name} schema from the server's OpenAPI document.")
-    if all_optional:
+    if all_optional and name in sparse_update_schemas():
         text += ("\n\nEvery property is optional, so this is a SPARSE body: what you leave "
                  "unset is left unchanged, and is omitted from the wire request entirely "
                  "rather than sent as null (&#167;27.4 rule 5). Naming the properties you "
                  "mean to change is the whole API — there is no builder because C# object "
                  "initializers already are one, and no way to accidentally send a field you "
                  "did not name.")
-    elif replacement:
+    elif all_optional:
+        text += ("\n\nEvery property is optional: one you leave unset is omitted from the "
+                 "wire entirely rather than sent as null.")
+    elif replacement and all(f["required"] for f in fields):
         text += ("\n\nThis body REPLACES rather than patches (&#167;27.4 rule 5): what you do "
                  "not carry over from a prior read is not preserved, it is overwritten. Every "
                  "property is required, so forgetting one is a compile error rather than a "
                  "silent null on the wire. Read first, <c>with</c>-expression the parts you "
                  "mean to keep, write back.")
+    elif replacement:
+        req = [f"<c>{f['wire']}</c>" for f in fields if f["required"]]
+        named = ", ".join(req) + (" is" if len(req) == 1 else " are")
+        text += ("\n\nThis body REPLACES rather than patches (&#167;27.4 rule 5): what you do "
+                 "not carry over from a prior read is not preserved, it is overwritten. "
+                 f"{named} required, so forgetting one is a compile error; an optional "
+                 "property you leave unset is omitted from the wire, and the server then "
+                 "applies its default rather than keeping the stored value, except where the "
+                 "operation documents otherwise. Read first, <c>with</c>-expression the parts "
+                 "you mean to keep, write back.")
 
     body: list[str] = xmldoc(text)
     if not fields:
@@ -1322,8 +1346,9 @@ def operation_doc(namespace: str, opname: str, op: dict[str, Any], method_name: 
             "body entirely and left unchanged (&#167;27.4 rule 5).")
     elif op["update_style"] == "replace":
         lines.append(
-            "\n\nA REPLACEMENT, not a patch: every field of the body is written, so read the "
-            "current value first and carry over the parts you mean to keep "
+            "\n\nA REPLACEMENT, not a patch: what the body does not carry is not "
+            "preserved (a member left unset is omitted from the wire, not sent as null), so "
+            "read the current value first and carry over the parts you mean to keep "
             "(&#167;27.4 rule 5).")
     canonical = f"{namespace}.{opname}"
     if canonical in CALL_SITE_NOTES:

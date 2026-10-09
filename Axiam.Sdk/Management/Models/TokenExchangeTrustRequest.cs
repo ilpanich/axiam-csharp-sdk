@@ -20,11 +20,8 @@ namespace Axiam.Sdk.Management.Models;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Every property is optional, so this is a SPARSE body: what you leave unset is left
-/// unchanged, and is omitted from the wire request entirely rather than sent as null
-/// (&#167;27.4 rule 5). Naming the properties you mean to change is the whole API — there is no
-/// builder because C# object initializers already are one, and no way to accidentally send a
-/// field you did not name.
+/// Every property is optional: one you leave unset is omitted from the wire entirely rather
+/// than sent as null.
 /// </para>
 /// </remarks>
 public sealed record TokenExchangeTrustRequest
