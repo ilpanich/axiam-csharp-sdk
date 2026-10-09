@@ -283,6 +283,132 @@ public sealed class SsfReceiverTests : IDisposable
         Assert.Equal(2, _handler.To(path).Count);
     }
 
+    /// <summary>
+    /// &#167;32.8 helper (8), contract 1.59 (&#167;34.2 P1, R-1 / CS-02): a batch of two whose second
+    /// SET names an unknown kid while the refetch fails. Afterwards the first SET's jti is not in
+    /// the store, or the first SET is returned in <c>events</c> — here, the second form: the first
+    /// is returned and the second, unjudged, is in neither list and is not recorded.
+    /// </summary>
+    [Fact]
+    public async Task APollBatchCutShortByAFailedKeyFetchKeepsNoJtiItDoesNotReturn()
+    {
+        var store = new SpyReplayStore();
+        SsfReceiver receiver = new(_client, new SsfReceiverOptions
+        {
+            Issuer = Issuer,
+            Audience = Audience,
+            Keys = SsfKeySource.FromJwksUri($"https://axiam.test{JwksPath}"),
+            AccessTokenProvider = _ => Task.FromResult(Sensitive<string>.Wrap(Secrets.Fresh())),
+            ReplayStore = store,
+            TimeProvider = _clock,
+        });
+        int jwksCalls = 0;
+        _handler.Map("GET", JwksPath, _ => ++jwksCalls == 1
+            ? CapturingHandler.Json(200, Jwks(_key))
+            : CapturingHandler.Status(500));
+
+        JsonObject first = Claims();
+        JsonObject second = Claims();
+        string firstJti = first["jti"]!.GetValue<string>();
+        string secondJti = second["jti"]!.GetValue<string>();
+        var sets = new JsonObject { [firstJti] = Set(_key, first), [secondJti] = Set(new SigningKey(), second) };
+        _handler.Map("POST", $"/ssf/v1/poll/{StreamId}", _ => CapturingHandler.Json(200, new JsonObject { ["sets"] = sets.DeepClone() }.ToJsonString()));
+
+        SsfPollResult? result = null;
+        try
+        {
+            result = await receiver.PollAsync(StreamId);
+        }
+        catch (NetworkError)
+        {
+            // The first form: raised having recorded nothing — checked below.
+        }
+
+        Assert.Equal(2, jwksCalls);
+        bool returned = result is not null && result.Events.Any(e => e.Jti == firstJti);
+        Assert.True(returned || !store.Holds(firstJti), "poll left a jti recorded that it did not return");
+        Assert.False(store.Holds(secondJti), "the unjudged SET was recorded");
+
+        // This SDK's form: what was judged is returned, the unjudged SET is listed apart.
+        Assert.NotNull(result);
+        Assert.Equal(firstJti, Assert.Single(result!.Events).Jti);
+        Assert.Empty(result.Refused);
+        Assert.Equal(new[] { secondJti }, result.Unjudged);
+    }
+
+    /// <summary>
+    /// &#167;34.2 P1/P3 (R-1 / CS-02): a replay store that cannot answer is no verdict either — the
+    /// SETs judged before it are returned, the rest are unjudged and unrecorded; with nothing
+    /// recorded yet, the poll raises the store's failure.
+    /// </summary>
+    [Fact]
+    public async Task APollBatchCutShortByAFailingStoreKeepsNoJtiItDoesNotReturn()
+    {
+        var store = new SpyReplayStore { FailAfter = 1 };
+        SsfReceiver receiver = new(_client, new SsfReceiverOptions
+        {
+            Issuer = Issuer,
+            Audience = Audience,
+            Keys = SsfKeySource.FromJwksUri($"https://axiam.test{JwksPath}"),
+            AccessTokenProvider = _ => Task.FromResult(Sensitive<string>.Wrap(Secrets.Fresh())),
+            ReplayStore = store,
+            TimeProvider = _clock,
+        });
+        JsonObject[] batch = { Claims(), Claims(), Claims() };
+        string[] jtis = batch.Select(c => c["jti"]!.GetValue<string>()).ToArray();
+        var sets = new JsonObject();
+        for (int i = 0; i < batch.Length; i++)
+        {
+            sets[jtis[i]] = Set(_key, batch[i]);
+        }
+
+        string path = $"/ssf/v1/poll/{StreamId}";
+        _handler.Map("POST", path, _ => CapturingHandler.Json(200, new JsonObject { ["sets"] = sets.DeepClone() }.ToJsonString()));
+
+        SsfPollResult result = await receiver.PollAsync(StreamId);
+        Assert.Equal(jtis[0], Assert.Single(result.Events).Jti);
+        Assert.Equal(new[] { jtis[1], jtis[2] }, result.Unjudged);
+        Assert.Empty(result.Refused);
+        Assert.True(store.Holds(jtis[0]));
+        Assert.False(store.Holds(jtis[1]));
+        Assert.False(store.Holds(jtis[2]));
+
+        // Nothing recorded before the failure: the poll raises, and has recorded nothing.
+        var broken = new SpyReplayStore { FailAfter = 0 };
+        SsfReceiver failing = new(_client, new SsfReceiverOptions
+        {
+            Issuer = Issuer,
+            Audience = Audience,
+            Keys = SsfKeySource.FromJwksUri($"https://axiam.test{JwksPath}"),
+            AccessTokenProvider = _ => Task.FromResult(Sensitive<string>.Wrap(Secrets.Fresh())),
+            ReplayStore = broken,
+            TimeProvider = _clock,
+        });
+        await Assert.ThrowsAsync<InvalidOperationException>(() => failing.PollAsync(StreamId));
+        Assert.All(jtis, j => Assert.False(broken.Holds(j)));
+    }
+
+    /// <summary>A replay store that remembers what it recorded and can be made to fail.</summary>
+    private sealed class SpyReplayStore : IReplayStore
+    {
+        private readonly HashSet<string> _held = new(StringComparer.Ordinal);
+
+        /// <summary>When set, every call after this many successful records throws.</summary>
+        public int? FailAfter { get; init; }
+
+        public bool Holds(string jti) => _held.Contains(jti);
+
+        public bool CheckAndRecord(string jti, TimeSpan window)
+        {
+            if (FailAfter is { } n && _held.Count >= n)
+            {
+                throw new InvalidOperationException("replay store unavailable");
+            }
+
+            return _held.Add(jti);
+        }
+    }
+
     /// <summary>&#167;32.7: poll is not retried on a 400 (retry-enabled client), but is on a 503.</summary>
     [Fact]
     public async Task PollIsNotRetriedOnA4xxButIsOnA503()

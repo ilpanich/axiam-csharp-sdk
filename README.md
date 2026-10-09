@@ -2116,13 +2116,18 @@ catch (SetVerificationError refused)
     return Results.Json(new { err = refused.FailureReason.PushErrorCode() }, statusCode: 400);
 }
 
-// Poll (RFC 8936): acknowledge what you processed, refuse what failed — on the NEXT call.
+// Poll (RFC 8936): acknowledge what you processed, refuse what failed — on the NEXT call. A
+// `replayed` SET was accepted by this receiver before: acknowledge it, never report it (§34.2 P2).
+// `page.Unjudged` (a key fetch or the store failed part-way) is neither: leave it to be re-offered.
 SsfPollResult page = await receiver.PollAsync(streamId, new SsfPollOptions { ReturnImmediately = true });
 Process(page.Events);
 await receiver.PollAsync(streamId, new SsfPollOptions
 {
-    Ack = page.Events.Select(e => e.Jti).ToList(),
-    SetErrs = page.Refused.ToDictionary(r => r.Jti, r => SetErr.FromReason(r.Reason)),
+    Ack = page.Events.Select(e => e.Jti)
+        .Concat(page.Refused.Where(r => r.Reason == SetFailureReason.Replayed).Select(r => r.Jti))
+        .ToList(),
+    SetErrs = page.Refused.Where(r => r.Reason != SetFailureReason.Replayed)
+        .ToDictionary(r => r.Jti, r => SetErr.FromReason(r.Reason)),
 });
 ```
 
@@ -2133,8 +2138,14 @@ await receiver.PollAsync(streamId, new SsfPollOptions
   never honoured. An unknown `kid` costs one JWKS refetch, at most once a minute. A JWKS that cannot
   be fetched is a `NetworkError`, not a verdict on the SET.
 - **A verified SET is recorded.** The replay window defaults to, and cannot be set below, seven
-  days (`IReplayStore` is pluggable; `MemoryReplayStore` is the default). A polled SET you neither
-  acknowledge nor refuse is re-offered and then reads as `replayed` — acknowledge what you process.
+  days (`IReplayStore` is pluggable; `MemoryReplayStore` is the default — bounded in time by the
+  window, unbounded in count). A store that throws fails closed: nothing is returned as verified. A
+  polled SET you neither acknowledge nor refuse is re-offered and then reads as `replayed` —
+  acknowledge what you process.
+- **A poll never keeps a `jti` it does not return** (§34.2 P1). A key fetch or a store that fails
+  part-way through a batch leaves that SET and the rest **unjudged** — not recorded, in neither
+  `Events` nor `Refused`, listed in `Unjudged` — while the SETs already judged are returned. When
+  nothing had been recorded yet, `PollAsync` raises the failure instead.
 - **`PollAsync` acknowledges nothing itself**, sends only the members you set (`{}` when none),
   carries no session, and is retried only on a transport failure, `5xx`, `408` or `429`.
 - `malformed`, `invalid_type` and `replayed` are not RFC 8935 codes; `PushErrorCode()` answers them
