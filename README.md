@@ -20,7 +20,7 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to **contract 1.52**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
+This SDK conforms to **contract 1.58**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
 §21, §22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates and the §6.1 rules 6–10
 mTLS device login, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, and the §1.1.1 gRPC
 `validate_token`/`introspect_token` operations, contract 1.51, the §12 OIDC/SSO relying-party
@@ -30,12 +30,16 @@ and ticket grant, contract 1.10, the §22 reactor runtime, contract 1.19, the §
 login path, contract 1.26, the §24 WebAuthn relying-party layer, the §25 account-lifecycle
 operations and §26 Pushed Authorization Requests, contract 1.28, §23.4 rule 7's `mode`-driven
 password-login fallback, contract 1.29, the §5.2 rule 1 acting tenant, contract 1.51, the §10.1
-rule 9 sender-constrained-token check, contract 1.51, and the §27 Management API — all 162
-operations across 24 namespaces with the §27.6 declarative layer, including the §27.6.1 resource
+rule 9 sender-constrained-token check, contract 1.51, and the §27 Management API — all 190
+operations across 28 namespaces with the §27.6 declarative layer, including the §27.6.1 resource
 metadata, two-shape role bindings and service accounts, contract 1.51 — and the §28 MCP
-resource-server helpers, contract 1.48).
+resource-server helpers, contract 1.48), §28.12, §29, §30, §31, §32 and §33, with §32.7 and §33.2
+signed (the RFC 7592 client configuration operations, contract 1.53; the `directory`, `saml`,
+`ssf` and `scim_targets` management namespaces, contracts 1.54–1.57; the SSF receiver helper,
+contract 1.56; CIBA with the signed request form in PS256, ES256 and EdDSA, and §21.3.1's seventh
+`mtls_endpoint_aliases` member, contract 1.58). Nothing in contract 1.53–1.58 is carved out.
 
-§12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27 and §28 are named rather than
+§12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27, §28, §28.12, §29, §30, §31, §32 and §33 are named rather than
 folded into the range because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
 statement that was true when written into a different claim without anyone editing it.
 
@@ -590,6 +594,7 @@ name wherever the document publishes one:
 | `RevokeAsync` | `revocation_endpoint` |
 | `DeviceAuthorizeAsync` | `device_authorization_endpoint` |
 | `OidcParAsync` | `pushed_authorization_request_endpoint` |
+| `CibaInitiateAsync` | `backchannel_authentication_endpoint` (the seventh alias, contract 1.58) |
 
 Three things this deliberately does **not** do:
 
@@ -599,7 +604,7 @@ Three things this deliberately does **not** do:
   and correctly publishes nothing. The same holds one level in: every property of
   `MtlsEndpointAliases` is nullable, and an endpoint the object does not name falls back
   rather than failing the document.
-- **No alias is ever synthesised.** Only the six endpoints RFC 8705 §5 lists can be aliased
+- **No alias is ever synthesised.** Only the seven endpoints the contract lists can be aliased
   — never `authorization_endpoint`, `end_session_endpoint` or `jwks_uri`. The first two are
   front-channel and the third is public key material; sending a browser to an mTLS host
   raises a native certificate-chooser dialog most users cannot answer.
@@ -1816,13 +1821,14 @@ Worked end to end in [`examples/ParLogin`](examples/ParLogin).
 
 ## Management API (CONTRACT.md §27)
 
-The administrative surface: 162 operations across 24 namespaces — users, groups, roles,
+The administrative surface: 190 operations across 28 namespaces — users, groups, roles,
 permissions, resources, scopes, service accounts, certificates, CA certificates, PGP keys, webhooks,
-OAuth2 clients, federation, notification rules, e-mail config, settings, SCIM tokens, reactors,
-WebAuthn policy, audit, privacy, organizations, tenants and platform.
+OAuth2 clients, federation, notification rules, e-mail config, directory, SAML, SSF streams, SCIM
+targets, settings, SCIM tokens, reactors, WebAuthn policy, audit, privacy, organizations, tenants
+and platform.
 
 The namespace handles sit **directly on the client** — `client.ServiceAccounts.RotateSecretAsync(id)`,
-the form §27.3's C# row shows — and the same 24 handles are also reachable behind one accessor,
+the form §27.3's C# row shows — and the same 28 handles are also reachable behind one accessor,
 `client.Management` (§27.2 rule 4), which reads better where a call site is already dense with §1
 methods. The two forms are **equivalent**: the direct properties forward to `Management`, so rule 4's
 "where an SDK offers both, the two MUST return equivalent handles" holds structurally rather than by
@@ -1995,6 +2001,208 @@ Sensitive<string> secret = report.CreatedServiceAccounts().Single().ClientSecret
 Worked end to end in [`examples/ManagementManifest`](examples/ManagementManifest), and combined with
 §6.1 mTLS for a full device provisioning lifecycle in
 [`examples/DeviceMtlsProvisioning`](examples/DeviceMtlsProvisioning).
+
+## RFC 7592 client configuration (CONTRACT.md §28.12)
+
+A client that registered itself through `POST /oauth2/register` (RFC 7591) received, once, a
+`registration_client_uri` and a `registration_access_token`. With those two it can read, replace
+and delete **its own** registration:
+
+```csharp
+var token = Sensitive<string>.Wrap(storedRegistrationToken);
+
+ClientRegistration current = await client.ReadClientRegistrationAsync(registrationClientUri, token);
+
+// An update is a FULL replacement: start from the read (unknown members ride along in
+// current.Extra), change what you mean to change.
+ClientRegistration updated = await client.UpdateClientRegistrationAsync(
+    registrationClientUri, token, current with { ClientName = "Billing agent v2" });
+
+// The token ROTATED: persist the new one before doing anything else.
+Persist(updated.RegistrationAccessToken!.Value.Expose());
+
+await client.DeleteClientRegistrationAsync(registrationClientUri, updated.RegistrationAccessToken!.Value);
+```
+
+- **Only at the configured AXIAM.** A URI whose scheme, host or port differs from the client's base
+  URL — or an `http` URI unless the base URL is `http` on a loopback host — is refused with a
+  `ValidationError` before any request; the message names no part of the URI.
+- **Bearer only, and not the session.** The requests carry `Authorization: Bearer <token>` and
+  nothing of the client's session — they go out on a separate transport with no cookie jar, no
+  CSRF or tenant headers and no redirect following, and a `401` never triggers the §9 refresh.
+- **Writes are never retried.** An update that lost its answer has already rotated the token; a
+  delete that lost its `204` would read `401`. The read is retried per §16 on a transport failure,
+  `5xx`, `408` or `429` only.
+- **Errors**: an `error` body at any status is an `OAuthProtocolError` (`invalid_token`,
+  `invalid_client_metadata`, …; `error_description` optional), otherwise §2.
+  `RegistrationAccessToken` and `ClientSecret` are `Sensitive<string>`.
+
+## Directory, SAML, SSF and SCIM targets (CONTRACT.md §29 – §32)
+
+Four management namespaces generated like the rest of §27 — `client.Directory` (§30),
+`client.Saml` (§29), `client.Ssf` (§32) and `client.ScimTargets` (§31) — with the call-site
+warnings the contract requires in each method's XML documentation. `Directory`, `Saml` and `Ssf`
+take the client's tenant; `.ForTenant(id)` names another.
+
+```csharp
+// Directory (§30): a sparse PATCH. JsonNullable<string>.Null sends an explicit null (clears);
+// leaving a member unset sends nothing (keeps).
+await client.Directory.UpdateAsync(new UpdateDirectoryConfig
+{
+    GroupFilter = JsonNullable<string>.Null,
+});
+
+// Moving the connection (url, start_tls, bind_dn, trust_anchors_pem) requires the secret again:
+// the SDK holds no copy of it.
+await client.Directory.UpdateAsync(new UpdateDirectoryConfig
+{
+    Url = "ldaps://dc2.corp.example",
+    BindSecret = Sensitive<string>.Wrap(bindSecret),
+});
+
+// SAML (§29): parse an SP's metadata into a draft (nothing is stored), review, then create.
+SamlSpMetadataDraft draft = await client.Saml.ParseSpMetadataAsync(
+    ParseSamlSpMetadata.FromUrl("https://sp.example/metadata"));   // or FromXml(...)
+SamlServiceProvider sp = await client.Saml.CreateServiceProviderAsync(draft.ServiceProvider);
+
+// Read-modify-write for the replacements: ToInput() carries every member over, the secret absent
+// (absent keeps the stored one).
+SamlServiceProvider read = await client.Saml.GetServiceProviderAsync(sp.Id);
+await client.Saml.UpdateServiceProviderAsync(sp.Id, read.ToInput() with { DisplayName = "Payroll (EU)" });
+
+ScimTargetResponse target = await client.ScimTargets.GetAsync(targetId);
+await client.ScimTargets.UpdateAsync(targetId, target.ToInput() with { Enabled = false });
+
+SsfStream stream = await client.Ssf.GetStreamAsync(streamId);
+await client.Ssf.UpdateStreamAsync(streamId, stream.ToInput() with { Status = SsfStreamStatus.Paused });
+```
+
+- **No secret on a response.** `DirectoryConfig`, `SsfStream`, `ScimTargetResponse` and
+  `SamlIdpCredential` declare no secret or key member, and a stray `bind_secret`, `credential`,
+  `authorization_header` or `private_key_pem` in a response is dropped by the decoder.
+  `BindSecret`, `Credential` and `AuthorizationHeader` on the request types are `Sensitive<string>`.
+- **`parse_sp_metadata` takes exactly one of `metadata_url` / `metadata_xml`**; both or neither is a
+  local `ValidationError` before any request.
+- **`SamlIdpInfo.ActiveCredentialId` / `NextCredentialId`** are `JsonNullable<Guid>?`: `null` means
+  the member was absent, `JsonNullable<Guid>.Null` an empty slot.
+- **Open values.** Unknown enum values decode to `Unknown`; an unknown `ScimTargetAuth` /
+  `ScimTargetScope` `type` decodes to `ScimTargetAuthUnknown` / `ScimTargetScopeUnknown`, which
+  refuses to be sent (local `ValidationError`).
+- **No write is retried**, `PATCH` included.
+
+## SSF receiver (CONTRACT.md §32.7)
+
+`Axiam.Sdk.Ssf.SsfReceiver` is the relying party's half: it verifies Security Event Tokens and polls
+a stream.
+
+```csharp
+var receiver = new SsfReceiver(client, new SsfReceiverOptions
+{
+    Issuer = "https://iam.example/t/<tenant>",
+    Audience = "https://rp.example",
+    Keys = SsfKeySource.FromJwksUri("https://iam.example/t/<tenant>/oauth2/jwks"),
+    AccessTokenProvider = async ct =>
+        (await client.LoginClientCredentialsAsync(new LoginClientCredentialsParams { Scope = "ssf.manage" }, ct)).AccessToken,
+});
+
+// Push (RFC 8935): verify, and answer 400 {"err": ...} with the RFC 8935 code on a refusal.
+try
+{
+    SecurityEvent e = await receiver.VerifySetAsync(compactSet);
+    // e.EventType == SsfEventTypes.SessionRevoked, e.SubId, e.Event ...
+}
+catch (SetVerificationError refused)
+{
+    return Results.Json(new { err = refused.FailureReason.PushErrorCode() }, statusCode: 400);
+}
+
+// Poll (RFC 8936): acknowledge what you processed, refuse what failed — on the NEXT call.
+SsfPollResult page = await receiver.PollAsync(streamId, new SsfPollOptions { ReturnImmediately = true });
+Process(page.Events);
+await receiver.PollAsync(streamId, new SsfPollOptions
+{
+    Ack = page.Events.Select(e => e.Jti).ToList(),
+    SetErrs = page.Refused.ToDictionary(r => r.Jti, r => SetErr.FromReason(r.Reason)),
+});
+```
+
+- **Nine checks, in order** (malformed → `typ` → `alg` EdDSA only → `kid` in the configured JWKS →
+  Ed25519 signature → `iss` → `aud` → SET claim rules → replay), each refusal a
+  `SetVerificationError` (an `AuthError`) with a typed `FailureReason`. Keys come only from the
+  configured `jwks_uri` (or a discovery document whose `issuer` matches); `jwk`/`x5c` headers are
+  never honoured. An unknown `kid` costs one JWKS refetch, at most once a minute. A JWKS that cannot
+  be fetched is a `NetworkError`, not a verdict on the SET.
+- **A verified SET is recorded.** The replay window defaults to, and cannot be set below, seven
+  days (`IReplayStore` is pluggable; `MemoryReplayStore` is the default). A polled SET you neither
+  acknowledge nor refuse is re-offered and then reads as `replayed` — acknowledge what you process.
+- **`PollAsync` acknowledges nothing itself**, sends only the members you set (`{}` when none),
+  carries no session, and is retried only on a transport failure, `5xx`, `408` or `429`.
+- `malformed`, `invalid_type` and `replayed` are not RFC 8935 codes; `PushErrorCode()` answers them
+  as `invalid_request`.
+
+## CIBA (CONTRACT.md §33)
+
+Client-initiated backchannel authentication, poll and ping mode, on `AxiamClient`. The client must
+be confidential: `OidcClientSecret` (`client_secret_post`), or a §6.1 client certificate
+(`tls_client_auth`, `client_id` only) — without either the calls fail locally with an `AuthError`.
+
+```csharp
+// Poll mode.
+CibaInitiateResponse initiated = await client.CibaInitiateAsync(new CibaInitiateParams
+{
+    Scope = "openid payments",
+    Hint = CibaUserHint.LoginHint("alice"),          // or CibaUserHint.IdTokenHint(idToken)
+    BindingMessage = "Pay 42 EUR to ACME",
+});
+try
+{
+    OidcTokenSet tokens = await client.CibaAwaitAsync(initiated);
+}
+catch (OAuthProtocolError e) when (e.IsAccessDenied) { /* the user said no */ }
+catch (OAuthProtocolError e) when (e.IsExpiredToken) { /* nobody answered in time */ }
+
+// Ping mode: AXIAM calls your endpoint; check it, answer 204 at once, then poll ONCE.
+var notification = Sensitive<string>.Wrap(RandomToken());
+CibaInitiateResponse pinged = await client.CibaInitiateAsync(new CibaInitiateParams
+{
+    Scope = "openid",
+    Hint = CibaUserHint.LoginHint("alice"),
+    Delivery = CibaDelivery.Ping(notification),
+});
+
+app.MapPost("/ciba/notify", async (HttpRequest request) =>
+{
+    string body = await new StreamReader(request.Body).ReadToEndAsync();
+    var headers = request.Headers.SelectMany(h => h.Value.Select(v => KeyValuePair.Create(h.Key, v ?? "")));
+    Sensitive<string> authReqId = client.CibaHandlePing(headers, body, notification);   // no I/O
+    _ = Task.Run(() => client.CibaPollAsync(new CibaPollParams(authReqId)));
+    return Results.NoContent();
+});
+
+// Signed form (§33.2): the registered algorithm and your key — no defaults.
+CibaRequestSigner signer = CibaRequestSigner.FromPem(CibaSigningAlg.ES256, Sensitive<string>.Wrap(pem), kid: "k1");
+await client.CibaInitiateAsync(new CibaInitiateParams { Scope = "openid", Hint = CibaUserHint.LoginHint("alice"), Signer = signer });
+```
+
+- **`CibaInitiateAsync` is never retried** (any status, any transport error): each accepted call
+  stores a request and may notify a person. A success proves nothing about the user — AXIAM answers
+  a hint naming nobody exactly like a real one.
+- **`CibaAwaitAsync`** waits one `interval` before the first poll (5 s when absent), adds 5 s per
+  `slow_down` for good, loops on `authorization_pending`, `rate_limit_exceeded` and transient
+  failures, and stops at `expires_in` with a local `expired_token`. It takes an `ICibaClock` for
+  tests. It does not adopt the tokens as the client's credential. In ping mode do not loop: poll
+  once from the ping handler, and fall back to `CibaAwaitAsync` only after half of `expires_in`.
+- **`CibaPollAsync`** surfaces `authorization_pending`, `slow_down`, `access_denied`,
+  `expired_token` and `invalid_grant` as `OAuthProtocolError` (not retried); a request is redeemed
+  once — store the tokens first.
+- **`CibaHandlePing`** checks exactly one `Authorization: Bearer <token>` with
+  `CryptographicOperations.FixedTimeEquals`, and a JSON body with a non-empty `auth_req_id`.
+- **Signed form**: PS256 (RSA-PSS), ES256 (P-256) and EdDSA (Ed25519, via BouncyCastle), the key
+  probe-signed at construction; the form then carries only client authentication and `request`.
+  `auth_req_id`, the notification token, the key and the `request` string are never rendered.
+- The discovery document's `backchannel_authentication_endpoint` is used (its
+  `mtls_endpoint_aliases` entry on an mTLS client — the seventh alias, §21.3.1); without it the
+  server does not support CIBA and `CibaInitiateAsync` raises an `AuthError`.
 
 ## Grpc.Tools exception
 

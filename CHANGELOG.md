@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Contract **1.58** (CONTRACT.md §28.12, §29, §30, §31, §32 with §32.7, §33 with §33.2 signed, and the
+§21.3.1 amendment). The vendored `CONTRACT.md`, `openapi.json` and `management-registry.json` come
+from axiam `21a9c22e`; `proto/` is unchanged.
+
+### Added
+
+- **RFC 7592 client configuration (§28.12)**: `ReadClientRegistrationAsync`,
+  `UpdateClientRegistrationAsync`, `DeleteClientRegistrationAsync` and `ClientRegistration`
+  (tolerant decoding, unknown members kept in `Extra`; `RegistrationAccessToken` and `ClientSecret`
+  `Sensitive`). Same-origin check before any I/O, bearer-only on a session-free transport, writes
+  never retried, the read never on a 4xx other than 408/429.
+- **Four management namespaces**, generated: `Directory` (§30), `Saml` (§29), `Ssf` (§32) and
+  `ScimTargets` (§31) — 190 operations across 28 namespaces — with direct accessors on
+  `AxiamClient`, the contract's call-site warnings in the XML docs, `JsonNullable<T>` for the
+  explicit-null members, `ParseSamlSpMetadata.FromUrl` / `FromXml` (both-or-neither refused
+  locally) and `ManagementReplacements.ToInput` for the read-modify-write replacements.
+- **SSF receiver (§32.7)**: `Axiam.Sdk.Ssf.SsfReceiver` — `VerifySetAsync` (the nine checks,
+  `SetVerificationError` / `SetFailureReason`) and `PollAsync`; `SetErr`, `IReplayStore`,
+  `MemoryReplayStore`, `SsfEventTypes`.
+- **CIBA (§33)**: `CibaInitiateAsync` (never retried), `CibaPollAsync`, `CibaAwaitAsync` (injectable
+  `ICibaClock`), synchronous `CibaHandlePing` (constant-time bearer check); the signed request form
+  via `CibaRequestSigner` (PS256, ES256, EdDSA); `OAuthProtocolError.IsAccessDenied` /
+  `IsExpiredToken`.
+- **§21.3.1**: `MtlsEndpointAliases.BackchannelAuthenticationEndpoint` (the seventh alias) and the
+  four CIBA members on `OidcConfiguration`.
+
+### Changed
+
+- The generator emits PATCH (`directory.update`), defaults `{tenant_id}` for `directory`, `saml` and
+  `ssf`, names URI-valued enum members by their last path segment (`SsfEventType.SessionRevoked`),
+  and gives `ScimTargetAuth` / `ScimTargetScope` an `...Unknown` arm that decodes and refuses to be
+  sent.
+- `/oauth2/bc-authorize` joins the paths whose `401` never enters the §9 refresh guard.
+
 ## [1.0.0-beta17] - 2026-09-25
 Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1, §6.1 rules
 6–10, §10.1 rule 9, §27.6.1, §27.13). The vendored `CONTRACT.md`, `sdks/openapi.json`,

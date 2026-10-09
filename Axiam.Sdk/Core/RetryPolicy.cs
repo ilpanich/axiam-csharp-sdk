@@ -184,6 +184,17 @@ internal static class RetryPolicy
         }
     }
 
+    /// <summary>
+    /// The narrower predicate for calls &#167;28.12, &#167;32.7 and &#167;33.7 retry
+    /// "on a transport error or a <c>5xx</c>" only: a <see cref="NetworkError"/> with no
+    /// HTTP status (the transport failed), or one built from a <c>5xx</c>, <c>408</c> or
+    /// <c>429</c>. Any other <c>4xx</c> — a bodiless <c>400</c> included, which &#167;2
+    /// maps to <see cref="NetworkError"/> — is a decisive answer and is not repeated.
+    /// </summary>
+    internal static bool IsTransient(NetworkError error) =>
+        error is not Management.ValidationError
+        && error.HttpStatus is null or 408 or 429 or >= 500;
+
     internal static async Task<T> ExecuteAsync<T>(
         string operationName,
         AxiamClientOptions options,

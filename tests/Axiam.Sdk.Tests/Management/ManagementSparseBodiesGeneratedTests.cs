@@ -143,6 +143,28 @@ public sealed class ManagementSparseBodiesGeneratedTests
     }
 
     /// <summary>
+    /// &#167;27.4 rule 5 for ParseSamlSpMetadata: each property sets exactly its own key.
+    /// </summary>
+    [Fact]
+    public void ParseSamlSpMetadataSendsOnlyWhatWasSet()
+    {
+        AssertKeys(
+            new ParseSamlSpMetadata { MetadataUrl = "example" },
+            "metadata_url");
+        AssertKeys(
+            new ParseSamlSpMetadata { MetadataXml = "example" },
+            "metadata_xml");
+        AssertKeys(
+            new ParseSamlSpMetadata
+            {
+                MetadataUrl = "example",
+                MetadataXml = "example",
+            },
+            "metadata_url", "metadata_xml");
+        AssertKeys(new ParseSamlSpMetadata());
+    }
+
+    /// <summary>
     /// &#167;27.4 rule 5 for TenantSettingsOverride: each property sets exactly its own key.
     /// </summary>
     [Fact]
@@ -245,11 +267,17 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new TenantSettingsOverride { RequireUppercase = true },
             "require_uppercase");
         AssertKeys(
+            new TenantSettingsOverride { SamlIdpEnabled = true },
+            "saml_idp_enabled");
+        AssertKeys(
             new TenantSettingsOverride { SensitiveScopesEnabled = true },
             "sensitive_scopes_enabled");
         AssertKeys(
             new TenantSettingsOverride { ServerCertAllowedNames = Array.Empty<string>() },
             "server_cert_allowed_names");
+        AssertKeys(
+            new TenantSettingsOverride { SsfEnabled = true },
+            "ssf_enabled");
         AssertKeys(
             new TenantSettingsOverride { WebauthnUserVerification = "example" },
             "webauthn_user_verification");
@@ -288,8 +316,10 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 RequireLowercase = true,
                 RequireSymbols = true,
                 RequireUppercase = true,
+                SamlIdpEnabled = true,
                 SensitiveScopesEnabled = true,
                 ServerCertAllowedNames = Array.Empty<string>(),
+                SsfEnabled = true,
                 WebauthnUserVerification = "example",
             },
             "access_token_lifetime_secs", "admin_notifications_enabled", "cimd",
@@ -302,7 +332,8 @@ public sealed class ManagementSparseBodiesGeneratedTests
             "mfa_challenge_lifetime_secs", "mfa_enforced", "min_length", "opaque_ksf",
             "opaque_mode", "opaque_suite", "password_history_count", "refresh_token_lifetime_secs",
             "require_digits", "require_lowercase", "require_symbols", "require_uppercase",
-            "sensitive_scopes_enabled", "server_cert_allowed_names", "webauthn_user_verification");
+            "saml_idp_enabled", "sensitive_scopes_enabled", "server_cert_allowed_names",
+            "ssf_enabled", "webauthn_user_verification");
         AssertKeys(new TenantSettingsOverride());
     }
 
@@ -343,6 +374,97 @@ public sealed class ManagementSparseBodiesGeneratedTests
             "accepted_audiences", "enabled", "max_lifetime_secs", "max_token_age_secs",
             "scope_map", "subject_mapping");
         AssertKeys(new TokenExchangeTrustRequest());
+    }
+
+    /// <summary>
+    /// &#167;27.4 rule 5 for UpdateDirectoryConfig: each property sets exactly its own key.
+    /// </summary>
+    [Fact]
+    public void UpdateDirectoryConfigSendsOnlyWhatWasSet()
+    {
+        AssertKeys(
+            new UpdateDirectoryConfig { BaseDn = "example" },
+            "base_dn");
+        AssertKeys(
+            new UpdateDirectoryConfig { BindDn = "example" },
+            "bind_dn");
+        AssertKeys(
+            new UpdateDirectoryConfig { BindSecret = Sensitive<string>.Wrap("example") },
+            "bind_secret");
+        AssertKeys(
+            new UpdateDirectoryConfig { Enabled = true },
+            "enabled");
+        AssertKeys(
+            new UpdateDirectoryConfig { GroupBaseDn = JsonNullable<string>.Of("example") },
+            "group_base_dn");
+        AssertKeys(
+            new UpdateDirectoryConfig { GroupFilter = JsonNullable<string>.Of("example") },
+            "group_filter");
+        AssertKeys(
+            new UpdateDirectoryConfig { GroupMappings = Array.Empty<GroupMapping>() },
+            "group_mappings");
+        AssertKeys(
+            new UpdateDirectoryConfig { GroupMemberAttribute = "example" },
+            "group_member_attribute");
+        AssertKeys(
+            new UpdateDirectoryConfig { GroupNestingDepth = 1 },
+            "group_nesting_depth");
+        AssertKeys(
+            new UpdateDirectoryConfig { JitProvisioning = true },
+            "jit_provisioning");
+        AssertKeys(
+            new UpdateDirectoryConfig { Kind = DirectoryKind.OpenLdap },
+            "kind");
+        AssertKeys(
+            new UpdateDirectoryConfig { StartTls = true },
+            "start_tls");
+        AssertKeys(
+            new UpdateDirectoryConfig { SyncIntervalSecs = 1L },
+            "sync_interval_secs");
+        AssertKeys(
+            new UpdateDirectoryConfig { TrustAnchorsPem = Array.Empty<string>() },
+            "trust_anchors_pem");
+        AssertKeys(
+            new UpdateDirectoryConfig { Url = "example" },
+            "url");
+        AssertKeys(
+            new UpdateDirectoryConfig { UserAttributeMap = new UserAttributeMap { DisplayName = "example", Email = "example", ExternalId = "example", Username = "example" } },
+            "user_attribute_map");
+        AssertKeys(
+            new UpdateDirectoryConfig { UserFilter = "example" },
+            "user_filter");
+        AssertKeys(
+            new UpdateDirectoryConfig
+            {
+                BaseDn = "example",
+                BindDn = "example",
+                BindSecret = Sensitive<string>.Wrap("example"),
+                Enabled = true,
+                GroupBaseDn = JsonNullable<string>.Of("example"),
+                GroupFilter = JsonNullable<string>.Of("example"),
+                GroupMappings = Array.Empty<GroupMapping>(),
+                GroupMemberAttribute = "example",
+                GroupNestingDepth = 1,
+                JitProvisioning = true,
+                Kind = DirectoryKind.OpenLdap,
+                StartTls = true,
+                SyncIntervalSecs = 1L,
+                TrustAnchorsPem = Array.Empty<string>(),
+                Url = "example",
+                UserAttributeMap = new UserAttributeMap { DisplayName = "example", Email = "example", ExternalId = "example", Username = "example" },
+                UserFilter = "example",
+            },
+            "base_dn", "bind_dn", "bind_secret", "enabled", "group_base_dn",
+            "group_filter", "group_mappings", "group_member_attribute", "group_nesting_depth",
+            "jit_provisioning", "kind", "start_tls", "sync_interval_secs",
+            "trust_anchors_pem", "url", "user_attribute_map", "user_filter");
+        AssertKeys(new UpdateDirectoryConfig());
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateDirectoryConfig { GroupBaseDn = JsonNullable<string>.Null },
+            "{\"group_base_dn\":null}");
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateDirectoryConfig { GroupFilter = JsonNullable<string>.Null },
+            "{\"group_filter\":null}");
     }
 
     /// <summary>
@@ -518,8 +640,20 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new UpdateOAuth2ClientRequest { AuthnRequestParams = AuthnRequestParamsMode.Ignore },
             "authn_request_params");
         AssertKeys(
+            new UpdateOAuth2ClientRequest { BackchannelAuthenticationRequestSigningAlg = "example" },
+            "backchannel_authentication_request_signing_alg");
+        AssertKeys(
+            new UpdateOAuth2ClientRequest { BackchannelClientNotificationEndpoint = "example" },
+            "backchannel_client_notification_endpoint");
+        AssertKeys(
             new UpdateOAuth2ClientRequest { BackchannelLogoutUri = "example" },
             "backchannel_logout_uri");
+        AssertKeys(
+            new UpdateOAuth2ClientRequest { BackchannelTokenDeliveryMode = "example" },
+            "backchannel_token_delivery_mode");
+        AssertKeys(
+            new UpdateOAuth2ClientRequest { BackchannelUserCodeParameter = true },
+            "backchannel_user_code_parameter");
         AssertKeys(
             new UpdateOAuth2ClientRequest { BrowserSso = true },
             "browser_sso");
@@ -579,7 +713,11 @@ public sealed class ManagementSparseBodiesGeneratedTests
             {
                 AllowedResources = Array.Empty<string>(),
                 AuthnRequestParams = AuthnRequestParamsMode.Ignore,
+                BackchannelAuthenticationRequestSigningAlg = "example",
+                BackchannelClientNotificationEndpoint = "example",
                 BackchannelLogoutUri = "example",
+                BackchannelTokenDeliveryMode = "example",
+                BackchannelUserCodeParameter = true,
                 BrowserSso = true,
                 DpopBoundAccessTokens = true,
                 DpopRequireNonce = true,
@@ -599,7 +737,9 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 TlsClientCertificateBoundAccessTokens = true,
                 TokenEndpointAuthMethod = ClientAuthMethod.ClientSecretPost,
             },
-            "allowed_resources", "authn_request_params", "backchannel_logout_uri",
+            "allowed_resources", "authn_request_params", "backchannel_authentication_request_signing_alg",
+            "backchannel_client_notification_endpoint", "backchannel_logout_uri",
+            "backchannel_token_delivery_mode", "backchannel_user_code_parameter",
             "browser_sso", "dpop_bound_access_tokens", "dpop_require_nonce",
             "grant_types", "jwks", "jwks_uri", "name", "post_logout_redirect_uris",
             "profile", "redirect_uris", "require_par", "scopes", "self_signed_tls_client_auth_thumbprints",
@@ -914,7 +1054,18 @@ public sealed class ManagementSparseBodiesGeneratedTests
         int cases = typeof(ManagementSparseBodiesGeneratedTests)
             .GetMethods()
             .Count(m => m.Name.EndsWith("SendsOnlyWhatWasSet", StringComparison.Ordinal));
-        Assert.Equal(19, cases);
+        Assert.Equal(21, cases);
+    }
+
+    /// <summary>
+    /// Asserts the encoded body is exactly <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="body">the request body to render.</param>
+    /// <param name="expected">the exact JSON text.</param>
+    /// <typeparam name="T">the body type.</typeparam>
+    private static void AssertJson<T>(T body, string expected)
+    {
+        Assert.Equal(expected, ManagementSupport.EncodeBody("test", body));
     }
 
     /// <summary>

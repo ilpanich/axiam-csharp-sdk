@@ -44,11 +44,46 @@ public sealed record CreateOAuth2ClientRequest
     public AuthnRequestParamsMode? AuthnRequestParams { get; init; }
 
     /// <summary>
+    /// G-7 — CIBA Core §4: <c>PS256</c>, <c>ES256</c> or <c>EdDSA</c>. When set, every
+    /// backchannel authentication request must be a signed <c>request</c> JWT under this
+    /// algorithm, verified against <c>jwks</c> or <c>jwks_uri</c> (exactly one is required; an
+    /// inline <c>jwks</c> must hold a key of the algorithm). Required for a <c>fapi2</c> client
+    /// holding the CIBA grant.
+    /// </summary>
+    [JsonPropertyName("backchannel_authentication_request_signing_alg")]
+    public string? BackchannelAuthenticationRequestSigningAlg { get; init; }
+
+    /// <summary>
+    /// G-7 — CIBA Core §4: where a ping-mode client is notified. Required in ping mode and
+    /// refused in poll mode; an absolute <c>https</c> URL held to the webhook address policy
+    /// (no credentials, no fragment, no private, loopback or internal host).
+    /// </summary>
+    [JsonPropertyName("backchannel_client_notification_endpoint")]
+    public string? BackchannelClientNotificationEndpoint { get; init; }
+
+    /// <summary>
     /// B5 — where OIDC back-channel logout tokens are delivered. Omit for a client that does
     /// not participate.
     /// </summary>
     [JsonPropertyName("backchannel_logout_uri")]
     public string? BackchannelLogoutUri { get; init; }
+
+    /// <summary>
+    /// G-7 — CIBA Core §4 <c>backchannel_token_delivery_mode</c>: <c>poll</c> or <c>ping</c>.
+    /// Required when <c>grant_types</c> holds <c>urn:openid:params:grant-type:ciba</c>, refused
+    /// otherwise; <c>push</c> is not offered. A CIBA client must be confidential; a
+    /// <c>fapi2</c> one must also register
+    /// <c>backchannel_authentication_request_signing_alg</c>.
+    /// </summary>
+    [JsonPropertyName("backchannel_token_delivery_mode")]
+    public string? BackchannelTokenDeliveryMode { get; init; }
+
+    /// <summary>
+    /// G-7 — CIBA Core §4. <c>true</c> is **refused**: this server holds no user code to
+    /// verify.
+    /// </summary>
+    [JsonPropertyName("backchannel_user_code_parameter")]
+    public bool? BackchannelUserCodeParameter { get; init; }
 
     /// <summary>
     /// X7.3 — whether an unauthenticated authorization request from this client may be answered

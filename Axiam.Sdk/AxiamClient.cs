@@ -562,6 +562,7 @@ public sealed partial class AxiamClient : IDisposable
         // constructors) and its own OIDC discovery semaphores/cache.
         _httpClient.Dispose();
         DisposeOidcState();
+        DisposeSessionless();
 
         if (_ownsResources)
         {

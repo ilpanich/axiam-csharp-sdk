@@ -20,7 +20,8 @@ namespace Axiam.Sdk.Tests;
 ///   <item>a call going over mTLS prefers the alias;</item>
 ///   <item>a call NOT going over mTLS keeps the top-level entry;</item>
 ///   <item>an ABSENT member means "no separate mTLS host", never "unsupported";</item>
-///   <item>only the six listed endpoints are ever aliased — not
+///   <item>only the seven listed endpoints are ever aliased (the seventh,
+///   <c>backchannel_authentication_endpoint</c>, contract 1.58) — not
 ///   <c>authorization_endpoint</c>, <c>end_session_endpoint</c> or <c>jwks_uri</c>;</item>
 ///   <item><c>issuer</c> is not an endpoint, does not move, and still governs <c>iss</c>
 ///   validation by exact string.</item>
@@ -48,7 +49,7 @@ public class MtlsEndpointAliasesTests
     private static readonly byte[] KeyPem = System.Text.Encoding.ASCII.GetBytes(
         "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIA==\n-----END PRIVATE KEY-----\n");
 
-    /// <summary>All six aliases on the mTLS origin.</summary>
+    /// <summary>All seven aliases on the mTLS origin.</summary>
     private static object AllAliases() => new
     {
         token_endpoint = $"{MtlsOrigin}/oauth2/token",
@@ -57,6 +58,7 @@ public class MtlsEndpointAliasesTests
         introspection_endpoint = $"{MtlsOrigin}/oauth2/introspect",
         device_authorization_endpoint = $"{MtlsOrigin}/oauth2/device_authorization",
         pushed_authorization_request_endpoint = $"{MtlsOrigin}/oauth2/par",
+        backchannel_authentication_endpoint = $"{MtlsOrigin}/oauth2/bc-authorize",
     };
 
     /// <summary>The discovery document, optionally carrying <paramref name="aliases"/>.</summary>
@@ -83,6 +85,8 @@ public class MtlsEndpointAliasesTests
             OidcTestKit.TokenResponseJson("access-token-value")));
         handler.Map("/oauth2/introspect", _ => OidcTestKit.JsonOk("""{"active":true}"""));
         handler.Map("/oauth2/revoke", _ => OidcTestKit.JsonOk("{}"));
+        handler.Map("/oauth2/bc-authorize", _ => OidcTestKit.JsonOk(
+            """{"auth_req_id":"r1","expires_in":120,"interval":5}"""));
         handler.Map("/oauth2/device_authorization", _ => OidcTestKit.JsonOk(
             OidcTestKit.DeviceAuthorizationJson()));
         // 201, not 200: RFC 9126 §2.2 specifies Created, and the SDK asserts exactly that.
@@ -159,11 +163,16 @@ public class MtlsEndpointAliasesTests
             Request = request,
             RedirectUri = "https://app.example.com/cb",
         });
+        await client.CibaInitiateAsync(new CibaInitiateParams
+        {
+            Scope = "openid",
+            Hint = CibaUserHint.LoginHint("alice"),
+        });
 
         foreach (string path in new[]
                  {
                      "/oauth2/token", "/oauth2/introspect", "/oauth2/revoke",
-                     "/oauth2/device_authorization", "/oauth2/par",
+                     "/oauth2/device_authorization", "/oauth2/par", "/oauth2/bc-authorize",
                  })
         {
             AssertOnly(handler, path, MtlsOrigin);
@@ -258,11 +267,12 @@ public class MtlsEndpointAliasesTests
     }
 
     [Fact]
-    public void AliasRecord_CarriesOnlyTheSixAliasableEndpoints()
+    public void AliasRecord_CarriesOnlyTheSevenAliasableEndpoints()
     {
         // Naming them as a closed set is what makes authorization_endpoint,
         // end_session_endpoint and jwks_uri unrepresentable rather than merely unused. A
-        // seventh property here would be an alias the SDK could synthesise.
+        // property beyond these seven (contract 1.58 added the CIBA endpoint, §21.3.1)
+        // would be an alias the SDK could synthesise.
         string[] properties = typeof(MtlsEndpointAliases)
             .GetProperties()
             .Where(p => p.Name != "EqualityContract")
@@ -273,6 +283,7 @@ public class MtlsEndpointAliasesTests
         Assert.Equal(
             new[]
             {
+                "BackchannelAuthenticationEndpoint",
                 "DeviceAuthorizationEndpoint",
                 "IntrospectionEndpoint",
                 "PushedAuthorizationRequestEndpoint",
@@ -431,5 +442,58 @@ public class MtlsEndpointAliasesTests
         await client.LoginClientCredentialsAsync(new LoginClientCredentialsParams());
 
         AssertOnly(handler, "/oauth2/token", MtlsOrigin);
+    }
+
+    /// <summary>
+    /// CONTRACT.md &#167;21.3.1 vector A, read verbatim from the vendored CONTRACT.md: the seven
+    /// aliases decode, each on the mTLS host, and the front-channel members stay where they are.
+    /// </summary>
+    [Fact]
+    public void VectorA_CarriesSevenAliases()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "CONTRACT.md")))
+        {
+            dir = dir.Parent;
+        }
+
+        string contract = File.ReadAllText(Path.Combine(dir!.FullName, "CONTRACT.md"));
+        int vector = contract.IndexOf("**Vector A", StringComparison.Ordinal);
+        int open = contract.IndexOf("```json", vector, StringComparison.Ordinal) + "```json".Length;
+        int close = contract.IndexOf("```", open, StringComparison.Ordinal);
+        string json = contract[open..close];
+
+        using JsonDocument raw = JsonDocument.Parse(json);
+        Assert.Equal(7, raw.RootElement.GetProperty("mtls_endpoint_aliases").EnumerateObject().Count());
+
+        // Vector A is abridged; fill the members the record requires but the vector omits.
+        var document = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
+        foreach (string list in new[]
+                 {
+                     "response_types_supported", "subject_types_supported", "id_token_signing_alg_values_supported",
+                     "scopes_supported", "token_endpoint_auth_methods_supported", "claims_supported", "grant_types_supported",
+                 })
+        {
+            document[list] = JsonSerializer.SerializeToElement(Array.Empty<string>());
+        }
+
+        OidcConfiguration configuration = JsonSerializer.Deserialize<OidcConfiguration>(JsonSerializer.Serialize(document))!;
+        MtlsEndpointAliases aliases = configuration.MtlsEndpointAliases!;
+        foreach (string? alias in new[]
+                 {
+                     aliases.TokenEndpoint, aliases.UserinfoEndpoint, aliases.RevocationEndpoint,
+                     aliases.IntrospectionEndpoint, aliases.DeviceAuthorizationEndpoint,
+                     aliases.PushedAuthorizationRequestEndpoint, aliases.BackchannelAuthenticationEndpoint,
+                 })
+        {
+            Assert.Equal("mtls.iam.example.test", new Uri(alias!).Host);
+        }
+
+        Assert.Equal(
+            "https://iam.example.test/oauth2/bc-authorize?tenant_id=6f3e0a5c-1b2d-4e8f-9a7b-0c1d2e3f4a5b",
+            configuration.BackchannelAuthenticationEndpoint);
+        Assert.Equal("https://iam.example.test", configuration.Issuer);
+        Assert.Equal("iam.example.test", new Uri(configuration.AuthorizationEndpoint).Host);
+        Assert.Equal("iam.example.test", new Uri(configuration.JwksUri).Host);
     }
 }

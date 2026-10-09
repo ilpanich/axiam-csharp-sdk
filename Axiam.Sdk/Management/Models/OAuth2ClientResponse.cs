@@ -32,6 +32,24 @@ public sealed record OAuth2ClientResponse
     public required AuthnRequestParamsMode AuthnRequestParams { get; init; }
 
     /// <summary>
+    /// the server's backchannel_authentication_request_signing_alg field
+    /// </summary>
+    [JsonPropertyName("backchannel_authentication_request_signing_alg")]
+    public CibaRequestSigningAlg? BackchannelAuthenticationRequestSigningAlg { get; init; }
+
+    /// <summary>
+    /// G-7 — the ping-mode notification endpoint.
+    /// </summary>
+    [JsonPropertyName("backchannel_client_notification_endpoint")]
+    public string? BackchannelClientNotificationEndpoint { get; init; }
+
+    /// <summary>
+    /// the server's backchannel_token_delivery_mode field
+    /// </summary>
+    [JsonPropertyName("backchannel_token_delivery_mode")]
+    public CibaDeliveryMode? BackchannelTokenDeliveryMode { get; init; }
+
+    /// <summary>
     /// X7.3 — echoed for the same reason.
     /// </summary>
     [JsonPropertyName("browser_sso")]

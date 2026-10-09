@@ -12,13 +12,29 @@ using System.Text.Json.Serialization;
 namespace Axiam.Sdk.Management.Models;
 
 /// <summary>
-/// The HealthResponse schema from the server's OpenAPI document.
+/// Response body for <c>GET /health</c>. <c>profile</c> and <c>unavailable</c> are additive
+/// (G-8, D-59): a client that reads only <c>status</c> is unaffected.
 /// </summary>
 public sealed record HealthResponse
 {
+    /// <summary>
+    /// The messaging profile this process runs: <c>full</c> (RabbitMQ is used) or
+    /// <c>minimal</c> (<c>AXIAM__AMQP__ENABLED=false</c>, no broker).
+    /// </summary>
+    [JsonPropertyName("profile")]
+    public required string Profile { get; init; }
+
     /// <summary>
     /// the server's status field
     /// </summary>
     [JsonPropertyName("status")]
     public required string Status { get; init; }
+
+    /// <summary>
+    /// Present only in the <c>minimal</c> profile: the capabilities it does not provide —
+    /// <c>reactors</c>, <c>amqp_authz</c>, <c>amqp_audit_ingestion</c> and
+    /// <c>decision_cache_broadcast</c>. Absent in <c>full</c>.
+    /// </summary>
+    [JsonPropertyName("unavailable")]
+    public IReadOnlyList<string>? Unavailable { get; init; }
 }

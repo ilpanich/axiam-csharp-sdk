@@ -219,6 +219,13 @@ public sealed record TenantSettingsOverride
     public bool? RequireUppercase { get; init; }
 
     /// <summary>
+    /// G-2 / D-20 — disable-only, like <c>sensitive_scopes_enabled</c>; see
+    /// [<c>OidcPolicy::saml_idp_enabled</c>].
+    /// </summary>
+    [JsonPropertyName("saml_idp_enabled")]
+    public bool? SamlIdpEnabled { get; init; }
+
+    /// <summary>
     /// the server's sensitive_scopes_enabled field
     /// </summary>
     [JsonPropertyName("sensitive_scopes_enabled")]
@@ -231,6 +238,13 @@ public sealed record TenantSettingsOverride
     /// </summary>
     [JsonPropertyName("server_cert_allowed_names")]
     public IReadOnlyList<string>? ServerCertAllowedNames { get; init; }
+
+    /// <summary>
+    /// G-5 / D-45 — disable-only, like <c>saml_idp_enabled</c>; see
+    /// [<c>OidcPolicy::ssf_enabled</c>].
+    /// </summary>
+    [JsonPropertyName("ssf_enabled")]
+    public bool? SsfEnabled { get; init; }
 
     /// <summary>
     /// the server's webauthn_user_verification field

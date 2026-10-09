@@ -34,8 +34,15 @@ public sealed class PlatformApi
     }
 
     /// <summary>
-    /// Issues <c>GET /health</c>.
+    /// Also states the deployment profile (<c>full</c> | <c>minimal</c>) and, in
+    /// <c>minimal</c>, what that profile does not provide. The state is optional so the route
+    /// stays a liveness probe that answers even when mounted without it (<c>full</c>).
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Issues <c>GET /health</c>.
+    /// </para>
+    /// </remarks>
     /// <param name="cancellationToken">cancels the request.</param>
     /// <returns>the server response</returns>
     public async Task<HealthResponse> HealthAsync(CancellationToken cancellationToken = default)
