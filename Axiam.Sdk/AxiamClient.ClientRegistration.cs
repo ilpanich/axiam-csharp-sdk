@@ -5,6 +5,7 @@ using System.Text.Json;
 using Axiam.Sdk.Auth.Oidc;
 using Axiam.Sdk.Core;
 using Axiam.Sdk.Management;
+using Axiam.Sdk.Options;
 using Axiam.Sdk.Rest;
 
 namespace Axiam.Sdk;
@@ -65,6 +66,12 @@ public sealed partial class AxiamClient
             }
         }
     }
+
+    /// <summary>This client's effective options (the &#167;32.7 receiver reads its retry and JWKS settings).</summary>
+    internal AxiamClientOptions Options => _options;
+
+    /// <summary>This client's &#167;19 telemetry dispatcher.</summary>
+    internal TelemetryDispatcher Telemetry => _telemetry;
 
     private void DisposeSessionless()
     {

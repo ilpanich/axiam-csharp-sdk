@@ -217,7 +217,7 @@ internal sealed class ManagementTransport
     /// everything the table does not name falls through to <see cref="ErrorMapper"/>,
     /// which is &#167;2's own mapping and stays the single source of truth for it.
     /// </remarks>
-    private static async Task<Exception> ClassifyAsync(
+    internal static async Task<Exception> ClassifyAsync(
         string operation, HttpResponseMessage response, CancellationToken cancellationToken)
     {
         string peeked = await PeekAsync(response, cancellationToken).ConfigureAwait(false);
