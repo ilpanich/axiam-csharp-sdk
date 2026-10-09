@@ -364,9 +364,9 @@ public sealed class CibaTests : IDisposable
         AxiamClient client = Client();
         var clock = new ManualCibaClock();
         string tokens = Tokens();
+        // Contract 1.59 (§34.2 P8): the 500 carries the body AXIAM's token endpoint sends.
         ScriptToken(
             () => OAuth(400, "authorization_pending"),
-            // Contract 1.59 (§34.2 P8): the 500 carries the body AXIAM's token endpoint sends.
             () => OAuth(500, "server_error"),
             () => OAuth(429, "rate_limit_exceeded"),
             () => CapturingHandler.Status(429),
