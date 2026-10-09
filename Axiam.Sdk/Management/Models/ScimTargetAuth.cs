@@ -20,8 +20,10 @@ namespace Axiam.Sdk.Management.Models;
 /// An <b>open</b> set of shapes discriminated by the <c>type</c> field (CONTRACT.md &#167;31.2,
 /// &#167;27.13): a caller pattern-matches on the record type, and a <c>type</c> this SDK does
 /// not know decodes to <see cref="ScimTargetAuthUnknown"/> rather than failing the response it
-/// arrived in. That arm is never sent: encoding it is refused locally, before any request, with
-/// a <see cref="Axiam.Sdk.Management.ValidationError"/>.
+/// arrived in. That arm is never sent: the request encoder refuses it locally, before any
+/// request, with a <see cref="Axiam.Sdk.Management.ValidationError"/>. Serializing it anywhere
+/// else, for a log line, never fails: it renders its <c>type</c> and nothing else (CONTRACT.md
+/// &#167;34.2 P12.2).
 /// </para>
 /// </remarks>
 [JsonConverter(typeof(ScimTargetAuthConverter))]
@@ -44,8 +46,9 @@ public sealed record ScimTargetAuthUnknown : ScimTargetAuth
 
 /// <summary>
 /// Wire converter for ScimTargetAuth: dispatches on <c>type</c> when reading (an unknown value
-/// becomes ScimTargetAuthUnknown) and writes the arm's members after the tag. Writing
-/// ScimTargetAuthUnknown is refused.
+/// becomes ScimTargetAuthUnknown) and writes the arm's members after the tag.
+/// ScimTargetAuthUnknown is refused by the request encoder (<c>ManagementJson.Wire</c>) and
+/// rendered as its <c>type</c> alone by every other serializer.
 /// </summary>
 internal sealed class ScimTargetAuthConverter : JsonConverter<ScimTargetAuth>
 {
@@ -71,6 +74,27 @@ internal sealed class ScimTargetAuthConverter : JsonConverter<ScimTargetAuth>
     /// <inheritdoc/>
     public override void Write(Utf8JsonWriter writer, ScimTargetAuth value, JsonSerializerOptions options)
     {
+        if (value is ScimTargetAuthUnknown unknown)
+        {
+            // CONTRACT.md §34.2 P12.2: refused on the request path, never in a rendering.
+            if (ManagementJson.IsWire(options))
+            {
+                throw new ValidationError(
+                    "ScimTargetAuth: refusing to send a type this SDK does not know (CONTRACT.md §31.2); "
+                    + "replace it with a known arm before writing back",
+                    Array.Empty<FieldError>());
+            }
+
+            writer.WriteStartObject();
+            if (unknown.Type is not null)
+            {
+                writer.WriteString("type", unknown.Type);
+            }
+
+            writer.WriteEndObject();
+            return;
+        }
+
         string tag = value switch
         {
             ScimTargetAuthBearer => "bearer",

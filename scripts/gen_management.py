@@ -1027,8 +1027,10 @@ def emit_open_union_base(name: str, schema: Any, tag: str, arms: list[tuple[str,
           f"(CONTRACT.md &#167;31.2, &#167;27.13): a caller pattern-matches on the record "
           f"type, and a <c>{tag}</c> this SDK does not know decodes to <see cref=\"{unknown}\"/> "
           f"rather than failing the response it arrived in. That arm is never sent: "
-          f"encoding it is refused locally, before any request, with a "
-          f"<see cref=\"Axiam.Sdk.Management.ValidationError\"/>.")
+          f"the request encoder refuses it locally, before any request, with a "
+          f"<see cref=\"Axiam.Sdk.Management.ValidationError\"/>. Serializing it anywhere "
+          f"else, for a log line, never fails: it renders its <c>{tag}</c> and nothing else "
+          f"(CONTRACT.md &#167;34.2 P12.2).")
     lines.append(f"[JsonConverter(typeof({type_name}Converter))]")
     lines.append(f"public abstract record {type_name};")
     lines.append("")
@@ -1048,8 +1050,9 @@ def emit_open_union_base(name: str, schema: Any, tag: str, arms: list[tuple[str,
     lines.append("")
     lines.extend(xmldoc(
         f"Wire converter for {type_name}: dispatches on <c>{tag}</c> when reading (an unknown "
-        f"value becomes {unknown}) and writes the arm's members after the tag. Writing "
-        f"{unknown} is refused."))
+        f"value becomes {unknown}) and writes the arm's members after the tag. {unknown} is "
+        f"refused by the request encoder (<c>ManagementJson.Wire</c>) and rendered as its "
+        f"<c>{tag}</c> alone by every other serializer."))
     lines.append(f"internal sealed class {type_name}Converter : JsonConverter<{type_name}>")
     lines.append("{")
     lines.append("    /// <inheritdoc/>")
@@ -1075,6 +1078,27 @@ def emit_open_union_base(name: str, schema: Any, tag: str, arms: list[tuple[str,
     lines.append("    /// <inheritdoc/>")
     lines.append(f"    public override void Write(Utf8JsonWriter writer, {type_name} value, JsonSerializerOptions options)")
     lines.append("    {")
+    lines.append(f"        if (value is {unknown} unknown)")
+    lines.append("        {")
+    lines.append("            // CONTRACT.md \u00a734.2 P12.2: refused on the request path, never in a rendering.")
+    lines.append("            if (ManagementJson.IsWire(options))")
+    lines.append("            {")
+    lines.append(f"                throw new ValidationError(")
+    lines.append(f'                    "{type_name}: refusing to send a {tag} this SDK does not know (CONTRACT.md \u00a731.2); "')
+    lines.append(f'                    + "replace it with a known arm before writing back",')
+    lines.append(f"                    Array.Empty<FieldError>());")
+    lines.append("            }")
+    lines.append("")
+    lines.append("            writer.WriteStartObject();")
+    lines.append(f"            if (unknown.{prop(tag)} is not null)")
+    lines.append("            {")
+    lines.append(f'                writer.WriteString("{tag}", unknown.{prop(tag)});')
+    lines.append("            }")
+    lines.append("")
+    lines.append("            writer.WriteEndObject();")
+    lines.append("            return;")
+    lines.append("        }")
+    lines.append("")
     lines.append("        string tag = value switch")
     lines.append("        {")
     for (value, _), arm in zip(arms, arm_names):

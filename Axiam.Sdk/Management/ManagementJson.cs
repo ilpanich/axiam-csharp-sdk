@@ -89,6 +89,15 @@ internal static class ManagementJson
     /// </remarks>
     internal static readonly JsonSerializerOptions Wire = Build(exposeSecrets: true);
 
+    /// <summary>
+    /// Whether <paramref name="options"/> is <see cref="Wire"/> — the request encoder. A value
+    /// the SDK must never send (an open union's unknown arm) is refused there and rendered by
+    /// every other serializer (CONTRACT.md &#167;34.2 P12.2).
+    /// </summary>
+    /// <param name="options">The options a converter was handed.</param>
+    /// <returns><c>true</c> when the value is being encoded for a request.</returns>
+    internal static bool IsWire(JsonSerializerOptions options) => ReferenceEquals(options, Wire);
+
     private static JsonSerializerOptions Build(bool exposeSecrets)
     {
         var options = new JsonSerializerOptions
