@@ -212,14 +212,24 @@ public sealed class SsfReceiver
     /// <c>Ack</c> and <c>SetErrs</c> are sent exactly as given, and only the members you set.
     /// <b>Nothing is acknowledged on your behalf</b>: acknowledge, on the next call, the
     /// <c>jti</c>s you processed, and pass each refused one in <c>SetErrs</c>
-    /// (<see cref="SetErr.FromReason"/>). A SET you neither acknowledge nor refuse is re-offered —
-    /// and, having been recorded when it verified, then reads as <c>replayed</c>.
+    /// (<see cref="SetErr.FromReason"/>) — except a <c>replayed</c> one, which this receiver
+    /// accepted earlier: acknowledge that (CONTRACT.md &#167;34.2 P2). A SET you neither acknowledge
+    /// nor refuse is re-offered — and, having been recorded when it verified, then reads as
+    /// <c>replayed</c>.
     /// </para>
     /// <para>
     /// Retried per &#167;16 on a transport failure, <c>5xx</c>, <c>408</c> or <c>429</c>; never on
     /// another <c>4xx</c> (<c>400</c> is a <see cref="ValidationError"/>, <c>404</c> a
-    /// <see cref="NotFoundError"/>, as on the management surface). A JWKS fetch failure aborts the
-    /// poll rather than refusing SETs it could not judge.
+    /// <see cref="NotFoundError"/>, as on the management surface).
+    /// </para>
+    /// <para>
+    /// <b>A poll never keeps a <c>jti</c> it does not return</b> (&#167;34.2 P1). A failure that is
+    /// no verdict on a SET — a JWKS or discovery fetch that fails, a replay store that throws —
+    /// leaves that SET and every later one in the batch <b>unjudged</b>: in neither
+    /// <see cref="SsfPollResult.Events"/> nor <see cref="SsfPollResult.Refused"/>, not recorded,
+    /// listed in <see cref="SsfPollResult.Unjudged"/>. Do not acknowledge them; the transmitter
+    /// offers them again. When the failure comes before any SET of the batch was recorded, the
+    /// poll raises it instead (nothing is recorded either way).
     /// </para>
     /// </remarks>
     /// <param name="streamId">The stream id (path-escaped).</param>
@@ -329,11 +339,14 @@ public sealed class SsfReceiver
                     moreEl.ValueKind == JsonValueKind.True;
         var verified = new List<SecurityEvent>();
         var refused = new List<RefusedSet>();
+        var unjudged = new List<string>();
         if (reply.ValueKind == JsonValueKind.Object && reply.TryGetProperty("sets", out JsonElement sets) &&
             sets.ValueKind == JsonValueKind.Object)
         {
-            foreach (JsonProperty entry in sets.EnumerateObject())
+            List<JsonProperty> entries = sets.EnumerateObject().ToList();
+            for (int i = 0; i < entries.Count; i++)
             {
+                JsonProperty entry = entries[i];
                 if (entry.Value.ValueKind != JsonValueKind.String)
                 {
                     refused.Add(new RefusedSet(entry.Name, SetFailureReason.Malformed));
@@ -348,10 +361,19 @@ public sealed class SsfReceiver
                 {
                     refused.Add(new RefusedSet(entry.Name, e.FailureReason));
                 }
+                catch (Exception) when (verified.Count > 0)
+                {
+                    // CONTRACT.md §34.2 P1/P3: a failure that is no verdict (a key fetch, the
+                    // store) leaves this SET and every later one unjudged — not returned, not
+                    // recorded. The SETs already recorded MUST be returned, so the poll returns
+                    // rather than raising; with none recorded yet, the failure propagates.
+                    unjudged.AddRange(entries.Skip(i).Select(e => e.Name));
+                    break;
+                }
             }
         }
 
-        return new SsfPollResult(verified, more, refused);
+        return new SsfPollResult(verified, more, refused) { Unjudged = unjudged };
     }
 
     private async Task<byte[]?> KeyForKidAsync(string kid, CancellationToken cancellationToken)

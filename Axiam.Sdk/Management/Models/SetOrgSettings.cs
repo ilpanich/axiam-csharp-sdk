@@ -17,9 +17,18 @@ namespace Axiam.Sdk.Management.Models;
 /// <remarks>
 /// <para>
 /// This body REPLACES rather than patches (&#167;27.4 rule 5): what you do not carry over from
-/// a prior read is not preserved, it is overwritten. Every property is required, so forgetting
-/// one is a compile error rather than a silent null on the wire. Read first,
-/// <c>with</c>-expression the parts you mean to keep, write back.
+/// a prior read is not preserved, it is overwritten. <c>access_token_lifetime_secs</c>,
+/// <c>admin_notifications_enabled</c>, <c>default_cert_validity_days</c>,
+/// <c>email_verification_grace_period_hours</c>, <c>email_verification_required</c>,
+/// <c>hibp_check_enabled</c>, <c>lockout_backoff_multiplier</c>, <c>lockout_duration_secs</c>,
+/// <c>max_cert_validity_days</c>, <c>max_failed_login_attempts</c>,
+/// <c>max_lockout_duration_secs</c>, <c>mfa_challenge_lifetime_secs</c>, <c>mfa_enforced</c>,
+/// <c>min_length</c>, <c>password_history_count</c>, <c>refresh_token_lifetime_secs</c>,
+/// <c>require_digits</c>, <c>require_lowercase</c>, <c>require_symbols</c>,
+/// <c>require_uppercase</c> are required, so forgetting one is a compile error; an optional
+/// property you leave unset is omitted from the wire, and the server then applies its default
+/// rather than keeping the stored value, except where the operation documents otherwise. Read
+/// first, <c>with</c>-expression the parts you mean to keep, write back.
 /// </para>
 /// </remarks>
 public sealed record SetOrgSettings

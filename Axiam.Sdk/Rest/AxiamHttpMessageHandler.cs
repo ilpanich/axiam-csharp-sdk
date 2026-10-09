@@ -82,6 +82,39 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
             DeviceAuthPath,
         };
 
+    /// <summary>
+    /// CONTRACT.md &#167;34.2 P11 (contract 1.59): the &#167;9 exemption covers the OAuth2
+    /// endpoints <b>in both issuer forms</b> — <c>/oauth2/…</c> and
+    /// <c>/t/{tenant_id}/oauth2/…</c> — so the endpoint is recognised, not one literal path. A
+    /// tenant-path <c>bc-authorize</c> whose <c>401</c> entered &#167;9 would be re-sent after the
+    /// refresh, a second initiate &#167;33.7 rule 1 forbids.
+    /// </summary>
+    /// <param name="path">The request's absolute path.</param>
+    /// <returns><c>true</c> when a <c>401</c> on <paramref name="path"/> never enters &#167;9.</returns>
+    private static bool IsReactiveRefreshExemptPath(string path)
+    {
+        if (ReactiveRefreshExemptPaths.Contains(path))
+        {
+            return true;
+        }
+
+        // `/t/{tenant_id}/oauth2/<endpoint>`: one non-empty segment between `/t/` and `/oauth2/`.
+        const string TenantPrefix = "/t/";
+        if (!path.StartsWith(TenantPrefix, StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        int slash = path.IndexOf('/', TenantPrefix.Length);
+        if (slash <= TenantPrefix.Length)
+        {
+            return false;
+        }
+
+        string rest = path.Substring(slash);
+        return rest.StartsWith("/oauth2/", StringComparison.Ordinal) && ReactiveRefreshExemptPaths.Contains(rest);
+    }
+
     private const string AccessCookieName = "axiam_access";
     private const string CsrfCookieName = "axiam_csrf";
     private const string CsrfHeaderName = "X-CSRF-Token";
@@ -208,7 +241,7 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
         // attempt that could only ever fail.
         string? path = request.RequestUri?.AbsolutePath;
         bool isRefreshExemptCall = _staticBearerToken is not null
-            || (path is not null && ReactiveRefreshExemptPaths.Contains(path));
+            || (path is not null && IsReactiveRefreshExemptPath(path));
 
         // Buffer the body up front (needed to build a single retry-clone below; every
         // request body this SDK sends is a small, fully-materialized JSON payload, not

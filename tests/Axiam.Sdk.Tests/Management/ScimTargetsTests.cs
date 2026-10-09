@@ -175,6 +175,34 @@ public sealed class ScimTargetsTests : ManagementTestBase
         Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<ScimTargetAuth>("[]"));
     }
 
+    /// <summary>
+    /// R-21 / CS-10 (CONTRACT.md &#167;34.2 P12.2, &#167;7 rule 1): an unknown arm is refused on
+    /// the request path only — a decoded <see cref="ScimTargetResponse"/> carrying one renders for
+    /// a log line, as its discriminator and nothing else.
+    /// </summary>
+    [Fact]
+    public async Task AnUnknownArmRendersForALogLineAndIsRefusedOnlyWhenSent()
+    {
+        Guid id = Guid.NewGuid();
+        Mount("GET", $"{Targets}/{id}", 200, TargetBody(b =>
+        {
+            b["auth"] = new JsonObject { ["type"] = "mtls", ["certificate_ref"] = "kept-nowhere" };
+            b["scope"] = new JsonObject { ["filter"] = "dept eq 7" };
+        }).ToJsonString());
+        ScimTargetResponse target = await Client.ScimTargets.GetAsync(id);
+
+        JsonElement rendered = JsonSerializer.SerializeToElement(target);
+        Assert.Equal("""{"type":"mtls"}""", rendered.GetProperty("auth").GetRawText());
+        Assert.Equal("{}", rendered.GetProperty("scope").GetRawText());
+        Assert.DoesNotContain("kept-nowhere", JsonSerializer.Serialize(target), StringComparison.Ordinal);
+        Assert.Contains("mtls", JsonSerializer.Serialize(target.Auth), StringComparison.Ordinal);
+
+        Route put = Mount("PUT", $"{Targets}/{id}", 200, TargetBody().ToJsonString());
+        await Assert.ThrowsAsync<ValidationError>(() => Client.ScimTargets.UpdateAsync(id, Input(null) with { Auth = target.Auth }));
+        await Assert.ThrowsAsync<ValidationError>(() => Client.ScimTargets.UpdateAsync(id, Input(null) with { Scope = target.Scope }));
+        Assert.Equal(0, put.Calls);
+    }
+
     /// <summary>&#167;31.8 (5): none of the four writes is retried on a 503 (retry-enabled client).</summary>
     [Fact]
     public async Task NoWriteIsRetriedOn503()

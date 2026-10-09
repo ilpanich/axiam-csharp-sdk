@@ -279,4 +279,14 @@ public sealed class SsfPollOptions
 /// <param name="Events">The SETs that verified, in the transmitter's order.</param>
 /// <param name="MoreAvailable">Whether the transmitter holds more.</param>
 /// <param name="Refused">The SETs that did not verify.</param>
-public sealed record SsfPollResult(IReadOnlyList<SecurityEvent> Events, bool MoreAvailable, IReadOnlyList<RefusedSet> Refused);
+public sealed record SsfPollResult(IReadOnlyList<SecurityEvent> Events, bool MoreAvailable, IReadOnlyList<RefusedSet> Refused)
+{
+    /// <summary>
+    /// The keys of the SETs left <b>unjudged</b> by a failure that is no verdict — a key fetch
+    /// or a replay store that failed part-way through the batch (CONTRACT.md &#167;34.2 P1). They
+    /// are in neither <see cref="Events"/> nor <see cref="Refused"/> and their <c>jti</c>s were
+    /// not recorded: acknowledge none of them and the transmitter offers them again. Empty when
+    /// every SET was judged.
+    /// </summary>
+    public IReadOnlyList<string> Unjudged { get; init; } = Array.Empty<string>();
+}

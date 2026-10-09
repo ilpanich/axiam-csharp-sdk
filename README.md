@@ -20,7 +20,7 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to **contract 1.58**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
+This SDK conforms to **contract 1.59**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
 §21, §22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates and the §6.1 rules 6–10
 mTLS device login, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, and the §1.1.1 gRPC
 `validate_token`/`introspect_token` operations, contract 1.51, the §12 OIDC/SSO relying-party
@@ -37,7 +37,8 @@ resource-server helpers, contract 1.48), §28.12, §29, §30, §31, §32 and §3
 signed (the RFC 7592 client configuration operations, contract 1.53; the `directory`, `saml`,
 `ssf` and `scim_targets` management namespaces, contracts 1.54–1.57; the SSF receiver helper,
 contract 1.56; CIBA with the signed request form in PS256, ES256 and EdDSA, and §21.3.1's seventh
-`mtls_endpoint_aliases` member, contract 1.58). Nothing in contract 1.53–1.58 is carved out.
+`mtls_endpoint_aliases` member, contract 1.58), read with contract 1.59's §34.2 clarifications
+(P1–P12) of those sections. Nothing in contract 1.53–1.59 is carved out.
 
 §12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27, §28, §28.12, §29, §30, §31, §32 and §33 are named rather than
 folded into the range because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
@@ -2065,11 +2066,12 @@ SamlSpMetadataDraft draft = await client.Saml.ParseSpMetadataAsync(
     ParseSamlSpMetadata.FromUrl("https://sp.example/metadata"));   // or FromXml(...)
 SamlServiceProvider sp = await client.Saml.CreateServiceProviderAsync(draft.ServiceProvider);
 
-// Read-modify-write for the replacements: ToInput() carries every member over, the secret absent
-// (absent keeps the stored one).
+// Read-modify-write for the replacements: ToInput() carries every member the read carried over.
 SamlServiceProvider read = await client.Saml.GetServiceProviderAsync(sp.Id);
 await client.Saml.UpdateServiceProviderAsync(sp.Id, read.ToInput() with { DisplayName = "Payroll (EU)" });
 
+// The SCIM target's credential and the SSF stream's push header are left absent, which keeps the
+// stored one.
 ScimTargetResponse target = await client.ScimTargets.GetAsync(targetId);
 await client.ScimTargets.UpdateAsync(targetId, target.ToInput() with { Enabled = false });
 
@@ -2116,13 +2118,18 @@ catch (SetVerificationError refused)
     return Results.Json(new { err = refused.FailureReason.PushErrorCode() }, statusCode: 400);
 }
 
-// Poll (RFC 8936): acknowledge what you processed, refuse what failed — on the NEXT call.
+// Poll (RFC 8936): acknowledge what you processed, refuse what failed — on the NEXT call. A
+// `replayed` SET was accepted by this receiver before: acknowledge it, never report it (§34.2 P2).
+// `page.Unjudged` (a key fetch or the store failed part-way) is neither: leave it to be re-offered.
 SsfPollResult page = await receiver.PollAsync(streamId, new SsfPollOptions { ReturnImmediately = true });
 Process(page.Events);
 await receiver.PollAsync(streamId, new SsfPollOptions
 {
-    Ack = page.Events.Select(e => e.Jti).ToList(),
-    SetErrs = page.Refused.ToDictionary(r => r.Jti, r => SetErr.FromReason(r.Reason)),
+    Ack = page.Events.Select(e => e.Jti)
+        .Concat(page.Refused.Where(r => r.Reason == SetFailureReason.Replayed).Select(r => r.Jti))
+        .ToList(),
+    SetErrs = page.Refused.Where(r => r.Reason != SetFailureReason.Replayed)
+        .ToDictionary(r => r.Jti, r => SetErr.FromReason(r.Reason)),
 });
 ```
 
@@ -2133,8 +2140,14 @@ await receiver.PollAsync(streamId, new SsfPollOptions
   never honoured. An unknown `kid` costs one JWKS refetch, at most once a minute. A JWKS that cannot
   be fetched is a `NetworkError`, not a verdict on the SET.
 - **A verified SET is recorded.** The replay window defaults to, and cannot be set below, seven
-  days (`IReplayStore` is pluggable; `MemoryReplayStore` is the default). A polled SET you neither
-  acknowledge nor refuse is re-offered and then reads as `replayed` — acknowledge what you process.
+  days (`IReplayStore` is pluggable; `MemoryReplayStore` is the default — bounded in time by the
+  window, unbounded in count). A store that throws fails closed: nothing is returned as verified. A
+  polled SET you neither acknowledge nor refuse is re-offered and then reads as `replayed` —
+  acknowledge what you process.
+- **A poll never keeps a `jti` it does not return** (§34.2 P1). A key fetch or a store that fails
+  part-way through a batch leaves that SET and the rest **unjudged** — not recorded, in neither
+  `Events` nor `Refused`, listed in `Unjudged` — while the SETs already judged are returned. When
+  nothing had been recorded yet, `PollAsync` raises the failure instead.
 - **`PollAsync` acknowledges nothing itself**, sends only the members you set (`{}` when none),
   carries no session, and is retried only on a transport failure, `5xx`, `408` or `429`.
 - `malformed`, `invalid_type` and `replayed` are not RFC 8935 codes; `PushErrorCode()` answers them

@@ -21,9 +21,12 @@ namespace Axiam.Sdk.Management.Models;
 /// <remarks>
 /// <para>
 /// This body REPLACES rather than patches (&#167;27.4 rule 5): what you do not carry over from
-/// a prior read is not preserved, it is overwritten. Every property is required, so forgetting
-/// one is a compile error rather than a silent null on the wire. Read first,
-/// <c>with</c>-expression the parts you mean to keep, write back.
+/// a prior read is not preserved, it is overwritten. <c>base_dn</c>, <c>bind_dn</c>,
+/// <c>enabled</c>, <c>kind</c>, <c>start_tls</c>, <c>url</c>, <c>user_filter</c> are required,
+/// so forgetting one is a compile error; an optional property you leave unset is omitted from
+/// the wire, and the server then applies its default rather than keeping the stored value,
+/// except where the operation documents otherwise. Read first, <c>with</c>-expression the parts
+/// you mean to keep, write back.
 /// </para>
 /// </remarks>
 public sealed record SetDirectoryConfig

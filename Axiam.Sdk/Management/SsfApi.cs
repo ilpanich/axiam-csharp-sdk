@@ -146,8 +146,9 @@ public sealed class SsfApi
     /// </summary>
     /// <remarks>
     /// <para>
-    /// A REPLACEMENT, not a patch: every field of the body is written, so read the current
-    /// value first and carry over the parts you mean to keep (&#167;27.4 rule 5).
+    /// A REPLACEMENT, not a patch: what the body does not carry is not preserved (a member left
+    /// unset is omitted from the wire, not sent as null), so read the current value first and
+    /// carry over the parts you mean to keep (&#167;27.4 rule 5).
     /// </para>
     /// <para>
     /// An omitted optional member takes its default (&#167;32.2) &#8212; <b>except

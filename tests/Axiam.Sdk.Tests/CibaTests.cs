@@ -364,9 +364,10 @@ public sealed class CibaTests : IDisposable
         AxiamClient client = Client();
         var clock = new ManualCibaClock();
         string tokens = Tokens();
+        // Contract 1.59 (§34.2 P8): the 500 carries the body AXIAM's token endpoint sends.
         ScriptToken(
             () => OAuth(400, "authorization_pending"),
-            () => CapturingHandler.Status(500),
+            () => OAuth(500, "server_error"),
             () => OAuth(429, "rate_limit_exceeded"),
             () => CapturingHandler.Status(429),
             () => CapturingHandler.Json(200, tokens));
@@ -690,6 +691,58 @@ public sealed class CibaTests : IDisposable
         AxiamClient plain = Client();
         await plain.CibaInitiateAsync(Request());
         Assert.Equal("axiam.test", _handler.To(BcPath)[0].Uri.Host);
+    }
+
+    /// <summary>
+    /// R-16 / CS-01 (CONTRACT.md &#167;34.2 P11, &#167;33.4, &#167;33.7 rule 1): under a tenant-path
+    /// issuer the endpoints are <c>/t/{tenant_id}/oauth2/…</c>, and a <c>401</c> there with a live
+    /// session is no session expiry either. It must not enter the &#167;9 guard — which would
+    /// refresh and <b>re-send</b> the initiate — nor, on the CIBA grant, refresh anything.
+    /// </summary>
+    [Fact]
+    public async Task ATenantPath401NeverEntersTheRefreshGuardOrResendsTheInitiate()
+    {
+        string tenantBc = $"/t/{OidcTestKit.TenantGuid}{BcPath}";
+        string tenantToken = $"/t/{OidcTestKit.TenantGuid}{TokenPath}";
+        JsonObject doc = JsonNode.Parse(Discovery())!.AsObject();
+        doc["issuer"] = $"{Origin}/t/{OidcTestKit.TenantGuid}";
+        doc["token_endpoint"] = $"{Origin}{tenantToken}";
+        doc["backchannel_authentication_endpoint"] = $"{Origin}{tenantBc}";
+        _handler.Map("GET", "/.well-known/openid-configuration", _ => CapturingHandler.Json(200, doc.ToJsonString()));
+        _handler.Map("POST", tenantBc, _ => OAuth(401, "invalid_client", "client authentication failed"));
+        _handler.Map("POST", tenantToken, _ => OAuth(401, "invalid_client", "client authentication failed"));
+        // A refresh that succeeds: were the 401 to enter §9, the handler would re-send.
+        _handler.Map("POST", "/api/v1/auth/refresh", _ => CapturingHandler.Json(200, "{}"));
+
+        AxiamClient client = Client();
+        SeedLiveSession(client);
+
+        OAuthProtocolError initiate = await Assert.ThrowsAsync<OAuthProtocolError>(() => client.CibaInitiateAsync(Request()));
+        Assert.Equal("invalid_client", initiate.Error);
+        Assert.Single(_handler.To(tenantBc));
+
+        OAuthProtocolError poll = await Assert.ThrowsAsync<OAuthProtocolError>(
+            () => client.CibaPollAsync(new CibaPollParams(Sensitive<string>.Wrap(Secrets.Fresh()))));
+        Assert.Equal("invalid_client", poll.Error);
+        Assert.Single(_handler.To(tenantToken));
+
+        Assert.Empty(_handler.To("/api/v1/auth/refresh"));
+    }
+
+    /// <summary>Seeds a live, resolvable session cookie, the condition under which a non-exempt 401 refreshes.</summary>
+    private static void SeedLiveSession(AxiamClient client)
+    {
+        FieldInfo field = typeof(AxiamClient).GetField("_cookieContainer", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        var container = (CookieContainer)field.GetValue(client)!;
+        static string B64(byte[] b) => Convert.ToBase64String(b).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        string header = B64(Encoding.UTF8.GetBytes("""{"alg":"none"}"""));
+        string body = B64(JsonSerializer.SerializeToUtf8Bytes(new
+        {
+            tenant_id = OidcTestKit.TenantGuid,
+            org_id = Guid.NewGuid().ToString(),
+            exp = DateTimeOffset.UtcNow.AddMinutes(15).ToUnixTimeSeconds(),
+        }));
+        container.Add(OidcTestKit.BaseUrl, new Cookie("axiam_access", $"{header}.{body}.unsigned"));
     }
 
     private static string RepoRoot()

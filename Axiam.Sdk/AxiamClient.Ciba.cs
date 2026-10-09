@@ -153,7 +153,9 @@ public sealed partial class AxiamClient
     /// <c>access_denied</c> and <c>expired_token</c> (terminal and distinct —
     /// <see cref="OAuthProtocolError.IsAccessDenied"/>, <see cref="OAuthProtocolError.IsExpiredToken"/>),
     /// <c>invalid_grant</c>. A transport failure, <c>5xx</c>, <c>408</c> or bodiless <c>429</c> is
-    /// retried per &#167;16 within the call; no other <c>4xx</c> is.
+    /// retried per &#167;16 within the call; no other <c>4xx</c> is. A <c>5xx</c> is a
+    /// <see cref="NetworkError"/> whatever its body, <c>{"error":"server_error"}</c> included
+    /// (&#167;34.2 P8).
     /// </para>
     /// <para>
     /// <b>Store the returned tokens before anything else</b>: a request is redeemed once, and a
@@ -192,6 +194,13 @@ public sealed partial class AxiamClient
             async _ =>
             {
                 using HttpResponseMessage response = await PostOAuth2FormAsync(endpoint, form, tenantId, cancellationToken).ConfigureAwait(false);
+                if ((int)response.StatusCode >= 500)
+                {
+                    // §33.7 rule 5, §34.2 P8: on ciba_poll a 5xx is transient whatever its body —
+                    // AXIAM's own token endpoint answers 500 {"error":"server_error"}.
+                    throw NetworkError.FromResponse(response, "ciba poll failed");
+                }
+
                 if (!response.IsSuccessStatusCode)
                 {
                     // An OAuthProtocolError is an AuthError: never retried. A bodiless status is a

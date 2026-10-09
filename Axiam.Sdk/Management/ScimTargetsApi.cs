@@ -138,8 +138,9 @@ public sealed class ScimTargetsApi
     /// Issues <c>PUT /api/v1/scim-targets/{id}</c>.
     /// </para>
     /// <para>
-    /// A REPLACEMENT, not a patch: every field of the body is written, so read the current
-    /// value first and carry over the parts you mean to keep (&#167;27.4 rule 5).
+    /// A REPLACEMENT, not a patch: what the body does not carry is not preserved (a member left
+    /// unset is omitted from the wire, not sent as null), so read the current value first and
+    /// carry over the parts you mean to keep (&#167;27.4 rule 5).
     /// </para>
     /// <para>
     /// <b>The credential is bound to its URL</b> (&#167;31.3 rule 2): absent <c>credential</c>
