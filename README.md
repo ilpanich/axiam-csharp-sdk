@@ -20,7 +20,7 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to **contract 1.58**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
+This SDK conforms to **contract 1.59**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
 §21, §22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates and the §6.1 rules 6–10
 mTLS device login, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, and the §1.1.1 gRPC
 `validate_token`/`introspect_token` operations, contract 1.51, the §12 OIDC/SSO relying-party
@@ -37,7 +37,8 @@ resource-server helpers, contract 1.48), §28.12, §29, §30, §31, §32 and §3
 signed (the RFC 7592 client configuration operations, contract 1.53; the `directory`, `saml`,
 `ssf` and `scim_targets` management namespaces, contracts 1.54–1.57; the SSF receiver helper,
 contract 1.56; CIBA with the signed request form in PS256, ES256 and EdDSA, and §21.3.1's seventh
-`mtls_endpoint_aliases` member, contract 1.58). Nothing in contract 1.53–1.58 is carved out.
+`mtls_endpoint_aliases` member, contract 1.58), read with contract 1.59's §34.2 clarifications
+(P1–P12) of those sections. Nothing in contract 1.53–1.59 is carved out.
 
 §12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27, §28, §28.12, §29, §30, §31, §32 and §33 are named rather than
 folded into the range because they landed after this SDK already claimed §1–§13: widening the range silently would turn a

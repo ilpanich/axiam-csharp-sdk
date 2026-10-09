@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Contract **1.59** (CONTRACT.md §34, the cross-SDK review of the Phase 23 ports: follow-up F-59-05,
+ilpanich/axiam#580). The statement is unchanged in its sections — §28.12, §29, §30, §31, §32 with
+§32.7, §33 with §33.2 signed — now read with §34.2's clarifications P1–P12. The vendored
+`CONTRACT.md` comes from axiam `fe369eb`; `openapi.json`, `management-registry.json` and `proto/`
+are unchanged.
+
+### Fixed
+
+- **R-16 (§33.4, §33.7 rule 1, §12.3 rule 3; P11):** a `401` on a tenant-path OAuth2 endpoint
+  (`/t/{tenant_id}/oauth2/bc-authorize`, `…/token`, `…/introspect`, `…/revoke`) no longer enters the
+  §9 refresh guard — which re-sent the CIBA initiate after refreshing. The exemption recognises the
+  endpoint in both issuer forms.
+- **R-1 (§32.7 `poll`, step 9; P1):** `SsfReceiver.PollAsync` no longer keeps a `jti` it does not
+  return. P1's **second form**: a key fetch or replay store that fails part-way through a batch
+  leaves that SET and the rest unjudged — not recorded, listed in the new
+  `SsfPollResult.Unjudged` — and the SETs already judged are returned; when nothing had been
+  recorded yet the poll raises the failure, having recorded nothing. §32.8 helper test 8 gains the
+  two-SET batch.
+- **R-21 (§31.2, §7 rule 1; P12.2):** serializing a decoded `ScimTargetResponse` whose `auth` or
+  `scope` is an unknown arm — for a log line — renders the discriminator alone instead of throwing.
+  Sending one is still refused locally, now by the request encoder (`ManagementJson.Wire`).
+- **R-28 (§27.4 rule 5, §29.2):** the generated docs no longer call every replacement body's
+  properties required, `ParseSamlSpMetadata` a sparse body, or a replacement "every field written";
+  the README's SAML read-modify-write comment no longer mentions a secret the type lacks.
+- **§33.8 test 8 (P8):** a `5xx` on `CibaPollAsync` is a `NetworkError` whatever its body, so
+  `500 {"error":"server_error"}` is retried and never ends `CibaAwaitAsync`.
+
+### Documented
+
+- **P4:** `IReplayStore` reports failure by throwing, and a store that throws fails closed (nothing
+  is returned as verified) — P4's first route; the README says `MemoryReplayStore` is bounded in
+  time, unbounded in count.
+- **P2:** the `PollAsync` docs and the README example acknowledge a `replayed` SET rather than
+  reporting it in `SetErrs`.
+- **P10:** unchanged — the deadline is anchored at the instant the initiate response was received
+  (`CibaInitiateResponse.ReceivedAt`), one of the two anchors P10 allows.
+
 Contract **1.58** (CONTRACT.md §28.12, §29, §30, §31, §32 with §32.7, §33 with §33.2 signed, and the
 §21.3.1 amendment). The vendored `CONTRACT.md`, `openapi.json` and `management-registry.json` come
 from axiam `21a9c22e`; `proto/` is unchanged.
