@@ -177,9 +177,10 @@ public sealed class TenantsApi
     }
 
     /// <summary>
-    /// #523 (D-4): the tenant is tombstoned and its sessions and refresh tokens are revoked
-    /// before the <c>204</c>; its data is purged afterwards by the cleanup job's
-    /// <c>tenant_purge</c> sweep, on the cleanup interval.
+    /// #523 (D-4): the tenant is tombstoned and its sessions, refresh tokens, certificates and
+    /// signing CAs are revoked before the <c>204</c> (R1W1-01: the certificates go on their
+    /// issuers' revocation lists and stay there until they expire); its data is purged
+    /// afterwards by the cleanup job's <c>tenant_purge</c> sweep, on the cleanup interval.
     /// </summary>
     /// <remarks>
     /// <para>
