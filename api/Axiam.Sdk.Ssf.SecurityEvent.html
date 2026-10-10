@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class SecurityEvent | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class SecurityEvent | AXIAM .NET SDK ">
+      
+      <meta name="description" content="A verified Security Event Token (&#167;32.7&#39;s result).">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0/apiSpec/new?filename=Axiam_Sdk_Ssf_SecurityEvent.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Ssf.SecurityEvent%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Ssf.SecurityEvent">
+
+
+
+  <h1 id="Axiam_Sdk_Ssf_SecurityEvent" data-uid="Axiam.Sdk.Ssf.SecurityEvent" class="text-break">
+Class SecurityEvent  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfTypes.cs/#L255"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Ssf.html">Ssf</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A verified Security Event Token (§32.7's result).</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record SecurityEvent : IEquatable&lt;SecurityEvent&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">SecurityEvent</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Ssf.SecurityEvent.html">SecurityEvent</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Axiam_Sdk_Ssf_SecurityEvent__ctor_" data-uid="Axiam.Sdk.Ssf.SecurityEvent.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Ssf_SecurityEvent__ctor_System_String_System_Int64_System_String_System_Text_Json_JsonElement_System_String_System_String_System_Text_Json_JsonElement_System_Text_Json_JsonElement_" data-uid="Axiam.Sdk.Ssf.SecurityEvent.#ctor(System.String,System.Int64,System.String,System.Text.Json.JsonElement,System.String,System.String,System.Text.Json.JsonElement,System.Text.Json.JsonElement)">
+  SecurityEvent(string, long, string, JsonElement, string?, string, JsonElement, JsonElement)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfTypes.cs/#L255"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A verified Security Event Token (§32.7's result).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SecurityEvent(string Jti, long Iat, string Iss, JsonElement Aud, string? Txn, string EventType, JsonElement Event, JsonElement SubId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>Jti</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The SET's unique id.</p>
+</dd>
+    <dt><code>Iat</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd><p>When it was issued, seconds since the epoch.</p>
+</dd>
+    <dt><code>Iss</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The issuer, equal to the configured one.</p>
+</dd>
+    <dt><code>Aud</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonelement">JsonElement</a></dt>
+    <dd><p>The audience as sent: one string, or an array containing yours.</p>
+</dd>
+    <dt><code>Txn</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The transaction id shared by every SET one operation produced, if any.</p>
+</dd>
+    <dt><code>EventType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The single <code>events</code> key — an event-type URI, see <a class="xref" href="Axiam.Sdk.Ssf.SsfEventTypes.html">SsfEventTypes</a>.</p>
+</dd>
+    <dt><code>Event</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonelement">JsonElement</a></dt>
+    <dd><p>That event's object, opaque to the helper.</p>
+</dd>
+    <dt><code>SubId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonelement">JsonElement</a></dt>
+    <dd><p>The RFC 9493 subject identifier, opaque to the helper.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Ssf_SecurityEvent_Aud_" data-uid="Axiam.Sdk.Ssf.SecurityEvent.Aud*"></a>
+
+  <h3 id="Axiam_Sdk_Ssf_SecurityEvent_Aud" data-uid="Axiam.Sdk.Ssf.SecurityEvent.Aud">
+  Aud
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfTypes.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The audience as sent: one string, or an array containing yours.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JsonElement Aud { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonelement">JsonElement</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Ssf_SecurityEvent_Event_" data-uid="Axiam.Sdk.Ssf.SecurityEvent.Event*"></a>
+
+  <h3 id="Axiam_Sdk_Ssf_SecurityEvent_Event" data-uid="Axiam.Sdk.Ssf.SecurityEvent.Event">
+  Event
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfTypes.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>That event's object, opaque to the helper.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JsonElement Event { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonelement">JsonElement</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Ssf_SecurityEvent_EventType_" data-uid="Axiam.Sdk.Ssf.SecurityEvent.EventType*"></a>
+
+  <h3 id="Axiam_Sdk_Ssf_SecurityEvent_EventType" data-uid="Axiam.Sdk.Ssf.SecurityEvent.EventType">
+  EventType
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfTypes.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The single <code>events</code> key — an event-type URI, see <a class="xref" href="Axiam.Sdk.Ssf.SsfEventTypes.html">SsfEventTypes</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string EventType { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Ssf_SecurityEvent_Iat_" data-uid="Axiam.Sdk.Ssf.SecurityEvent.Iat*"></a>
+
+  <h3 id="Axiam_Sdk_Ssf_SecurityEvent_Iat" data-uid="Axiam.Sdk.Ssf.SecurityEvent.Iat">
+  Iat
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfTypes.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>When it was issued, seconds since the epoch.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public long Iat { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Ssf_SecurityEvent_Iss_" data-uid="Axiam.Sdk.Ssf.SecurityEvent.Iss*"></a>
+
+  <h3 id="Axiam_Sdk_Ssf_SecurityEvent_Iss" data-uid="Axiam.Sdk.Ssf.SecurityEvent.Iss">
+  Iss
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfTypes.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The issuer, equal to the configured one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Iss { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Ssf_SecurityEvent_Jti_" data-uid="Axiam.Sdk.Ssf.SecurityEvent.Jti*"></a>
+
+  <h3 id="Axiam_Sdk_Ssf_SecurityEvent_Jti" data-uid="Axiam.Sdk.Ssf.SecurityEvent.Jti">
+  Jti
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfTypes.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The SET's unique id.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Jti { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Ssf_SecurityEvent_SubId_" data-uid="Axiam.Sdk.Ssf.SecurityEvent.SubId*"></a>
+
+  <h3 id="Axiam_Sdk_Ssf_SecurityEvent_SubId" data-uid="Axiam.Sdk.Ssf.SecurityEvent.SubId">
+  SubId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfTypes.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The RFC 9493 subject identifier, opaque to the helper.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JsonElement SubId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonelement">JsonElement</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Ssf_SecurityEvent_Txn_" data-uid="Axiam.Sdk.Ssf.SecurityEvent.Txn*"></a>
+
+  <h3 id="Axiam_Sdk_Ssf_SecurityEvent_Txn" data-uid="Axiam.Sdk.Ssf.SecurityEvent.Txn">
+  Txn
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfTypes.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The transaction id shared by every SET one operation produced, if any.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Txn { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

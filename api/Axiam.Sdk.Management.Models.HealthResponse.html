@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class HealthResponse | AXIAM .NET SDK ">
       
-      <meta name="description" content="The HealthResponse schema from the server&#39;s OpenAPI document.">
+      <meta name="description" content="Response body for GET /health. profile and unavailable are additive (G-8, D-59): a client that reads only status is unaffected.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta17/apiSpec/new?filename=Axiam_Sdk_Management_Models_HealthResponse.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.HealthResponse%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0/apiSpec/new?filename=Axiam_Sdk_Management_Models_HealthResponse.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.HealthResponse%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Management_Models_HealthResponse" data-uid="Axiam.Sdk.Management.Models.HealthResponse" class="text-break">
-Class HealthResponse  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/HealthResponse.cs/#L17"><i class="bi bi-code-slash"></i></a>
+Class HealthResponse  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/HealthResponse.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,8 @@ Class HealthResponse  <a class="header-action link-secondary" title="View source
   <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>The HealthResponse schema from the server's OpenAPI document.</p>
+  <div class="markdown summary"><p>Response body for <code>GET /health</code>. <code>profile</code> and <code>unavailable</code> are additive
+(G-8, D-59): a client that reads only <code>status</code> is unaffected.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -156,11 +157,45 @@ Class HealthResponse  <a class="header-action link-secondary" title="View source
 </h2>
 
 
+  <a id="Axiam_Sdk_Management_Models_HealthResponse_Profile_" data-uid="Axiam.Sdk.Management.Models.HealthResponse.Profile*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_HealthResponse_Profile" data-uid="Axiam.Sdk.Management.Models.HealthResponse.Profile">
+  Profile
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/HealthResponse.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The messaging profile this process runs: <code>full</code> (RabbitMQ is used) or
+<code>minimal</code> (<code>AXIAM__AMQP__ENABLED=false</code>, no broker).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;profile&quot;)]
+public required string Profile { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_Models_HealthResponse_Status_" data-uid="Axiam.Sdk.Management.Models.HealthResponse.Status*"></a>
 
   <h3 id="Axiam_Sdk_Management_Models_HealthResponse_Status" data-uid="Axiam.Sdk.Management.Models.HealthResponse.Status">
   Status
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/HealthResponse.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/HealthResponse.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>the server's status field</p>
@@ -179,6 +214,41 @@ public required string Status { get; init; }</code></pre>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_HealthResponse_Unavailable_" data-uid="Axiam.Sdk.Management.Models.HealthResponse.Unavailable*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_HealthResponse_Unavailable" data-uid="Axiam.Sdk.Management.Models.HealthResponse.Unavailable">
+  Unavailable
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/HealthResponse.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Present only in the <code>minimal</code> profile: the capabilities it does not provide —
+<code>reactors</code>, <code>amqp_authz</code>, <code>amqp_audit_ingestion</code> and
+<code>decision_cache_broadcast</code>. Absent in <code>full</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;unavailable&quot;)]
+public IReadOnlyList&lt;string&gt;? Unavailable { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
     <dd></dd>
   </dl>
 

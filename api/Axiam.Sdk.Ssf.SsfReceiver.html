@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class SsfReceiver | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class SsfReceiver | AXIAM .NET SDK ">
+      
+      <meta name="description" content="The Shared Signals Framework receiver helper — CONTRACT.md &#167;32.7: verifies a Security Event Token () and polls a stream&#39;s RFC 8936 endpoint ().">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0/apiSpec/new?filename=Axiam_Sdk_Ssf_SsfReceiver.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Ssf.SsfReceiver%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Ssf.SsfReceiver">
+
+
+
+  <h1 id="Axiam_Sdk_Ssf_SsfReceiver" data-uid="Axiam.Sdk.Ssf.SsfReceiver" class="text-break">
+Class SsfReceiver  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfReceiver.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Ssf.html">Ssf</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>The Shared Signals Framework receiver helper — CONTRACT.md §32.7: verifies a Security
+Event Token (<a class="xref" href="Axiam.Sdk.Ssf.SsfReceiver.html#Axiam_Sdk_Ssf_SsfReceiver_VerifySetAsync_System_String_System_Threading_CancellationToken_">VerifySetAsync(string, CancellationToken)</a>) and polls a stream's RFC 8936 endpoint
+(<a class="xref" href="Axiam.Sdk.Ssf.SsfReceiver.html#Axiam_Sdk_Ssf_SsfReceiver_PollAsync_System_String_Axiam_Sdk_Ssf_SsfPollOptions_System_Threading_CancellationToken_">PollAsync(string, SsfPollOptions?, CancellationToken)</a>).</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class SsfReceiver</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">SsfReceiver</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Ssf_SsfReceiver_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+A relying party's tool, not the §27 <code>ssf</code> management namespace (which registers
+streams). Built over an <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a> for its transport: the JWKS, the SSF
+configuration document and the poll endpoint are fetched under the client's §6 TLS
+policy, on a session-free transport — no cookie, no session bearer, no redirect.
+</p>
+<p>
+<b>Keys come only from the configured JWKS</b> (directly, or from a discovery document whose
+<code>issuer</code> matches): a <code>jwk</code> or <code>x5c</code> header member is never honoured. On an
+unknown <code>kid</code> the JWKS is fetched again once, and forced refetches happen at most once a
+minute. A JWKS that cannot be fetched is a <a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a> — not a verdict on the SET.
+</p>
+<p>
+<b>The key cache expires</b> <a class="xref" href="Axiam.Sdk.Options.AxiamClientOptions.html#Axiam_Sdk_Options_AxiamClientOptions_JwksCacheTtl">JwksCacheTtl</a> after the fetch that
+filled it, and never later than 10 minutes (CONTRACT.md §34.2 P6; a longer setting is
+clamped for this receiver and reported as a <a class="xref" href="Axiam.Sdk.Core.ConfigClampedEvent.html">ConfigClampedEvent</a>). A <b>failed</b>
+fetch — a cold fill, the refresh of an expired cache, or an unknown-<code>kid</code> refetch — counts
+toward the once-a-minute limit: a SET inside the minute after one makes no fetch and is a
+<a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a> (no verdict). A successful fill or refresh does not count, so an
+unknown <code>kid</code> right after one is refetched.
+</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Axiam_Sdk_Ssf_SsfReceiver__ctor_" data-uid="Axiam.Sdk.Ssf.SsfReceiver.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Ssf_SsfReceiver__ctor_Axiam_Sdk_AxiamClient_Axiam_Sdk_Ssf_SsfReceiverOptions_" data-uid="Axiam.Sdk.Ssf.SsfReceiver.#ctor(Axiam.Sdk.AxiamClient,Axiam.Sdk.Ssf.SsfReceiverOptions)">
+  SsfReceiver(AxiamClient, SsfReceiverOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfReceiver.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds a receiver over <code class="paramref">client</code>'s transport.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SsfReceiver(AxiamClient client, SsfReceiverOptions options)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>client</code> <a class="xref" href="Axiam.Sdk.AxiamClient.html">AxiamClient</a></dt>
+    <dd><p>The client whose TLS policy and base URL (the transmitter root) are used.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Axiam.Sdk.Ssf.SsfReceiverOptions.html">SsfReceiverOptions</a></dt>
+    <dd><p>The receiver configuration.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.ValidationError.html">ValidationError</a></dt>
+    <dd><p>The replay window is below seven days, or the issuer or audience is empty — refused at
+configuration, before any I/O.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Ssf_SsfReceiver_PollAsync_" data-uid="Axiam.Sdk.Ssf.SsfReceiver.PollAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Ssf_SsfReceiver_PollAsync_System_String_Axiam_Sdk_Ssf_SsfPollOptions_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Ssf.SsfReceiver.PollAsync(System.String,Axiam.Sdk.Ssf.SsfPollOptions,System.Threading.CancellationToken)">
+  PollAsync(string, SsfPollOptions?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfReceiver.cs/#L327"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Polls the stream's RFC 8936 endpoint, <code>{base URL}/ssf/v1/poll/{stream_id}</code>, with a
+bearer from <a class="xref" href="Axiam.Sdk.Ssf.SsfReceiverOptions.html#Axiam_Sdk_Ssf_SsfReceiverOptions_AccessTokenProvider">AccessTokenProvider</a>, and verifies every SET.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;SsfPollResult&gt; PollAsync(string streamId, SsfPollOptions? options = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>streamId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The stream id (path-escaped).</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Axiam.Sdk.Ssf.SsfPollOptions.html">SsfPollOptions</a></dt>
+    <dd><p>What to send; <code>null</code> sends <code>{}</code>.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the poll.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Ssf.SsfPollResult.html">SsfPollResult</a>&gt;</dt>
+    <dd><p>The verified and the refused SETs, apart.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Ssf_SsfReceiver_PollAsync_System_String_Axiam_Sdk_Ssf_SsfPollOptions_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+<code>Ack</code> and <code>SetErrs</code> are sent exactly as given, and only the members you set.
+<b>Nothing is acknowledged on your behalf</b>: acknowledge, on the next call, the
+<code>jti</code>s you processed, and pass each refused one in <code>SetErrs</code>
+(<a class="xref" href="Axiam.Sdk.Ssf.SetErr.html#Axiam_Sdk_Ssf_SetErr_FromReason_Axiam_Sdk_Ssf_SetFailureReason_">FromReason(SetFailureReason)</a>) — except a <code>replayed</code> one, which this receiver
+accepted earlier: acknowledge that (CONTRACT.md §34.2 P2). A SET you neither acknowledge
+nor refuse is re-offered — and, having been recorded when it verified, then reads as
+<code>replayed</code>.
+</p>
+<p>
+Retried per §16 on a transport failure, <code>5xx</code>, <code>408</code> or <code>429</code>; never on
+another <code>4xx</code> (<code>400</code> is a <a class="xref" href="Axiam.Sdk.Management.ValidationError.html">ValidationError</a>, <code>404</code> a
+<a class="xref" href="Axiam.Sdk.Management.NotFoundError.html">NotFoundError</a>, as on the management surface).
+</p>
+<p>
+<b>A poll never keeps a <code>jti</code> it does not return</b> (§34.2 P1). A failure that is
+no verdict on a SET — a JWKS or discovery fetch that fails, a replay store that throws —
+leaves that SET <b>unjudged</b>, and from then on the batch asks the replay store nothing:
+every later SET that passes steps 1 – 8 is unjudged too, and one that fails them is refused
+as usual. An unjudged SET is in neither <a class="xref" href="Axiam.Sdk.Ssf.SsfPollResult.html#Axiam_Sdk_Ssf_SsfPollResult_Events">Events</a> nor
+<a class="xref" href="Axiam.Sdk.Ssf.SsfPollResult.html#Axiam_Sdk_Ssf_SsfPollResult_Refused">Refused</a>, is not recorded, and is listed in
+<a class="xref" href="Axiam.Sdk.Ssf.SsfPollResult.html#Axiam_Sdk_Ssf_SsfPollResult_Unjudged">Unjudged</a>. Do not acknowledge them; the transmitter offers them
+again. A poll that returns with SETs unjudged emits an <a class="xref" href="Axiam.Sdk.Core.SsfUnjudgedEvent.html">SsfUnjudgedEvent</a>
+(§19.1), so an outage that raised nothing is still visible. When the failure comes
+before any SET of the batch was recorded, the poll raises it instead (nothing is recorded
+either way).
+</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.AuthError.html">AuthError</a></dt>
+    <dd><p>No access-token provider is configured — no request is sent.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_Ssf_SsfReceiver_VerifySetAsync_" data-uid="Axiam.Sdk.Ssf.SsfReceiver.VerifySetAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Ssf_SsfReceiver_VerifySetAsync_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Ssf.SsfReceiver.VerifySetAsync(System.String,System.Threading.CancellationToken)">
+  VerifySetAsync(string, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Ssf/SsfReceiver.cs/#L129"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Verifies one compact SET (CONTRACT.md §32.7), refusing at the first failure with a
+<a class="xref" href="Axiam.Sdk.Ssf.SetVerificationError.html">SetVerificationError</a> naming the step.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;SecurityEvent&gt; VerifySetAsync(string set, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>set</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The compact SET.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels a JWKS fetch.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Ssf.SecurityEvent.html">SecurityEvent</a>&gt;</dt>
+    <dd><p>The verified event.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Ssf_SsfReceiver_VerifySetAsync_System_String_System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The order: 1 three base64url parts, JSON-object header and payload
+[<code>malformed</code>]; 2 <code>typ</code> <code>secevent+jwt</code> or <code>application/secevent+jwt</code>,
+any case [<code>invalid_type</code>]; 3 <code>alg</code> exactly <code>EdDSA</code> [<code>invalid_key</code>];
+4 the <code>kid</code> in the configured JWKS, one refetch on a miss, at most once a minute
+[<code>invalid_key</code>]; 5 the Ed25519 signature [<code>invalid_key</code>]; 6 <code>iss</code> exactly the
+configured issuer [<code>invalid_issuer</code>]; 7 <code>aud</code> equal to, or an array containing,
+the audience [<code>invalid_audience</code>]; 8 no <code>exp</code>, no <code>sub</code>, a non-empty
+<code>jti</code>, a numeric <code>iat</code>, an object <code>sub_id</code>, exactly one <code>events</code> member
+[<code>invalid_request</code>]; 9 a <code>jti</code> not seen within the replay window
+[<code>replayed</code>], recorded only once 1–8 passed.</p>
+<p><b>A SET that verifies has been recorded</b>: verifying it again is
+<code>replayed</code>. Acknowledge a polled SET once you have processed it.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Ssf.SetVerificationError.html">SetVerificationError</a></dt>
+    <dd><p>The SET was refused.</p>
+</dd>
+    <dt><a class="xref" href="Axiam.Sdk.Core.NetworkError.html">NetworkError</a></dt>
+    <dd><p>The JWKS (or discovery document) could not be fetched, or the <a class="xref" href="Axiam.Sdk.Ssf.IReplayStore.html">IReplayStore</a> could
+not answer (§34.2 P3, P4): no verdict, no reason code, and the <code>jti</code> is not recorded.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/index.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/index.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -81,7 +81,12 @@
 OIDC/SSO relying-party helpers (<code>OidcDiscoverAsync</code>, <code>OidcBegin</code>,
 <code>OidcExchangeAsync</code>, <code>OidcRefreshAsync</code>, <code>LoginClientCredentialsAsync</code>,
 <code>IntrospectAsync</code>, <code>RevokeAsync</code>, <code>SsoStartAsync</code>, <code>SsoCompleteAsync</code>), and the
-AMQP consumer with HMAC verification and replay protection.</li>
+AMQP consumer with HMAC verification and replay protection; the RFC 7592 client
+configuration operations (<code>ReadClientRegistrationAsync</code>, <code>UpdateClientRegistrationAsync</code>,
+<code>DeleteClientRegistrationAsync</code>); CIBA (<code>CibaInitiateAsync</code>, <code>CibaPollAsync</code>,
+<code>CibaAwaitAsync</code>, <code>CibaHandlePing</code>); the §27 management API (190 operations across 28
+namespaces, including <code>Directory</code>, <code>Saml</code>, <code>Ssf</code> and <code>ScimTargets</code>); and the SSF receiver
+helper (<code>Axiam.Sdk.Ssf.SsfReceiver</code>).</li>
 <li><strong><code>Axiam.Sdk.AspNetCore</code></strong> — the resource-server middleware for ASP.NET Core:
 verifies the AXIAM JWT locally against a cached JWKS, enforces the cross-tenant
 claim check, applies the CSRF double-submit check to cookie-authenticated

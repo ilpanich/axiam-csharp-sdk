@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta17/apiSpec/new?filename=Axiam_Sdk_Management_Models_CreateFederationConfigRequest.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.CreateFederationConfigRequest%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0/apiSpec/new?filename=Axiam_Sdk_Management_Models_CreateFederationConfigRequest.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.CreateFederationConfigRequest%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest" class="text-break">
-Class CreateFederationConfigRequest  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L18"><i class="bi bi-code-slash"></i></a>
+Class CreateFederationConfigRequest  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -156,11 +156,47 @@ Class CreateFederationConfigRequest  <a class="header-action link-secondary" tit
 </h2>
 
 
+  <a id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AllowSha1Signatures_" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowSha1Signatures*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AllowSha1Signatures" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowSha1Signatures">
+  AllowSha1Signatures
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>SAML only: accept IdP responses signed with SHA-1 (<code>rsa-sha1</code>). Default
+<code>false</code> — since 1.0.0 the SP verifier accepts only SHA-2 signatures. The escape
+hatch for an IdP that cannot sign with SHA-2 yet; refused on a non-SAML config, and
+audited (<code>federation.sha1_signatures_allowed</code>) when set to <code>true</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;allow_sha1_signatures&quot;)]
+public bool? AllowSha1Signatures { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AllowTenantInheritance_" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowTenantInheritance*"></a>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AllowTenantInheritance" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowTenantInheritance">
   AllowTenantInheritance
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Whether tenants of this organization may inherit this provider. Only meaningful on a
@@ -194,7 +230,7 @@ public bool? AllowTenantInheritance { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AllowedAlgorithms" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowedAlgorithms">
   AllowedAlgorithms
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L40"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Accepted JWT signing algorithms (OIDC) or signature algorithms (SAML). Defaults to
@@ -228,7 +264,7 @@ public IReadOnlyList&lt;string&gt;? AllowedAlgorithms { get; init; }</code></pre
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AllowedIssuerTenants" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AllowedIssuerTenants">
   AllowedIssuerTenants
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>External IdP tenant identifiers accepted when the provider publishes a templated issuer
@@ -262,7 +298,7 @@ public IReadOnlyList&lt;string&gt;? AllowedIssuerTenants { get; init; }</code></
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AppleKeyId" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleKeyId">
   AppleKeyId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L55"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Apple Key ID of the <code>.p8</code> signing key (10 characters). With both Apple identifiers
@@ -297,7 +333,7 @@ public string? AppleKeyId { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AppleTeamId" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AppleTeamId">
   AppleTeamId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L61"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Apple Team ID (10 characters).</p>
@@ -330,7 +366,7 @@ public string? AppleTeamId { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AttributeMap" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AttributeMap">
   AttributeMap
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L67"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Maps external IdP attributes to AXIAM user fields.</p>
@@ -363,7 +399,7 @@ public JsonElement? AttributeMap { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_AuthorizationEndpoint" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.AuthorizationEndpoint">
   AuthorizationEndpoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L73"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>OAuth2-variant authorization endpoint. Required for <code>OAuth2</code>.</p>
@@ -396,7 +432,7 @@ public string? AuthorizationEndpoint { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_ButtonIcon" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ButtonIcon">
   ButtonIcon
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sign-in-button icon for a <strong>generic</strong> provider, as a base64 raster data URL
@@ -433,7 +469,7 @@ public string? ButtonIcon { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_ClientId" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ClientId">
   ClientId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L80"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L89"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>OAuth2 client ID registered with the external IdP.</p>
@@ -466,7 +502,7 @@ public required string ClientId { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_ClientSecret" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ClientSecret">
   ClientSecret
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L96"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>OAuth2 client secret registered with the external IdP. -- SECRET: redacted from ToString
@@ -496,11 +532,47 @@ public required Sensitive&lt;string&gt; ClientSecret { get; init; }</code></pre>
 
 
 
+  <a id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_IdpMetadataSigningCertPem_" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.IdpMetadataSigningCertPem*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_IdpMetadataSigningCertPem" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.IdpMetadataSigningCertPem">
+  IdpMetadataSigningCertPem
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>SAML only: the PEM certificate the IdP signs its metadata document with (#530). When
+set, the metadata must carry one SHA-2 signature on its <code>EntityDescriptor</code> root
+that verifies against it, or no sign-in starts. Omitted: the metadata is not
+signature-checked.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;idp_metadata_signing_cert_pem&quot;)]
+public string? IdpMetadataSigningCertPem { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_IdpSigningCertPem_" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.IdpSigningCertPem*"></a>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_IdpSigningCertPem" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.IdpSigningCertPem">
   IdpSigningCertPem
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>PEM-encoded X.509 certificate for verifying SAML assertions or OIDC signatures
@@ -534,7 +606,7 @@ public string? IdpSigningCertPem { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_MetadataUrl" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.MetadataUrl">
   MetadataUrl
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L118"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>OIDC discovery URL or SAML metadata URL.</p>
@@ -567,7 +639,7 @@ public string? MetadataUrl { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_Protocol" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.Protocol">
   Protocol
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L106"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L124"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Federation protocol: &quot;OidcConnect&quot; or &quot;Saml&quot;.</p>
@@ -600,7 +672,7 @@ public required string Protocol { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_Provider" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.Provider">
   Provider
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L130"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Display name for the identity provider (e.g., &quot;Google&quot;, &quot;Okta&quot;).</p>
@@ -633,7 +705,7 @@ public required string Provider { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_ProviderKind" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderKind">
   ProviderKind
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L122"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L140"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Which provider this is: <code>google</code>, <code>github</code>, <code>facebook</code>, <code>apple</code>,
@@ -670,7 +742,7 @@ public string? ProviderKind { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_ProviderSlug" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.ProviderSlug">
   ProviderSlug
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L129"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L147"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Operator-chosen identifier, <strong>required</strong> for the <code>generic_*</code> kinds and refused for
@@ -704,7 +776,7 @@ public string? ProviderSlug { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_RequirePkce" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.RequirePkce">
   RequirePkce
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L153"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Send PKCE on the authorization request. Forced on for <code>OAuth2</code>.</p>
@@ -737,7 +809,7 @@ public bool? RequirePkce { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_Scopes" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.Scopes">
   Scopes
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L159"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Scopes to request. Omitted or empty ⇒ the per-kind default.</p>
@@ -770,7 +842,7 @@ public IReadOnlyList&lt;string&gt;? Scopes { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_TokenEndpoint" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.TokenEndpoint">
   TokenEndpoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L165"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>OAuth2-variant token endpoint. Required for <code>OAuth2</code>.</p>
@@ -803,7 +875,7 @@ public string? TokenEndpoint { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_TokenExchange" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.TokenExchange">
   TokenExchange
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L153"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L171"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>the server's token_exchange field</p>
@@ -836,7 +908,7 @@ public TokenExchangeTrustRequest? TokenExchange { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Management_Models_CreateFederationConfigRequest_UserinfoEndpoint" data-uid="Axiam.Sdk.Management.Models.CreateFederationConfigRequest.UserinfoEndpoint">
   UserinfoEndpoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L159"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/CreateFederationConfigRequest.cs/#L177"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>OAuth2-variant userinfo endpoint. Required for <code>OAuth2</code>.</p>

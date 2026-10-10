@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class SetDirectoryConfig | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class SetDirectoryConfig | AXIAM .NET SDK ">
+      
+      <meta name="description" content="PUT /api/v1/tenants/{tenant_id}/directory — a replacement. Every DirectoryConfig member except id, tenant_id and the two timestamps, plus the write-only bind_secret. An omitted optional member is reset to its default, not kept.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0/apiSpec/new?filename=Axiam_Sdk_Management_Models_SetDirectoryConfig.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.SetDirectoryConfig%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig">
+
+
+
+  <h1 id="Axiam_Sdk_Management_Models_SetDirectoryConfig" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig" class="text-break">
+Class SetDirectoryConfig  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a>.<a class="xref" href="Axiam.Sdk.Management.Models.html">Models</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p><code>PUT /api/v1/tenants/{tenant_id}/directory</code> — a <strong>replacement</strong>. Every
+<code>DirectoryConfig</code> member except <code>id</code>, <code>tenant_id</code> and the two timestamps,
+plus the write-only <code>bind_secret</code>. An omitted optional member is <strong>reset to its
+default</strong>, not kept.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record SetDirectoryConfig : IEquatable&lt;SetDirectoryConfig&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">SetDirectoryConfig</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.SetDirectoryConfig.html">SetDirectoryConfig</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+This body REPLACES rather than patches (§27.4 rule 5): what you do not carry over from
+a prior read is not preserved, it is overwritten. <code>base_dn</code>, <code>bind_dn</code>,
+<code>enabled</code>, <code>kind</code>, <code>start_tls</code>, <code>url</code>, <code>user_filter</code> are required,
+so forgetting one is a compile error; an optional property you leave unset is omitted from
+the wire, and the server then applies its default rather than keeping the stored value,
+except where the operation documents otherwise. Read first, <code>with</code>-expression the parts
+you mean to keep, write back.
+</p>
+</div>
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_BaseDn_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.BaseDn*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_BaseDn" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.BaseDn">
+  BaseDn
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Where users are searched for.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;base_dn&quot;)]
+public required string BaseDn { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_BindDn_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.BindDn*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_BindDn" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.BindDn">
+  BindDn
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The service account the search runs as.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;bind_dn&quot;)]
+public required string BindDn { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_BindSecret_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.BindSecret*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_BindSecret" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.BindSecret">
+  BindSecret
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The service account's password: <strong>write-only</strong>, 1 to 4096 octets. Required when the
+tenant has no configuration yet; on a replacement, absent means <em>keep the stored secret</em>
+— unless the write moves the connection (<code>url</code>, <code>start_tls</code>, <code>bind_dn</code> or
+<code>trust_anchors_pem</code>), which then requires it (<code>400</code>, P23W2-01). -- SECRET:
+redacted from ToString and from every rendering except the one request body it is sent
+in.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;bind_secret&quot;)]
+public Sensitive&lt;string&gt;? BindSecret { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_Enabled_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.Enabled*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_Enabled" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.Enabled">
+  Enabled
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A disabled directory serves no sign-in and is not synced.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;enabled&quot;)]
+public required bool Enabled { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_GroupBaseDn_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.GroupBaseDn*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_GroupBaseDn" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.GroupBaseDn">
+  GroupBaseDn
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Defaults to null.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;group_base_dn&quot;)]
+public string? GroupBaseDn { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_GroupFilter_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.GroupFilter*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_GroupFilter" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.GroupFilter">
+  GroupFilter
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Defaults to null.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;group_filter&quot;)]
+public string? GroupFilter { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_GroupMappings_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.GroupMappings*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_GroupMappings" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.GroupMappings">
+  GroupMappings
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>At most 500; every <code>group_id</code> a group of the tenant. Default empty.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;group_mappings&quot;)]
+public IReadOnlyList&lt;GroupMapping&gt;? GroupMappings { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.GroupMapping.html">GroupMapping</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_GroupMemberAttribute_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.GroupMemberAttribute*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_GroupMemberAttribute" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.GroupMemberAttribute">
+  GroupMemberAttribute
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Defaults by <code>kind</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;group_member_attribute&quot;)]
+public string? GroupMemberAttribute { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_GroupNestingDepth_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.GroupNestingDepth*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_GroupNestingDepth" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.GroupNestingDepth">
+  GroupNestingDepth
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>0..=10</code>, default 5.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;group_nesting_depth&quot;)]
+public int? GroupNestingDepth { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_JitProvisioning_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.JitProvisioning*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_JitProvisioning" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.JitProvisioning">
+  JitProvisioning
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Default false.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;jit_provisioning&quot;)]
+public bool? JitProvisioning { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_Kind_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.Kind*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_Kind" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.Kind">
+  Kind
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Chooses defaults only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;kind&quot;)]
+public required DirectoryKind Kind { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.DirectoryKind.html">DirectoryKind</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_StartTls_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.StartTls*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_StartTls" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.StartTls">
+  StartTls
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Upgrade an <code>ldap://</code> connection with StartTLS before any bind.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;start_tls&quot;)]
+public required bool StartTls { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_SyncIntervalSecs_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.SyncIntervalSecs*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_SyncIntervalSecs" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.SyncIntervalSecs">
+  SyncIntervalSecs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>300..=86400</code>, default 3600.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sync_interval_secs&quot;)]
+public long? SyncIntervalSecs { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_TrustAnchorsPem_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.TrustAnchorsPem*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_TrustAnchorsPem" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.TrustAnchorsPem">
+  TrustAnchorsPem
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L120"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>At most 16 CA certificates in PEM. Default empty (the public roots).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;trust_anchors_pem&quot;)]
+public IReadOnlyList&lt;string&gt;? TrustAnchorsPem { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_Url_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.Url*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_Url" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.Url">
+  Url
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>ldaps://host[:port]</code>, or <code>ldap://host[:port]</code> with <code>start_tls</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;url&quot;)]
+public required string Url { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_UserAttributeMap_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.UserAttributeMap*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_UserAttributeMap" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.UserAttributeMap">
+  UserAttributeMap
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's user_attribute_map field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;user_attribute_map&quot;)]
+public UserAttributeMap? UserAttributeMap { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.UserAttributeMap.html">UserAttributeMap</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SetDirectoryConfig_UserFilter_" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.UserFilter*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SetDirectoryConfig_UserFilter" data-uid="Axiam.Sdk.Management.Models.SetDirectoryConfig.UserFilter">
+  UserFilter
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SetDirectoryConfig.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>One <code>{username}</code> placeholder in value position.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;user_filter&quot;)]
+public required string UserFilter { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

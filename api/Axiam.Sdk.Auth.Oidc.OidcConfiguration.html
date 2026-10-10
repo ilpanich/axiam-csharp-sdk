@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0-beta17/apiSpec/new?filename=Axiam_Sdk_Auth_Oidc_OidcConfiguration.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.Oidc.OidcConfiguration%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0/apiSpec/new?filename=Axiam_Sdk_Auth_Oidc_OidcConfiguration.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.Oidc.OidcConfiguration%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration" class="text-break">
-Class OidcConfiguration  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L95"><i class="bi bi-code-slash"></i></a>
+Class OidcConfiguration  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L111"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -171,6 +171,18 @@ this SDK accepts today. The same reasoning is why
 <a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_MtlsEndpointAliases">MtlsEndpointAliases</a> are nullable next to them.
 </p>
 <p>
+The four CIBA members (contract 1.58, §21.5, §33) are optional: an absent
+<a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelAuthenticationEndpoint">BackchannelAuthenticationEndpoint</a> means the server does not support CIBA, and
+the delivery modes and the user-code flag describe the server, never a client's registration.
+</p>
+<p>
+The four revocation and introspection authentication members (contract 1.60, §21.5) are
+optional too: a server before 1.0.0 sends none of them, although <code>openapi.json</code> marks them
+required. Like <a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_TokenEndpointAuthMethodsSupported">TokenEndpointAuthMethodsSupported</a> they describe the deployment and
+never change the method this SDK authenticates revocation or introspection with
+(§12.1 rules 3 and 4).
+</p>
+<p>
 This record deliberately models a <i>curated subset</i> of the metadata document, not
 all of it. <code>acr_values_supported</code>, <code>claims_parameter_supported</code>,
 <code>request_parameter_supported</code> and <code>dpop_signing_alg_values_supported</code> are
@@ -186,9 +198,9 @@ ignored on parse rather than rejected.
 
   <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration__ctor_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor*"></a>
 
-  <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration__ctor_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_String_System_String_System_String_System_Boolean_System_Boolean_Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String,System.String,System.Boolean,System.Boolean,Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String})">
-  OidcConfiguration(string, string, string, string, string, string, string, IReadOnlyList&lt;string&gt;, IReadOnlyList&lt;string&gt;, IReadOnlyList&lt;string&gt;, IReadOnlyList&lt;string&gt;, IReadOnlyList&lt;string&gt;, IReadOnlyList&lt;string&gt;, IReadOnlyList&lt;string&gt;, string?, string?, string?, bool, bool, MtlsEndpointAliases?, IReadOnlyList&lt;string&gt;?, IReadOnlyList&lt;string&gt;?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L95"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration__ctor_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_String_System_String_System_String_System_Boolean_System_Boolean_Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_String_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Nullable_System_Boolean__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.String,System.String,System.Boolean,System.Boolean,Axiam.Sdk.Auth.Oidc.MtlsEndpointAliases,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Nullable{System.Boolean},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String})">
+  OidcConfiguration(string, string, string, string, string, string, string, IReadOnlyList&lt;string&gt;, IReadOnlyList&lt;string&gt;, IReadOnlyList&lt;string&gt;, IReadOnlyList&lt;string&gt;, IReadOnlyList&lt;string&gt;, IReadOnlyList&lt;string&gt;, IReadOnlyList&lt;string&gt;, string?, string?, string?, bool, bool, MtlsEndpointAliases?, IReadOnlyList&lt;string&gt;?, IReadOnlyList&lt;string&gt;?, string?, IReadOnlyList&lt;string&gt;?, IReadOnlyList&lt;string&gt;?, bool?, IReadOnlyList&lt;string&gt;?, IReadOnlyList&lt;string&gt;?, IReadOnlyList&lt;string&gt;?, IReadOnlyList&lt;string&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L111"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The OIDC Discovery 1.0 metadata document served by
@@ -200,7 +212,7 @@ SDK-shaped result.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public OidcConfiguration(string Issuer, string AuthorizationEndpoint, string TokenEndpoint, string UserinfoEndpoint, string JwksUri, string RevocationEndpoint, string IntrospectionEndpoint, IReadOnlyList&lt;string&gt; ResponseTypesSupported, IReadOnlyList&lt;string&gt; SubjectTypesSupported, IReadOnlyList&lt;string&gt; IdTokenSigningAlgValuesSupported, IReadOnlyList&lt;string&gt; ScopesSupported, IReadOnlyList&lt;string&gt; TokenEndpointAuthMethodsSupported, IReadOnlyList&lt;string&gt; ClaimsSupported, IReadOnlyList&lt;string&gt; GrantTypesSupported, string? DeviceAuthorizationEndpoint = null, string? PushedAuthorizationRequestEndpoint = null, string? EndSessionEndpoint = null, bool BackchannelLogoutSupported = false, bool BackchannelLogoutSessionSupported = false, MtlsEndpointAliases? MtlsEndpointAliases = null, IReadOnlyList&lt;string&gt;? CodeChallengeMethodsSupported = null, IReadOnlyList&lt;string&gt;? TokenEndpointAuthSigningAlgValuesSupported = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public OidcConfiguration(string Issuer, string AuthorizationEndpoint, string TokenEndpoint, string UserinfoEndpoint, string JwksUri, string RevocationEndpoint, string IntrospectionEndpoint, IReadOnlyList&lt;string&gt; ResponseTypesSupported, IReadOnlyList&lt;string&gt; SubjectTypesSupported, IReadOnlyList&lt;string&gt; IdTokenSigningAlgValuesSupported, IReadOnlyList&lt;string&gt; ScopesSupported, IReadOnlyList&lt;string&gt; TokenEndpointAuthMethodsSupported, IReadOnlyList&lt;string&gt; ClaimsSupported, IReadOnlyList&lt;string&gt; GrantTypesSupported, string? DeviceAuthorizationEndpoint = null, string? PushedAuthorizationRequestEndpoint = null, string? EndSessionEndpoint = null, bool BackchannelLogoutSupported = false, bool BackchannelLogoutSessionSupported = false, MtlsEndpointAliases? MtlsEndpointAliases = null, IReadOnlyList&lt;string&gt;? CodeChallengeMethodsSupported = null, IReadOnlyList&lt;string&gt;? TokenEndpointAuthSigningAlgValuesSupported = null, string? BackchannelAuthenticationEndpoint = null, IReadOnlyList&lt;string&gt;? BackchannelTokenDeliveryModesSupported = null, IReadOnlyList&lt;string&gt;? BackchannelAuthenticationRequestSigningAlgValuesSupported = null, bool? BackchannelUserCodeParameterSupported = null, IReadOnlyList&lt;string&gt;? RevocationEndpointAuthMethodsSupported = null, IReadOnlyList&lt;string&gt;? RevocationEndpointAuthSigningAlgValuesSupported = null, IReadOnlyList&lt;string&gt;? IntrospectionEndpointAuthMethodsSupported = null, IReadOnlyList&lt;string&gt;? IntrospectionEndpointAuthSigningAlgValuesSupported = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -249,6 +261,22 @@ SDK-shaped result.</p>
     <dd></dd>
     <dt><code>TokenEndpointAuthSigningAlgValuesSupported</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
     <dd></dd>
+    <dt><code>BackchannelAuthenticationEndpoint</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>BackchannelTokenDeliveryModesSupported</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+    <dt><code>BackchannelAuthenticationRequestSigningAlgValuesSupported</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+    <dt><code>BackchannelUserCodeParameterSupported</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+    <dt><code>RevocationEndpointAuthMethodsSupported</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+    <dt><code>RevocationEndpointAuthSigningAlgValuesSupported</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+    <dt><code>IntrospectionEndpointAuthMethodsSupported</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+    <dt><code>IntrospectionEndpointAuthSigningAlgValuesSupported</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
   </dl>
 
 
@@ -258,7 +286,7 @@ SDK-shaped result.</p>
 
 
 
-  <h4 class="section" id="Axiam_Sdk_Auth_Oidc_OidcConfiguration__ctor_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_String_System_String_System_String_System_Boolean_System_Boolean_Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String___remarks">Remarks</h4>
+  <h4 class="section" id="Axiam_Sdk_Auth_Oidc_OidcConfiguration__ctor_System_String_System_String_System_String_System_String_System_String_System_String_System_String_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_String_System_String_System_String_System_Boolean_System_Boolean_Axiam_Sdk_Auth_Oidc_MtlsEndpointAliases_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_String_System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Nullable_System_Boolean__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_Collections_Generic_IReadOnlyList_System_String___remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p><a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_Issuer">Issuer</a> is the AUTHORITATIVE issuer for ID-token validation (§12.4
 rule 3). It may legitimately differ from the client's base URL when AXIAM runs behind a
 proxy, so this SDK never rejects a document on an issuer/base-URL mismatch (§12.3
@@ -273,6 +301,18 @@ document from a non-AXIAM OP, and modelling either as required would reject docu
 this SDK accepts today. The same reasoning is why
 <a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_DeviceAuthorizationEndpoint">DeviceAuthorizationEndpoint</a>, <a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_EndSessionEndpoint">EndSessionEndpoint</a> and
 <a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_MtlsEndpointAliases">MtlsEndpointAliases</a> are nullable next to them.
+</p>
+<p>
+The four CIBA members (contract 1.58, §21.5, §33) are optional: an absent
+<a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelAuthenticationEndpoint">BackchannelAuthenticationEndpoint</a> means the server does not support CIBA, and
+the delivery modes and the user-code flag describe the server, never a client's registration.
+</p>
+<p>
+The four revocation and introspection authentication members (contract 1.60, §21.5) are
+optional too: a server before 1.0.0 sends none of them, although <code>openapi.json</code> marks them
+required. Like <a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcConfiguration.html#Axiam_Sdk_Auth_Oidc_OidcConfiguration_TokenEndpointAuthMethodsSupported">TokenEndpointAuthMethodsSupported</a> they describe the deployment and
+never change the method this SDK authenticates revocation or introspection with
+(§12.1 rules 3 and 4).
 </p>
 <p>
 This record deliberately models a <i>curated subset</i> of the metadata document, not
@@ -294,7 +334,7 @@ ignored on parse rather than rejected.
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_AuthorizationEndpoint" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.AuthorizationEndpoint">
   AuthorizationEndpoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L113"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -322,11 +362,75 @@ public string AuthorizationEndpoint { get; init; }</code></pre>
 
 
 
+  <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelAuthenticationEndpoint_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.BackchannelAuthenticationEndpoint*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelAuthenticationEndpoint" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.BackchannelAuthenticationEndpoint">
+  BackchannelAuthenticationEndpoint
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L134"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;backchannel_authentication_endpoint&quot;)]
+public string? BackchannelAuthenticationEndpoint { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelAuthenticationRequestSigningAlgValuesSupported_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.BackchannelAuthenticationRequestSigningAlgValuesSupported*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelAuthenticationRequestSigningAlgValuesSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.BackchannelAuthenticationRequestSigningAlgValuesSupported">
+  BackchannelAuthenticationRequestSigningAlgValuesSupported
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L136"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;backchannel_authentication_request_signing_alg_values_supported&quot;)]
+public IReadOnlyList&lt;string&gt;? BackchannelAuthenticationRequestSigningAlgValuesSupported { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelLogoutSessionSupported_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.BackchannelLogoutSessionSupported*"></a>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelLogoutSessionSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.BackchannelLogoutSessionSupported">
   BackchannelLogoutSessionSupported
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L130"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -358,7 +462,7 @@ public bool BackchannelLogoutSessionSupported { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelLogoutSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.BackchannelLogoutSupported">
   BackchannelLogoutSupported
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L113"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L129"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -386,11 +490,75 @@ public bool BackchannelLogoutSupported { get; init; }</code></pre>
 
 
 
+  <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelTokenDeliveryModesSupported_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.BackchannelTokenDeliveryModesSupported*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelTokenDeliveryModesSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.BackchannelTokenDeliveryModesSupported">
+  BackchannelTokenDeliveryModesSupported
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;backchannel_token_delivery_modes_supported&quot;)]
+public IReadOnlyList&lt;string&gt;? BackchannelTokenDeliveryModesSupported { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelUserCodeParameterSupported_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.BackchannelUserCodeParameterSupported*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_BackchannelUserCodeParameterSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.BackchannelUserCodeParameterSupported">
+  BackchannelUserCodeParameterSupported
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L137"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;backchannel_user_code_parameter_supported&quot;)]
+public bool? BackchannelUserCodeParameterSupported { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_ClaimsSupported_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.ClaimsSupported*"></a>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_ClaimsSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.ClaimsSupported">
   ClaimsSupported
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L124"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -422,7 +590,7 @@ public IReadOnlyList&lt;string&gt; ClaimsSupported { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_CodeChallengeMethodsSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.CodeChallengeMethodsSupported">
   CodeChallengeMethodsSupported
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L116"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L132"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -454,7 +622,7 @@ public IReadOnlyList&lt;string&gt;? CodeChallengeMethodsSupported { get; init; }
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_DeviceAuthorizationEndpoint" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.DeviceAuthorizationEndpoint">
   DeviceAuthorizationEndpoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L126"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -486,7 +654,7 @@ public string? DeviceAuthorizationEndpoint { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_EndSessionEndpoint" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.EndSessionEndpoint">
   EndSessionEndpoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L128"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -518,7 +686,7 @@ public string? EndSessionEndpoint { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_GrantTypesSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.GrantTypesSupported">
   GrantTypesSupported
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L109"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L125"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -550,7 +718,7 @@ public IReadOnlyList&lt;string&gt; GrantTypesSupported { get; init; }</code></pr
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_IdTokenSigningAlgValuesSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.IdTokenSigningAlgValuesSupported">
   IdTokenSigningAlgValuesSupported
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L121"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -582,7 +750,7 @@ public IReadOnlyList&lt;string&gt; IdTokenSigningAlgValuesSupported { get; init;
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_IntrospectionEndpoint" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.IntrospectionEndpoint">
   IntrospectionEndpoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L118"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -610,11 +778,75 @@ public string IntrospectionEndpoint { get; init; }</code></pre>
 
 
 
+  <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_IntrospectionEndpointAuthMethodsSupported_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.IntrospectionEndpointAuthMethodsSupported*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_IntrospectionEndpointAuthMethodsSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.IntrospectionEndpointAuthMethodsSupported">
+  IntrospectionEndpointAuthMethodsSupported
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;introspection_endpoint_auth_methods_supported&quot;)]
+public IReadOnlyList&lt;string&gt;? IntrospectionEndpointAuthMethodsSupported { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_IntrospectionEndpointAuthSigningAlgValuesSupported_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.IntrospectionEndpointAuthSigningAlgValuesSupported*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_IntrospectionEndpointAuthSigningAlgValuesSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.IntrospectionEndpointAuthSigningAlgValuesSupported">
+  IntrospectionEndpointAuthSigningAlgValuesSupported
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;introspection_endpoint_auth_signing_alg_values_supported&quot;)]
+public IReadOnlyList&lt;string&gt;? IntrospectionEndpointAuthSigningAlgValuesSupported { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_Issuer_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.Issuer*"></a>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_Issuer" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.Issuer">
   Issuer
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -646,7 +878,7 @@ public string Issuer { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_JwksUri" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.JwksUri">
   JwksUri
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L116"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -678,7 +910,7 @@ public string JwksUri { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_MtlsEndpointAliases" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.MtlsEndpointAliases">
   MtlsEndpointAliases
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L115"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L131"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -710,7 +942,7 @@ public MtlsEndpointAliases? MtlsEndpointAliases { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_PushedAuthorizationRequestEndpoint" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.PushedAuthorizationRequestEndpoint">
   PushedAuthorizationRequestEndpoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L111"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L127"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -742,7 +974,7 @@ public string? PushedAuthorizationRequestEndpoint { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_ResponseTypesSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.ResponseTypesSupported">
   ResponseTypesSupported
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L119"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -774,7 +1006,7 @@ public IReadOnlyList&lt;string&gt; ResponseTypesSupported { get; init; }</code><
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_RevocationEndpoint" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.RevocationEndpoint">
   RevocationEndpoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L117"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -802,11 +1034,75 @@ public string RevocationEndpoint { get; init; }</code></pre>
 
 
 
+  <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_RevocationEndpointAuthMethodsSupported_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.RevocationEndpointAuthMethodsSupported*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_RevocationEndpointAuthMethodsSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.RevocationEndpointAuthMethodsSupported">
+  RevocationEndpointAuthMethodsSupported
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;revocation_endpoint_auth_methods_supported&quot;)]
+public IReadOnlyList&lt;string&gt;? RevocationEndpointAuthMethodsSupported { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_RevocationEndpointAuthSigningAlgValuesSupported_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.RevocationEndpointAuthSigningAlgValuesSupported*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_RevocationEndpointAuthSigningAlgValuesSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.RevocationEndpointAuthSigningAlgValuesSupported">
+  RevocationEndpointAuthSigningAlgValuesSupported
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L139"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;revocation_endpoint_auth_signing_alg_values_supported&quot;)]
+public IReadOnlyList&lt;string&gt;? RevocationEndpointAuthSigningAlgValuesSupported { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_ScopesSupported_" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.ScopesSupported*"></a>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_ScopesSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.ScopesSupported">
   ScopesSupported
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L106"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -838,7 +1134,7 @@ public IReadOnlyList&lt;string&gt; ScopesSupported { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_SubjectTypesSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.SubjectTypesSupported">
   SubjectTypesSupported
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L104"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -870,7 +1166,7 @@ public IReadOnlyList&lt;string&gt; SubjectTypesSupported { get; init; }</code></
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_TokenEndpoint" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.TokenEndpoint">
   TokenEndpoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -902,7 +1198,7 @@ public string TokenEndpoint { get; init; }</code></pre>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_TokenEndpointAuthMethodsSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.TokenEndpointAuthMethodsSupported">
   TokenEndpointAuthMethodsSupported
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L107"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L123"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -934,7 +1230,7 @@ public IReadOnlyList&lt;string&gt; TokenEndpointAuthMethodsSupported { get; init
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_TokenEndpointAuthSigningAlgValuesSupported" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.TokenEndpointAuthSigningAlgValuesSupported">
   TokenEndpointAuthSigningAlgValuesSupported
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L117"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L133"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -966,7 +1262,7 @@ public IReadOnlyList&lt;string&gt;? TokenEndpointAuthSigningAlgValuesSupported {
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcConfiguration_UserinfoEndpoint" data-uid="Axiam.Sdk.Auth.Oidc.OidcConfiguration.UserinfoEndpoint">
   UserinfoEndpoint
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0-beta17/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L115"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>

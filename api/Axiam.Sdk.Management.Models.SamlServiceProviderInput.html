@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class SamlServiceProviderInput | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class SamlServiceProviderInput | AXIAM .NET SDK ">
+      
+      <meta name="description" content="Everything an administrator supplies when registering or replacing a service provider (create and update both take it; update is a full replacement). Every field but entity_id, display_name and acs_urls has a default, so a client written against a later revision of this struct keeps working.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0/apiSpec/new?filename=Axiam_Sdk_Management_Models_SamlServiceProviderInput.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.SamlServiceProviderInput%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput">
+
+
+
+  <h1 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput" class="text-break">
+Class SamlServiceProviderInput  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a>.<a class="xref" href="Axiam.Sdk.Management.Models.html">Models</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Everything an administrator supplies when registering or replacing a service provider
+(<code>create</code> and <code>update</code> both take it; <code>update</code> is a full replacement). Every
+field but <code>entity_id</code>, <code>display_name</code> and <code>acs_urls</code> has a default, so a
+client written against a later revision of this struct keeps working.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record SamlServiceProviderInput : IEquatable&lt;SamlServiceProviderInput&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">SamlServiceProviderInput</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.SamlServiceProviderInput.html">SamlServiceProviderInput</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+This body REPLACES rather than patches (§27.4 rule 5): what you do not carry over from
+a prior read is not preserved, it is overwritten. <code>acs_urls</code>, <code>display_name</code>,
+<code>entity_id</code> are required, so forgetting one is a compile error; an optional property
+you leave unset is omitted from the wire, and the server then applies its default rather
+than keeping the stored value, except where the operation documents otherwise. Read first,
+<code>with</code>-expression the parts you mean to keep, write back.
+</p>
+</div>
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_AcsUrls_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.AcsUrls*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_AcsUrls" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.AcsUrls">
+  AcsUrls
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The ACS allow-list. At least one, at most one default.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;acs_urls&quot;)]
+public required IReadOnlyList&lt;AcsEndpoint&gt; AcsUrls { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.AcsEndpoint.html">AcsEndpoint</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_AllowIdpInitiated_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.AllowIdpInitiated*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_AllowIdpInitiated" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.AllowIdpInitiated">
+  AllowIdpInitiated
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether IdP-initiated SSO is allowed for this SP (D-3). A per-SP opt-in, off by default:
+an unsolicited assertion has no <code>InResponseTo</code> to bind it to a request the SP made.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;allow_idp_initiated&quot;)]
+public bool? AllowIdpInitiated { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_AllowedGroups_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.AllowedGroups*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_AllowedGroups" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.AllowedGroups">
+  AllowedGroups
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Groups whose members may sign in to this SP. <strong>Empty means every active user of the
+tenant may.</strong> Evaluated by the SSO endpoint (T23.2.3).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;allowed_groups&quot;)]
+public IReadOnlyList&lt;Guid&gt;? AllowedGroups { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_AttributeMappings_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.AttributeMappings*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_AttributeMappings" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.AttributeMappings">
+  AttributeMappings
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Attribute mapping table, at most [<code>MAX_ATTRIBUTE_MAPPINGS</code>] entries.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;attribute_mappings&quot;)]
+public IReadOnlyList&lt;AttributeMapping&gt;? AttributeMappings { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.AttributeMapping.html">AttributeMapping</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_DisplayName_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.DisplayName*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_DisplayName" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.DisplayName">
+  DisplayName
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Human-readable name for the console.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;display_name&quot;)]
+public required string DisplayName { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_Enabled_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.Enabled*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_Enabled" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.Enabled">
+  Enabled
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether the SP may sign in at all. A disabled SP stays registered but every SSO request
+for it is refused.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;enabled&quot;)]
+public bool? Enabled { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_EncryptAssertions_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.EncryptAssertions*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_EncryptAssertions" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.EncryptAssertions">
+  EncryptAssertions
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Encrypt assertions to the SP's encryption certificate (D-2). Off by default; requires
+[<code>Self::sp_encryption_cert_pem</code>].</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;encrypt_assertions&quot;)]
+public bool? EncryptAssertions { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_EntityId_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.EntityId*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_EntityId" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.EntityId">
+  EntityId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The SP's <code>entityID</code>, unique per tenant. At most [<code>MAX_ENTITY_ID_BYTES</code>].</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;entity_id&quot;)]
+public required string EntityId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_NameIdFormat_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.NameIdFormat*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_NameIdFormat" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.NameIdFormat">
+  NameIdFormat
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>NameID</code> policy. Default: persistent, pairwise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;name_id_format&quot;)]
+public NameIdFormat? NameIdFormat { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.NameIdFormat.html">NameIdFormat</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_SignResponses_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.SignResponses*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_SignResponses" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.SignResponses">
+  SignResponses
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sign the <code>&lt;samlp:Response&gt;</code> envelope as well as the assertion (which is
+signed always). Default <strong><code>true</code></strong>: it costs nothing and many SPs require it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sign_responses&quot;)]
+public bool? SignResponses { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_SloBinding_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.SloBinding*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_SloBinding" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.SloBinding">
+  SloBinding
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's slo_binding field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;slo_binding&quot;)]
+public SamlBinding? SloBinding { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.SamlBinding.html">SamlBinding</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_SloUrl_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.SloUrl*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_SloUrl" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.SloUrl">
+  SloUrl
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L106"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Single-logout endpoint, if the SP supports it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;slo_url&quot;)]
+public string? SloUrl { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_SpEncryptionCertPem_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.SpEncryptionCertPem*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_SpEncryptionCertPem" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.SpEncryptionCertPem">
+  SpEncryptionCertPem
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L113"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>PEM certificate assertions are encrypted to. Required when <code>encrypt_assertions</code> is
+set.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sp_encryption_cert_pem&quot;)]
+public string? SpEncryptionCertPem { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_SpSigningCertPem_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.SpSigningCertPem*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_SpSigningCertPem" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.SpSigningCertPem">
+  SpSigningCertPem
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>PEM certificate the SP signs its <code>AuthnRequest</code>s with.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;sp_signing_cert_pem&quot;)]
+public string? SpSigningCertPem { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_WantAuthnRequestsSigned_" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.WantAuthnRequestsSigned*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_SamlServiceProviderInput_WantAuthnRequestsSigned" data-uid="Axiam.Sdk.Management.Models.SamlServiceProviderInput.WantAuthnRequestsSigned">
+  WantAuthnRequestsSigned
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/Models/SamlServiceProviderInput.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Refuse an <code>AuthnRequest</code> that is not signed by <code>sp_signing_cert_pem</code>. Requires
+that certificate.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;want_authn_requests_signed&quot;)]
+public bool? WantAuthnRequestsSigned { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

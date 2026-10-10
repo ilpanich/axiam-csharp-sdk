@@ -95,6 +95,14 @@
 Classes
 </h3>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.AcsEndpoint.html">AcsEndpoint</a></dt>
+      <dd><p>One <code>AssertionConsumerService</code> endpoint of a service provider. The list of these is an
+<strong>allow-list</strong>, checked the way OAuth2 redirect URIs are: an <code>AuthnRequest</code> naming an
+ACS URL is honoured only when the URL equals one registered here, byte for byte. No globs,
+no prefix match.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.AddMemberRequest.html">AddMemberRequest</a></dt>
       <dd><p>The AddMemberRequest schema from the server's OpenAPI document.</p>
 </dd>
@@ -123,6 +131,11 @@ the same write-only + omit-preserving contract as [<code>SmtpConfig::password</c
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.AssignRoleToUserRequest.html">AssignRoleToUserRequest</a></dt>
       <dd><p>The AssignRoleToUserRequest schema from the server's OpenAPI document.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.AttributeMapping.html">AttributeMapping</a></dt>
+      <dd><p>One entry of an SP's attribute mapping table.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -294,6 +307,23 @@ only its hash is kept.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.DirectoryConfig.html">DirectoryConfig</a></dt>
+      <dd><p>A tenant's directory configuration, as stored and as read back. Carries no secret: see the
+module documentation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.DirectoryLinkResult.html">DirectoryLinkResult</a></dt>
+      <dd><p>What linking did.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.DirectorySyncStatus.html">DirectorySyncStatus</a></dt>
+      <dd><p>A read-only view of the sync job's state for one tenant. Counts of what a run did are in its
+audit rows, and no account id is here.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.EmailConfig.html">EmailConfig</a></dt>
       <dd><p>Fully resolved email configuration (all fields present).</p>
 </dd>
@@ -375,8 +405,22 @@ users.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.GroupMapping.html">GroupMapping</a></dt>
+      <dd><p>One row of the group-mapping table (G-3, T23.3.4, D-30): a directory group, named by its
+distinguished name, and the AXIAM group a member of it is put into. <strong>The table is the only
+way a directory group reaches an AXIAM group.</strong> There is no match by name, no prefix or
+wildcard, and no AXIAM group is ever created from a directory one: a directory administrator
+who names a group <code>admins</code> gains nothing unless a tenant administrator mapped it here.
+The DN is stored as the administrator typed it and compared after RFC 4514 normalisation
+(<code>axiam_directory::dn</code>), so <code>CN=Staff, OU=Groups</code> and <code>cn=staff,ou=groups</code>
+are the same row. One DN may map to several AXIAM groups; the same (DN, group) pair twice is
+refused as redundant.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.HealthResponse.html">HealthResponse</a></dt>
-      <dd><p>The HealthResponse schema from the server's OpenAPI document.</p>
+      <dd><p>Response body for <code>GET /health</code>. <code>profile</code> and <code>unavailable</code> are additive
+(G-8, D-59): a client that reads only <code>status</code> is unaffected.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -386,6 +430,16 @@ carries no subject, validity window or key algorithm: all three are read out of 
 certificate itself. A caller that could name them separately could name a subject the
 certificate does not have, and AXIAM would enforce the claim while every relying party read
 the certificate.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.IssueSamlIdpCredential.html">IssueSamlIdpCredential</a></dt>
+      <dd><p><code>POST …/saml/idp-credentials</code> body.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.LinkDirectoryAccount.html">LinkDirectoryAccount</a></dt>
+      <dd><p><code>POST /api/v1/tenants/{tenant_id}/directory/links</code> body.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -498,15 +552,18 @@ tenant may be stricter than its organization and never more permissive: *
 [<code>Self::sensitive_scopes_enabled</code>], validated <strong>disable-only</strong> — the mirror image of
 <code>mfa_enforced</code>, because releasing personal data is the less-restrictive direction, so a
 tenant can turn its organization's decision off but never on. *
-[<code>Self::dynamic_registration</code>], on the ladder <code>disabled</code> →
-<code>initial_access_token</code> → <code>anonymous</code>: a tenant may move down it and never up. *
-[<code>Self::dcr_max_clients</code>] and [<code>Self::dcr_unused_client_ttl_days</code>], on the
-ordinary <code>tenant &lt;= org</code> rule — with the wrinkle that <code>0</code> on the second means
-<em>never sweep</em>, which is the longest window of all and is handled by
-[<code>dcr_ttl_strictness</code>]. <strong>Not ordered</strong>, therefore never validated against the baseline
-and never clamped: * [<code>Self::default_locale</code>]. A language is a presentation preference;
-there is no sense in which Italian is stricter than French. *
-[<code>Self::dcr_allowed_scopes</code>], [<code>Self::dcr_allowed_redirect_hosts</code>] and
+[<code>Self::saml_idp_enabled</code>], validated <strong>disable-only</strong> exactly like
+[<code>Self::sensitive_scopes_enabled</code>] (D-20): a tenant may turn its organization's
+<code>true</code> off and never its <code>false</code> on. * [<code>Self::ssf_enabled</code>], validated
+<strong>disable-only</strong> the same way (D-45). * [<code>Self::dynamic_registration</code>], on the ladder
+<code>disabled</code> → <code>initial_access_token</code> → <code>anonymous</code>: a tenant may move down it
+and never up. * [<code>Self::dcr_max_clients</code>] and
+[<code>Self::dcr_unused_client_ttl_days</code>], on the ordinary <code>tenant &lt;= org</code> rule —
+with the wrinkle that <code>0</code> on the second means <em>never sweep</em>, which is the longest
+window of all and is handled by [<code>dcr_ttl_strictness</code>]. <strong>Not ordered</strong>, therefore
+never validated against the baseline and never clamped: * [<code>Self::default_locale</code>]. A
+language is a presentation preference; there is no sense in which Italian is stricter than
+French. * [<code>Self::dcr_allowed_scopes</code>], [<code>Self::dcr_allowed_redirect_hosts</code>] and
 [<code>Self::external_client_allowed_resources</code>]. Each names per-tenant resources — <em>this</em>
 tenant's MCP servers, <em>this</em> tenant's callback hosts — and there is no sense in which one
 such list is stricter than another. A subset rule would force an organization to enumerate
@@ -543,6 +600,11 @@ these takes effect as users next set a password rather than invalidating everybo
       <dd><p>An organization groups multiple tenants under a single administrative entity. Organizations
 represent companies, departments, or business units. CA certificates are registered at the
 organization level, enabling a hierarchical trust model across all tenants.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ParseSamlSpMetadata.html">ParseSamlSpMetadata</a></dt>
+      <dd><p><code>POST …/saml/parse-sp-metadata</code> body: <strong>exactly one</strong> of the two members.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -684,6 +746,109 @@ set_org_config</code>). A non-empty value is a real secret to encrypt+replace.</
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SamlIdpCredential.html">SamlIdpCredential</a></dt>
+      <dd><p>The tenant's IdP signing credential, <strong>public facts only</strong>. There is no key on it and no
+field a key could be put in: the private key is generated by the server, sealed at rest,
+never returned by any route and destroyed on retirement (D-21).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SamlIdpCredentialPromotion.html">SamlIdpCredentialPromotion</a></dt>
+      <dd><p>What promoting the <code>next</code> credential did.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SamlIdpInfo.html">SamlIdpInfo</a></dt>
+      <dd><p>The tenant's SAML IdP, as the administrator needs to see it before and while switching it
+on: what an SP will be given, and whether it answers yet.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SamlServiceProvider.html">SamlServiceProvider</a></dt>
+      <dd><p>A registered service provider, as stored.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SamlServiceProviderInput.html">SamlServiceProviderInput</a></dt>
+      <dd><p>Everything an administrator supplies when registering or replacing a service provider
+(<code>create</code> and <code>update</code> both take it; <code>update</code> is a full replacement). Every
+field but <code>entity_id</code>, <code>display_name</code> and <code>acs_urls</code> has a default, so a
+client written against a later revision of this struct keeps working.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SamlSpMetadataDraft.html">SamlSpMetadataDraft</a></dt>
+      <dd><p>A parse of SP metadata: <strong>a draft, not a registration</strong>. Nothing is stored until the caller
+submits <code>service_provider</code> to <code>create_service_provider</code> or
+<code>update_service_provider</code>, and nothing in it is trusted because it came from a document
+(D-41).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimReconcileAccepted.html">ScimReconcileAccepted</a></dt>
+      <dd><p>The body of a started reconciliation's <code>202</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTargetAuth.html">ScimTargetAuth</a></dt>
+      <dd><p>How AXIAM authenticates to the downstream service provider, without the credential itself.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTargetAuthBearer.html">ScimTargetAuthBearer</a></dt>
+      <dd><p>The 'bearer' arm of ScimTargetAuth.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTargetAuthOauth2ClientCredentials.html">ScimTargetAuthOauth2ClientCredentials</a></dt>
+      <dd><p>The 'oauth2_client_credentials' arm of ScimTargetAuth.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTargetAuthUnknown.html">ScimTargetAuthUnknown</a></dt>
+      <dd><p>A <code>type</code> this SDK does not know. Reachable only by decoding; the members it arrived
+with are not kept, and it is never sent (CONTRACT.md §31.2).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTargetDeliveryState.html">ScimTargetDeliveryState</a></dt>
+      <dd><p>A target's delivery state, as <code>GET</code> projects it. Fixed vocabulary only: the failure
+reason is one of the deliverer's phrases, never a URL, a response body or a value.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTargetInput.html">ScimTargetInput</a></dt>
+      <dd><p><code>create</code> and <code>update</code> (a <strong>replacement</strong>) body.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTargetResponse.html">ScimTargetResponse</a></dt>
+      <dd><p>A registered SCIM target, as the management API returns it. <strong>The credential is never
+returned</strong>, and there is no member that says anything about it.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTargetScope.html">ScimTargetScope</a></dt>
+      <dd><p>Which users a target provisions.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTargetScopeAllUsers.html">ScimTargetScopeAllUsers</a></dt>
+      <dd><p>The 'all_users' arm of ScimTargetScope.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTargetScopeGroups.html">ScimTargetScopeGroups</a></dt>
+      <dd><p>The 'groups' arm of ScimTargetScope.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTargetScopeUnknown.html">ScimTargetScopeUnknown</a></dt>
+      <dd><p>A <code>type</code> this SDK does not know. Reachable only by decoding; the members it arrived
+with are not kept, and it is never sent (CONTRACT.md §31.2).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTokenResponse.html">ScimTokenResponse</a></dt>
       <dd><p>Metadata only. The handle is never in a list response — it exists in plaintext exactly once,
 in [<code>CreateScimTokenResponse</code>].</p>
@@ -712,6 +877,14 @@ in [<code>CreateScimTokenResponse</code>].</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.SessionResponse.html">SessionResponse</a></dt>
       <dd><p>One of a user's sessions, as an administrator sees it.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SetDirectoryConfig.html">SetDirectoryConfig</a></dt>
+      <dd><p><code>PUT /api/v1/tenants/{tenant_id}/directory</code> — a <strong>replacement</strong>. Every
+<code>DirectoryConfig</code> member except <code>id</code>, <code>tenant_id</code> and the two timestamps,
+plus the write-only <code>bind_secret</code>. An omitted optional member is <strong>reset to its
+default</strong>, not kept.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -765,6 +938,17 @@ set_org_config</code>). A non-empty value is a real secret to encrypt+replace.</
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SsfStream.html">SsfStream</a></dt>
+      <dd><p>A registered SSF stream, as the management API returns it. <strong>The push <code>Authorization</code>
+header is never returned</strong>; <code>authorization_header_set</code> says whether one is stored.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SsfStreamInput.html">SsfStreamInput</a></dt>
+      <dd><p><code>create_stream</code> and <code>update_stream</code> (a <strong>replacement</strong>) body.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.SubjectAltName.html">SubjectAltName</a></dt>
       <dd><p>A name to put in a <code>Server</code> certificate's <code>subjectAltName</code>. Stated explicitly in
 the request, never read from a CSR: a CSR asking for a <code>subjectAltName</code> extension is
@@ -811,6 +995,13 @@ reading a provider needs to see exactly what it trusts.</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.TokenPolicy.html">TokenPolicy</a></dt>
       <dd><p>Token lifetime configuration.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.UpdateDirectoryConfig.html">UpdateDirectoryConfig</a></dt>
+      <dd><p><code>PATCH /api/v1/tenants/{tenant_id}/directory</code> — a <strong>sparse</strong> update. Every member
+optional: absent leaves the stored value, and for the two nullable members an explicit
+<code>null</code> clears it.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -884,6 +1075,11 @@ reading a provider needs to see exactly what it trusts.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.UserAttributeMap.html">UserAttributeMap</a></dt>
+      <dd><p>Which directory attribute feeds each AXIAM user field.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.UserResponse.html">UserResponse</a></dt>
       <dd><p>Public-safe user representation (no password_hash, no mfa_secret).</p>
 </dd>
@@ -922,6 +1118,13 @@ Enums
       <dd><p>What attestation conveyance a registration ceremony requests, and whether the policy is
 enforced at all. <code>None</code> is the default and reproduces today's behavior byte-for-byte:
 <code>evaluate</code> allows every registration unconditionally, with no MDS lookup (D8 step 1).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.AttributeSource.html">AttributeSource</a></dt>
+      <dd><p>Where an attribute's value comes from. Every variant has a real source today; a variant with
+none (a telephone number the OIDC <code>phone</code> scope gates behind its own consent, say) is
+deliberately absent rather than mapped to an empty value.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -964,6 +1167,24 @@ gives <code>L1 &lt; L1Plus &lt; L2 &lt; L2Plus &lt; L3 &lt; L3Plus</code>, which
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.CibaDeliveryMode.html">CibaDeliveryMode</a></dt>
+      <dd><p>How a CIBA client learns that a request has been decided (CIBA Core §5). <code>push</code> is
+deliberately absent: AXIAM does not offer it, and the FAPI-CIBA profile forbids it — push
+delivers the tokens themselves to a client endpoint, which makes the notification endpoint a
+token sink.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.CibaRequestSigningAlg.html">CibaRequestSigningAlg</a></dt>
+      <dd><p>The JWS algorithm a CIBA client signs its authentication requests with (CIBA Core §4
+<code>backchannel_authentication_request_signing_alg</code>, §7.1.1). Exactly the three algorithms
+AXIAM verifies on any client-signed JWT (<code>axiam_oauth2::jose::PERMITTED_ALGORITHMS</code>):
+FAPI 2.0 §5.3.1.1's list. A registration naming anything else — <code>RS256</code>, <code>HS256</code>,
+<code>none</code> — is refused rather than stored, so no row can hold an algorithm the verifier
+would not honour (D-61).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.ClientAuthMethod.html">ClientAuthMethod</a></dt>
       <dd><p>How a client proves its identity at the token endpoint (RFC 8705 §2, OIDC Core §9 naming).
 Only the methods AXIAM actually implements are representable. <code>None</code> — the
@@ -987,6 +1208,21 @@ that is <em>nearly</em> FAPI, and a reviewer can answer &quot;is this client fin
 reading one field. The same philosophy as the rate-limit postures: ordinary clients see no
 behaviour change at all, because <a href="Self::Standard"><code>Standard</code></a> is the serde default and
 every row written before schema v38 decodes to it.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.DeprovisionPolicy.html">DeprovisionPolicy</a></dt>
+      <dd><p>What happens downstream to a user who falls out of scope or is no longer active. Erasure
+always deletes, whatever this says.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.DirectoryKind.html">DirectoryKind</a></dt>
+      <dd><p>Which kind of directory server a configuration points at. It drives <strong>defaults only</strong>: the
+external-id attribute, the group-membership strategy and the change attribute the sync job
+reads. Every one of them is still an explicit, editable field of the configuration (or, for
+the strategy and change attribute, derived from this value at the point of use); nothing
+about the kind changes what is <em>allowed</em>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -1018,6 +1254,11 @@ through <code>POST /oauth2-clients</code> by somebody holding <code>oauth2_clien
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.MfaMethodType.html">MfaMethodType</a></dt>
       <dd><p>Type of MFA method.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.NameIdFormat.html">NameIdFormat</a></dt>
+      <dd><p>How the assertion's <code>NameID</code> is formed (per service provider).</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -1061,6 +1302,24 @@ so data written before this existed, and clients that send no <code>effect</code
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SamlBinding.html">SamlBinding</a></dt>
+      <dd><p>A SAML 2.0 protocol binding (SAML Bindings §3). The response binding for Web Browser SSO is
+always [<code>Self::HttpPost</code>], but the enum keeps both because SP metadata carries both,
+and an <code>slo_url</code> may use either.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SamlIdpCredentialStatus.html">SamlIdpCredentialStatus</a></dt>
+      <dd><p>Where a signing credential is in its life. An open set: an SDK decodes a value it does not
+know without failing.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SamlIdpSlot.html">SamlIdpSlot</a></dt>
+      <dd><p>Which slot a credential is issued into.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.ScimTokenStatus.html">ScimTokenStatus</a></dt>
       <dd><p>Why a token is or is not currently usable — for display only. The authentication path never
 surfaces this distinction on the wire.</p>
@@ -1069,6 +1328,33 @@ surfaces this distinction on the wire.</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.SettingsScope.html">SettingsScope</a></dt>
       <dd><p>Whether a settings row belongs to an organization or a tenant.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SsfDeliveryMethod.html">SsfDeliveryMethod</a></dt>
+      <dd><p>How SETs reach the receiver.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SsfEventType.html">SsfEventType</a></dt>
+      <dd><p>The six event types AXIAM transmits (G-5). Stored and sent as their event-type URIs;
+[<code>Self::ALL</code>] is the canonical order every list AXIAM returns is sorted in.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SsfStatusActor.html">SsfStatusActor</a></dt>
+      <dd><p>Who set a stream's current status. A status an administrator set to anything but
+<code>enabled</code> cannot be changed by the receiver (D-51).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SsfStreamStatus.html">SsfStreamStatus</a></dt>
+      <dd><p>A stream's SSF status (SSF 1.0 §8.1.2), with AXIAM's meaning pinned by D-51.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.SsfSubjectFormat.html">SsfSubjectFormat</a></dt>
+      <dd><p>Which RFC 9493 subject identifier names the user in the SETs of a stream (D-46).</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -1091,6 +1377,12 @@ default.</p>
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.UnknownAaguidAction.html">UnknownAaguidAction</a></dt>
       <dd><p>What to do with an AAGUID that has no MDS entry (i.e. FIDO Alliance has no metadata for it —
 not necessarily malicious, MDS coverage is incomplete for some legitimate authenticators).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.UserNameSource.html">UserNameSource</a></dt>
+      <dd><p>Which AXIAM attribute becomes the downstream <code>userName</code>. The mapping is a fixed
+attribute set, not a mapping language (D-57).</p>
 </dd>
     </dl>
     <dl class="jumplist">
