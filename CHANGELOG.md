@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-10
+
 The first stable release. `Axiam.Sdk` 1.0.0 and `Axiam.Sdk.AspNetCore` 1.0.0 are a .NET client for
 AXIAM, built for `net8.0` and `net10.0`, over all three of its transports — REST (`HttpClient`, with
 the §6 strict-TLS policy), gRPC (`Grpc.Net.Client`, stubs generated at build time from the vendored
@@ -110,6 +112,20 @@ Since `v1.0.0-beta17`. Each entry says what to change.
   §21.3.1's vector A, still decode. They describe the deployment and never change how the SDK
   authenticates.
 
+- The four revocation and introspection discovery members, optional; refresh scope pinned (contract 1.60)
+
+- The key cache expires within 10 minutes, a failed fetch counts, ssf_unjudged (contract 1.60)
+
+- Contract 1.60 models, re-vendored from axiam 3ed6547
+
+- CIBA initiation, polling and ping helpers, signed form (CONTRACT §33, §21.3.1)
+
+- SSF stream management tests and the receiver helper (CONTRACT §32, §32.7)
+
+- Directory namespace semantics and generator infrastructure (CONTRACT §30)
+
+- RFC 7592 client configuration operations (CONTRACT §28.12)
+
 ### Changed
 
 - **Every write is sent once, on its own connection (§34.2 P11).** `SocketsHttpHandler` re-sends a
@@ -131,6 +147,34 @@ Since `v1.0.0-beta17`. Each entry says what to change.
   (`AXIAM__AMQP__ENABLED=false`) reads no AMQP queue (§8). The README states conformance at
   contract 1.60 and the semver policy.
 
+- re-vendor at axiam 8df0e11 (the R1W1 tls_client_auth note, the spec digest)
+
+- README at contract 1.60; the 1.0.0 changelog
+
+- Contract 1.60 actor token, minimal-profile note and changelog (15.2 rule 9, 8)
+
+- re-vendor CONTRACT.md at contract 1.60 (axiam 58df4ee)
+
+- Keep the t08 note outside the scripted answers (format)
+
+- Contract 1.59 conformance statement and changelog (F-59-05)
+
+- The generated docs say what the types do (R-28, CS-06)
+
+- re-vendor CONTRACT.md at contract 1.59 (axiam fe369eb)
+
+- Contract 1.58 conformance statement, usage, changelog
+
+- scim_targets namespace required tests (CONTRACT §31)
+
+- Saml namespace required tests (CONTRACT §29)
+
+- re-vendor contract 1.58 artifacts and regenerate §27 surface
+
+- re-vendor openapi.json + management-registry.json after utoipa 6
+
+- Bump the minor-patch group with 3 updates
+
 ### Fixed
 
 - **A `401` on a tenant-path OAuth2 endpoint no longer enters the §9 refresh guard (§34.2 P11,
@@ -140,6 +184,20 @@ Since `v1.0.0-beta17`. Each entry says what to change.
 - **The generated management docs say what the types do (R-28):** a replacement body's optional
   members are no longer called required, `ParseSamlSpMetadata` is no longer called a sparse body,
   and an unset member of a replacement is documented as taking the server's default.
+
+- A custom CA does not waive the hostname check
+
+- A replay store that cannot answer gives no verdict, as the section 2 type (contract 1.60 B1, P4)
+
+- A write the SDK never retries is not re-sent by .NET either (contract 1.60 A6, P11)
+
+- A 5xx on ciba_poll is transient whatever its body (§33.8 t8, P8)
+
+- An unknown union arm renders for a log line and is refused only by the request encoder (R-21, CS-10)
+
+- A poll cut short by a non-verdict failure returns what it recorded and leaves the rest unjudged (R-1, CS-02)
+
+- A 401 on a tenant-path /oauth2 endpoint never enters §9 or re-sends the CIBA initiate (R-16, CS-01)
 
 ### Security
 
