@@ -298,6 +298,8 @@ public sealed class SsfReceiver
                     Content = new StringContent(payload, Encoding.UTF8, "application/json"),
                 };
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.Reveal());
+                // §34.2 P11: poll is the one SSF write §16 retries, so it may share the pool.
+                Rest.ConnectionPolicy.MarkRetryEligible(request);
                 HttpResponseMessage response;
                 try
                 {

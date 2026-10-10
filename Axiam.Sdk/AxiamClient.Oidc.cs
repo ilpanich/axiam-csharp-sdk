@@ -1264,7 +1264,8 @@ public sealed partial class AxiamClient
         string topLevel)
         => PreferredEndpoint(configuration, pick, topLevel) ?? topLevel;
 
-    private async Task<HttpResponseMessage> PostOAuth2FormAsync(string endpointUrl, IDictionary<string, string> form, Guid tenantId, CancellationToken cancellationToken)
+    private async Task<HttpResponseMessage> PostOAuth2FormAsync(
+        string endpointUrl, IDictionary<string, string> form, Guid tenantId, CancellationToken cancellationToken, bool retryEligible = false)
     {
         string url = AppendTenantIdQuery(endpointUrl, tenantId);
         // NOT wrapped in `using` — HttpClient.SendAsync disposes neither the request nor
@@ -1274,6 +1275,13 @@ public sealed partial class AxiamClient
         // here needs deterministic disposal.
         var content = new FormUrlEncodedContent(form);
         var request = new HttpRequestMessage(HttpMethod.Post, url) { Content = content };
+        if (retryEligible)
+        {
+            // §34.2 P11: only a request §16 itself retries (ciba_poll) may share the pool; every
+            // other form POST is a write that must not be re-sent and gets a fresh connection.
+            Rest.ConnectionPolicy.MarkRetryEligible(request);
+        }
+
         try
         {
             return await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);

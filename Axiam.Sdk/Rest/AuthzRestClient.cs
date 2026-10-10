@@ -39,6 +39,23 @@ public sealed class AuthzRestClient
 
     private readonly HttpClient _http;
 
+    // What HttpClient.PostAsJsonAsync serializes with when it is given no options.
+    private static readonly System.Text.Json.JsonSerializerOptions WebJson = new(System.Text.Json.JsonSerializerDefaults.Web);
+
+    /// <summary>
+    /// <c>PostAsJsonAsync</c>, for a request §16 retries: it carries the retry-eligible mark, so it
+    /// shares the connection pool instead of taking the fresh connection every other write takes
+    /// (CONTRACT.md §34.2 P11, <see cref="ConnectionPolicy"/>).
+    /// </summary>
+    private Task<HttpResponseMessage> PostRetryEligibleAsync<T>(string path, T body, CancellationToken cancellationToken)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, path)
+        {
+            Content = JsonContent.Create(body, mediaType: null, WebJson),
+        };
+        return _http.SendAsync(ConnectionPolicy.MarkRetryEligible(request), cancellationToken);
+    }
+
     private readonly AxiamClientOptions _options;
     private readonly TelemetryDispatcher _telemetry;
     private readonly DecisionMemo _memo;
@@ -193,7 +210,7 @@ public sealed class AuthzRestClient
         HttpResponseMessage response;
         try
         {
-            response = await _http.PostAsJsonAsync(CheckPath, wireRequest, cancellationToken).ConfigureAwait(false);
+            response = await PostRetryEligibleAsync(CheckPath, wireRequest, cancellationToken).ConfigureAwait(false);
         }
         catch (HttpRequestException ex)
         {
@@ -280,7 +297,7 @@ public sealed class AuthzRestClient
         HttpResponseMessage response;
         try
         {
-            response = await _http.PostAsJsonAsync(BatchCheckPath, wireRequest, cancellationToken).ConfigureAwait(false);
+            response = await PostRetryEligibleAsync(BatchCheckPath, wireRequest, cancellationToken).ConfigureAwait(false);
         }
         catch (HttpRequestException ex)
         {
