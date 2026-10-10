@@ -28,10 +28,22 @@ namespace Axiam.Sdk.Ssf;
 /// unknown <c>kid</c> the JWKS is fetched again once, and forced refetches happen at most once a
 /// minute. A JWKS that cannot be fetched is a <see cref="NetworkError"/> — not a verdict on the SET.
 /// </para>
+/// <para>
+/// <b>The key cache expires</b> <see cref="Options.AxiamClientOptions.JwksCacheTtl"/> after the fetch that
+/// filled it, and never later than 10 minutes (CONTRACT.md &#167;34.2 P6; a longer setting is
+/// clamped for this receiver and reported as a <see cref="ConfigClampedEvent"/>). A <b>failed</b>
+/// fetch — a cold fill, the refresh of an expired cache, or an unknown-<c>kid</c> refetch — counts
+/// toward the once-a-minute limit: a SET inside the minute after one makes no fetch and is a
+/// <see cref="NetworkError"/> (no verdict). A successful fill or refresh does not count, so an
+/// unknown <c>kid</c> right after one is refetched.
+/// </para>
 /// </remarks>
 public sealed class SsfReceiver
 {
     private static readonly TimeSpan ForcedRefetchInterval = TimeSpan.FromSeconds(60);
+
+    /// <summary>The longest an SSF key cache may live (CONTRACT.md &#167;34.2 P6).</summary>
+    internal static readonly TimeSpan MaxKeyCacheLifetime = TimeSpan.FromMinutes(10);
 
     private readonly AxiamClient _client;
     private readonly SsfReceiverOptions _options;
@@ -40,7 +52,13 @@ public sealed class SsfReceiver
     private readonly SemaphoreSlim _jwksLock = new(1, 1);
     private Dictionary<string, byte[]>? _keys;
     private DateTimeOffset _fetchedAt;
-    private DateTimeOffset? _lastForcedRefetch;
+    private readonly TimeSpan _keyCacheLifetime;
+
+    // Every fetch that counts toward the once-a-minute limit (§34.2 P6): an unknown-kid refetch,
+    // whatever its outcome, and any failed fetch. `_lastFailedFetch` alone gates a cold fill or the
+    // refresh of an expired cache, which a successful fetch does not hold back.
+    private DateTimeOffset? _lastCountedFetch;
+    private DateTimeOffset? _lastFailedFetch;
     private string? _jwksUri;
 
     /// <summary>Builds a receiver over <paramref name="client"/>'s transport.</summary>
@@ -67,6 +85,16 @@ public sealed class SsfReceiver
         ArgumentNullException.ThrowIfNull(options.Keys);
         _time = options.TimeProvider ?? TimeProvider.System;
         _replay = options.ReplayStore ?? new MemoryReplayStore(_time);
+        _keyCacheLifetime = client.Options.JwksCacheTtl;
+        if (_keyCacheLifetime > MaxKeyCacheLifetime)
+        {
+            _keyCacheLifetime = MaxKeyCacheLifetime;
+            client.Telemetry.Emit(new ConfigClampedEvent(
+                "JwksCacheTtl (SsfReceiver key cache)",
+                client.Options.JwksCacheTtl.ToString(),
+                MaxKeyCacheLifetime.ToString(),
+                "§34.2 P6"));
+        }
     }
 
     private static ValidationError Refuse(string field, string why) =>
@@ -99,9 +127,23 @@ public sealed class SsfReceiver
     /// not answer (&#167;34.2 P3, P4): no verdict, no reason code, and the <c>jti</c> is not recorded.
     /// </exception>
     public Task<SecurityEvent> VerifySetAsync(string set, CancellationToken cancellationToken = default)
-        => VerifyAsync(set, expectedJti: null, cancellationToken);
+        => VerifyAsync(set, expectedJti: null, batch: null, cancellationToken);
 
-    private async Task<SecurityEvent> VerifyAsync(string set, string? expectedJti, CancellationToken cancellationToken)
+    /// <summary>What one <see cref="PollAsync"/> batch has learned so far (&#167;34.2 P1).</summary>
+    private sealed class Batch
+    {
+        /// <summary>
+        /// <c>false</c> once a failure that is no verdict happened with a SET already recorded:
+        /// from then on the store is asked nothing, and a SET that passes steps 1 – 8 is unjudged.
+        /// </summary>
+        public bool AskStore { get; set; } = true;
+
+        /// <summary>What first left a SET unjudged: <c>replay_store</c> or <c>key_fetch</c>.</summary>
+        public SsfUnjudgedCause? Cause { get; set; }
+    }
+
+    private async Task<SecurityEvent> VerifyAsync(
+        string set, string? expectedJti, Batch? batch, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(set);
 
@@ -195,17 +237,35 @@ public sealed class SsfReceiver
         }
 
         JsonProperty only = events.EnumerateObject().First();
+        var verified = new SecurityEvent(
+            jti, iat, iss, aud, Str(claims, "txn"), only.Name, only.Value.Clone(), subId.Clone());
+
+        // §34.2 P1 (contract 1.60): after a store failure in a poll batch the store is asked
+        // nothing more; the caller reads a SET returned from here as unjudged, not recorded.
+        if (batch is { AskStore: false })
+        {
+            return verified;
+        }
 
         // 9. A store has three answers (§34.2 P4). `false` is "already seen"; a store that cannot
-        // answer throws, and that is no verdict: the §2 type with no reason code (P3), never
+        // answer throws, and that is no verdict: NetworkError with no reason code (P3), never
         // `replayed` -- P2 would acknowledge a `replayed` SET, losing an event nobody processed.
+        // An SDK error of the §2 types passes through (C-1); this SDK's own refusal type is
+        // wrapped too, so no store failure surfaces carrying a reason code.
         bool firstSighting;
         try
         {
             firstSighting = _replay.CheckAndRecord(jti, _options.ReplayWindow);
         }
-        catch (Exception ex) when (ex is not (OperationCanceledException or NetworkError or SetVerificationError))
+        catch (Exception ex) when (ex is OperationCanceledException or NetworkError ||
+                                   (ex is AuthError or AuthzError && ex is not SetVerificationError))
         {
+            NoteStoreFailure(batch);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            NoteStoreFailure(batch);
             throw NetworkError.FromException(ex, "ssf: the replay store could not answer");
         }
 
@@ -214,8 +274,16 @@ public sealed class SsfReceiver
             throw new SetVerificationError(SetFailureReason.Replayed, "jti already seen");
         }
 
-        return new SecurityEvent(
-            jti, iat, iss, aud, Str(claims, "txn"), only.Name, only.Value.Clone(), subId.Clone());
+        return verified;
+    }
+
+    private static void NoteStoreFailure(Batch? batch)
+    {
+        if (batch is not null)
+        {
+            batch.Cause ??= SsfUnjudgedCause.ReplayStore;
+            batch.AskStore = false;
+        }
     }
 
     /// <summary>
@@ -240,11 +308,15 @@ public sealed class SsfReceiver
     /// <para>
     /// <b>A poll never keeps a <c>jti</c> it does not return</b> (&#167;34.2 P1). A failure that is
     /// no verdict on a SET — a JWKS or discovery fetch that fails, a replay store that throws —
-    /// leaves that SET and every later one in the batch <b>unjudged</b>: in neither
-    /// <see cref="SsfPollResult.Events"/> nor <see cref="SsfPollResult.Refused"/>, not recorded,
-    /// listed in <see cref="SsfPollResult.Unjudged"/>. Do not acknowledge them; the transmitter
-    /// offers them again. When the failure comes before any SET of the batch was recorded, the
-    /// poll raises it instead (nothing is recorded either way).
+    /// leaves that SET <b>unjudged</b>, and from then on the batch asks the replay store nothing:
+    /// every later SET that passes steps 1 – 8 is unjudged too, and one that fails them is refused
+    /// as usual. An unjudged SET is in neither <see cref="SsfPollResult.Events"/> nor
+    /// <see cref="SsfPollResult.Refused"/>, is not recorded, and is listed in
+    /// <see cref="SsfPollResult.Unjudged"/>. Do not acknowledge them; the transmitter offers them
+    /// again. A poll that returns with SETs unjudged emits an <see cref="SsfUnjudgedEvent"/>
+    /// (&#167;19.1), so an outage that raised nothing is still visible. When the failure comes
+    /// before any SET of the batch was recorded, the poll raises it instead (nothing is recorded
+    /// either way).
     /// </para>
     /// </remarks>
     /// <param name="streamId">The stream id (path-escaped).</param>
@@ -357,37 +429,53 @@ public sealed class SsfReceiver
         var verified = new List<SecurityEvent>();
         var refused = new List<RefusedSet>();
         var unjudged = new List<string>();
+        var batch = new Batch();
         if (reply.ValueKind == JsonValueKind.Object && reply.TryGetProperty("sets", out JsonElement sets) &&
             sets.ValueKind == JsonValueKind.Object)
         {
-            List<JsonProperty> entries = sets.EnumerateObject().ToList();
-            for (int i = 0; i < entries.Count; i++)
+            foreach (JsonProperty entry in sets.EnumerateObject())
             {
-                JsonProperty entry = entries[i];
                 if (entry.Value.ValueKind != JsonValueKind.String)
                 {
                     refused.Add(new RefusedSet(entry.Name, SetFailureReason.Malformed));
                     continue;
                 }
 
+                bool recording = batch.AskStore;
                 try
                 {
-                    verified.Add(await VerifyAsync(entry.Value.GetString()!, entry.Name, cancellationToken).ConfigureAwait(false));
+                    SecurityEvent judged = await VerifyAsync(entry.Value.GetString()!, entry.Name, batch, cancellationToken)
+                        .ConfigureAwait(false);
+                    if (recording)
+                    {
+                        verified.Add(judged);
+                    }
+                    else
+                    {
+                        unjudged.Add(entry.Name);
+                    }
                 }
                 catch (SetVerificationError e)
                 {
                     refused.Add(new RefusedSet(entry.Name, e.FailureReason));
                 }
-                catch (Exception) when (verified.Count > 0)
+                catch (Exception ex) when (ex is not OperationCanceledException && verified.Count > 0)
                 {
                     // CONTRACT.md §34.2 P1/P3: a failure that is no verdict (a key fetch, the
-                    // store) leaves this SET and every later one unjudged — not returned, not
-                    // recorded. The SETs already recorded MUST be returned, so the poll returns
-                    // rather than raising; with none recorded yet, the failure propagates.
-                    unjudged.AddRange(entries.Skip(i).Select(e => e.Name));
-                    break;
+                    // store) leaves this SET unjudged — not returned, not recorded — and the
+                    // batch asks the store nothing more. The SETs already recorded MUST be
+                    // returned, so the poll returns rather than raising; with none recorded
+                    // yet, the failure propagates.
+                    batch.Cause ??= SsfUnjudgedCause.KeyFetch;
+                    batch.AskStore = false;
+                    unjudged.Add(entry.Name);
                 }
             }
+        }
+
+        if (unjudged.Count > 0)
+        {
+            _client.Telemetry.Emit(new SsfUnjudgedEvent("ssf.poll", unjudged.Count, batch.Cause ?? SsfUnjudgedCause.KeyFetch));
         }
 
         return new SsfPollResult(verified, more, refused) { Unjudged = unjudged };
@@ -399,9 +487,18 @@ public sealed class SsfReceiver
         try
         {
             DateTimeOffset now = _time.GetUtcNow();
-            if (_keys is null || now - _fetchedAt > _client.Options.JwksCacheTtl)
+            if (_keys is null || now - _fetchedAt > _keyCacheLifetime)
             {
-                await FetchKeysAsync(cancellationToken).ConfigureAwait(false);
+                // A cold fill or the refresh of an expired cache. Within the minute after a failed
+                // fetch it makes no fetch: no verdict (§34.2 P6), so an outage is not a fetch per SET.
+                if (_lastFailedFetch is { } failed && now - failed < ForcedRefetchInterval)
+                {
+                    throw NetworkError.FromMessage(
+                        "SSF JWKS fetch failed less than a minute ago; not fetching again yet");
+                }
+
+                _keys = null;
+                await FetchCountingFailureAsync(now, cancellationToken).ConfigureAwait(false);
             }
 
             if (_keys!.TryGetValue(kid, out byte[]? key))
@@ -411,18 +508,32 @@ public sealed class SsfReceiver
 
             // One forced refetch for an unknown kid, and forced refetches at most once a minute:
             // a stream of SETs naming made-up kids must not become a stream of JWKS fetches.
-            if (_lastForcedRefetch is { } last && now - last < ForcedRefetchInterval)
+            if (_lastCountedFetch is { } last && now - last < ForcedRefetchInterval)
             {
                 return null;
             }
 
-            _lastForcedRefetch = now;
-            await FetchKeysAsync(cancellationToken).ConfigureAwait(false);
+            _lastCountedFetch = now;
+            await FetchCountingFailureAsync(now, cancellationToken).ConfigureAwait(false);
             return _keys!.TryGetValue(kid, out key) ? key : null;
         }
         finally
         {
             _jwksLock.Release();
+        }
+    }
+
+    private async Task FetchCountingFailureAsync(DateTimeOffset now, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await FetchKeysAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            _lastFailedFetch = now;
+            _lastCountedFetch = now;
+            throw;
         }
     }
 

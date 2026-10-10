@@ -461,6 +461,12 @@ public sealed class SsfReceiverTests : IDisposable
         /// <summary>When set, every call after this many successful records throws.</summary>
         public int? FailAfter { get; set; }
 
+        /// <summary>What the store throws when it fails; an <see cref="InvalidOperationException"/> by default.</summary>
+        public Func<Exception>? Failure { get; set; }
+
+        /// <summary>How many times the receiver asked the store.</summary>
+        public int Calls { get; private set; }
+
         public bool Holds(string jti) => _held.Contains(jti);
 
         /// <summary>The store answers again.</summary>
@@ -468,13 +474,201 @@ public sealed class SsfReceiverTests : IDisposable
 
         public bool CheckAndRecord(string jti, TimeSpan window)
         {
+            Calls++;
             if (FailAfter is { } n && _held.Count >= n)
             {
-                throw new InvalidOperationException("replay store unavailable");
+                throw Failure?.Invoke() ?? new InvalidOperationException("replay store unavailable");
             }
 
             return _held.Add(jti);
         }
+    }
+
+    private (AxiamClient Client, List<TelemetryEvent> Events) ObservedClient(TimeSpan? jwksCacheTtl = null)
+    {
+        var events = new List<TelemetryEvent>();
+        var options = new AxiamClientOptions
+        {
+            BaseUrl = Base,
+            TenantId = OidcTestKit.TenantGuid,
+            TelemetryHook = events.Add,
+            JwksCacheTtl = jwksCacheTtl ?? TimeSpan.FromMinutes(5),
+        };
+        return (AxiamClient.CreateForTesting(Base, OidcTestKit.TenantGuid, options, _handler), events);
+    }
+
+    private SsfReceiver ReceiverOver(AxiamClient client, IReplayStore? store = null) => new(client, new SsfReceiverOptions
+    {
+        Issuer = Issuer,
+        Audience = Audience,
+        Keys = SsfKeySource.FromJwksUri($"https://axiam.test{JwksPath}"),
+        AccessTokenProvider = _ => Task.FromResult(Sensitive<string>.Wrap(Secrets.Fresh())),
+        ReplayStore = store,
+        TimeProvider = _clock,
+    });
+
+    /// <summary>
+    /// &#167;34.2 P6 (contract 1.60): the key cache expires no later than 10 minutes after the fetch
+    /// that filled it, whatever <c>JwksCacheTtl</c> says; a longer setting is clamped for the
+    /// receiver and reported once as <c>config_clamped</c>. The next SET after expiry fetches again.
+    /// </summary>
+    [Fact]
+    public async Task TheKeyCacheExpiresWithinTenMinutesWhateverTheSetting()
+    {
+        (AxiamClient client, List<TelemetryEvent> events) = ObservedClient(TimeSpan.FromHours(1));
+        using (client)
+        {
+            SsfReceiver receiver = ReceiverOver(client);
+            ConfigClampedEvent clamped = Assert.Single(events.OfType<ConfigClampedEvent>());
+            Assert.Equal(TimeSpan.FromMinutes(10).ToString(), clamped.Effective);
+            Assert.Equal("§34.2 P6", clamped.ContractReference);
+
+            await receiver.VerifySetAsync(Set(_key, Claims()));
+            Assert.Single(_handler.To(JwksPath));
+
+            _clock.Advance(TimeSpan.FromMinutes(10));
+            await receiver.VerifySetAsync(Set(_key, Claims()));
+            Assert.Single(_handler.To(JwksPath));
+
+            _clock.Advance(TimeSpan.FromSeconds(1));
+            await receiver.VerifySetAsync(Set(_key, Claims()));
+            Assert.Equal(2, _handler.To(JwksPath).Count);
+        }
+
+        // Within the bound the setting is used as given, and nothing is reported.
+        (AxiamClient shortLived, List<TelemetryEvent> quiet) = ObservedClient(TimeSpan.FromMinutes(2));
+        using (shortLived)
+        {
+            SsfReceiver receiver = ReceiverOver(shortLived);
+            Assert.Empty(quiet.OfType<ConfigClampedEvent>());
+            await receiver.VerifySetAsync(Set(_key, Claims()));
+            _clock.Advance(TimeSpan.FromMinutes(2) + TimeSpan.FromSeconds(1));
+            await receiver.VerifySetAsync(Set(_key, Claims()));
+            Assert.Equal(4, _handler.To(JwksPath).Count);
+        }
+    }
+
+    /// <summary>
+    /// &#167;34.2 P6 (contract 1.60), &#167;32.8 helper (7): a failed cold fill counts toward the
+    /// once-a-minute limit — a SET inside the minute makes no fetch and is a <c>NetworkError</c>, no
+    /// verdict; a successful fill does not count, so an unknown kid right after one is refetched;
+    /// and a failed refresh of an expired cache counts like a failed fill.
+    /// </summary>
+    [Fact]
+    public async Task AFailedKeyFetchCountsTowardTheMinuteAndASuccessfulFillDoesNot()
+    {
+        bool up = false;
+        _handler.Map("GET", JwksPath, _ => up ? CapturingHandler.Json(200, Jwks(_key)) : CapturingHandler.Status(503));
+        SsfReceiver receiver = Receiver();
+
+        // A failed cold fill, then a SET inside the minute: no fetch, no verdict.
+        await Assert.ThrowsAsync<NetworkError>(() => receiver.VerifySetAsync(Set(_key, Claims())));
+        Assert.Single(_handler.To(JwksPath));
+        up = true;
+        _clock.Advance(TimeSpan.FromSeconds(59));
+        Exception early = await Assert.ThrowsAnyAsync<Exception>(() => receiver.VerifySetAsync(Set(_key, Claims())));
+        Assert.IsType<NetworkError>(early);
+        Assert.Single(_handler.To(JwksPath));
+
+        // After the minute the fill is attempted again and succeeds; it does not count, so an
+        // unknown kid at once earns its one refetch.
+        _clock.Advance(TimeSpan.FromSeconds(2));
+        await receiver.VerifySetAsync(Set(_key, Claims()));
+        Assert.Equal(2, _handler.To(JwksPath).Count);
+        Assert.Equal(SetFailureReason.InvalidKey, await Refused(receiver, Set(new SigningKey(), Claims())));
+        Assert.Equal(3, _handler.To(JwksPath).Count);
+
+        // The cache expires (5 minutes, the default); its refresh fails, and that counts: the next
+        // SET inside the minute makes no fetch and is no verdict either — the expired keys are not used.
+        _clock.Advance(TimeSpan.FromMinutes(5) + TimeSpan.FromSeconds(1));
+        up = false;
+        await Assert.ThrowsAsync<NetworkError>(() => receiver.VerifySetAsync(Set(_key, Claims())));
+        Assert.Equal(4, _handler.To(JwksPath).Count);
+        up = true;
+        _clock.Advance(TimeSpan.FromSeconds(30));
+        await Assert.ThrowsAsync<NetworkError>(() => receiver.VerifySetAsync(Set(_key, Claims())));
+        Assert.Equal(4, _handler.To(JwksPath).Count);
+        _clock.Advance(TimeSpan.FromSeconds(31));
+        await receiver.VerifySetAsync(Set(_key, Claims()));
+        Assert.Equal(5, _handler.To(JwksPath).Count);
+    }
+
+    /// <summary>
+    /// &#167;34.2 P1 (contract 1.60, C-3, C-4): after the store fails in a poll batch it is asked
+    /// nothing more. That SET and every later one that passes steps 1 – 8 are unjudged, a later one
+    /// that fails them is refused as usual, the SET recorded before the failure is returned, the
+    /// poll raises nothing — and it emits <c>ssf_unjudged</c> with the count and the cause.
+    /// </summary>
+    [Fact]
+    public async Task AfterAStoreFailureThePollAsksTheStoreNothingMoreAndReportsIt()
+    {
+        (AxiamClient client, List<TelemetryEvent> events) = ObservedClient();
+        using (client)
+        {
+            var store = new SpyReplayStore { FailAfter = 1 };
+            SsfReceiver receiver = ReceiverOver(client, store);
+            JsonObject[] claims = { Claims(), Claims(), Claims(c => c["iss"] = "https://evil.example"), Claims() };
+            string[] jtis = claims.Select(c => c["jti"]!.GetValue<string>()).ToArray();
+            var sets = new JsonObject();
+            for (int i = 0; i < claims.Length; i++)
+            {
+                sets[jtis[i]] = Set(_key, claims[i]);
+            }
+
+            string path = $"/ssf/v1/poll/{StreamId}";
+            _handler.Map("POST", path, _ => CapturingHandler.Json(200, new JsonObject { ["sets"] = sets.DeepClone() }.ToJsonString()));
+
+            SsfPollResult result = await receiver.PollAsync(StreamId);
+            Assert.Equal(jtis[0], Assert.Single(result.Events).Jti);
+            Assert.Equal(new[] { jtis[1], jtis[3] }, result.Unjudged);
+            Assert.Equal(new RefusedSet(jtis[2], SetFailureReason.InvalidIssuer), Assert.Single(result.Refused));
+            Assert.Equal(2, store.Calls);
+            Assert.True(store.Holds(jtis[0]));
+            Assert.All(jtis.Skip(1), j => Assert.False(store.Holds(j)));
+
+            SsfUnjudgedEvent unjudged = Assert.Single(events.OfType<SsfUnjudgedEvent>());
+            Assert.Equal(new SsfUnjudgedEvent("ssf.poll", 2, SsfUnjudgedCause.ReplayStore), unjudged);
+            Assert.DoesNotContain(jtis[1], unjudged.ToString(), StringComparison.Ordinal);
+
+            // A batch cut short by a key fetch reports that cause; a batch fully judged reports nothing.
+            store.Recover();
+            JsonObject known = Claims();
+            JsonObject stranger = Claims();
+            var mixed = new JsonObject
+            {
+                [known["jti"]!.GetValue<string>()] = Set(_key, known),
+                [stranger["jti"]!.GetValue<string>()] = Set(new SigningKey(), stranger),
+            };
+            _handler.Map("POST", path, _ => CapturingHandler.Json(200, new JsonObject { ["sets"] = mixed.DeepClone() }.ToJsonString()));
+            _handler.Map("GET", JwksPath, _ => CapturingHandler.Status(500));
+            SsfPollResult cut = await receiver.PollAsync(StreamId);
+            Assert.Single(cut.Events);
+            Assert.Single(cut.Unjudged);
+            Assert.Equal(SsfUnjudgedCause.KeyFetch, events.OfType<SsfUnjudgedEvent>().Last().Cause);
+
+            _handler.Map("POST", path, _ => CapturingHandler.Json(200, """{"sets":{}}"""));
+            await receiver.PollAsync(StreamId);
+            Assert.Equal(2, events.OfType<SsfUnjudgedEvent>().Count());
+        }
+    }
+
+    /// <summary>
+    /// &#167;34.2 P3 (contract 1.60, C-1): an SDK error of the &#167;2 types raised inside the store
+    /// passes through unchanged; anything else — this SDK's own refusal type included — is wrapped
+    /// in <c>NetworkError</c>, so no store failure surfaces carrying a reason code.
+    /// </summary>
+    [Fact]
+    public async Task AStoresOwnSection2ErrorPassesThroughAndARefusalFromItIsWrapped()
+    {
+        var authz = new AuthzError("the store's own authorization failure");
+        var store = new SpyReplayStore { FailAfter = 0, Failure = () => authz };
+        SsfReceiver receiver = ReceiverOver(_client, store);
+        Assert.Same(authz, await Assert.ThrowsAsync<AuthzError>(() => receiver.VerifySetAsync(Set(_key, Claims()))));
+
+        store.Failure = () => new SetVerificationError(SetFailureReason.Replayed, "a store must not decide this");
+        Exception wrapped = await Assert.ThrowsAnyAsync<Exception>(() => receiver.VerifySetAsync(Set(_key, Claims())));
+        Assert.IsType<NetworkError>(wrapped);
+        Assert.NotNull(wrapped.InnerException); // the cause is chained (sanitized, as every NetworkError cause is)
     }
 
     /// <summary>&#167;32.7: poll is not retried on a 400 (retry-enabled client), but is on a 503.</summary>
