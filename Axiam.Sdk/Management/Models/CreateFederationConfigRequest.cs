@@ -18,6 +18,15 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record CreateFederationConfigRequest
 {
     /// <summary>
+    /// SAML only: accept IdP responses signed with SHA-1 (<c>rsa-sha1</c>). Default
+    /// <c>false</c> — since 1.0.0 the SP verifier accepts only SHA-2 signatures. The escape
+    /// hatch for an IdP that cannot sign with SHA-2 yet; refused on a non-SAML config, and
+    /// audited (<c>federation.sha1_signatures_allowed</c>) when set to <c>true</c>.
+    /// </summary>
+    [JsonPropertyName("allow_sha1_signatures")]
+    public bool? AllowSha1Signatures { get; init; }
+
+    /// <summary>
     /// Whether tenants of this organization may inherit this provider. Only meaningful on a
     /// config in the organization-scope tenant.
     /// </summary>
@@ -86,6 +95,15 @@ public sealed record CreateFederationConfigRequest
     /// </summary>
     [JsonPropertyName("client_secret")]
     public required Sensitive<string> ClientSecret { get; init; }
+
+    /// <summary>
+    /// SAML only: the PEM certificate the IdP signs its metadata document with (#530). When
+    /// set, the metadata must carry one SHA-2 signature on its <c>EntityDescriptor</c> root
+    /// that verifies against it, or no sign-in starts. Omitted: the metadata is not
+    /// signature-checked.
+    /// </summary>
+    [JsonPropertyName("idp_metadata_signing_cert_pem")]
+    public string? IdpMetadataSigningCertPem { get; init; }
 
     /// <summary>
     /// PEM-encoded X.509 certificate for verifying SAML assertions or OIDC signatures

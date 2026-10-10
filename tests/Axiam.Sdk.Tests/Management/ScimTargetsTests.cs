@@ -124,6 +124,51 @@ public sealed class ScimTargetsTests : ManagementTestBase
         }
     }
 
+    /// <summary>
+    /// &#167;31.8 (3), contract 1.60 (&#167;31.3 rule 4): <c>expected_updated_at</c>, when set, is sent
+    /// on <c>update</c> exactly as given — the caller's string, nanoseconds and offset untouched —
+    /// and is absent when unset; a <c>409</c> surfaces as <see cref="ConflictError"/> after one
+    /// request. The read-modify-write form sends the <c>updated_at</c> it read, as the server sent it.
+    /// </summary>
+    [Fact]
+    public async Task ExpectedUpdatedAtIsSentExactlyAsGivenAndAbsentWhenUnset()
+    {
+        const string version = "2026-10-05T01:02:03.123456789Z";
+        const string offsetVersion = "2026-10-05T03:02:03.5+02:00";
+        Guid id = Guid.NewGuid();
+        Route put = Mount("PUT", $"{Targets}/{id}", 200, TargetBody().ToJsonString());
+
+        await Client.ScimTargets.UpdateAsync(id, Input(null));
+        Assert.False(put.Last.Json().TryGetProperty("expected_updated_at", out _));
+
+        await Client.ScimTargets.UpdateAsync(id, Input(null) with { ExpectedUpdatedAt = version });
+        Assert.Equal(version, put.Last.Json().GetProperty("expected_updated_at").GetString());
+        await Client.ScimTargets.UpdateAsync(id, Input(null) with { ExpectedUpdatedAt = offsetVersion });
+        Assert.Equal(offsetVersion, put.Last.Json().GetProperty("expected_updated_at").GetString());
+
+        Guid overtaken = Guid.NewGuid();
+        Route conflict = Mount("PUT", $"{Targets}/{overtaken}", 409,
+            """{"error":"conflict","message":"the SCIM target changed since it was read (reload it and retry)"}""");
+        await Assert.ThrowsAsync<ConflictError>(() =>
+            Client.ScimTargets.UpdateAsync(overtaken, Input(null) with { ExpectedUpdatedAt = version }));
+        Assert.Equal(1, conflict.Calls);
+        Assert.Equal(version, conflict.Last.Json().GetProperty("expected_updated_at").GetString());
+
+        // Read, modify, write: the version is the server's own string, which a DateTimeOffset
+        // (100 ns) could not carry.
+        Guid read = Guid.NewGuid();
+        Mount("GET", $"{Targets}/{read}", 200, TargetBody(b => b["updated_at"] = version).ToJsonString());
+        Route write = Mount("PUT", $"{Targets}/{read}", 200, TargetBody().ToJsonString());
+        ScimTargetResponse target = await Client.ScimTargets.GetAsync(read);
+        await Client.ScimTargets.UpdateAsync(read, target.ToInput() with { Name = "Renamed" });
+        Assert.Equal(version, write.Last.Json().GetProperty("expected_updated_at").GetString());
+        Assert.Equal(version, (target with { Name = "copied" }).ToInput().ExpectedUpdatedAt);
+
+        // A target the SDK did not decode itself carries its UpdatedAt in the round-trip format.
+        ScimTargetResponse built = JsonSerializer.Deserialize<ScimTargetResponse>(TargetBody().ToJsonString(), ManagementJson.Reader)!;
+        Assert.Equal("2026-10-05T00:00:00.0000000+00:00", built.ToInput().ExpectedUpdatedAt);
+    }
+
     /// <summary>&#167;31.8 (4): unknown values, a null state and a new failure reason decode; the pager carries search.</summary>
     [Fact]
     public async Task UnknownValuesDecodeAndThePagerCarriesSearch()

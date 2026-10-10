@@ -101,8 +101,18 @@ namespace Axiam.Sdk.Management
 
         /// <summary>
         /// A <see cref="ScimTargetResponse"/> as the body that replaces it with itself;
-        /// <c>credential</c> absent (keeps the stored one).
+        /// <c>credential</c> absent (keeps the stored one), and <c>expected_updated_at</c> the
+        /// <c>updated_at</c> it was read with, so the update is refused <c>409</c> if another
+        /// administrator wrote the target in between (CONTRACT.md &#167;31.3 rule 4).
         /// </summary>
+        /// <remarks>
+        /// The version is the server's own string when the target came from this SDK's
+        /// <c>ScimTargets</c> calls, because the server compares it for equality at nanosecond
+        /// precision and <see cref="DateTimeOffset"/> keeps 100 ns. For a target built any other
+        /// way it is <see cref="ScimTargetResponse.UpdatedAt"/> in the round-trip format. Set
+        /// <see cref="ScimTargetInput.ExpectedUpdatedAt"/> to <c>null</c> with a
+        /// <c>with</c>-expression for a last-writer-wins replacement.
+        /// </remarks>
         /// <param name="target">The target as read.</param>
         /// <returns>The replacement body.</returns>
         public static ScimTargetInput ToInput(this ScimTargetResponse target)
@@ -114,6 +124,8 @@ namespace Axiam.Sdk.Management
                 BaseUrl = target.BaseUrl,
                 Deprovision = target.Deprovision,
                 Enabled = target.Enabled,
+                ExpectedUpdatedAt = target.UpdatedAtAsRead
+                    ?? target.UpdatedAt.ToString("O", System.Globalization.CultureInfo.InvariantCulture),
                 Name = target.Name,
                 PushGroups = target.PushGroups,
                 Scope = target.Scope,
@@ -155,6 +167,39 @@ namespace Axiam.Sdk.Management
 
 namespace Axiam.Sdk.Management.Models
 {
+    /// <summary>
+    /// A read model that keeps a member's wire string next to its parsed value; the decoder
+    /// (<c>ManagementSupport.Decode</c>) hands it the string.
+    /// </summary>
+    internal interface IKeepsWireVersion
+    {
+        /// <summary>The wire member whose string is kept.</summary>
+        string WireMember { get; }
+
+        /// <summary>This value with <paramref name="asRead"/> kept.</summary>
+        /// <param name="asRead">The member's string, exactly as the server sent it.</param>
+        /// <returns>A copy carrying it.</returns>
+        object WithWireVersion(string asRead);
+    }
+
+    /// <content>
+    /// <c>updated_at</c> exactly as the server sent it, for the <c>expected_updated_at</c> of
+    /// the read-modify-write form (CONTRACT.md &#167;31.3 rule 4).
+    /// </content>
+    public sealed partial record ScimTargetResponse : IKeepsWireVersion
+    {
+        /// <summary>
+        /// <c>updated_at</c> as the server sent it, nanoseconds and all; <c>null</c> for a
+        /// target this SDK did not decode itself.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonIgnore]
+        internal string? UpdatedAtAsRead { get; init; }
+
+        string IKeepsWireVersion.WireMember => "updated_at";
+
+        object IKeepsWireVersion.WithWireVersion(string asRead) => this with { UpdatedAtAsRead = asRead };
+    }
+
     /// <content>
     /// The two ways to build a valid <c>saml.parse_sp_metadata</c> body (CONTRACT.md
     /// &#167;29.2: exactly one member).

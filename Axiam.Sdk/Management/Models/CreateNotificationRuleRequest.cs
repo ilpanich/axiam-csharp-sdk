@@ -39,4 +39,12 @@ public sealed record CreateNotificationRuleRequest
     /// </summary>
     [JsonPropertyName("recipient_emails")]
     public required IReadOnlyList<string> RecipientEmails { get; init; }
+
+    /// <summary>
+    /// Minutes in which one event type mails each recipient at most once: the first event of a
+    /// window is mailed, the rest are counted and the next mail says how many were not sent
+    /// (#551). 1 … 1440; 15 when omitted.
+    /// </summary>
+    [JsonPropertyName("window_minutes")]
+    public int? WindowMinutes { get; init; }
 }

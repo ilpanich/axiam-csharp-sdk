@@ -54,4 +54,10 @@ public sealed record UpdateNotificationRuleRequest
     /// </summary>
     [JsonPropertyName("recipient_emails")]
     public IReadOnlyList<string>? RecipientEmails { get; init; }
+
+    /// <summary>
+    /// The rule's notification window in minutes, 1 … 1440 (#551).
+    /// </summary>
+    [JsonPropertyName("window_minutes")]
+    public int? WindowMinutes { get; init; }
 }

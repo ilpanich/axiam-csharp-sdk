@@ -303,6 +303,11 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
             // Marks this clone so a second 401 on the retry itself does NOT trigger yet
             // another refresh attempt — exactly one retry, never a loop (§9.3).
             retryRequest.Options.Set(RetryMarkerKey, true);
+            if (ConnectionPolicy.IsRetryEligible(request))
+            {
+                ConnectionPolicy.MarkRetryEligible(retryRequest);
+            }
+
             ApplyHeaders(retryRequest, refreshed.AccessToken.Reveal());
 
             response = await base.SendAsync(retryRequest, cancellationToken).ConfigureAwait(false);

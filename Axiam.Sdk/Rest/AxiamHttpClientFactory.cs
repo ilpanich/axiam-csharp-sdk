@@ -55,20 +55,7 @@ public static class AxiamHttpClientFactory
     /// <param name="clientKeyPem">Optional PEM private key (PKCS#8/PKCS#1) for mTLS (&#167;6.1). MUST accompany <paramref name="clientCertPem"/>.</param>
     public static HttpClientHandler CreatePrimaryHandler(byte[]? customCaPem, byte[]? clientCertPem = null, byte[]? clientKeyPem = null)
     {
-        var handler = new HttpClientHandler
-        {
-            UseCookies = true,
-            CookieContainer = new CookieContainer(),
-            // SDK-17: never auto-follow redirects. .NET strips `Authorization` on a
-            // cross-origin redirect but NOT the SDK's custom `X-Tenant-Id`/`X-CSRF-Token`
-            // headers (added by AxiamHttpMessageHandler), so a downgrade/cross-origin 3xx
-            // could silently re-send them to an untrusted host. The SDK never relies on
-            // auto-redirect: auth endpoints are POSTs that must not 3xx-redirect, and no
-            // SDK call path expects a transparent redirect — a 3xx surfaces to the caller
-            // instead of being followed blindly.
-            AllowAutoRedirect = false,
-        };
-
+        X509Certificate2? customCa = null;
         if (customCaPem is not null && customCaPem.Length > 0)
         {
             // net8.0 TFM: `new X509Certificate2(byte[])` is NOT obsolete on this target
@@ -78,7 +65,6 @@ public static class AxiamHttpClientFactory
             // 21-RESEARCH.md Open Question 3 / Assumption A2 without a suppression being
             // strictly required. `X509CertificateLoader` (the newer, non-obsolete .NET
             // 9+ API) has no net8.0-compatible surface, so it is not used here.
-            X509Certificate2 customCa;
             try
             {
                 customCa = new X509Certificate2(customCaPem);
@@ -93,30 +79,37 @@ public static class AxiamHttpClientFactory
                     nameof(customCaPem),
                     ex);
             }
+        }
 
-            handler.ServerCertificateCustomValidationCallback = (_, cert, chain, _) => // additive CustomTrustStore chain-trust callback (never `=> true`)
-            {
-                if (cert is null || chain is null)
-                {
-                    return false;
-                }
+        X509Certificate2? clientCert = BuildClientCertificate(clientCertPem, clientKeyPem);
 
-                // Adds ONE trusted CA to the chain — this is NOT a bypass: unknown or
-                // mismatched certificates still fail verification. There is no branch
-                // here (or anywhere else in this SDK) that returns `true`
-                // unconditionally — the exact §6/SC#4-prohibited shape CI's grep gate
-                // (plan 21-07) scans for.
-                chain.ChainPolicy.CustomTrustStore.Add(customCa);
-                chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
-                return chain.Build(cert);
-            };
+        // P11 (contract 1.60): the primary handler is the one that routes every never-retried write onto
+        // a fresh connection that is not reused afterwards (see WriteIsolatingHandler). It IS an
+        // HttpClientHandler, so every caller that reads its CookieContainer is unchanged.
+        var handler = new WriteIsolatingHandler(customCa, clientCert)
+        {
+            UseCookies = true,
+            CookieContainer = new CookieContainer(),
+            // SDK-17: never auto-follow redirects. .NET strips `Authorization` on a
+            // cross-origin redirect but NOT the SDK's custom `X-Tenant-Id`/`X-CSRF-Token`
+            // headers (added by AxiamHttpMessageHandler), so a downgrade/cross-origin 3xx
+            // could silently re-send them to an untrusted host. The SDK never relies on
+            // auto-redirect: auth endpoints are POSTs that must not 3xx-redirect, and no
+            // SDK call path expects a transparent redirect — a 3xx surfaces to the caller
+            // instead of being followed blindly.
+            AllowAutoRedirect = false,
+        };
+
+        if (customCa is not null)
+        {
+            handler.ServerCertificateCustomValidationCallback = (_, cert, chain, sslPolicyErrors) => // additive CustomTrustStore chain-trust callback (never `=> true`)
+                TrustThroughCustomCa(customCa, cert, chain, sslPolicyErrors);
         }
         // No `else` branch sets a validation callback to anything permissive — the
         // default system trust store verification applies untouched (the only
         // callback assignment anywhere in this file is the additive CustomTrustStore
         // path above).
 
-        X509Certificate2? clientCert = BuildClientCertificate(clientCertPem, clientKeyPem);
         if (clientCert is not null)
         {
             // §6.1: present a client identity for mutual TLS. This is a purely additive
@@ -129,6 +122,44 @@ public static class AxiamHttpClientFactory
         }
 
         return handler;
+    }
+
+    /// <summary>
+    /// The additive custom-CA chain trust of CONTRACT.md &#167;6, shared by the primary handler and by the
+    /// write handler of &#167;34.2 P11 so the two cannot drift. It adds ONE trusted CA to the chain
+    /// (<c>CustomTrustStore</c>, <c>CustomRootTrust</c>) &#8212; this is NOT a bypass: an unknown or mismatched
+    /// certificate still fails to build, and there is no branch that returns <c>true</c> unconditionally.
+    /// </summary>
+    /// <param name="customCa">The configured CA.</param>
+    /// <param name="cert">The server's certificate.</param>
+    /// <param name="chain">The chain the TLS stack is validating.</param>
+    /// <param name="sslPolicyErrors">What the TLS stack already found wrong with the presented certificate.</param>
+    /// <returns>
+    /// <c>true</c> only when <paramref name="cert"/> builds to <paramref name="customCa"/> <b>and</b>
+    /// <paramref name="sslPolicyErrors"/> holds nothing but <see cref="SslPolicyErrors.RemoteCertificateChainErrors"/>.
+    /// </returns>
+    /// <remarks>
+    /// A custom CA widens <b>who may sign</b>, not <b>whose name is accepted</b>: only the chain error is
+    /// resolved here. A certificate whose name does not match the host
+    /// (<see cref="SslPolicyErrors.RemoteCertificateNameMismatch"/>) or none at all
+    /// (<see cref="SslPolicyErrors.RemoteCertificateNotAvailable"/>) is refused whatever the chain says.
+    /// </remarks>
+    internal static bool TrustThroughCustomCa(
+        X509Certificate2 customCa, X509Certificate2? cert, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
+    {
+        if (cert is null || chain is null)
+        {
+            return false;
+        }
+
+        if ((sslPolicyErrors & ~SslPolicyErrors.RemoteCertificateChainErrors) != SslPolicyErrors.None)
+        {
+            return false;
+        }
+
+        chain.ChainPolicy.CustomTrustStore.Add(customCa);
+        chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
+        return chain.Build(cert);
     }
 
     /// <summary>

@@ -56,6 +56,13 @@ void Sink(TelemetryEvent telemetryEvent)
             Console.Error.WriteLine(
                 $"WARN: {e.Setting}={e.Requested} was clamped to {e.Effective} ({e.ContractReference})");
             break;
+
+        // §19.1 (contract 1.60) — an SSF poll returned normally but left SETs
+        // unjudged because a key fetch or the replay store failed. The poll raised
+        // nothing, so this is the only place that outage shows.
+        case SsfUnjudgedEvent e:
+            Console.Error.WriteLine($"WARN: {e.Operation} left {e.Count} SET(s) unjudged ({e.Cause})");
+            break;
     }
 }
 
@@ -125,6 +132,7 @@ Console.WriteLine($"  refreshes: {Interlocked.Read(ref refreshes)}");
  *   RefreshEvent       → counter   "axiam.token.refresh"     tags: role
  *   ConfigClampedEvent → a log line at Warning, not a metric: it fires once at
  *                        construction and its whole value is being READ.
+ *   SsfUnjudgedEvent   → counter   "axiam.ssf.unjudged"      tags: cause (value: Count)
  *
  * Tag with PathTemplate, never with the request URL: a metric tag carrying a
  * UUID is a cardinality bomb. The hook runs on the calling thread, so it must

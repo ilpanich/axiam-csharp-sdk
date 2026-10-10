@@ -17,15 +17,20 @@ namespace Axiam.Sdk.Management;
 ///   <item><c>null</c> (the property was never set) — <b>absent</b>: omitted from a request
 ///   body, and what a response that did not carry the member decodes to;</item>
 ///   <item><see cref="Null"/> — an explicit JSON <c>null</c>: sent as <c>null</c> (on
-///   <c>directory.update</c> that <b>clears</b> the stored value), and what a response that
+///   <c>directory.update</c> and <c>federation.update_config</c> that <b>clears</b> the stored
+///   value), and what a response that
 ///   carried <c>null</c> decodes to;</item>
 ///   <item><see cref="Of"/> (or an implicit conversion from <typeparamref name="T"/>) — a
 ///   value.</item>
 /// </list>
 /// <para>
-/// Only four members of the surface use it, by name (the generator's
+/// Only these members of the surface use it, by name (the generator's
 /// <c>EXPLICIT_NULL_FIELDS</c>): <c>UpdateDirectoryConfig.GroupBaseDn</c> and
-/// <c>.GroupFilter</c> (&#167;30.2: an explicit <c>null</c> clears), and
+/// <c>.GroupFilter</c> (&#167;30.2: an explicit <c>null</c> clears); the ten nullable members of
+/// <c>UpdateFederationConfigRequest</c> — <c>MetadataUrl</c>, <c>IdpSigningCertPem</c>,
+/// <c>IdpMetadataSigningCertPem</c>, <c>ProviderSlug</c>, <c>AuthorizationEndpoint</c>,
+/// <c>TokenEndpoint</c>, <c>UserinfoEndpoint</c>, <c>AppleTeamId</c>, <c>AppleKeyId</c> and
+/// <c>ButtonIcon</c> (&#167;27.15 note 8: an explicit <c>null</c> clears); and
 /// <c>SamlIdpInfo.ActiveCredentialId</c> and <c>.NextCredentialId</c> (&#167;29.8 test 8: a
 /// <c>null</c> slot is kept apart from an absent member). Every other nullable member keeps
 /// the surface's ordinary "null means absent" reading.

@@ -117,12 +117,24 @@ public static class SsfEventTypes
 /// Remembers the <c>jti</c>s already accepted, for &#167;32.7 step 9. Pluggable so a receiver
 /// running several instances can share one store.
 /// </summary>
+/// <remarks>
+/// A store has <b>three</b> answers (CONTRACT.md &#167;34.2 P4): first sighting (<c>true</c>), already
+/// seen (<c>false</c>), and <b>cannot answer</b> &#8212; which is an exception, never <c>false</c>. A store
+/// that cannot answer gives no verdict: the receiver treats the SET as unjudged, raises a
+/// <see cref="Core.NetworkError"/> with no reason code from <see cref="SsfReceiver.VerifySetAsync"/>, and
+/// <see cref="SsfReceiver.PollAsync"/> records nothing for it and leaves it out of both <c>Events</c>
+/// and <c>Refused</c>, so you do not acknowledge it and the transmitter offers it again. Answering
+/// <c>false</c> because the backing database is down would instead report the event as
+/// <c>replayed</c> &#8212; which &#167;34.2 P2 has you <i>acknowledge</i> &#8212; and an event that was never
+/// processed would be lost.
+/// </remarks>
 public interface IReplayStore
 {
     /// <summary>
     /// Records <paramref name="jti"/> for <paramref name="window"/> and returns <c>true</c>, or
     /// returns <c>false</c> without recording when it is already held. MUST be atomic: two
-    /// concurrent calls with one <c>jti</c> must not both see <c>true</c>.
+    /// concurrent calls with one <c>jti</c> must not both see <c>true</c>. <b>Throws</b> when the
+    /// store cannot answer; it MUST NOT return <c>false</c> then.
     /// </summary>
     /// <param name="jti">The SET's id.</param>
     /// <param name="window">How long to remember it.</param>

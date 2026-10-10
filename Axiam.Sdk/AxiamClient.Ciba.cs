@@ -193,7 +193,7 @@ public sealed partial class AxiamClient
             Random.Shared.NextDouble,
             async _ =>
             {
-                using HttpResponseMessage response = await PostOAuth2FormAsync(endpoint, form, tenantId, cancellationToken).ConfigureAwait(false);
+                using HttpResponseMessage response = await PostOAuth2FormAsync(endpoint, form, tenantId, cancellationToken, retryEligible: true).ConfigureAwait(false);
                 if ((int)response.StatusCode >= 500)
                 {
                     // §33.7 rule 5, §34.2 P8: on ciba_poll a 5xx is transient whatever its body —

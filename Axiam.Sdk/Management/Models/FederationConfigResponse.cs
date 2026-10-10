@@ -17,6 +17,14 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record FederationConfigResponse
 {
     /// <summary>
+    /// SAML only: whether IdP responses signed with SHA-1 are accepted (default <c>false</c>;
+    /// #531). -- A response that lacks the member (a server before 1.0.0) reads as
+    /// <c>false</c>.
+    /// </summary>
+    [JsonPropertyName("allow_sha1_signatures")]
+    public bool AllowSha1Signatures { get; init; } = false;
+
+    /// <summary>
     /// Whether tenants of this organization may inherit this provider.
     /// </summary>
     [JsonPropertyName("allow_tenant_inheritance")]
@@ -103,6 +111,13 @@ public sealed record FederationConfigResponse
     /// </summary>
     [JsonPropertyName("id")]
     public required Guid Id { get; init; }
+
+    /// <summary>
+    /// SAML only: the certificate the IdP's metadata must be signed with (#530); <c>null</c>
+    /// when the metadata is not signature-checked.
+    /// </summary>
+    [JsonPropertyName("idp_metadata_signing_cert_pem")]
+    public string? IdpMetadataSigningCertPem { get; init; }
 
     /// <summary>
     /// the server's metadata_url field

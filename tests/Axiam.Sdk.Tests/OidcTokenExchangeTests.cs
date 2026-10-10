@@ -371,6 +371,46 @@ public class OidcTokenExchangeTests
         Assert.Equal("urn:ietf:params:oauth:token-type:jwt", captured!["subject_token_type"]);
     }
 
+    /// <summary>
+    /// &#167;15.6 (contract 1.60, &#167;15.2 rule 9): an <c>actor_token</c> the server did not issue to the
+    /// exchanging client is answered <c>400 invalid_request</c> with
+    /// <c>actor_token was not issued to the exchanging client</c>; the SDK surfaces that unchanged, with
+    /// exactly one request and no rewriting &#8212; it neither drops the actor token (which would turn a
+    /// delegation into an impersonation) nor substitutes a token of its own.
+    /// </summary>
+    [Fact]
+    public async Task TokenExchangeAsync_ActorTokenNotIssuedToTheClient_IsSurfacedUnchangedWithOneRequest()
+    {
+        const string Description = "actor_token was not issued to the exchanging client";
+        (RoutingHandler handler, AxiamClient client) = SetUp();
+        int calls = 0;
+        var forms = new List<Dictionary<string, string>>();
+        handler.Map(TokenPath, request =>
+        {
+            calls++;
+            forms.Add(OidcTestKit.ReadForm(request));
+            return OidcTestKit.JsonStatus(
+                HttpStatusCode.BadRequest,
+                OidcTestKit.OAuth2ErrorJson("invalid_request", Description));
+        });
+
+        OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(
+            () => client.TokenExchangeAsync(new TokenExchangeParams(
+                Sensitive<string>.Wrap(SubjectToken),
+                AxiamClient.AccessTokenType,
+                ActorToken: Sensitive<string>.Wrap(ActorToken))));
+
+        // Unchanged: the same code and the server's own description.
+        Assert.Equal("invalid_request", error.Error);
+        Assert.Equal(Description, error.ErrorDescription);
+        // Exactly one request: no retry, no impersonation fallback without the actor token, and no
+        // repair by sending a token of the SDK's own.
+        Assert.Equal(1, calls);
+        Assert.Equal(ActorToken, forms[0]["actor_token"]);
+        Assert.Equal("urn:ietf:params:oauth:token-type:access_token", forms[0]["actor_token_type"]);
+        Assert.Equal(SubjectToken, forms[0]["subject_token"]);
+    }
+
     [Theory]
     [InlineData("urn:ietf:params:oauth:token-type:refresh_token")]
     [InlineData("urn:ietf:params:oauth:token-type:id_token")]

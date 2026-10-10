@@ -66,6 +66,17 @@ public sealed record ScimTargetInput
     public bool? Enabled { get; init; }
 
     /// <summary>
+    /// The <c>updated_at</c> of the target as the client read it (P23W5-09, T-416). **Update
+    /// only; create ignores it.** When present, the replacement lands only if the target still
+    /// has that version, else <c>409</c> (reload and retry): two administrators who opened the
+    /// form at the same version cannot silently overwrite each other. When absent the
+    /// replacement is conditional on the version the server reads during the request —
+    /// last-writer-wins between administrators, as before.
+    /// </summary>
+    [JsonPropertyName("expected_updated_at")]
+    public string? ExpectedUpdatedAt { get; init; }
+
+    /// <summary>
     /// 1–128 bytes.
     /// </summary>
     [JsonPropertyName("name")]

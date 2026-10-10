@@ -134,6 +134,16 @@ public sealed class FederationApi
     /// and left unchanged (&#167;27.4 rule 5).
     /// </para>
     /// <para>
+    /// <b>An explicit null clears</b> (&#167;27.15 note 8): a member left unset (<c>null</c>)
+    /// is not sent and stays as stored; <c>MetadataUrl</c>, <c>IdpSigningCertPem</c>,
+    /// <c>IdpMetadataSigningCertPem</c>, <c>ProviderSlug</c>, <c>AuthorizationEndpoint</c>,
+    /// <c>TokenEndpoint</c>, <c>UserinfoEndpoint</c>, <c>AppleTeamId</c>, <c>AppleKeyId</c> and
+    /// <c>ButtonIcon</c> set to <c>JsonNullable&lt;string&gt;.Null</c> are sent as <c>null</c>
+    /// and clear the stored value. An <c>OAuth2</c> configuration's three endpoints cannot be
+    /// cleared (<c>400</c>), and <c>AppleTeamId</c> / <c>AppleKeyId</c> clear only together.
+    /// The other members cannot be cleared; leave them unset to keep them.
+    /// </para>
+    /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
     /// </para>

@@ -135,3 +135,29 @@ public sealed record ConfigClampedEvent(
     string Requested,
     string Effective,
     string ContractReference) : TelemetryEvent;
+
+/// <summary>What left a polled SET unjudged (CONTRACT.md &#167;19.1, &#167;34.2 P1).</summary>
+public enum SsfUnjudgedCause
+{
+    /// <summary>A JWKS or discovery fetch failed (<c>key_fetch</c>).</summary>
+    KeyFetch,
+
+    /// <summary>The replay store could not answer (<c>replay_store</c>).</summary>
+    ReplayStore,
+}
+
+/// <summary>
+/// Emitted when <c>SsfReceiver.PollAsync</c> returns normally leaving at least one SET unjudged
+/// (CONTRACT.md &#167;19.1 <c>ssf_unjudged</c>, contract 1.60).
+/// </summary>
+/// <remarks>
+/// Such a poll raises nothing — the SETs it did judge must be returned — so without this event
+/// a JWKS or replay-store outage is invisible to the caller. It carries no <c>jti</c> and no SET.
+/// </remarks>
+/// <param name="Operation">Canonical operation name: <c>ssf.poll</c>.</param>
+/// <param name="Count">How many SETs of the batch were left unjudged.</param>
+/// <param name="Cause">The failure that first left a SET unjudged.</param>
+public sealed record SsfUnjudgedEvent(
+    string Operation,
+    int Count,
+    SsfUnjudgedCause Cause) : TelemetryEvent;

@@ -277,6 +277,11 @@ public sealed partial class AxiamClient
     ///   <item><b>No default <c>ActorToken</c></b> (&#167;15.2 rule 1). Passing
     ///     <see langword="null"/> asks for <i>impersonation</i>; the SDK will not quietly reuse the
     ///     client's own session token as the actor and turn that into a delegation.</item>
+    ///   <item><b>The actor is this client</b> (rule 9). A delegation's <c>ActorToken</c> is the same
+    ///     client's own <c>client_credentials</c> token (<see cref="LoginClientCredentialsAsync"/>), which
+    ///     the caller obtains and passes; one issued to another client, a console sign-in or a service
+    ///     account is answered <c>invalid_request</c> (<c>actor_token was not issued to the exchanging
+    ///     client</c>) and raised unchanged, with one request and no rewriting.</item>
     ///   <item><b>No retry or downgrade on <c>unauthorized_client</c></b> (rule 2) — a registration
     ///     fact an operator must fix.</item>
     ///   <item><b>No auto-narrowing on <c>invalid_scope</c></b> (rule 3). The server refuses

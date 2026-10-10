@@ -7,76 +7,148 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Contract **1.59** (CONTRACT.md §34, the cross-SDK review of the Phase 23 ports: follow-up F-59-05,
-ilpanich/axiam#580). The statement is unchanged in its sections — §28.12, §29, §30, §31, §32 with
-§32.7, §33 with §33.2 signed — now read with §34.2's clarifications P1–P12. The vendored
-`CONTRACT.md` comes from axiam `fe369eb`; `openapi.json`, `management-registry.json` and `proto/`
-are unchanged.
+The first stable release. `Axiam.Sdk` 1.0.0 and `Axiam.Sdk.AspNetCore` 1.0.0 are a .NET client for
+AXIAM, built for `net8.0` and `net10.0`, over all three of its transports — REST (`HttpClient`, with
+the §6 strict-TLS policy), gRPC (`Grpc.Net.Client`, stubs generated at build time from the vendored
+`proto/`) and AMQP (signed messages, §8, and the §22 reactor runtime) — plus ASP.NET Core
+middleware, DI and policy authorization. From this release both packages follow Semantic
+Versioning. They conform to **contract 1.60** (`CONTRACT.md`, `openapi.json`,
+`management-registry.json` and `proto/` vendored byte for byte from axiam `8df0e11`): §1–§13 with
+§6.1 mTLS and the §6.1 device login, §1.1 and §1.1.1, §12.7, §14, §15, §17, §19, §20, §21, §22,
+§23 (OPAQUE), §24 (WebAuthn, without the §24.6b ceremony helper a server runtime cannot honestly
+offer), §25, §26, §27 (the Management API: 190 operations across 28 namespaces, with the §27.6
+declarative layer), §28 and §28.12, §29, §30, §31, §32 with the §32.7 SSF receiver, §33 with §33.2
+signed requests (PS256, ES256, EdDSA), and §34 — every row of §34.4 that names C# or every SDK.
+§35 is informative and has no SDK surface.
 
-### Fixed
+### Breaking changes
 
-- **R-16 (§33.4, §33.7 rule 1, §12.3 rule 3; P11):** a `401` on a tenant-path OAuth2 endpoint
-  (`/t/{tenant_id}/oauth2/bc-authorize`, `…/token`, `…/introspect`, `…/revoke`) no longer enters the
-  §9 refresh guard — which re-sent the CIBA initiate after refreshing. The exemption recognises the
-  endpoint in both issuer forms.
-- **R-1 (§32.7 `poll`, step 9; P1):** `SsfReceiver.PollAsync` no longer keeps a `jti` it does not
-  return. P1's **second form**: a key fetch or replay store that fails part-way through a batch
-  leaves that SET and the rest unjudged — not recorded, listed in the new
-  `SsfPollResult.Unjudged` — and the SETs already judged are returned; when nothing had been
-  recorded yet the poll raises the failure, having recorded nothing. §32.8 helper test 8 gains the
-  two-SET batch.
-- **R-21 (§31.2, §7 rule 1; P12.2):** serializing a decoded `ScimTargetResponse` whose `auth` or
-  `scope` is an unknown arm — for a log line — renders the discriminator alone instead of throwing.
-  Sending one is still refused locally, now by the request encoder (`ManagementJson.Wire`).
-- **R-28 (§27.4 rule 5, §29.2):** the generated docs no longer call every replacement body's
-  properties required, `ParseSamlSpMetadata` a sparse body, or a replacement "every field written";
-  the README's SAML read-modify-write comment no longer mentions a secret the type lacks.
-- **§33.8 test 8 (P8):** a `5xx` on `CibaPollAsync` is a `NetworkError` whatever its body, so
-  `500 {"error":"server_error"}` is retried and never ends `CibaAwaitAsync`.
+Since `v1.0.0-beta17`. Each entry says what to change.
 
-### Documented
-
-- **P4:** `IReplayStore` reports failure by throwing, and a store that throws fails closed (nothing
-  is returned as verified) — P4's first route; the README says `MemoryReplayStore` is bounded in
-  time, unbounded in count.
-- **P2:** the `PollAsync` docs and the README example acknowledge a `replayed` SET rather than
-  reporting it in `SetErrs`.
-- **P10:** unchanged — the deadline is anchored at the instant the initiate response was received
-  (`CibaInitiateResponse.ReceivedAt`), one of the two anchors P10 allows.
-
-Contract **1.58** (CONTRACT.md §28.12, §29, §30, §31, §32 with §32.7, §33 with §33.2 signed, and the
-§21.3.1 amendment). The vendored `CONTRACT.md`, `openapi.json` and `management-registry.json` come
-from axiam `21a9c22e`; `proto/` is unchanged.
+- **A custom CA no longer waives the hostname check (§6, contract 1.60).** The additive custom-CA
+  trust used to accept a certificate signed by the configured CA for *any* host name, and passed a
+  missing certificate on to the chain build. Now only the chain is resolved against the custom CA;
+  a name mismatch or no certificate is refused, on reads and writes alike. *Migration:* the server
+  certificate must name the host the client connects to, as a SAN entry rather than only the CN.
+- **`UpdateFederationConfigRequest`: an explicit `null` clears (§27.15 note 8).** Its ten nullable
+  members — `MetadataUrl`, `IdpSigningCertPem`, `IdpMetadataSigningCertPem`, `ProviderSlug`,
+  `AuthorizationEndpoint`, `TokenEndpoint`, `UserinfoEndpoint`, `AppleTeamId`, `AppleKeyId`,
+  `ButtonIcon` — are `JsonNullable<string>?` instead of `string?`. Unset is not sent and keeps the
+  stored value; `JsonNullable<string>.Null` is sent as `null` and clears it. *Migration:* assigning
+  a string still compiles (implicit conversion); code that reads these properties gets a
+  `JsonNullable<string>?` (`.Value`, `.IsNull`). Assigning a `string?` variable that holds `null`
+  now sends `null` and **clears** the member — leave the property unset to keep it.
+- **`OidcConfiguration` has eight more optional positional parameters** — the four CIBA members
+  (§21.5, §33) and the four revocation and introspection authentication members (§21.5, contract
+  1.60). *Migration:* none for code that reads the properties or decodes the document; code that
+  calls the constructor positionally past the old last parameter, or deconstructs the record,
+  must name the new parameters (or recompile, for the constructor's binary signature).
+- **`NotificationRuleResponse.WindowMinutes` is required (§27.15 note 1).** Reading a notification
+  rule from a server before 1.0.0, which does not send `window_minutes`, now fails to decode
+  (`NetworkError`). *Migration:* use a 1.0.0 server.
+- **`TelemetryEvent` has a new subtype, `SsfUnjudgedEvent`.** *Migration:* a `switch` over
+  telemetry events that must be exhaustive needs a case or a default for it.
 
 ### Added
 
-- **RFC 7592 client configuration (§28.12)**: `ReadClientRegistrationAsync`,
+- **Contract 1.60 management members (§27.15, §31), generated.** `WindowMinutes` on the
+  notification-rule request and response models, passed through as given and never clamped (a value
+  outside 1 to 1440 is the server's `400`). `AllowSha1Signatures` and `IdpMetadataSigningCertPem` on
+  the federation configuration models; `FederationConfigResponse.AllowSha1Signatures` reads `false`
+  when a server before 1.0.0 leaves it out. `ScimTargetInput.ExpectedUpdatedAt`, a `string` sent
+  exactly as given: the server compares it with the stored `updated_at` at nanosecond precision,
+  which a `DateTimeOffset` cannot carry, so `ScimTargetResponse` keeps `updated_at` exactly as the
+  server sent it and `ManagementReplacements.ToInput(ScimTargetResponse)` sends that as
+  `expected_updated_at` — an update built from a read is refused `409` (`ConflictError`, never
+  retried) if another administrator wrote the target in between (§31.3 rule 4).
+- **Four management namespaces (§29 – §32)**, generated like the rest of §27: `Directory`, `Saml`,
+  `Ssf` and `ScimTargets` (`Directory`, `Saml` and `Ssf` take the client's tenant;
+  `directory.update` is a sparse `PATCH`), with direct accessors on `AxiamClient`, the contract's
+  call-site warnings in the XML docs, `JsonNullable<T>` for the members where `null` is not absent,
+  `ParseSamlSpMetadata.FromUrl` / `FromXml` (both or neither refused locally with a
+  `ValidationError`) and `ManagementReplacements.ToInput` for read-modify-write replacements. The
+  open unions `ScimTargetAuth` / `ScimTargetScope` decode an unknown `type` to an `...Unknown` arm
+  that renders its discriminator for a log line and is refused by the request encoder; URI-valued
+  enum members are named by their last path segment (`SsfEventType.SessionRevoked`).
+- **The SSF receiver (§32.7)**: `Axiam.Sdk.Ssf.SsfReceiver` — `VerifySetAsync` (nine checks in
+  order, each refusal a `SetVerificationError` with a typed `SetFailureReason`) and `PollAsync`;
+  `SetErr`, `IReplayStore`, `MemoryReplayStore` (bounded in time, unbounded in count),
+  `SsfEventTypes`.
+  - A replay store has three answers (§34.2 P4): seen, not seen, and **cannot answer**, which is an
+    exception. That gives no verdict: `VerifySetAsync` raises `NetworkError` with no reason code
+    and the store's failure as its cause, the `jti` is not recorded, and the SET is never read as
+    `replayed`. An `AuthError`, `AuthzError` or `NetworkError` the store raises passes through;
+    anything else, `SetVerificationError` included, is wrapped.
+  - A poll never keeps a `jti` it does not return (§34.2 P1): a key fetch or a store that fails
+    part-way through a batch leaves that SET unjudged — not recorded, listed in
+    `SsfPollResult.Unjudged` — and the rest of the batch asks the store nothing (a later SET that
+    fails the other checks is refused as usual); the SETs judged before are returned. When nothing
+    had been recorded yet, the poll raises instead.
+  - The key cache expires `JwksCacheTtl` after its fill and never later than 10 minutes (a longer
+    setting is clamped for the receiver and reported as `ConfigClampedEvent`); a failed fetch
+    counts toward the once-a-minute refetch limit, so within the minute after one a SET makes no
+    fetch and is a `NetworkError`; a successful fill does not count (§34.2 P6).
+  - A `replayed` SET is acknowledged, not reported in `SetErrs` (§34.2 P2), as the docs and the
+    README example show.
+- **`SsfUnjudgedEvent` (§19.1 `ssf_unjudged`, contract 1.60):** emitted when a poll returns
+  leaving SETs unjudged, with the count and the cause (`KeyFetch` or `ReplayStore`) and no `jti`.
+  The `TelemetryHook` example handles it.
+- **CIBA (§33):** `CibaInitiateAsync` (never retried), `CibaPollAsync`, `CibaAwaitAsync` (an
+  injectable `ICibaClock`; the deadline anchored at `CibaInitiateResponse.ReceivedAt`) and the
+  synchronous `CibaHandlePing` (constant-time bearer check); the signed request form through
+  `CibaRequestSigner` (PS256, ES256, EdDSA); `OAuthProtocolError.IsAccessDenied` /
+  `IsExpiredToken`. A `5xx` on `CibaPollAsync` is retried whatever its body and never ends
+  `CibaAwaitAsync` (§33.8 test 8, §34.2 P8).
+- **RFC 7592 client configuration (§28.12):** `ReadClientRegistrationAsync`,
   `UpdateClientRegistrationAsync`, `DeleteClientRegistrationAsync` and `ClientRegistration`
-  (tolerant decoding, unknown members kept in `Extra`; `RegistrationAccessToken` and `ClientSecret`
-  `Sensitive`). Same-origin check before any I/O, bearer-only on a session-free transport, writes
-  never retried, the read never on a 4xx other than 408/429.
-- **Four management namespaces**, generated: `Directory` (§30), `Saml` (§29), `Ssf` (§32) and
-  `ScimTargets` (§31) — 190 operations across 28 namespaces — with direct accessors on
-  `AxiamClient`, the contract's call-site warnings in the XML docs, `JsonNullable<T>` for the
-  explicit-null members, `ParseSamlSpMetadata.FromUrl` / `FromXml` (both-or-neither refused
-  locally) and `ManagementReplacements.ToInput` for the read-modify-write replacements.
-- **SSF receiver (§32.7)**: `Axiam.Sdk.Ssf.SsfReceiver` — `VerifySetAsync` (the nine checks,
-  `SetVerificationError` / `SetFailureReason`) and `PollAsync`; `SetErr`, `IReplayStore`,
-  `MemoryReplayStore`, `SsfEventTypes`.
-- **CIBA (§33)**: `CibaInitiateAsync` (never retried), `CibaPollAsync`, `CibaAwaitAsync` (injectable
-  `ICibaClock`), synchronous `CibaHandlePing` (constant-time bearer check); the signed request form
-  via `CibaRequestSigner` (PS256, ES256, EdDSA); `OAuthProtocolError.IsAccessDenied` /
-  `IsExpiredToken`.
-- **§21.3.1**: `MtlsEndpointAliases.BackchannelAuthenticationEndpoint` (the seventh alias) and the
-  four CIBA members on `OidcConfiguration`.
+  (tolerant decoding, unknown members kept in `Extra`, `RegistrationAccessToken` and
+  `ClientSecret` `Sensitive`); a same-origin check before any I/O, bearer only on a session-free
+  transport, writes never retried.
+- **Discovery (§21.3.1, §21.5):** `MtlsEndpointAliases.BackchannelAuthenticationEndpoint` (the
+  seventh alias), the four CIBA members, and the four revocation and introspection authentication
+  members on `OidcConfiguration`, all optional — a document from a server before 1.0.0, and
+  §21.3.1's vector A, still decode. They describe the deployment and never change how the SDK
+  authenticates.
 
 ### Changed
 
-- The generator emits PATCH (`directory.update`), defaults `{tenant_id}` for `directory`, `saml` and
-  `ssf`, names URI-valued enum members by their last path segment (`SsfEventType.SessionRevoked`),
-  and gives `ScimTargetAuth` / `ScimTargetScope` an `...Unknown` arm that decodes and refuses to be
-  sent.
-- `/oauth2/bc-authorize` joins the paths whose `401` never enters the §9 refresh guard.
+- **Every write is sent once, on its own connection (§34.2 P11).** `SocketsHttpHandler` re-sends a
+  request that gets no response byte when the connection drops — measured on .NET 8, a request
+  with no content reached a server that dropped it unanswered four times. Every `POST`, `PUT`,
+  `PATCH` and `DELETE` now goes through a private handler whose connections are never reused,
+  with `Connection: close` and an empty content where the caller built none; the cookie jar,
+  redirect policy, proxy, mTLS identity and custom-CA trust are shared. The requests §16 retries
+  itself — `Authz.CheckAccessAsync`, `BatchCheckAsync`, `CibaPollAsync`, `SsfReceiver.PollAsync`
+  — keep the shared pool. Expect a TLS handshake per write on a deployment that sends many.
+- **A refresh's `scope` is the token's (§12.1, contract 1.60).** `OidcRefreshAsync` already took
+  the response's `scope` — which a server narrows when the client's registration was narrowed
+  since the grant — and never the original grant's; a test now pins it.
+- `/oauth2/bc-authorize` joins the endpoints whose `401` never enters the §9 refresh guard.
+- **Documentation.** The token-exchange docs and README example obtain the `actor_token` from the
+  same client's `client_credentials` grant: a token issued to another client is answered
+  `invalid_request` and surfaces unchanged, after one request (§15.2 rule 9). The README says a
+  broker confirm is not evidence that AXIAM saw a message, and that a minimal-profile server
+  (`AXIAM__AMQP__ENABLED=false`) reads no AMQP queue (§8). The README states conformance at
+  contract 1.60 and the semver policy.
+
+### Fixed
+
+- **A `401` on a tenant-path OAuth2 endpoint no longer enters the §9 refresh guard (§34.2 P11,
+  R-16).** `/t/{tenant_id}/oauth2/bc-authorize`, `…/token`, `…/introspect` and `…/revoke` are
+  recognised like their `/oauth2/…` forms; before, a `401` on the tenant-path CIBA initiate was
+  re-sent after a refresh, though §33.7 rule 1 says it is never sent twice.
+- **The generated management docs say what the types do (R-28):** a replacement body's optional
+  members are no longer called required, `ParseSamlSpMetadata` is no longer called a sparse body,
+  and an unset member of a replacement is documented as taking the server's default.
+
+### Security
+
+- **The custom-CA hostname check** (see Breaking changes): a certificate from the configured
+  custom CA issued for another host is refused, closing a man-in-the-middle path for any holder of
+  a certificate from that CA. Tested over a real TLS server: the wrong host and no certificate are
+  refused on reads and writes, the right host is accepted.
+- **Writes are never re-sent by the HTTP stack** (see Changed): a dropped `DELETE` or bodiless
+  `POST` can no longer reach the server more than once.
 
 ## [1.0.0-beta17] - 2026-09-25
 Contract **1.51**, the dogfooding remediation (CONTRACT.md §1.1.1, §5.2 rule 1, §6.1 rules
