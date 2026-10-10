@@ -7,6 +7,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Contract **1.60** (CONTRACT.md §34.4, the answers to ilpanich/axiam#588; rows A6, B1, §15.2 rule 9 and
+the §8 minimal-profile note for C#). The vendored `CONTRACT.md` comes from the 1.60 draft of the
+platform repository; `openapi.json`, `management-registry.json` and `proto/` are unchanged by this
+step.
+
+### Fixed
+
+- **A6 (§34.2 P11, R-17): a write the SDK does not retry is no longer re-sent by .NET.** Measured on
+  .NET 8 against a server that reads a request and drops the connection unanswered, `SocketsHttpHandler`
+  re-sent a request with no content — a `DELETE`, or a `POST`/`PUT`/`PATCH` built without a body —
+  three times, so the server received it **four** times, on a fresh connection as much as on a pooled
+  one. Every `POST`, `PUT`, `PATCH` and `DELETE` now goes through a private `SocketsHttpHandler`
+  (`PooledConnectionLifetime = TimeSpan.Zero`, so its connections are never reused) with
+  `Connection: close` and an empty content where the caller built none; the cookie jar, redirect
+  policy, proxy, mTLS identity and additive custom-CA trust are shared with the primary handler
+  (`AxiamHttpClientFactory.TrustThroughCustomCa` is the one implementation of the latter). The
+  requests §16 retries itself — `Authz.CheckAccessAsync`, `BatchCheckAsync`, `CibaPollAsync` and
+  `SsfReceiver.PollAsync` — are marked and keep the shared pool. New test
+  `WriteConnectionTests`: a dropped write arrives exactly once for every verb, with and without a body,
+  dropped after the request or after its headers, with a warm pooled connection or without.
+- **B1 (§34.2 P4, §32.8 helper test 6): a replay store that cannot answer gives no verdict.**
+  `IReplayStore.CheckAndRecord` already reported failure by throwing, so it was never read as
+  `replayed`; but the store's own exception reached the caller raw. `SsfReceiver.VerifySetAsync` now
+  raises a `NetworkError` (cause chained, no reason code) when the store throws, and `PollAsync` leaves
+  that SET unjudged — in neither `Events` nor `Refused`, not recorded, listed in `Unjudged`, so it is not
+  acknowledged and is offered again. New test `AStoreThatCannotAnswerGivesNoVerdict`.
+
+### Changed
+
+- A replay store that throws now surfaces as `NetworkError` (with the store's exception summarised in
+  its cause chain) rather than as the store's own exception type. A caller that caught the store's
+  exception around `VerifySetAsync` / `PollAsync` catches `NetworkError` instead. The
+  `IReplayStore` signature is unchanged — it was already fallible — so this is not a source break.
+- A write is now one connection: on a deployment that sends many writes per second, expect a TLS
+  handshake per write. Reads and the four retry-eligible requests above are unchanged.
+
+### Documented
+
+- **§15.2 rule 9:** the `TokenExchangeAsync` / `TokenExchangeParams.ActorToken` documentation and the
+  README example obtain the actor token from the same client's `client_credentials` grant; a token
+  issued to another client is answered `invalid_request` (`actor_token was not issued to the exchanging
+  client`) and surfaces unchanged. New §15.6 test
+  `TokenExchangeAsync_ActorTokenNotIssuedToTheClient_IsSurfacedUnchangedWithOneRequest`: exactly one
+  request, no rewriting.
+- **§8 minimal profile:** the README says a broker confirm is not evidence that AXIAM saw a message, and
+  that a minimal-profile server (`AXIAM__AMQP__ENABLED=false`) reads no AMQP queue.
+- **P4:** the `IReplayStore` documentation states the three answers and that "cannot answer" is an
+  exception, never `false`.
+
 Contract **1.59** (CONTRACT.md §34, the cross-SDK review of the Phase 23 ports: follow-up F-59-05,
 ilpanich/axiam#580). The statement is unchanged in its sections — §28.12, §29, §30, §31, §32 with
 §32.7, §33 with §33.2 signed — now read with §34.2's clarifications P1–P12. The vendored

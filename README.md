@@ -883,10 +883,32 @@ ExchangedToken exchanged = await client.TokenExchangeAsync(new TokenExchangePara
     Audience: "orders-service"));
 ```
 
+A **delegation** adds the acting party. The actor token is the same client's `client_credentials`
+token (its `sub`, and so the issued token's `act.sub`, is the client's `client_id`):
+
+```csharp
+// Same client as the exchange: it authenticates both calls.
+OidcTokenSet actor = await client.LoginClientCredentialsAsync(new LoginClientCredentialsParams());
+
+ExchangedToken delegated = await client.TokenExchangeAsync(new TokenExchangeParams(
+    Sensitive<string>.Wrap(userToken),
+    AxiamClient.AccessTokenType,
+    ActorToken: actor.AccessToken,      // issued to THIS client (§15.2 rule 9); never defaulted by the SDK
+    Scopes: new[] { "orders:read" },
+    Audience: "orders-service"));
+```
+
 Most of what this method does is refuse to be helpful:
 
 - **No default `ActorToken`.** Passing `null` asks for *impersonation*; the SDK will not
   quietly substitute the client's own session token and turn that into a delegation.
+- **A delegation names its actor, and the actor is this same client** (§15.2 rule 9). The
+  `ActorToken` must have been issued to the exchanging client: obtain it with that client's own
+  `client_credentials` grant and pass it yourself. A token issued to another client, a console
+  sign-in or a service account's token is answered `invalid_request` — `actor_token was not
+  issued to the exchanging client` — which surfaces as the `OAuthProtocolError` it is: one
+  request, not retried, not turned into an impersonation, and not repaired with a token of the
+  SDK's own.
 - **No auto-narrowing after `invalid_scope`.** The server refuses rather than silently
   narrowing precisely so the caller finds out here.
 - **No refresh token, ever** — `ExchangedToken` has no such property. Re-run the exchange.
@@ -1022,6 +1044,16 @@ Notes:
 - **Dedup is the receiver's job.** `X-Axiam-Delivery` (surfaced as `WebhookEvent.DeliveryId`
   when present in the body) is the at-least-once dedup key — retries replay a valid
   signature inside the freshness window.
+
+## AMQP and the minimal profile (CONTRACT.md §8)
+
+A server running in the **minimal profile** (`AXIAM__AMQP__ENABLED=false`) reads no AMQP queue: it does
+not consume `axiam.authz.request` or `axiam.audit.events`, whatever a broker holds. **A broker confirm
+(a publisher confirm, or the broker's `basic.ack` of a publish) is not evidence that AXIAM saw a
+message** — it means only that the broker accepted it, never that AXIAM decided the request or recorded
+the event, and this SDK does not treat one as such. Against a minimal-profile server use REST or gRPC;
+`GET /health` reports `profile: minimal` and lists `amqp_authz` and `amqp_audit_ingestion` under
+`unavailable`.
 
 ## Reactors — AMQP extension actors (CONTRACT.md §22)
 
@@ -2141,7 +2173,11 @@ await receiver.PollAsync(streamId, new SsfPollOptions
   be fetched is a `NetworkError`, not a verdict on the SET.
 - **A verified SET is recorded.** The replay window defaults to, and cannot be set below, seven
   days (`IReplayStore` is pluggable; `MemoryReplayStore` is the default — bounded in time by the
-  window, unbounded in count). A store that throws fails closed: nothing is returned as verified. A
+  window, unbounded in count). A store has three answers (§34.2 P4): first sighting (`true`),
+  already seen (`false`) and **cannot answer** — which is an exception, never `false`. A store that
+  throws gives **no verdict**: `VerifySetAsync` raises a `NetworkError` (cause chained) with no reason
+  code, the `jti` is not recorded, and the SET is never accepted nor read as `replayed` (which §34.2 P2
+  would have you acknowledge, losing an event nobody processed). A push endpoint answers it `5xx`. A
   polled SET you neither acknowledge nor refuse is re-offered and then reads as `replayed` —
   acknowledge what you process.
 - **A poll never keeps a `jti` it does not return** (§34.2 P1). A key fetch or a store that fails
@@ -2216,6 +2252,20 @@ await client.CibaInitiateAsync(new CibaInitiateParams { Scope = "openid", Hint =
 - The discovery document's `backchannel_authentication_endpoint` is used (its
   `mtls_endpoint_aliases` entry on an mTLS client — the seventh alias, §21.3.1); without it the
   server does not support CIBA and `CibaInitiateAsync` raises an `AuthError`.
+
+## Writes are sent once (CONTRACT.md §34.2 P11)
+
+A write this SDK does not retry (`POST`, `PUT`, `PATCH`, `DELETE`) is also not re-sent by the HTTP
+library underneath it. `SocketsHttpHandler` re-sends a request that gets no response byte when the
+connection drops — measured against a server that reads a request and closes the connection, a
+request with **no content** reached it **four times** — and .NET has no switch to turn that off. So
+every write goes on a **fresh connection that is not reused afterwards** (a private
+`SocketsHttpHandler` with `PooledConnectionLifetime = TimeSpan.Zero`, `Connection: close`, and an
+empty content where the caller built none), sharing the client's cookie jar and TLS policy. The
+requests §16 itself retries — `Authz.CheckAccessAsync`, `BatchCheckAsync`, `CibaPollAsync` and
+`SsfReceiver.PollAsync` — keep the shared pool. A write now costs a connection, which is the price
+of "at most once". The gRPC channel and a handler you supply through
+`IHttpClientFactory` (`AxiamHttpClientFactory.ConfigureFactoryHandler`) are not covered.
 
 ## Grpc.Tools exception
 

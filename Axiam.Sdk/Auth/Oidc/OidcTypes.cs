@@ -653,6 +653,11 @@ public sealed record DeviceLoginParams(
 /// <param name="ActorToken">
 /// The acting party, when this is a <b>delegation</b> (&#167;15.2 rule 1). Its absence selects
 /// <b>impersonation</b> — a different operation with different risk. The SDK never fills this in.
+/// The token must have been issued to <b>the exchanging client</b> (&#167;15.2 rule 9): obtain it from that
+/// same client's <c>client_credentials</c> grant (<see cref="AxiamClient.LoginClientCredentialsAsync"/>),
+/// whose <c>sub</c> is the client's <c>client_id</c>. Any other actor token is answered
+/// <c>400 invalid_request</c> (<c>actor_token was not issued to the exchanging client</c>), which the SDK
+/// raises unchanged, once, without retrying or rewriting it.
 /// </param>
 /// <param name="Scopes">Scopes to request; omitted from the body when <see langword="null"/> or empty.</param>
 /// <param name="Audience">The service the issued token is for.</param>
