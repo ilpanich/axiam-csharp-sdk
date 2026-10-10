@@ -475,6 +475,9 @@ public sealed class ManagementSparseBodiesGeneratedTests
     public void UpdateFederationConfigRequestSendsOnlyWhatWasSet()
     {
         AssertKeys(
+            new UpdateFederationConfigRequest { AllowSha1Signatures = true },
+            "allow_sha1_signatures");
+        AssertKeys(
             new UpdateFederationConfigRequest { AllowTenantInheritance = true },
             "allow_tenant_inheritance");
         AssertKeys(
@@ -484,19 +487,19 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new UpdateFederationConfigRequest { AllowedIssuerTenants = Array.Empty<string>() },
             "allowed_issuer_tenants");
         AssertKeys(
-            new UpdateFederationConfigRequest { AppleKeyId = "example" },
+            new UpdateFederationConfigRequest { AppleKeyId = JsonNullable<string>.Of("example") },
             "apple_key_id");
         AssertKeys(
-            new UpdateFederationConfigRequest { AppleTeamId = "example" },
+            new UpdateFederationConfigRequest { AppleTeamId = JsonNullable<string>.Of("example") },
             "apple_team_id");
         AssertKeys(
             new UpdateFederationConfigRequest { AttributeMap = JsonDocument.Parse("{}").RootElement },
             "attribute_map");
         AssertKeys(
-            new UpdateFederationConfigRequest { AuthorizationEndpoint = "example" },
+            new UpdateFederationConfigRequest { AuthorizationEndpoint = JsonNullable<string>.Of("example") },
             "authorization_endpoint");
         AssertKeys(
-            new UpdateFederationConfigRequest { ButtonIcon = "example" },
+            new UpdateFederationConfigRequest { ButtonIcon = JsonNullable<string>.Of("example") },
             "button_icon");
         AssertKeys(
             new UpdateFederationConfigRequest { ClientId = "example" },
@@ -508,16 +511,19 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new UpdateFederationConfigRequest { Enabled = true },
             "enabled");
         AssertKeys(
-            new UpdateFederationConfigRequest { IdpSigningCertPem = "example" },
+            new UpdateFederationConfigRequest { IdpMetadataSigningCertPem = JsonNullable<string>.Of("example") },
+            "idp_metadata_signing_cert_pem");
+        AssertKeys(
+            new UpdateFederationConfigRequest { IdpSigningCertPem = JsonNullable<string>.Of("example") },
             "idp_signing_cert_pem");
         AssertKeys(
-            new UpdateFederationConfigRequest { MetadataUrl = "example" },
+            new UpdateFederationConfigRequest { MetadataUrl = JsonNullable<string>.Of("example") },
             "metadata_url");
         AssertKeys(
             new UpdateFederationConfigRequest { Provider = "example" },
             "provider");
         AssertKeys(
-            new UpdateFederationConfigRequest { ProviderSlug = "example" },
+            new UpdateFederationConfigRequest { ProviderSlug = JsonNullable<string>.Of("example") },
             "provider_slug");
         AssertKeys(
             new UpdateFederationConfigRequest { RequirePkce = true },
@@ -526,44 +532,77 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new UpdateFederationConfigRequest { Scopes = Array.Empty<string>() },
             "scopes");
         AssertKeys(
-            new UpdateFederationConfigRequest { TokenEndpoint = "example" },
+            new UpdateFederationConfigRequest { TokenEndpoint = JsonNullable<string>.Of("example") },
             "token_endpoint");
         AssertKeys(
             new UpdateFederationConfigRequest { TokenExchange = new TokenExchangeTrustRequest {  } },
             "token_exchange");
         AssertKeys(
-            new UpdateFederationConfigRequest { UserinfoEndpoint = "example" },
+            new UpdateFederationConfigRequest { UserinfoEndpoint = JsonNullable<string>.Of("example") },
             "userinfo_endpoint");
         AssertKeys(
             new UpdateFederationConfigRequest
             {
+                AllowSha1Signatures = true,
                 AllowTenantInheritance = true,
                 AllowedAlgorithms = Array.Empty<string>(),
                 AllowedIssuerTenants = Array.Empty<string>(),
-                AppleKeyId = "example",
-                AppleTeamId = "example",
+                AppleKeyId = JsonNullable<string>.Of("example"),
+                AppleTeamId = JsonNullable<string>.Of("example"),
                 AttributeMap = JsonDocument.Parse("{}").RootElement,
-                AuthorizationEndpoint = "example",
-                ButtonIcon = "example",
+                AuthorizationEndpoint = JsonNullable<string>.Of("example"),
+                ButtonIcon = JsonNullable<string>.Of("example"),
                 ClientId = "example",
                 ClientSecret = Sensitive<string>.Wrap("example"),
                 Enabled = true,
-                IdpSigningCertPem = "example",
-                MetadataUrl = "example",
+                IdpMetadataSigningCertPem = JsonNullable<string>.Of("example"),
+                IdpSigningCertPem = JsonNullable<string>.Of("example"),
+                MetadataUrl = JsonNullable<string>.Of("example"),
                 Provider = "example",
-                ProviderSlug = "example",
+                ProviderSlug = JsonNullable<string>.Of("example"),
                 RequirePkce = true,
                 Scopes = Array.Empty<string>(),
-                TokenEndpoint = "example",
+                TokenEndpoint = JsonNullable<string>.Of("example"),
                 TokenExchange = new TokenExchangeTrustRequest {  },
-                UserinfoEndpoint = "example",
+                UserinfoEndpoint = JsonNullable<string>.Of("example"),
             },
-            "allow_tenant_inheritance", "allowed_algorithms", "allowed_issuer_tenants",
-            "apple_key_id", "apple_team_id", "attribute_map", "authorization_endpoint",
-            "button_icon", "client_id", "client_secret", "enabled", "idp_signing_cert_pem",
+            "allow_sha1_signatures", "allow_tenant_inheritance", "allowed_algorithms",
+            "allowed_issuer_tenants", "apple_key_id", "apple_team_id", "attribute_map",
+            "authorization_endpoint", "button_icon", "client_id", "client_secret",
+            "enabled", "idp_metadata_signing_cert_pem", "idp_signing_cert_pem",
             "metadata_url", "provider", "provider_slug", "require_pkce", "scopes",
             "token_endpoint", "token_exchange", "userinfo_endpoint");
         AssertKeys(new UpdateFederationConfigRequest());
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateFederationConfigRequest { AppleKeyId = JsonNullable<string>.Null },
+            "{\"apple_key_id\":null}");
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateFederationConfigRequest { AppleTeamId = JsonNullable<string>.Null },
+            "{\"apple_team_id\":null}");
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateFederationConfigRequest { AuthorizationEndpoint = JsonNullable<string>.Null },
+            "{\"authorization_endpoint\":null}");
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateFederationConfigRequest { ButtonIcon = JsonNullable<string>.Null },
+            "{\"button_icon\":null}");
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateFederationConfigRequest { IdpMetadataSigningCertPem = JsonNullable<string>.Null },
+            "{\"idp_metadata_signing_cert_pem\":null}");
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateFederationConfigRequest { IdpSigningCertPem = JsonNullable<string>.Null },
+            "{\"idp_signing_cert_pem\":null}");
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateFederationConfigRequest { MetadataUrl = JsonNullable<string>.Null },
+            "{\"metadata_url\":null}");
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateFederationConfigRequest { ProviderSlug = JsonNullable<string>.Null },
+            "{\"provider_slug\":null}");
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateFederationConfigRequest { TokenEndpoint = JsonNullable<string>.Null },
+            "{\"token_endpoint\":null}");
+        // §27.4 rule 5: an explicit null is sent as null, not omitted.
+        AssertJson(new UpdateFederationConfigRequest { UserinfoEndpoint = JsonNullable<string>.Null },
+            "{\"userinfo_endpoint\":null}");
     }
 
     /// <summary>
@@ -615,6 +654,9 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new UpdateNotificationRuleRequest { RecipientEmails = Array.Empty<string>() },
             "recipient_emails");
         AssertKeys(
+            new UpdateNotificationRuleRequest { WindowMinutes = 1 },
+            "window_minutes");
+        AssertKeys(
             new UpdateNotificationRuleRequest
             {
                 Description = "example",
@@ -622,8 +664,10 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 Events = Array.Empty<NotificationEventType>(),
                 Name = "example",
                 RecipientEmails = Array.Empty<string>(),
+                WindowMinutes = 1,
             },
-            "description", "enabled", "events", "name", "recipient_emails");
+            "description", "enabled", "events", "name", "recipient_emails",
+            "window_minutes");
         AssertKeys(new UpdateNotificationRuleRequest());
     }
 

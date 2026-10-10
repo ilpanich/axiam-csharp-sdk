@@ -69,4 +69,11 @@ public sealed record NotificationRuleResponse
     /// </summary>
     [JsonPropertyName("updated_at")]
     public required DateTimeOffset UpdatedAt { get; init; }
+
+    /// <summary>
+    /// Minutes in which one event type mails each recipient at most once; further events are
+    /// counted and reported by the next mail (#551).
+    /// </summary>
+    [JsonPropertyName("window_minutes")]
+    public required int WindowMinutes { get; init; }
 }

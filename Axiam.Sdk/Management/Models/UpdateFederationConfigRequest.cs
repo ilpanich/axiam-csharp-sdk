@@ -7,6 +7,7 @@
 #nullable enable
 
 using Axiam.Sdk.Core;
+using Axiam.Sdk.Management;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -27,6 +28,13 @@ namespace Axiam.Sdk.Management.Models;
 public sealed record UpdateFederationConfigRequest
 {
     /// <summary>
+    /// SAML only: accept IdP responses signed with SHA-1. Refused on a non-SAML config; turning
+    /// it on is audited (<c>federation.sha1_signatures_allowed</c>).
+    /// </summary>
+    [JsonPropertyName("allow_sha1_signatures")]
+    public bool? AllowSha1Signatures { get; init; }
+
+    /// <summary>
     /// Whether tenants may inherit this organization-level provider.
     /// </summary>
     [JsonPropertyName("allow_tenant_inheritance")]
@@ -45,16 +53,20 @@ public sealed record UpdateFederationConfigRequest
     public IReadOnlyList<string>? AllowedIssuerTenants { get; init; }
 
     /// <summary>
-    /// Apple Key ID. <c>Some(None)</c> clears it.
+    /// Apple Key ID. Explicit <c>null</c> clears it. -- THREE states (&#167;27.4 rule 5, null
+    /// is not absent): <c>null</c> (unset) is an absent member, <c>JsonNullable.Null</c> is an
+    /// explicit JSON <c>null</c>, anything else a value.
     /// </summary>
     [JsonPropertyName("apple_key_id")]
-    public string? AppleKeyId { get; init; }
+    public JsonNullable<string>? AppleKeyId { get; init; }
 
     /// <summary>
-    /// Apple Team ID. <c>Some(None)</c> clears it.
+    /// Apple Team ID. Explicit <c>null</c> clears it. -- THREE states (&#167;27.4 rule 5, null
+    /// is not absent): <c>null</c> (unset) is an absent member, <c>JsonNullable.Null</c> is an
+    /// explicit JSON <c>null</c>, anything else a value.
     /// </summary>
     [JsonPropertyName("apple_team_id")]
-    public string? AppleTeamId { get; init; }
+    public JsonNullable<string>? AppleTeamId { get; init; }
 
     /// <summary>
     /// the server's attribute_map field
@@ -63,16 +75,20 @@ public sealed record UpdateFederationConfigRequest
     public JsonElement? AttributeMap { get; init; }
 
     /// <summary>
-    /// OAuth2-variant authorization endpoint. <c>Some(None)</c> clears it.
+    /// OAuth2-variant authorization endpoint. Explicit <c>null</c> clears it. -- THREE states
+    /// (&#167;27.4 rule 5, null is not absent): <c>null</c> (unset) is an absent member,
+    /// <c>JsonNullable.Null</c> is an explicit JSON <c>null</c>, anything else a value.
     /// </summary>
     [JsonPropertyName("authorization_endpoint")]
-    public string? AuthorizationEndpoint { get; init; }
+    public JsonNullable<string>? AuthorizationEndpoint { get; init; }
 
     /// <summary>
-    /// Sign-in-button icon for a generic provider. <c>Some(None)</c> clears it.
+    /// Sign-in-button icon for a generic provider. Explicit <c>null</c> clears it. -- THREE
+    /// states (&#167;27.4 rule 5, null is not absent): <c>null</c> (unset) is an absent member,
+    /// <c>JsonNullable.Null</c> is an explicit JSON <c>null</c>, anything else a value.
     /// </summary>
     [JsonPropertyName("button_icon")]
-    public string? ButtonIcon { get; init; }
+    public JsonNullable<string>? ButtonIcon { get; init; }
 
     /// <summary>
     /// the server's client_id field
@@ -94,17 +110,33 @@ public sealed record UpdateFederationConfigRequest
     public bool? Enabled { get; init; }
 
     /// <summary>
-    /// PEM-encoded X.509 certificate for verifying SAML assertions (CQ-B40/REQ-14 AC-5).
-    /// <c>Some(None)</c> clears the stored cert.
+    /// SAML only: the IdP metadata signing certificate (#530). Explicit <c>null</c> clears it;
+    /// omitted leaves it. Clearing it is audited
+    /// (<c>federation.metadata_signing_cert_cleared</c>), and so is replacing it with a
+    /// different certificate (<c>federation.metadata_signing_cert_changed</c>). -- THREE states
+    /// (&#167;27.4 rule 5, null is not absent): <c>null</c> (unset) is an absent member,
+    /// <c>JsonNullable.Null</c> is an explicit JSON <c>null</c>, anything else a value.
     /// </summary>
-    [JsonPropertyName("idp_signing_cert_pem")]
-    public string? IdpSigningCertPem { get; init; }
+    [JsonPropertyName("idp_metadata_signing_cert_pem")]
+    public JsonNullable<string>? IdpMetadataSigningCertPem { get; init; }
 
     /// <summary>
-    /// the server's metadata_url field
+    /// PEM-encoded X.509 certificate for verifying SAML assertions (CQ-B40/REQ-14 AC-5).
+    /// Explicit <c>null</c> clears the stored cert; omitted leaves it. -- THREE states
+    /// (&#167;27.4 rule 5, null is not absent): <c>null</c> (unset) is an absent member,
+    /// <c>JsonNullable.Null</c> is an explicit JSON <c>null</c>, anything else a value.
+    /// </summary>
+    [JsonPropertyName("idp_signing_cert_pem")]
+    public JsonNullable<string>? IdpSigningCertPem { get; init; }
+
+    /// <summary>
+    /// OIDC discovery or SAML metadata URL. Explicit <c>null</c> clears it; omitted leaves it.
+    /// -- THREE states (&#167;27.4 rule 5, null is not absent): <c>null</c> (unset) is an
+    /// absent member, <c>JsonNullable.Null</c> is an explicit JSON <c>null</c>, anything else a
+    /// value.
     /// </summary>
     [JsonPropertyName("metadata_url")]
-    public string? MetadataUrl { get; init; }
+    public JsonNullable<string>? MetadataUrl { get; init; }
 
     /// <summary>
     /// the server's provider field
@@ -113,10 +145,13 @@ public sealed record UpdateFederationConfigRequest
     public string? Provider { get; init; }
 
     /// <summary>
-    /// Operator-chosen identifier for a <c>generic_*</c> kind. <c>Some(None)</c> clears it.
+    /// Operator-chosen identifier for a <c>generic_*</c> kind. Explicit <c>null</c> clears it.
+    /// -- THREE states (&#167;27.4 rule 5, null is not absent): <c>null</c> (unset) is an
+    /// absent member, <c>JsonNullable.Null</c> is an explicit JSON <c>null</c>, anything else a
+    /// value.
     /// </summary>
     [JsonPropertyName("provider_slug")]
-    public string? ProviderSlug { get; init; }
+    public JsonNullable<string>? ProviderSlug { get; init; }
 
     /// <summary>
     /// Send PKCE on the authorization request.
@@ -131,10 +166,12 @@ public sealed record UpdateFederationConfigRequest
     public IReadOnlyList<string>? Scopes { get; init; }
 
     /// <summary>
-    /// OAuth2-variant token endpoint. <c>Some(None)</c> clears it.
+    /// OAuth2-variant token endpoint. Explicit <c>null</c> clears it. -- THREE states
+    /// (&#167;27.4 rule 5, null is not absent): <c>null</c> (unset) is an absent member,
+    /// <c>JsonNullable.Null</c> is an explicit JSON <c>null</c>, anything else a value.
     /// </summary>
     [JsonPropertyName("token_endpoint")]
-    public string? TokenEndpoint { get; init; }
+    public JsonNullable<string>? TokenEndpoint { get; init; }
 
     /// <summary>
     /// the server's token_exchange field
@@ -143,8 +180,10 @@ public sealed record UpdateFederationConfigRequest
     public TokenExchangeTrustRequest? TokenExchange { get; init; }
 
     /// <summary>
-    /// OAuth2-variant userinfo endpoint. <c>Some(None)</c> clears it.
+    /// OAuth2-variant userinfo endpoint. Explicit <c>null</c> clears it. -- THREE states
+    /// (&#167;27.4 rule 5, null is not absent): <c>null</c> (unset) is an absent member,
+    /// <c>JsonNullable.Null</c> is an explicit JSON <c>null</c>, anything else a value.
     /// </summary>
     [JsonPropertyName("userinfo_endpoint")]
-    public string? UserinfoEndpoint { get; init; }
+    public JsonNullable<string>? UserinfoEndpoint { get; init; }
 }

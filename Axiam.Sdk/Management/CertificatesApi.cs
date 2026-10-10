@@ -165,9 +165,15 @@ public sealed class CertificatesApi
     }
 
     /// <summary>
-    /// Issues <c>POST /api/v1/certificates/{id}/revoke</c>.
+    /// Under a CA whose key Vault's PKI engine holds, the certificate is revoked in Vault as
+    /// well, so Vault's own revocation list names it (T-470). A Vault that refuses or cannot be
+    /// reached does not undo or fail the revocation: it is recorded
+    /// (<c>certificate.vault_revocation_pending</c>) and retried by the cleanup job.
     /// </summary>
     /// <remarks>
+    /// <para>
+    /// Issues <c>POST /api/v1/certificates/{id}/revoke</c>.
+    /// </para>
     /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.

@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using Axiam.Sdk.Core;
+using Axiam.Sdk.Management.Models;
 
 namespace Axiam.Sdk.Management;
 
@@ -119,9 +120,16 @@ internal static class ManagementSupport
 
         try
         {
-            return element.Deserialize<T>(ManagementJson.Reader)
-                   ?? throw NetworkError.FromMessage(
-                       $"{operation}: the server's response deserialized to null");
+            T result = element.Deserialize<T>(ManagementJson.Reader)
+                       ?? throw NetworkError.FromMessage(
+                           $"{operation}: the server's response deserialized to null");
+            // §31.3 rule 4: a version sent back must be the server's own string.
+            return result is IKeepsWireVersion keeps &&
+                   element.ValueKind == JsonValueKind.Object &&
+                   element.TryGetProperty(keeps.WireMember, out JsonElement asRead) &&
+                   asRead.ValueKind == JsonValueKind.String
+                ? (T)keeps.WithWireVersion(asRead.GetString()!)
+                : result;
         }
         catch (JsonException ex)
         {

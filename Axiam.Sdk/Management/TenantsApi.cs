@@ -177,9 +177,14 @@ public sealed class TenantsApi
     }
 
     /// <summary>
-    /// Issues <c>DELETE /api/v1/organizations/{org_id}/tenants/{tenant_id}</c>.
+    /// #523 (D-4): the tenant is tombstoned and its sessions and refresh tokens are revoked
+    /// before the <c>204</c>; its data is purged afterwards by the cleanup job's
+    /// <c>tenant_purge</c> sweep, on the cleanup interval.
     /// </summary>
     /// <remarks>
+    /// <para>
+    /// Issues <c>DELETE /api/v1/organizations/{org_id}/tenants/{tenant_id}</c>.
+    /// </para>
     /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.

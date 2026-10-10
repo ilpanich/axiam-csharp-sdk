@@ -78,6 +78,33 @@ EXPLICIT_NULL_FIELDS = {
     ("UpdateDirectoryConfig", "group_filter"),
     ("SamlIdpInfo", "active_credential_id"),
     ("SamlIdpInfo", "next_credential_id"),
+} | {
+    # contract 1.60, §27.15 note 8: every nullable member of the federation update
+    # is cleared by an explicit `null` and left unchanged when omitted. The body's
+    # other members (provider, client_id, the booleans, the lists, ...) read a
+    # `null` as absent, so they stay on the ordinary path.
+    ("UpdateFederationConfigRequest", wire) for wire in (
+        "metadata_url", "idp_signing_cert_pem", "idp_metadata_signing_cert_pem",
+        "provider_slug", "authorization_endpoint", "token_endpoint",
+        "userinfo_endpoint", "apple_team_id", "apple_key_id", "button_icon",
+    )
+}
+
+# Response members the schema marks `required` that an older server does not send,
+# and the value their absence reads as. `required` in C# makes System.Text.Json
+# THROW on a missing member; a plain non-required property with this default reads
+# it as the contract says. §27.15 note 6: `allow_sha1_signatures` absent (a server
+# before 1.0.0) is `false`.
+ABSENT_READS_AS: dict[tuple[str, str], str] = {
+    ("FederationConfigResponse", "allow_sha1_signatures"): "false",
+}
+
+# `date-time` members typed `string` rather than `DateTimeOffset`. §31.3 rule 4 asks
+# for `expected_updated_at` to be passed through unchanged -- the caller's string,
+# not a re-rendering -- and the server compares it for equality with a timestamp of
+# nanosecond precision, which a `DateTimeOffset` (100 ns ticks) cannot hold.
+DATE_TIME_AS_STRING = {
+    ("ScimTargetInput", "expected_updated_at"),
 }
 
 # Call-site documentation the contract makes an SDK repeat (§29.3, §30.3, §31.3,
@@ -103,6 +130,16 @@ CALL_SITE_NOTES: dict[str, str] = {
         "stays as stored; `GroupBaseDn` / `GroupFilter` set to `JsonNullable<string>.Null` "
         "are sent as `null` and clear the value. An enabled directory and an effective "
         "`opaque_mode = required` never coexist (`409`)."
+    ),
+    "federation.update_config": (
+        "**An explicit null clears** (§27.15 note 8): a member left unset (`null`) is "
+        "not sent and stays as stored; `MetadataUrl`, `IdpSigningCertPem`, "
+        "`IdpMetadataSigningCertPem`, `ProviderSlug`, `AuthorizationEndpoint`, "
+        "`TokenEndpoint`, `UserinfoEndpoint`, `AppleTeamId`, `AppleKeyId` and "
+        "`ButtonIcon` set to `JsonNullable<string>.Null` are sent as `null` and clear "
+        "the stored value. An `OAuth2` configuration's three endpoints cannot be cleared "
+        "(`400`), and `AppleTeamId` / `AppleKeyId` clear only together. The other "
+        "members cannot be cleared; leave them unset to keep them."
     ),
     "directory.delete": (
         "**Deleting stops the directory, and only that** (§30.3 rule 5): directory "
@@ -210,9 +247,10 @@ PRECHECK_TEST_BODIES: dict[str, str] = {
     "saml.parse_sp_metadata": 'ParseSamlSpMetadata.FromUrl("https://sp.example/metadata")',
 }
 
-# Models generated `partial`, so a hand-written file can add factories to them
-# (`ParseSamlSpMetadata.FromUrl` / `FromXml`, Axiam.Sdk/Management/ManagementChecks.cs).
-PARTIAL_RECORDS = {"ParseSamlSpMetadata"}
+# Models generated `partial`, so a hand-written file can add members to them
+# (`ParseSamlSpMetadata.FromUrl` / `FromXml`, and `ScimTargetResponse`'s `updated_at`
+# exactly as read for §31.3 rule 4, Axiam.Sdk/Management/ManagementChecks.cs).
+PARTIAL_RECORDS = {"ParseSamlSpMetadata", "ScimTargetResponse"}
 
 
 def note_xml(text: str) -> str:
@@ -894,11 +932,14 @@ def field_list(schema_name: str, secrets: set[str]) -> tuple[list[dict[str, Any]
             "wire": wire,
             "name": prop(wire),
             "type": ("Sensitive<string>" if wire in secrets
+                     else "string" if (schema_name, wire) in DATE_TIME_AS_STRING
                      else f"JsonNullable<{cs_type(props[wire])}>"
                      if (schema_name, wire) in EXPLICIT_NULL_FIELDS
                      else cs_type(props[wire])),
-            "required": False if is_response_side_inherit else wire in required,
-            "default_literal": "true" if is_response_side_inherit else None,
+            "required": (False if is_response_side_inherit or (schema_name, wire) in ABSENT_READS_AS
+                         else wire in required),
+            "default_literal": ("true" if is_response_side_inherit
+                                else ABSENT_READS_AS.get((schema_name, wire))),
             "doc": props[wire].get("description") or f"the server's {wire} field",
             "secret": wire in secrets,
             "explicit_null": (schema_name, wire) in EXPLICIT_NULL_FIELDS,
@@ -1006,6 +1047,9 @@ def emit_record(name: str, secrets: set[str], replacement: bool) -> str:
             doc += (" -- THREE states (&#167;27.4 rule 5, null is not absent): <c>null</c> "
                     "(unset) is an absent member, <c>JsonNullable.Null</c> is an explicit JSON "
                     "<c>null</c>, anything else a value.")
+        if (name, f["wire"]) in ABSENT_READS_AS:
+            doc += (f" -- A response that lacks the member (a server before 1.0.0) reads as "
+                    f"<c>{ABSENT_READS_AS[(name, f['wire'])]}</c>.")
         body.extend(xmldoc(doc, "    "))
         body.append(f'    [JsonPropertyName("{f["wire"]}")]')
         if f["name"] in OMIT_WHEN_EMPTY and not f["required"]:
@@ -1023,8 +1067,8 @@ def emit_record(name: str, secrets: set[str], replacement: bool) -> str:
         elif f["required"]:
             body.append(f'    public required {f["type"]} {f["name"]} {{ get; init; }}')
         elif f.get("default_literal") is not None:
-            # S-10 rule 3: absent on the wire reads as this default (never
-            # nullable, never `required`) -- see field_list's comment.
+            # S-10 rule 3 and ABSENT_READS_AS: absent on the wire reads as this
+            # default (never nullable, never `required`) -- see field_list's comment.
             body.append(f'    public {f["type"]} {f["name"]} {{ get; init; }} = {f["default_literal"]};')
         else:
             body.append(f'    public {f["type"]}? {f["name"]} {{ get; init; }}')

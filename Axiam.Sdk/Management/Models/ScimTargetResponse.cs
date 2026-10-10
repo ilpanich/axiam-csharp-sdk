@@ -15,7 +15,7 @@ namespace Axiam.Sdk.Management.Models;
 /// A registered SCIM target, as the management API returns it. **The credential is never
 /// returned**, and there is no member that says anything about it.
 /// </summary>
-public sealed record ScimTargetResponse
+public sealed partial record ScimTargetResponse
 {
     /// <summary>
     /// How AXIAM authenticates to it (no credential).
