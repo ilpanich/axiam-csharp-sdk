@@ -31,6 +31,39 @@ public class OidcDiscoveryTests
         Assert.Equal(1, handler.CountFor("/.well-known/openid-configuration"));
     }
 
+    /// <summary>
+    /// CONTRACT.md &#167;21.5 (contract 1.60): the four revocation and introspection members are
+    /// optional — a document carrying them decodes them, and one without them (a server before
+    /// 1.0.0) still decodes, with each <c>null</c>. The revocation then still authenticates with the
+    /// method the client was configured with (&#167;12.1 rules 3 and 4).
+    /// </summary>
+    [Fact]
+    public async Task OidcDiscoverAsync_TheFourRevocationAndIntrospectionMembersAreOptional()
+    {
+        using var without = new RoutingHandler();
+        OidcTestKit.MapDiscovery(without);
+        OidcConfiguration old = await OidcTestKit.Client(without).OidcDiscoverAsync();
+        Assert.Null(old.RevocationEndpointAuthMethodsSupported);
+        Assert.Null(old.RevocationEndpointAuthSigningAlgValuesSupported);
+        Assert.Null(old.IntrospectionEndpointAuthMethodsSupported);
+        Assert.Null(old.IntrospectionEndpointAuthSigningAlgValuesSupported);
+
+        var document = System.Text.Json.Nodes.JsonNode.Parse(OidcTestKit.DiscoveryJson(OidcTestKit.BaseUrl))!.AsObject();
+        document["revocation_endpoint_auth_methods_supported"] = new System.Text.Json.Nodes.JsonArray(
+            "tls_client_auth", "self_signed_tls_client_auth", "private_key_jwt", "client_secret_basic", "none");
+        document["revocation_endpoint_auth_signing_alg_values_supported"] = new System.Text.Json.Nodes.JsonArray("PS256", "ES256", "EdDSA");
+        document["introspection_endpoint_auth_methods_supported"] = new System.Text.Json.Nodes.JsonArray(
+            "tls_client_auth", "self_signed_tls_client_auth", "private_key_jwt", "client_secret_basic");
+        document["introspection_endpoint_auth_signing_alg_values_supported"] = new System.Text.Json.Nodes.JsonArray("PS256", "ES256", "EdDSA");
+        using var with = new RoutingHandler();
+        with.Map("/.well-known/openid-configuration", _ => OidcTestKit.JsonOk(document.ToJsonString()));
+        OidcConfiguration current = await OidcTestKit.Client(with).OidcDiscoverAsync();
+        Assert.Equal("none", current.RevocationEndpointAuthMethodsSupported![^1]);
+        Assert.DoesNotContain("none", current.IntrospectionEndpointAuthMethodsSupported!);
+        Assert.Equal(new[] { "PS256", "ES256", "EdDSA" }, current.RevocationEndpointAuthSigningAlgValuesSupported);
+        Assert.Equal(new[] { "PS256", "ES256", "EdDSA" }, current.IntrospectionEndpointAuthSigningAlgValuesSupported);
+    }
+
     [Fact]
     public async Task OidcDiscoverAsync_CachesWithinTtl_NoSecondFetch()
     {

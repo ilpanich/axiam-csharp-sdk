@@ -94,6 +94,13 @@ public sealed record MtlsEndpointAliases(
 /// the delivery modes and the user-code flag describe the server, never a client's registration.
 /// </para>
 /// <para>
+/// The four revocation and introspection authentication members (contract 1.60, &#167;21.5) are
+/// optional too: a server before 1.0.0 sends none of them, although <c>openapi.json</c> marks them
+/// required. Like <see cref="TokenEndpointAuthMethodsSupported"/> they describe the deployment and
+/// never change the method this SDK authenticates revocation or introspection with
+/// (&#167;12.1 rules 3 and 4).
+/// </para>
+/// <para>
 /// This record deliberately models a <i>curated subset</i> of the metadata document, not
 /// all of it. <c>acr_values_supported</c>, <c>claims_parameter_supported</c>,
 /// <c>request_parameter_supported</c> and <c>dpop_signing_alg_values_supported</c> are
@@ -127,7 +134,11 @@ public sealed record OidcConfiguration(
     [property: JsonPropertyName("backchannel_authentication_endpoint")] string? BackchannelAuthenticationEndpoint = null,
     [property: JsonPropertyName("backchannel_token_delivery_modes_supported")] IReadOnlyList<string>? BackchannelTokenDeliveryModesSupported = null,
     [property: JsonPropertyName("backchannel_authentication_request_signing_alg_values_supported")] IReadOnlyList<string>? BackchannelAuthenticationRequestSigningAlgValuesSupported = null,
-    [property: JsonPropertyName("backchannel_user_code_parameter_supported")] bool? BackchannelUserCodeParameterSupported = null);
+    [property: JsonPropertyName("backchannel_user_code_parameter_supported")] bool? BackchannelUserCodeParameterSupported = null,
+    [property: JsonPropertyName("revocation_endpoint_auth_methods_supported")] IReadOnlyList<string>? RevocationEndpointAuthMethodsSupported = null,
+    [property: JsonPropertyName("revocation_endpoint_auth_signing_alg_values_supported")] IReadOnlyList<string>? RevocationEndpointAuthSigningAlgValuesSupported = null,
+    [property: JsonPropertyName("introspection_endpoint_auth_methods_supported")] IReadOnlyList<string>? IntrospectionEndpointAuthMethodsSupported = null,
+    [property: JsonPropertyName("introspection_endpoint_auth_signing_alg_values_supported")] IReadOnlyList<string>? IntrospectionEndpointAuthSigningAlgValuesSupported = null);
 
 /// <summary>
 /// The result of <see cref="AxiamClient.OidcBegin"/> — everything the caller needs to start

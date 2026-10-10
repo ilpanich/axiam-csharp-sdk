@@ -43,6 +43,35 @@ public class OidcRefreshAndCredentialsTests
         Assert.Equal("openid profile", form["scope"]);
     }
 
+    /// <summary>
+    /// CONTRACT.md &#167;12.1 (contract 1.60): a refresh may narrow <c>scope</c>, and the response's
+    /// <c>scope</c> is the token set's — never the original grant's, never the one requested.
+    /// </summary>
+    [Fact]
+    public async Task OidcRefreshAsync_TakesTheResponsesScopeNotTheGrantsOriginalOne()
+    {
+        (RoutingHandler handler, AxiamClient client) = SetUp();
+        handler.Map("/oauth2/token", _ => OidcTestKit.JsonOk(
+            """{"access_token":"narrowed-access","token_type":"Bearer","expires_in":900,"refresh_token":"next-refresh","scope":"profile"}"""));
+
+        OidcTokenSet narrowed = await client.OidcRefreshAsync(new OidcRefreshParams
+        {
+            RefreshToken = Sensitive<string>.Wrap("old-refresh"),
+            Scope = "openid profile email",
+        });
+
+        Assert.Equal("profile", narrowed.Scope);
+        Assert.Null(narrowed.IdToken); // `openid` is gone, and with it the ID token
+
+        handler.Map("/oauth2/token", _ => OidcTestKit.JsonOk(OidcTestKit.TokenResponseJson("silent-access")));
+        OidcTokenSet silent = await client.OidcRefreshAsync(new OidcRefreshParams
+        {
+            RefreshToken = Sensitive<string>.Wrap("next-refresh"),
+            Scope = "openid profile email",
+        });
+        Assert.Null(silent.Scope);
+    }
+
     [Fact]
     public async Task OidcRefreshAsync_IsDistinctFromCookieSessionRefresh_NeverAliased()
     {
