@@ -384,8 +384,73 @@ public sealed class SsfReceiverTests : IDisposable
             ReplayStore = broken,
             TimeProvider = _clock,
         });
-        await Assert.ThrowsAsync<InvalidOperationException>(() => failing.PollAsync(StreamId));
+        await Assert.ThrowsAsync<NetworkError>(() => failing.PollAsync(StreamId));
         Assert.All(jtis, j => Assert.False(broken.Holds(j)));
+    }
+
+    /// <summary>
+    /// &#167;32.8 helper (6), contract 1.60 (&#167;34.2 P4, row B1 <i>verify</i>): a store that <b>cannot answer</b>
+    /// gives no verdict. <c>VerifySetAsync</c> raises the &#167;2 type with no reason code &#8212; never
+    /// <c>replayed</c>, never an accepted event &#8212; and <c>PollAsync</c> returns that SET in neither
+    /// <c>Events</c> nor <c>Refused</c>, does not record its <c>jti</c> and does not put it in the
+    /// acknowledgements, so the transmitter offers it again.
+    /// </summary>
+    [Fact]
+    public async Task AStoreThatCannotAnswerGivesNoVerdict()
+    {
+        var store = new SpyReplayStore { FailAfter = 0 };
+        SsfReceiver receiver = new(_client, new SsfReceiverOptions
+        {
+            Issuer = Issuer,
+            Audience = Audience,
+            Keys = SsfKeySource.FromJwksUri($"https://axiam.test{JwksPath}"),
+            AccessTokenProvider = _ => Task.FromResult(Sensitive<string>.Wrap(Secrets.Fresh())),
+            ReplayStore = store,
+            TimeProvider = _clock,
+        });
+
+        // verify_set: the §2 type, not a SetVerificationError (which carries a reason code), and not `replayed`.
+        JsonObject claims = Claims();
+        string set = Set(_key, claims);
+        Exception raised = await Assert.ThrowsAnyAsync<Exception>(() => receiver.VerifySetAsync(set));
+        Assert.IsType<NetworkError>(raised);
+        Assert.IsNotType<SetVerificationError>(raised);
+        Assert.False(store.Holds(claims["jti"]!.GetValue<string>()));
+
+        // The cause is chained (§2: a NetworkError carries one), and the store's own message is not lost.
+        Assert.NotNull(raised.InnerException);
+        Assert.Contains("replay store unavailable", raised.InnerException!.Message, StringComparison.Ordinal);
+
+        // Once the store answers again, the same SET is accepted: it was never judged, so it was never refused.
+        store.Recover();
+        Assert.Equal(claims["jti"]!.GetValue<string>(), (await receiver.VerifySetAsync(set)).Jti);
+
+        // poll: a SET whose store check cannot answer is in neither Events nor Refused, is not recorded
+        // and is reported as unjudged -- so the caller has no jti to acknowledge for it.
+        var broken = new SpyReplayStore { FailAfter = 1 };
+        SsfReceiver polling = new(_client, new SsfReceiverOptions
+        {
+            Issuer = Issuer,
+            Audience = Audience,
+            Keys = SsfKeySource.FromJwksUri($"https://axiam.test{JwksPath}"),
+            AccessTokenProvider = _ => Task.FromResult(Sensitive<string>.Wrap(Secrets.Fresh())),
+            ReplayStore = broken,
+            TimeProvider = _clock,
+        });
+        JsonObject[] batch = { Claims(), Claims() };
+        string[] jtis = batch.Select(c => c["jti"]!.GetValue<string>()).ToArray();
+        var sets = new JsonObject();
+        for (int i = 0; i < batch.Length; i++)
+        {
+            sets[jtis[i]] = Set(_key, batch[i]);
+        }
+
+        _handler.Map("POST", $"/ssf/v1/poll/{StreamId}", _ => CapturingHandler.Json(200, new JsonObject { ["sets"] = sets.DeepClone() }.ToJsonString()));
+        SsfPollResult result = await polling.PollAsync(StreamId);
+        Assert.Equal(jtis[0], Assert.Single(result.Events).Jti);
+        Assert.Empty(result.Refused);
+        Assert.Equal(new[] { jtis[1] }, result.Unjudged);
+        Assert.False(broken.Holds(jtis[1]));
     }
 
     /// <summary>A replay store that remembers what it recorded and can be made to fail.</summary>
@@ -394,9 +459,12 @@ public sealed class SsfReceiverTests : IDisposable
         private readonly HashSet<string> _held = new(StringComparer.Ordinal);
 
         /// <summary>When set, every call after this many successful records throws.</summary>
-        public int? FailAfter { get; init; }
+        public int? FailAfter { get; set; }
 
         public bool Holds(string jti) => _held.Contains(jti);
+
+        /// <summary>The store answers again.</summary>
+        public void Recover() => FailAfter = null;
 
         public bool CheckAndRecord(string jti, TimeSpan window)
         {

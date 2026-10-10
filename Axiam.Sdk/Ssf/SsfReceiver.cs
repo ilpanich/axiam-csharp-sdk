@@ -94,7 +94,10 @@ public sealed class SsfReceiver
     /// <param name="cancellationToken">Cancels a JWKS fetch.</param>
     /// <returns>The verified event.</returns>
     /// <exception cref="SetVerificationError">The SET was refused.</exception>
-    /// <exception cref="NetworkError">The JWKS (or discovery document) could not be fetched.</exception>
+    /// <exception cref="NetworkError">
+    /// The JWKS (or discovery document) could not be fetched, or the <see cref="IReplayStore"/> could
+    /// not answer (&#167;34.2 P3, P4): no verdict, no reason code, and the <c>jti</c> is not recorded.
+    /// </exception>
     public Task<SecurityEvent> VerifySetAsync(string set, CancellationToken cancellationToken = default)
         => VerifyAsync(set, expectedJti: null, cancellationToken);
 
@@ -193,8 +196,20 @@ public sealed class SsfReceiver
 
         JsonProperty only = events.EnumerateObject().First();
 
-        // 9.
-        if (!_replay.CheckAndRecord(jti, _options.ReplayWindow))
+        // 9. A store has three answers (§34.2 P4). `false` is "already seen"; a store that cannot
+        // answer throws, and that is no verdict: the §2 type with no reason code (P3), never
+        // `replayed` -- P2 would acknowledge a `replayed` SET, losing an event nobody processed.
+        bool firstSighting;
+        try
+        {
+            firstSighting = _replay.CheckAndRecord(jti, _options.ReplayWindow);
+        }
+        catch (Exception ex) when (ex is not (OperationCanceledException or NetworkError or SetVerificationError))
+        {
+            throw NetworkError.FromException(ex, "ssf: the replay store could not answer");
+        }
+
+        if (!firstSighting)
         {
             throw new SetVerificationError(SetFailureReason.Replayed, "jti already seen");
         }
