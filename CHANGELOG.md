@@ -12,6 +12,19 @@ the §8 minimal-profile note for C#). The vendored `CONTRACT.md` comes from the 
 platform repository; `openapi.json`, `management-registry.json` and `proto/` are unchanged by this
 step.
 
+### Security
+
+- **A custom CA no longer waives the hostname check (§6).** The additive custom-CA callback
+  (`CustomRootTrust`) ignored `SslPolicyErrors`, so a certificate signed by the configured CA was
+  accepted for *any* host name, and a missing certificate was passed on to the chain build. It now
+  resolves only `RemoteCertificateChainErrors`; `RemoteCertificateNameMismatch` and
+  `RemoteCertificateNotAvailable` are refused, on reads and on the write path alike
+  (`AxiamHttpClientFactory.TrustThroughCustomCa` takes the policy errors). **Breaking only for a
+  deployment that relied on the mismatch**: its server certificate must name the host the client
+  connects to (a SAN entry, not only a CN). Tests over a real TLS server: a certificate from the custom
+  CA for the wrong host is refused on reads and writes, the right host is accepted, no certificate is
+  refused.
+
 ### Fixed
 
 - **A6 (§34.2 P11, R-17): a write the SDK does not retry is no longer re-sent by .NET.** Measured on

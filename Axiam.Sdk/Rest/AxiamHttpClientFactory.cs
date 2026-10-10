@@ -102,8 +102,8 @@ public static class AxiamHttpClientFactory
 
         if (customCa is not null)
         {
-            handler.ServerCertificateCustomValidationCallback = (_, cert, chain, _) => // additive CustomTrustStore chain-trust callback (never `=> true`)
-                TrustThroughCustomCa(customCa, cert, chain);
+            handler.ServerCertificateCustomValidationCallback = (_, cert, chain, sslPolicyErrors) => // additive CustomTrustStore chain-trust callback (never `=> true`)
+                TrustThroughCustomCa(customCa, cert, chain, sslPolicyErrors);
         }
         // No `else` branch sets a validation callback to anything permissive — the
         // default system trust store verification applies untouched (the only
@@ -133,10 +133,26 @@ public static class AxiamHttpClientFactory
     /// <param name="customCa">The configured CA.</param>
     /// <param name="cert">The server's certificate.</param>
     /// <param name="chain">The chain the TLS stack is validating.</param>
-    /// <returns><c>true</c> only when <paramref name="cert"/> builds to <paramref name="customCa"/>.</returns>
-    internal static bool TrustThroughCustomCa(X509Certificate2 customCa, X509Certificate2? cert, X509Chain? chain)
+    /// <param name="sslPolicyErrors">What the TLS stack already found wrong with the presented certificate.</param>
+    /// <returns>
+    /// <c>true</c> only when <paramref name="cert"/> builds to <paramref name="customCa"/> <b>and</b>
+    /// <paramref name="sslPolicyErrors"/> holds nothing but <see cref="SslPolicyErrors.RemoteCertificateChainErrors"/>.
+    /// </returns>
+    /// <remarks>
+    /// A custom CA widens <b>who may sign</b>, not <b>whose name is accepted</b>: only the chain error is
+    /// resolved here. A certificate whose name does not match the host
+    /// (<see cref="SslPolicyErrors.RemoteCertificateNameMismatch"/>) or none at all
+    /// (<see cref="SslPolicyErrors.RemoteCertificateNotAvailable"/>) is refused whatever the chain says.
+    /// </remarks>
+    internal static bool TrustThroughCustomCa(
+        X509Certificate2 customCa, X509Certificate2? cert, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
     {
         if (cert is null || chain is null)
+        {
+            return false;
+        }
+
+        if ((sslPolicyErrors & ~SslPolicyErrors.RemoteCertificateChainErrors) != SslPolicyErrors.None)
         {
             return false;
         }

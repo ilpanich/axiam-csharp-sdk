@@ -136,11 +136,12 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
             X509Certificate2 customCa = _customCa;
             // The same additive CustomTrustStore trust the primary handler installs, through the
             // same function (AxiamHttpClientFactory.TrustThroughCustomCa) -- never `=> true`.
-            handler.SslOptions.RemoteCertificateValidationCallback = (_, cert, chain, _) =>
+            handler.SslOptions.RemoteCertificateValidationCallback = (_, cert, chain, sslPolicyErrors) =>
                 AxiamHttpClientFactory.TrustThroughCustomCa(
                     customCa,
                     cert is null ? null : cert as X509Certificate2 ?? new X509Certificate2(cert),
-                    chain);
+                    chain,
+                    sslPolicyErrors);
         }
 
         return handler;
