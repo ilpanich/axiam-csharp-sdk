@@ -17,10 +17,13 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 - **Source:** [github.com/ilpanich/axiam-csharp-sdk](https://github.com/ilpanich/axiam-csharp-sdk)
 - **License:** Apache-2.0
 - **Target frameworks:** `net8.0` and `net10.0` — see [Supported .NET versions](#supported-net-versions)
+- **Versioning:** stable from 1.0.0 and follows [Semantic Versioning](https://semver.org/): a
+  breaking change to the public API comes only with a new major version, and the
+  [changelog](CHANGELOG.md) names it with its migration.
 
 ## Contract conformance
 
-This SDK conforms to **contract 1.59**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
+This SDK conforms to **contract 1.60**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
 §21, §22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates and the §6.1 rules 6–10
 mTLS device login, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, and the §1.1.1 gRPC
 `validate_token`/`introspect_token` operations, contract 1.51, the §12 OIDC/SSO relying-party
@@ -37,8 +40,13 @@ resource-server helpers, contract 1.48), §28.12, §29, §30, §31, §32 and §3
 signed (the RFC 7592 client configuration operations, contract 1.53; the `directory`, `saml`,
 `ssf` and `scim_targets` management namespaces, contracts 1.54–1.57; the SSF receiver helper,
 contract 1.56; CIBA with the signed request form in PS256, ES256 and EdDSA, and §21.3.1's seventh
-`mtls_endpoint_aliases` member, contract 1.58), read with contract 1.59's §34.2 clarifications
-(P1–P12) of those sections. Nothing in contract 1.53–1.59 is carved out.
+`mtls_endpoint_aliases` member, contract 1.58), read with the §34.2 clarifications (P1–P12, as
+contract 1.60 amends them) and contract 1.60's §34.4 answers — among them §27.15's
+`window_minutes`, `allow_sha1_signatures`, `idp_metadata_signing_cert_pem` and the
+`federation.update_config` null rule, §31's `expected_updated_at`, the §12.1 refresh `scope`, the
+four §21.5 revocation and introspection discovery members, §15.2 rule 9's actor token, the §19.1
+`ssf_unjudged` event and the §6 hostname check under a custom CA. §35 is informative and needs no
+SDK surface. Nothing in contract 1.53–1.60 is carved out.
 
 §12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27, §28, §28.12, §29, §30, §31, §32 and §33 are named rather than
 folded into the range because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
@@ -448,8 +456,8 @@ both ends so a preflight can report which you are actually on. See
 ## Quickstart
 
 ```bash
-dotnet add package Axiam.Sdk
-dotnet add package Axiam.Sdk.AspNetCore   # optional — ASP.NET Core middleware + DI
+dotnet add package Axiam.Sdk --version 1.0.0
+dotnet add package Axiam.Sdk.AspNetCore --version 1.0.0   # optional — ASP.NET Core middleware + DI
 ```
 
 ```csharp
@@ -1895,7 +1903,7 @@ IReadOnlyList<Role> roles = await client.Management.Roles.ListAllAsync();
 Page<UserResponse> found = await client.Users.ListAsync(PageRequest.Matching(25, "ada"));
 ```
 
-Eight things worth knowing:
+Nine things worth knowing:
 
 - **The client's org and tenant are implicit.** A route with `{org_id}` or `{tenant_id}` in it takes
   them from the client (§27.4 rule 3). The handles that carry such routes — and only those — expose
@@ -1951,6 +1959,15 @@ Eight things worth knowing:
   spelling is the empty string, which no server value is, so carrying an unrecognised value back
   into an update is refused by the server rather than written as a spelling it never used. A
   `switch` over these members needs an `Unknown` arm.
+
+- **Contract 1.60's members are passed through, never adjusted** (§27.15). `WindowMinutes` on the
+  notification rules is sent as given — a value outside 1 to 1440 is the server's `400`, never a
+  client-side clamp — and omitted when unset. `FederationConfigResponse.AllowSha1Signatures` reads
+  `false` when a server before 1.0.0 leaves it out. On `Federation.UpdateConfigAsync` the ten
+  nullable members (`MetadataUrl`, `IdpSigningCertPem`, `IdpMetadataSigningCertPem`,
+  `ProviderSlug`, the three OAuth2 endpoints, `AppleTeamId`, `AppleKeyId`, `ButtonIcon`) are
+  `JsonNullable<string>?`: unset keeps the stored value, `JsonNullable<string>.Null` sends `null`
+  and clears it (note 8).
 
 Worked end to end in [`examples/ManagementBasics`](examples/ManagementBasics).
 
@@ -2103,7 +2120,8 @@ SamlServiceProvider read = await client.Saml.GetServiceProviderAsync(sp.Id);
 await client.Saml.UpdateServiceProviderAsync(sp.Id, read.ToInput() with { DisplayName = "Payroll (EU)" });
 
 // The SCIM target's credential and the SSF stream's push header are left absent, which keeps the
-// stored one.
+// stored one. The SCIM target's ToInput() also sends the updated_at it read as
+// expected_updated_at, so the write is refused 409 if another administrator wrote in between.
 ScimTargetResponse target = await client.ScimTargets.GetAsync(targetId);
 await client.ScimTargets.UpdateAsync(targetId, target.ToInput() with { Enabled = false });
 
@@ -2122,6 +2140,11 @@ await client.Ssf.UpdateStreamAsync(streamId, stream.ToInput() with { Status = Ss
 - **Open values.** Unknown enum values decode to `Unknown`; an unknown `ScimTargetAuth` /
   `ScimTargetScope` `type` decodes to `ScimTargetAuthUnknown` / `ScimTargetScopeUnknown`, which
   refuses to be sent (local `ValidationError`).
+- **`ScimTargetInput.ExpectedUpdatedAt` is a `string`, sent exactly as given** (§31.3 rule 4,
+  contract 1.60). The server compares it with the stored version at nanosecond precision, which a
+  `DateTimeOffset` cannot hold, so pass the `updated_at` string you read — `ToInput()` does it for
+  you from a target this SDK decoded. A `409` (`ConflictError`) means another write landed: read
+  again and retry; the SDK never retries it.
 - **No write is retried**, `PATCH` included.
 
 ## SSF receiver (CONTRACT.md §32.7)
@@ -2171,6 +2194,11 @@ await receiver.PollAsync(streamId, new SsfPollOptions
   configured `jwks_uri` (or a discovery document whose `issuer` matches); `jwk`/`x5c` headers are
   never honoured. An unknown `kid` costs one JWKS refetch, at most once a minute. A JWKS that cannot
   be fetched is a `NetworkError`, not a verdict on the SET.
+- **The key cache expires** `JwksCacheTtl` (5 minutes by default) after the fetch that filled it,
+  and never later than 10 minutes — a longer setting is clamped for the receiver and reported as a
+  `ConfigClampedEvent` (§34.2 P6). A **failed** fetch counts toward the once-a-minute limit: a SET
+  inside the minute after one makes no fetch and is a `NetworkError`, so a JWKS outage is not one
+  fetch per SET. A successful fetch does not count.
 - **A verified SET is recorded.** The replay window defaults to, and cannot be set below, seven
   days (`IReplayStore` is pluggable; `MemoryReplayStore` is the default — bounded in time by the
   window, unbounded in count). A store has three answers (§34.2 P4): first sighting (`true`),
@@ -2181,9 +2209,12 @@ await receiver.PollAsync(streamId, new SsfPollOptions
   polled SET you neither acknowledge nor refuse is re-offered and then reads as `replayed` —
   acknowledge what you process.
 - **A poll never keeps a `jti` it does not return** (§34.2 P1). A key fetch or a store that fails
-  part-way through a batch leaves that SET and the rest **unjudged** — not recorded, in neither
-  `Events` nor `Refused`, listed in `Unjudged` — while the SETs already judged are returned. When
-  nothing had been recorded yet, `PollAsync` raises the failure instead.
+  part-way through a batch leaves that SET **unjudged** — not recorded, in neither `Events` nor
+  `Refused`, listed in `Unjudged` — and the rest of the batch asks the store nothing: a later SET
+  that passes the other checks is unjudged too, one that fails them is refused as usual, and the
+  SETs already judged are returned. Such a poll raises nothing, so it emits an `SsfUnjudgedEvent`
+  (§19.1 `ssf_unjudged`: the count and the cause, `KeyFetch` or `ReplayStore`) to make the outage
+  visible. When nothing had been recorded yet, `PollAsync` raises the failure instead.
 - **`PollAsync` acknowledges nothing itself**, sends only the members you set (`{}` when none),
   carries no session, and is retried only on a transport failure, `5xx`, `408` or `429`.
 - `malformed`, `invalid_type` and `replayed` are not RFC 8935 codes; `PushErrorCode()` answers them
@@ -2355,6 +2386,9 @@ var options = new AxiamClientOptions
   constructor is `private protected`, so no type outside the assembly can derive from it — with
   fixed property lists.
 - **Path templates, not URLs**, so a metric label cannot become a cardinality bomb.
+- **Beyond requests:** `RetryEvent` (§16.5), `RefreshEvent` (§9), `ConfigClampedEvent` (a setting
+  the SDK clamped, once, at construction) and `SsfUnjudgedEvent` (an SSF poll that left SETs
+  unjudged, contract 1.60). See [`examples/TelemetryHook`](examples/TelemetryHook).
 
 One `RequestStartEvent`/`RequestEndEvent` pair is emitted **per attempt**, so you can count real
 wire calls.
