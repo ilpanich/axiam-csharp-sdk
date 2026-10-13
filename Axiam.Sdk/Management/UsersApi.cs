@@ -162,9 +162,16 @@ public sealed class UsersApi
     }
 
     /// <summary>
-    /// Issues <c>DELETE /api/v1/users/{user_id}</c>.
+    /// Revokes the account's sessions and its still-active <c>User</c> certificates — those
+    /// issued for it (<c>user_id</c>), and, for a certificate issued without that binding,
+    /// those its <c>metadata.user_id</c> or subject common name ties to it — before the account
+    /// is tombstoned. A revoked certificate goes on its issuer's revocation list, and on
+    /// Vault's for a <c>vault_pki</c> issuer through the cleanup job's sweep (#533).
     /// </summary>
     /// <remarks>
+    /// <para>
+    /// Issues <c>DELETE /api/v1/users/{user_id}</c>.
+    /// </para>
     /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.

@@ -57,6 +57,16 @@ public sealed record CreateCertificateRequest
     public IReadOnlyList<SubjectAltName>? SubjectAltNames { get; init; }
 
     /// <summary>
+    /// The user account a <c>User</c> certificate is issued for (#533), returned as the
+    /// certificate's <c>user_id</c>. Optional; accepted only for <c>cert_type: User</c>, and it
+    /// must name a user of this tenant that has not been deleted or erased. A
+    /// <c>metadata.user_id</c> in the same request must agree with it. Revoking the account's
+    /// certificates — directory linking, deletion, erasure — matches on it.
+    /// </summary>
+    [JsonPropertyName("user_id")]
+    public Guid? UserId { get; init; }
+
+    /// <summary>
     /// Validity duration in days.
     /// </summary>
     [JsonPropertyName("validity_days")]

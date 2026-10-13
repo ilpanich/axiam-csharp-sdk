@@ -63,7 +63,12 @@ public sealed record CreateOAuth2ClientRequest
 
     /// <summary>
     /// B5 — where OIDC back-channel logout tokens are delivered. Omit for a client that does
-    /// not participate.
+    /// not participate. Must be an absolute <c>https</c> URL with no credentials and no
+    /// fragment, naming a public host: an IP literal that is loopback, private, link-local or
+    /// the cloud metadata address, and the names <c>localhost</c>, <c>*.localhost</c>,
+    /// <c>*.local</c> and <c>*.internal</c>, are refused with <c>400</c>. Delivery is one
+    /// request that does not follow redirects, and a name that resolves to a non-public address
+    /// is refused when it is sent.
     /// </summary>
     [JsonPropertyName("backchannel_logout_uri")]
     public string? BackchannelLogoutUri { get; init; }

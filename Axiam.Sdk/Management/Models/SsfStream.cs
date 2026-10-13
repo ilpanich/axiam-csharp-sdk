@@ -15,7 +15,7 @@ namespace Axiam.Sdk.Management.Models;
 /// A registered SSF stream, as the management API returns it. **The push <c>Authorization</c>
 /// header is never returned**; <c>authorization_header_set</c> says whether one is stored.
 /// </summary>
-public sealed record SsfStream
+public sealed partial record SsfStream
 {
     /// <summary>
     /// The SET <c>aud</c>. Unique across the deployment.

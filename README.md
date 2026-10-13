@@ -23,7 +23,7 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to **contract 1.60**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
+This SDK conforms to **contract 1.61**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
 §21, §22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates and the §6.1 rules 6–10
 mTLS device login, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, and the §1.1.1 gRPC
 `validate_token`/`introspect_token` operations, contract 1.51, the §12 OIDC/SSO relying-party
@@ -46,7 +46,11 @@ contract 1.60 amends them) and contract 1.60's §34.4 answers — among them §2
 `federation.update_config` null rule, §31's `expected_updated_at`, the §12.1 refresh `scope`, the
 four §21.5 revocation and introspection discovery members, §15.2 rule 9's actor token, the §19.1
 `ssf_unjudged` event and the §6 hostname check under a custom CA. §35 is informative and needs no
-SDK surface. Nothing in contract 1.53–1.60 is carved out.
+SDK surface. Contract 1.61 (§34.5) is additive: `Certificate.UserId` (§27.11 rule 5) with
+`CreateCertificateRequest.UserId` and `SignCertificateCsrRequest.UserId`, `SsfStreamInput.ExpectedUpdatedAt`
+with the three meanings of `events_requested` on an update, which `SsfStream.ToInput()` honours (§32.2,
+§32.3 rule 4); `CibaPendingList` (§33.3 rule 16) is a console surface no registry operation returns, so this
+SDK has no model for it. Nothing in contract 1.53–1.61 is carved out.
 
 §12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27, §28, §28.12, §29, §30, §31, §32 and §33 are named rather than
 folded into the range because they landed after this SDK already claimed §1–§13: widening the range silently would turn a

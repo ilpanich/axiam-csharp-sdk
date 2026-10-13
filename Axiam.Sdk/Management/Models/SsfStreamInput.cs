@@ -76,10 +76,24 @@ public sealed record SsfStreamInput
 
     /// <summary>
     /// A subset of <c>events_allowed</c>; absent means all of them. The receiver may narrow it
-    /// later, never widen it.
+    /// later, never widen it. On update, absent therefore *resets* a narrowing the receiver
+    /// made to every allowed event, and <c>[]</c> keeps a receiver's "none": a client that
+    /// edits a stream sends the value it read (cut to the new <c>events_allowed</c>), never an
+    /// absent field.
     /// </summary>
     [JsonPropertyName("events_requested")]
     public IReadOnlyList<SsfEventType>? EventsRequested { get; init; }
+
+    /// <summary>
+    /// The <c>updated_at</c> of the stream as the client read it (R1W2-03, T-406). **Update
+    /// only; create ignores it.** When present, the replacement lands only if the stream still
+    /// has that version, else <c>409</c> (reload and retry): a pause or a narrowing the
+    /// receiver made after the form was read is not silently reverted. When absent the
+    /// replacement is conditional on the version the server reads during the request — an old
+    /// client keeps that behaviour, and the console always sends it.
+    /// </summary>
+    [JsonPropertyName("expected_updated_at")]
+    public string? ExpectedUpdatedAt { get; init; }
 
     /// <summary>
     /// An OAuth2 client of the tenant with the <c>client_credentials</c> grant and the
