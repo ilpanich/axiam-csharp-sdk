@@ -65,7 +65,10 @@ public sealed record GeneratedCertificate
     public required KeyAlgorithm KeyAlgorithm { get; init; }
 
     /// <summary>
-    /// Arbitrary key-value metadata (e.g., device serial, user ID binding).
+    /// Arbitrary key-value metadata (e.g., a device serial). Free-form and never authoritative:
+    /// the account a <c>User</c> certificate was issued for is <c>user_id</c>. A
+    /// <c>metadata.user_id</c> is still read, by the revocation of a user's certificates, for a
+    /// row issued before the binding existed (schema v98, #533).
     /// </summary>
     [JsonPropertyName("metadata")]
     public required JsonElement Metadata { get; init; }
@@ -114,4 +117,17 @@ public sealed record GeneratedCertificate
     /// </summary>
     [JsonPropertyName("tenant_id")]
     public required Guid TenantId { get; init; }
+
+    /// <summary>
+    /// The user account a <c>User</c> certificate was issued for, in this tenant (#533);
+    /// <c>null</c> for every other type, for a <c>User</c> certificate issued without one, and
+    /// for every certificate issued before schema v98. What revoking a user's certificates
+    /// matches on — directory linking, administrator deletion and Art. 17 erasure. A row with
+    /// <c>None</c> is matched by the older convention instead (<c>metadata.user_id</c>, or a
+    /// subject common name equal to the account's username or email); a row naming another
+    /// account never is. It does not make the certificate authenticate as the user: a
+    /// certificate authenticates only as the service account it is bound to.
+    /// </summary>
+    [JsonPropertyName("user_id")]
+    public Guid? UserId { get; init; }
 }

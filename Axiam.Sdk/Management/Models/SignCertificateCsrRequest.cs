@@ -54,6 +54,12 @@ public sealed record SignCertificateCsrRequest
     public IReadOnlyList<SubjectAltName>? SubjectAltNames { get; init; }
 
     /// <summary>
+    /// See [<c>CreateCertificateRequest::user_id</c>].
+    /// </summary>
+    [JsonPropertyName("user_id")]
+    public Guid? UserId { get; init; }
+
+    /// <summary>
     /// Validity duration in days.
     /// </summary>
     [JsonPropertyName("validity_days")]

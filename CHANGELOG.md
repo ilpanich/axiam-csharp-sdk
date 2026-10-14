@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-13
+
+Contract 1.61 (accompanying the AXIAM 1.0.1 release), additive and clarifying: `CONTRACT.md`,
+`openapi.json` and `management-registry.json` re-vendored byte for byte from `ilpanich/axiam`
+`058d8e0` (branch `claude/release-1.0.1`; `proto/` is unchanged), the §27 surface regenerated
+(190 operations across 28 namespaces), and the README states conformance at contract 1.61.
+
+### Added
+
+- **`Certificate.UserId` (§27.11 rule 5).** On `Certificate` and `GeneratedCertificate`
+  (`Guid?`): `null` and an absent member both decode as "no account named" (a server before 1.0.1
+  omits it); never required, coalesced or synthesised from `metadata` or the subject.
+  `CreateCertificateRequest.UserId` and `SignCertificateCsrRequest.UserId` are sent exactly as
+  given and the key is omitted, never `null`, when the caller names no account.
+- **`SsfStreamInput.ExpectedUpdatedAt` (§32.2, §32.3 rule 4).** A `string?` — the `updated_at` of
+  the stream as read, sent on `Ssf.UpdateStreamAsync` exactly as given (a `DateTimeOffset` cannot
+  hold the server's nanoseconds or keep an offset) and omitted when unset; a `409` is a
+  `ConflictError` and is not retried. An `EventsRequested` of `[]` is sent as `[]` and an unset one
+  is omitted (the three meanings of §32.2). `SsfStream.ToInput()` now sends the
+  `EventsRequested` and the `updated_at` it read — the server's own string, kept as
+  `SsfStream.UpdatedAtAsRead` like `ScimTargetResponse`'s. This answers ilpanich/axiam#631.
+- `CibaPendingList.total_pending` / `truncated` (§33.3 rule 16) are not modelled: no registry
+  operation returns the type and the generator emits only the models its operations carry.
+
+### Changed
+
+- `SsfStream` is now a `partial` record (as `ScimTargetResponse` is), to carry the wire version.
+- The generated `Certificate`, `GeneratedCertificate`, `CreateCertificateRequest`,
+  `SignCertificateCsrRequest` and `SsfStreamInput` gain an optional `init` property each; XML docs
+  follow the 1.61 `openapi.json`.
+
+### Tests
+
+- `Contract161ModelsTests`: §27.11 rule 5's required test; §32.8 test 1's additions
+  (`expected_updated_at` as given and absent, `[]` as `[]`), the `409`, and `ToInput()`.
+
 ## [1.0.0] - 2026-10-10
 
 The first stable release. `Axiam.Sdk` 1.0.0 and `Axiam.Sdk.AspNetCore` 1.0.0 are a .NET client for

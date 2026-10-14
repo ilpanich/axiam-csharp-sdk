@@ -77,8 +77,21 @@ namespace Axiam.Sdk.Management
 
         /// <summary>
         /// An <see cref="SsfStream"/> as the body that replaces it with itself;
-        /// <c>authorization_header</c> absent (keeps the stored one).
+        /// <c>authorization_header</c> absent (keeps the stored one), and — from contract 1.61
+        /// (CONTRACT.md &#167;32.2) — <c>events_requested</c> and <c>expected_updated_at</c> the
+        /// values it was read with.
         /// </summary>
+        /// <remarks>
+        /// An <c>events_requested</c> of <c>[]</c> (the receiver's "none") stays <c>[]</c>:
+        /// omitting it would reset the stream to every allowed event. The version is the
+        /// server's own string when the stream came from this SDK's <c>Ssf</c> calls, so the
+        /// update is refused <c>409</c> if the stream was written (the receiver included) in
+        /// between; for a stream built any other way it is <see cref="SsfStream.UpdatedAt"/> in
+        /// the round-trip format. When you lower <c>EventsAllowed</c> with a <c>with</c>-expression,
+        /// cut <c>EventsRequested</c> to the new ceiling in the same expression, and set
+        /// <see cref="SsfStreamInput.ExpectedUpdatedAt"/> to <c>null</c> to replace whatever is
+        /// stored.
+        /// </remarks>
         /// <param name="stream">The stream as read.</param>
         /// <returns>The replacement body.</returns>
         public static SsfStreamInput ToInput(this SsfStream stream)
@@ -92,6 +105,8 @@ namespace Axiam.Sdk.Management
                 EndpointUrl = stream.EndpointUrl,
                 EventsAllowed = stream.EventsAllowed,
                 EventsRequested = stream.EventsRequested,
+                ExpectedUpdatedAt = stream.UpdatedAtAsRead
+                    ?? stream.UpdatedAt.ToString("O", System.Globalization.CultureInfo.InvariantCulture),
                 ReceiverClientId = stream.ReceiverClientId,
                 Status = stream.Status,
                 StatusReason = stream.StatusReason,
@@ -191,6 +206,24 @@ namespace Axiam.Sdk.Management.Models
         /// <summary>
         /// <c>updated_at</c> as the server sent it, nanoseconds and all; <c>null</c> for a
         /// target this SDK did not decode itself.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonIgnore]
+        internal string? UpdatedAtAsRead { get; init; }
+
+        string IKeepsWireVersion.WireMember => "updated_at";
+
+        object IKeepsWireVersion.WithWireVersion(string asRead) => this with { UpdatedAtAsRead = asRead };
+    }
+
+    /// <content>
+    /// <c>updated_at</c> exactly as the server sent it, for the <c>expected_updated_at</c> of
+    /// the read-modify-write form (CONTRACT.md &#167;32.2, contract 1.61).
+    /// </content>
+    public sealed partial record SsfStream : IKeepsWireVersion
+    {
+        /// <summary>
+        /// <c>updated_at</c> as the server sent it, nanoseconds and all; <c>null</c> for a
+        /// stream this SDK did not decode itself.
         /// </summary>
         [System.Text.Json.Serialization.JsonIgnore]
         internal string? UpdatedAtAsRead { get; init; }

@@ -156,7 +156,14 @@ public sealed class SsfApi
     /// update moves <c>endpoint_url</c> to another scheme, host or port while a header is
     /// stored: then it must carry <c>authorization_header</c> again or
     /// <c>clear_authorization_header: true</c>, else <c>400</c> (&#167;32.3 rule 5). An update
-    /// overtaken by the receiver's own write is <c>409</c>: read the stream again.
+    /// overtaken by the receiver's own write is <c>409</c>: read the stream again (never
+    /// retried). <b>Contract 1.61:</b> <c>expected_updated_at</c> (the <c>updated_at</c> string
+    /// you read, sent as given) makes the update conditional on that version, <c>409</c> if the
+    /// stream was written since; and <c>events_requested</c> has three meanings on an update
+    /// (&#167;32.2): absent *resets* the stream to every event of <c>events_allowed</c>,
+    /// <c>[]</c> is stored as the receiver's "none", a list is stored as given. An edit
+    /// therefore sends back the <c>events_requested</c> and <c>expected_updated_at</c> it read;
+    /// <c>SsfStream.ToInput()</c> does.
     /// </para>
     /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including

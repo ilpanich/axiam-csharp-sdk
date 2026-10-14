@@ -52,7 +52,8 @@ public sealed record UpdateOAuth2ClientRequest
 
     /// <summary>
     /// Pass an empty string to clear a previously registered URI — the one edit an operator
-    /// makes when an RP is decommissioned.
+    /// makes when an RP is decommissioned. Any other value is held to the same rule as on
+    /// create.
     /// </summary>
     [JsonPropertyName("backchannel_logout_uri")]
     public string? BackchannelLogoutUri { get; init; }

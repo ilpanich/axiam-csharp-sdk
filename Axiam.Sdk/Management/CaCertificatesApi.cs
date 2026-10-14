@@ -199,9 +199,15 @@ public sealed class CaCertificatesApi
     }
 
     /// <summary>
-    /// Issues <c>POST /api/v1/organizations/{org_id}/ca-certificates/{id}/revoke</c>.
+    /// A subordinate CA its parent signed through Vault's PKI engine is revoked on the parent's
+    /// list in Vault as well (#612). A Vault that refuses or cannot be reached does not undo or
+    /// fail the revocation: it is recorded (<c>ca_certificate.vault_revocation_pending</c>, in
+    /// the organization's own audit log) and retried by the cleanup job.
     /// </summary>
     /// <remarks>
+    /// <para>
+    /// Issues <c>POST /api/v1/organizations/{org_id}/ca-certificates/{id}/revoke</c>.
+    /// </para>
     /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
     /// the ones that look idempotent.
