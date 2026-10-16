@@ -111,6 +111,34 @@ DATE_TIME_AS_STRING = {
     ("SsfStreamInput", "expected_updated_at"),
 }
 
+# Request members the schema types as a UUID that the SDK passes as a plain `string?`.
+# Contract 1.62 (§27.11 rule 5, item (i)): the request `user_id` of `certificates.generate`
+# and `certificates.sign_csr` is untyped, so that a value that is not a UUID can be sent and
+# the server's `400` for it is the caller's to see -- a `Guid?` makes the malformed value
+# unrepresentable, which is a client-side judgement of the value. The RESPONSE member
+# (`Certificate.UserId`) stays a `Guid?`. Source-breaking where the request member was typed.
+UNTYPED_STRING_REQUEST_MEMBERS = {
+    ("CreateCertificateRequest", "user_id"),
+    ("SignCertificateCsrRequest", "user_id"),
+}
+UNTYPED_STRING_NOTE = (
+    "\n\n**Contract 1.62 (§27.11 rule 5):** passed as the text of a UUID, **untyped** -- "
+    "a string, not a `Guid` -- so that a value that is not a UUID reaches the server and its "
+    "`400` is surfaced as a `ValidationError`; the SDK does not judge it. Left `null` (or "
+    "never set) the key is omitted; `null` is never sent."
+)
+
+# Required integer query parameters, typed `long` and required rather than `string? = null`.
+# CONTRACT §36.3 rule 2 and §36.8 test 2: `delete_segment` and `delete_profile` "send
+# `?version=` and cannot be called without one" -- the version the caller read, sent exactly.
+# Scoped to these two operations by name: `privacy.cancel_delete`'s `token` is also a required
+# query parameter in the registry, and making that one required is a different (source-
+# breaking) change that no contract item asks for.
+REQUIRED_VERSION_QUERY = {
+    ("network.delete_segment", "version"),
+    ("network.delete_profile", "version"),
+}
+
 # Call-site documentation the contract makes an SDK repeat (§29.3, §30.3, §31.3,
 # §32.2), keyed by the registry's canonical operation name. Written in a small
 # markdown dialect (**bold**, `code`) that `note_xml` turns into XML doc markup.
@@ -206,19 +234,27 @@ CALL_SITE_NOTES: dict[str, str] = {
         "into `next`, wait until every SP has refreshed the metadata, then promote."
     ),
     "ssf.update_stream": (
-        "An omitted optional member takes its default (§32.2) -- **except "
+        "**The three meanings of `events_requested` on an update** (§32.2, contract 1.62) -- keep "
+        "them apart: **absent** *resets* the stream to every event of `events_allowed` (as on "
+        "create), widening what the receiver narrowed; **`[]`** is stored as the receiver's "
+        "\"none\" (it does not widen, and the stream carries nothing); **a list** is stored as "
+        "given and refused (`400`) if any entry is outside `events_allowed`. A raw API client, "
+        "with no SDK, is bound by the same meaning: an `events_requested` left out of the `PUT` "
+        "resets the stream. An omitted optional member takes its default on every write, including an "
+        "update: `description`, `endpoint_url` and `status_reason` null, `subject_format` "
+        "`iss_sub`, `status` `enabled`, `clear_authorization_header` false -- **except "
         "`authorization_header`, which absent keeps the stored one** -- unless the "
         "update moves `endpoint_url` to another scheme, host or port while a header "
         "is stored: then it must carry `authorization_header` again or "
-        "`clear_authorization_header: true`, else `400` (§32.3 rule 5). An update "
-        "overtaken by the receiver's own write is `409`: read the stream again (never "
-        "retried). **Contract 1.61:** `expected_updated_at` (the `updated_at` string you "
-        "read, sent as given) makes the update conditional on that version, `409` if the "
-        "stream was written since; and `events_requested` has three meanings on an update "
-        "(§32.2): absent *resets* the stream to every event of `events_allowed`, `[]` is "
-        "stored as the receiver's \"none\", a list is stored as given. An edit therefore "
-        "sends back the `events_requested` and `expected_updated_at` it read; "
-        "`SsfStream.ToInput()` does."
+        "`clear_authorization_header: true`, else `400` (§32.3 rule 5). **Contract 1.61:** "
+        "`expected_updated_at` (the `updated_at` string you read, sent as given; `null` or unset "
+        "is \"none\" and the key is omitted) makes the update conditional on that version, and "
+        "an update overtaken by a write since -- the receiver's own included -- is `409` "
+        "(`ConflictError`, never retried): read the stream again. An edit therefore sends back "
+        "the `events_requested` and `expected_updated_at` it read, with `events_requested` cut to "
+        "the new `events_allowed` when the ceiling is lowered. **Use "
+        "`stream.ToInput(new SsfStreamChanges { ... })`**, the change-taking form, which does "
+        "all three; `stream.ToInput()` is the plain converter and leaves the cut to you."
     ),
     "scim_targets.create": (
         "`credential` is required here (§31.3 rule 2). It is write-only: no "
@@ -945,6 +981,7 @@ def field_list(schema_name: str, secrets: set[str]) -> tuple[list[dict[str, Any]
             "name": prop(wire),
             "type": ("Sensitive<string>" if wire in secrets
                      else "string" if (schema_name, wire) in DATE_TIME_AS_STRING
+                     else "string" if (schema_name, wire) in UNTYPED_STRING_REQUEST_MEMBERS
                      else f"JsonNullable<{cs_type(props[wire])}>"
                      if (schema_name, wire) in EXPLICIT_NULL_FIELDS
                      else cs_type(props[wire])),
@@ -952,7 +989,9 @@ def field_list(schema_name: str, secrets: set[str]) -> tuple[list[dict[str, Any]
                          else wire in required),
             "default_literal": ("true" if is_response_side_inherit
                                 else ABSENT_READS_AS.get((schema_name, wire))),
-            "doc": props[wire].get("description") or f"the server's {wire} field",
+            "doc": ((props[wire].get("description") or f"the server's {wire} field")
+                    + (UNTYPED_STRING_NOTE if (schema_name, wire) in UNTYPED_STRING_REQUEST_MEMBERS
+                       else "")),
             "secret": wire in secrets,
             "explicit_null": (schema_name, wire) in EXPLICIT_NULL_FIELDS,
         })
@@ -1342,7 +1381,17 @@ def operation_params(namespace: str, op: dict[str, Any]) -> list[dict[str, str]]
             "doc": "the request body",
         })
     _, other = split_query(op)
+    canonical = f"{namespace}.{op_name_of(namespace, op)}"
     for query in other:
+        if (canonical, query) in REQUIRED_VERSION_QUERY:
+            params.append({
+                "name": arg(query), "type": "long", "default": "",
+                "doc": f"the {query} you read, sent exactly as given (&#167;36.3 rule 2); "
+                       "there is no overload without it",
+            })
+    for query in other:
+        if (canonical, query) in REQUIRED_VERSION_QUERY:
+            continue
         params.append({
             "name": arg(query), "type": "string?", "default": " = null",
             "doc": f"the optional {query.replace('_', ' ')} filter, or <c>null</c> to omit it",
@@ -1449,7 +1498,10 @@ def emit_operation(namespace: str, opname: str, op: dict[str, Any]) -> list[str]
     _, other = split_query(op)
     if other or op["paginated"]:
         if other:
-            entries = ", ".join(f'["{q}"] = {arg(q)}' for q in other)
+            entries = ", ".join(
+                f'["{q}"] = {arg(q)}.ToString(System.Globalization.CultureInfo.InvariantCulture)'
+                if (canonical, q) in REQUIRED_VERSION_QUERY else f'["{q}"] = {arg(q)}'
+                for q in other)
             base = ("new Dictionary<string, string?>(StringComparer.Ordinal) { "
                     + entries + " }")
         else:
@@ -1775,8 +1827,12 @@ def call_arguments(namespace: str, op: dict[str, Any],
         body = PRECHECK_TEST_BODIES.get(canonical) or literal_for(schema, secrets.get(schema, set()))
         args.append(f"body: {body}")
     _, other = split_query(op)
+    canonical_op = f"{namespace}.{op_name_of(namespace, op)}"
     for query in other:
-        args.append(f"{arg(query).lstrip('@')}: null")
+        if (canonical_op, query) in REQUIRED_VERSION_QUERY:
+            args.append(f"{arg(query).lstrip('@')}: 7")
+        else:
+            args.append(f"{arg(query).lstrip('@')}: null")
     if op["paginated"]:
         args.append("page: PageRequest.Of(50)")
     return args, route

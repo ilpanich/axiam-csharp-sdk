@@ -46,9 +46,9 @@ public sealed class ManagementClientAccessorsTests : ManagementTestBase
             Assert.Equal(property.PropertyType, onClient!.PropertyType);
         }
 
-        // 28 namespaces (contract 1.58). Pinned so a partial regeneration that dropped
-        // one fails here rather than quietly shipping 27.
-        Assert.Equal(28, onAggregate.Length);
+        // 29 namespaces (contract 1.62: `network` joins the 28 of contract 1.58). Pinned so a
+        // partial regeneration that dropped one fails here rather than quietly shipping 28.
+        Assert.Equal(29, onAggregate.Length);
     }
 
     /// <summary>Both forms reach the same route with the client's own scope.</summary>

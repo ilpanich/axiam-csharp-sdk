@@ -86,8 +86,12 @@ public sealed record GeneratedCertificate
     public required DateTimeOffset NotBefore { get; init; }
 
     /// <summary>
-    /// PEM-encoded private key — returned only on generation. -- SECRET: redacted from ToString
-    /// and from every rendering except the one request body it is sent in.
+    /// PEM-encoded private key — returned only on generation. An unencrypted PKCS#8 <c>PRIVATE
+    /// KEY</c> block. An Ed25519 key AXIAM generated is RFC 8410 version 1 (<c>version</c>
+    /// INTEGER 0, the 32-byte seed and no embedded public key), which OpenSSL 3.0 reads; the
+    /// longer RFC 5958 v2 form it does not. An RSA-4096 key is the usual PKCS#8
+    /// <c>RSAPrivateKey</c>. -- SECRET: redacted from ToString and from every rendering except
+    /// the one request body it is sent in.
     /// </summary>
     [JsonPropertyName("private_key_pem")]
     public required Sensitive<string> PrivateKeyPem { get; init; }

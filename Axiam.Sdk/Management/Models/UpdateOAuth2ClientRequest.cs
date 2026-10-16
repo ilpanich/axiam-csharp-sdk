@@ -138,7 +138,9 @@ public sealed record UpdateOAuth2ClientRequest
     public bool? RequirePar { get; init; }
 
     /// <summary>
-    /// the server's scopes field
+    /// Replace the client's scopes. On a <c>managed_by: dcr | cimd</c> client a scope the
+    /// request adds that is outside the tenant's effective <c>dcr_allowed_scopes</c> is refused
+    /// with <c>422</c> (#636); an administrator-managed client is not bounded.
     /// </summary>
     [JsonPropertyName("scopes")]
     public IReadOnlyList<string>? Scopes { get; init; }

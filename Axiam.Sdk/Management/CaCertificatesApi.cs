@@ -97,7 +97,9 @@ public sealed class CaCertificatesApi
     /// <summary>
     /// Generate a CA. What that means depends on the configured key custodian, and deliberately
     /// not on the request: * Under <c>database</c> or <c>vault</c> custody, AXIAM generates a
-    /// self-signed root and returns its private key once, in <c>private_key_pem</c>. * Under
+    /// self-signed root and returns its private key once, in <c>private_key_pem</c>: an
+    /// unencrypted PKCS#8 <c>PRIVATE KEY</c> block, which for Ed25519 is RFC 8410 version 1
+    /// (the seed alone, no public-key attribute) so that OpenSSL 3.0 can read it. * Under
     /// <c>vault_pki</c> custody, Vault generates a root and a signing intermediate beneath it,
     /// and the response has **no** <c>private_key_pem</c> because the key never existed outside
     /// Vault. The root's certificate comes back in <c>chain_pem</c>, which is the only copy

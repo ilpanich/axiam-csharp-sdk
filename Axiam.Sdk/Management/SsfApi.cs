@@ -151,19 +151,30 @@ public sealed class SsfApi
     /// carry over the parts you mean to keep (&#167;27.4 rule 5).
     /// </para>
     /// <para>
-    /// An omitted optional member takes its default (&#167;32.2) &#8212; <b>except
-    /// <c>authorization_header</c>, which absent keeps the stored one</b> &#8212; unless the
-    /// update moves <c>endpoint_url</c> to another scheme, host or port while a header is
-    /// stored: then it must carry <c>authorization_header</c> again or
-    /// <c>clear_authorization_header: true</c>, else <c>400</c> (&#167;32.3 rule 5). An update
-    /// overtaken by the receiver's own write is <c>409</c>: read the stream again (never
-    /// retried). <b>Contract 1.61:</b> <c>expected_updated_at</c> (the <c>updated_at</c> string
-    /// you read, sent as given) makes the update conditional on that version, <c>409</c> if the
-    /// stream was written since; and <c>events_requested</c> has three meanings on an update
-    /// (&#167;32.2): absent *resets* the stream to every event of <c>events_allowed</c>,
-    /// <c>[]</c> is stored as the receiver's "none", a list is stored as given. An edit
-    /// therefore sends back the <c>events_requested</c> and <c>expected_updated_at</c> it read;
-    /// <c>SsfStream.ToInput()</c> does.
+    /// <b>The three meanings of <c>events_requested</c> on an update</b> (&#167;32.2, contract
+    /// 1.62) &#8212; keep them apart: <b>absent</b> *resets* the stream to every event of
+    /// <c>events_allowed</c> (as on create), widening what the receiver narrowed;
+    /// <b><c>[]</c></b> is stored as the receiver's "none" (it does not widen, and the stream
+    /// carries nothing); <b>a list</b> is stored as given and refused (<c>400</c>) if any entry
+    /// is outside <c>events_allowed</c>. A raw API client, with no SDK, is bound by the same
+    /// meaning: an <c>events_requested</c> left out of the <c>PUT</c> resets the stream. An
+    /// omitted optional member takes its default on every write, including an update:
+    /// <c>description</c>, <c>endpoint_url</c> and <c>status_reason</c> null,
+    /// <c>subject_format</c> <c>iss_sub</c>, <c>status</c> <c>enabled</c>,
+    /// <c>clear_authorization_header</c> false &#8212; <b>except <c>authorization_header</c>,
+    /// which absent keeps the stored one</b> &#8212; unless the update moves
+    /// <c>endpoint_url</c> to another scheme, host or port while a header is stored: then it
+    /// must carry <c>authorization_header</c> again or <c>clear_authorization_header: true</c>,
+    /// else <c>400</c> (&#167;32.3 rule 5). <b>Contract 1.61:</b> <c>expected_updated_at</c>
+    /// (the <c>updated_at</c> string you read, sent as given; <c>null</c> or unset is "none"
+    /// and the key is omitted) makes the update conditional on that version, and an update
+    /// overtaken by a write since &#8212; the receiver's own included &#8212; is <c>409</c>
+    /// (<c>ConflictError</c>, never retried): read the stream again. An edit therefore sends
+    /// back the <c>events_requested</c> and <c>expected_updated_at</c> it read, with
+    /// <c>events_requested</c> cut to the new <c>events_allowed</c> when the ceiling is
+    /// lowered. <b>Use <c>stream.ToInput(new SsfStreamChanges { ... })</c></b>, the
+    /// change-taking form, which does all three; <c>stream.ToInput()</c> is the plain converter
+    /// and leaves the cut to you.
     /// </para>
     /// <para>
     /// Not retried: &#167;27.4 rule 8 makes every write on this surface single-shot, including
