@@ -37,7 +37,7 @@ password-login fallback, contract 1.29, the §5.2 rule 1 acting tenant, contract
 rule 9 sender-constrained-token check, contract 1.51, and the §27 Management API — all 202
 operations across 29 namespaces (190 across 28 before contract 1.62) with the §27.6 declarative layer, including the §27.6.1 resource
 metadata, two-shape role bindings and service accounts, contract 1.51 — and the §28 MCP
-resource-server helpers, contract 1.48), §28.12, §29, §30, §31, §32 and §33, with §32.7 and §33.2
+resource-server helpers, contract 1.48), §28.12, §29, §30, §31, §32, §33 and §36, with §32.7 and §33.2
 signed (the RFC 7592 client configuration operations, contract 1.53; the `directory`, `saml`,
 `ssf` and `scim_targets` management namespaces, contracts 1.54–1.57; the SSF receiver helper,
 contract 1.56; CIBA with the signed request form in PS256, ES256 and EdDSA, and §21.3.1's seventh
@@ -57,9 +57,9 @@ authenticates at both device-grant endpoints (§14.1), the change-taking form of
 (`stream.ToInput(new SsfStreamChanges { ... })`, §32.2), and the request `user_id` as a plain `string?`
 (§27.11 rule 5, source-breaking: see the changelog). Nothing in contract 1.53–1.62 is carved out except what
 this README says it declines: `webhooks` in the manifest, the `private_key_jwt` client assertion and DPoP
-proof generation.
+proof generation. Manifest pruning: not offered in any namespace (§27.10).
 
-§12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27, §28, §28.12, §29, §30, §31, §32 and §33 are named rather than
+§12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27, §28, §28.12, §29, §30, §31, §32, §33 and §36 are named rather than
 folded into the range because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
 statement that was true when written into a different claim without anyone editing it.
 

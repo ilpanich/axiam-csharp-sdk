@@ -106,22 +106,41 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
             return true;
         }
 
-        // `/t/{tenant_id}/oauth2/<endpoint>`: one non-empty segment between `/t/` and `/oauth2/`.
+        string? rest = TenantFormOAuth2Rest(path);
+        return rest is not null && ReactiveRefreshExemptPaths.Contains(rest);
+    }
+
+    /// <summary>
+    /// For <c>/t/{tenant_id}/oauth2/&lt;endpoint&gt;</c> (one non-empty segment between
+    /// <c>/t/</c> and <c>/oauth2/</c>) the <c>/oauth2/&lt;endpoint&gt;</c> remainder, else
+    /// <c>null</c>.
+    /// </summary>
+    private static string? TenantFormOAuth2Rest(string path)
+    {
         const string TenantPrefix = "/t/";
         if (!path.StartsWith(TenantPrefix, StringComparison.Ordinal))
         {
-            return false;
+            return null;
         }
 
         int slash = path.IndexOf('/', TenantPrefix.Length);
         if (slash <= TenantPrefix.Length)
         {
-            return false;
+            return null;
         }
 
         string rest = path.Substring(slash);
-        return rest.StartsWith("/oauth2/", StringComparison.Ordinal) && ReactiveRefreshExemptPaths.Contains(rest);
+        return rest.StartsWith("/oauth2/", StringComparison.Ordinal) ? rest : null;
     }
+
+    /// <summary>
+    /// True for any OAuth2 endpoint path in either issuer form — <c>/oauth2/…</c> and
+    /// <c>/t/{tenant_id}/oauth2/…</c> — where no session or adopted bearer is ever attached
+    /// (CONTRACT.md &#167;6.1 rule 11, &#167;12.1 rule 3, &#167;14.6).
+    /// </summary>
+    private static bool IsOAuth2EndpointPath(string? path) =>
+        path is not null
+        && (path.StartsWith("/oauth2/", StringComparison.Ordinal) || TenantFormOAuth2Rest(path) is not null);
 
     private const string AccessCookieName = "axiam_access";
     private const string CsrfCookieName = "axiam_csrf";
@@ -391,7 +410,16 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
             return;
         }
 
-        string? access = overrideAccessToken ?? _staticBearerToken ?? ReadAccessTokenFromCookieJar();
+        // CONTRACT.md §6.1 rule 11, §12.1 rule 3 and §14.6 (contract 1.62; C162-05): no session
+        // credential and no adopted (device / §6.1) bearer goes to an /oauth2/* endpoint, in
+        // either issuer form. Those requests authenticate their client in the body
+        // (client_secret_post) or not at all; the session's access token has no business there.
+        // A header the caller put on this one request itself (an RFC 7591 initial access token or
+        // an RFC 7592 registration_access_token, §28.12) is left exactly as it is: this branch
+        // neither adds nor removes an Authorization header.
+        string? access = IsOAuth2EndpointPath(request.RequestUri?.AbsolutePath)
+            ? null
+            : overrideAccessToken ?? _staticBearerToken ?? ReadAccessTokenFromCookieJar();
         if (access is not null)
         {
             request.Headers.Remove(AuthorizationHeaderName);

@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Contracts 1.61 and 1.62, released together with the AXIAM 1.1.0 platform. Release 1.0.1 was never
 tagged, so its section is merged here and there is no `[1.0.1]`. `CONTRACT.md`, `openapi.json` and
-`management-registry.json` are re-vendored byte for byte from `ilpanich/axiam` `d76c5a80b` (branch
+`management-registry.json` are re-vendored byte for byte from `ilpanich/axiam` `d25413506` (branch
 `claude/release-1.1.0`; `proto/` is unchanged), the §27 surface is regenerated (**202 operations across
 29 namespaces**, from 190 across 28), and the README states conformance at contract 1.62. The SemVer
 promise in the README now says that a contract record may add a member or widen a type with a minor
@@ -89,6 +89,13 @@ Source-breaking, wire-additive. Each entry says what to change.
   1.62 item (d): "not modelled" is conformant).
 
 ### Changed
+
+- **Contract 1.62 corrections (re-vendored from `d25413506`) and C162-05.** The re-vendor carries the
+  corrected §34.6 items, §36 and the Conformance Statement sentence; the README now names §36 and states that
+  manifest pruning is not offered in any namespace (§27.10). `AxiamHttpMessageHandler` no longer attaches a
+  session's access token, or an adopted device / §6.1 bearer, as `Authorization` to any `/oauth2/*` request
+  (either issuer form; §6.1 rule 11, §12.1 rule 3, §14.6): `device_authorize`, `device_poll` and the token
+  requests carry none. A credential the caller sets on that one request (RFC 7591 / RFC 7592, §28.12) is kept.
 
 - **`/oauth2/device_authorization` joins the paths whose `401` never enters the §9 refresh guard**
   (§14.1 rule 4). It did not, so a signed-in client's `invalid_client` there would have called
