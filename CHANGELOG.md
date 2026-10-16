@@ -7,15 +7,71 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.1] - 2026-10-13
+## [1.1.0] - 2026-10-16
 
-Contract 1.61 (accompanying the AXIAM 1.0.1 release), additive and clarifying: `CONTRACT.md`,
-`openapi.json` and `management-registry.json` re-vendored byte for byte from `ilpanich/axiam`
-`058d8e0` (branch `claude/release-1.0.1`; `proto/` is unchanged), the §27 surface regenerated
-(190 operations across 28 namespaces), and the README states conformance at contract 1.61.
+Contracts 1.61 and 1.62, released together with the AXIAM 1.1.0 platform. Release 1.0.1 was never
+tagged, so its section is merged here and there is no `[1.0.1]`. `CONTRACT.md`, `openapi.json` and
+`management-registry.json` are re-vendored byte for byte from `ilpanich/axiam` `d76c5a80b` (branch
+`claude/release-1.1.0`; `proto/` is unchanged), the §27 surface is regenerated (**202 operations across
+29 namespaces**, from 190 across 28), and the README states conformance at contract 1.62. The SemVer
+promise in the README now says that a contract record may add a member or widen a type with a minor
+bump and that a removal waits for 2.0.0.
+
+### Breaking changes
+
+Source-breaking, wire-additive. Each entry says what to change.
+
+- **`CreateCertificateRequest.UserId` and `SignCertificateCsrRequest.UserId` are `string?`, not `Guid?`
+  (§27.11 rule 5, contract 1.62 item (i)).** The request member is passed as the text of a UUID, untyped,
+  so that a value that is not a UUID reaches the server and its `400` surfaces as a `ValidationError`; a
+  `Guid?` made the malformed value unrepresentable, which is a client-side judgement of it. The wire is
+  unchanged for a valid value. *Migration:* pass `userId.ToString()`; code that assigned a `Guid` no
+  longer compiles. The **response** members, `Certificate.UserId` and `GeneratedCertificate.UserId`,
+  stay `Guid?`. An explicitly assigned `null` is "none": the key is omitted and `null` is never sent.
+- **`ManagementManifest`, `PlanTarget` and `StepOutcome` grew** (contract 1.62 item (n)): three
+  properties, three enum members appended and an optional trailing `StepOutcome.ReasonCode`. Existing
+  code compiles and plans exactly as before; a `switch` over `PlanTarget` without a default arm gains
+  a warning for the new members, and a positional deconstruction of `StepOutcome` needs the extra element.
+- **A `403` from a management call carries the server's `message`** after the operation name in
+  `AuthzError.Message` (`Action` and `ResourceId` are unchanged). Code that compared the message text
+  for equality should branch on `Action` or on the type instead.
 
 ### Added
 
+- **The `network` namespace (§36, contract 1.62 item (l)).** Twelve operations on `client.Network` and
+  `client.Management.Network`: `ListSegmentsAsync` / `ListSegmentsAllAsync` (with `site`),
+  `CreateSegmentAsync`, `GetSegmentAsync`, `ReplaceSegmentAsync`, `DeleteSegmentAsync(id, long version)`,
+  `ListProfilesAsync` / `ListProfilesAllAsync`, `CreateProfileAsync`, `GetProfileAsync`,
+  `ReplaceProfileAsync`, `DeleteProfileAsync(segmentId, long version)`, `GetPolicyAsync` and
+  `ReplacePolicyAsync`, with their models (`NetworkSegmentResponse`, `NetworkReplyProfile`,
+  `NetworkPolicyResponse`, the create and replace requests, `NetworkSegmentKind`,
+  `RadiusTerminationAction`, `RadiusServiceType`; every enumeration open, decoding an unknown value to
+  `Unknown`). The two deletes cannot be called without the version. The decision route
+  (`POST /api/v1/network/decide`) is not SDK work and has no method (§27.0, §36.11).
+- **`ConflictError.ReasonCode` (§36.4).** The `409` body's `reason_code`, verbatim and open
+  (`stale_version`, `strands_profile`, `has_children`, `site_gone`, `duplicate_name`, `duplicate_vlan`,
+  `duplicate_rank`, `profile_exists`, `other`); `null` when the server sent none.
+- **`network` in a §27.6 manifest (§27.6.2, items (n), (u), (v), (w)).** `ManagementManifest.NetworkPolicy`
+  (a singleton), `NetworkSegments` and `NetworkProfiles`, and `ManifestBuilder.NetworkSegment` /
+  `NetworkProfile` / `NetworkPolicy`. A segment is keyed by site + kind + name (the wire spelling,
+  `access` or `quarantine`), a profile by its segment. Planned after everything else: policy, segments,
+  profiles; `PlanAsync` issues `GET`s only and judges every stated member on the read (a profile's
+  effective timeout, so a value above the cap is an `Update` whose apply the server refuses `403` and
+  the apply stops); `filter_ids` is compared as a set, a duplicate within one segment refused before any
+  request; an `Update` is a full replacement built from the read, with the version read sent exactly and a
+  profile's `segment_version` taken from the segment write's response; a `409` stops the apply and its
+  `reason_code` is on `StepOutcome.ReasonCode`. There is no pruning in this SDK, for `network` either.
+- **The change-taking form for an SSF stream (§32.2, contract 1.62 item (e)).**
+  `stream.ToInput(new SsfStreamChanges { ... })` sends the `events_requested` and the
+  `expected_updated_at` as read (the server's own string; `[]` stays `[]`) and cuts `events_requested` to
+  the new `events_allowed`. The plain `ToInput()` remains and its documentation names the caller's duty.
+  `expected_updated_at` as the response's own string (item (g)) was already this SDK's form.
+- **The device grant authenticates its client (§14.1, contract 1.62 items (m) and (t)).**
+  `DeviceAuthorizeAsync` and `DevicePollAsync` send `client_secret` in the form body when the client was
+  built with one (never `Authorization: Basic`), a client configured with a certificate presents it, and a
+  public client sends `client_id` alone and is not refused. A `401` `invalid_client` is an
+  `OAuthProtocolError` after one request. This SDK has no `private_key_jwt` assertion and generates no
+  DPoP proof, so it cannot drive a client registered for either.
 - **`Certificate.UserId` (§27.11 rule 5).** On `Certificate` and `GeneratedCertificate`
   (`Guid?`): `null` and an absent member both decode as "no account named" (a server before 1.0.1
   omits it); never required, coalesced or synthesised from `metadata` or the subject.
@@ -29,17 +85,34 @@ Contract 1.61 (accompanying the AXIAM 1.0.1 release), additive and clarifying: `
   `EventsRequested` and the `updated_at` it read — the server's own string, kept as
   `SsfStream.UpdatedAtAsRead` like `ScimTargetResponse`'s. This answers ilpanich/axiam#631.
 - `CibaPendingList.total_pending` / `truncated` (§33.3 rule 16) are not modelled: no registry
-  operation returns the type and the generator emits only the models its operations carry.
+  operation returns the type and the generator emits only the models its operations carry (contract
+  1.62 item (d): "not modelled" is conformant).
 
 ### Changed
 
+- **`/oauth2/device_authorization` joins the paths whose `401` never enters the §9 refresh guard**
+  (§14.1 rule 4). It did not, so a signed-in client's `invalid_client` there would have called
+  `/api/v1/auth/refresh`.
+- The `Ssf.UpdateStreamAsync` documentation states, where the call is documented, the three meanings of
+  `events_requested` (absent resets to all of `events_allowed`, `[]` is none, a list is stored as given
+  and refused `400` outside `events_allowed`), the defaults of the omitted members and the raw-API-client
+  sentence (§32.2, contract 1.62 item (h)).
 - `SsfStream` is now a `partial` record (as `ScimTargetResponse` is), to carry the wire version.
 - The generated `Certificate`, `GeneratedCertificate`, `CreateCertificateRequest`,
   `SignCertificateCsrRequest` and `SsfStreamInput` gain an optional `init` property each; XML docs
-  follow the 1.61 `openapi.json`.
+  follow the 1.62 `openapi.json`.
+- The 2026-10-13 change-log line of the contract (item (j)) reads "wire-additive; source-breaking in
+  Rust, Java, Kotlin and PHP, released as 1.1.0". For this SDK the contract-1.61 members were
+  source-compatible; the source-breaking change above is item (i) of contract 1.62.
+- Both packages are version `1.1.0`.
 
 ### Tests
 
+- `Contract162ModelsTests` (§36.8 tests 1 to 5; the request `user_id` as an untyped string and an assigned
+  `null` as "none"), `NetworkManifestTests` (§27.9 "Manifest, `network`", over a stateful fake that keeps
+  the version rules), `Contract162SsfTests` (§32.8 test 7 and the call-site documentation check),
+  `Contract162DeviceGrantTests` (§14.6's 1.62 assertions), and the generated surface cases for the twelve
+  operations.
 - `Contract161ModelsTests`: §27.11 rule 5's required test; §32.8 test 1's additions
   (`expected_updated_at` as given and absent, `[]` as `[]`), the `409`, and `ToInput()`.
 
