@@ -68,6 +68,14 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
     private const string OAuth2BcAuthorizePath = "/oauth2/bc-authorize";
 
     /// <summary>
+    /// CONTRACT.md &#167;14.1 rule 4 and &#167;14.6 (contract 1.62): a <c>401 invalid_client</c> from the
+    /// device authorization endpoint is a failed client authentication, never a session expiry,
+    /// and "does not enter the &#167;9 refresh guard" - the same answer the poll's
+    /// <c>/oauth2/token</c> already gets.
+    /// </summary>
+    private const string OAuth2DeviceAuthorizationPath = "/oauth2/device_authorization";
+
+    /// <summary>
     /// CONTRACT.md &#167;6.1 rules 6/8: "this IS the login" — a 401 on
     /// <c>POST /api/v1/auth/device</c> itself is an authentication outcome, exactly like
     /// <see cref="LoginPath"/>'s, never routed through the &#167;9 refresh guard.
@@ -79,7 +87,7 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
         {
             RefreshPath, LoginPath, MfaVerifyPath, LogoutPath,
             OAuth2TokenPath, OAuth2IntrospectPath, OAuth2RevokePath, OAuth2BcAuthorizePath,
-            DeviceAuthPath,
+            OAuth2DeviceAuthorizationPath, DeviceAuthPath,
         };
 
     /// <summary>
