@@ -15,7 +15,10 @@ namespace Axiam.Sdk.Management.Models;
 /// Body of <c>POST /api/v1/certificates/sign-csr</c>. No <c>subject</c> and no
 /// <c>key_algorithm</c>: both are read out of the CSR, which is the only place they can be
 /// stated without the row and the certificate being able to disagree. No key is returned, so
-/// there is no key field anywhere on this exchange.
+/// there is no key field anywhere on this exchange. The CSR's common name meets the rules of
+/// <c>subject</c> on <c>POST /api/v1/certificates</c> (printable, at most 64 characters) and is
+/// refused, not rewritten, when it does not. So does the value of every other attribute of the
+/// CSR's subject, and a subject with more than one common name is refused.
 /// </summary>
 public sealed record SignCertificateCsrRequest
 {
@@ -54,10 +57,14 @@ public sealed record SignCertificateCsrRequest
     public IReadOnlyList<SubjectAltName>? SubjectAltNames { get; init; }
 
     /// <summary>
-    /// See [<c>CreateCertificateRequest::user_id</c>].
+    /// See [<c>CreateCertificateRequest::user_id</c>]. **Contract 1.62 (§27.11 rule 5):**
+    /// passed as the text of a UUID, **untyped** -- a string, not a <c>Guid</c> -- so that a
+    /// value that is not a UUID reaches the server and its <c>400</c> is surfaced as a
+    /// <c>ValidationError</c>; the SDK does not judge it. Left <c>null</c> (or never set) the
+    /// key is omitted; <c>null</c> is never sent.
     /// </summary>
     [JsonPropertyName("user_id")]
-    public Guid? UserId { get; init; }
+    public string? UserId { get; init; }
 
     /// <summary>
     /// Validity duration in days.

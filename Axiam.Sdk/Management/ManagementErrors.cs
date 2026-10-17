@@ -58,9 +58,35 @@ public sealed class ConflictError : AuthzError
 {
     /// <summary>Constructs a <see cref="ConflictError"/>.</summary>
     /// <param name="message">Names the operation and what the server said.</param>
-    public ConflictError(string message) : base(message)
+    /// <param name="reasonCode">
+    /// The body's <c>reason_code</c> (CONTRACT.md &#167;36.4), or <c>null</c> when it carried none.
+    /// </param>
+    public ConflictError(string message, string? reasonCode = null) : base(message)
     {
+        ReasonCode = reasonCode;
     }
+
+    /// <summary>
+    /// The <c>reason_code</c> the server's <c>409</c> body carried, verbatim; <c>null</c> when it
+    /// carried none (a server predating it, or an operation that does not send one).
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// CONTRACT.md &#167;36.4 (contract 1.62): every <c>409</c> of the twelve <c>network</c>
+    /// operations says which in <c>reason_code</c> &#8212; <c>stale_version</c>, <c>strands_profile</c>,
+    /// <c>has_children</c>, <c>site_gone</c>, <c>duplicate_name</c>, <c>duplicate_vlan</c>,
+    /// <c>duplicate_rank</c>, <c>profile_exists</c> or <c>other</c> (&#167;36.3 rule 2). The
+    /// vocabulary is <b>open</b>: a value this SDK has never seen is surfaced as the string the
+    /// server sent, and a caller treats it as a conflict whose <see cref="Exception.Message"/> is for a
+    /// human. Branch on this member, <b>never on the message</b>, which an SDK must not parse.
+    /// </para>
+    /// <para>
+    /// It is not the <c>reason</c> of an authorization decision (&#167;3), which is a human
+    /// string. The <c>error</c> slug (<c>conflict</c> or <c>already_exists</c>) maps to
+    /// <see cref="ConflictError"/> either way and is not exposed.
+    /// </para>
+    /// </remarks>
+    public string? ReasonCode { get; }
 }
 
 /// <summary>

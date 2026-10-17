@@ -1654,6 +1654,130 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
         AssertDecodedEveryField(result, body);
     }
 
+    /// <summary>Exercises network.list_segments.</summary>
+    [Fact]
+    public async Task Network_ListSegments()
+    {
+        string body = "{\"items\": [{\"created_at\": \"2026-08-26T00:00:00Z\", \"created_by\": \"11111111-1111-4111-8111-111111111111\", \"enabled\": true, \"filter_ids\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"kind\": \"access\", \"name\": \"example\", \"path\": \"example\", \"site_key\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"updated_by\": \"11111111-1111-4111-8111-111111111111\", \"version\": 1, \"vlan_id\": 1}], \"total\": 1, \"offset\": 0, \"limit\": 200}";
+        Mount("GET", $"/api/v1/network/segments", 200, body);
+        var result = await Client.Management.Network.ListSegmentsAsync(site: null, page: PageRequest.Of(50));
+        string item = JsonDocument.Parse(body).RootElement.GetProperty("items")[0].GetRawText();
+        AssertDecodedEveryField(result.Items[0], item);
+        await Client.Management.Network.ListSegmentsAllAsync(site: null, start: PageRequest.Of(50));
+        await Client.Management.Network.ListSegmentsAllAsync(site: null);
+    }
+
+    /// <summary>Exercises network.create_segment.</summary>
+    [Fact]
+    public async Task Network_CreateSegment()
+    {
+        string body = "{\"created_at\": \"2026-08-26T00:00:00Z\", \"created_by\": \"11111111-1111-4111-8111-111111111111\", \"enabled\": true, \"filter_ids\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"kind\": \"access\", \"name\": \"example\", \"path\": \"example\", \"site_key\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"updated_by\": \"11111111-1111-4111-8111-111111111111\", \"version\": 1, \"vlan_id\": 1}";
+        Mount("POST", $"/api/v1/network/segments", 201, body);
+        var result = await Client.Management.Network.CreateSegmentAsync(body: new CreateNetworkSegmentRequest { Kind = NetworkSegmentKind.Access, Name = "example", SiteKey = "example", VlanId = 1 });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises network.get_segment.</summary>
+    [Fact]
+    public async Task Network_GetSegment()
+    {
+        string body = "{\"created_at\": \"2026-08-26T00:00:00Z\", \"created_by\": \"11111111-1111-4111-8111-111111111111\", \"enabled\": true, \"filter_ids\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"kind\": \"access\", \"name\": \"example\", \"path\": \"example\", \"site_key\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"updated_by\": \"11111111-1111-4111-8111-111111111111\", \"version\": 1, \"vlan_id\": 1}";
+        Mount("GET", $"/api/v1/network/segments/{ExampleId}", 200, body);
+        var result = await Client.Management.Network.GetSegmentAsync(id: ExampleId);
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises network.replace_segment.</summary>
+    [Fact]
+    public async Task Network_ReplaceSegment()
+    {
+        string body = "{\"created_at\": \"2026-08-26T00:00:00Z\", \"created_by\": \"11111111-1111-4111-8111-111111111111\", \"enabled\": true, \"filter_ids\": [], \"id\": \"11111111-1111-4111-8111-111111111111\", \"kind\": \"access\", \"name\": \"example\", \"path\": \"example\", \"site_key\": \"example\", \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"updated_by\": \"11111111-1111-4111-8111-111111111111\", \"version\": 1, \"vlan_id\": 1}";
+        Mount("PUT", $"/api/v1/network/segments/{ExampleId}", 200, body);
+        var result = await Client.Management.Network.ReplaceSegmentAsync(id: ExampleId, body: new ReplaceNetworkSegmentRequest { Enabled = true, FilterIds = Array.Empty<string>(), Version = 1L, VlanId = 1 });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises network.delete_segment.</summary>
+    [Fact]
+    public async Task Network_DeleteSegment()
+    {
+        string body = "";
+        Mount("DELETE", $"/api/v1/network/segments/{ExampleId}", 204, body);
+        await Client.Management.Network.DeleteSegmentAsync(id: ExampleId, version: 7);
+    }
+
+    /// <summary>Exercises network.list_profiles.</summary>
+    [Fact]
+    public async Task Network_ListProfiles()
+    {
+        string body = "{\"items\": [{\"created_at\": \"2026-08-26T00:00:00Z\", \"created_by\": \"11111111-1111-4111-8111-111111111111\", \"dictionary\": \"example\", \"segment_id\": \"11111111-1111-4111-8111-111111111111\", \"session_timeout_clamped\": true, \"session_timeout_secs\": 1, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"termination_action\": \"default\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"updated_by\": \"11111111-1111-4111-8111-111111111111\", \"version\": 1}], \"total\": 1, \"offset\": 0, \"limit\": 200}";
+        Mount("GET", $"/api/v1/network/profiles", 200, body);
+        var result = await Client.Management.Network.ListProfilesAsync(page: PageRequest.Of(50));
+        string item = JsonDocument.Parse(body).RootElement.GetProperty("items")[0].GetRawText();
+        AssertDecodedEveryField(result.Items[0], item);
+        await Client.Management.Network.ListProfilesAllAsync(start: PageRequest.Of(50));
+        await Client.Management.Network.ListProfilesAllAsync();
+    }
+
+    /// <summary>Exercises network.create_profile.</summary>
+    [Fact]
+    public async Task Network_CreateProfile()
+    {
+        string body = "{\"created_at\": \"2026-08-26T00:00:00Z\", \"created_by\": \"11111111-1111-4111-8111-111111111111\", \"dictionary\": \"example\", \"segment_id\": \"11111111-1111-4111-8111-111111111111\", \"session_timeout_clamped\": true, \"session_timeout_secs\": 1, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"termination_action\": \"default\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"updated_by\": \"11111111-1111-4111-8111-111111111111\", \"version\": 1}";
+        Mount("POST", $"/api/v1/network/profiles", 201, body);
+        var result = await Client.Management.Network.CreateProfileAsync(body: new CreateNetworkReplyProfileRequest { Profile = new NetworkReplyProfileInput { SessionTimeoutSecs = 1 }, SegmentId = ExampleId, SegmentVersion = 1L });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises network.get_profile.</summary>
+    [Fact]
+    public async Task Network_GetProfile()
+    {
+        string body = "{\"created_at\": \"2026-08-26T00:00:00Z\", \"created_by\": \"11111111-1111-4111-8111-111111111111\", \"dictionary\": \"example\", \"segment_id\": \"11111111-1111-4111-8111-111111111111\", \"session_timeout_clamped\": true, \"session_timeout_secs\": 1, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"termination_action\": \"default\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"updated_by\": \"11111111-1111-4111-8111-111111111111\", \"version\": 1}";
+        Mount("GET", $"/api/v1/network/profiles/{ExampleId}", 200, body);
+        var result = await Client.Management.Network.GetProfileAsync(segmentId: ExampleId);
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises network.replace_profile.</summary>
+    [Fact]
+    public async Task Network_ReplaceProfile()
+    {
+        string body = "{\"created_at\": \"2026-08-26T00:00:00Z\", \"created_by\": \"11111111-1111-4111-8111-111111111111\", \"dictionary\": \"example\", \"segment_id\": \"11111111-1111-4111-8111-111111111111\", \"session_timeout_clamped\": true, \"session_timeout_secs\": 1, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"termination_action\": \"default\", \"updated_at\": \"2026-08-26T00:00:00Z\", \"updated_by\": \"11111111-1111-4111-8111-111111111111\", \"version\": 1}";
+        Mount("PUT", $"/api/v1/network/profiles/{ExampleId}", 200, body);
+        var result = await Client.Management.Network.ReplaceProfileAsync(segmentId: ExampleId, body: new ReplaceNetworkReplyProfileRequest { Profile = new NetworkReplyProfileInput { SessionTimeoutSecs = 1 }, SegmentVersion = 1L, Version = 1L });
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises network.delete_profile.</summary>
+    [Fact]
+    public async Task Network_DeleteProfile()
+    {
+        string body = "";
+        Mount("DELETE", $"/api/v1/network/profiles/{ExampleId}", 204, body);
+        await Client.Management.Network.DeleteProfileAsync(segmentId: ExampleId, version: 7);
+    }
+
+    /// <summary>Exercises network.get_policy.</summary>
+    [Fact]
+    public async Task Network_GetPolicy()
+    {
+        string body = "{\"session_timeout_max_secs\": 1, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"version\": 1}";
+        Mount("GET", $"/api/v1/network/policy", 200, body);
+        var result = await Client.Management.Network.GetPolicyAsync();
+        AssertDecodedEveryField(result, body);
+    }
+
+    /// <summary>Exercises network.replace_policy.</summary>
+    [Fact]
+    public async Task Network_ReplacePolicy()
+    {
+        string body = "{\"session_timeout_max_secs\": 1, \"tenant_id\": \"11111111-1111-4111-8111-111111111111\", \"version\": 1}";
+        Mount("PUT", $"/api/v1/network/policy", 200, body);
+        var result = await Client.Management.Network.ReplacePolicyAsync(body: new ReplaceNetworkPolicyRequest { SessionTimeoutMaxSecs = 1, Version = 1L });
+        AssertDecodedEveryField(result, body);
+    }
+
     /// <summary>Exercises settings.get_org.</summary>
     [Fact]
     public async Task Settings_GetOrg()
@@ -2220,6 +2344,18 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "groups.remove_member",
             "groups.remove_service_account",
             "groups.update",
+            "network.create_profile",
+            "network.create_segment",
+            "network.delete_profile",
+            "network.delete_segment",
+            "network.get_policy",
+            "network.get_profile",
+            "network.get_segment",
+            "network.list_profiles",
+            "network.list_segments",
+            "network.replace_policy",
+            "network.replace_profile",
+            "network.replace_segment",
             "notification_rules.create",
             "notification_rules.delete",
             "notification_rules.get",
@@ -2359,7 +2495,7 @@ public sealed class ManagementSurfaceGeneratedTests : ManagementTestBase
             "webhooks.list",
             "webhooks.update",
         };
-        Assert.Equal(190, exercised.Length);
+        Assert.Equal(202, exercised.Length);
         Assert.Equal(ExpectedSurface(), exercised);
     }
 }

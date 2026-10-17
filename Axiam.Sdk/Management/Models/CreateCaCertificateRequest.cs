@@ -50,7 +50,10 @@ public sealed record CreateCaCertificateRequest
     /// <summary>
     /// The CA's common name, e.g. <c>ACME Corp Root CA</c>. A **common name**, not a
     /// distinguished name. A single <c>CN=</c> prefix is accepted and stripped; anything else
-    /// containing <c>=</c> — <c>O=Acme, CN=ACME Corp Root CA</c> — is refused with <c>400</c>.
+    /// containing <c>=</c> — <c>O=Acme, CN=ACME Corp Root CA</c> — is refused with <c>400</c>,
+    /// as is a name of more than 64 characters (RFC 5280 <c>ub-common-name</c>) or one holding
+    /// a control character, a tab or line break, an invisible or bidirectional formatting
+    /// character, or two spaces in a row.
     /// </summary>
     [JsonPropertyName("subject")]
     public required string Subject { get; init; }

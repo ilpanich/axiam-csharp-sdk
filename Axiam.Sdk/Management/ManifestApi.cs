@@ -40,6 +40,7 @@ public sealed class ManifestApi
         CreateGroup, UpdateGroup, AssignRoleToGroup, UpdateRoleOnGroup,
         CreateUser, UpdateUser, AssignRoleToUser, UpdateRoleOnUser, AddGroupMember,
         CreateServiceAccount, UpdateServiceAccount, AssignRoleToServiceAccount, UpdateRoleOnServiceAccount,
+        UpdateNetworkPolicy, CreateNetworkSegment, UpdateNetworkSegment, CreateNetworkProfile, UpdateNetworkProfile,
     }
 
     /// <summary>Which server API a <see cref="Kind.AssignRoleToGroup"/>-family step targets —
@@ -74,7 +75,28 @@ public sealed class ManifestApi
         internal Dictionary<Guid, IReadOnlyList<CurrentBinding>> UserRoleBindings { get; } = new();
         internal Dictionary<Guid, IReadOnlyList<CurrentBinding>> ServiceAccountRoleBindings { get; } = new();
         internal Dictionary<Guid, IReadOnlyList<Guid>> GroupMembers { get; } = new();
+
+        /// <summary>The tenant's cap as read; set only when the manifest states one (&#167;27.6.2 item 3).</summary>
+        internal NetworkPolicyResponse? NetworkPolicy { get; set; }
+        internal IReadOnlyList<NetworkSegmentResponse> NetworkSegments { get; set; } = Array.Empty<NetworkSegmentResponse>();
+        internal IReadOnlyList<NetworkReplyProfile> NetworkProfiles { get; set; } = Array.Empty<NetworkReplyProfile>();
     }
+
+    /// <summary>
+    /// A segment's id and the <c>version</c> a following profile write must send as its
+    /// <c>segment_version</c>: the version as read, or &#8212; once this apply has created or replaced the
+    /// segment &#8212; the version of <b>that write's response</b> (&#167;27.6.2 item 4).
+    /// </summary>
+    private sealed record SegmentState(Guid Id, long Version);
+
+    /// <summary>The <c>Spec</c> of an <see cref="Kind.UpdateNetworkSegment"/> step: what the manifest states and the row read.</summary>
+    private sealed record SegmentUpdate(ManagementManifest.NetworkSegmentSpec Wanted, NetworkSegmentResponse Read);
+
+    /// <summary>The <c>Spec</c> of an <see cref="Kind.UpdateNetworkProfile"/> step.</summary>
+    private sealed record ProfileUpdate(ManagementManifest.NetworkProfileSpec Wanted, NetworkReplyProfile Read);
+
+    /// <summary>The <c>Spec</c> of an <see cref="Kind.UpdateNetworkPolicy"/> step.</summary>
+    private sealed record PolicyUpdate(ManagementManifest.NetworkPolicySpec Wanted, NetworkPolicyResponse Read);
 
     private sealed class Resolved
     {
@@ -85,6 +107,9 @@ public sealed class ManifestApi
         internal Dictionary<string, Guid> Groups { get; } = new(StringComparer.Ordinal);
         internal Dictionary<string, Guid> Users { get; } = new(StringComparer.Ordinal);
         internal Dictionary<string, Guid> ServiceAccounts { get; } = new(StringComparer.Ordinal);
+
+        /// <summary>Segment spec key to its id and current version (&#167;27.6.2 item 4).</summary>
+        internal Dictionary<string, SegmentState> NetworkSegments { get; } = new(StringComparer.Ordinal);
 
         /// <summary>§27.5 rule 5: the one-time <c>client_secret</c> response of every
         /// service account this apply created, keyed by manifest key — read back by
@@ -221,6 +246,26 @@ public sealed class ManifestApi
                 snapshot.UserRoleBindings[user.Id] = ToCurrentBindings(
                     await _api.Users.ListRolesAsync(user.Id, token).ConfigureAwait(false));
             }
+        }
+
+        // §27.6.2 item 3: GETs only, and only for what the manifest states, so a manifest
+        // without a `network` section plans exactly as it did before 1.62. Each list is walked to
+        // exhaustion (§27.4 rule 4); a profile is matched to its segment by `segment_id`.
+        if (manifest.NetworkPolicy is not null)
+        {
+            snapshot.NetworkPolicy = await _api.Network.GetPolicyAsync(token).ConfigureAwait(false);
+        }
+
+        if (manifest.NetworkSegments.Count > 0 || manifest.NetworkProfiles.Count > 0)
+        {
+            snapshot.NetworkSegments = await _api.Network
+                .ListSegmentsAllAsync(start: PlanPage, cancellationToken: token).ConfigureAwait(false);
+        }
+
+        if (manifest.NetworkProfiles.Count > 0)
+        {
+            snapshot.NetworkProfiles = await _api.Network
+                .ListProfilesAllAsync(start: PlanPage, cancellationToken: token).ConfigureAwait(false);
         }
 
         var wantedServiceAccounts = manifest.ServiceAccounts.Select(a => a.Name).ToHashSet(StringComparer.Ordinal);
@@ -501,8 +546,117 @@ public sealed class ManifestApi
                 PlanTarget.ServiceAccountRole, Kind.AssignRoleToServiceAccount, Kind.UpdateRoleOnServiceAccount);
         }
 
+        DeriveNetwork(m, snap, res, outSteps);
         return outSteps;
     }
+
+    /// <summary>
+    /// CONTRACT.md &#167;27.6.2 (contract 1.62): the <c>network</c> namespace, appended after everything
+    /// &#167;27.6 rule 5 orders &#8212; the policy, then the segments, then the profiles in their segments'
+    /// order &#8212; so that a manifest without a <c>network</c> section plans exactly as before. Every
+    /// member is judged <b>on the read</b>: a profile read is the effective one, and
+    /// <c>filter_ids</c> is compared as a set.
+    /// </summary>
+    private static void DeriveNetwork(ManagementManifest m, Snapshot snap, Resolved res, List<Step> outSteps)
+    {
+        if (m.NetworkPolicy is { } policy && snap.NetworkPolicy is { } policyRead)
+        {
+            // The policy always exists (the default, version 0), so it is never Create.
+            bool drifted = policyRead.SessionTimeoutMaxSecs != policy.SessionTimeoutMaxSecs;
+            outSteps.Add(MakeStep(
+                drifted ? PlanChange.Update : PlanChange.NoChange, PlanTarget.NetworkPolicy, "network.policy",
+                "network policy (the Session-Timeout cap)",
+                drifted ? Kind.UpdateNetworkPolicy : Kind.Noop, new PolicyUpdate(policy, policyRead), null));
+        }
+
+        foreach (ManagementManifest.NetworkSegmentSpec spec in m.NetworkSegments)
+        {
+            string summary = $"network segment '{SegmentLabel(spec)}'";
+            NetworkSegmentResponse? read = snap.NetworkSegments.FirstOrDefault(
+                r => r.SiteKey == spec.Site && r.Kind == spec.Kind && r.Name == spec.Name);
+            if (read is null)
+            {
+                outSteps.Add(MakeStep(PlanChange.Create, PlanTarget.NetworkSegment, spec.Key, summary,
+                    Kind.CreateNetworkSegment, spec, null));
+                continue;
+            }
+
+            res.NetworkSegments[spec.Key] = new SegmentState(read.Id, read.Version);
+            bool segmentDrifted = SegmentDrifted(spec, read);
+            outSteps.Add(MakeStep(
+                segmentDrifted ? PlanChange.Update : PlanChange.NoChange, PlanTarget.NetworkSegment, spec.Key,
+                summary, segmentDrifted ? Kind.UpdateNetworkSegment : Kind.Noop,
+                new SegmentUpdate(spec, read), null));
+        }
+
+        // Within the profiles the order is the segments' (rule 8: a stable plan).
+        foreach (ManagementManifest.NetworkSegmentSpec segment in m.NetworkSegments)
+        {
+            ManagementManifest.NetworkProfileSpec? spec =
+                m.NetworkProfiles.FirstOrDefault(p => p.Segment == segment.Key);
+            if (spec is null)
+            {
+                continue;
+            }
+
+            string summary = $"network profile of segment '{SegmentLabel(segment)}'";
+            NetworkReplyProfile? read =
+                res.NetworkSegments.TryGetValue(segment.Key, out SegmentState? state)
+                    ? snap.NetworkProfiles.FirstOrDefault(p => p.SegmentId == state.Id)
+                    : null; // a segment that does not exist yet cannot have a profile
+            if (read is null)
+            {
+                outSteps.Add(MakeStep(PlanChange.Create, PlanTarget.NetworkProfile, segment.Key, summary,
+                    Kind.CreateNetworkProfile, spec, null));
+                continue;
+            }
+
+            bool profileDrifted = ProfileDrifted(spec, read);
+            outSteps.Add(MakeStep(
+                profileDrifted ? PlanChange.Update : PlanChange.NoChange, PlanTarget.NetworkProfile, segment.Key,
+                summary, profileDrifted ? Kind.UpdateNetworkProfile : Kind.Noop,
+                new ProfileUpdate(spec, read), null));
+        }
+    }
+
+    private static string SegmentLabel(ManagementManifest.NetworkSegmentSpec spec) =>
+        $"{spec.Site}/{WireName(spec.Kind)}/{spec.Name}";
+
+    /// <summary>The wire spelling of a segment kind (&#167;27.6.2 item 1): no <c>zones</c>.</summary>
+    private static string WireName(NetworkSegmentKind kind) => kind switch
+    {
+        NetworkSegmentKind.Access => "access",
+        NetworkSegmentKind.Quarantine => "quarantine",
+        _ => kind.ToString(),
+    };
+
+    /// <summary>
+    /// A stated member differs from the read (&#167;27.6.2 item 3): the site, kind and name are the key and
+    /// never drift; <c>filter_ids</c> is a set; an unstated member is silent (&#167;27.6 rule 3).
+    /// </summary>
+    private static bool SegmentDrifted(ManagementManifest.NetworkSegmentSpec spec, NetworkSegmentResponse read) =>
+        read.VlanId != spec.VlanId
+        || (spec.Rank is { } rank && Differs(rank, read.Rank))
+        || (spec.FilterIds is { } ids && !ids.ToHashSet(StringComparer.Ordinal).SetEquals(read.FilterIds))
+        || (spec.Enabled is { } enabled && enabled != read.Enabled);
+
+    /// <summary>
+    /// A stated member differs from the <b>effective</b> profile as read (&#167;27.6.2 item 3): the
+    /// timeout is compared with the value lowered to the cap, so a stated value above the cap differs.
+    /// </summary>
+    private static bool ProfileDrifted(ManagementManifest.NetworkProfileSpec spec, NetworkReplyProfile read) =>
+        read.SessionTimeoutSecs != spec.SessionTimeoutSecs
+        || (spec.TerminationAction is { } action && read.TerminationAction != action)
+        || (spec.IdleTimeoutSecs is { } idle && Differs(idle, read.IdleTimeoutSecs))
+        || (spec.FilterId is { } filter && Differs(filter, read.FilterId))
+        || (spec.ServiceType is { } service && Differs(service, read.ServiceType));
+
+    /// <summary>
+    /// Whether a stated tri-state member differs from the read: a stated <see cref="JsonNullable{T}.Null"/>
+    /// says "none" and matches only a read that is null.
+    /// </summary>
+    private static bool Differs<T>(JsonNullable<T> stated, object? read) =>
+        stated.IsNull ? read is not null : !Equals(read, stated.Value);
 
     private static Step MakeStep(
         PlanChange change, PlanTarget target, string key, string summary,
@@ -670,7 +824,9 @@ public sealed class ManifestApi
                         ApplyStatus.Failed, ex.Message,
                         RestoreSucceeded: rebindFailure.RestoreSucceeded,
                         RestoreError: rebindFailure.RestoreError)
-                    : new StepOutcome(ApplyStatus.Failed, ex.Message);
+                    // §27.6.2 item 5: a 409 is that action's failure, and its `reason_code` is
+                    // data on the outcome so a caller branches on it, never on the message.
+                    : new StepOutcome(ApplyStatus.Failed, ex.Message, ReasonCode: (ex as ConflictError)?.ReasonCode);
                 applied.Add(new AppliedStep(step.Action, outcome));
                 stopped = true;
                 continue;
@@ -904,6 +1060,118 @@ public sealed class ManifestApi
                 await RebindAsync(SubjectKind.ServiceAccount, res.ServiceAccounts[s.Related!], (RebindSpec)s.Spec!, res, token)
                     .ConfigureAwait(false);
                 break;
+
+            case Kind.UpdateNetworkPolicy:
+            {
+                var update = (PolicyUpdate)s.Spec!;
+                // The version `plan` read, sent exactly; no re-read, no retry (§27.6.2 item 4).
+                await _api.Network.ReplacePolicyAsync(
+                    new ReplaceNetworkPolicyRequest
+                    {
+                        SessionTimeoutMaxSecs = update.Wanted.SessionTimeoutMaxSecs,
+                        Version = update.Read.Version,
+                    }, token).ConfigureAwait(false);
+                break;
+            }
+
+            case Kind.CreateNetworkSegment:
+            {
+                var spec = (ManagementManifest.NetworkSegmentSpec)s.Spec!;
+                // `kind` is the wire spelling; an unstated optional member is left out and a stated
+                // "none" is left out too. `filter_ids` goes in the order the manifest states.
+                NetworkSegmentResponse created = await _api.Network.CreateSegmentAsync(
+                    new CreateNetworkSegmentRequest
+                    {
+                        Kind = spec.Kind,
+                        SiteKey = spec.Site,
+                        Name = spec.Name,
+                        VlanId = spec.VlanId,
+                        Rank = spec.Rank is { IsNull: false } rank ? rank.Value : null,
+                        FilterIds = spec.FilterIds,
+                        Enabled = spec.Enabled,
+                    }, token).ConfigureAwait(false);
+                res.NetworkSegments[s.Key] = new SegmentState(created.Id, created.Version);
+                break;
+            }
+
+            case Kind.UpdateNetworkSegment:
+            {
+                var update = (SegmentUpdate)s.Spec!;
+                NetworkSegmentResponse replaced = await _api.Network.ReplaceSegmentAsync(
+                    update.Read.Id,
+                    new ReplaceNetworkSegmentRequest
+                    {
+                        // The full replacement body: the stated members over the read's, every
+                        // unstated one carried from the read. No kind, site_key or name (§36.2).
+                        Version = update.Read.Version,
+                        VlanId = update.Wanted.VlanId,
+                        FilterIds = update.Wanted.FilterIds ?? update.Read.FilterIds,
+                        Enabled = update.Wanted.Enabled ?? update.Read.Enabled,
+                        Rank = update.Wanted.Rank is { } rank
+                            ? (rank.IsNull ? null : rank.Value)
+                            : update.Read.Rank,
+                    }, token).ConfigureAwait(false);
+                // A profile that follows is written against THIS version, not the one plan read.
+                res.NetworkSegments[s.Key] = new SegmentState(update.Read.Id, replaced.Version);
+                break;
+            }
+
+            case Kind.CreateNetworkProfile:
+            {
+                var spec = (ManagementManifest.NetworkProfileSpec)s.Spec!;
+                SegmentState segment = res.NetworkSegments[spec.Segment];
+                await _api.Network.CreateProfileAsync(
+                    new CreateNetworkReplyProfileRequest
+                    {
+                        SegmentId = segment.Id,
+                        SegmentVersion = segment.Version,
+                        Profile = new NetworkReplyProfileInput
+                        {
+                            SessionTimeoutSecs = spec.SessionTimeoutSecs,
+                            TerminationAction = spec.TerminationAction,
+                            IdleTimeoutSecs = spec.IdleTimeoutSecs is { IsNull: false } idle ? idle.Value : null,
+                            FilterId = spec.FilterId is { IsNull: false } filter ? filter.Value : null,
+                            ServiceType = spec.ServiceType is { IsNull: false } service ? service.Value : null,
+                        },
+                    }, token).ConfigureAwait(false);
+                break;
+            }
+
+            case Kind.UpdateNetworkProfile:
+            {
+                var update = (ProfileUpdate)s.Spec!;
+                ManagementManifest.NetworkProfileSpec spec = update.Wanted;
+                NetworkReplyProfile read = update.Read;
+                SegmentState segment = res.NetworkSegments[spec.Segment];
+                await _api.Network.ReplaceProfileAsync(
+                    segment.Id,
+                    new ReplaceNetworkReplyProfileRequest
+                    {
+                        Version = read.Version,
+                        SegmentVersion = segment.Version,
+                        Profile = new NetworkReplyProfileInput
+                        {
+                            // Carried from the read: the dictionary, and every member the manifest
+                            // does not state. A value this SDK decoded as unknown is never re-sent
+                            // (§36.2), so it is left out. The carried timeout is the read's
+                            // effective one, and what is sent is what is stored from then on.
+                            Dictionary = read.Dictionary,
+                            SessionTimeoutSecs = spec.SessionTimeoutSecs,
+                            TerminationAction = spec.TerminationAction
+                                ?? (read.TerminationAction == RadiusTerminationAction.Unknown ? null : read.TerminationAction),
+                            IdleTimeoutSecs = spec.IdleTimeoutSecs is { } idle
+                                ? (idle.IsNull ? null : idle.Value)
+                                : read.IdleTimeoutSecs,
+                            FilterId = spec.FilterId is { } filter
+                                ? (filter.IsNull ? null : filter.Value)
+                                : read.FilterId,
+                            ServiceType = spec.ServiceType is { } service
+                                ? (service.IsNull ? null : service.Value)
+                                : (read.ServiceType == RadiusServiceType.Unknown ? null : read.ServiceType),
+                        },
+                    }, token).ConfigureAwait(false);
+                break;
+            }
 
             case Kind.Noop:
             default:

@@ -51,6 +51,15 @@ public enum PlanTarget
 
     /// <summary>A role held by a service account.</summary>
     ServiceAccountRole,
+
+    /// <summary>The tenant's <c>Session-Timeout</c> cap, a singleton (CONTRACT.md &#167;27.6.2, contract 1.62).</summary>
+    NetworkPolicy,
+
+    /// <summary>A network segment (CONTRACT.md &#167;27.6.2, contract 1.62).</summary>
+    NetworkSegment,
+
+    /// <summary>A segment's reply profile (CONTRACT.md &#167;27.6.2, contract 1.62).</summary>
+    NetworkProfile,
 }
 
 /// <summary>One step of a plan.</summary>
@@ -133,12 +142,20 @@ public enum ApplyStatus
 /// action's outcome"), because it is the only place this credential is retrievable.
 /// <c>null</c> for every other step.
 /// </param>
+/// <param name="ReasonCode">
+/// CONTRACT.md &#167;27.6.2 item 5 (contract 1.62): on a <see cref="ApplyStatus.Failed"/> outcome
+/// whose cause was a <c>409</c>, the body's <c>reason_code</c> as the server sent it
+/// (<see cref="ConflictError.ReasonCode"/>) &#8212; <c>stale_version</c>, <c>strands_profile</c>,
+/// <c>duplicate_vlan</c> and so on; the vocabulary is open. <c>null</c> for every other step.
+/// Branch on it, never on <see cref="Message"/>.
+/// </param>
 public sealed record StepOutcome(
     ApplyStatus Status,
     string? Message = null,
     bool? RestoreSucceeded = null,
     Models.ServiceAccountCreatedResponse? CreatedServiceAccount = null,
-    string? RestoreError = null);
+    string? RestoreError = null,
+    string? ReasonCode = null);
 
 /// <summary>One planned step, paired with what became of it.</summary>
 /// <param name="Action">The step as it was planned.</param>

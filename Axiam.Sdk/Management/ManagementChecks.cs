@@ -76,21 +76,34 @@ namespace Axiam.Sdk.Management
         }
 
         /// <summary>
-        /// An <see cref="SsfStream"/> as the body that replaces it with itself;
-        /// <c>authorization_header</c> absent (keeps the stored one), and — from contract 1.61
-        /// (CONTRACT.md &#167;32.2) — <c>events_requested</c> and <c>expected_updated_at</c> the
-        /// values it was read with.
+        /// An <see cref="SsfStream"/> as the body that replaces it with itself, <b>unchanged</b>:
+        /// the plain converter of CONTRACT.md &#167;32.2. <c>authorization_header</c> is absent (keeps
+        /// the stored one), and — from contract 1.61 — <c>events_requested</c> and
+        /// <c>expected_updated_at</c> are the values the stream was read with.
         /// </summary>
         /// <remarks>
-        /// An <c>events_requested</c> of <c>[]</c> (the receiver's "none") stays <c>[]</c>:
-        /// omitting it would reset the stream to every allowed event. The version is the
-        /// server's own string when the stream came from this SDK's <c>Ssf</c> calls, so the
-        /// update is refused <c>409</c> if the stream was written (the receiver included) in
-        /// between; for a stream built any other way it is <see cref="SsfStream.UpdatedAt"/> in
-        /// the round-trip format. When you lower <c>EventsAllowed</c> with a <c>with</c>-expression,
-        /// cut <c>EventsRequested</c> to the new ceiling in the same expression, and set
-        /// <see cref="SsfStreamInput.ExpectedUpdatedAt"/> to <c>null</c> to replace whatever is
-        /// stored.
+        /// <para>
+        /// <b>Prefer <see cref="ToInput(SsfStream, SsfStreamChanges)"/> when the edit changes the
+        /// stream.</b> This converter cannot know that you are about to lower the ceiling, so
+        /// <b>cutting <c>events_requested</c> to the new <c>events_allowed</c> is the caller's duty</b>
+        /// wherever a body is built another way (a <c>with</c>-expression over this result, an
+        /// object initializer): a requested list left outside the new ceiling is <c>400</c>, and one
+        /// left out altogether <b>resets</b> the stream to every event of <c>events_allowed</c>,
+        /// widening what the receiver narrowed. Those are the three meanings of
+        /// <c>events_requested</c> on an update (&#167;32.2): absent resets, <c>[]</c> is the receiver's
+        /// "none", a list is stored as given. An update conditional on the <c>expected_updated_at</c>
+        /// read is <c>409</c> (<see cref="ConflictError"/>, never retried) once the stream has been
+        /// written since, the receiver's own writes included: read again and decide again.
+        /// </para>
+        /// <para>
+        /// An <c>events_requested</c> of <c>[]</c> stays <c>[]</c>: omitting it would reset the
+        /// stream. The version is the server's <b>own string</b> when the stream came from this
+        /// SDK's <c>Ssf</c> calls (&#167;32.2: never parsed and rendered again, because the comparison
+        /// is of the instant); for a stream built any other way it is <see cref="SsfStream.UpdatedAt"/>
+        /// in the round-trip format. Set <see cref="SsfStreamInput.ExpectedUpdatedAt"/> to
+        /// <c>null</c> (the key is then left out, and <c>null</c> is never sent) to replace
+        /// whatever is stored.
+        /// </para>
         /// </remarks>
         /// <param name="stream">The stream as read.</param>
         /// <returns>The replacement body.</returns>
@@ -113,6 +126,104 @@ namespace Axiam.Sdk.Management
                 SubjectFormat = stream.SubjectFormat,
             };
         }
+
+        /// <summary>
+        /// The change-taking form of CONTRACT.md &#167;32.2 (contract 1.62): the body of
+        /// <c>ssf.update_stream</c> from an <see cref="SsfStream"/> that was read and
+        /// <b>the changes to make to it</b>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// SsfStream stream = await client.Ssf.GetStreamAsync(id);
+        /// await client.Ssf.UpdateStreamAsync(id, stream.ToInput(new SsfStreamChanges
+        /// {
+        ///     EventsAllowed = new[] { SsfEventType.SessionRevoked },   // lower the ceiling
+        /// }));
+        /// </code>
+        /// </example>
+        /// <remarks>
+        /// <para>What the body carries, and why each point is a rule rather than a convenience:</para>
+        /// <list type="bullet">
+        /// <item><description>
+        /// <b><c>events_requested</c>, as read.</b> An update that omits it <b>resets</b> the stream
+        /// to every event of <c>events_allowed</c>, widening what the receiver narrowed. The read
+        /// list goes back as it was; an empty list (the receiver's "none") goes back as <c>[]</c>
+        /// and is never omitted.
+        /// </description></item>
+        /// <item><description>
+        /// <b>Cut to the new ceiling.</b> When <paramref name="changes"/> lowers
+        /// <c>events_allowed</c> and does not name <c>events_requested</c>, the requested list becomes
+        /// the entries of the read list that are in the new ceiling, in their order (a request outside
+        /// the ceiling is <c>400</c>). An <c>EventsRequested</c> named in <paramref name="changes"/>
+        /// is sent as given: the server judges it. An entry this SDK decoded as
+        /// <see cref="SsfEventType.Unknown"/> cannot be shown to be in the new ceiling and is dropped
+        /// by the cut.
+        /// </description></item>
+        /// <item><description>
+        /// <b><c>expected_updated_at</c>, as read.</b> The <c>updated_at</c> string of the stream you
+        /// read, byte for byte (&#167;32.2). The update then lands only on the version you read, and a
+        /// write made since, the receiver's own included, answers <c>409</c>
+        /// (<see cref="ConflictError"/>, never retried): read again and decide again. An
+        /// <c>ExpectedUpdatedAt</c> of <see cref="JsonNullable{T}.Null"/> in
+        /// <paramref name="changes"/> is "none": the key is left out and <c>null</c> is never sent.
+        /// </description></item>
+        /// </list>
+        /// <para>
+        /// <c>authorization_header</c> and <c>clear_authorization_header</c> are absent unless
+        /// <paramref name="changes"/> sets them: absent keeps the stored header. This is the form
+        /// to use; <see cref="ToInput(SsfStream)"/> is the plain converter, whose documentation names
+        /// the caller's duty.
+        /// </para>
+        /// </remarks>
+        /// <param name="stream">The stream as read.</param>
+        /// <param name="changes">The changes to make; every member left <c>null</c> is unchanged.</param>
+        /// <returns>The replacement body.</returns>
+        public static SsfStreamInput ToInput(this SsfStream stream, SsfStreamChanges changes)
+        {
+            ArgumentNullException.ThrowIfNull(stream);
+            ArgumentNullException.ThrowIfNull(changes);
+
+            IReadOnlyList<SsfEventType> allowed = changes.EventsAllowed ?? stream.EventsAllowed;
+            IReadOnlyList<SsfEventType>? requested = changes.EventsRequested;
+            if (requested is null)
+            {
+                requested = stream.EventsRequested;
+                if (changes.EventsAllowed is not null && requested is not null)
+                {
+                    var ceiling = new HashSet<SsfEventType>(changes.EventsAllowed);
+                    requested = requested
+                        .Where(e => e != SsfEventType.Unknown && ceiling.Contains(e))
+                        .ToList();
+                }
+            }
+
+            string? expected = stream.UpdatedAtAsRead
+                ?? stream.UpdatedAt.ToString("O", System.Globalization.CultureInfo.InvariantCulture);
+            if (changes.ExpectedUpdatedAt is not null)
+            {
+                expected = changes.ExpectedUpdatedAt.IsNull ? null : changes.ExpectedUpdatedAt.Value;
+            }
+
+            return new SsfStreamInput
+            {
+                Audience = changes.Audience ?? stream.Audience,
+                AuthorizationHeader = changes.AuthorizationHeader,
+                ClearAuthorizationHeader = changes.ClearAuthorizationHeader,
+                DeliveryMethod = changes.DeliveryMethod ?? stream.DeliveryMethod,
+                Description = Pick(changes.Description, stream.Description),
+                EndpointUrl = Pick(changes.EndpointUrl, stream.EndpointUrl),
+                EventsAllowed = allowed,
+                EventsRequested = requested,
+                ExpectedUpdatedAt = expected,
+                ReceiverClientId = changes.ReceiverClientId ?? stream.ReceiverClientId,
+                Status = changes.Status ?? stream.Status,
+                StatusReason = Pick(changes.StatusReason, stream.StatusReason),
+                SubjectFormat = changes.SubjectFormat ?? stream.SubjectFormat,
+            };
+        }
+
+        private static string? Pick(JsonNullable<string>? change, string? read) =>
+            change is null ? read : change.IsNull ? null : change.Value;
 
         /// <summary>
         /// A <see cref="ScimTargetResponse"/> as the body that replaces it with itself;

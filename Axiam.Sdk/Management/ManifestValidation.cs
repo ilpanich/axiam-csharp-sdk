@@ -1,4 +1,5 @@
 using Axiam.Sdk.Core;
+using Axiam.Sdk.Management.Models;
 
 namespace Axiam.Sdk.Management;
 
@@ -108,6 +109,8 @@ internal static class ManifestValidation
             problems.Add(cycle);
         }
 
+        NetworkSection(manifest, problems);
+
         if (problems.Count > 0)
         {
             throw NetworkError.FromMessage(
@@ -125,6 +128,76 @@ internal static class ManifestValidation
     /// role bound with <c>inherit: false</c> (the server refuses it with <c>400</c>; an
     /// SDK MAY pre-empt it, and this one does, since it needs no server state).
     /// </summary>
+    /// <summary>
+    /// CONTRACT.md &#167;27.6.2 item 1: the <c>network</c> section's client-side refusals, all before any
+    /// request (zero wire calls). A natural key named twice cannot be reconciled with one server row; a
+    /// profile whose segment is not a spec of this manifest is a dangling key; a segment that lists one
+    /// Filter-Id twice states a set with a repeated member (the list is compared as a set).
+    /// </summary>
+    private static void NetworkSection(ManagementManifest manifest, List<string> problems)
+    {
+        Duplicates(manifest.NetworkSegments.Select(g => g.Key), "network segment", problems);
+
+        foreach (var group in manifest.NetworkSegments
+                     .GroupBy(g => (g.Site, g.Kind, g.Name))
+                     .Where(g => g.Count() > 1)
+                     .OrderBy(g => g.Key.Site, StringComparer.Ordinal)
+                     .ThenBy(g => g.Key.Kind)
+                     .ThenBy(g => g.Key.Name, StringComparer.Ordinal))
+        {
+            problems.Add(
+                $"network segments {string.Join(" and ", group.Select(g => $"'{g.Key}'"))} name one natural key " +
+                $"(site '{group.Key.Site}', kind '{WireKind(group.Key.Kind)}', name '{group.Key.Name}'), " +
+                "which one server row cannot satisfy");
+        }
+
+        foreach (ManagementManifest.NetworkSegmentSpec segment in manifest.NetworkSegments)
+        {
+            if (segment.Kind is not (NetworkSegmentKind.Access or NetworkSegmentKind.Quarantine))
+            {
+                problems.Add($"network segment '{segment.Key}' has kind '{segment.Kind}'; the wire spellings " +
+                             "are 'access' and 'quarantine'");
+            }
+
+            foreach (string repeated in (segment.FilterIds ?? Array.Empty<string>())
+                         .GroupBy(f => f, StringComparer.Ordinal)
+                         .Where(g => g.Count() > 1)
+                         .Select(g => g.Key)
+                         .OrderBy(f => f, StringComparer.Ordinal))
+            {
+                problems.Add($"network segment '{segment.Key}' lists Filter-Id '{repeated}' more than once; " +
+                             "filter_ids is compared as a set, which has no repeated member");
+            }
+        }
+
+        var segmentKeys = manifest.NetworkSegments.Select(g => g.Key).ToHashSet(StringComparer.Ordinal);
+        foreach (ManagementManifest.NetworkProfileSpec profile in manifest.NetworkProfiles)
+        {
+            if (!segmentKeys.Contains(profile.Segment))
+            {
+                problems.Add($"network profile names segment '{profile.Segment}', which no network segment " +
+                             "of this manifest declares");
+            }
+        }
+
+        foreach (string segment in manifest.NetworkProfiles
+                     .GroupBy(p => p.Segment, StringComparer.Ordinal)
+                     .Where(g => g.Count() > 1)
+                     .Select(g => g.Key)
+                     .OrderBy(k => k, StringComparer.Ordinal))
+        {
+            problems.Add($"network segment '{segment}' has more than one profile; a profile is addressed by " +
+                         "its segment, so a manifest carries at most one per segment");
+        }
+    }
+
+    private static string WireKind(NetworkSegmentKind kind) => kind switch
+    {
+        NetworkSegmentKind.Access => "access",
+        NetworkSegmentKind.Quarantine => "quarantine",
+        _ => kind.ToString(),
+    };
+
     private static void RoleBindings(
         IReadOnlyList<ManagementManifest.RoleBinding>? bindings,
         HashSet<string> resourceKeys,

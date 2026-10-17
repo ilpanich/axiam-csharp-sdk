@@ -118,11 +118,14 @@ public sealed record GeneratedCaCertificate
 
     /// <summary>
     /// PEM-encoded private key — returned only on generation, and only when there is one to
-    /// return. Absent under <c>vault_pki</c> custody, where the key was generated inside Vault
-    /// and no API exports it. The field is omitted rather than sent as <c>null</c> so a client
-    /// that has always read it keeps working unchanged for every custodian that does produce a
-    /// key. -- SECRET: redacted from ToString and from every rendering except the one request
-    /// body it is sent in.
+    /// return. An unencrypted PKCS#8 <c>PRIVATE KEY</c> block. An Ed25519 key is RFC 8410
+    /// version 1 (<c>version</c> INTEGER 0, the 32-byte seed and no embedded public key), which
+    /// OpenSSL 3.0 reads; an RSA-4096 key is the usual PKCS#8 <c>RSAPrivateKey</c>. Absent
+    /// under <c>vault_pki</c> custody, where the key was generated inside Vault and no API
+    /// exports it. The field is omitted rather than sent as <c>null</c> so a client that has
+    /// always read it keeps working unchanged for every custodian that does produce a key. --
+    /// SECRET: redacted from ToString and from every rendering except the one request body it
+    /// is sent in.
     /// </summary>
     [JsonPropertyName("private_key_pem")]
     public Sensitive<string>? PrivateKeyPem { get; init; }

@@ -47,7 +47,7 @@ public sealed class Contract161ModelsTests : ManagementTestBase
         return body;
     }
 
-    private static CreateCertificateRequest GenerateRequest(Guid? userId) => new()
+    private static CreateCertificateRequest GenerateRequest(string? userId) => new()
     {
         CertType = CertificateType.User,
         IssuerCaId = ExampleId,
@@ -57,7 +57,7 @@ public sealed class Contract161ModelsTests : ManagementTestBase
         UserId = userId,
     };
 
-    private static SignCertificateCsrRequest SignRequest(Guid? userId) => new()
+    private static SignCertificateCsrRequest SignRequest(string? userId) => new()
     {
         CertType = CertificateType.User,
         CsrPem = "example",
@@ -75,12 +75,12 @@ public sealed class Contract161ModelsTests : ManagementTestBase
             CertBody(user, edit: b => b["private_key_pem"] = "example").ToJsonString());
         Route sign = Mount("POST", "/api/v1/certificates/sign-csr", 201, CertBody(user).ToJsonString());
 
-        await Client.Certificates.GenerateAsync(GenerateRequest(user));
+        await Client.Certificates.GenerateAsync(GenerateRequest(user.ToString()));
         Assert.Equal(user.ToString(), generate.Last.Json().GetProperty("user_id").GetString());
         await Client.Certificates.GenerateAsync(GenerateRequest(null));
         Assert.False(generate.Last.Json().TryGetProperty("user_id", out _), "no account named: no key, and never null");
 
-        await Client.Certificates.SignCsrAsync(SignRequest(user));
+        await Client.Certificates.SignCsrAsync(SignRequest(user.ToString()));
         Assert.Equal(user.ToString(), sign.Last.Json().GetProperty("user_id").GetString());
         await Client.Certificates.SignCsrAsync(SignRequest(null));
         Assert.False(sign.Last.Json().TryGetProperty("user_id", out _), "no account named: no key, and never null");
