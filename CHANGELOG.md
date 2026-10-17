@@ -97,6 +97,13 @@ Source-breaking, wire-additive. Each entry says what to change.
   (either issuer form; §6.1 rule 11, §12.1 rule 3, §14.6): `device_authorize`, `device_poll` and the token
   requests carry none. A credential the caller sets on that one request (RFC 7591 / RFC 7592, §28.12) is kept.
 
+- **`openapi.json` and `management-registry.json` re-vendored from `ilpanich/axiam` `e8722b668`** (release PR
+  #716, the atomicity-race fixes): the spec documents the `409` responses (and `403`/`404` on the
+  account-deletion cancel) the server gained; digest
+  `sha256:7c3a5091d9d515b1aa3e157e74d342faf64a2c88e735f3c873b66951b3fac8a1`. `CONTRACT.md` and `proto/` are
+  unchanged, the generated §27 surface is unchanged (`python3 scripts/gen_management.py --check` is clean)
+  and no source changed.
+
 - **`/oauth2/device_authorization` joins the paths whose `401` never enters the §9 refresh guard**
   (§14.1 rule 4). It did not, so a signed-in client's `invalid_client` there would have called
   `/api/v1/auth/refresh`.
