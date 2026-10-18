@@ -173,7 +173,7 @@ writes <a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html#Axiam_Sdk_
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.ManagementApi.html">ManagementApi</a></dt>
-      <dd><p>The CONTRACT.md §27 management API: 190 operations across 28 namespaces.</p>
+      <dd><p>The CONTRACT.md §27 management API: 202 operations across 29 namespaces.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -189,6 +189,23 @@ writes <a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html#Axiam_Sdk_
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.ManagementManifest.GroupSpec.html">ManagementManifest.GroupSpec</a></dt>
       <dd><p>One group, and the roles it holds.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.html">ManagementManifest.NetworkPolicySpec</a></dt>
+      <dd><p>The tenant's <code>Session-Timeout</code> cap (CONTRACT.md §27.6.2 item 1, contract 1.62).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html">ManagementManifest.NetworkProfileSpec</a></dt>
+      <dd><p>A segment's reply profile (CONTRACT.md §27.6.2 item 1, contract 1.62), addressed by its
+segment.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html">ManagementManifest.NetworkSegmentSpec</a></dt>
+      <dd><p>One network segment (CONTRACT.md §27.6.2 item 1, contract 1.62): a node of the reserved
+<code>/network</code> subtree with a VLAN and a <code>Filter-Id</code> envelope.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -255,6 +272,11 @@ reconcile toward it.</p>
       <dt><a class="xref" href="Axiam.Sdk.Management.NamespaceScope.html">NamespaceScope</a></dt>
       <dd><p>A per-handle override of the organization or tenant a route interpolates
 (CONTRACT.md §27.4 rule 3).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.NetworkApi.html">NetworkApi</a></dt>
+      <dd><p>The network management operations.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -361,6 +383,13 @@ reconcile toward it.</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.SsfApi.html">SsfApi</a></dt>
       <dd><p>The ssf management operations.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.SsfStreamChanges.html">SsfStreamChanges</a></dt>
+      <dd><p>The changes to make to an <a class="xref" href="Axiam.Sdk.Management.Models.SsfStream.html">SsfStream</a> that was read, for the change-taking
+read-modify-write form <a class="xref" href="Axiam.Sdk.Management.ManagementReplacements.html#Axiam_Sdk_Management_ManagementReplacements_ToInput_Axiam_Sdk_Management_Models_SsfStream_Axiam_Sdk_Management_SsfStreamChanges_">ToInput(SsfStream, SsfStreamChanges)</a>
+(CONTRACT.md §32.2, contract 1.62).</p>
 </dd>
     </dl>
     <dl class="jumplist">

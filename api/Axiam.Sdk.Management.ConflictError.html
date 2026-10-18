@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0/apiSpec/new?filename=Axiam_Sdk_Management_ConflictError.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.ConflictError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.1.0/apiSpec/new?filename=Axiam_Sdk_Management_ConflictError.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.ConflictError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Management_ConflictError" data-uid="Axiam.Sdk.Management.ConflictError" class="text-break">
-Class ConflictError  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/ManagementErrors.cs/#L57"><i class="bi bi-code-slash"></i></a>
+Class ConflictError  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementErrors.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -205,9 +205,9 @@ repeating the request cannot change it (§27.4 rule 8).
 
   <a id="Axiam_Sdk_Management_ConflictError__ctor_" data-uid="Axiam.Sdk.Management.ConflictError.#ctor*"></a>
 
-  <h3 id="Axiam_Sdk_Management_ConflictError__ctor_System_String_" data-uid="Axiam.Sdk.Management.ConflictError.#ctor(System.String)">
-  ConflictError(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/ManagementErrors.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Management_ConflictError__ctor_System_String_System_String_" data-uid="Axiam.Sdk.Management.ConflictError.#ctor(System.String,System.String)">
+  ConflictError(string, string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementErrors.cs/#L64"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs a <a class="xref" href="Axiam.Sdk.Management.ConflictError.html">ConflictError</a>.</p>
@@ -215,13 +215,16 @@ repeating the request cannot change it (§27.4 rule 8).
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ConflictError(string message)</code></pre>
+    <pre><code class="lang-csharp hljs">public ConflictError(string message, string? reasonCode = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd><p>Names the operation and what the server said.</p>
+</dd>
+    <dt><code>reasonCode</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The body's <code>reason_code</code> (CONTRACT.md §36.4), or <code>null</code> when it carried none.</p>
 </dd>
   </dl>
 
@@ -232,6 +235,59 @@ repeating the request cannot change it (§27.4 rule 8).
 
 
 
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_ConflictError_ReasonCode_" data-uid="Axiam.Sdk.Management.ConflictError.ReasonCode*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ConflictError_ReasonCode" data-uid="Axiam.Sdk.Management.ConflictError.ReasonCode">
+  ReasonCode
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementErrors.cs/#L89"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The <code>reason_code</code> the server's <code>409</code> body carried, verbatim; <code>null</code> when it
+carried none (a server predating it, or an operation that does not send one).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? ReasonCode { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_ConflictError_ReasonCode_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+CONTRACT.md §36.4 (contract 1.62): every <code>409</code> of the twelve <code>network</code>
+operations says which in <code>reason_code</code> — <code>stale_version</code>, <code>strands_profile</code>,
+<code>has_children</code>, <code>site_gone</code>, <code>duplicate_name</code>, <code>duplicate_vlan</code>,
+<code>duplicate_rank</code>, <code>profile_exists</code> or <code>other</code> (§36.3 rule 2). The
+vocabulary is <b>open</b>: a value this SDK has never seen is surfaced as the string the
+server sent, and a caller treats it as a conflict whose <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.message">Message</a> is for a
+human. Branch on this member, <b>never on the message</b>, which an SDK must not parse.
+</p>
+<p>
+It is not the <code>reason</code> of an authorization decision (§3), which is a human
+string. The <code>error</code> slug (<code>conflict</code> or <code>already_exists</code>) maps to
+<a class="xref" href="Axiam.Sdk.Management.ConflictError.html">ConflictError</a> either way and is not exposed.
+</p>
+</div>
 
 
 

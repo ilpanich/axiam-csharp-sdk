@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class NetworkReplyProfile | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class NetworkReplyProfile | AXIAM .NET SDK ">
+      
+      <meta name="description" content="A segment&#39;s reply profile as read: the effective one, with the Session-Timeout already clamped to the tenant&#39;s current cap (design note &#167;3.4) and Idle-Timeout kept within it.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.1.0/apiSpec/new?filename=Axiam_Sdk_Management_Models_NetworkReplyProfile.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.Models.NetworkReplyProfile%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile">
+
+
+
+  <h1 id="Axiam_Sdk_Management_Models_NetworkReplyProfile" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile" class="text-break">
+Class NetworkReplyProfile  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L19"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a>.<a class="xref" href="Axiam.Sdk.Management.Models.html">Models</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A segment's reply profile as read: <strong>the effective one</strong>, with the <code>Session-Timeout</code>
+already clamped to the tenant's current cap (design note §3.4) and <code>Idle-Timeout</code> kept
+within it.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record NetworkReplyProfile : IEquatable&lt;NetworkReplyProfile&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">NetworkReplyProfile</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.NetworkReplyProfile.html">NetworkReplyProfile</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_CreatedAt_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedAt*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_CreatedAt" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedAt">
+  CreatedAt
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creation time.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;created_at&quot;)]
+public required DateTimeOffset CreatedAt { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_CreatedBy_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedBy*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_CreatedBy" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedBy">
+  CreatedBy
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The administrator who created it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;created_by&quot;)]
+public required Guid CreatedBy { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_Dictionary_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.Dictionary*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_Dictionary" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.Dictionary">
+  Dictionary
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The dictionary version the profile was validated against.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;dictionary&quot;)]
+public required string Dictionary { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_FilterId_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.FilterId*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_FilterId" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.FilterId">
+  FilterId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>Filter-Id</code>, one of the segment's declared names.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;filter_id&quot;)]
+public string? FilterId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_IdleTimeoutSecs_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.IdleTimeoutSecs*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_IdleTimeoutSecs" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.IdleTimeoutSecs">
+  IdleTimeoutSecs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>Idle-Timeout</code>, seconds, never above the effective <code>Session-Timeout</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;idle_timeout_secs&quot;)]
+public int? IdleTimeoutSecs { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_SegmentId_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.SegmentId*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_SegmentId" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.SegmentId">
+  SegmentId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The owning segment, which is also this profile's id: one profile per segment, at most.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;segment_id&quot;)]
+public required Guid SegmentId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_ServiceType_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.ServiceType*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_ServiceType" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.ServiceType">
+  ServiceType
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>the server's service_type field</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;service_type&quot;)]
+public RadiusServiceType? ServiceType { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.RadiusServiceType.html">RadiusServiceType</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_SessionTimeoutClamped_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutClamped*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_SessionTimeoutClamped" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutClamped">
+  SessionTimeoutClamped
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether the stored value was above the cap and has been lowered.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;session_timeout_clamped&quot;)]
+public required bool SessionTimeoutClamped { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_SessionTimeoutSecs_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutSecs*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_SessionTimeoutSecs" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutSecs">
+  SessionTimeoutSecs
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>Session-Timeout</code>, seconds: the stored value lowered to the tenant's current cap.
+This is the value a reply carries.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;session_timeout_secs&quot;)]
+public required int SessionTimeoutSecs { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_TenantId_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.TenantId*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_TenantId" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.TenantId">
+  TenantId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The owning tenant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;tenant_id&quot;)]
+public required Guid TenantId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_TerminationAction_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.TerminationAction*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_TerminationAction" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.TerminationAction">
+  TerminationAction
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>Termination-Action</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;termination_action&quot;)]
+public required RadiusTerminationAction TerminationAction { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.RadiusTerminationAction.html">RadiusTerminationAction</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_UpdatedAt_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedAt*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_UpdatedAt" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedAt">
+  UpdatedAt
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Last write time.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;updated_at&quot;)]
+public required DateTimeOffset UpdatedAt { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_UpdatedBy_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedBy*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_UpdatedBy" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedBy">
+  UpdatedBy
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The administrator who last wrote it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;updated_by&quot;)]
+public required Guid UpdatedBy { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.guid">Guid</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_Models_NetworkReplyProfile_Version_" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.Version*"></a>
+
+  <h3 id="Axiam_Sdk_Management_Models_NetworkReplyProfile_Version" data-uid="Axiam.Sdk.Management.Models.NetworkReplyProfile.Version">
+  Version
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/Models/NetworkReplyProfile.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The version the next replace or delete must name. Starts at 1.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;version&quot;)]
+public required long Version { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

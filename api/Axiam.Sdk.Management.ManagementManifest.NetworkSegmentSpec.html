@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ManagementManifest.NetworkSegmentSpec | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ManagementManifest.NetworkSegmentSpec | AXIAM .NET SDK ">
+      
+      <meta name="description" content="One network segment (CONTRACT.md &#167;27.6.2 item 1, contract 1.62): a node of the reserved /network subtree with a VLAN and a Filter-Id envelope.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.1.0/apiSpec/new?filename=Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec">
+
+
+
+  <h1 id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec" class="text-break">
+Class ManagementManifest.NetworkSegmentSpec  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementManifest.cs/#L240"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>One network segment (CONTRACT.md §27.6.2 item 1, contract 1.62): a node of the reserved
+<code>/network</code> subtree with a VLAN and a <code>Filter-Id</code> envelope.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record ManagementManifest.NetworkSegmentSpec : IEquatable&lt;ManagementManifest.NetworkSegmentSpec&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ManagementManifest.NetworkSegmentSpec</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.html">ManagementManifest</a>.<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html">NetworkSegmentSpec</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+The natural key is <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Site">Site</a> + <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Kind">Kind</a> + <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Name">Name</a>; the three
+never change (§36.3 rule 4) and so are never drift. Every other member is a field,
+reconciled by §27.6 rule 3: a <code>null</code> (unstated) member is silent, and on an
+<code>Update</code> is <b>carried from the read</b>, because the replacement body would
+otherwise clear it.
+</p>
+<p>
+<b>Judged on the read.</b> Every stated member is compared with the value the read returns.
+<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_FilterIds">FilterIds</a> is compared <b>as a set</b>: the same names in another order are
+<code>NoChange</code>, a list that repeats a name is refused at <code>PlanAsync</code> with zero wire
+calls, and when the SDK writes the segment it sends the names in the order stated here.
+</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec__ctor_" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.#ctor*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec__ctor_System_String_System_String_Axiam_Sdk_Management_Models_NetworkSegmentKind_System_String_System_Int32_Axiam_Sdk_Management_JsonNullable_System_Int32__System_Collections_Generic_IReadOnlyList_System_String__System_Nullable_System_Boolean__" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.#ctor(System.String,System.String,Axiam.Sdk.Management.Models.NetworkSegmentKind,System.String,System.Int32,Axiam.Sdk.Management.JsonNullable{System.Int32},System.Collections.Generic.IReadOnlyList{System.String},System.Nullable{System.Boolean})">
+  NetworkSegmentSpec(string, string, NetworkSegmentKind, string, int, JsonNullable&lt;int&gt;?, IReadOnlyList&lt;string&gt;?, bool?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementManifest.cs/#L240"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>One network segment (CONTRACT.md §27.6.2 item 1, contract 1.62): a node of the reserved
+<code>/network</code> subtree with a VLAN and a <code>Filter-Id</code> envelope.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NetworkSegmentSpec(string Key, string Site, NetworkSegmentKind Kind, string Name, int VlanId, JsonNullable&lt;int&gt;? Rank = null, IReadOnlyList&lt;string&gt;? FilterIds = null, bool? Enabled = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>Key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Manifest-local identifier, referenced by <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_Segment">Segment</a>.</p>
+</dd>
+    <dt><code>Site</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The wire <code>site_key</code> (a single-site tenant uses <code>default</code>).</p>
+</dd>
+    <dt><code>Kind</code> <a class="xref" href="Axiam.Sdk.Management.Models.NetworkSegmentKind.html">NetworkSegmentKind</a></dt>
+    <dd><p><a class="xref" href="Axiam.Sdk.Management.Models.NetworkSegmentKind.html#Axiam_Sdk_Management_Models_NetworkSegmentKind_Access">Access</a> or <a class="xref" href="Axiam.Sdk.Management.Models.NetworkSegmentKind.html#Axiam_Sdk_Management_Models_NetworkSegmentKind_Quarantine">Quarantine</a>, the wire spelling.
+<a class="xref" href="Axiam.Sdk.Management.Models.NetworkSegmentKind.html#Axiam_Sdk_Management_Models_NetworkSegmentKind_Unknown">Unknown</a> is refused: it is a value this SDK decodes, never one it sends.</p>
+</dd>
+    <dt><code>Name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The segment's name.</p>
+</dd>
+    <dt><code>VlanId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The segment's VLAN.</p>
+</dd>
+    <dt><code>Rank</code> <a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html">JsonNullable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</dt>
+    <dd><p>The placement rank of an access segment. <code>null</code> is unstated;
+<a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html#Axiam_Sdk_Management_JsonNullable_1_Null">Null</a> states &quot;none&quot; (left out of the body, which is how a replacement clears it).</p>
+</dd>
+    <dt><code>FilterIds</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd><p>The segment's <code>Filter-Id</code> envelope, or <code>null</code> when unstated.</p>
+</dd>
+    <dt><code>Enabled</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd><p>Whether the segment is a placement candidate, or <code>null</code> when unstated.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec__ctor_System_String_System_String_Axiam_Sdk_Management_Models_NetworkSegmentKind_System_String_System_Int32_Axiam_Sdk_Management_JsonNullable_System_Int32__System_Collections_Generic_IReadOnlyList_System_String__System_Nullable_System_Boolean___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+The natural key is <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Site">Site</a> + <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Kind">Kind</a> + <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Name">Name</a>; the three
+never change (§36.3 rule 4) and so are never drift. Every other member is a field,
+reconciled by §27.6 rule 3: a <code>null</code> (unstated) member is silent, and on an
+<code>Update</code> is <b>carried from the read</b>, because the replacement body would
+otherwise clear it.
+</p>
+<p>
+<b>Judged on the read.</b> Every stated member is compared with the value the read returns.
+<a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_FilterIds">FilterIds</a> is compared <b>as a set</b>: the same names in another order are
+<code>NoChange</code>, a list that repeats a name is refused at <code>PlanAsync</code> with zero wire
+calls, and when the SDK writes the segment it sends the names in the order stated here.
+</p>
+</div>
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Enabled_" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Enabled*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Enabled" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Enabled">
+  Enabled
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementManifest.cs/#L248"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether the segment is a placement candidate, or <code>null</code> when unstated.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? Enabled { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_FilterIds_" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.FilterIds*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_FilterIds" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.FilterIds">
+  FilterIds
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementManifest.cs/#L247"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The segment's <code>Filter-Id</code> envelope, or <code>null</code> when unstated.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;string&gt;? FilterIds { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Key_" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Key*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Key" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Key">
+  Key
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementManifest.cs/#L241"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Manifest-local identifier, referenced by <a class="xref" href="Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_Segment">Segment</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Key { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Kind_" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Kind*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Kind" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Kind">
+  Kind
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementManifest.cs/#L243"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><a class="xref" href="Axiam.Sdk.Management.Models.NetworkSegmentKind.html#Axiam_Sdk_Management_Models_NetworkSegmentKind_Access">Access</a> or <a class="xref" href="Axiam.Sdk.Management.Models.NetworkSegmentKind.html#Axiam_Sdk_Management_Models_NetworkSegmentKind_Quarantine">Quarantine</a>, the wire spelling.
+<a class="xref" href="Axiam.Sdk.Management.Models.NetworkSegmentKind.html#Axiam_Sdk_Management_Models_NetworkSegmentKind_Unknown">Unknown</a> is refused: it is a value this SDK decodes, never one it sends.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NetworkSegmentKind Kind { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.NetworkSegmentKind.html">NetworkSegmentKind</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Name_" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Name*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Name" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Name">
+  Name
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementManifest.cs/#L244"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The segment's name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Name { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Rank_" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Rank*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Rank" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Rank">
+  Rank
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementManifest.cs/#L246"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The placement rank of an access segment. <code>null</code> is unstated;
+<a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html#Axiam_Sdk_Management_JsonNullable_1_Null">Null</a> states &quot;none&quot; (left out of the body, which is how a replacement clears it).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JsonNullable&lt;int&gt;? Rank { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html">JsonNullable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Site_" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Site*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Site" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Site">
+  Site
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementManifest.cs/#L242"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The wire <code>site_key</code> (a single-site tenant uses <code>default</code>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Site { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_VlanId_" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.VlanId*"></a>
+
+  <h3 id="Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_VlanId" data-uid="Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.VlanId">
+  VlanId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementManifest.cs/#L245"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The segment's VLAN.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int VlanId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

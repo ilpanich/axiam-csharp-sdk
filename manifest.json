@@ -2067,7 +2067,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.ManagementApi",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementApi.yml\" sourcestartlinenumber=\"1\">The CONTRACT.md §27 management API: 190 operations across 28 namespaces.</p>\n"
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementApi.yml\" sourcestartlinenumber=\"1\">The CONTRACT.md §27 management API: 202 operations across 29 namespaces.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2096,6 +2096,48 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.ManagementManifest.GroupSpec",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.GroupSpec.yml\" sourcestartlinenumber=\"1\">One group, and the roles it holds.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.yml\" sourcestartlinenumber=\"1\">The tenant's <code>Session-Timeout</code> cap (CONTRACT.md §27.6.2 item 1, contract 1.62).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.yml\" sourcestartlinenumber=\"1\">A segment's reply profile (CONTRACT.md §27.6.2 item 1, contract 1.62), addressed by its\nsegment.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.yml\" sourcestartlinenumber=\"1\">One network segment (CONTRACT.md §27.6.2 item 1, contract 1.62): a node of the reserved\n<code>/network</code> subtree with a VLAN and a <code>Filter-Id</code> envelope.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2726,6 +2768,34 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.CreateIntermediateCaRequest",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateIntermediateCaRequest.yml\" sourcestartlinenumber=\"1\">Body of <code>POST .../tenants/{tenant_id}/signing-cas</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.yml\" sourcestartlinenumber=\"1\">The body of <code>POST /api/v1/network/profiles</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.yml\" sourcestartlinenumber=\"1\">The body of <code>POST /api/v1/network/segments</code>.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -3527,6 +3597,76 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.NetworkPolicyResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.yml\" sourcestartlinenumber=\"1\">The tenant's network policy, as the management API returns it.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.NetworkReplyProfile.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.NetworkReplyProfile",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.NetworkReplyProfile.yml\" sourcestartlinenumber=\"1\">A segment's reply profile as read: <strong sourcefile=\"api/Axiam.Sdk.Management.Models.NetworkReplyProfile.yml\" sourcestartlinenumber=\"1\">the effective one</strong>, with the <code>Session-Timeout</code>\nalready clamped to the tenant's current cap (design note §3.4) and <code>Idle-Timeout</code> kept\nwithin it.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.NetworkReplyProfileInput",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.yml\" sourcestartlinenumber=\"1\">What a writer supplies for a profile. Closed: an unknown key is a refusal naming it, never\nignored (design note §3.4).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.NetworkSegmentKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.NetworkSegmentKind.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.NetworkSegmentKind",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.NetworkSegmentKind.yml\" sourcestartlinenumber=\"1\">What a segment is for.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.NetworkSegmentResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.yml\" sourcestartlinenumber=\"1\">A network segment, as the management API returns it.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Management.Models.NotificationEventType.yml",
       "output": {
         ".html": {
@@ -3933,6 +4073,34 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.RadiusServiceType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.RadiusServiceType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.RadiusServiceType",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.RadiusServiceType.yml\" sourcestartlinenumber=\"1\"><code>Service-Type</code> (RFC 2865 §5.6). Option B accepts only <code>framed_user</code>; the\nadministrative values are refused with a 400.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.RadiusTerminationAction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.RadiusTerminationAction.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.RadiusTerminationAction",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.RadiusTerminationAction.yml\" sourcestartlinenumber=\"1\"><code>Termination-Action</code> (RFC 2865 §5.29).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Management.Models.ReactorEventDescriptor.yml",
       "output": {
         ".html": {
@@ -4000,6 +4168,48 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.RegistrationTokenResponse",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.yml\" sourcestartlinenumber=\"1\">Metadata only. The handle exists in plaintext exactly once, in\n[<code>CreateRegistrationTokenResponse</code>].</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.yml\" sourcestartlinenumber=\"1\">The body of <code>PUT /api/v1/network/policy</code>: a <strong sourcefile=\"api/Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.yml\" sourcestartlinenumber=\"1\">replacement</strong> of the policy.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.yml\" sourcestartlinenumber=\"1\">The body of <code>PUT /api/v1/network/profiles/{segment_id}</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.yml\" sourcestartlinenumber=\"1\">The body of <code>PUT /api/v1/network/segments/{id}</code>: a <strong sourcefile=\"api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.yml\" sourcestartlinenumber=\"1\">replacement</strong> of the envelope. The\nkind and the place in the tree do not change.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -4615,7 +4825,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.SignCertificateCsrRequest",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.yml\" sourcestartlinenumber=\"1\">Body of <code>POST /api/v1/certificates/sign-csr</code>. No <code>subject</code> and no\n<code>key_algorithm</code>: both are read out of the CSR, which is the only place they can be\nstated without the row and the certificate being able to disagree. No key is returned, so\nthere is no key field anywhere on this exchange.</p>\n"
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.yml\" sourcestartlinenumber=\"1\">Body of <code>POST /api/v1/certificates/sign-csr</code>. No <code>subject</code> and no\n<code>key_algorithm</code>: both are read out of the CSR, which is the only place they can be\nstated without the row and the certificate being able to disagree. No key is returned, so\nthere is no key field anywhere on this exchange. The CSR's common name meets the rules of\n<code>subject</code> on <code>POST /api/v1/certificates</code> (printable, at most 64 characters) and is\nrefused, not rewritten, when it does not. So does the value of every other attribute of the\nCSR's subject, and a subject with more than one common name is refused.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -5249,6 +5459,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.NetworkApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.NetworkApi.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.NetworkApi",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.NetworkApi.yml\" sourcestartlinenumber=\"1\">The network management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Management.NotFoundError.yml",
       "output": {
         ".html": {
@@ -5568,6 +5792,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.SsfApi",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.SsfApi.yml\" sourcestartlinenumber=\"1\">The ssf management operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.SsfStreamChanges.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.SsfStreamChanges.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.SsfStreamChanges",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.SsfStreamChanges.yml\" sourcestartlinenumber=\"1\">The changes to make to an <xref href=\"Axiam.Sdk.Management.Models.SsfStream\" data-throw-if-not-resolved=\"false\"></xref> that was read, for the change-taking\nread-modify-write form <xref href=\"Axiam.Sdk.Management.ManagementReplacements.ToInput(Axiam.Sdk.Management.Models.SsfStream%2cAxiam.Sdk.Management.SsfStreamChanges)\" data-throw-if-not-resolved=\"false\"></xref>\n(CONTRACT.md §32.2, contract 1.62).</p>\n"
     },
     {
       "type": "ManagedReference",

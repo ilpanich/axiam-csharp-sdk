@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class SsfStreamChanges | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class SsfStreamChanges | AXIAM .NET SDK ">
+      
+      <meta name="description" content="The changes to make to an  that was read, for the change-taking read-modify-write form  (CONTRACT.md &#167;32.2, contract 1.62).">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.1.0/apiSpec/new?filename=Axiam_Sdk_Management_SsfStreamChanges.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.SsfStreamChanges%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Management.SsfStreamChanges">
+
+
+
+  <h1 id="Axiam_Sdk_Management_SsfStreamChanges" data-uid="Axiam.Sdk.Management.SsfStreamChanges" class="text-break">
+Class SsfStreamChanges  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Management.html">Management</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>The changes to make to an <a class="xref" href="Axiam.Sdk.Management.Models.SsfStream.html">SsfStream</a> that was read, for the change-taking
+read-modify-write form <a class="xref" href="Axiam.Sdk.Management.ManagementReplacements.html#Axiam_Sdk_Management_ManagementReplacements_ToInput_Axiam_Sdk_Management_Models_SsfStream_Axiam_Sdk_Management_SsfStreamChanges_">ToInput(SsfStream, SsfStreamChanges)</a>
+(CONTRACT.md §32.2, contract 1.62).</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed record SsfStreamChanges : IEquatable&lt;SsfStreamChanges&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">SsfStreamChanges</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Axiam.Sdk.Management.SsfStreamChanges.html">SsfStreamChanges</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Management_SsfStreamChanges_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+Every member is optional and <code>null</code> means <b>unchanged</b>: the member keeps the value
+the stream was read with. The five members the wire lets a caller clear
+(<a class="xref" href="Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_Description">Description</a>, <a class="xref" href="Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_EndpointUrl">EndpointUrl</a>, <a class="xref" href="Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_StatusReason">StatusReason</a>,
+<a class="xref" href="Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_ExpectedUpdatedAt">ExpectedUpdatedAt</a> and, by their own rules, the authorization header through
+<a class="xref" href="Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_ClearAuthorizationHeader">ClearAuthorizationHeader</a>) are <a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html">JsonNullable&lt;T&gt;</a>: assign
+<code>JsonNullable&lt;string&gt;.Null</code> to say "none".
+</p>
+<p>
+<b>An assigned null is "none" (CONTRACT.md §27.11 rule 5):</b>
+<code>ExpectedUpdatedAt = JsonNullable&lt;string&gt;.Null</code> leaves the
+<code>expected_updated_at</code> key out of the body and <code>null</code> is never sent; the update
+then replaces whatever is stored instead of landing only on the version that was read.
+</p>
+</div>
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_Audience_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.Audience*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_Audience" data-uid="Axiam.Sdk.Management.SsfStreamChanges.Audience">
+  Audience
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A new <code>audience</code>, or <code>null</code> to keep the read one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Audience { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_AuthorizationHeader_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.AuthorizationHeader*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_AuthorizationHeader" data-uid="Axiam.Sdk.Management.SsfStreamChanges.AuthorizationHeader">
+  AuthorizationHeader
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A push <code>Authorization</code> header to store. The read stream carries none (the value is
+never returned), so unset means &quot;keep the stored one&quot; on the wire; a write that moves
+<code>endpoint_url</code> to another scheme, host or port while a header is stored must carry
+one again (§32.3 rule 5).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Sensitive&lt;string&gt;? AuthorizationHeader { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Core.Sensitive-1.html">Sensitive</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_ClearAuthorizationHeader_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.ClearAuthorizationHeader*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_ClearAuthorizationHeader" data-uid="Axiam.Sdk.Management.SsfStreamChanges.ClearAuthorizationHeader">
+  ClearAuthorizationHeader
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L86"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><code>true</code> to remove the stored header; refused together with <a class="xref" href="Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_AuthorizationHeader">AuthorizationHeader</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool? ClearAuthorizationHeader { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_DeliveryMethod_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.DeliveryMethod*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_DeliveryMethod" data-uid="Axiam.Sdk.Management.SsfStreamChanges.DeliveryMethod">
+  DeliveryMethod
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A new <code>delivery_method</code>, or <code>null</code> to keep the read one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SsfDeliveryMethod? DeliveryMethod { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.SsfDeliveryMethod.html">SsfDeliveryMethod</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_Description_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.Description*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_Description" data-uid="Axiam.Sdk.Management.SsfStreamChanges.Description">
+  Description
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A new <code>description</code>, <a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html#Axiam_Sdk_Management_JsonNullable_1_Null">Null</a> to clear it, or
+<code>null</code> to keep the read one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JsonNullable&lt;string&gt;? Description { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html">JsonNullable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_EndpointUrl_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.EndpointUrl*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_EndpointUrl" data-uid="Axiam.Sdk.Management.SsfStreamChanges.EndpointUrl">
+  EndpointUrl
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A new <code>endpoint_url</code>, <a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html#Axiam_Sdk_Management_JsonNullable_1_Null">Null</a> to clear it, or
+<code>null</code> to keep the read one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JsonNullable&lt;string&gt;? EndpointUrl { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html">JsonNullable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_EventsAllowed_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.EventsAllowed*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_EventsAllowed" data-uid="Axiam.Sdk.Management.SsfStreamChanges.EventsAllowed">
+  EventsAllowed
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A new ceiling, or <code>null</code> to keep the read one. When it is set and
+<a class="xref" href="Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_EventsRequested">EventsRequested</a> is not, the body's <code>events_requested</code> is the read
+list cut to this ceiling (the entries that are in it, in their order).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;SsfEventType&gt;? EventsAllowed { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.SsfEventType.html">SsfEventType</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_EventsRequested_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.EventsRequested*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_EventsRequested" data-uid="Axiam.Sdk.Management.SsfStreamChanges.EventsRequested">
+  EventsRequested
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>What the receiver is to be sent, <b>sent as given</b> (the server judges it: a list
+outside the ceiling is <code>400</code>; an empty list is the receiver's &quot;none&quot; and goes as
+<code>[]</code>). <code>null</code> keeps the read list, cut to <a class="xref" href="Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_EventsAllowed">EventsAllowed</a> when
+that is changed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;SsfEventType&gt;? EventsRequested { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Axiam.Sdk.Management.Models.SsfEventType.html">SsfEventType</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_ExpectedUpdatedAt_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.ExpectedUpdatedAt*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_ExpectedUpdatedAt" data-uid="Axiam.Sdk.Management.SsfStreamChanges.ExpectedUpdatedAt">
+  ExpectedUpdatedAt
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The <code>expected_updated_at</code> to send instead of the read stream's own string, or
+<a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html#Axiam_Sdk_Management_JsonNullable_1_Null">Null</a> for &quot;none&quot; (the key is left out; <code>null</code> is never
+sent), or <code>null</code> to send the read stream's <code>updated_at</code> as the server wrote it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JsonNullable&lt;string&gt;? ExpectedUpdatedAt { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html">JsonNullable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_ReceiverClientId_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.ReceiverClientId*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_ReceiverClientId" data-uid="Axiam.Sdk.Management.SsfStreamChanges.ReceiverClientId">
+  ReceiverClientId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A new <code>receiver_client_id</code>, or <code>null</code> to keep the read one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? ReceiverClientId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_Status_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.Status*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_Status" data-uid="Axiam.Sdk.Management.SsfStreamChanges.Status">
+  Status
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A new <code>status</code>, or <code>null</code> to keep the read one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SsfStreamStatus? Status { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.SsfStreamStatus.html">SsfStreamStatus</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_StatusReason_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.StatusReason*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_StatusReason" data-uid="Axiam.Sdk.Management.SsfStreamChanges.StatusReason">
+  StatusReason
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A new <code>status_reason</code>, <a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html#Axiam_Sdk_Management_JsonNullable_1_Null">Null</a> to clear it, or
+<code>null</code> to keep the read one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JsonNullable&lt;string&gt;? StatusReason { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.JsonNullable-1.html">JsonNullable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Management_SsfStreamChanges_SubjectFormat_" data-uid="Axiam.Sdk.Management.SsfStreamChanges.SubjectFormat*"></a>
+
+  <h3 id="Axiam_Sdk_Management_SsfStreamChanges_SubjectFormat" data-uid="Axiam.Sdk.Management.SsfStreamChanges.SubjectFormat">
+  SubjectFormat
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/SsfStreamChanges.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A new <code>subject_format</code>, or <code>null</code> to keep the read one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SsfSubjectFormat? SubjectFormat { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Axiam.Sdk.Management.Models.SsfSubjectFormat.html">SsfSubjectFormat</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -7191,6 +7191,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.MfaSetupEnrollAsync
   nameWithType: AxiamClient.MfaSetupEnrollAsync
+- uid: Axiam.Sdk.AxiamClient.Network
+  name: Network
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_Network
+  commentId: P:Axiam.Sdk.AxiamClient.Network
+  fullName: Axiam.Sdk.AxiamClient.Network
+  nameWithType: AxiamClient.Network
+- uid: Axiam.Sdk.AxiamClient.Network*
+  name: Network
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_Network_
+  commentId: Overload:Axiam.Sdk.AxiamClient.Network
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.Network
+  nameWithType: AxiamClient.Network
 - uid: Axiam.Sdk.AxiamClient.NotificationRules
   name: NotificationRules
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_NotificationRules
@@ -10807,15 +10820,15 @@ references:
   commentId: T:Axiam.Sdk.Management.ConflictError
   fullName: Axiam.Sdk.Management.ConflictError
   nameWithType: ConflictError
-- uid: Axiam.Sdk.Management.ConflictError.#ctor(System.String)
-  name: ConflictError(string)
-  href: api/Axiam.Sdk.Management.ConflictError.html#Axiam_Sdk_Management_ConflictError__ctor_System_String_
-  commentId: M:Axiam.Sdk.Management.ConflictError.#ctor(System.String)
-  name.vb: New(String)
-  fullName: Axiam.Sdk.Management.ConflictError.ConflictError(string)
-  fullName.vb: Axiam.Sdk.Management.ConflictError.New(String)
-  nameWithType: ConflictError.ConflictError(string)
-  nameWithType.vb: ConflictError.New(String)
+- uid: Axiam.Sdk.Management.ConflictError.#ctor(System.String,System.String)
+  name: ConflictError(string, string?)
+  href: api/Axiam.Sdk.Management.ConflictError.html#Axiam_Sdk_Management_ConflictError__ctor_System_String_System_String_
+  commentId: M:Axiam.Sdk.Management.ConflictError.#ctor(System.String,System.String)
+  name.vb: New(String, String)
+  fullName: Axiam.Sdk.Management.ConflictError.ConflictError(string, string?)
+  fullName.vb: Axiam.Sdk.Management.ConflictError.New(String, String)
+  nameWithType: ConflictError.ConflictError(string, string?)
+  nameWithType.vb: ConflictError.New(String, String)
 - uid: Axiam.Sdk.Management.ConflictError.#ctor*
   name: ConflictError
   href: api/Axiam.Sdk.Management.ConflictError.html#Axiam_Sdk_Management_ConflictError__ctor_
@@ -10826,6 +10839,19 @@ references:
   fullName.vb: Axiam.Sdk.Management.ConflictError.New
   nameWithType: ConflictError.ConflictError
   nameWithType.vb: ConflictError.New
+- uid: Axiam.Sdk.Management.ConflictError.ReasonCode
+  name: ReasonCode
+  href: api/Axiam.Sdk.Management.ConflictError.html#Axiam_Sdk_Management_ConflictError_ReasonCode
+  commentId: P:Axiam.Sdk.Management.ConflictError.ReasonCode
+  fullName: Axiam.Sdk.Management.ConflictError.ReasonCode
+  nameWithType: ConflictError.ReasonCode
+- uid: Axiam.Sdk.Management.ConflictError.ReasonCode*
+  name: ReasonCode
+  href: api/Axiam.Sdk.Management.ConflictError.html#Axiam_Sdk_Management_ConflictError_ReasonCode_
+  commentId: Overload:Axiam.Sdk.Management.ConflictError.ReasonCode
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ConflictError.ReasonCode
+  nameWithType: ConflictError.ReasonCode
 - uid: Axiam.Sdk.Management.DirectoryApi
   name: DirectoryApi
   href: api/Axiam.Sdk.Management.DirectoryApi.html
@@ -11833,6 +11859,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ManagementApi.Manifest
   nameWithType: ManagementApi.Manifest
+- uid: Axiam.Sdk.Management.ManagementApi.Network
+  name: Network
+  href: api/Axiam.Sdk.Management.ManagementApi.html#Axiam_Sdk_Management_ManagementApi_Network
+  commentId: P:Axiam.Sdk.Management.ManagementApi.Network
+  fullName: Axiam.Sdk.Management.ManagementApi.Network
+  nameWithType: ManagementApi.Network
+- uid: Axiam.Sdk.Management.ManagementApi.Network*
+  name: Network
+  href: api/Axiam.Sdk.Management.ManagementApi.html#Axiam_Sdk_Management_ManagementApi_Network_
+  commentId: Overload:Axiam.Sdk.Management.ManagementApi.Network
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementApi.Network
+  nameWithType: ManagementApi.Network
 - uid: Axiam.Sdk.Management.ManagementApi.NotificationRules
   name: NotificationRules
   href: api/Axiam.Sdk.Management.ManagementApi.html#Axiam_Sdk_Management_ManagementApi_NotificationRules
@@ -12292,6 +12331,315 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ManagementManifest.Groups
   nameWithType: ManagementManifest.Groups
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkPolicy
+  name: NetworkPolicy
+  href: api/Axiam.Sdk.Management.ManagementManifest.html#Axiam_Sdk_Management_ManagementManifest_NetworkPolicy
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkPolicy
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkPolicy
+  nameWithType: ManagementManifest.NetworkPolicy
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkPolicy*
+  name: NetworkPolicy
+  href: api/Axiam.Sdk.Management.ManagementManifest.html#Axiam_Sdk_Management_ManagementManifest_NetworkPolicy_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkPolicy
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkPolicy
+  nameWithType: ManagementManifest.NetworkPolicy
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec
+  name: ManagementManifest.NetworkPolicySpec
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.html
+  commentId: T:Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec
+  nameWithType: ManagementManifest.NetworkPolicySpec
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.#ctor(System.Int32)
+  name: NetworkPolicySpec(int)
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkPolicySpec__ctor_System_Int32_
+  commentId: M:Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.#ctor(System.Int32)
+  name.vb: New(Integer)
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.NetworkPolicySpec(int)
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.New(Integer)
+  nameWithType: ManagementManifest.NetworkPolicySpec.NetworkPolicySpec(int)
+  nameWithType.vb: ManagementManifest.NetworkPolicySpec.New(Integer)
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.#ctor*
+  name: NetworkPolicySpec
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkPolicySpec__ctor_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.NetworkPolicySpec
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.New
+  nameWithType: ManagementManifest.NetworkPolicySpec.NetworkPolicySpec
+  nameWithType.vb: ManagementManifest.NetworkPolicySpec.New
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.SessionTimeoutMaxSecs
+  name: SessionTimeoutMaxSecs
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkPolicySpec_SessionTimeoutMaxSecs
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.SessionTimeoutMaxSecs
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.SessionTimeoutMaxSecs
+  nameWithType: ManagementManifest.NetworkPolicySpec.SessionTimeoutMaxSecs
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.SessionTimeoutMaxSecs*
+  name: SessionTimeoutMaxSecs
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkPolicySpec_SessionTimeoutMaxSecs_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.SessionTimeoutMaxSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkPolicySpec.SessionTimeoutMaxSecs
+  nameWithType: ManagementManifest.NetworkPolicySpec.SessionTimeoutMaxSecs
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec
+  name: ManagementManifest.NetworkProfileSpec
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html
+  commentId: T:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec
+  nameWithType: ManagementManifest.NetworkProfileSpec
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.#ctor(System.String,System.Int32,System.Nullable{Axiam.Sdk.Management.Models.RadiusTerminationAction},Axiam.Sdk.Management.JsonNullable{System.Int32},Axiam.Sdk.Management.JsonNullable{System.String},Axiam.Sdk.Management.JsonNullable{Axiam.Sdk.Management.Models.RadiusServiceType})
+  name: NetworkProfileSpec(string, int, RadiusTerminationAction?, JsonNullable<int>?, JsonNullable<string>?, JsonNullable<RadiusServiceType>?)
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec__ctor_System_String_System_Int32_System_Nullable_Axiam_Sdk_Management_Models_RadiusTerminationAction__Axiam_Sdk_Management_JsonNullable_System_Int32__Axiam_Sdk_Management_JsonNullable_System_String__Axiam_Sdk_Management_JsonNullable_Axiam_Sdk_Management_Models_RadiusServiceType__
+  commentId: M:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.#ctor(System.String,System.Int32,System.Nullable{Axiam.Sdk.Management.Models.RadiusTerminationAction},Axiam.Sdk.Management.JsonNullable{System.Int32},Axiam.Sdk.Management.JsonNullable{System.String},Axiam.Sdk.Management.JsonNullable{Axiam.Sdk.Management.Models.RadiusServiceType})
+  name.vb: New(String, Integer, RadiusTerminationAction?, JsonNullable(Of Integer), JsonNullable(Of String), JsonNullable(Of RadiusServiceType))
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.NetworkProfileSpec(string, int, Axiam.Sdk.Management.Models.RadiusTerminationAction?, Axiam.Sdk.Management.JsonNullable<int>?, Axiam.Sdk.Management.JsonNullable<string>?, Axiam.Sdk.Management.JsonNullable<Axiam.Sdk.Management.Models.RadiusServiceType>?)
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.New(String, Integer, Axiam.Sdk.Management.Models.RadiusTerminationAction?, Axiam.Sdk.Management.JsonNullable(Of Integer), Axiam.Sdk.Management.JsonNullable(Of String), Axiam.Sdk.Management.JsonNullable(Of Axiam.Sdk.Management.Models.RadiusServiceType))
+  nameWithType: ManagementManifest.NetworkProfileSpec.NetworkProfileSpec(string, int, RadiusTerminationAction?, JsonNullable<int>?, JsonNullable<string>?, JsonNullable<RadiusServiceType>?)
+  nameWithType.vb: ManagementManifest.NetworkProfileSpec.New(String, Integer, RadiusTerminationAction?, JsonNullable(Of Integer), JsonNullable(Of String), JsonNullable(Of RadiusServiceType))
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.#ctor*
+  name: NetworkProfileSpec
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec__ctor_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.NetworkProfileSpec
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.New
+  nameWithType: ManagementManifest.NetworkProfileSpec.NetworkProfileSpec
+  nameWithType.vb: ManagementManifest.NetworkProfileSpec.New
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.FilterId
+  name: FilterId
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_FilterId
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.FilterId
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.FilterId
+  nameWithType: ManagementManifest.NetworkProfileSpec.FilterId
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.FilterId*
+  name: FilterId
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_FilterId_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.FilterId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.FilterId
+  nameWithType: ManagementManifest.NetworkProfileSpec.FilterId
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.IdleTimeoutSecs
+  name: IdleTimeoutSecs
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_IdleTimeoutSecs
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.IdleTimeoutSecs
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.IdleTimeoutSecs
+  nameWithType: ManagementManifest.NetworkProfileSpec.IdleTimeoutSecs
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.IdleTimeoutSecs*
+  name: IdleTimeoutSecs
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_IdleTimeoutSecs_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.IdleTimeoutSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.IdleTimeoutSecs
+  nameWithType: ManagementManifest.NetworkProfileSpec.IdleTimeoutSecs
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.Segment
+  name: Segment
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_Segment
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.Segment
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.Segment
+  nameWithType: ManagementManifest.NetworkProfileSpec.Segment
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.Segment*
+  name: Segment
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_Segment_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.Segment
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.Segment
+  nameWithType: ManagementManifest.NetworkProfileSpec.Segment
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.ServiceType
+  name: ServiceType
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_ServiceType
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.ServiceType
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.ServiceType
+  nameWithType: ManagementManifest.NetworkProfileSpec.ServiceType
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.ServiceType*
+  name: ServiceType
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_ServiceType_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.ServiceType
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.ServiceType
+  nameWithType: ManagementManifest.NetworkProfileSpec.ServiceType
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.SessionTimeoutSecs
+  name: SessionTimeoutSecs
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_SessionTimeoutSecs
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.SessionTimeoutSecs
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.SessionTimeoutSecs
+  nameWithType: ManagementManifest.NetworkProfileSpec.SessionTimeoutSecs
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.SessionTimeoutSecs*
+  name: SessionTimeoutSecs
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_SessionTimeoutSecs_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.SessionTimeoutSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.SessionTimeoutSecs
+  nameWithType: ManagementManifest.NetworkProfileSpec.SessionTimeoutSecs
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.TerminationAction
+  name: TerminationAction
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_TerminationAction
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.TerminationAction
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.TerminationAction
+  nameWithType: ManagementManifest.NetworkProfileSpec.TerminationAction
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.TerminationAction*
+  name: TerminationAction
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfileSpec_TerminationAction_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.TerminationAction
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfileSpec.TerminationAction
+  nameWithType: ManagementManifest.NetworkProfileSpec.TerminationAction
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfiles
+  name: NetworkProfiles
+  href: api/Axiam.Sdk.Management.ManagementManifest.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfiles
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkProfiles
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfiles
+  nameWithType: ManagementManifest.NetworkProfiles
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkProfiles*
+  name: NetworkProfiles
+  href: api/Axiam.Sdk.Management.ManagementManifest.html#Axiam_Sdk_Management_ManagementManifest_NetworkProfiles_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkProfiles
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkProfiles
+  nameWithType: ManagementManifest.NetworkProfiles
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec
+  name: ManagementManifest.NetworkSegmentSpec
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html
+  commentId: T:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec
+  nameWithType: ManagementManifest.NetworkSegmentSpec
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.#ctor(System.String,System.String,Axiam.Sdk.Management.Models.NetworkSegmentKind,System.String,System.Int32,Axiam.Sdk.Management.JsonNullable{System.Int32},System.Collections.Generic.IReadOnlyList{System.String},System.Nullable{System.Boolean})
+  name: NetworkSegmentSpec(string, string, NetworkSegmentKind, string, int, JsonNullable<int>?, IReadOnlyList<string>?, bool?)
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec__ctor_System_String_System_String_Axiam_Sdk_Management_Models_NetworkSegmentKind_System_String_System_Int32_Axiam_Sdk_Management_JsonNullable_System_Int32__System_Collections_Generic_IReadOnlyList_System_String__System_Nullable_System_Boolean__
+  commentId: M:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.#ctor(System.String,System.String,Axiam.Sdk.Management.Models.NetworkSegmentKind,System.String,System.Int32,Axiam.Sdk.Management.JsonNullable{System.Int32},System.Collections.Generic.IReadOnlyList{System.String},System.Nullable{System.Boolean})
+  name.vb: New(String, String, NetworkSegmentKind, String, Integer, JsonNullable(Of Integer), IReadOnlyList(Of String), Boolean?)
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.NetworkSegmentSpec(string, string, Axiam.Sdk.Management.Models.NetworkSegmentKind, string, int, Axiam.Sdk.Management.JsonNullable<int>?, System.Collections.Generic.IReadOnlyList<string>?, bool?)
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.New(String, String, Axiam.Sdk.Management.Models.NetworkSegmentKind, String, Integer, Axiam.Sdk.Management.JsonNullable(Of Integer), System.Collections.Generic.IReadOnlyList(Of String), Boolean?)
+  nameWithType: ManagementManifest.NetworkSegmentSpec.NetworkSegmentSpec(string, string, NetworkSegmentKind, string, int, JsonNullable<int>?, IReadOnlyList<string>?, bool?)
+  nameWithType.vb: ManagementManifest.NetworkSegmentSpec.New(String, String, NetworkSegmentKind, String, Integer, JsonNullable(Of Integer), IReadOnlyList(Of String), Boolean?)
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.#ctor*
+  name: NetworkSegmentSpec
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec__ctor_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.NetworkSegmentSpec
+  fullName.vb: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.New
+  nameWithType: ManagementManifest.NetworkSegmentSpec.NetworkSegmentSpec
+  nameWithType.vb: ManagementManifest.NetworkSegmentSpec.New
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Enabled
+  name: Enabled
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Enabled
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Enabled
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Enabled
+  nameWithType: ManagementManifest.NetworkSegmentSpec.Enabled
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Enabled*
+  name: Enabled
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Enabled_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Enabled
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Enabled
+  nameWithType: ManagementManifest.NetworkSegmentSpec.Enabled
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.FilterIds
+  name: FilterIds
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_FilterIds
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.FilterIds
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.FilterIds
+  nameWithType: ManagementManifest.NetworkSegmentSpec.FilterIds
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.FilterIds*
+  name: FilterIds
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_FilterIds_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.FilterIds
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.FilterIds
+  nameWithType: ManagementManifest.NetworkSegmentSpec.FilterIds
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Key
+  name: Key
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Key
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Key
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Key
+  nameWithType: ManagementManifest.NetworkSegmentSpec.Key
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Key*
+  name: Key
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Key_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Key
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Key
+  nameWithType: ManagementManifest.NetworkSegmentSpec.Key
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Kind
+  name: Kind
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Kind
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Kind
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Kind
+  nameWithType: ManagementManifest.NetworkSegmentSpec.Kind
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Kind*
+  name: Kind
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Kind_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Kind
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Kind
+  nameWithType: ManagementManifest.NetworkSegmentSpec.Kind
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Name
+  name: Name
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Name
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Name
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Name
+  nameWithType: ManagementManifest.NetworkSegmentSpec.Name
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Name*
+  name: Name
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Name_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Name
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Name
+  nameWithType: ManagementManifest.NetworkSegmentSpec.Name
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Rank
+  name: Rank
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Rank
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Rank
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Rank
+  nameWithType: ManagementManifest.NetworkSegmentSpec.Rank
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Rank*
+  name: Rank
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Rank_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Rank
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Rank
+  nameWithType: ManagementManifest.NetworkSegmentSpec.Rank
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Site
+  name: Site
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Site
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Site
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Site
+  nameWithType: ManagementManifest.NetworkSegmentSpec.Site
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Site*
+  name: Site
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_Site_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Site
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.Site
+  nameWithType: ManagementManifest.NetworkSegmentSpec.Site
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.VlanId
+  name: VlanId
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_VlanId
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.VlanId
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.VlanId
+  nameWithType: ManagementManifest.NetworkSegmentSpec.VlanId
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.VlanId*
+  name: VlanId
+  href: api/Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegmentSpec_VlanId_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.VlanId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegmentSpec.VlanId
+  nameWithType: ManagementManifest.NetworkSegmentSpec.VlanId
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegments
+  name: NetworkSegments
+  href: api/Axiam.Sdk.Management.ManagementManifest.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegments
+  commentId: P:Axiam.Sdk.Management.ManagementManifest.NetworkSegments
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegments
+  nameWithType: ManagementManifest.NetworkSegments
+- uid: Axiam.Sdk.Management.ManagementManifest.NetworkSegments*
+  name: NetworkSegments
+  href: api/Axiam.Sdk.Management.ManagementManifest.html#Axiam_Sdk_Management_ManagementManifest_NetworkSegments_
+  commentId: Overload:Axiam.Sdk.Management.ManagementManifest.NetworkSegments
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManagementManifest.NetworkSegments
+  nameWithType: ManagementManifest.NetworkSegments
 - uid: Axiam.Sdk.Management.ManagementManifest.PermissionSpec
   name: ManagementManifest.PermissionSpec
   href: api/Axiam.Sdk.Management.ManagementManifest.PermissionSpec.html
@@ -13035,6 +13383,12 @@ references:
   commentId: M:Axiam.Sdk.Management.ManagementReplacements.ToInput(Axiam.Sdk.Management.Models.SsfStream)
   fullName: Axiam.Sdk.Management.ManagementReplacements.ToInput(Axiam.Sdk.Management.Models.SsfStream)
   nameWithType: ManagementReplacements.ToInput(SsfStream)
+- uid: Axiam.Sdk.Management.ManagementReplacements.ToInput(Axiam.Sdk.Management.Models.SsfStream,Axiam.Sdk.Management.SsfStreamChanges)
+  name: ToInput(SsfStream, SsfStreamChanges)
+  href: api/Axiam.Sdk.Management.ManagementReplacements.html#Axiam_Sdk_Management_ManagementReplacements_ToInput_Axiam_Sdk_Management_Models_SsfStream_Axiam_Sdk_Management_SsfStreamChanges_
+  commentId: M:Axiam.Sdk.Management.ManagementReplacements.ToInput(Axiam.Sdk.Management.Models.SsfStream,Axiam.Sdk.Management.SsfStreamChanges)
+  fullName: Axiam.Sdk.Management.ManagementReplacements.ToInput(Axiam.Sdk.Management.Models.SsfStream, Axiam.Sdk.Management.SsfStreamChanges)
+  nameWithType: ManagementReplacements.ToInput(SsfStream, SsfStreamChanges)
 - uid: Axiam.Sdk.Management.ManagementReplacements.ToInput*
   name: ToInput
   href: api/Axiam.Sdk.Management.ManagementReplacements.html#Axiam_Sdk_Management_ManagementReplacements_ToInput_
@@ -13221,6 +13575,54 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.ManifestBuilder.GroupRole
   nameWithType: ManifestBuilder.GroupRole
+- uid: Axiam.Sdk.Management.ManifestBuilder.NetworkPolicy(System.Int32)
+  name: NetworkPolicy(int)
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_NetworkPolicy_System_Int32_
+  commentId: M:Axiam.Sdk.Management.ManifestBuilder.NetworkPolicy(System.Int32)
+  name.vb: NetworkPolicy(Integer)
+  fullName: Axiam.Sdk.Management.ManifestBuilder.NetworkPolicy(int)
+  fullName.vb: Axiam.Sdk.Management.ManifestBuilder.NetworkPolicy(Integer)
+  nameWithType: ManifestBuilder.NetworkPolicy(int)
+  nameWithType.vb: ManifestBuilder.NetworkPolicy(Integer)
+- uid: Axiam.Sdk.Management.ManifestBuilder.NetworkPolicy*
+  name: NetworkPolicy
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_NetworkPolicy_
+  commentId: Overload:Axiam.Sdk.Management.ManifestBuilder.NetworkPolicy
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManifestBuilder.NetworkPolicy
+  nameWithType: ManifestBuilder.NetworkPolicy
+- uid: Axiam.Sdk.Management.ManifestBuilder.NetworkProfile(System.String,System.Int32,System.Nullable{Axiam.Sdk.Management.Models.RadiusTerminationAction},Axiam.Sdk.Management.JsonNullable{System.Int32},Axiam.Sdk.Management.JsonNullable{System.String},Axiam.Sdk.Management.JsonNullable{Axiam.Sdk.Management.Models.RadiusServiceType})
+  name: NetworkProfile(string, int, RadiusTerminationAction?, JsonNullable<int>?, JsonNullable<string>?, JsonNullable<RadiusServiceType>?)
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_NetworkProfile_System_String_System_Int32_System_Nullable_Axiam_Sdk_Management_Models_RadiusTerminationAction__Axiam_Sdk_Management_JsonNullable_System_Int32__Axiam_Sdk_Management_JsonNullable_System_String__Axiam_Sdk_Management_JsonNullable_Axiam_Sdk_Management_Models_RadiusServiceType__
+  commentId: M:Axiam.Sdk.Management.ManifestBuilder.NetworkProfile(System.String,System.Int32,System.Nullable{Axiam.Sdk.Management.Models.RadiusTerminationAction},Axiam.Sdk.Management.JsonNullable{System.Int32},Axiam.Sdk.Management.JsonNullable{System.String},Axiam.Sdk.Management.JsonNullable{Axiam.Sdk.Management.Models.RadiusServiceType})
+  name.vb: NetworkProfile(String, Integer, RadiusTerminationAction?, JsonNullable(Of Integer), JsonNullable(Of String), JsonNullable(Of RadiusServiceType))
+  fullName: Axiam.Sdk.Management.ManifestBuilder.NetworkProfile(string, int, Axiam.Sdk.Management.Models.RadiusTerminationAction?, Axiam.Sdk.Management.JsonNullable<int>?, Axiam.Sdk.Management.JsonNullable<string>?, Axiam.Sdk.Management.JsonNullable<Axiam.Sdk.Management.Models.RadiusServiceType>?)
+  fullName.vb: Axiam.Sdk.Management.ManifestBuilder.NetworkProfile(String, Integer, Axiam.Sdk.Management.Models.RadiusTerminationAction?, Axiam.Sdk.Management.JsonNullable(Of Integer), Axiam.Sdk.Management.JsonNullable(Of String), Axiam.Sdk.Management.JsonNullable(Of Axiam.Sdk.Management.Models.RadiusServiceType))
+  nameWithType: ManifestBuilder.NetworkProfile(string, int, RadiusTerminationAction?, JsonNullable<int>?, JsonNullable<string>?, JsonNullable<RadiusServiceType>?)
+  nameWithType.vb: ManifestBuilder.NetworkProfile(String, Integer, RadiusTerminationAction?, JsonNullable(Of Integer), JsonNullable(Of String), JsonNullable(Of RadiusServiceType))
+- uid: Axiam.Sdk.Management.ManifestBuilder.NetworkProfile*
+  name: NetworkProfile
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_NetworkProfile_
+  commentId: Overload:Axiam.Sdk.Management.ManifestBuilder.NetworkProfile
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManifestBuilder.NetworkProfile
+  nameWithType: ManifestBuilder.NetworkProfile
+- uid: Axiam.Sdk.Management.ManifestBuilder.NetworkSegment(System.String,System.String,Axiam.Sdk.Management.Models.NetworkSegmentKind,System.String,System.Int32,Axiam.Sdk.Management.JsonNullable{System.Int32},System.Collections.Generic.IReadOnlyList{System.String},System.Nullable{System.Boolean})
+  name: NetworkSegment(string, string, NetworkSegmentKind, string, int, JsonNullable<int>?, IReadOnlyList<string>?, bool?)
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_NetworkSegment_System_String_System_String_Axiam_Sdk_Management_Models_NetworkSegmentKind_System_String_System_Int32_Axiam_Sdk_Management_JsonNullable_System_Int32__System_Collections_Generic_IReadOnlyList_System_String__System_Nullable_System_Boolean__
+  commentId: M:Axiam.Sdk.Management.ManifestBuilder.NetworkSegment(System.String,System.String,Axiam.Sdk.Management.Models.NetworkSegmentKind,System.String,System.Int32,Axiam.Sdk.Management.JsonNullable{System.Int32},System.Collections.Generic.IReadOnlyList{System.String},System.Nullable{System.Boolean})
+  name.vb: NetworkSegment(String, String, NetworkSegmentKind, String, Integer, JsonNullable(Of Integer), IReadOnlyList(Of String), Boolean?)
+  fullName: Axiam.Sdk.Management.ManifestBuilder.NetworkSegment(string, string, Axiam.Sdk.Management.Models.NetworkSegmentKind, string, int, Axiam.Sdk.Management.JsonNullable<int>?, System.Collections.Generic.IReadOnlyList<string>?, bool?)
+  fullName.vb: Axiam.Sdk.Management.ManifestBuilder.NetworkSegment(String, String, Axiam.Sdk.Management.Models.NetworkSegmentKind, String, Integer, Axiam.Sdk.Management.JsonNullable(Of Integer), System.Collections.Generic.IReadOnlyList(Of String), Boolean?)
+  nameWithType: ManifestBuilder.NetworkSegment(string, string, NetworkSegmentKind, string, int, JsonNullable<int>?, IReadOnlyList<string>?, bool?)
+  nameWithType.vb: ManifestBuilder.NetworkSegment(String, String, NetworkSegmentKind, String, Integer, JsonNullable(Of Integer), IReadOnlyList(Of String), Boolean?)
+- uid: Axiam.Sdk.Management.ManifestBuilder.NetworkSegment*
+  name: NetworkSegment
+  href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_NetworkSegment_
+  commentId: Overload:Axiam.Sdk.Management.ManifestBuilder.NetworkSegment
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.ManifestBuilder.NetworkSegment
+  nameWithType: ManifestBuilder.NetworkSegment
 - uid: Axiam.Sdk.Management.ManifestBuilder.Permission(System.String,System.String,System.String)
   name: Permission(string, string, string)
   href: api/Axiam.Sdk.Management.ManifestBuilder.html#Axiam_Sdk_Management_ManifestBuilder_Permission_System_String_System_String_System_String_
@@ -14382,6 +14784,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.Certificate.TenantId
   nameWithType: Certificate.TenantId
+- uid: Axiam.Sdk.Management.Models.Certificate.UserId
+  name: UserId
+  href: api/Axiam.Sdk.Management.Models.Certificate.html#Axiam_Sdk_Management_Models_Certificate_UserId
+  commentId: P:Axiam.Sdk.Management.Models.Certificate.UserId
+  fullName: Axiam.Sdk.Management.Models.Certificate.UserId
+  nameWithType: Certificate.UserId
+- uid: Axiam.Sdk.Management.Models.Certificate.UserId*
+  name: UserId
+  href: api/Axiam.Sdk.Management.Models.Certificate.html#Axiam_Sdk_Management_Models_Certificate_UserId_
+  commentId: Overload:Axiam.Sdk.Management.Models.Certificate.UserId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.Certificate.UserId
+  nameWithType: Certificate.UserId
 - uid: Axiam.Sdk.Management.Models.CertificatePolicy
   name: CertificatePolicy
   href: api/Axiam.Sdk.Management.Models.CertificatePolicy.html
@@ -15113,6 +15528,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.CreateCertificateRequest.SubjectAltNames
   nameWithType: CreateCertificateRequest.SubjectAltNames
+- uid: Axiam.Sdk.Management.Models.CreateCertificateRequest.UserId
+  name: UserId
+  href: api/Axiam.Sdk.Management.Models.CreateCertificateRequest.html#Axiam_Sdk_Management_Models_CreateCertificateRequest_UserId
+  commentId: P:Axiam.Sdk.Management.Models.CreateCertificateRequest.UserId
+  fullName: Axiam.Sdk.Management.Models.CreateCertificateRequest.UserId
+  nameWithType: CreateCertificateRequest.UserId
+- uid: Axiam.Sdk.Management.Models.CreateCertificateRequest.UserId*
+  name: UserId
+  href: api/Axiam.Sdk.Management.Models.CreateCertificateRequest.html#Axiam_Sdk_Management_Models_CreateCertificateRequest_UserId_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateCertificateRequest.UserId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateCertificateRequest.UserId
+  nameWithType: CreateCertificateRequest.UserId
 - uid: Axiam.Sdk.Management.Models.CreateCertificateRequest.ValidityDays
   name: ValidityDays
   href: api/Axiam.Sdk.Management.Models.CreateCertificateRequest.html#Axiam_Sdk_Management_Models_CreateCertificateRequest_ValidityDays
@@ -15534,6 +15962,148 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.CreateIntermediateCaRequest.ValidityDays
   nameWithType: CreateIntermediateCaRequest.ValidityDays
+- uid: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest
+  name: CreateNetworkReplyProfileRequest
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.html
+  commentId: T:Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest
+  nameWithType: CreateNetworkReplyProfileRequest
+- uid: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.Profile
+  name: Profile
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.html#Axiam_Sdk_Management_Models_CreateNetworkReplyProfileRequest_Profile
+  commentId: P:Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.Profile
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.Profile
+  nameWithType: CreateNetworkReplyProfileRequest.Profile
+- uid: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.Profile*
+  name: Profile
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.html#Axiam_Sdk_Management_Models_CreateNetworkReplyProfileRequest_Profile_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.Profile
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.Profile
+  nameWithType: CreateNetworkReplyProfileRequest.Profile
+- uid: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.SegmentId
+  name: SegmentId
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.html#Axiam_Sdk_Management_Models_CreateNetworkReplyProfileRequest_SegmentId
+  commentId: P:Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.SegmentId
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.SegmentId
+  nameWithType: CreateNetworkReplyProfileRequest.SegmentId
+- uid: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.SegmentId*
+  name: SegmentId
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.html#Axiam_Sdk_Management_Models_CreateNetworkReplyProfileRequest_SegmentId_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.SegmentId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.SegmentId
+  nameWithType: CreateNetworkReplyProfileRequest.SegmentId
+- uid: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.SegmentVersion
+  name: SegmentVersion
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.html#Axiam_Sdk_Management_Models_CreateNetworkReplyProfileRequest_SegmentVersion
+  commentId: P:Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.SegmentVersion
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.SegmentVersion
+  nameWithType: CreateNetworkReplyProfileRequest.SegmentVersion
+- uid: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.SegmentVersion*
+  name: SegmentVersion
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.html#Axiam_Sdk_Management_Models_CreateNetworkReplyProfileRequest_SegmentVersion_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.SegmentVersion
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.SegmentVersion
+  nameWithType: CreateNetworkReplyProfileRequest.SegmentVersion
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest
+  name: CreateNetworkSegmentRequest
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html
+  commentId: T:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest
+  nameWithType: CreateNetworkSegmentRequest
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Enabled
+  name: Enabled
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_Enabled
+  commentId: P:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Enabled
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Enabled
+  nameWithType: CreateNetworkSegmentRequest.Enabled
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Enabled*
+  name: Enabled
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_Enabled_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Enabled
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Enabled
+  nameWithType: CreateNetworkSegmentRequest.Enabled
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.FilterIds
+  name: FilterIds
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_FilterIds
+  commentId: P:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.FilterIds
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.FilterIds
+  nameWithType: CreateNetworkSegmentRequest.FilterIds
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.FilterIds*
+  name: FilterIds
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_FilterIds_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.FilterIds
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.FilterIds
+  nameWithType: CreateNetworkSegmentRequest.FilterIds
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Kind
+  name: Kind
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_Kind
+  commentId: P:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Kind
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Kind
+  nameWithType: CreateNetworkSegmentRequest.Kind
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Kind*
+  name: Kind
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_Kind_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Kind
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Kind
+  nameWithType: CreateNetworkSegmentRequest.Kind
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Name
+  name: Name
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_Name
+  commentId: P:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Name
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Name
+  nameWithType: CreateNetworkSegmentRequest.Name
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Name*
+  name: Name
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_Name_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Name
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Name
+  nameWithType: CreateNetworkSegmentRequest.Name
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Rank
+  name: Rank
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_Rank
+  commentId: P:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Rank
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Rank
+  nameWithType: CreateNetworkSegmentRequest.Rank
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Rank*
+  name: Rank
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_Rank_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Rank
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.Rank
+  nameWithType: CreateNetworkSegmentRequest.Rank
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.SiteKey
+  name: SiteKey
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_SiteKey
+  commentId: P:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.SiteKey
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.SiteKey
+  nameWithType: CreateNetworkSegmentRequest.SiteKey
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.SiteKey*
+  name: SiteKey
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_SiteKey_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.SiteKey
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.SiteKey
+  nameWithType: CreateNetworkSegmentRequest.SiteKey
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.VlanId
+  name: VlanId
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_VlanId
+  commentId: P:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.VlanId
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.VlanId
+  nameWithType: CreateNetworkSegmentRequest.VlanId
+- uid: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.VlanId*
+  name: VlanId
+  href: api/Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_VlanId_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.VlanId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.VlanId
+  nameWithType: CreateNetworkSegmentRequest.VlanId
 - uid: Axiam.Sdk.Management.Models.CreateNotificationRuleRequest
   name: CreateNotificationRuleRequest
   href: api/Axiam.Sdk.Management.Models.CreateNotificationRuleRequest.html
@@ -18471,6 +19041,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.GeneratedCertificate.TenantId
   nameWithType: GeneratedCertificate.TenantId
+- uid: Axiam.Sdk.Management.Models.GeneratedCertificate.UserId
+  name: UserId
+  href: api/Axiam.Sdk.Management.Models.GeneratedCertificate.html#Axiam_Sdk_Management_Models_GeneratedCertificate_UserId
+  commentId: P:Axiam.Sdk.Management.Models.GeneratedCertificate.UserId
+  fullName: Axiam.Sdk.Management.Models.GeneratedCertificate.UserId
+  nameWithType: GeneratedCertificate.UserId
+- uid: Axiam.Sdk.Management.Models.GeneratedCertificate.UserId*
+  name: UserId
+  href: api/Axiam.Sdk.Management.Models.GeneratedCertificate.html#Axiam_Sdk_Management_Models_GeneratedCertificate_UserId_
+  commentId: Overload:Axiam.Sdk.Management.Models.GeneratedCertificate.UserId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.GeneratedCertificate.UserId
+  nameWithType: GeneratedCertificate.UserId
 - uid: Axiam.Sdk.Management.Models.GeneratedPgpKey
   name: GeneratedPgpKey
   href: api/Axiam.Sdk.Management.Models.GeneratedPgpKey.html
@@ -19589,6 +20172,574 @@ references:
   commentId: F:Axiam.Sdk.Management.Models.NameIdFormat.Unknown
   fullName: Axiam.Sdk.Management.Models.NameIdFormat.Unknown
   nameWithType: NameIdFormat.Unknown
+- uid: Axiam.Sdk.Management.Models.NetworkPolicyResponse
+  name: NetworkPolicyResponse
+  href: api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html
+  commentId: T:Axiam.Sdk.Management.Models.NetworkPolicyResponse
+  fullName: Axiam.Sdk.Management.Models.NetworkPolicyResponse
+  nameWithType: NetworkPolicyResponse
+- uid: Axiam.Sdk.Management.Models.NetworkPolicyResponse.SessionTimeoutMaxSecs
+  name: SessionTimeoutMaxSecs
+  href: api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html#Axiam_Sdk_Management_Models_NetworkPolicyResponse_SessionTimeoutMaxSecs
+  commentId: P:Axiam.Sdk.Management.Models.NetworkPolicyResponse.SessionTimeoutMaxSecs
+  fullName: Axiam.Sdk.Management.Models.NetworkPolicyResponse.SessionTimeoutMaxSecs
+  nameWithType: NetworkPolicyResponse.SessionTimeoutMaxSecs
+- uid: Axiam.Sdk.Management.Models.NetworkPolicyResponse.SessionTimeoutMaxSecs*
+  name: SessionTimeoutMaxSecs
+  href: api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html#Axiam_Sdk_Management_Models_NetworkPolicyResponse_SessionTimeoutMaxSecs_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkPolicyResponse.SessionTimeoutMaxSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkPolicyResponse.SessionTimeoutMaxSecs
+  nameWithType: NetworkPolicyResponse.SessionTimeoutMaxSecs
+- uid: Axiam.Sdk.Management.Models.NetworkPolicyResponse.TenantId
+  name: TenantId
+  href: api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html#Axiam_Sdk_Management_Models_NetworkPolicyResponse_TenantId
+  commentId: P:Axiam.Sdk.Management.Models.NetworkPolicyResponse.TenantId
+  fullName: Axiam.Sdk.Management.Models.NetworkPolicyResponse.TenantId
+  nameWithType: NetworkPolicyResponse.TenantId
+- uid: Axiam.Sdk.Management.Models.NetworkPolicyResponse.TenantId*
+  name: TenantId
+  href: api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html#Axiam_Sdk_Management_Models_NetworkPolicyResponse_TenantId_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkPolicyResponse.TenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkPolicyResponse.TenantId
+  nameWithType: NetworkPolicyResponse.TenantId
+- uid: Axiam.Sdk.Management.Models.NetworkPolicyResponse.UpdatedAt
+  name: UpdatedAt
+  href: api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html#Axiam_Sdk_Management_Models_NetworkPolicyResponse_UpdatedAt
+  commentId: P:Axiam.Sdk.Management.Models.NetworkPolicyResponse.UpdatedAt
+  fullName: Axiam.Sdk.Management.Models.NetworkPolicyResponse.UpdatedAt
+  nameWithType: NetworkPolicyResponse.UpdatedAt
+- uid: Axiam.Sdk.Management.Models.NetworkPolicyResponse.UpdatedAt*
+  name: UpdatedAt
+  href: api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html#Axiam_Sdk_Management_Models_NetworkPolicyResponse_UpdatedAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkPolicyResponse.UpdatedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkPolicyResponse.UpdatedAt
+  nameWithType: NetworkPolicyResponse.UpdatedAt
+- uid: Axiam.Sdk.Management.Models.NetworkPolicyResponse.UpdatedBy
+  name: UpdatedBy
+  href: api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html#Axiam_Sdk_Management_Models_NetworkPolicyResponse_UpdatedBy
+  commentId: P:Axiam.Sdk.Management.Models.NetworkPolicyResponse.UpdatedBy
+  fullName: Axiam.Sdk.Management.Models.NetworkPolicyResponse.UpdatedBy
+  nameWithType: NetworkPolicyResponse.UpdatedBy
+- uid: Axiam.Sdk.Management.Models.NetworkPolicyResponse.UpdatedBy*
+  name: UpdatedBy
+  href: api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html#Axiam_Sdk_Management_Models_NetworkPolicyResponse_UpdatedBy_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkPolicyResponse.UpdatedBy
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkPolicyResponse.UpdatedBy
+  nameWithType: NetworkPolicyResponse.UpdatedBy
+- uid: Axiam.Sdk.Management.Models.NetworkPolicyResponse.Version
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html#Axiam_Sdk_Management_Models_NetworkPolicyResponse_Version
+  commentId: P:Axiam.Sdk.Management.Models.NetworkPolicyResponse.Version
+  fullName: Axiam.Sdk.Management.Models.NetworkPolicyResponse.Version
+  nameWithType: NetworkPolicyResponse.Version
+- uid: Axiam.Sdk.Management.Models.NetworkPolicyResponse.Version*
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html#Axiam_Sdk_Management_Models_NetworkPolicyResponse_Version_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkPolicyResponse.Version
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkPolicyResponse.Version
+  nameWithType: NetworkPolicyResponse.Version
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile
+  name: NetworkReplyProfile
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html
+  commentId: T:Axiam.Sdk.Management.Models.NetworkReplyProfile
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile
+  nameWithType: NetworkReplyProfile
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedAt
+  name: CreatedAt
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_CreatedAt
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedAt
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedAt
+  nameWithType: NetworkReplyProfile.CreatedAt
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedAt*
+  name: CreatedAt
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_CreatedAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedAt
+  nameWithType: NetworkReplyProfile.CreatedAt
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedBy
+  name: CreatedBy
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_CreatedBy
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedBy
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedBy
+  nameWithType: NetworkReplyProfile.CreatedBy
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedBy*
+  name: CreatedBy
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_CreatedBy_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedBy
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.CreatedBy
+  nameWithType: NetworkReplyProfile.CreatedBy
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.Dictionary
+  name: Dictionary
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_Dictionary
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.Dictionary
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.Dictionary
+  nameWithType: NetworkReplyProfile.Dictionary
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.Dictionary*
+  name: Dictionary
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_Dictionary_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.Dictionary
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.Dictionary
+  nameWithType: NetworkReplyProfile.Dictionary
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.FilterId
+  name: FilterId
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_FilterId
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.FilterId
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.FilterId
+  nameWithType: NetworkReplyProfile.FilterId
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.FilterId*
+  name: FilterId
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_FilterId_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.FilterId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.FilterId
+  nameWithType: NetworkReplyProfile.FilterId
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.IdleTimeoutSecs
+  name: IdleTimeoutSecs
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_IdleTimeoutSecs
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.IdleTimeoutSecs
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.IdleTimeoutSecs
+  nameWithType: NetworkReplyProfile.IdleTimeoutSecs
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.IdleTimeoutSecs*
+  name: IdleTimeoutSecs
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_IdleTimeoutSecs_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.IdleTimeoutSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.IdleTimeoutSecs
+  nameWithType: NetworkReplyProfile.IdleTimeoutSecs
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.SegmentId
+  name: SegmentId
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_SegmentId
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.SegmentId
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.SegmentId
+  nameWithType: NetworkReplyProfile.SegmentId
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.SegmentId*
+  name: SegmentId
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_SegmentId_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.SegmentId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.SegmentId
+  nameWithType: NetworkReplyProfile.SegmentId
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.ServiceType
+  name: ServiceType
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_ServiceType
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.ServiceType
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.ServiceType
+  nameWithType: NetworkReplyProfile.ServiceType
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.ServiceType*
+  name: ServiceType
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_ServiceType_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.ServiceType
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.ServiceType
+  nameWithType: NetworkReplyProfile.ServiceType
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutClamped
+  name: SessionTimeoutClamped
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_SessionTimeoutClamped
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutClamped
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutClamped
+  nameWithType: NetworkReplyProfile.SessionTimeoutClamped
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutClamped*
+  name: SessionTimeoutClamped
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_SessionTimeoutClamped_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutClamped
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutClamped
+  nameWithType: NetworkReplyProfile.SessionTimeoutClamped
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutSecs
+  name: SessionTimeoutSecs
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_SessionTimeoutSecs
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutSecs
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutSecs
+  nameWithType: NetworkReplyProfile.SessionTimeoutSecs
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutSecs*
+  name: SessionTimeoutSecs
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_SessionTimeoutSecs_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.SessionTimeoutSecs
+  nameWithType: NetworkReplyProfile.SessionTimeoutSecs
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.TenantId
+  name: TenantId
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_TenantId
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.TenantId
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.TenantId
+  nameWithType: NetworkReplyProfile.TenantId
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.TenantId*
+  name: TenantId
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_TenantId_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.TenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.TenantId
+  nameWithType: NetworkReplyProfile.TenantId
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.TerminationAction
+  name: TerminationAction
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_TerminationAction
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.TerminationAction
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.TerminationAction
+  nameWithType: NetworkReplyProfile.TerminationAction
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.TerminationAction*
+  name: TerminationAction
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_TerminationAction_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.TerminationAction
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.TerminationAction
+  nameWithType: NetworkReplyProfile.TerminationAction
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedAt
+  name: UpdatedAt
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_UpdatedAt
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedAt
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedAt
+  nameWithType: NetworkReplyProfile.UpdatedAt
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedAt*
+  name: UpdatedAt
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_UpdatedAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedAt
+  nameWithType: NetworkReplyProfile.UpdatedAt
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedBy
+  name: UpdatedBy
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_UpdatedBy
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedBy
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedBy
+  nameWithType: NetworkReplyProfile.UpdatedBy
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedBy*
+  name: UpdatedBy
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_UpdatedBy_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedBy
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.UpdatedBy
+  nameWithType: NetworkReplyProfile.UpdatedBy
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.Version
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_Version
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfile.Version
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.Version
+  nameWithType: NetworkReplyProfile.Version
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfile.Version*
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfile.html#Axiam_Sdk_Management_Models_NetworkReplyProfile_Version_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfile.Version
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfile.Version
+  nameWithType: NetworkReplyProfile.Version
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput
+  name: NetworkReplyProfileInput
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html
+  commentId: T:Axiam.Sdk.Management.Models.NetworkReplyProfileInput
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput
+  nameWithType: NetworkReplyProfileInput
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.Dictionary
+  name: Dictionary
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html#Axiam_Sdk_Management_Models_NetworkReplyProfileInput_Dictionary
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfileInput.Dictionary
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.Dictionary
+  nameWithType: NetworkReplyProfileInput.Dictionary
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.Dictionary*
+  name: Dictionary
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html#Axiam_Sdk_Management_Models_NetworkReplyProfileInput_Dictionary_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfileInput.Dictionary
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.Dictionary
+  nameWithType: NetworkReplyProfileInput.Dictionary
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.FilterId
+  name: FilterId
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html#Axiam_Sdk_Management_Models_NetworkReplyProfileInput_FilterId
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfileInput.FilterId
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.FilterId
+  nameWithType: NetworkReplyProfileInput.FilterId
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.FilterId*
+  name: FilterId
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html#Axiam_Sdk_Management_Models_NetworkReplyProfileInput_FilterId_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfileInput.FilterId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.FilterId
+  nameWithType: NetworkReplyProfileInput.FilterId
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.IdleTimeoutSecs
+  name: IdleTimeoutSecs
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html#Axiam_Sdk_Management_Models_NetworkReplyProfileInput_IdleTimeoutSecs
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfileInput.IdleTimeoutSecs
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.IdleTimeoutSecs
+  nameWithType: NetworkReplyProfileInput.IdleTimeoutSecs
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.IdleTimeoutSecs*
+  name: IdleTimeoutSecs
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html#Axiam_Sdk_Management_Models_NetworkReplyProfileInput_IdleTimeoutSecs_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfileInput.IdleTimeoutSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.IdleTimeoutSecs
+  nameWithType: NetworkReplyProfileInput.IdleTimeoutSecs
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.ServiceType
+  name: ServiceType
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html#Axiam_Sdk_Management_Models_NetworkReplyProfileInput_ServiceType
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfileInput.ServiceType
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.ServiceType
+  nameWithType: NetworkReplyProfileInput.ServiceType
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.ServiceType*
+  name: ServiceType
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html#Axiam_Sdk_Management_Models_NetworkReplyProfileInput_ServiceType_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfileInput.ServiceType
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.ServiceType
+  nameWithType: NetworkReplyProfileInput.ServiceType
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.SessionTimeoutSecs
+  name: SessionTimeoutSecs
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html#Axiam_Sdk_Management_Models_NetworkReplyProfileInput_SessionTimeoutSecs
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfileInput.SessionTimeoutSecs
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.SessionTimeoutSecs
+  nameWithType: NetworkReplyProfileInput.SessionTimeoutSecs
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.SessionTimeoutSecs*
+  name: SessionTimeoutSecs
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html#Axiam_Sdk_Management_Models_NetworkReplyProfileInput_SessionTimeoutSecs_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfileInput.SessionTimeoutSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.SessionTimeoutSecs
+  nameWithType: NetworkReplyProfileInput.SessionTimeoutSecs
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.TerminationAction
+  name: TerminationAction
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html#Axiam_Sdk_Management_Models_NetworkReplyProfileInput_TerminationAction
+  commentId: P:Axiam.Sdk.Management.Models.NetworkReplyProfileInput.TerminationAction
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.TerminationAction
+  nameWithType: NetworkReplyProfileInput.TerminationAction
+- uid: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.TerminationAction*
+  name: TerminationAction
+  href: api/Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html#Axiam_Sdk_Management_Models_NetworkReplyProfileInput_TerminationAction_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkReplyProfileInput.TerminationAction
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkReplyProfileInput.TerminationAction
+  nameWithType: NetworkReplyProfileInput.TerminationAction
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentKind
+  name: NetworkSegmentKind
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentKind.html
+  commentId: T:Axiam.Sdk.Management.Models.NetworkSegmentKind
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentKind
+  nameWithType: NetworkSegmentKind
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentKind.Access
+  name: Access
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentKind.html#Axiam_Sdk_Management_Models_NetworkSegmentKind_Access
+  commentId: F:Axiam.Sdk.Management.Models.NetworkSegmentKind.Access
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentKind.Access
+  nameWithType: NetworkSegmentKind.Access
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentKind.Quarantine
+  name: Quarantine
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentKind.html#Axiam_Sdk_Management_Models_NetworkSegmentKind_Quarantine
+  commentId: F:Axiam.Sdk.Management.Models.NetworkSegmentKind.Quarantine
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentKind.Quarantine
+  nameWithType: NetworkSegmentKind.Quarantine
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentKind.Unknown
+  name: Unknown
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentKind.html#Axiam_Sdk_Management_Models_NetworkSegmentKind_Unknown
+  commentId: F:Axiam.Sdk.Management.Models.NetworkSegmentKind.Unknown
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentKind.Unknown
+  nameWithType: NetworkSegmentKind.Unknown
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse
+  name: NetworkSegmentResponse
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html
+  commentId: T:Axiam.Sdk.Management.Models.NetworkSegmentResponse
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse
+  nameWithType: NetworkSegmentResponse
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.CreatedAt
+  name: CreatedAt
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_CreatedAt
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.CreatedAt
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.CreatedAt
+  nameWithType: NetworkSegmentResponse.CreatedAt
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.CreatedAt*
+  name: CreatedAt
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_CreatedAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.CreatedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.CreatedAt
+  nameWithType: NetworkSegmentResponse.CreatedAt
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.CreatedBy
+  name: CreatedBy
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_CreatedBy
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.CreatedBy
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.CreatedBy
+  nameWithType: NetworkSegmentResponse.CreatedBy
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.CreatedBy*
+  name: CreatedBy
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_CreatedBy_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.CreatedBy
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.CreatedBy
+  nameWithType: NetworkSegmentResponse.CreatedBy
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Enabled
+  name: Enabled
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Enabled
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Enabled
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Enabled
+  nameWithType: NetworkSegmentResponse.Enabled
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Enabled*
+  name: Enabled
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Enabled_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Enabled
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Enabled
+  nameWithType: NetworkSegmentResponse.Enabled
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.FilterIds
+  name: FilterIds
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_FilterIds
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.FilterIds
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.FilterIds
+  nameWithType: NetworkSegmentResponse.FilterIds
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.FilterIds*
+  name: FilterIds
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_FilterIds_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.FilterIds
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.FilterIds
+  nameWithType: NetworkSegmentResponse.FilterIds
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Id
+  name: Id
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Id
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Id
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Id
+  nameWithType: NetworkSegmentResponse.Id
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Id*
+  name: Id
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Id_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Id
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Id
+  nameWithType: NetworkSegmentResponse.Id
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Kind
+  name: Kind
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Kind
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Kind
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Kind
+  nameWithType: NetworkSegmentResponse.Kind
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Kind*
+  name: Kind
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Kind_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Kind
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Kind
+  nameWithType: NetworkSegmentResponse.Kind
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Name
+  name: Name
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Name
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Name
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Name
+  nameWithType: NetworkSegmentResponse.Name
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Name*
+  name: Name
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Name_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Name
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Name
+  nameWithType: NetworkSegmentResponse.Name
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Path
+  name: Path
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Path
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Path
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Path
+  nameWithType: NetworkSegmentResponse.Path
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Path*
+  name: Path
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Path_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Path
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Path
+  nameWithType: NetworkSegmentResponse.Path
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Rank
+  name: Rank
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Rank
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Rank
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Rank
+  nameWithType: NetworkSegmentResponse.Rank
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Rank*
+  name: Rank
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Rank_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Rank
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Rank
+  nameWithType: NetworkSegmentResponse.Rank
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.SiteKey
+  name: SiteKey
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_SiteKey
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.SiteKey
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.SiteKey
+  nameWithType: NetworkSegmentResponse.SiteKey
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.SiteKey*
+  name: SiteKey
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_SiteKey_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.SiteKey
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.SiteKey
+  nameWithType: NetworkSegmentResponse.SiteKey
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.TenantId
+  name: TenantId
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_TenantId
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.TenantId
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.TenantId
+  nameWithType: NetworkSegmentResponse.TenantId
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.TenantId*
+  name: TenantId
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_TenantId_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.TenantId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.TenantId
+  nameWithType: NetworkSegmentResponse.TenantId
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.UpdatedAt
+  name: UpdatedAt
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_UpdatedAt
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.UpdatedAt
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.UpdatedAt
+  nameWithType: NetworkSegmentResponse.UpdatedAt
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.UpdatedAt*
+  name: UpdatedAt
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_UpdatedAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.UpdatedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.UpdatedAt
+  nameWithType: NetworkSegmentResponse.UpdatedAt
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.UpdatedBy
+  name: UpdatedBy
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_UpdatedBy
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.UpdatedBy
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.UpdatedBy
+  nameWithType: NetworkSegmentResponse.UpdatedBy
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.UpdatedBy*
+  name: UpdatedBy
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_UpdatedBy_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.UpdatedBy
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.UpdatedBy
+  nameWithType: NetworkSegmentResponse.UpdatedBy
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Version
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Version
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Version
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Version
+  nameWithType: NetworkSegmentResponse.Version
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Version*
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_Version_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.Version
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.Version
+  nameWithType: NetworkSegmentResponse.Version
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.VlanId
+  name: VlanId
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_VlanId
+  commentId: P:Axiam.Sdk.Management.Models.NetworkSegmentResponse.VlanId
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.VlanId
+  nameWithType: NetworkSegmentResponse.VlanId
+- uid: Axiam.Sdk.Management.Models.NetworkSegmentResponse.VlanId*
+  name: VlanId
+  href: api/Axiam.Sdk.Management.Models.NetworkSegmentResponse.html#Axiam_Sdk_Management_Models_NetworkSegmentResponse_VlanId_
+  commentId: Overload:Axiam.Sdk.Management.Models.NetworkSegmentResponse.VlanId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NetworkSegmentResponse.VlanId
+  nameWithType: NetworkSegmentResponse.VlanId
 - uid: Axiam.Sdk.Management.Models.NotificationEventType
   name: NotificationEventType
   href: api/Axiam.Sdk.Management.Models.NotificationEventType.html
@@ -21632,6 +22783,48 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.ProviderConfigSmtp.Username
   nameWithType: ProviderConfigSmtp.Username
+- uid: Axiam.Sdk.Management.Models.RadiusServiceType
+  name: RadiusServiceType
+  href: api/Axiam.Sdk.Management.Models.RadiusServiceType.html
+  commentId: T:Axiam.Sdk.Management.Models.RadiusServiceType
+  fullName: Axiam.Sdk.Management.Models.RadiusServiceType
+  nameWithType: RadiusServiceType
+- uid: Axiam.Sdk.Management.Models.RadiusServiceType.FramedUser
+  name: FramedUser
+  href: api/Axiam.Sdk.Management.Models.RadiusServiceType.html#Axiam_Sdk_Management_Models_RadiusServiceType_FramedUser
+  commentId: F:Axiam.Sdk.Management.Models.RadiusServiceType.FramedUser
+  fullName: Axiam.Sdk.Management.Models.RadiusServiceType.FramedUser
+  nameWithType: RadiusServiceType.FramedUser
+- uid: Axiam.Sdk.Management.Models.RadiusServiceType.Unknown
+  name: Unknown
+  href: api/Axiam.Sdk.Management.Models.RadiusServiceType.html#Axiam_Sdk_Management_Models_RadiusServiceType_Unknown
+  commentId: F:Axiam.Sdk.Management.Models.RadiusServiceType.Unknown
+  fullName: Axiam.Sdk.Management.Models.RadiusServiceType.Unknown
+  nameWithType: RadiusServiceType.Unknown
+- uid: Axiam.Sdk.Management.Models.RadiusTerminationAction
+  name: RadiusTerminationAction
+  href: api/Axiam.Sdk.Management.Models.RadiusTerminationAction.html
+  commentId: T:Axiam.Sdk.Management.Models.RadiusTerminationAction
+  fullName: Axiam.Sdk.Management.Models.RadiusTerminationAction
+  nameWithType: RadiusTerminationAction
+- uid: Axiam.Sdk.Management.Models.RadiusTerminationAction.Default
+  name: Default
+  href: api/Axiam.Sdk.Management.Models.RadiusTerminationAction.html#Axiam_Sdk_Management_Models_RadiusTerminationAction_Default
+  commentId: F:Axiam.Sdk.Management.Models.RadiusTerminationAction.Default
+  fullName: Axiam.Sdk.Management.Models.RadiusTerminationAction.Default
+  nameWithType: RadiusTerminationAction.Default
+- uid: Axiam.Sdk.Management.Models.RadiusTerminationAction.RadiusRequest
+  name: RadiusRequest
+  href: api/Axiam.Sdk.Management.Models.RadiusTerminationAction.html#Axiam_Sdk_Management_Models_RadiusTerminationAction_RadiusRequest
+  commentId: F:Axiam.Sdk.Management.Models.RadiusTerminationAction.RadiusRequest
+  fullName: Axiam.Sdk.Management.Models.RadiusTerminationAction.RadiusRequest
+  nameWithType: RadiusTerminationAction.RadiusRequest
+- uid: Axiam.Sdk.Management.Models.RadiusTerminationAction.Unknown
+  name: Unknown
+  href: api/Axiam.Sdk.Management.Models.RadiusTerminationAction.html#Axiam_Sdk_Management_Models_RadiusTerminationAction_Unknown
+  commentId: F:Axiam.Sdk.Management.Models.RadiusTerminationAction.Unknown
+  fullName: Axiam.Sdk.Management.Models.RadiusTerminationAction.Unknown
+  nameWithType: RadiusTerminationAction.Unknown
 - uid: Axiam.Sdk.Management.Models.ReactorEventDescriptor
   name: ReactorEventDescriptor
   href: api/Axiam.Sdk.Management.Models.ReactorEventDescriptor.html
@@ -22083,6 +23276,154 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.RegistrationTokenResponse.UsedByClientId
   nameWithType: RegistrationTokenResponse.UsedByClientId
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest
+  name: ReplaceNetworkPolicyRequest
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.html
+  commentId: T:Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest
+  nameWithType: ReplaceNetworkPolicyRequest
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.SessionTimeoutMaxSecs
+  name: SessionTimeoutMaxSecs
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkPolicyRequest_SessionTimeoutMaxSecs
+  commentId: P:Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.SessionTimeoutMaxSecs
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.SessionTimeoutMaxSecs
+  nameWithType: ReplaceNetworkPolicyRequest.SessionTimeoutMaxSecs
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.SessionTimeoutMaxSecs*
+  name: SessionTimeoutMaxSecs
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkPolicyRequest_SessionTimeoutMaxSecs_
+  commentId: Overload:Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.SessionTimeoutMaxSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.SessionTimeoutMaxSecs
+  nameWithType: ReplaceNetworkPolicyRequest.SessionTimeoutMaxSecs
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.Version
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkPolicyRequest_Version
+  commentId: P:Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.Version
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.Version
+  nameWithType: ReplaceNetworkPolicyRequest.Version
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.Version*
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkPolicyRequest_Version_
+  commentId: Overload:Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.Version
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.Version
+  nameWithType: ReplaceNetworkPolicyRequest.Version
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest
+  name: ReplaceNetworkReplyProfileRequest
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.html
+  commentId: T:Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest
+  nameWithType: ReplaceNetworkReplyProfileRequest
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.Profile
+  name: Profile
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkReplyProfileRequest_Profile
+  commentId: P:Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.Profile
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.Profile
+  nameWithType: ReplaceNetworkReplyProfileRequest.Profile
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.Profile*
+  name: Profile
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkReplyProfileRequest_Profile_
+  commentId: Overload:Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.Profile
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.Profile
+  nameWithType: ReplaceNetworkReplyProfileRequest.Profile
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.SegmentVersion
+  name: SegmentVersion
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkReplyProfileRequest_SegmentVersion
+  commentId: P:Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.SegmentVersion
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.SegmentVersion
+  nameWithType: ReplaceNetworkReplyProfileRequest.SegmentVersion
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.SegmentVersion*
+  name: SegmentVersion
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkReplyProfileRequest_SegmentVersion_
+  commentId: Overload:Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.SegmentVersion
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.SegmentVersion
+  nameWithType: ReplaceNetworkReplyProfileRequest.SegmentVersion
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.Version
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkReplyProfileRequest_Version
+  commentId: P:Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.Version
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.Version
+  nameWithType: ReplaceNetworkReplyProfileRequest.Version
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.Version*
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkReplyProfileRequest_Version_
+  commentId: Overload:Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.Version
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.Version
+  nameWithType: ReplaceNetworkReplyProfileRequest.Version
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest
+  name: ReplaceNetworkSegmentRequest
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html
+  commentId: T:Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest
+  nameWithType: ReplaceNetworkSegmentRequest
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Enabled
+  name: Enabled
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkSegmentRequest_Enabled
+  commentId: P:Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Enabled
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Enabled
+  nameWithType: ReplaceNetworkSegmentRequest.Enabled
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Enabled*
+  name: Enabled
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkSegmentRequest_Enabled_
+  commentId: Overload:Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Enabled
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Enabled
+  nameWithType: ReplaceNetworkSegmentRequest.Enabled
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.FilterIds
+  name: FilterIds
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkSegmentRequest_FilterIds
+  commentId: P:Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.FilterIds
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.FilterIds
+  nameWithType: ReplaceNetworkSegmentRequest.FilterIds
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.FilterIds*
+  name: FilterIds
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkSegmentRequest_FilterIds_
+  commentId: Overload:Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.FilterIds
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.FilterIds
+  nameWithType: ReplaceNetworkSegmentRequest.FilterIds
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Rank
+  name: Rank
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkSegmentRequest_Rank
+  commentId: P:Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Rank
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Rank
+  nameWithType: ReplaceNetworkSegmentRequest.Rank
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Rank*
+  name: Rank
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkSegmentRequest_Rank_
+  commentId: Overload:Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Rank
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Rank
+  nameWithType: ReplaceNetworkSegmentRequest.Rank
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Version
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkSegmentRequest_Version
+  commentId: P:Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Version
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Version
+  nameWithType: ReplaceNetworkSegmentRequest.Version
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Version*
+  name: Version
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkSegmentRequest_Version_
+  commentId: Overload:Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Version
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.Version
+  nameWithType: ReplaceNetworkSegmentRequest.Version
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.VlanId
+  name: VlanId
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkSegmentRequest_VlanId
+  commentId: P:Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.VlanId
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.VlanId
+  nameWithType: ReplaceNetworkSegmentRequest.VlanId
+- uid: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.VlanId*
+  name: VlanId
+  href: api/Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html#Axiam_Sdk_Management_Models_ReplaceNetworkSegmentRequest_VlanId_
+  commentId: Overload:Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.VlanId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.VlanId
+  nameWithType: ReplaceNetworkSegmentRequest.VlanId
 - uid: Axiam.Sdk.Management.Models.ResolvedPermissionGrant
   name: ResolvedPermissionGrant
   href: api/Axiam.Sdk.Management.Models.ResolvedPermissionGrant.html
@@ -25894,6 +27235,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.SubjectAltNames
   nameWithType: SignCertificateCsrRequest.SubjectAltNames
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.UserId
+  name: UserId
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_UserId
+  commentId: P:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.UserId
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.UserId
+  nameWithType: SignCertificateCsrRequest.UserId
+- uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.UserId*
+  name: UserId
+  href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_UserId_
+  commentId: Overload:Axiam.Sdk.Management.Models.SignCertificateCsrRequest.UserId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.UserId
+  nameWithType: SignCertificateCsrRequest.UserId
 - uid: Axiam.Sdk.Management.Models.SignCertificateCsrRequest.ValidityDays
   name: ValidityDays
   href: api/Axiam.Sdk.Management.Models.SignCertificateCsrRequest.html#Axiam_Sdk_Management_Models_SignCertificateCsrRequest_ValidityDays
@@ -26566,6 +27920,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SsfStreamInput.EventsRequested
   nameWithType: SsfStreamInput.EventsRequested
+- uid: Axiam.Sdk.Management.Models.SsfStreamInput.ExpectedUpdatedAt
+  name: ExpectedUpdatedAt
+  href: api/Axiam.Sdk.Management.Models.SsfStreamInput.html#Axiam_Sdk_Management_Models_SsfStreamInput_ExpectedUpdatedAt
+  commentId: P:Axiam.Sdk.Management.Models.SsfStreamInput.ExpectedUpdatedAt
+  fullName: Axiam.Sdk.Management.Models.SsfStreamInput.ExpectedUpdatedAt
+  nameWithType: SsfStreamInput.ExpectedUpdatedAt
+- uid: Axiam.Sdk.Management.Models.SsfStreamInput.ExpectedUpdatedAt*
+  name: ExpectedUpdatedAt
+  href: api/Axiam.Sdk.Management.Models.SsfStreamInput.html#Axiam_Sdk_Management_Models_SsfStreamInput_ExpectedUpdatedAt_
+  commentId: Overload:Axiam.Sdk.Management.Models.SsfStreamInput.ExpectedUpdatedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SsfStreamInput.ExpectedUpdatedAt
+  nameWithType: SsfStreamInput.ExpectedUpdatedAt
 - uid: Axiam.Sdk.Management.Models.SsfStreamInput.ReceiverClientId
   name: ReceiverClientId
   href: api/Axiam.Sdk.Management.Models.SsfStreamInput.html#Axiam_Sdk_Management_Models_SsfStreamInput_ReceiverClientId
@@ -29783,6 +31150,212 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.NamespaceScope.TenantId
   nameWithType: NamespaceScope.TenantId
+- uid: Axiam.Sdk.Management.NetworkApi
+  name: NetworkApi
+  href: api/Axiam.Sdk.Management.NetworkApi.html
+  commentId: T:Axiam.Sdk.Management.NetworkApi
+  fullName: Axiam.Sdk.Management.NetworkApi
+  nameWithType: NetworkApi
+- uid: Axiam.Sdk.Management.NetworkApi.CreateProfileAsync(Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest,System.Threading.CancellationToken)
+  name: CreateProfileAsync(CreateNetworkReplyProfileRequest, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_CreateProfileAsync_Axiam_Sdk_Management_Models_CreateNetworkReplyProfileRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.CreateProfileAsync(Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.CreateProfileAsync(Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.CreateProfileAsync(CreateNetworkReplyProfileRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.CreateProfileAsync*
+  name: CreateProfileAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_CreateProfileAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.CreateProfileAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.CreateProfileAsync
+  nameWithType: NetworkApi.CreateProfileAsync
+- uid: Axiam.Sdk.Management.NetworkApi.CreateSegmentAsync(Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest,System.Threading.CancellationToken)
+  name: CreateSegmentAsync(CreateNetworkSegmentRequest, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_CreateSegmentAsync_Axiam_Sdk_Management_Models_CreateNetworkSegmentRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.CreateSegmentAsync(Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.CreateSegmentAsync(Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.CreateSegmentAsync(CreateNetworkSegmentRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.CreateSegmentAsync*
+  name: CreateSegmentAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_CreateSegmentAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.CreateSegmentAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.CreateSegmentAsync
+  nameWithType: NetworkApi.CreateSegmentAsync
+- uid: Axiam.Sdk.Management.NetworkApi.DeleteProfileAsync(System.Guid,System.Int64,System.Threading.CancellationToken)
+  name: DeleteProfileAsync(Guid, long, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_DeleteProfileAsync_System_Guid_System_Int64_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.DeleteProfileAsync(System.Guid,System.Int64,System.Threading.CancellationToken)
+  name.vb: DeleteProfileAsync(Guid, Long, CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.DeleteProfileAsync(System.Guid, long, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Management.NetworkApi.DeleteProfileAsync(System.Guid, Long, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.DeleteProfileAsync(Guid, long, CancellationToken)
+  nameWithType.vb: NetworkApi.DeleteProfileAsync(Guid, Long, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.DeleteProfileAsync*
+  name: DeleteProfileAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_DeleteProfileAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.DeleteProfileAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.DeleteProfileAsync
+  nameWithType: NetworkApi.DeleteProfileAsync
+- uid: Axiam.Sdk.Management.NetworkApi.DeleteSegmentAsync(System.Guid,System.Int64,System.Threading.CancellationToken)
+  name: DeleteSegmentAsync(Guid, long, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_DeleteSegmentAsync_System_Guid_System_Int64_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.DeleteSegmentAsync(System.Guid,System.Int64,System.Threading.CancellationToken)
+  name.vb: DeleteSegmentAsync(Guid, Long, CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.DeleteSegmentAsync(System.Guid, long, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Management.NetworkApi.DeleteSegmentAsync(System.Guid, Long, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.DeleteSegmentAsync(Guid, long, CancellationToken)
+  nameWithType.vb: NetworkApi.DeleteSegmentAsync(Guid, Long, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.DeleteSegmentAsync*
+  name: DeleteSegmentAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_DeleteSegmentAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.DeleteSegmentAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.DeleteSegmentAsync
+  nameWithType: NetworkApi.DeleteSegmentAsync
+- uid: Axiam.Sdk.Management.NetworkApi.GetPolicyAsync(System.Threading.CancellationToken)
+  name: GetPolicyAsync(CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_GetPolicyAsync_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.GetPolicyAsync(System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.GetPolicyAsync(System.Threading.CancellationToken)
+  nameWithType: NetworkApi.GetPolicyAsync(CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.GetPolicyAsync*
+  name: GetPolicyAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_GetPolicyAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.GetPolicyAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.GetPolicyAsync
+  nameWithType: NetworkApi.GetPolicyAsync
+- uid: Axiam.Sdk.Management.NetworkApi.GetProfileAsync(System.Guid,System.Threading.CancellationToken)
+  name: GetProfileAsync(Guid, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_GetProfileAsync_System_Guid_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.GetProfileAsync(System.Guid,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.GetProfileAsync(System.Guid, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.GetProfileAsync(Guid, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.GetProfileAsync*
+  name: GetProfileAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_GetProfileAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.GetProfileAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.GetProfileAsync
+  nameWithType: NetworkApi.GetProfileAsync
+- uid: Axiam.Sdk.Management.NetworkApi.GetSegmentAsync(System.Guid,System.Threading.CancellationToken)
+  name: GetSegmentAsync(Guid, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_GetSegmentAsync_System_Guid_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.GetSegmentAsync(System.Guid,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.GetSegmentAsync(System.Guid, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.GetSegmentAsync(Guid, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.GetSegmentAsync*
+  name: GetSegmentAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_GetSegmentAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.GetSegmentAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.GetSegmentAsync
+  nameWithType: NetworkApi.GetSegmentAsync
+- uid: Axiam.Sdk.Management.NetworkApi.ListProfilesAllAsync(Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)
+  name: ListProfilesAllAsync(PageRequest?, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ListProfilesAllAsync_Axiam_Sdk_Management_PageRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.ListProfilesAllAsync(Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)
+  name.vb: ListProfilesAllAsync(PageRequest, CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.ListProfilesAllAsync(Axiam.Sdk.Management.PageRequest?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Management.NetworkApi.ListProfilesAllAsync(Axiam.Sdk.Management.PageRequest, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.ListProfilesAllAsync(PageRequest?, CancellationToken)
+  nameWithType.vb: NetworkApi.ListProfilesAllAsync(PageRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.ListProfilesAllAsync*
+  name: ListProfilesAllAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ListProfilesAllAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.ListProfilesAllAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.ListProfilesAllAsync
+  nameWithType: NetworkApi.ListProfilesAllAsync
+- uid: Axiam.Sdk.Management.NetworkApi.ListProfilesAsync(Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)
+  name: ListProfilesAsync(PageRequest?, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ListProfilesAsync_Axiam_Sdk_Management_PageRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.ListProfilesAsync(Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)
+  name.vb: ListProfilesAsync(PageRequest, CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.ListProfilesAsync(Axiam.Sdk.Management.PageRequest?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Management.NetworkApi.ListProfilesAsync(Axiam.Sdk.Management.PageRequest, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.ListProfilesAsync(PageRequest?, CancellationToken)
+  nameWithType.vb: NetworkApi.ListProfilesAsync(PageRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.ListProfilesAsync*
+  name: ListProfilesAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ListProfilesAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.ListProfilesAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.ListProfilesAsync
+  nameWithType: NetworkApi.ListProfilesAsync
+- uid: Axiam.Sdk.Management.NetworkApi.ListSegmentsAllAsync(System.String,Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)
+  name: ListSegmentsAllAsync(string?, PageRequest?, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ListSegmentsAllAsync_System_String_Axiam_Sdk_Management_PageRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.ListSegmentsAllAsync(System.String,Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)
+  name.vb: ListSegmentsAllAsync(String, PageRequest, CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.ListSegmentsAllAsync(string?, Axiam.Sdk.Management.PageRequest?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Management.NetworkApi.ListSegmentsAllAsync(String, Axiam.Sdk.Management.PageRequest, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.ListSegmentsAllAsync(string?, PageRequest?, CancellationToken)
+  nameWithType.vb: NetworkApi.ListSegmentsAllAsync(String, PageRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.ListSegmentsAllAsync*
+  name: ListSegmentsAllAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ListSegmentsAllAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.ListSegmentsAllAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.ListSegmentsAllAsync
+  nameWithType: NetworkApi.ListSegmentsAllAsync
+- uid: Axiam.Sdk.Management.NetworkApi.ListSegmentsAsync(System.String,Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)
+  name: ListSegmentsAsync(string?, PageRequest?, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ListSegmentsAsync_System_String_Axiam_Sdk_Management_PageRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.ListSegmentsAsync(System.String,Axiam.Sdk.Management.PageRequest,System.Threading.CancellationToken)
+  name.vb: ListSegmentsAsync(String, PageRequest, CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.ListSegmentsAsync(string?, Axiam.Sdk.Management.PageRequest?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Management.NetworkApi.ListSegmentsAsync(String, Axiam.Sdk.Management.PageRequest, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.ListSegmentsAsync(string?, PageRequest?, CancellationToken)
+  nameWithType.vb: NetworkApi.ListSegmentsAsync(String, PageRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.ListSegmentsAsync*
+  name: ListSegmentsAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ListSegmentsAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.ListSegmentsAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.ListSegmentsAsync
+  nameWithType: NetworkApi.ListSegmentsAsync
+- uid: Axiam.Sdk.Management.NetworkApi.ReplacePolicyAsync(Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest,System.Threading.CancellationToken)
+  name: ReplacePolicyAsync(ReplaceNetworkPolicyRequest, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ReplacePolicyAsync_Axiam_Sdk_Management_Models_ReplaceNetworkPolicyRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.ReplacePolicyAsync(Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.ReplacePolicyAsync(Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.ReplacePolicyAsync(ReplaceNetworkPolicyRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.ReplacePolicyAsync*
+  name: ReplacePolicyAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ReplacePolicyAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.ReplacePolicyAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.ReplacePolicyAsync
+  nameWithType: NetworkApi.ReplacePolicyAsync
+- uid: Axiam.Sdk.Management.NetworkApi.ReplaceProfileAsync(System.Guid,Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest,System.Threading.CancellationToken)
+  name: ReplaceProfileAsync(Guid, ReplaceNetworkReplyProfileRequest, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ReplaceProfileAsync_System_Guid_Axiam_Sdk_Management_Models_ReplaceNetworkReplyProfileRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.ReplaceProfileAsync(System.Guid,Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.ReplaceProfileAsync(System.Guid, Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.ReplaceProfileAsync(Guid, ReplaceNetworkReplyProfileRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.ReplaceProfileAsync*
+  name: ReplaceProfileAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ReplaceProfileAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.ReplaceProfileAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.ReplaceProfileAsync
+  nameWithType: NetworkApi.ReplaceProfileAsync
+- uid: Axiam.Sdk.Management.NetworkApi.ReplaceSegmentAsync(System.Guid,Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest,System.Threading.CancellationToken)
+  name: ReplaceSegmentAsync(Guid, ReplaceNetworkSegmentRequest, CancellationToken)
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ReplaceSegmentAsync_System_Guid_Axiam_Sdk_Management_Models_ReplaceNetworkSegmentRequest_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Management.NetworkApi.ReplaceSegmentAsync(System.Guid,Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest,System.Threading.CancellationToken)
+  fullName: Axiam.Sdk.Management.NetworkApi.ReplaceSegmentAsync(System.Guid, Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest, System.Threading.CancellationToken)
+  nameWithType: NetworkApi.ReplaceSegmentAsync(Guid, ReplaceNetworkSegmentRequest, CancellationToken)
+- uid: Axiam.Sdk.Management.NetworkApi.ReplaceSegmentAsync*
+  name: ReplaceSegmentAsync
+  href: api/Axiam.Sdk.Management.NetworkApi.html#Axiam_Sdk_Management_NetworkApi_ReplaceSegmentAsync_
+  commentId: Overload:Axiam.Sdk.Management.NetworkApi.ReplaceSegmentAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.NetworkApi.ReplaceSegmentAsync
+  nameWithType: NetworkApi.ReplaceSegmentAsync
 - uid: Axiam.Sdk.Management.NotFoundError
   name: NotFoundError
   href: api/Axiam.Sdk.Management.NotFoundError.html
@@ -30605,6 +32178,24 @@ references:
   commentId: F:Axiam.Sdk.Management.PlanTarget.GroupRole
   fullName: Axiam.Sdk.Management.PlanTarget.GroupRole
   nameWithType: PlanTarget.GroupRole
+- uid: Axiam.Sdk.Management.PlanTarget.NetworkPolicy
+  name: NetworkPolicy
+  href: api/Axiam.Sdk.Management.PlanTarget.html#Axiam_Sdk_Management_PlanTarget_NetworkPolicy
+  commentId: F:Axiam.Sdk.Management.PlanTarget.NetworkPolicy
+  fullName: Axiam.Sdk.Management.PlanTarget.NetworkPolicy
+  nameWithType: PlanTarget.NetworkPolicy
+- uid: Axiam.Sdk.Management.PlanTarget.NetworkProfile
+  name: NetworkProfile
+  href: api/Axiam.Sdk.Management.PlanTarget.html#Axiam_Sdk_Management_PlanTarget_NetworkProfile
+  commentId: F:Axiam.Sdk.Management.PlanTarget.NetworkProfile
+  fullName: Axiam.Sdk.Management.PlanTarget.NetworkProfile
+  nameWithType: PlanTarget.NetworkProfile
+- uid: Axiam.Sdk.Management.PlanTarget.NetworkSegment
+  name: NetworkSegment
+  href: api/Axiam.Sdk.Management.PlanTarget.html#Axiam_Sdk_Management_PlanTarget_NetworkSegment
+  commentId: F:Axiam.Sdk.Management.PlanTarget.NetworkSegment
+  fullName: Axiam.Sdk.Management.PlanTarget.NetworkSegment
+  nameWithType: PlanTarget.NetworkSegment
 - uid: Axiam.Sdk.Management.PlanTarget.Permission
   name: Permission
   href: api/Axiam.Sdk.Management.PlanTarget.html#Axiam_Sdk_Management_PlanTarget_Permission
@@ -32136,21 +33727,196 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.SsfApi.UpdateStreamAsync
   nameWithType: SsfApi.UpdateStreamAsync
+- uid: Axiam.Sdk.Management.SsfStreamChanges
+  name: SsfStreamChanges
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html
+  commentId: T:Axiam.Sdk.Management.SsfStreamChanges
+  fullName: Axiam.Sdk.Management.SsfStreamChanges
+  nameWithType: SsfStreamChanges
+- uid: Axiam.Sdk.Management.SsfStreamChanges.Audience
+  name: Audience
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_Audience
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.Audience
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.Audience
+  nameWithType: SsfStreamChanges.Audience
+- uid: Axiam.Sdk.Management.SsfStreamChanges.Audience*
+  name: Audience
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_Audience_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.Audience
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.Audience
+  nameWithType: SsfStreamChanges.Audience
+- uid: Axiam.Sdk.Management.SsfStreamChanges.AuthorizationHeader
+  name: AuthorizationHeader
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_AuthorizationHeader
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.AuthorizationHeader
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.AuthorizationHeader
+  nameWithType: SsfStreamChanges.AuthorizationHeader
+- uid: Axiam.Sdk.Management.SsfStreamChanges.AuthorizationHeader*
+  name: AuthorizationHeader
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_AuthorizationHeader_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.AuthorizationHeader
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.AuthorizationHeader
+  nameWithType: SsfStreamChanges.AuthorizationHeader
+- uid: Axiam.Sdk.Management.SsfStreamChanges.ClearAuthorizationHeader
+  name: ClearAuthorizationHeader
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_ClearAuthorizationHeader
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.ClearAuthorizationHeader
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.ClearAuthorizationHeader
+  nameWithType: SsfStreamChanges.ClearAuthorizationHeader
+- uid: Axiam.Sdk.Management.SsfStreamChanges.ClearAuthorizationHeader*
+  name: ClearAuthorizationHeader
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_ClearAuthorizationHeader_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.ClearAuthorizationHeader
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.ClearAuthorizationHeader
+  nameWithType: SsfStreamChanges.ClearAuthorizationHeader
+- uid: Axiam.Sdk.Management.SsfStreamChanges.DeliveryMethod
+  name: DeliveryMethod
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_DeliveryMethod
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.DeliveryMethod
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.DeliveryMethod
+  nameWithType: SsfStreamChanges.DeliveryMethod
+- uid: Axiam.Sdk.Management.SsfStreamChanges.DeliveryMethod*
+  name: DeliveryMethod
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_DeliveryMethod_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.DeliveryMethod
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.DeliveryMethod
+  nameWithType: SsfStreamChanges.DeliveryMethod
+- uid: Axiam.Sdk.Management.SsfStreamChanges.Description
+  name: Description
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_Description
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.Description
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.Description
+  nameWithType: SsfStreamChanges.Description
+- uid: Axiam.Sdk.Management.SsfStreamChanges.Description*
+  name: Description
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_Description_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.Description
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.Description
+  nameWithType: SsfStreamChanges.Description
+- uid: Axiam.Sdk.Management.SsfStreamChanges.EndpointUrl
+  name: EndpointUrl
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_EndpointUrl
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.EndpointUrl
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.EndpointUrl
+  nameWithType: SsfStreamChanges.EndpointUrl
+- uid: Axiam.Sdk.Management.SsfStreamChanges.EndpointUrl*
+  name: EndpointUrl
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_EndpointUrl_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.EndpointUrl
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.EndpointUrl
+  nameWithType: SsfStreamChanges.EndpointUrl
+- uid: Axiam.Sdk.Management.SsfStreamChanges.EventsAllowed
+  name: EventsAllowed
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_EventsAllowed
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.EventsAllowed
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.EventsAllowed
+  nameWithType: SsfStreamChanges.EventsAllowed
+- uid: Axiam.Sdk.Management.SsfStreamChanges.EventsAllowed*
+  name: EventsAllowed
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_EventsAllowed_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.EventsAllowed
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.EventsAllowed
+  nameWithType: SsfStreamChanges.EventsAllowed
+- uid: Axiam.Sdk.Management.SsfStreamChanges.EventsRequested
+  name: EventsRequested
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_EventsRequested
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.EventsRequested
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.EventsRequested
+  nameWithType: SsfStreamChanges.EventsRequested
+- uid: Axiam.Sdk.Management.SsfStreamChanges.EventsRequested*
+  name: EventsRequested
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_EventsRequested_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.EventsRequested
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.EventsRequested
+  nameWithType: SsfStreamChanges.EventsRequested
+- uid: Axiam.Sdk.Management.SsfStreamChanges.ExpectedUpdatedAt
+  name: ExpectedUpdatedAt
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_ExpectedUpdatedAt
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.ExpectedUpdatedAt
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.ExpectedUpdatedAt
+  nameWithType: SsfStreamChanges.ExpectedUpdatedAt
+- uid: Axiam.Sdk.Management.SsfStreamChanges.ExpectedUpdatedAt*
+  name: ExpectedUpdatedAt
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_ExpectedUpdatedAt_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.ExpectedUpdatedAt
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.ExpectedUpdatedAt
+  nameWithType: SsfStreamChanges.ExpectedUpdatedAt
+- uid: Axiam.Sdk.Management.SsfStreamChanges.ReceiverClientId
+  name: ReceiverClientId
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_ReceiverClientId
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.ReceiverClientId
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.ReceiverClientId
+  nameWithType: SsfStreamChanges.ReceiverClientId
+- uid: Axiam.Sdk.Management.SsfStreamChanges.ReceiverClientId*
+  name: ReceiverClientId
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_ReceiverClientId_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.ReceiverClientId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.ReceiverClientId
+  nameWithType: SsfStreamChanges.ReceiverClientId
+- uid: Axiam.Sdk.Management.SsfStreamChanges.Status
+  name: Status
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_Status
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.Status
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.Status
+  nameWithType: SsfStreamChanges.Status
+- uid: Axiam.Sdk.Management.SsfStreamChanges.Status*
+  name: Status
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_Status_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.Status
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.Status
+  nameWithType: SsfStreamChanges.Status
+- uid: Axiam.Sdk.Management.SsfStreamChanges.StatusReason
+  name: StatusReason
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_StatusReason
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.StatusReason
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.StatusReason
+  nameWithType: SsfStreamChanges.StatusReason
+- uid: Axiam.Sdk.Management.SsfStreamChanges.StatusReason*
+  name: StatusReason
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_StatusReason_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.StatusReason
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.StatusReason
+  nameWithType: SsfStreamChanges.StatusReason
+- uid: Axiam.Sdk.Management.SsfStreamChanges.SubjectFormat
+  name: SubjectFormat
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_SubjectFormat
+  commentId: P:Axiam.Sdk.Management.SsfStreamChanges.SubjectFormat
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.SubjectFormat
+  nameWithType: SsfStreamChanges.SubjectFormat
+- uid: Axiam.Sdk.Management.SsfStreamChanges.SubjectFormat*
+  name: SubjectFormat
+  href: api/Axiam.Sdk.Management.SsfStreamChanges.html#Axiam_Sdk_Management_SsfStreamChanges_SubjectFormat_
+  commentId: Overload:Axiam.Sdk.Management.SsfStreamChanges.SubjectFormat
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.SsfStreamChanges.SubjectFormat
+  nameWithType: SsfStreamChanges.SubjectFormat
 - uid: Axiam.Sdk.Management.StepOutcome
   name: StepOutcome
   href: api/Axiam.Sdk.Management.StepOutcome.html
   commentId: T:Axiam.Sdk.Management.StepOutcome
   fullName: Axiam.Sdk.Management.StepOutcome
   nameWithType: StepOutcome
-- uid: Axiam.Sdk.Management.StepOutcome.#ctor(Axiam.Sdk.Management.ApplyStatus,System.String,System.Nullable{System.Boolean},Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse,System.String)
-  name: StepOutcome(ApplyStatus, string?, bool?, ServiceAccountCreatedResponse?, string?)
-  href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome__ctor_Axiam_Sdk_Management_ApplyStatus_System_String_System_Nullable_System_Boolean__Axiam_Sdk_Management_Models_ServiceAccountCreatedResponse_System_String_
-  commentId: M:Axiam.Sdk.Management.StepOutcome.#ctor(Axiam.Sdk.Management.ApplyStatus,System.String,System.Nullable{System.Boolean},Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse,System.String)
-  name.vb: New(ApplyStatus, String, Boolean?, ServiceAccountCreatedResponse, String)
-  fullName: Axiam.Sdk.Management.StepOutcome.StepOutcome(Axiam.Sdk.Management.ApplyStatus, string?, bool?, Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse?, string?)
-  fullName.vb: Axiam.Sdk.Management.StepOutcome.New(Axiam.Sdk.Management.ApplyStatus, String, Boolean?, Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse, String)
-  nameWithType: StepOutcome.StepOutcome(ApplyStatus, string?, bool?, ServiceAccountCreatedResponse?, string?)
-  nameWithType.vb: StepOutcome.New(ApplyStatus, String, Boolean?, ServiceAccountCreatedResponse, String)
+- uid: Axiam.Sdk.Management.StepOutcome.#ctor(Axiam.Sdk.Management.ApplyStatus,System.String,System.Nullable{System.Boolean},Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse,System.String,System.String)
+  name: StepOutcome(ApplyStatus, string?, bool?, ServiceAccountCreatedResponse?, string?, string?)
+  href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome__ctor_Axiam_Sdk_Management_ApplyStatus_System_String_System_Nullable_System_Boolean__Axiam_Sdk_Management_Models_ServiceAccountCreatedResponse_System_String_System_String_
+  commentId: M:Axiam.Sdk.Management.StepOutcome.#ctor(Axiam.Sdk.Management.ApplyStatus,System.String,System.Nullable{System.Boolean},Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse,System.String,System.String)
+  name.vb: New(ApplyStatus, String, Boolean?, ServiceAccountCreatedResponse, String, String)
+  fullName: Axiam.Sdk.Management.StepOutcome.StepOutcome(Axiam.Sdk.Management.ApplyStatus, string?, bool?, Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse?, string?, string?)
+  fullName.vb: Axiam.Sdk.Management.StepOutcome.New(Axiam.Sdk.Management.ApplyStatus, String, Boolean?, Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse, String, String)
+  nameWithType: StepOutcome.StepOutcome(ApplyStatus, string?, bool?, ServiceAccountCreatedResponse?, string?, string?)
+  nameWithType.vb: StepOutcome.New(ApplyStatus, String, Boolean?, ServiceAccountCreatedResponse, String, String)
 - uid: Axiam.Sdk.Management.StepOutcome.#ctor*
   name: StepOutcome
   href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome__ctor_
@@ -32187,6 +33953,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.StepOutcome.Message
   nameWithType: StepOutcome.Message
+- uid: Axiam.Sdk.Management.StepOutcome.ReasonCode
+  name: ReasonCode
+  href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_ReasonCode
+  commentId: P:Axiam.Sdk.Management.StepOutcome.ReasonCode
+  fullName: Axiam.Sdk.Management.StepOutcome.ReasonCode
+  nameWithType: StepOutcome.ReasonCode
+- uid: Axiam.Sdk.Management.StepOutcome.ReasonCode*
+  name: ReasonCode
+  href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_ReasonCode_
+  commentId: Overload:Axiam.Sdk.Management.StepOutcome.ReasonCode
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.StepOutcome.ReasonCode
+  nameWithType: StepOutcome.ReasonCode
 - uid: Axiam.Sdk.Management.StepOutcome.RestoreError
   name: RestoreError
   href: api/Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_RestoreError

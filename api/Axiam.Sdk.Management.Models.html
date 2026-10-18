@@ -226,6 +226,16 @@ three constants above, so a settings row written by hand cannot lift them.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.CreateNetworkReplyProfileRequest.html">CreateNetworkReplyProfileRequest</a></dt>
+      <dd><p>The body of <code>POST /api/v1/network/profiles</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.CreateNetworkSegmentRequest.html">CreateNetworkSegmentRequest</a></dt>
+      <dd><p>The body of <code>POST /api/v1/network/segments</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.CreateNotificationRuleRequest.html">CreateNotificationRuleRequest</a></dt>
       <dd><p>The CreateNotificationRuleRequest schema from the server's OpenAPI document.</p>
 </dd>
@@ -502,6 +512,29 @@ ingested yet&quot;), not an error.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.NetworkPolicyResponse.html">NetworkPolicyResponse</a></dt>
+      <dd><p>The tenant's network policy, as the management API returns it.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.NetworkReplyProfile.html">NetworkReplyProfile</a></dt>
+      <dd><p>A segment's reply profile as read: <strong>the effective one</strong>, with the <code>Session-Timeout</code>
+already clamped to the tenant's current cap (design note §3.4) and <code>Idle-Timeout</code> kept
+within it.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.NetworkReplyProfileInput.html">NetworkReplyProfileInput</a></dt>
+      <dd><p>What a writer supplies for a profile. Closed: an unknown key is a refusal naming it, never
+ignored (design note §3.4).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.NetworkSegmentResponse.html">NetworkSegmentResponse</a></dt>
+      <dd><p>A network segment, as the management API returns it.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.NotificationPolicy.html">NotificationPolicy</a></dt>
       <dd><p>Admin notification preferences.</p>
 </dd>
@@ -696,6 +729,22 @@ set_org_config</code>). A non-empty value is a real secret to encrypt+replace.</
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.RegistrationTokenResponse.html">RegistrationTokenResponse</a></dt>
       <dd><p>Metadata only. The handle exists in plaintext exactly once, in
 [<code>CreateRegistrationTokenResponse</code>].</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ReplaceNetworkPolicyRequest.html">ReplaceNetworkPolicyRequest</a></dt>
+      <dd><p>The body of <code>PUT /api/v1/network/policy</code>: a <strong>replacement</strong> of the policy.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ReplaceNetworkReplyProfileRequest.html">ReplaceNetworkReplyProfileRequest</a></dt>
+      <dd><p>The body of <code>PUT /api/v1/network/profiles/{segment_id}</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.ReplaceNetworkSegmentRequest.html">ReplaceNetworkSegmentRequest</a></dt>
+      <dd><p>The body of <code>PUT /api/v1/network/segments/{id}</code>: a <strong>replacement</strong> of the envelope. The
+kind and the place in the tree do not change.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -912,7 +961,10 @@ default</strong>, not kept.</p>
       <dd><p>Body of <code>POST /api/v1/certificates/sign-csr</code>. No <code>subject</code> and no
 <code>key_algorithm</code>: both are read out of the CSR, which is the only place they can be
 stated without the row and the certificate being able to disagree. No key is returned, so
-there is no key field anywhere on this exchange.</p>
+there is no key field anywhere on this exchange. The CSR's common name meets the rules of
+<code>subject</code> on <code>POST /api/v1/certificates</code> (printable, at most 64 characters) and is
+refused, not rewritten, when it does not. So does the value of every other attribute of the
+CSR's subject, and a subject with more than one common name is refused.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -1262,6 +1314,11 @@ through <code>POST /oauth2-clients</code> by somebody holding <code>oauth2_clien
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.NetworkSegmentKind.html">NetworkSegmentKind</a></dt>
+      <dd><p>What a segment is for.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.NotificationEventType.html">NotificationEventType</a></dt>
       <dd><p>Events that can trigger an admin notification.</p>
 </dd>
@@ -1294,6 +1351,17 @@ so data written before this existed, and clients that send no <code>effect</code
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.PgpKeyStatus.html">PgpKeyStatus</a></dt>
       <dd><p>Status of an OpenPGP key.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.RadiusServiceType.html">RadiusServiceType</a></dt>
+      <dd><p><code>Service-Type</code> (RFC 2865 §5.6). Option B accepts only <code>framed_user</code>; the
+administrative values are refused with a 400.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.RadiusTerminationAction.html">RadiusTerminationAction</a></dt>
+      <dd><p><code>Termination-Action</code> (RFC 2865 §5.29).</p>
 </dd>
     </dl>
     <dl class="jumplist">

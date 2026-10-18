@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.0.0/apiSpec/new?filename=Axiam_Sdk_Management_StepOutcome.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.StepOutcome%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.1.0/apiSpec/new?filename=Axiam_Sdk_Management_StepOutcome.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.StepOutcome%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Management_StepOutcome" data-uid="Axiam.Sdk.Management.StepOutcome" class="text-break">
-Class StepOutcome  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/ManagementPlan.cs/#L136"><i class="bi bi-code-slash"></i></a>
+Class StepOutcome  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementPlan.cs/#L152"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -158,9 +158,9 @@ Class StepOutcome  <a class="header-action link-secondary" title="View source" h
 
   <a id="Axiam_Sdk_Management_StepOutcome__ctor_" data-uid="Axiam.Sdk.Management.StepOutcome.#ctor*"></a>
 
-  <h3 id="Axiam_Sdk_Management_StepOutcome__ctor_Axiam_Sdk_Management_ApplyStatus_System_String_System_Nullable_System_Boolean__Axiam_Sdk_Management_Models_ServiceAccountCreatedResponse_System_String_" data-uid="Axiam.Sdk.Management.StepOutcome.#ctor(Axiam.Sdk.Management.ApplyStatus,System.String,System.Nullable{System.Boolean},Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse,System.String)">
-  StepOutcome(ApplyStatus, string?, bool?, ServiceAccountCreatedResponse?, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/ManagementPlan.cs/#L136"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Management_StepOutcome__ctor_Axiam_Sdk_Management_ApplyStatus_System_String_System_Nullable_System_Boolean__Axiam_Sdk_Management_Models_ServiceAccountCreatedResponse_System_String_System_String_" data-uid="Axiam.Sdk.Management.StepOutcome.#ctor(Axiam.Sdk.Management.ApplyStatus,System.String,System.Nullable{System.Boolean},Axiam.Sdk.Management.Models.ServiceAccountCreatedResponse,System.String,System.String)">
+  StepOutcome(ApplyStatus, string?, bool?, ServiceAccountCreatedResponse?, string?, string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementPlan.cs/#L152"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>What became of one step, and why.</p>
@@ -168,7 +168,7 @@ Class StepOutcome  <a class="header-action link-secondary" title="View source" h
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public StepOutcome(ApplyStatus Status, string? Message = null, bool? RestoreSucceeded = null, ServiceAccountCreatedResponse? CreatedServiceAccount = null, string? RestoreError = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public StepOutcome(ApplyStatus Status, string? Message = null, bool? RestoreSucceeded = null, ServiceAccountCreatedResponse? CreatedServiceAccount = null, string? RestoreError = null, string? ReasonCode = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -203,6 +203,13 @@ programmatically can read it without parsing text. <code>null</code> whenever
 <a class="xref" href="Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_RestoreSucceeded">RestoreSucceeded</a> is <code>null</code> or <code>true</code>; set alongside
 <code>RestoreSucceeded: false</code>.</p>
 </dd>
+    <dt><code>ReasonCode</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>CONTRACT.md §27.6.2 item 5 (contract 1.62): on a <a class="xref" href="Axiam.Sdk.Management.ApplyStatus.html#Axiam_Sdk_Management_ApplyStatus_Failed">Failed</a> outcome
+whose cause was a <code>409</code>, the body's <code>reason_code</code> as the server sent it
+(<a class="xref" href="Axiam.Sdk.Management.ConflictError.html#Axiam_Sdk_Management_ConflictError_ReasonCode">ReasonCode</a>) — <code>stale_version</code>, <code>strands_profile</code>,
+<code>duplicate_vlan</code> and so on; the vocabulary is open. <code>null</code> for every other step.
+Branch on it, never on <a class="xref" href="Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_Message">Message</a>.</p>
+</dd>
   </dl>
 
 
@@ -224,7 +231,7 @@ programmatically can read it without parsing text. <code>null</code> whenever
 
   <h3 id="Axiam_Sdk_Management_StepOutcome_CreatedServiceAccount" data-uid="Axiam.Sdk.Management.StepOutcome.CreatedServiceAccount">
   CreatedServiceAccount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/ManagementPlan.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementPlan.cs/#L156"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>CONTRACT.md §27.5 rule 5 (contract 1.51): on a <a class="xref" href="Axiam.Sdk.Management.ApplyStatus.html#Axiam_Sdk_Management_ApplyStatus_Created">Created</a>
@@ -261,7 +268,7 @@ action's outcome&quot;), because it is the only place this credential is retriev
 
   <h3 id="Axiam_Sdk_Management_StepOutcome_Message" data-uid="Axiam.Sdk.Management.StepOutcome.Message">
   Message
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/ManagementPlan.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementPlan.cs/#L154"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The server's explanation, present only on <a class="xref" href="Axiam.Sdk.Management.ApplyStatus.html#Axiam_Sdk_Management_ApplyStatus_Failed">Failed</a>.</p>
@@ -289,11 +296,47 @@ action's outcome&quot;), because it is the only place this credential is retriev
 
 
 
+  <a id="Axiam_Sdk_Management_StepOutcome_ReasonCode_" data-uid="Axiam.Sdk.Management.StepOutcome.ReasonCode*"></a>
+
+  <h3 id="Axiam_Sdk_Management_StepOutcome_ReasonCode" data-uid="Axiam.Sdk.Management.StepOutcome.ReasonCode">
+  ReasonCode
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementPlan.cs/#L158"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>CONTRACT.md §27.6.2 item 5 (contract 1.62): on a <a class="xref" href="Axiam.Sdk.Management.ApplyStatus.html#Axiam_Sdk_Management_ApplyStatus_Failed">Failed</a> outcome
+whose cause was a <code>409</code>, the body's <code>reason_code</code> as the server sent it
+(<a class="xref" href="Axiam.Sdk.Management.ConflictError.html#Axiam_Sdk_Management_ConflictError_ReasonCode">ReasonCode</a>) — <code>stale_version</code>, <code>strands_profile</code>,
+<code>duplicate_vlan</code> and so on; the vocabulary is open. <code>null</code> for every other step.
+Branch on it, never on <a class="xref" href="Axiam.Sdk.Management.StepOutcome.html#Axiam_Sdk_Management_StepOutcome_Message">Message</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? ReasonCode { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_Management_StepOutcome_RestoreError_" data-uid="Axiam.Sdk.Management.StepOutcome.RestoreError*"></a>
 
   <h3 id="Axiam_Sdk_Management_StepOutcome_RestoreError" data-uid="Axiam.Sdk.Management.StepOutcome.RestoreError">
   RestoreError
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/ManagementPlan.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementPlan.cs/#L157"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>CONTRACT 1.52 N6.3 (C-12): the restore's OWN error, reported as data rather than only
@@ -329,7 +372,7 @@ programmatically can read it without parsing text. <code>null</code> whenever
 
   <h3 id="Axiam_Sdk_Management_StepOutcome_RestoreSucceeded" data-uid="Axiam.Sdk.Management.StepOutcome.RestoreSucceeded">
   RestoreSucceeded
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/ManagementPlan.cs/#L139"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementPlan.cs/#L155"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>CONTRACT.md §27.6.1 item 2 (contract 1.51): a role-binding UPDATE is unassign then
@@ -367,7 +410,7 @@ new binding — <a class="xref" href="Axiam.Sdk.Management.StepOutcome.html#Axia
 
   <h3 id="Axiam_Sdk_Management_StepOutcome_Status" data-uid="Axiam.Sdk.Management.StepOutcome.Status">
   Status
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.0.0/Axiam.Sdk/Management/ManagementPlan.cs/#L137"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Management/ManagementPlan.cs/#L153"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>What happened.</p>
