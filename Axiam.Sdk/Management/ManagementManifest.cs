@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Axiam.Sdk.Core;
+using Axiam.Sdk.Management.Models;
 
 namespace Axiam.Sdk.Management;
 
@@ -53,6 +54,31 @@ public sealed record ManagementManifest
     /// apply fails — see <see cref="ApplyReport.CreatedServiceAccounts"/>.
     /// </remarks>
     public IReadOnlyList<ServiceAccountSpec> ServiceAccounts { get; init; } = Array.Empty<ServiceAccountSpec>();
+
+    /// <summary>
+    /// The tenant's <c>Session-Timeout</c> cap, a <b>singleton</b> (CONTRACT.md &#167;27.6.2,
+    /// contract 1.62): the tenant has exactly one, so a manifest carries at most one and it has no key.
+    /// <c>null</c> leaves the tenant's cap alone.
+    /// </summary>
+    /// <remarks>
+    /// Never <c>Create</c>d (the default, <c>version</c> 0, always exists) and never pruned: it is
+    /// <c>NoChange</c> or <c>Update</c>. Written <b>first</b> of the <c>network</c> actions, because
+    /// a profile's timeout is checked against the cap at the write. Human-only (&#167;36.1).
+    /// </remarks>
+    public NetworkPolicySpec? NetworkPolicy { get; init; }
+
+    /// <summary>
+    /// The network segments (CONTRACT.md &#167;27.6.2, contract 1.62), reconciled by their natural
+    /// key: <b>site + kind + name</b>, where kind is the <b>wire</b> spelling
+    /// (<see cref="NetworkSegmentKind.Access"/> or <see cref="NetworkSegmentKind.Quarantine"/>).
+    /// </summary>
+    public IReadOnlyList<NetworkSegmentSpec> NetworkSegments { get; init; } = Array.Empty<NetworkSegmentSpec>();
+
+    /// <summary>
+    /// The segments' reply profiles (CONTRACT.md &#167;27.6.2, contract 1.62), reconciled by the
+    /// segment they belong to: a profile has no name or id of its own.
+    /// </summary>
+    public IReadOnlyList<NetworkProfileSpec> NetworkProfiles { get; init; } = Array.Empty<NetworkProfileSpec>();
 
     /// <summary>A manifest that describes nothing, and therefore changes nothing.</summary>
     /// <returns>An empty manifest.</returns>
@@ -179,6 +205,86 @@ public sealed record ManagementManifest
         IReadOnlyList<RoleBinding>? Roles = null);
 
     /// <summary>
+    /// One network segment (CONTRACT.md &#167;27.6.2 item 1, contract 1.62): a node of the reserved
+    /// <c>/network</c> subtree with a VLAN and a <c>Filter-Id</c> envelope.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// The natural key is <see cref="Site"/> + <see cref="Kind"/> + <see cref="Name"/>; the three
+    /// never change (&#167;36.3 rule 4) and so are never drift. Every other member is a field,
+    /// reconciled by &#167;27.6 rule 3: a <c>null</c> (unstated) member is silent, and on an
+    /// <c>Update</c> is <b>carried from the read</b>, because the replacement body would
+    /// otherwise clear it.
+    /// </para>
+    /// <para>
+    /// <b>Judged on the read.</b> Every stated member is compared with the value the read returns.
+    /// <see cref="FilterIds"/> is compared <b>as a set</b>: the same names in another order are
+    /// <c>NoChange</c>, a list that repeats a name is refused at <c>PlanAsync</c> with zero wire
+    /// calls, and when the SDK writes the segment it sends the names in the order stated here.
+    /// </para>
+    /// </remarks>
+    /// <param name="Key">Manifest-local identifier, referenced by <see cref="NetworkProfileSpec.Segment"/>.</param>
+    /// <param name="Site">The wire <c>site_key</c> (a single-site tenant uses <c>default</c>).</param>
+    /// <param name="Kind">
+    /// <see cref="NetworkSegmentKind.Access"/> or <see cref="NetworkSegmentKind.Quarantine"/>, the wire spelling.
+    /// <see cref="NetworkSegmentKind.Unknown"/> is refused: it is a value this SDK decodes, never one it sends.
+    /// </param>
+    /// <param name="Name">The segment's name.</param>
+    /// <param name="VlanId">The segment's VLAN.</param>
+    /// <param name="Rank">
+    /// The placement rank of an access segment. <c>null</c> is unstated;
+    /// <see cref="JsonNullable{T}.Null"/> states "none" (left out of the body, which is how a replacement clears it).
+    /// </param>
+    /// <param name="FilterIds">The segment's <c>Filter-Id</c> envelope, or <c>null</c> when unstated.</param>
+    /// <param name="Enabled">Whether the segment is a placement candidate, or <c>null</c> when unstated.</param>
+    public sealed record NetworkSegmentSpec(
+        string Key,
+        string Site,
+        NetworkSegmentKind Kind,
+        string Name,
+        int VlanId,
+        JsonNullable<int>? Rank = null,
+        IReadOnlyList<string>? FilterIds = null,
+        bool? Enabled = null);
+
+    /// <summary>
+    /// A segment's reply profile (CONTRACT.md &#167;27.6.2 item 1, contract 1.62), addressed by its
+    /// segment.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <b>Judged on the read.</b> The profile read is the <b>effective</b> one, so
+    /// <see cref="SessionTimeoutSecs"/> is compared with the value lowered to the tenant's cap:
+    /// a profile whose stored timeout is above a lowered cap reads as the cap, and a manifest stating
+    /// the cap is <c>NoChange</c>. A manifest that states a value <b>above</b> the cap differs from the
+    /// read, so <c>PlanAsync</c> shows an <c>Update</c>; <c>ApplyAsync</c> then sends the replace, the server
+    /// refuses it (<c>403</c> <c>authorization_denied</c>, the write gate's H3), and that is the action's
+    /// failure: reported as the server gave it, <c>ApplyAsync</c> stops, nothing is retried, adjusted or
+    /// lowered by the SDK (&#167;27.6.2 item 3).
+    /// </para>
+    /// <para>
+    /// A stated <see cref="JsonNullable{T}.Null"/> is "none": the member is left <b>out</b> of the body.
+    /// </para>
+    /// </remarks>
+    /// <param name="Segment">The <see cref="NetworkSegmentSpec.Key"/> of a segment of this manifest.</param>
+    /// <param name="SessionTimeoutSecs">The <c>Session-Timeout</c> in seconds.</param>
+    /// <param name="TerminationAction">The <c>Termination-Action</c>, or <c>null</c> when unstated.</param>
+    /// <param name="IdleTimeoutSecs">The <c>Idle-Timeout</c>; <c>null</c> unstated, <see cref="JsonNullable{T}.Null"/> none.</param>
+    /// <param name="FilterId">One of the segment's <c>filter_ids</c>; <c>null</c> unstated, <see cref="JsonNullable{T}.Null"/> none.</param>
+    /// <param name="ServiceType">The <c>Service-Type</c>; <c>null</c> unstated, <see cref="JsonNullable{T}.Null"/> none.</param>
+    public sealed record NetworkProfileSpec(
+        string Segment,
+        int SessionTimeoutSecs,
+        RadiusTerminationAction? TerminationAction = null,
+        JsonNullable<int>? IdleTimeoutSecs = null,
+        JsonNullable<string>? FilterId = null,
+        JsonNullable<RadiusServiceType>? ServiceType = null);
+
+    /// <summary>The tenant's <c>Session-Timeout</c> cap (CONTRACT.md &#167;27.6.2 item 1, contract 1.62).</summary>
+    /// <param name="SessionTimeoutMaxSecs">The cap in seconds; the server accepts 300 to 86 400.</param>
+    public sealed record NetworkPolicySpec(int SessionTimeoutMaxSecs);
+
+    /// <summary>
     /// One role binding on a group, user or service account (CONTRACT.md &#167;27.6.1
     /// item 2, contract 1.51) — either shape a manifest's <c>roles[]</c> entry can take.
     /// </summary>
@@ -245,6 +351,9 @@ public sealed class ManifestBuilder
     private readonly Dictionary<string, List<string>> _userGroups = new(StringComparer.Ordinal);
     private readonly List<ManagementManifest.ServiceAccountSpec> _serviceAccounts = new();
     private readonly Dictionary<string, List<ManagementManifest.RoleBinding>> _serviceAccountRoles = new(StringComparer.Ordinal);
+    private readonly List<ManagementManifest.NetworkSegmentSpec> _networkSegments = new();
+    private readonly List<ManagementManifest.NetworkProfileSpec> _networkProfiles = new();
+    private ManagementManifest.NetworkPolicySpec? _networkPolicy;
     private readonly List<string> _problems = new();
 
     /// <summary>Declares a root resource.</summary>
@@ -491,6 +600,73 @@ public sealed class ManifestBuilder
         return this;
     }
 
+    /// <summary>
+    /// Declares a network segment (CONTRACT.md &#167;27.6.2, contract 1.62).
+    /// </summary>
+    /// <param name="key">Manifest-local identifier.</param>
+    /// <param name="site">The wire <c>site_key</c>.</param>
+    /// <param name="kind"><see cref="NetworkSegmentKind.Access"/> or <see cref="NetworkSegmentKind.Quarantine"/>.</param>
+    /// <param name="name">The segment's name.</param>
+    /// <param name="vlanId">The segment's VLAN.</param>
+    /// <param name="rank">The access segment's placement rank; <see cref="JsonNullable{T}.Null"/> states "none".</param>
+    /// <param name="filterIds">The segment's <c>Filter-Id</c> envelope (compared as a set).</param>
+    /// <param name="enabled">Whether the segment is a placement candidate.</param>
+    /// <returns>This builder.</returns>
+    public ManifestBuilder NetworkSegment(
+        string key, string site, NetworkSegmentKind kind, string name, int vlanId,
+        JsonNullable<int>? rank = null, IReadOnlyList<string>? filterIds = null, bool? enabled = null)
+    {
+        _networkSegments.Add(new ManagementManifest.NetworkSegmentSpec(
+            key, site, kind, name, vlanId, rank, filterIds, enabled));
+        return this;
+    }
+
+    /// <summary>
+    /// Declares the reply profile of a segment declared earlier (CONTRACT.md &#167;27.6.2, contract 1.62).
+    /// </summary>
+    /// <param name="segmentKey">The key of an already-declared <see cref="NetworkSegment"/>.</param>
+    /// <param name="sessionTimeoutSecs">The <c>Session-Timeout</c> in seconds.</param>
+    /// <param name="terminationAction">The <c>Termination-Action</c>, or <c>null</c> when unstated.</param>
+    /// <param name="idleTimeoutSecs">The <c>Idle-Timeout</c>; <see cref="JsonNullable{T}.Null"/> states "none".</param>
+    /// <param name="filterId">One of the segment's <c>filter_ids</c>; <see cref="JsonNullable{T}.Null"/> states "none".</param>
+    /// <param name="serviceType">The <c>Service-Type</c>; <see cref="JsonNullable{T}.Null"/> states "none".</param>
+    /// <returns>This builder.</returns>
+    public ManifestBuilder NetworkProfile(
+        string segmentKey, int sessionTimeoutSecs, RadiusTerminationAction? terminationAction = null,
+        JsonNullable<int>? idleTimeoutSecs = null, JsonNullable<string>? filterId = null,
+        JsonNullable<RadiusServiceType>? serviceType = null)
+    {
+        if (!_networkSegments.Any(g => g.Key == segmentKey))
+        {
+            _problems.Add($"NetworkProfile names segment '{segmentKey}', " +
+                          "which no NetworkSegment(...) call has declared yet");
+            return this;
+        }
+
+        _networkProfiles.Add(new ManagementManifest.NetworkProfileSpec(
+            segmentKey, sessionTimeoutSecs, terminationAction, idleTimeoutSecs, filterId, serviceType));
+        return this;
+    }
+
+    /// <summary>
+    /// States the tenant's <c>Session-Timeout</c> cap (CONTRACT.md &#167;27.6.2, contract 1.62). A
+    /// singleton: stating it twice is a problem <see cref="Build"/> reports.
+    /// </summary>
+    /// <param name="sessionTimeoutMaxSecs">The cap in seconds.</param>
+    /// <returns>This builder.</returns>
+    public ManifestBuilder NetworkPolicy(int sessionTimeoutMaxSecs)
+    {
+        if (_networkPolicy is not null)
+        {
+            _problems.Add("NetworkPolicy is stated more than once; the tenant has exactly one, " +
+                          "so a manifest carries at most one");
+            return this;
+        }
+
+        _networkPolicy = new ManagementManifest.NetworkPolicySpec(sessionTimeoutMaxSecs);
+        return this;
+    }
+
     /// <summary>Assembles the manifest, or throws if any back-reference is dangling.</summary>
     /// <returns>The assembled manifest.</returns>
     /// <exception cref="NetworkError">
@@ -524,6 +700,9 @@ public sealed class ManifestBuilder
             ServiceAccounts = _serviceAccounts
                 .Select(a => a with { Roles = Get(_serviceAccountRoles, a.Key) })
                 .ToList(),
+            NetworkPolicy = _networkPolicy,
+            NetworkSegments = _networkSegments.ToList(),
+            NetworkProfiles = _networkProfiles.ToList(),
         };
     }
 

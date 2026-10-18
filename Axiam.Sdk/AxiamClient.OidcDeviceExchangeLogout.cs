@@ -74,9 +74,24 @@ public sealed partial class AxiamClient
     /// and obtains the code pair.
     /// </summary>
     /// <remarks>
-    /// <b>Unauthenticated by design.</b> A device that cannot show a browser also cannot hold a
-    /// client secret, so this never sends <c>client_secret</c> and never refuses a client built
-    /// without one (&#167;14.1).
+    /// <para>
+    /// <b>Client authentication (contract 1.62, &#167;14.1 rule 2).</b> A client built with a
+    /// credential sends it here exactly as it does at <c>/oauth2/token</c>: the client secret
+    /// as <c>client_secret</c> in the <b>form body</b> - never <c>Authorization: Basic</c>, for
+    /// a <c>client_secret_basic</c> registration too (&#167;12.1 rule 3) - or, for a client
+    /// configured with a certificate, the certificate on the connection (the mutual-TLS alias
+    /// of this endpoint is preferred when discovery advertises one). A client built with no
+    /// secret is a <b>public</b> client: it sends <c>client_id</c> and no credential, and this
+    /// method never refuses it client-side (the usual device cannot hold a secret). The SDK
+    /// sends a credential only when its caller configured one. This SDK has no
+    /// <c>private_key_jwt</c> client assertion (&#167;21.8) and so cannot drive a client
+    /// registered for it.
+    /// </para>
+    /// <para>
+    /// A failed client authentication is <c>401</c> <c>invalid_client</c>, surfaced as
+    /// <see cref="OAuthProtocolError"/> after one request; it never enters the &#167;9 refresh
+    /// guard. A client that does not hold the grant is <c>400 unauthorized_client</c>.
+    /// </para>
     /// </remarks>
     /// <param name="params">The request arguments.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
@@ -113,6 +128,11 @@ public sealed partial class AxiamClient
             form["scope"] = @params.Scope;
         }
 
+        // §14.1 rule 2 (contract 1.62): the credential the client was configured with, by the
+        // same rule as its token requests - `client_secret` in the form body, only when set.
+        // A public client sends none; the mTLS certificate rides the connection.
+        AppendOidcClientSecretIfConfigured(form);
+
         using HttpResponseMessage response = await PostOAuth2FormAsync(endpoint, form, tenantId, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
@@ -141,10 +161,24 @@ public sealed partial class AxiamClient
     /// <b>one</b> poll attempt.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// The raw single call, so an application driving its own loop (a UI rendering a countdown,
     /// say) can. All five RFC 8628 &#167;3.5 answers surface as <see cref="OAuthProtocolError"/> —
     /// <c>authorization_pending</c> and <c>slow_down</c> included — so a hand-rolled loop sees
     /// exactly what <see cref="DeviceLoginAsync"/> sees. Most callers want that method.
+    /// </para>
+    /// <para>
+    /// <b>Client authentication (contract 1.62, &#167;14.1 rules 2 and 3).</b> Every poll sends
+    /// <c>client_id</c>, and, for a client built with a secret, <c>client_secret</c> in the form
+    /// body (never <c>Authorization: Basic</c>); a public client sends no credential, and a
+    /// client configured with a certificate presents it on the connection. A <c>401</c>
+    /// <c>invalid_client</c> (unknown client, failed or missing credential, a credential sent by
+    /// a public client, a client that no longer holds the grant, or a bound client's missing
+    /// proof or certificate, &#167;14.2 rule 5) is an <see cref="OAuthProtocolError"/> with that
+    /// <c>error</c>, raised after one request, never retried and never refreshed. This SDK
+    /// generates no DPoP proof (&#167;21.7.3), so it cannot drive a client registered for
+    /// sender-constrained DPoP tokens and surfaces that refusal as given.
+    /// </para>
     /// </remarks>
     /// <param name="params">The poll arguments.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
@@ -162,6 +196,10 @@ public sealed partial class AxiamClient
             ["device_code"] = @params.DeviceCode.Reveal(),
             ["client_id"] = clientId,
         };
+
+        // §14.1 rules 2 and 3 (contract 1.62): `client_id` on every poll (above), and the
+        // credential the client was configured with, at the poll as at `device_authorize`.
+        AppendOidcClientSecretIfConfigured(form);
 
         TokenResponseWire wire = await PostTokenAsync(configuration, form, tenantId, cancellationToken).ConfigureAwait(false);
         // No nonce: the device grant has no authorization request to carry one.

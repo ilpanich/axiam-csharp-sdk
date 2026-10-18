@@ -41,7 +41,12 @@ public sealed record CreateCertificateRequest
     public JsonElement? Metadata { get; init; }
 
     /// <summary>
-    /// the server's subject field
+    /// The certificate's common name, e.g. <c>device-001</c>: a bare name or one <c>CN=</c>
+    /// component, at most 64 characters (RFC 5280 <c>ub-common-name</c>), printable — a control
+    /// character, tab or line break, an invisible or bidirectional formatting character, or two
+    /// spaces in a row is refused with <c>400</c>. A name that is to be written into another
+    /// system's configuration (a FreeRADIUS table, an ACL) should match
+    /// <c>^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$</c>.
     /// </summary>
     [JsonPropertyName("subject")]
     public required string Subject { get; init; }
@@ -61,10 +66,14 @@ public sealed record CreateCertificateRequest
     /// certificate's <c>user_id</c>. Optional; accepted only for <c>cert_type: User</c>, and it
     /// must name a user of this tenant that has not been deleted or erased. A
     /// <c>metadata.user_id</c> in the same request must agree with it. Revoking the account's
-    /// certificates — directory linking, deletion, erasure — matches on it.
+    /// certificates — directory linking, deletion, erasure — matches on it. **Contract 1.62
+    /// (§27.11 rule 5):** passed as the text of a UUID, **untyped** -- a string, not a
+    /// <c>Guid</c> -- so that a value that is not a UUID reaches the server and its <c>400</c>
+    /// is surfaced as a <c>ValidationError</c>; the SDK does not judge it. Left <c>null</c> (or
+    /// never set) the key is omitted; <c>null</c> is never sent.
     /// </summary>
     [JsonPropertyName("user_id")]
-    public Guid? UserId { get; init; }
+    public string? UserId { get; init; }
 
     /// <summary>
     /// Validity duration in days.

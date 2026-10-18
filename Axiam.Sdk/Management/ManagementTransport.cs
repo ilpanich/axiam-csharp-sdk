@@ -225,8 +225,13 @@ internal sealed class ManagementTransport
         return (int)response.StatusCode switch
         {
             404 => new NotFoundError($"{operation}: not found{detail}"),
-            409 => new ConflictError($"{operation}: conflict{detail}"),
+            409 => new ConflictError($"{operation}: conflict{detail}", ParseReasonCode(peeked)),
             400 or 422 => new ValidationError($"{operation}: rejected{detail}", ParseFieldErrors(peeked)),
+            // §36.4 and §27.6.2 item 3: a 403 is surfaced as the server gave it, so the
+            // refusal of a value above the tenant's cap (a 403 with a message and neither
+            // `action` nor `resource_id`) reaches the caller, and a manifest's outcome, with
+            // its message. Still a plain AuthzError carrying `action` and `resource_id`.
+            403 => WithServerMessage((AuthzError)ErrorMapper.FromHttpResponse(response, $"{operation} failed"), detail),
             _ => ErrorMapper.FromHttpResponse(response, $"{operation} failed"),
         };
     }
@@ -243,6 +248,35 @@ internal sealed class ManagementTransport
         catch (HttpRequestException)
         {
             return string.Empty;
+        }
+    }
+
+    private static AuthzError WithServerMessage(AuthzError mapped, string detail) =>
+        detail.Length == 0 ? mapped : new AuthzError(mapped.Message + detail, mapped.Action, mapped.ResourceId);
+
+    /// <summary>
+    /// The <c>reason_code</c> member of a <c>409</c> body (CONTRACT.md &#167;36.4), verbatim, or
+    /// <c>null</c> when the body is not a JSON object carrying a string by that name.
+    /// </summary>
+    private static string? ParseReasonCode(string body)
+    {
+        if (string.IsNullOrWhiteSpace(body))
+        {
+            return null;
+        }
+
+        try
+        {
+            using var document = JsonDocument.Parse(body);
+            return document.RootElement.ValueKind == JsonValueKind.Object &&
+                   document.RootElement.TryGetProperty("reason_code", out JsonElement code) &&
+                   code.ValueKind == JsonValueKind.String
+                ? code.GetString()
+                : null;
+        }
+        catch (JsonException)
+        {
+            return null;
         }
     }
 

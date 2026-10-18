@@ -359,6 +359,19 @@ public sealed partial class AxiamClient
     public PlatformApi Platform => Management.Platform;
 
     /// <summary>
+    /// The network (CONTRACT.md &#167;36) operations: segments, their reply profiles and the
+    /// tenant's <c>Session-Timeout</c> cap.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Acquiring the handle performs no I/O (&#167;27.2 rule 1). The same handle
+    /// as <c>Management.Network</c> (&#167;27.2 rule 4). The decision route
+    /// (<c>POST /api/v1/network/decide</c>) is FreeRADIUS's, not an SDK's, and is not here.
+    /// </para>
+    /// </remarks>
+    public NetworkApi Network => Management.Network;
+
+    /// <summary>
     /// The organization UUID this client can address, if one has resolved.
     /// </summary>
     /// <remarks>

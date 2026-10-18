@@ -17,13 +17,14 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 - **Source:** [github.com/ilpanich/axiam-csharp-sdk](https://github.com/ilpanich/axiam-csharp-sdk)
 - **License:** Apache-2.0
 - **Target frameworks:** `net8.0` and `net10.0` — see [Supported .NET versions](#supported-net-versions)
-- **Versioning:** stable from 1.0.0 and follows [Semantic Versioning](https://semver.org/): a
-  breaking change to the public API comes only with a new major version, and the
-  [changelog](CHANGELOG.md) names it with its migration.
+- **Versioning:** stable from 1.0.0 and follows [Semantic Versioning](https://semver.org/). A
+  contract record may **add a member or widen a type with a minor bump** (a new optional property, a
+  request member that becomes a plain `string?`), and the [changelog](CHANGELOG.md) names every such
+  source-incompatible change with its migration; **a removal waits for 2.0.0**.
 
 ## Contract conformance
 
-This SDK conforms to **contract 1.61**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
+This SDK conforms to **contract 1.62**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
 §21, §22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates and the §6.1 rules 6–10
 mTLS device login, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, and the §1.1.1 gRPC
 `validate_token`/`introspect_token` operations, contract 1.51, the §12 OIDC/SSO relying-party
@@ -33,10 +34,10 @@ and ticket grant, contract 1.10, the §22 reactor runtime, contract 1.19, the §
 login path, contract 1.26, the §24 WebAuthn relying-party layer, the §25 account-lifecycle
 operations and §26 Pushed Authorization Requests, contract 1.28, §23.4 rule 7's `mode`-driven
 password-login fallback, contract 1.29, the §5.2 rule 1 acting tenant, contract 1.51, the §10.1
-rule 9 sender-constrained-token check, contract 1.51, and the §27 Management API — all 190
-operations across 28 namespaces with the §27.6 declarative layer, including the §27.6.1 resource
+rule 9 sender-constrained-token check, contract 1.51, and the §27 Management API — all 202
+operations across 29 namespaces (190 across 28 before contract 1.62) with the §27.6 declarative layer, including the §27.6.1 resource
 metadata, two-shape role bindings and service accounts, contract 1.51 — and the §28 MCP
-resource-server helpers, contract 1.48), §28.12, §29, §30, §31, §32 and §33, with §32.7 and §33.2
+resource-server helpers, contract 1.48), §28.12, §29, §30, §31, §32, §33 and §36, with §32.7 and §33.2
 signed (the RFC 7592 client configuration operations, contract 1.53; the `directory`, `saml`,
 `ssf` and `scim_targets` management namespaces, contracts 1.54–1.57; the SSF receiver helper,
 contract 1.56; CIBA with the signed request form in PS256, ES256 and EdDSA, and §21.3.1's seventh
@@ -50,9 +51,15 @@ SDK surface. Contract 1.61 (§34.5) is additive: `Certificate.UserId` (§27.11 r
 `CreateCertificateRequest.UserId` and `SignCertificateCsrRequest.UserId`, `SsfStreamInput.ExpectedUpdatedAt`
 with the three meanings of `events_requested` on an update, which `SsfStream.ToInput()` honours (§32.2,
 §32.3 rule 4); `CibaPendingList` (§33.3 rule 16) is a console surface no registry operation returns, so this
-SDK has no model for it. Nothing in contract 1.53–1.61 is carved out.
+SDK has no model for it. Contract 1.62 (§34.6) adds the §36 `network` namespace (segments, reply profiles and
+the tenant's `Session-Timeout` cap: twelve operations, also a §27.6.2 manifest namespace), a device client that
+authenticates at both device-grant endpoints (§14.1), the change-taking form of an SSF stream
+(`stream.ToInput(new SsfStreamChanges { ... })`, §32.2), and the request `user_id` as a plain `string?`
+(§27.11 rule 5, source-breaking: see the changelog). Nothing in contract 1.53–1.62 is carved out except what
+this README says it declines: `webhooks` in the manifest, the `private_key_jwt` client assertion and DPoP
+proof generation. Manifest pruning: not offered in any namespace (§27.10).
 
-§12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27, §28, §28.12, §29, §30, §31, §32 and §33 are named rather than
+§12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27, §28, §28.12, §29, §30, §31, §32, §33 and §36 are named rather than
 folded into the range because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
 statement that was true when written into a different claim without anyone editing it.
 
@@ -75,11 +82,14 @@ See [`CONTRACT.md`](CONTRACT.md) for the full cross-language behavioral contract
 | §27.6.1 two-shape role binding, `RoleBinding.Inherit` | **Shipped** on `GroupSpec`, `UserSpec` and `ServiceAccountSpec` |
 | §27.6.1 `ServiceAccountSpec`, §27.5 rule 5 | **Shipped**; the one-time `client_secret` is on `StepOutcome.CreatedServiceAccount` |
 | §27.13 `CertificateType.Server`, `SubjectAltName`, `inherit` on assignments | **Shipped** via the regenerated `Models/` surface; unrecognised enum values still decode to `Unknown` rather than throwing |
+| §27.6.2 `network` in the manifest (contract 1.62) | **Shipped**: `NetworkPolicy`, `NetworkSegments`, `NetworkProfiles` on `ManagementManifest`; see [Declarative manifests](#declarative-manifests-contractmd-276) |
 | §27.6 `webhooks` in the manifest | **Declined**: the contract names it without specifying a shape, and no consumer of this SDK has asked for it |
 
 **The manifest, in §27.10's terms.** This SDK is in the full tier: resources (nested), scopes,
-permissions, roles, role grants, groups, users, service accounts, resource metadata, and
-group/user/service-account role bindings in both shapes. `webhooks` is not implemented.
+permissions, roles, role grants, groups, users, service accounts, resource metadata,
+group/user/service-account role bindings in both shapes, and (contract 1.62) the `network` namespace.
+`webhooks` is not implemented, and **this SDK has no pruning** for any namespace, so none exists for
+`network` either: omission is never deletion (§27.6 rule 4).
 `ManagementManifest.Builder()` — the same fluent builder this SDK has always shipped, extended
 with `Resource(..., metadata:)`, `GroupRole`/`AssignRole`/`AssignServiceAccountRole`'s
 `resourceKey`/`inherit` parameters, and `ServiceAccount`/`AssignServiceAccountRole` — is this SDK's
@@ -460,8 +470,8 @@ both ends so a preflight can report which you are actually on. See
 ## Quickstart
 
 ```bash
-dotnet add package Axiam.Sdk --version 1.0.0
-dotnet add package Axiam.Sdk.AspNetCore --version 1.0.0   # optional — ASP.NET Core middleware + DI
+dotnet add package Axiam.Sdk --version 1.1.0
+dotnet add package Axiam.Sdk.AspNetCore --version 1.1.0   # optional — ASP.NET Core middleware + DI
 ```
 
 ```csharp
@@ -874,8 +884,19 @@ own loop. The polling rules are where implementations go wrong:
   already approved.
 
 `DeviceCode` is `Sensitive<string>`; `UserCode` deliberately is not — it exists to be read
-aloud, and wrapping it would defeat the one thing it is for. `DeviceAuthorizeAsync` sends no
-`client_secret` and does not refuse a client built without one.
+aloud, and wrapping it would defeat the one thing it is for.
+
+**Client authentication (contract 1.62, §14.1).** Both endpoints authenticate the client by the method it
+is registered for, and this SDK sends what the client was *configured* with, by the same rules as its
+other token requests: a client built with `OidcClientSecret` sends `client_secret` in the **form body** at
+`DeviceAuthorizeAsync` **and** at every poll — never `Authorization: Basic`, a `client_secret_basic`
+registration included (§12.1 rule 3) — and a client configured with a certificate presents it on the
+connection, on the mutual-TLS aliases of both endpoints. A client built with no secret is **public**: it
+sends `client_id` and no credential, and is not refused client-side (the usual device cannot hold a
+secret). The poll sends `client_id` every time. A `401` `invalid_client` from either call is an
+`OAuthProtocolError` after one request — never retried and never entering the refresh guard. This SDK
+has **no `private_key_jwt` client assertion** and **generates no DPoP proof** (§21.7.3), so it cannot drive
+a client registered for either; the server's `401` is surfaced as given.
 
 **`AdoptAsCredential` throws `NotSupportedException`**, exactly as
 `LoginClientCredentialsAsync` does in this port: §14.3 rule 4 defers to the §12.1 adoption
@@ -1866,14 +1887,14 @@ Worked end to end in [`examples/ParLogin`](examples/ParLogin).
 
 ## Management API (CONTRACT.md §27)
 
-The administrative surface: 190 operations across 28 namespaces — users, groups, roles,
+The administrative surface: 202 operations across 29 namespaces — users, groups, roles,
 permissions, resources, scopes, service accounts, certificates, CA certificates, PGP keys, webhooks,
 OAuth2 clients, federation, notification rules, e-mail config, directory, SAML, SSF streams, SCIM
-targets, settings, SCIM tokens, reactors, WebAuthn policy, audit, privacy, organizations, tenants
-and platform.
+targets, network segments and reply profiles, settings, SCIM tokens, reactors, WebAuthn policy, audit,
+privacy, organizations, tenants and platform.
 
 The namespace handles sit **directly on the client** — `client.ServiceAccounts.RotateSecretAsync(id)`,
-the form §27.3's C# row shows — and the same 28 handles are also reachable behind one accessor,
+the form §27.3's C# row shows — and the same 29 handles are also reachable behind one accessor,
 `client.Management` (§27.2 rule 4), which reads better where a call site is already dense with §1
 methods. The two forms are **equivalent**: the direct properties forward to `Management`, so rule 4's
 "where an SDK offers both, the two MUST return equivalent handles" holds structurally rather than by
@@ -1975,6 +1996,43 @@ Nine things worth knowing:
 
 Worked end to end in [`examples/ManagementBasics`](examples/ManagementBasics).
 
+### Network segments and reply profiles (CONTRACT.md §36, contract 1.62)
+
+`client.Network` (also `client.Management.Network`) administers a tenant's network for an operator-run
+FreeRADIUS: **segments** (a VLAN and a `Filter-Id` envelope under the reserved `/network` subtree), each with
+at most one typed **reply profile**, and the tenant's `Session-Timeout` cap. Twelve operations:
+`ListSegmentsAsync`/`ListSegmentsAllAsync` (with `site`), `CreateSegmentAsync`, `GetSegmentAsync`,
+`ReplaceSegmentAsync`, `DeleteSegmentAsync`, `ListProfilesAsync`/`ListProfilesAllAsync`, `CreateProfileAsync`,
+`GetProfileAsync`, `ReplaceProfileAsync`, `DeleteProfileAsync`, `GetPolicyAsync` and `ReplacePolicyAsync`.
+The namespace is human-only: a service-account token meets `401`.
+
+```csharp
+NetworkSegmentResponse lab = await client.Network.CreateSegmentAsync(new CreateNetworkSegmentRequest
+{
+    Kind = NetworkSegmentKind.Access, SiteKey = "hq", Name = "lab", VlanId = 20, Rank = 1,
+    FilterIds = new[] { "lab-in" },
+});
+// Every write is conditional on the version you read (§36.3 rule 2). A profile also carries the
+// segment's version; a delete takes the version as a required argument.
+await client.Network.CreateProfileAsync(new CreateNetworkReplyProfileRequest
+{
+    SegmentId = lab.Id, SegmentVersion = lab.Version,
+    Profile = new NetworkReplyProfileInput { SessionTimeoutSecs = 3600, FilterId = "lab-in" },
+});
+await client.Network.DeleteSegmentAsync(lab.Id, version: lab.Version);
+```
+
+- **A `409` is a `ConflictError` whose `ReasonCode` says which** (`stale_version`, `strands_profile`,
+  `has_children`, `site_gone`, `duplicate_name`, `duplicate_vlan`, `duplicate_rank`, `profile_exists`,
+  `other`; open — an unknown value is surfaced verbatim). It is never retried, and no helper re-reads
+  and retries for you: a `409` means another administrator wrote, and you decide.
+- **The `PUT`s are `Replace*`**: full-body and version-conditional. A read of a profile is the *effective*
+  one (`SessionTimeoutClamped` says it was lowered to the cap), so a read-modify-write of a clamped profile
+  stores the clamped value from then on; raise the cap first, with the profile left alone, to restore the stored one.
+- **Not here:** `POST /api/v1/network/decide` is FreeRADIUS's route, not an SDK's (§36.11), and this SDK
+  models neither its request nor its answer. It does not validate a segment or profile locally, render
+  RADIUS attributes, or cache a segment, a profile or the cap.
+
 ### Declarative manifests (CONTRACT.md §27.6)
 
 `client.Management.Manifest` takes a description of the tenant you want and reconciles toward it.
@@ -2051,6 +2109,43 @@ Sensitive<string> secret = report.CreatedServiceAccounts().Single().ClientSecret
   apply fails — it is the only place this credential is ever retrievable. `ApplyAsync`
   never rotates one. Accounts and their bindings are reconciled **last**, after every
   other namespace (§27.6 rule 5), and read only when the manifest names at least one.
+
+**§27.6.2 — the `network` namespace in a manifest (contract 1.62).** A site's segments, their reply
+profiles and the tenant's `Session-Timeout` cap are manifest namespaces:
+
+```csharp
+ManagementManifest manifest = ManagementManifest.Builder()
+    .NetworkPolicy(7200)                                                          // the cap: a singleton
+    .NetworkSegment("lab", "hq", NetworkSegmentKind.Access, "lab", vlanId: 20,
+                    rank: 1, filterIds: new[] { "lab-in", "lab-out" })
+    .NetworkProfile("lab", sessionTimeoutSecs: 5000, filterId: "lab-in")
+    .Build();
+ApplyReport report = await client.Management.Manifest.ApplyAsync(manifest);      // human caller only (§36.1)
+```
+
+- **Natural keys.** A segment is `Site` + `Kind` + `Name`, where `Kind` is the **wire** spelling
+  (`Access` or `Quarantine`; there is no `zones`); a profile is keyed by its segment; the policy is a
+  singleton. A natural key named twice, a profile naming no segment of the manifest, two profiles for
+  one segment and a segment that lists one Filter-Id twice are each refused **before any request**.
+- **Order.** The policy, then the segments, then the profiles in their segments' order, after everything
+  else — the cap first, because a profile's timeout is checked against it at the write. A manifest with no
+  `network` section plans and reads exactly as before.
+- **Judged on the read.** `PlanAsync` issues `GET`s only (`GetPolicyAsync`, `ListSegmentsAllAsync`,
+  `ListProfilesAllAsync`) and compares every stated member with the value as read; a profile read is the
+  **effective** one, so a stated `SessionTimeoutSecs` above a lowered cap is an `Update`, `ApplyAsync`
+  sends the replace, the server refuses it (`403`, reported on the `StepOutcome` with the server's message)
+  and `ApplyAsync` stops: the SDK never lowers or retries it. `filter_ids` is compared **as a set** — a
+  reorder is `NoChange` — and written in the order you state.
+- **Bodies.** An `Update` is a full replacement built from the read: the members you state over the read's,
+  every member you do not state carried, a stated `JsonNullable<T>.Null` left out of the body (how a
+  replacement clears an optional member), the version read sent exactly, and — for a profile — the
+  `segment_version` of the response of the segment write this apply made first, not the one `PlanAsync` read.
+- **A `409` is that action's failure.** `StepOutcome.ReasonCode` carries the `ConflictError`'s
+  `reason_code` (`stale_version`, `strands_profile`, `duplicate_vlan`, ...; the vocabulary is open);
+  `ApplyAsync` stops, nothing is retried or re-read, and running it again re-reads. Branch on the code,
+  never the message.
+- **No pruning.** As for every namespace in this SDK, a segment the manifest omits is never deleted, and
+  the policy has no delete.
 
 Worked end to end in [`examples/ManagementManifest`](examples/ManagementManifest), and combined with
 §6.1 mTLS for a full device provisioning lifecycle in
@@ -2131,7 +2226,20 @@ await client.ScimTargets.UpdateAsync(targetId, target.ToInput() with { Enabled =
 
 SsfStream stream = await client.Ssf.GetStreamAsync(streamId);
 await client.Ssf.UpdateStreamAsync(streamId, stream.ToInput() with { Status = SsfStreamStatus.Paused });
+
+// The change-taking form (§32.2, contract 1.62): the stream and the changes. It sends the
+// events_requested and the expected_updated_at as read, and cuts events_requested to the new ceiling.
+await client.Ssf.UpdateStreamAsync(streamId, stream.ToInput(new SsfStreamChanges
+{
+    EventsAllowed = new[] { SsfEventType.SessionRevoked },   // lower the ceiling
+}));
 ```
+
+`stream.ToInput()` is the plain converter and sends the stream back as read. It cannot know that you are
+about to lower the ceiling, so **cutting `EventsRequested` to the new `EventsAllowed` is your duty**
+wherever you build the body another way: an `events_requested` outside the ceiling is `400`, one left
+out resets the stream to every allowed event (the three meanings of §32.2), and an update conditional
+on the version read is `409` once the stream has been written since. Prefer the change-taking form.
 
 - **No secret on a response.** `DirectoryConfig`, `SsfStream`, `ScimTargetResponse` and
   `SamlIdpCredential` declare no secret or key member, and a stray `bind_secret`, `credential`,
