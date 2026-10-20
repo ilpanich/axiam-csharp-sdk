@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.1] - 2026-10-20
 
 Contract 1.63 and the 1.62 conformance follow-ups (#107). `CONTRACT.md`, `openapi.json` and
-`management-registry.json` are re-vendored byte for byte from `ilpanich/axiam` `a6cd10eba` (branch
+`management-registry.json` are re-vendored byte for byte from `ilpanich/axiam` `d919ba0cc` (branch
 `claude/release-1.1.1`; `proto/` is unchanged); the §27 surface is regenerated unchanged (202 operations
 across 29 namespaces). Not source-breaking: a patch.
 
@@ -42,7 +42,7 @@ across 29 namespaces). Not source-breaking: a patch.
 
 - `DeviceAuthorizationRequest.client_id` is optional in the 1.63 spec (§14.1, #683). This SDK has no model of
   that request (the device grant builds its form from the configured client), so nothing changes.
-- The SDK ships an AMQP consumer only, not an audit producer, so the §8 producer-side refusal of a
+- The SDK ships no helper that builds or signs an `AuditEventMessage` (its AMQP surface is a consumer), so the §8 producer-side refusal of a
   `tenants.` / `gdpr.` action (contract 1.63, MAY) has no code to live in. It generates no DPoP proofs, so the
   §21.7.4 rule (keep the key as long as the refresh token; `invalid_grant` is terminal) does not apply.
 
