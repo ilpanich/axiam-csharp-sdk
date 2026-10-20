@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-10-20
+
+Contract 1.63 and the 1.62 conformance follow-ups (#107). `CONTRACT.md`, `openapi.json` and
+`management-registry.json` are re-vendored byte for byte from `ilpanich/axiam` `a6cd10eba` (branch
+`claude/release-1.1.1`; `proto/` is unchanged); the §27 surface is regenerated unchanged (202 operations
+across 29 namespaces). Not source-breaking: a patch.
+
+### Fixed
+
+- **No session cookie and no CSRF header on `/oauth2/*` (§6.1 rule 11, §12.1 rule 3, §14.6; contract 1.63
+  item (a)).** A request to `/oauth2/*` or `/t/{tenant_id}/oauth2/*` (device authorization, device poll,
+  token, introspection, revocation, registration) left through the same cookie jar as every other call, so
+  an `axiam_*` session cookie rode along, and `X-CSRF-Token` was added to the state-changing ones. Both are
+  now withheld: the primary handler sends these requests through a cookie-less transport (a response's
+  `Set-Cookie` on that path is not kept either), and the CSRF header is not applied. A credential set on that
+  one request (RFC 7591 / 7592) is unchanged. Test: `Contract163OAuth2NoCookieTests`, on the wire.
+  A caller who supplies its own `SocketsHttpHandler` through `AxiamHttpClientFactory.ConfigureFactoryHandler`
+  owns that handler's jar; the SDK cannot withhold cookies from it per request.
+- **`plan` refuses an unknown open-enum value instead of leaving the member out (§27.6.2 item 4; C162-06).**
+  A profile `Update` that would carry a `termination_action` or `service_type` this SDK decoded as `Unknown`,
+  with the member not stated in the manifest, used to leave it out of the replacement body, so the server wrote
+  its default over a value nobody stated. `PlanAsync` and `ApplyAsync` now refuse before any write, naming the
+  member (a `NetworkError`, like every manifest refusal here); a manifest that states the member resolves it,
+  and a `NoChange` is not refused.
+
+### Planned
+
+- **2.0.0 (source-breaking, no code now; C162-15).** `PrivacyApi.CancelDeleteAsync(string? token = null)`
+  will take `token` as a required argument, as the registry marks `privacy.cancel_delete`'s `token`. Until
+  then the optional parameter stays.
+
+### Notes
+
+- `DeviceAuthorizationRequest.client_id` is optional in the 1.63 spec (§14.1, #683). This SDK has no model of
+  that request (the device grant builds its form from the configured client), so nothing changes.
+- The SDK ships an AMQP consumer only, not an audit producer, so the §8 producer-side refusal of a
+  `tenants.` / `gdpr.` action (contract 1.63, MAY) has no code to live in. It generates no DPoP proofs, so the
+  §21.7.4 rule (keep the key as long as the refresh token; `invalid_grant` is terminal) does not apply.
+
 ## [1.1.0] - 2026-10-16
 
 Contracts 1.61 and 1.62, released together with the AXIAM 1.1.0 platform. Release 1.0.1 was never

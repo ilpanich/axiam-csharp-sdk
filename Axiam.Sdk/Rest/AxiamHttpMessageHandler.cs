@@ -138,7 +138,7 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
     /// <c>/t/{tenant_id}/oauth2/…</c> — where no session or adopted bearer is ever attached
     /// (CONTRACT.md &#167;6.1 rule 11, &#167;12.1 rule 3, &#167;14.6).
     /// </summary>
-    private static bool IsOAuth2EndpointPath(string? path) =>
+    internal static bool IsOAuth2EndpointPath(string? path) =>
         path is not null
         && (path.StartsWith("/oauth2/", StringComparison.Ordinal) || TenantFormOAuth2Rest(path) is not null);
 
@@ -430,7 +430,11 @@ public sealed class AxiamHttpMessageHandler : DelegatingHandler
         // (never an X-CSRF-Token response header), so the cookie-jar read is the
         // load-bearing source; `_csrfToken` (populated by CaptureCsrfToken) is kept as
         // defense-in-depth should a future server version start echoing the header.
-        string? csrf = _csrfToken ?? ReadCsrfTokenFromCookieJar();
+        // CONTRACT.md §6.1 rule 11, §12.1 rule 3 (contract 1.63): no X-CSRF-Token on an /oauth2/* request
+        // either; the session cookies are withheld by WriteIsolatingHandler, which sends it cookie-less.
+        string? csrf = IsOAuth2EndpointPath(request.RequestUri?.AbsolutePath)
+            ? null
+            : _csrfToken ?? ReadCsrfTokenFromCookieJar();
         if (csrf is not null && StateChangingMethods.Contains(request.Method.Method))
         {
             request.Headers.Remove(CsrfHeaderName);
