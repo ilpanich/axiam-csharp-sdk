@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.1.0/apiSpec/new?filename=Axiam_Sdk_Grpc_TokenGrpcClient.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Grpc.TokenGrpcClient%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.1.1/apiSpec/new?filename=Axiam_Sdk_Grpc_TokenGrpcClient.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Grpc.TokenGrpcClient%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Grpc_TokenGrpcClient" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient" class="text-break">
-Class TokenGrpcClient  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L127"><i class="bi bi-code-slash"></i></a>
+Class TokenGrpcClient  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.1/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L127"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -174,7 +174,7 @@ default, so it can never silently fall back to the caller's own token.</p>
 
   <h3 id="Axiam_Sdk_Grpc_TokenGrpcClient__ctor_Axiam_Sdk_AxiamClient_System_Uri_" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient.#ctor(Axiam.Sdk.AxiamClient,System.Uri)">
   TokenGrpcClient(AxiamClient, Uri?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.1/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L147"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs the token gRPC transport from <code class="paramref">client</code>'s exposed
@@ -218,11 +218,11 @@ session (RefreshGuard/tenant/token) this gRPC transport shares.</p>
 
   <h3 id="Axiam_Sdk_Grpc_TokenGrpcClient_Dispose" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient.Dispose">
   Dispose()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L264"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.1/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L264"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The channel is shut down with the client — a no-op when this instance was
-built over a caller-owned <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.1.0/src/Grpc.Core.Api/CallInvoker.cs">CallInvoker</a> (the internal test seam).</p>
+built over a caller-owned <a class="xref" href="https://github.com/grpc/grpc-dotnet/blob/v1.1.1/src/Grpc.Core.Api/CallInvoker.cs">CallInvoker</a> (the internal test seam).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -246,7 +246,7 @@ built over a caller-owned <a class="xref" href="https://github.com/grpc/grpc-dot
 
   <h3 id="Axiam_Sdk_Grpc_TokenGrpcClient_IntrospectTokenAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient.IntrospectTokenAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)">
   IntrospectTokenAsync(Sensitive&lt;string&gt;, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L230"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.1/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L230"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>IntrospectToken</code> (CONTRACT.md §1.1.1, §10.3): the RFC 7662 field set,
@@ -298,7 +298,7 @@ gRPC <code>UNAUTHENTICATED</code>.</p>
 
   <h3 id="Axiam_Sdk_Grpc_TokenGrpcClient_ValidateTokenAsync_Axiam_Sdk_Core_Sensitive_System_String__System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Grpc.TokenGrpcClient.ValidateTokenAsync(Axiam.Sdk.Core.Sensitive{System.String},System.Threading.CancellationToken)">
   ValidateTokenAsync(Sensitive&lt;string&gt;, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.0/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L192"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.1/Axiam.Sdk/Grpc/TokenGrpcClient.cs/#L192"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><code>ValidateToken</code> (CONTRACT.md §1.1.1, §10.3): a lighter-weight check
