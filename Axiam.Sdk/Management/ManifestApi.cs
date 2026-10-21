@@ -612,10 +612,46 @@ public sealed class ManifestApi
             }
 
             bool profileDrifted = ProfileDrifted(spec, read);
+            if (profileDrifted)
+            {
+                RequireNoUnknownCarried(spec, read, segment);
+            }
+
             outSteps.Add(MakeStep(
                 profileDrifted ? PlanChange.Update : PlanChange.NoChange, PlanTarget.NetworkProfile, segment.Key,
                 summary, profileDrifted ? Kind.UpdateNetworkProfile : Kind.Noop,
                 new ProfileUpdate(spec, read), null));
+        }
+    }
+
+    /// <summary>
+    /// CONTRACT.md &#167;27.6.2 item 4 (contract 1.62; C162-06): an <c>Update</c> carries the read's members the
+    /// manifest does not state, and a <c>termination_action</c> or <c>service_type</c> this SDK decoded as
+    /// <c>Unknown</c> is never re-sent (&#167;36.2). Leaving it out would make the server write its default over
+    /// a value nobody stated, so <c>plan</c> refuses, before any write, unless the manifest states the member.
+    /// </summary>
+    private static void RequireNoUnknownCarried(
+        ManagementManifest.NetworkProfileSpec spec, NetworkReplyProfile read, ManagementManifest.NetworkSegmentSpec segment)
+    {
+        var unknown = new List<string>();
+        if (spec.TerminationAction is null && read.TerminationAction == RadiusTerminationAction.Unknown)
+        {
+            unknown.Add("termination_action");
+        }
+
+        if (spec.ServiceType is null && read.ServiceType == RadiusServiceType.Unknown)
+        {
+            unknown.Add("service_type");
+        }
+
+        if (unknown.Count > 0)
+        {
+            throw NetworkError.FromMessage(
+                "this manifest cannot be reconciled:\n  - " + string.Join("\n  - ", unknown.Select(
+                    member => $"network profile of segment '{SegmentLabel(segment)}' has a {member} this SDK does not " +
+                              "know (decoded as Unknown); updating it without stating the member would make the server " +
+                              "write its default over it. State the member in the manifest to replace it")) +
+                "\n\nNothing was written: §27.6.2 item 4 refuses it at plan.");
         }
     }
 

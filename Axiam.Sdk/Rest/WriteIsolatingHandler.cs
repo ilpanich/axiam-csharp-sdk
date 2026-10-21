@@ -66,6 +66,7 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
     private readonly X509Certificate2? _clientCertificate;
     private readonly object _gate = new();
     private HttpMessageInvoker? _writes;
+    private HttpMessageInvoker? _cookieless;
     private bool _disposed;
 
     /// <summary>Builds the handler; the TLS inputs are the ones <see cref="AxiamHttpClientFactory.CreatePrimaryHandler"/> parsed.</summary>
@@ -81,6 +82,21 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
+
+        // CONTRACT.md §6.1 rule 11 / §12.1 rule 3 (contract 1.63): an /oauth2/* request carries no
+        // axiam_* session cookie. The jar is attached below this point, so such a request leaves
+        // through a handler that has none (and whose responses set none).
+        if (AxiamHttpMessageHandler.IsOAuth2EndpointPath(request.RequestUri?.AbsolutePath))
+        {
+            if (ConnectionPolicy.NeedsFreshConnection(request))
+            {
+                request.Content ??= new ByteArrayContent(Array.Empty<byte>());
+                request.Headers.ConnectionClose = true;
+            }
+
+            return CookielessInvoker().SendAsync(request, cancellationToken);
+        }
+
         if (!ConnectionPolicy.NeedsFreshConnection(request))
         {
             return base.SendAsync(request, cancellationToken);
@@ -104,21 +120,34 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
         }
     }
 
+    private HttpMessageInvoker CookielessInvoker()
+    {
+        lock (_gate)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            return _cookieless ??= new HttpMessageInvoker(BuildWriteHandler(useCookies: false), disposeHandler: true);
+        }
+    }
+
     // Built on the first write rather than in the constructor so it mirrors the handler's state at
     // that moment: UseCookies and CookieContainer are changed after construction by the sessionless
     // client (UseCookies = false), and a SocketsHttpHandler refuses to change once it has sent.
-    private SocketsHttpHandler BuildWriteHandler()
+    private SocketsHttpHandler BuildWriteHandler(bool useCookies = true)
     {
         var handler = new SocketsHttpHandler
         {
-            UseCookies = UseCookies,
-            CookieContainer = CookieContainer,
+            UseCookies = useCookies && UseCookies,
             AllowAutoRedirect = false, // SDK-17: never follow a redirect with the SDK's headers
             // The point of this handler: a connection is already past its lifetime when it is made,
             // so it is closed after its exchange and never offered to a later request.
             PooledConnectionLifetime = TimeSpan.Zero,
             UseProxy = UseProxy,
         };
+
+        if (handler.UseCookies)
+        {
+            handler.CookieContainer = CookieContainer;
+        }
 
         if (UseProxy && Proxy is not null)
         {
@@ -157,6 +186,8 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
                 _disposed = true;
                 _writes?.Dispose();
                 _writes = null;
+                _cookieless?.Dispose();
+                _cookieless = null;
             }
         }
 

@@ -408,6 +408,71 @@ public sealed class NetworkManifestTests
         Assert.Equal(new[] { "z", "a", "m" }, post.Json()["filter_ids"]!.AsArray().Select(n => n!.GetValue<string>()).ToArray());
     }
 
+    /// <summary>&#167;27.6.2 item 4 (C162-06): an <c>Update</c> that would carry an unknown open-enum value of the read is refused at <c>plan</c>, with no write; stating the member resolves it; a <c>NoChange</c> is not refused.</summary>
+    [Theory]
+    [InlineData("termination_action")]
+    [InlineData("service_type")]
+    public async Task APlanRefusesAnUpdateThatWouldCarryAnUnknownOpenEnumValueTheManifestDoesNotState(string member)
+    {
+        var fake = new NetworkFake();
+        Guid id = fake.SeedSegment("hq", "access", "lab", vlan: 20, rank: 1, filters: new[] { "lab-in", "lab-out" });
+        if (member == "termination_action")
+        {
+            fake.SeedProfile(id, timeout: 600, filter: "lab-in", termination: "future");
+        }
+        else
+        {
+            fake.SeedProfile(id, timeout: 600, filter: "lab-in", service: "future_service");
+        }
+
+        using AxiamClient client = BuildClient(fake);
+
+        ManagementManifest Changing(RadiusTerminationAction? termination = null, JsonNullable<RadiusServiceType>? service = null) => new()
+        {
+            NetworkSegments = new[] { Lab() },
+            NetworkProfiles = new[]
+            {
+                new ManagementManifest.NetworkProfileSpec("lab", 900, termination, FilterId: "lab-in", ServiceType: service),
+            },
+        };
+
+        // Another member differs and the unknown one is not stated: refused, naming the member, no write.
+        NetworkError refused = await Assert.ThrowsAsync<NetworkError>(() => Manifest(client).PlanAsync(Changing()));
+        Assert.Contains(member, refused.Message, StringComparison.Ordinal);
+        await Assert.ThrowsAsync<NetworkError>(() => Manifest(client).ApplyAsync(Changing()));
+        Assert.DoesNotContain(fake.Requests, r => r.Method != "GET");
+
+        // Stating the member resolves it: an Update whose body carries the stated value, never the unknown one.
+        ManagementManifest stated = member == "termination_action"
+            ? Changing(termination: RadiusTerminationAction.RadiusRequest)
+            : Changing(service: JsonNullable<RadiusServiceType>.Of(RadiusServiceType.FramedUser));
+        ManagementPlan plan = await Manifest(client).PlanAsync(stated);
+        Assert.Equal(PlanChange.Update, plan.Actions.Single(a => a.Target == PlanTarget.NetworkProfile).Change);
+        await Manifest(client).ApplyAsync(stated);
+        Recorded put = fake.Requests.Single(r => r.Method == "PUT" && r.Path.Contains("/profiles/", StringComparison.Ordinal));
+        Assert.DoesNotContain("future", put.Body, StringComparison.Ordinal);
+    }
+
+    /// <summary>&#167;27.6.2 item 4: a profile with an unknown open-enum value that nothing differs from is <c>NoChange</c>, not refused, and writes nothing.</summary>
+    [Fact]
+    public async Task AnUnknownOpenEnumValueIsNotRefusedWhenNothingDiffers()
+    {
+        var fake = new NetworkFake();
+        Guid id = fake.SeedSegment("hq", "access", "lab", vlan: 20, rank: 1, filters: new[] { "lab-in", "lab-out" });
+        fake.SeedProfile(id, timeout: 600, filter: "lab-in", termination: "future");
+        using AxiamClient client = BuildClient(fake);
+
+        var manifest = new ManagementManifest
+        {
+            NetworkSegments = new[] { Lab() },
+            NetworkProfiles = new[] { new ManagementManifest.NetworkProfileSpec("lab", 600, FilterId: "lab-in") },
+        };
+        ManagementPlan plan = await Manifest(client).PlanAsync(manifest);
+        Assert.Equal(PlanChange.NoChange, plan.Actions.Single(a => a.Target == PlanTarget.NetworkProfile).Change);
+        await Manifest(client).ApplyAsync(manifest);
+        Assert.DoesNotContain(fake.Requests, r => r.Method != "GET");
+    }
+
     /// <summary>A clamped profile: stating the cap is NoChange; stating above it is an Update whose apply sends one replace, meets 403, stops without retry, and carries the server's message.</summary>
     [Fact]
     public async Task AClampedProfileIsJudgedOnTheReadAndAValueAboveTheCapIsTheActionsFailure()
@@ -491,7 +556,7 @@ public sealed class NetworkManifestTests
             return id;
         }
 
-        internal void SeedProfile(Guid segment, int timeout, int? idle = null, string? filter = null, string? service = null)
+        internal void SeedProfile(Guid segment, int timeout, int? idle = null, string? filter = null, string? service = null, string termination = "radius_request")
         {
             Profiles.Add(new JsonObject
             {
@@ -499,7 +564,7 @@ public sealed class NetworkManifestTests
                 ["tenant_id"] = TenantId.ToString(),
                 ["dictionary"] = "axiam-radius-reply/1",
                 ["stored_timeout"] = timeout,
-                ["termination_action"] = "radius_request",
+                ["termination_action"] = termination,
                 ["idle_timeout_secs"] = idle,
                 ["filter_id"] = filter,
                 ["service_type"] = service,
