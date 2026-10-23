@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-10-23
+
+Contract 1.64 and the 1.63 conformance follow-ups (#110). `CONTRACT.md`, `openapi.json`, `management-registry.json`
+and `proto/` are re-vendored byte for byte from `ilpanich/axiam` `fb92ec4` (branch `claude/release-1.1.2-w7`); the
+§27 surface is regenerated unchanged (202 operations across 29 namespaces). No signature changes: a patch (the one
+exception type of the `plan` refusal below narrows to a subclass, so a `catch (NetworkError)` still matches).
+
+### Fixed
+
+- **A `429 rate_limit_exceeded` on a device poll is waited out (§14.2 rule 9, §14.6; contract 1.64 item (b)).**
+  `DeviceLoginAsync` treated a `429` like a transport failure: no wait beyond the interval, and the `Retry-After`
+  ignored. It now waits the `Retry-After` (a minimum: the longer of it and the interval), capped at the `expires_in`
+  deadline (past it, the `expired_token` of rule 4, nothing sent after), counts the wait as one interval, does not
+  raise the interval and polls again. A single `DevicePollAsync` call raises the §2 `OAuthProtocolError`
+  (`rate_limit_exceeded`) for a `429` that carries the error body, as before for the contract. Tests:
+  `Contract164DevicePollRateLimitTests`, with a recorded sleep.
+- **`plan` refuses an unknown open-enum value with a `ValidationError` (§27.6.2 item 4; C163-07, C163-10).**
+  The refusal of 1.1.1 was a `NetworkError`; it is now a `ValidationError` with a `FieldError` per member. The
+  message names the member and quotes the value the server sent, which `NetworkReplyProfile` now keeps internally
+  (`RawTerminationAction`, `RawServiceType`, set when the response is decoded, never re-sent); where the SDK did not
+  decode the profile itself, it says the value is unknown (contract 1.64 (c)). `ValidationError` derives from
+  `NetworkError`, so a `catch (NetworkError)` around `PlanAsync`/`ApplyAsync` still matches.
+- **The cookie-less `/oauth2/*` transport pools its connections (C163-20).** It was built with
+  `PooledConnectionLifetime = TimeSpan.Zero`, so every device poll opened a new TLS connection. Requests the SDK
+  itself re-sends (the device poll, §14.2 rule 6; `ciba_poll`) now share a pooled, cookie-less (`UseCookies = false`)
+  handler with the default lifetime; every other write on `/oauth2/*` keeps a fresh connection (§34.2 P11).
+  `AxiamHttpClientFactory.ConfigureFactoryHandler` now documents that a hand-composed handler keeps its own jar and
+  would send it to `/oauth2/*`.
+
+### Tests
+
+- C163-08: `Contract163OAuth2NoCookieTests` gains a real `AxiamClient` over a loopback server whose login sets
+  `axiam_access` and `axiam_csrf`: `LoginAsync`, then the device authorization, the device poll and a token call
+  carry neither `Cookie` nor `X-CSRF-Token`, then a management `POST` carries both (full-path lookup).
+- C163-09: a `NoChange` is asserted for `service_type` as well as `termination_action`.
+
 ## [1.1.1] - 2026-10-20
 
 Contract 1.63 and the 1.62 conformance follow-ups (#107). `CONTRACT.md`, `openapi.json` and

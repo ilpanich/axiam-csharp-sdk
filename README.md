@@ -24,7 +24,7 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to **contract 1.63**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
+This SDK conforms to **contract 1.64**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
 §21, §22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates and the §6.1 rules 6–10
 mTLS device login, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, and the §1.1.1 gRPC
 `validate_token`/`introspect_token` operations, contract 1.51, the §12 OIDC/SSO relying-party
@@ -55,7 +55,7 @@ SDK has no model for it. Contract 1.62 (§34.6) adds the §36 `network` namespac
 the tenant's `Session-Timeout` cap: twelve operations, also a §27.6.2 manifest namespace), a device client that
 authenticates at both device-grant endpoints (§14.1), the change-taking form of an SSF stream
 (`stream.ToInput(new SsfStreamChanges { ... })`, §32.2), and the request `user_id` as a plain `string?`
-(§27.11 rule 5, source-breaking: see the changelog). Contract 1.63 (§34.7) changes one behaviour: no `axiam_*` session cookie and no `X-CSRF-Token` header goes to an `/oauth2/*` request, in either issuer form (§6.1 rule 11, §12.1 rule 3, §14.6), and `plan` refuses a profile `Update` that would carry an unknown `termination_action` or `service_type` the manifest does not state (§27.6.2 item 4). The SDK ships no helper that builds or signs an `AuditEventMessage` (its AMQP surface is a consumer), so the optional producer-side refusal of a reserved `tenants.` / `gdpr.` audit action (§8) has nothing to attach to; the server's refusal stands. This SDK generates no DPoP proofs, so the §21.7.4 key-lifetime rule does not apply. Nothing in contract 1.53–1.63 is carved out except what
+(§27.11 rule 5, source-breaking: see the changelog). Contract 1.63 (§34.7) changes one behaviour: no `axiam_*` session cookie and no `X-CSRF-Token` header goes to an `/oauth2/*` request, in either issuer form (§6.1 rule 11, §12.1 rule 3, §14.6), and `plan` refuses a profile `Update` that would carry an unknown `termination_action` or `service_type` the manifest does not state (§27.6.2 item 4). The SDK ships no helper that builds or signs an `AuditEventMessage` (its AMQP surface is a consumer), so the optional producer-side refusal of a reserved `tenants.` / `gdpr.` audit action (§8) has nothing to attach to; the server's refusal stands. This SDK generates no DPoP proofs, so the §21.7.4 key-lifetime rule does not apply. Contract 1.64 (§34.8) changes one behaviour: a `429 rate_limit_exceeded` on a device-code poll is not terminal, and `DeviceLoginAsync` waits the `Retry-After` out (a minimum, capped at the `expires_in` deadline), counts it as one interval and does not raise the interval (§14.2 rule 9); the `plan` refusal of an unknown open-enum value is a `ValidationError` that names the member and quotes the value this SDK kept (§27.6.2 item 4). Nothing in contract 1.53–1.64 is carved out except what
 this README says it declines: `webhooks` in the manifest, the `private_key_jwt` client assertion and DPoP
 proof generation. Manifest pruning: not offered in any namespace (§27.10).
 
@@ -470,8 +470,8 @@ both ends so a preflight can report which you are actually on. See
 ## Quickstart
 
 ```bash
-dotnet add package Axiam.Sdk --version 1.1.1
-dotnet add package Axiam.Sdk.AspNetCore --version 1.1.1   # optional — ASP.NET Core middleware + DI
+dotnet add package Axiam.Sdk --version 1.1.2
+dotnet add package Axiam.Sdk.AspNetCore --version 1.1.2   # optional — ASP.NET Core middleware + DI
 ```
 
 ```csharp
