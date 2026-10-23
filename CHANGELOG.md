@@ -36,6 +36,14 @@ exception type of the `plan` refusal below narrows to a subclass, so a `catch (N
   (never a `429`, which is the loop's rule-9 wait), at most `MaxRetryAttempts` requests, none when `RetryEnabled` is
   off. The `200` is parsed outside the retry, and `DeviceLoginAsync` bounds the retry waits by the `expires_in` deadline.
   A single `DevicePollAsync` therefore may make up to three requests before it surfaces a `NetworkError`.
+- **The deadline never cancels a request already sent (§14.2 rule 4, §14.3 rule 4; C164-40).** The first cut of the in-poll
+  retry armed a cancellation token at the deadline and handed it to the whole poll, so a `200` still being read when the
+  deadline passed (or the JWKS fetch for its `id_token`) was cancelled after the server had redeemed the device code, and the
+  caller got `expired_token` or a misleading signature error for a grant that succeeded. The deadline now governs only the
+  decision to send and the §16 retry waits: a wait that would reach it is not served and raises the typed `expired_token`
+  at once (so `Retry-After: 120` with 30 s left costs no 120 s sleep), and the request in flight keeps the caller's own
+  token. Tests: a `200` arriving after the deadline returns the token set; `Retry-After` past the deadline inside the
+  poll is not served; a `200` that does not parse is one request, not a retry (C164-41).
 - **The `expires_in` deadline is measured on the clock (§14.2 rule 4; C164-05).** It was `expires_in` minus the
   waits slept, so a slow request or the user-code callback let the loop poll after the real deadline. It is now a
   point in time taken when the authorization returns; no poll is sent once `now + wait` reaches it.

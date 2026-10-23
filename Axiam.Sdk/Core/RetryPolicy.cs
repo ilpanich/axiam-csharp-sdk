@@ -202,7 +202,8 @@ internal static class RetryPolicy
         Func<double> jitter,
         Func<int, Task<T>> operation,
         CancellationToken cancellationToken,
-        Func<NetworkError, bool>? retryable = null)
+        Func<NetworkError, bool>? retryable = null,
+        Func<TimeSpan, CancellationToken, Task>? delay = null)
     {
         int attempts = options.RetryEnabled ? EffectiveMaxAttempts(options) : 1;
 
@@ -231,7 +232,7 @@ internal static class RetryPolicy
 
                 // Task.Delay observes the token, so a caller's cancellation wins
                 // over a pending backoff rather than being absorbed by it.
-                await Task.Delay(wait, cancellationToken).ConfigureAwait(false);
+                await (delay ?? Task.Delay)(wait, cancellationToken).ConfigureAwait(false);
             }
         }
     }

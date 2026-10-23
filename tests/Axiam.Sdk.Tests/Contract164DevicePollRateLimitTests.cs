@@ -327,4 +327,65 @@ public class Contract164DevicePollRateLimitTests
         Assert.Equal(2, polls());
         Assert.All(pollStarts, t => Assert.True(t - start < TimeSpan.FromSeconds(30)));
     }
+
+    /// <summary>
+    /// C164-40: the deadline governs the waits and the decision to send, not a request already sent. A poll sent before the
+    /// deadline whose <c>200</c> arrives after it still returns the token set - the server has redeemed the code.
+    /// </summary>
+    [Fact]
+    public async Task A200ThatArrivesAfterTheDeadlineStillReturnsTheTokens()
+    {
+        var pollStarts = new List<DateTimeOffset>();
+        (AxiamClient client, _, Func<int> polls) = SetUp(
+            expiresIn: 30, interval: 5, TimeSpan.FromSeconds(40), pollStarts, Tokens);
+        DateTimeOffset start = client.DevicePollTime.GetUtcNow();
+
+        OidcTokenSet set = await client.DeviceLoginAsync(Login());
+
+        Assert.Equal("device-access-token", set.AccessToken.Reveal());
+        Assert.Equal(1, polls());
+        Assert.True(client.DevicePollTime.GetUtcNow() - start > TimeSpan.FromSeconds(30));
+    }
+
+    /// <summary>
+    /// C164-36/41 (the P10 analogue): a <c>503</c> with <c>Retry-After: 120</c> and <c>expires_in</c> 30. The in-poll &#167;16 wait
+    /// that would pass the deadline is not served: <c>expired_token</c>, one request, nothing at or after t=30.
+    /// </summary>
+    [Fact]
+    public async Task ARetryAfterPastTheDeadlineInsideThePollIsNotServed()
+    {
+        var pollStarts = new List<DateTimeOffset>();
+        (AxiamClient client, List<TimeSpan> sleeps, Func<int> polls) = SetUp(
+            expiresIn: 30, interval: 5, TimeSpan.Zero, pollStarts, () =>
+            {
+                HttpResponseMessage response = OidcTestKit.JsonStatus(
+                    HttpStatusCode.ServiceUnavailable, """{"error":"temporarily_unavailable"}""");
+                response.Headers.RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromSeconds(120));
+                return response;
+            });
+        DateTimeOffset start = client.DevicePollTime.GetUtcNow();
+
+        OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(() => client.DeviceLoginAsync(Login()));
+
+        Assert.True(error.IsExpiredToken);
+        Assert.Equal(1, polls());
+        Assert.Equal(new[] { 5.0 }, sleeps.Select(s => s.TotalSeconds).ToArray());
+        Assert.All(pollStarts, t => Assert.True(t - start < TimeSpan.FromSeconds(30)));
+    }
+
+    /// <summary>
+    /// C164-41: the <c>200</c> is parsed outside the retry. A body that does not parse is one request, not three: the device
+    /// code is already redeemed, and a re-send could only be refused.
+    /// </summary>
+    [Fact]
+    public async Task A200ThatDoesNotParseIsOneRequestNotARetry()
+    {
+        (AxiamClient client, _, Func<int> polls) = SetUp(
+            expiresIn: 600, interval: 5, () => OidcTestKit.JsonOk("{not json"));
+
+        await Assert.ThrowsAsync<NetworkError>(
+            () => client.DevicePollAsync(new DevicePollParams(Sensitive<string>.Wrap(OidcTestKit.DeviceCode))));
+
+        Assert.Equal(1, polls());
+    }
 }

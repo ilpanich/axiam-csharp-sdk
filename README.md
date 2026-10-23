@@ -55,7 +55,7 @@ SDK has no model for it. Contract 1.62 (§34.6) adds the §36 `network` namespac
 the tenant's `Session-Timeout` cap: twelve operations, also a §27.6.2 manifest namespace), a device client that
 authenticates at both device-grant endpoints (§14.1), the change-taking form of an SSF stream
 (`stream.ToInput(new SsfStreamChanges { ... })`, §32.2), and the request `user_id` as a plain `string?`
-(§27.11 rule 5, source-breaking: see the changelog). Contract 1.63 (§34.7) changes one behaviour: no `axiam_*` session cookie and no `X-CSRF-Token` header goes to an `/oauth2/*` request, in either issuer form (§6.1 rule 11, §12.1 rule 3, §14.6), and `plan` refuses a profile `Update` that would carry an unknown `termination_action` or `service_type` the manifest does not state (§27.6.2 item 4). The SDK ships no helper that builds or signs an `AuditEventMessage` (its AMQP surface is a consumer), so the optional producer-side refusal of a reserved `tenants.` / `gdpr.` audit action (§8) has nothing to attach to; the server's refusal stands. This SDK generates no DPoP proofs, so the §21.7.4 key-lifetime rule does not apply. Contract 1.64 (§34.8) changes one behaviour: a `429 rate_limit_exceeded` on a device-code poll is not terminal, and `DeviceLoginAsync` waits the `Retry-After` out (a minimum, capped at the `expires_in` deadline), counts it as one interval and does not raise the interval (§14.2 rule 9); the `plan` refusal of an unknown open-enum value is a `ValidationError` that names the member and quotes the value this SDK kept (§27.6.2 item 4). Nothing in contract 1.53–1.64 is carved out except what
+(§27.11 rule 5, source-breaking: see the changelog). Contract 1.63 (§34.7) changes one behaviour: no `axiam_*` session cookie and no `X-CSRF-Token` header goes to an `/oauth2/*` request, in either issuer form (§6.1 rule 11, §12.1 rule 3, §14.6), and `plan` refuses a profile `Update` that would carry an unknown `termination_action` or `service_type` the manifest does not state (§27.6.2 item 4). The SDK ships no helper that builds or signs an `AuditEventMessage` (its AMQP surface is a consumer), so the optional producer-side refusal of a reserved `tenants.` / `gdpr.` audit action (§8) has nothing to attach to; the server's refusal stands. This SDK generates no DPoP proofs, so the §21.7.4 key-lifetime rule does not apply. Contract 1.64 (§34.8) changes one behaviour: a `429 rate_limit_exceeded` on a device-code poll is not terminal, and `DeviceLoginAsync` waits the `Retry-After` out (the status decides: any `429`), a `5xx` on the poll is a transport failure whatever its body and is retried inside the poll under §16 (never a `429`) (a minimum, capped at the `expires_in` deadline), counts it as one interval and does not raise the interval (§14.2 rule 9); the `plan` refusal of an unknown open-enum value is a `ValidationError` that names the member and quotes the value this SDK kept (§27.6.2 item 4). Nothing in contract 1.53–1.64 is carved out except what
 this README says it declines: `webhooks` in the manifest, the `private_key_jwt` client assertion and DPoP
 proof generation. Manifest pruning: not offered in any namespace (§27.10).
 
@@ -881,7 +881,10 @@ own loop. The polling rules are where implementations go wrong:
   answered — the only information the device can act on.
 - **Polling stops at `ExpiresIn`**, even if the server has not yet said `expired_token`.
 - **A `5xx` mid-poll is not terminal.** A server restart must not lose a grant the user has
-  already approved.
+  already approved. A `5xx` is a transport failure whatever its body (status before body). With `RetryEnabled` (the
+  default) it, or a transport failure, is retried inside the poll under §16 (at most three requests in all, never on a
+  `429`, whose wait is the loop's); `DeviceLoginAsync` never serves a retry wait that would pass the `expires_in`
+  deadline, and a single `DevicePollAsync` may therefore make up to three requests.
 
 `DeviceCode` is `Sensitive<string>`; `UserCode` deliberately is not — it exists to be read
 aloud, and wrapping it would defeat the one thing it is for.

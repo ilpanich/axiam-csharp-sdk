@@ -202,7 +202,16 @@ public sealed partial class AxiamClient
     /// <param name="params">The poll arguments.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     /// <returns>The issued token set.</returns>
-    public async Task<OidcTokenSet> DevicePollAsync(DevicePollParams @params, CancellationToken cancellationToken = default)
+    public Task<OidcTokenSet> DevicePollAsync(DevicePollParams @params, CancellationToken cancellationToken = default) =>
+        DevicePollCoreAsync(@params, deadline: null, cancellationToken);
+
+    /// <summary>
+    /// One poll, with its §16 retry. <paramref name="deadline"/> is set by <see cref="DeviceLoginAsync"/>: a retry
+    /// wait that would reach it is not served, and the typed <c>expired_token</c> of rule 4 is raised instead (the
+    /// P10 analogue, C164-36). The deadline never cancels a request already sent, nor the reading of its answer:
+    /// the server has redeemed the device code by then, and the tokens are the caller's (C164-40).
+    /// </summary>
+    private async Task<OidcTokenSet> DevicePollCoreAsync(DevicePollParams @params, DateTimeOffset? deadline, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(@params);
         OidcConfiguration configuration = await ResolveOidcConfigurationAsync(@params.Configuration, cancellationToken).ConfigureAwait(false);
@@ -242,7 +251,10 @@ public sealed partial class AxiamClient
                 return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             },
             cancellationToken,
-            retryable: e => e is not Axiam.Sdk.Management.ValidationError && e.HttpStatus is null or >= 500).ConfigureAwait(false);
+            retryable: e => e is not Axiam.Sdk.Management.ValidationError && e.HttpStatus is null or >= 500,
+            delay: (wait, ct) => deadline is { } limit && DevicePollTime.GetUtcNow() + wait >= limit
+                ? throw ExpiredDeviceAuthorization()
+                : Task.Delay(wait, ct)).ConfigureAwait(false);
 
         TokenResponseWire wire;
         try
@@ -337,30 +349,17 @@ public sealed partial class AxiamClient
             retryAfter = TimeSpan.Zero;
             if (DevicePollTime.GetUtcNow() + wait >= deadline)
             {
-                throw new OAuthProtocolError(
-                    "expired_token",
-                    "the device authorization expired before the user completed it " +
-                    "(client-side deadline from expires_in; CONTRACT.md §14.2 rule 4)");
+                throw ExpiredDeviceAuthorization();
             }
 
             await DevicePollDelay(wait, cancellationToken).ConfigureAwait(false);
 
-            // C164-25: the poll's own §16 retry waits are bounded by the deadline, so a retried poll never
-            // runs past it; reaching it mid-poll is the same typed expired_token (rule 4).
-            using var pollCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            pollCts.CancelAfter(TimeSpan.FromMilliseconds(Math.Max(1, (deadline - DevicePollTime.GetUtcNow()).TotalMilliseconds)));
             try
             {
-                return await DevicePollAsync(
+                return await DevicePollCoreAsync(
                     new DevicePollParams(authorization.DeviceCode, @params.TenantId, configuration),
-                    pollCts.Token).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
-            {
-                throw new OAuthProtocolError(
-                    "expired_token",
-                    "the device authorization expired before the user completed it " +
-                    "(client-side deadline from expires_in; CONTRACT.md §14.2 rule 4)");
+                    deadline,
+                    cancellationToken).ConfigureAwait(false);
             }
             catch (OAuthProtocolError e) when (e.Error is "authorization_pending")
             {
@@ -392,6 +391,12 @@ public sealed partial class AxiamClient
             // expired_token / access_denied / invalid_grant fall through uncaught — terminal.
         }
     }
+
+    /// <summary>The typed <c>expired_token</c> of &#167;14.2 rule 4, raised by the client when its own deadline is reached.</summary>
+    private static OAuthProtocolError ExpiredDeviceAuthorization() => new(
+        "expired_token",
+        "the device authorization expired before the user completed it " +
+        "(client-side deadline from expires_in; CONTRACT.md §14.2 rule 4)");
 
     // ------------------------------------------------------------------
     // §15 Token Exchange (RFC 8693)
