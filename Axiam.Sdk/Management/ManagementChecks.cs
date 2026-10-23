@@ -327,13 +327,18 @@ namespace Axiam.Sdk.Management.Models
     /// </content>
     public sealed partial record NetworkReplyProfile : IKeepsRawEnums
     {
-        /// <summary><c>termination_action</c> as the server sent it; <c>null</c> for a profile this SDK did not decode itself.</summary>
+        /// <summary>
+        /// The two spellings as the server sent them; empty for a profile this SDK did not decode itself. Held in one object
+        /// whose equality is always true, so the record's value equality is that of its public members (C164-23).
+        /// </summary>
         [System.Text.Json.Serialization.JsonIgnore]
-        internal string? RawTerminationAction { get; init; }
+        internal RawEnumSpellings Raw { get; init; } = new(null, null);
 
-        /// <summary><c>service_type</c> as the server sent it; <c>null</c> when absent or not decoded by this SDK.</summary>
-        [System.Text.Json.Serialization.JsonIgnore]
-        internal string? RawServiceType { get; init; }
+        /// <summary><c>termination_action</c> as the server sent it, or <c>null</c>.</summary>
+        internal string? RawTerminationAction => Raw.TerminationAction;
+
+        /// <summary><c>service_type</c> as the server sent it, or <c>null</c> when absent or not decoded by this SDK.</summary>
+        internal string? RawServiceType => Raw.ServiceType;
 
         object IKeepsRawEnums.WithRawEnums(System.Text.Json.JsonElement wire)
         {
@@ -346,10 +351,30 @@ namespace Axiam.Sdk.Management.Models
 
             return this with
             {
-                RawTerminationAction = Read(wire, "termination_action"),
-                RawServiceType = Read(wire, "service_type"),
+                Raw = new RawEnumSpellings(Read(wire, "termination_action"), Read(wire, "service_type")),
             };
         }
+    }
+
+    /// <summary>
+    /// The wire spellings of <see cref="NetworkReplyProfile"/>'s open enumerations. Every instance equals every
+    /// other, so holding it never changes the owning record's equality.
+    /// </summary>
+    /// <param name="TerminationAction">The <c>termination_action</c> string, or <c>null</c>.</param>
+    /// <param name="ServiceType">The <c>service_type</c> string, or <c>null</c>.</param>
+    internal sealed class RawEnumSpellings(string? TerminationAction, string? ServiceType)
+    {
+        /// <summary>The <c>termination_action</c> string, or <c>null</c>.</summary>
+        public string? TerminationAction { get; } = TerminationAction;
+
+        /// <summary>The <c>service_type</c> string, or <c>null</c>.</summary>
+        public string? ServiceType { get; } = ServiceType;
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj) => obj is RawEnumSpellings;
+
+        /// <inheritdoc />
+        public override int GetHashCode() => 0;
     }
 
     /// <content>

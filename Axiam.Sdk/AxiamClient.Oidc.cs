@@ -1277,7 +1277,7 @@ public sealed partial class AxiamClient
         var request = new HttpRequestMessage(HttpMethod.Post, url) { Content = content };
         if (retryEligible)
         {
-            // §34.2 P11: only a request §16 itself retries (ciba_poll) may share the pool; every
+            // §34.2 P11: only a request §16 itself retries (`ciba_poll`, `device_poll`) may share the pool; every
             // other form POST is a write that must not be re-sent and gets a fresh connection.
             Rest.ConnectionPolicy.MarkRetryEligible(request);
         }
@@ -1307,14 +1307,23 @@ public sealed partial class AxiamClient
         {
             if (anyStatusErrors)
             {
-                // §14.2 rule 9 (contract 1.63): the device poll's 429 is the §2 OAuthProtocolError with
-                // `rate_limit_exceeded`; the Retry-After rides along for the loop (contract 1.64).
+                // §14.2 rule 6 (contract 1.64 amended; C164-03): a 5xx is a transport failure whatever its
+                // body - AXIAM answers an internal failure `500 {"error":"server_error"}` - so the status is
+                // read before the body, as `ciba_poll` does (§34.2 P8).
+                if ((int)response.StatusCode >= 500)
+                {
+                    throw NetworkError.FromResponse(response, "oidc token request failed");
+                }
+
+                // §14.2 rule 9 (contract 1.63): the device poll's 429 is the §2 OAuthProtocolError; the
+                // status and the Retry-After ride along for the loop, which decides on the status (1.64).
                 Exception mapped = await MapOAuth2ErrorAnyStatusAsync(response, "oidc token request failed", cancellationToken).ConfigureAwait(false);
-                if (mapped is OAuthProtocolError { RetryAfter: null } protocolError && response.StatusCode == (HttpStatusCode)429)
+                if (mapped is OAuthProtocolError protocolError)
                 {
                     throw new OAuthProtocolError(protocolError.Error, protocolError.ErrorDescription)
                     {
-                        RetryAfter = NetworkError.ParseRetryAfter(response),
+                        HttpStatus = (int)response.StatusCode,
+                        RetryAfter = response.StatusCode == (HttpStatusCode)429 ? NetworkError.ParseRetryAfter(response) : null,
                     };
                 }
 

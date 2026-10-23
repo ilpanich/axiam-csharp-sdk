@@ -175,14 +175,13 @@ public static class AxiamHttpClientFactory
     /// otherwise weakens server verification.
     /// </summary>
     /// <remarks>
-    /// <b>A hand-composed handler owns its jar (CONTRACT.md &#167;6.1 rule 11, &#167;12.1 rule 3).</b> The
-    /// SDK withholds the <c>axiam_*</c> session cookie and <c>X-CSRF-Token</c> from <c>/oauth2/*</c> by
-    /// sending those requests through a cookie-less transport of its own, which exists only on the
-    /// primary handler it builds. A <see cref="SocketsHttpHandler"/> composed by hand and registered
-    /// through <c>IHttpClientFactory</c> is sent every request as it stands: with <c>UseCookies = true</c>
-    /// (as this method sets it) its jar rides along on an <c>/oauth2/*</c> request too, and the SDK
-    /// cannot withhold it per request. A caller that must keep the cookie off those endpoints composes
-    /// a second, <c>UseCookies = false</c> handler for them.
+    /// <b>A hand-composed handler owns its jar (CONTRACT.md &#167;6.1 rule 11, &#167;12.1 rule 3).</b>
+    /// <c>X-CSRF-Token</c> is withheld from <c>/oauth2/*</c> in every composition; the <c>axiam_*</c> cookie is
+    /// withheld only by the cookie-less transport that the SDK's own primary handler builds. A
+    /// <see cref="SocketsHttpHandler"/> composed by hand and registered through <c>IHttpClientFactory</c> is sent
+    /// every request as it stands: with <c>UseCookies = true</c> (as this method sets it) its jar rides along on an
+    /// <c>/oauth2/*</c> request too, and the SDK cannot withhold it per request. A caller that must keep the cookie
+    /// off those endpoints composes a second, <c>UseCookies = false</c> handler for them.
     /// </remarks>
     public static void ConfigureFactoryHandler(SocketsHttpHandler handler, byte[]? clientCertPem = null, byte[]? clientKeyPem = null)
     {

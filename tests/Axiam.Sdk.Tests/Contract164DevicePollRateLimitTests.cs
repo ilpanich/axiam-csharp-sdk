@@ -20,8 +20,8 @@ public class Contract164DevicePollRateLimitTests
 
     private static HttpResponseMessage RateLimited(int? retryAfterSeconds)
     {
-        HttpResponseMessage response = OidcTestKit.JsonStatus(
-            (HttpStatusCode)429, OidcTestKit.OAuth2ErrorJson("rate_limit_exceeded", "too many requests"));
+        // The server's own body (contract 1.64 amended): no error_description.
+        HttpResponseMessage response = OidcTestKit.JsonStatus((HttpStatusCode)429, """{"error":"rate_limit_exceeded"}""");
         if (retryAfterSeconds is { } seconds)
         {
             response.Headers.RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromSeconds(seconds));
@@ -30,25 +30,58 @@ public class Contract164DevicePollRateLimitTests
         return response;
     }
 
+    private static HttpResponseMessage SlowDown429(int retryAfterSeconds)
+    {
+        HttpResponseMessage response = OidcTestKit.JsonStatus((HttpStatusCode)429, """{"error":"slow_down"}""");
+        response.Headers.RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromSeconds(retryAfterSeconds));
+        return response;
+    }
+
+    /// <summary>What AXIAM's token endpoint answers an internal failure (contract 1.64 amended, §14.2 rule 6).</summary>
+    private static HttpResponseMessage ServerError500() =>
+        OidcTestKit.JsonStatus(HttpStatusCode.InternalServerError, """{"error":"server_error","error_description":"db"}""");
+
     private static HttpResponseMessage Pending() =>
         OidcTestKit.JsonStatus(HttpStatusCode.BadRequest, OidcTestKit.OAuth2ErrorJson("authorization_pending", "pending"));
 
     private static HttpResponseMessage Tokens() =>
         OidcTestKit.JsonOk(OidcTestKit.TokenResponseJson("device-access-token"));
 
-    private static (AxiamClient Client, List<TimeSpan> Sleeps, Func<int> Polls) SetUp(
-        int expiresIn, int interval, params Func<HttpResponseMessage>[] steps)
+    /// <summary>A clock that only moves when a test or a recorded sleep moves it.</summary>
+    private sealed class FakeTime : TimeProvider
     {
+        private DateTimeOffset _now = new(2026, 10, 23, 12, 0, 0, TimeSpan.Zero);
+
+        public override DateTimeOffset GetUtcNow() => _now;
+
+        public void Advance(TimeSpan by) => _now += by;
+    }
+
+    private static (AxiamClient Client, List<TimeSpan> Sleeps, Func<int> Polls) SetUp(
+        int expiresIn, int interval, params Func<HttpResponseMessage>[] steps) =>
+        SetUp(expiresIn, interval, TimeSpan.Zero, new List<DateTimeOffset>(), steps);
+
+    private static (AxiamClient Client, List<TimeSpan> Sleeps, Func<int> Polls) SetUp(
+        int expiresIn, int interval, TimeSpan requestTime, List<DateTimeOffset> pollStarts, params Func<HttpResponseMessage>[] steps)
+    {
+        var time = new FakeTime();
         var handler = new RoutingHandler();
         OidcTestKit.MapDiscovery(handler);
         handler.Map(DeviceAuthPath, _ => OidcTestKit.JsonOk(OidcTestKit.DeviceAuthorizationJson(expiresIn: expiresIn, interval: interval)));
         int index = 0;
-        handler.Map(TokenPath, _ => steps[Math.Min(index++, steps.Length - 1)]());
+        handler.Map(TokenPath, _ =>
+        {
+            pollStarts.Add(time.GetUtcNow());
+            time.Advance(requestTime);
+            return steps[Math.Min(index++, steps.Length - 1)]();
+        });
         AxiamClient client = OidcTestKit.Client(handler, OidcTestKit.Options(clientSecret: null));
         var sleeps = new List<TimeSpan>();
+        client.DevicePollTime = time;
         client.DevicePollDelay = (delay, _) =>
         {
             sleeps.Add(delay);
+            time.Advance(delay);
             return Task.CompletedTask;
         };
         return (client, sleeps, () => index);
@@ -124,5 +157,81 @@ public class Contract164DevicePollRateLimitTests
             () => client.DevicePollAsync(new DevicePollParams(Sensitive<string>.Wrap(OidcTestKit.DeviceCode))));
 
         Assert.Equal("rate_limit_exceeded", error.Error);
+    }
+
+    /// <summary>
+    /// A third case (contract 1.64 amended, &#167;14.6): a <c>429</c> whose body says <c>slow_down</c>, then <c>200</c>,
+    /// does not raise the interval (C164-04). Only the <c>400</c> does.
+    /// </summary>
+    [Fact]
+    public async Task A429WhoseBodySaysSlowDownIsTheWaitAndDoesNotRaiseTheInterval()
+    {
+        (AxiamClient client, List<TimeSpan> sleeps, _) = SetUp(expiresIn: 600, interval: 5, () => SlowDown429(1), Pending, Tokens);
+
+        await client.DeviceLoginAsync(Login());
+
+        Assert.Equal(new[] { 5.0, 5.0, 5.0 }, sleeps.Select(s => s.TotalSeconds).ToArray());
+    }
+
+    /// <summary>The control for the case above: the same body as a <c>400</c> raises the interval for good.</summary>
+    [Fact]
+    public async Task ASlowDownOnA400StillRaisesTheInterval()
+    {
+        (AxiamClient client, List<TimeSpan> sleeps, _) = SetUp(
+            expiresIn: 600, interval: 5,
+            () => OidcTestKit.JsonStatus(HttpStatusCode.BadRequest, OidcTestKit.OAuth2ErrorJson("slow_down", "slower")),
+            Pending, Tokens);
+
+        await client.DeviceLoginAsync(Login());
+
+        Assert.Equal(new[] { 5.0, 10.0, 10.0 }, sleeps.Select(s => s.TotalSeconds).ToArray());
+    }
+
+    /// <summary>
+    /// &#167;14.2 rule 6 (contract 1.64 amended; C164-03): a <c>5xx</c> is a transport failure whatever its body. The
+    /// mock answers the body the server sends, <c>500 {"error":"server_error",&#8230;}</c>, mid-poll, then the tokens.
+    /// </summary>
+    [Fact]
+    public async Task A500WithTheServersOwnOAuthBodyIsNotTerminal()
+    {
+        (AxiamClient client, List<TimeSpan> sleeps, Func<int> polls) = SetUp(
+            expiresIn: 600, interval: 5, Pending, ServerError500, ServerError500, Tokens);
+
+        OidcTokenSet set = await client.DeviceLoginAsync(Login());
+
+        Assert.Equal("device-access-token", set.AccessToken.Reveal());
+        Assert.Equal(4, polls());
+        Assert.Equal(new[] { 5.0, 5.0, 5.0, 5.0 }, sleeps.Select(s => s.TotalSeconds).ToArray());
+    }
+
+    /// <summary>A single poll on that <c>500</c> is the &#167;2 <c>NetworkError</c>, not an <c>OAuthProtocolError</c>.</summary>
+    [Fact]
+    public async Task ASinglePollOnA500WithAnOAuthBodyIsANetworkError()
+    {
+        (AxiamClient client, _, _) = SetUp(expiresIn: 600, interval: 5, ServerError500);
+
+        NetworkError error = await Assert.ThrowsAsync<NetworkError>(
+            () => client.DevicePollAsync(new DevicePollParams(Sensitive<string>.Wrap(OidcTestKit.DeviceCode))));
+
+        Assert.Equal(500, error.HttpStatus);
+    }
+
+    /// <summary>
+    /// &#167;14.2 rule 4 and &#167;14.6 case 2 (C164-05): the deadline is measured on the clock, so the time a request takes
+    /// counts. With a 10 s request, <c>expires_in</c> 30 and interval 5, no poll starts at or after the deadline.
+    /// </summary>
+    [Fact]
+    public async Task NoPollIsSentAtOrAfterTheDeadlineWhenRequestsTakeTime()
+    {
+        var pollStarts = new List<DateTimeOffset>();
+        (AxiamClient client, _, Func<int> polls) = SetUp(
+            expiresIn: 30, interval: 5, TimeSpan.FromSeconds(10), pollStarts, Pending);
+        DateTimeOffset start = client.DevicePollTime.GetUtcNow();
+
+        OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(() => client.DeviceLoginAsync(Login()));
+
+        Assert.True(error.IsExpiredToken);
+        Assert.Equal(2, polls());
+        Assert.All(pollStarts, t => Assert.True(t - start < TimeSpan.FromSeconds(30)));
     }
 }

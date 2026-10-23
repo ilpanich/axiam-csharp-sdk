@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.2] - 2026-10-23
 
 Contract 1.64 and the 1.63 conformance follow-ups (#110). `CONTRACT.md`, `openapi.json`, `management-registry.json`
-and `proto/` are re-vendored byte for byte from `ilpanich/axiam` `fb92ec4` (branch `claude/release-1.1.2-w7`); the
-§27 surface is regenerated unchanged (202 operations across 29 namespaces). No signature changes: a patch (the one
+and `proto/` are re-vendored byte for byte from `ilpanich/axiam` `21beda0` (branch `claude/release-1.1.2-w7`; `CONTRACT.md` is the amended 1.64 text, `proto/` is unchanged); the
+§27 surface is regenerated unchanged (202 operations across 29 namespaces). No signature changes: a patch (the
 exception type of the `plan` refusal below narrows to a subclass, so a `catch (NetworkError)` still matches).
 
 ### Fixed
@@ -20,14 +20,26 @@ exception type of the `plan` refusal below narrows to a subclass, so a `catch (N
   `DeviceLoginAsync` treated a `429` like a transport failure: no wait beyond the interval, and the `Retry-After`
   ignored. It now waits the `Retry-After` (a minimum: the longer of it and the interval), capped at the `expires_in`
   deadline (past it, the `expired_token` of rule 4, nothing sent after), counts the wait as one interval, does not
-  raise the interval and polls again. A single `DevicePollAsync` call raises the §2 `OAuthProtocolError`
-  (`rate_limit_exceeded`) for a `429` that carries the error body, as before for the contract. Tests:
-  `Contract164DevicePollRateLimitTests`, with a recorded sleep.
+  raise the interval and polls again. The status decides, not the body: any `429` on a poll is this wait, and a
+  `429` whose body says `slow_down` does not raise the interval (only the `400` does; C164-04). **A single
+  `DevicePollAsync` now raises the §2 `OAuthProtocolError` (`rate_limit_exceeded`) for a `429` with the error
+  body, as §14.2 rule 9 has required since 1.63; 1.1.1 raised a `NetworkError`, so a hand-rolled loop that
+  catches `NetworkError` around `DevicePollAsync` must also catch `OAuthProtocolError` with
+  `Error == "rate_limit_exceeded"` (C164-22).** Tests: `Contract164DevicePollRateLimitTests`, with a recorded sleep.
+- **A `5xx` on a device poll is a transport failure whatever its body (§14.2 rule 6; C164-03).** AXIAM answers a
+  datastore fault at `/oauth2/token` with `500 {"error":"server_error"}`; the first cut of the change above read that
+  body, raised `OAuthProtocolError("server_error")` and ended an approved flow. The status is now read before the body,
+  as `ciba_poll` does: the poll raises a `NetworkError` and `DeviceLoginAsync` retries it at the same interval.
+- **The `expires_in` deadline is measured on the clock (§14.2 rule 4; C164-05).** It was `expires_in` minus the
+  waits slept, so a slow request or the user-code callback let the loop poll after the real deadline. It is now a
+  point in time taken when the authorization returns; no poll is sent once `now + wait` reaches it.
 - **`plan` refuses an unknown open-enum value with a `ValidationError` (§27.6.2 item 4; C163-07, C163-10).**
   The refusal of 1.1.1 was a `NetworkError`; it is now a `ValidationError` with a `FieldError` per member. The
   message names the member and quotes the value the server sent, which `NetworkReplyProfile` now keeps internally
   (`RawTerminationAction`, `RawServiceType`, set when the response is decoded, never re-sent); where the SDK did not
-  decode the profile itself, it says the value is unknown (contract 1.64 (c)). `ValidationError` derives from
+  decode the profile itself, it says the value is unknown (contract 1.64 (c)). The quoted value is capped at 64
+  characters and a control character is shown as `?` (C164-21). The kept spellings are held in an internal object
+  whose equality is always true, so a decoded profile still equals one built from its public members (C164-23). `ValidationError` derives from
   `NetworkError`, so a `catch (NetworkError)` around `PlanAsync`/`ApplyAsync` still matches.
 - **The cookie-less `/oauth2/*` transport pools its connections (C163-20).** It was built with
   `PooledConnectionLifetime = TimeSpan.Zero`, so every device poll opened a new TLS connection. Requests the SDK

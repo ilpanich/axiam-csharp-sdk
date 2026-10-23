@@ -630,7 +630,7 @@ public sealed class ManifestApi
     /// <c>Unknown</c> is never re-sent (&#167;36.2). Leaving it out would make the server write its default over
     /// a value nobody stated, so <c>plan</c> refuses, before any write, unless the manifest states the member.
     /// </summary>
-    private static void RequireNoUnknownCarried(
+    internal static void RequireNoUnknownCarried(
         ManagementManifest.NetworkProfileSpec spec, NetworkReplyProfile read, ManagementManifest.NetworkSegmentSpec segment)
     {
         var unknown = new List<(string Member, string Value)>();
@@ -661,10 +661,18 @@ public sealed class ManifestApi
     }
 
     /// <summary>The value as the refusal words it: quoted when kept, "this SDK does not know" otherwise.</summary>
-    private static string QuoteRaw(string? raw) =>
-        string.IsNullOrEmpty(raw)
-            ? "this SDK does not know (decoded as Unknown; the value is unknown)"
-            : $"of \"{raw}\", which this SDK does not know (decoded as Unknown)";
+    private static string QuoteRaw(string? raw)
+    {
+        if (string.IsNullOrEmpty(raw))
+        {
+            return "this SDK does not know (decoded as Unknown; the value is unknown)";
+        }
+
+        // Server data in a diagnostic (C164-21): capped, and a control character cannot reach a log line.
+        string shown = raw.Length > 64 ? raw[..64] + "…" : raw;
+        shown = string.Concat(shown.Select(c => char.IsControl(c) ? '?' : c));
+        return $"of \"{shown}\", which this SDK does not know (decoded as Unknown)";
+    }
 
     private static string SegmentLabel(ManagementManifest.NetworkSegmentSpec spec) =>
         $"{spec.Site}/{WireName(spec.Kind)}/{spec.Name}";

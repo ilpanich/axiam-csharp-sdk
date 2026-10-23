@@ -214,7 +214,8 @@ public class OidcDeviceFlowTests
         Func<int> calls = ScriptToken(
             handler,
             () => OAuthError("authorization_pending"),
-            () => OidcTestKit.Empty(HttpStatusCode.InternalServerError),
+            // Contract 1.64 (amended), §14.6: the body AXIAM's token endpoint sends, not a bodiless 500.
+            () => OidcTestKit.JsonStatus(HttpStatusCode.InternalServerError, """{"error":"server_error","error_description":"db"}"""),
             () => OidcTestKit.Empty(HttpStatusCode.ServiceUnavailable),
             TokenSuccess);
 

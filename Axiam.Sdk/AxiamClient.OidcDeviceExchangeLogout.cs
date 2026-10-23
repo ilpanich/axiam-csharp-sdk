@@ -28,6 +28,12 @@ public sealed partial class AxiamClient
     internal Func<TimeSpan, CancellationToken, Task> DevicePollDelay { get; set; } = Task.Delay;
 
     /// <summary>
+    /// The clock the device loop measures the <c>expires_in</c> deadline on (&#167;14.2 rule 4): wall time,
+    /// so a slow request counts against it as well as a wait does. A test substitutes its own.
+    /// </summary>
+    internal TimeProvider DevicePollTime { get; set; } = TimeProvider.System;
+
+    /// <summary>
     /// Polling interval used when the authorization response omits <c>interval</c> (RFC 8628
     /// &#167;3.2, &#167;14.2 rule 2). An SDK MUST NOT hard-code a faster floor.
     /// </summary>
@@ -262,21 +268,25 @@ public sealed partial class AxiamClient
             new DeviceAuthorizeParams(@params.Scope, @params.TenantId, configuration),
             cancellationToken).ConfigureAwait(false);
 
+        // §14.2 rule 4 (C164-05): the deadline is a point on the clock, taken as the authorization returns,
+        // not expires_in minus the waits slept - request time and the user-code callback count too.
+        DateTimeOffset deadline = DevicePollTime.GetUtcNow() + TimeSpan.FromSeconds(authorization.ExpiresIn);
+
         // §14.3 rule 2 — before any polling.
         await @params.OnUserCode(authorization).ConfigureAwait(false);
 
         int intervalSeconds = authorization.Interval;
-        long remainingSeconds = authorization.ExpiresIn;
-        // §14.2 rule 9 (contract 1.64): the wait a `429 rate_limit_exceeded` asked for. A minimum on
-        // the next wait, which replaces that interval's wait rather than adding to it; the interval
-        // itself is not raised.
+
+        // §14.2 rule 9 (contract 1.64): the wait a `429` on a poll asked for. A minimum on the next
+        // wait, which replaces that interval's wait rather than adding to it; the interval itself is
+        // not raised.
         TimeSpan retryAfter = TimeSpan.Zero;
 
         while (true)
         {
             // §14.2 rule 4: the deadline is authoritative. Checking before waiting keeps the SDK
             // from issuing a request that can only be refused, and reports it under the same
-            // expired_token code the server would have used — so a caller's branch does not care
+            // expired_token code the server would have used - so a caller's branch does not care
             // which side noticed first. A Retry-After past the deadline is capped by it: the
             // same expired_token, with nothing sent after the deadline.
             TimeSpan wait = TimeSpan.FromSeconds(intervalSeconds);
@@ -286,14 +296,13 @@ public sealed partial class AxiamClient
             }
 
             retryAfter = TimeSpan.Zero;
-            if (wait.TotalSeconds >= remainingSeconds)
+            if (DevicePollTime.GetUtcNow() + wait >= deadline)
             {
                 throw new OAuthProtocolError(
                     "expired_token",
                     "the device authorization expired before the user completed it " +
                     "(client-side deadline from expires_in; CONTRACT.md §14.2 rule 4)");
             }
-            remainingSeconds -= (long)Math.Ceiling(wait.TotalSeconds);
 
             await DevicePollDelay(wait, cancellationToken).ConfigureAwait(false);
 
@@ -307,17 +316,19 @@ public sealed partial class AxiamClient
             {
                 continue;
             }
-            catch (OAuthProtocolError e) when (e.Error is "slow_down")
+            catch (OAuthProtocolError e) when (e.HttpStatus == 429 || e.Error is "rate_limit_exceeded")
             {
-                // §14.2 rule 1: cumulative, never reset.
-                intervalSeconds += SlowDownIncrementSeconds;
+                // §14.2 rule 9 (contract 1.64, amended): any 429 is this wait, whatever its body names (a
+                // `429 slow_down` from a server before 1.1.2 or an intermediary included). Not terminal,
+                // and not a slow_down: wait Retry-After (a minimum), count it as this interval, leave the
+                // interval alone.
+                retryAfter = e.RetryAfter ?? TimeSpan.Zero;
                 continue;
             }
-            catch (OAuthProtocolError e) when (e.Error is "rate_limit_exceeded")
+            catch (OAuthProtocolError e) when (e.Error is "slow_down")
             {
-                // §14.2 rule 9 (contract 1.64): not terminal, and not a slow_down — wait Retry-After
-                // (a minimum), count it as this interval, leave the interval alone.
-                retryAfter = e.RetryAfter ?? TimeSpan.Zero;
+                // §14.2 rule 1: cumulative, never reset. Only the 400 gets here (rule 9).
+                intervalSeconds += SlowDownIncrementSeconds;
                 continue;
             }
             catch (NetworkError e)

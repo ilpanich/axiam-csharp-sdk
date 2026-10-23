@@ -38,9 +38,15 @@ namespace Axiam.Sdk.Rest;
 /// <b>What is a "write".</b> Every request whose method is not <c>GET</c>, <c>HEAD</c>, <c>OPTIONS</c> or
 /// <c>TRACE</c>, except one marked with <see cref="ConnectionPolicy.MarkRetryEligible"/>: the
 /// side-effect-free <c>POST</c>s that &#167;16 itself retries (<c>authz/check</c>, <c>authz/check/batch</c>,
-/// <c>ciba_poll</c>, <c>ssf.poll</c>). Those stay on the shared pool &#8212; a re-send of a request the SDK
+/// <c>ciba_poll</c>, <c>device_poll</c>, <c>ssf.poll</c>). Those stay on the shared pool &#8212; a re-send of a request the SDK
 /// would retry anyway costs nothing and a connection per authorization check would. The default is the
 /// safe one: a new write the marker was never added to gets the fresh connection.
+/// </para>
+/// <para>
+/// <b>Under <c>/oauth2/*</c></b> (&#167;6.1 rule 11) the same split holds on a second pair of private handlers with
+/// <c>UseCookies = false</c>: a <c>GET</c> or a retry-eligible <c>POST</c> (<c>ciba_poll</c>, <c>device_poll</c>) goes
+/// through a pooled one with the default <see cref="SocketsHttpHandler.PooledConnectionLifetime"/>, every other
+/// write through a fresh-connection one.
 /// </para>
 /// <para>
 /// <b>How.</b> Writes are sent through a second, private <see cref="SocketsHttpHandler"/> whose
@@ -145,13 +151,13 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
         {
             UseCookies = useCookies && UseCookies,
             AllowAutoRedirect = false, // SDK-17: never follow a redirect with the SDK's headers
-            // The point of this handler: a connection is already past its lifetime when it is made,
-            // so it is closed after its exchange and never offered to a later request.
             UseProxy = UseProxy,
         };
 
         if (fresh)
         {
+            // The point of this handler: a connection is already past its lifetime when it is made,
+            // so it is closed after its exchange and never offered to a later request.
             handler.PooledConnectionLifetime = TimeSpan.Zero;
         }
 

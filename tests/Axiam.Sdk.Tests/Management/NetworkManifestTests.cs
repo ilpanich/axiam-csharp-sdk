@@ -458,6 +458,55 @@ public sealed class NetworkManifestTests
         Assert.DoesNotContain("future", put.Body, StringComparison.Ordinal);
     }
 
+    /// <summary>C164-21: the quoted server value is capped at 64 characters and a control character cannot reach the message; with no value kept, the refusal says the value is unknown.</summary>
+    [Fact]
+    public void TheRefusalCapsAndEscapesTheQuotedValueAndSaysUnknownWhenNoneWasKept()
+    {
+        NetworkReplyProfile Read(string? raw) => new()
+        {
+            CreatedAt = DateTimeOffset.UnixEpoch, CreatedBy = Guid.Empty, Dictionary = "d", SegmentId = Guid.Empty,
+            SessionTimeoutClamped = false, SessionTimeoutSecs = 600, TenantId = Guid.Empty,
+            TerminationAction = RadiusTerminationAction.Unknown, UpdatedAt = DateTimeOffset.UnixEpoch,
+            UpdatedBy = Guid.Empty, Version = 1,
+            Raw = new RawEnumSpellings(raw, null),
+        };
+        var spec = new ManagementManifest.NetworkProfileSpec("lab", 900, FilterId: "lab-in");
+
+        ValidationError hostile = Assert.Throws<ValidationError>(
+            () => ManifestApi.RequireNoUnknownCarried(spec, Read("bad\nvalue" + new string('x', 100)), Lab()));
+        Assert.DoesNotContain("bad\nvalue", hostile.Message, StringComparison.Ordinal);
+        Assert.Contains("bad?value", hostile.Message, StringComparison.Ordinal);
+        Assert.Contains("…", hostile.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain(new string('x', 65), hostile.Message, StringComparison.Ordinal);
+
+        ValidationError unknown = Assert.Throws<ValidationError>(
+            () => ManifestApi.RequireNoUnknownCarried(spec, Read(null), Lab()));
+        Assert.Contains("the value is unknown", unknown.Message, StringComparison.Ordinal);
+        Assert.Equal("termination_action", Assert.Single(unknown.Fields).Field);
+    }
+
+    /// <summary>C164-23: the kept spellings are not part of a profile's value equality - a decoded profile equals one built from its public members.</summary>
+    [Fact]
+    public void ADecodedProfileEqualsOneBuiltFromItsPublicMembers()
+    {
+        const string json = """
+            {"created_at":"2026-01-01T00:00:00Z","created_by":"00000000-0000-0000-0000-000000000000","dictionary":"d",
+             "segment_id":"00000000-0000-0000-0000-000000000000","session_timeout_clamped":false,"session_timeout_secs":600,
+             "tenant_id":"00000000-0000-0000-0000-000000000000","termination_action":"future",
+             "updated_at":"2026-01-01T00:00:00Z","updated_by":"00000000-0000-0000-0000-000000000000","version":1}
+            """;
+        JsonElement node = JsonSerializer.Deserialize<JsonElement>(json);
+
+        NetworkReplyProfile decoded = ManagementSupport.Decode<NetworkReplyProfile>("network.get_profile", node);
+        NetworkReplyProfile plain = JsonSerializer.Deserialize<NetworkReplyProfile>(json, ManagementJson.Reader)!;
+
+        Assert.Equal("future", decoded.RawTerminationAction);
+        Assert.Null(plain.RawTerminationAction);
+        Assert.Equal(plain, decoded);
+        Assert.Equal(plain.GetHashCode(), decoded.GetHashCode());
+        Assert.Equal(decoded, decoded with { });
+    }
+
     /// <summary>&#167;27.6.2 item 4: a profile with an unknown open-enum value that nothing differs from is <c>NoChange</c>, not refused, and writes nothing (C163-09: <c>service_type</c> too).</summary>
     [Theory]
     [InlineData("termination_action")]
