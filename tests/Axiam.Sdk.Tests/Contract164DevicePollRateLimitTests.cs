@@ -114,7 +114,11 @@ public class Contract164DevicePollRateLimitTests
         SetUp(expiresIn, interval, requestTime, pollStarts, retry: true, steps);
 
     private static (AxiamClient Client, List<TimeSpan> Sleeps, Func<int> Polls) SetUp(
-        int expiresIn, int interval, TimeSpan requestTime, List<DateTimeOffset> pollStarts, bool retry, params Func<HttpResponseMessage>[] steps)
+        int expiresIn, int interval, TimeSpan requestTime, List<DateTimeOffset> pollStarts, bool retry, params Func<HttpResponseMessage>[] steps) =>
+        SetUp(expiresIn, interval, requestTime, pollStarts, retry, hook: null, steps);
+
+    private static (AxiamClient Client, List<TimeSpan> Sleeps, Func<int> Polls) SetUp(
+        int expiresIn, int interval, TimeSpan requestTime, List<DateTimeOffset> pollStarts, bool retry, TelemetryHook? hook, params Func<HttpResponseMessage>[] steps)
     {
         var time = new FakeTime();
         var handler = new RoutingHandler();
@@ -130,6 +134,7 @@ public class Contract164DevicePollRateLimitTests
         AxiamClient client = OidcTestKit.Client(handler, OidcTestKit.Options(clientSecret: null) with
         {
             RetryEnabled = retry,
+            TelemetryHook = hook,
             RetryBaseDelay = TimeSpan.FromMilliseconds(1),
             RetryMaxDelay = TimeSpan.FromMilliseconds(2),
         });
@@ -298,6 +303,11 @@ public class Contract164DevicePollRateLimitTests
         await client.DeviceLoginAsync(Login());
         Assert.Equal(3, polls());
         Assert.Equal(new[] { 5.0 }, Intervals(sleeps));
+
+        // C164-54: the loop's sleeper served the interval and the two in-poll §16 waits (a few ms each) - a poll that
+        // slept on the real clock instead would record only the interval.
+        Assert.Equal(3, sleeps.Count);
+        Assert.All(sleeps.Skip(1), wait => Assert.True(wait < TimeSpan.FromSeconds(1)));
     }
 
     /// <summary>A third <c>500</c> in a row exhausts the cap: three requests, then <c>DevicePollAsync</c> surfaces the failure.</summary>
@@ -505,8 +515,9 @@ public class Contract164DevicePollRateLimitTests
     public async Task ARetryAfterPastTheDeadlineInsideThePollIsNotServed()
     {
         var pollStarts = new List<DateTimeOffset>();
+        var events = new List<TelemetryEvent>();
         (AxiamClient client, List<TimeSpan> sleeps, Func<int> polls) = SetUp(
-            expiresIn: 30, interval: 5, TimeSpan.Zero, pollStarts, () =>
+            expiresIn: 30, interval: 5, TimeSpan.Zero, pollStarts, retry: true, hook: events.Add, () =>
             {
                 HttpResponseMessage response = OidcTestKit.JsonStatus(
                     HttpStatusCode.ServiceUnavailable, """{"error":"temporarily_unavailable"}""");
@@ -515,12 +526,41 @@ public class Contract164DevicePollRateLimitTests
             });
         DateTimeOffset start = client.DevicePollTime.GetUtcNow();
 
-        OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(() => client.DeviceLoginAsync(Login()));
+        // WaitAsync: a wait served on the real clock would block for minutes; report in 10 s instead.
+        OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(
+            () => client.DeviceLoginAsync(Login()).WaitAsync(TimeSpan.FromSeconds(10)));
 
         Assert.True(error.IsExpiredToken);
         Assert.Equal(1, polls());
         Assert.Equal(new[] { 5.0 }, sleeps.Select(s => s.TotalSeconds).ToArray());
         Assert.All(pollStarts, t => Assert.True(t - start < TimeSpan.FromSeconds(30)));
+        // C164-48: a retry the deadline refused is never announced (§16.5).
+        Assert.DoesNotContain(events, e => e is RetryEvent);
+    }
+
+    /// <summary>
+    /// C164-54, the boundary: <c>expires_in</c> 6, interval 5, a <c>503</c> with <c>Retry-After: 1</c>. Now (t=5) plus the wait
+    /// (1 s) equals the deadline, so the wait is refused: <c>expired_token</c>, one request, no retry announced.
+    /// </summary>
+    [Fact]
+    public async Task AWaitThatEndsExactlyAtTheDeadlineIsRefused()
+    {
+        var events = new List<TelemetryEvent>();
+        (AxiamClient client, _, Func<int> polls) = SetUp(
+            expiresIn: 6, interval: 5, TimeSpan.Zero, new List<DateTimeOffset>(), retry: true, hook: events.Add, () =>
+            {
+                HttpResponseMessage response = OidcTestKit.JsonStatus(
+                    HttpStatusCode.ServiceUnavailable, """{"error":"temporarily_unavailable"}""");
+                response.Headers.RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromSeconds(1));
+                return response;
+            });
+
+        OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(
+            () => client.DeviceLoginAsync(Login()).WaitAsync(TimeSpan.FromSeconds(10)));
+
+        Assert.True(error.IsExpiredToken);
+        Assert.Equal(1, polls());
+        Assert.DoesNotContain(events, e => e is RetryEvent);
     }
 
     /// <summary>

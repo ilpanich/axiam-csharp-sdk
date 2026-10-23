@@ -50,6 +50,10 @@ exception type of the `plan` refusal below narrows to a subclass, so a `catch (N
   (a `200` body that takes 1.5 s, and an `id_token` whose JWKS answers 1.5 s late) and fail against a deadline token armed on
   the real clock. A caller's cancellation during `id_token` or `logout_token` signature verification now propagates as an
   `OperationCanceledException` in every grant, instead of being reported as an invalid signature (tested).
+- **Round 5 (C164-54), tests only.** The in-poll §16 waits are pinned to the loop's sleeper (the interval plus two recorded
+  waits), no `retry` telemetry event is emitted for a wait the deadline refused, and a wait that ends exactly at the deadline is
+  refused; the Retry-After-past-the-deadline test fails in 10 s, not minutes, if the bound is dropped. (The round-4 commit message
+  attributed that guard to the wrong test; this is the test it belongs to.)
 - **The `expires_in` deadline is measured on the clock (§14.2 rule 4; C164-05).** It was `expires_in` minus the
   waits slept, so a slow request or the user-code callback let the loop poll after the real deadline. It is now a
   point in time taken when the authorization returns; no poll is sent once `now + wait` reaches it.
