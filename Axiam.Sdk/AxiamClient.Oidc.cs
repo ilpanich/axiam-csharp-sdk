@@ -1296,13 +1296,31 @@ public sealed partial class AxiamClient
         }
     }
 
-    private async Task<TokenResponseWire> PostTokenAsync(OidcConfiguration configuration, IDictionary<string, string> form, Guid tenantId, CancellationToken cancellationToken)
+    private async Task<TokenResponseWire> PostTokenAsync(
+        OidcConfiguration configuration, IDictionary<string, string> form, Guid tenantId, CancellationToken cancellationToken,
+        bool anyStatusErrors = false, bool retryEligible = false)
     {
         using HttpResponseMessage response = await PostOAuth2FormAsync(
             PreferredRequiredEndpoint(configuration, a => a.TokenEndpoint, configuration.TokenEndpoint),
-            form, tenantId, cancellationToken).ConfigureAwait(false);
+            form, tenantId, cancellationToken, retryEligible).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
+            if (anyStatusErrors)
+            {
+                // §14.2 rule 9 (contract 1.63): the device poll's 429 is the §2 OAuthProtocolError with
+                // `rate_limit_exceeded`; the Retry-After rides along for the loop (contract 1.64).
+                Exception mapped = await MapOAuth2ErrorAnyStatusAsync(response, "oidc token request failed", cancellationToken).ConfigureAwait(false);
+                if (mapped is OAuthProtocolError { RetryAfter: null } protocolError && response.StatusCode == (HttpStatusCode)429)
+                {
+                    throw new OAuthProtocolError(protocolError.Error, protocolError.ErrorDescription)
+                    {
+                        RetryAfter = NetworkError.ParseRetryAfter(response),
+                    };
+                }
+
+                throw mapped;
+            }
+
             throw await MapOAuth2ErrorAsync(response, "oidc token request failed", cancellationToken).ConfigureAwait(false);
         }
         return await ReadOidcJsonAsync<TokenResponseWire>(response, cancellationToken).ConfigureAwait(false);
