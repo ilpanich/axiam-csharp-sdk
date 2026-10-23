@@ -1297,42 +1297,42 @@ public sealed partial class AxiamClient
     }
 
     private async Task<TokenResponseWire> PostTokenAsync(
-        OidcConfiguration configuration, IDictionary<string, string> form, Guid tenantId, CancellationToken cancellationToken,
-        bool anyStatusErrors = false, bool retryEligible = false)
+        OidcConfiguration configuration, IDictionary<string, string> form, Guid tenantId, CancellationToken cancellationToken)
     {
         using HttpResponseMessage response = await PostOAuth2FormAsync(
             PreferredRequiredEndpoint(configuration, a => a.TokenEndpoint, configuration.TokenEndpoint),
-            form, tenantId, cancellationToken, retryEligible).ConfigureAwait(false);
+            form, tenantId, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
-            if (anyStatusErrors)
-            {
-                // §14.2 rule 6 (contract 1.64 amended; C164-03): a 5xx is a transport failure whatever its
-                // body - AXIAM answers an internal failure `500 {"error":"server_error"}` - so the status is
-                // read before the body, as `ciba_poll` does (§34.2 P8).
-                if ((int)response.StatusCode >= 500)
-                {
-                    throw NetworkError.FromResponse(response, "oidc token request failed");
-                }
-
-                // §14.2 rule 9 (contract 1.63): the device poll's 429 is the §2 OAuthProtocolError; the
-                // status and the Retry-After ride along for the loop, which decides on the status (1.64).
-                Exception mapped = await MapOAuth2ErrorAnyStatusAsync(response, "oidc token request failed", cancellationToken).ConfigureAwait(false);
-                if (mapped is OAuthProtocolError protocolError)
-                {
-                    throw new OAuthProtocolError(protocolError.Error, protocolError.ErrorDescription)
-                    {
-                        HttpStatus = (int)response.StatusCode,
-                        RetryAfter = response.StatusCode == (HttpStatusCode)429 ? NetworkError.ParseRetryAfter(response) : null,
-                    };
-                }
-
-                throw mapped;
-            }
-
             throw await MapOAuth2ErrorAsync(response, "oidc token request failed", cancellationToken).ConfigureAwait(false);
         }
         return await ReadOidcJsonAsync<TokenResponseWire>(response, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Maps a non-2xx answer to a device poll (CONTRACT.md &#167;14.2 rules 5, 6 and 9).
+    /// </summary>
+    /// <remarks>
+    /// A <c>5xx</c> is a transport failure whatever its body (rule 6, contract 1.64 amended; C164-03): AXIAM
+    /// answers an internal failure <c>500 {"error":"server_error"}</c>, so the status is read before the body, as
+    /// <c>ciba_poll</c> does (&#167;34.2 P8). Any other status goes by its body, and a <c>429</c> carries its status
+    /// and <c>Retry-After</c> for the polling loop, which decides on the status (rule 9).
+    /// </remarks>
+    private static async Task<Exception> MapDevicePollErrorAsync(HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+        if ((int)response.StatusCode >= 500)
+        {
+            return NetworkError.FromResponse(response, "device poll failed");
+        }
+
+        Exception mapped = await MapOAuth2ErrorAnyStatusAsync(response, "device poll failed", cancellationToken).ConfigureAwait(false);
+        return mapped is OAuthProtocolError protocolError
+            ? new OAuthProtocolError(protocolError.Error, protocolError.ErrorDescription)
+            {
+                HttpStatus = (int)response.StatusCode,
+                RetryAfter = response.StatusCode == (HttpStatusCode)429 ? NetworkError.ParseRetryAfter(response) : null,
+            }
+            : mapped;
     }
 
     /// <summary>

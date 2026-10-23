@@ -62,7 +62,11 @@ public class Contract164DevicePollRateLimitTests
         SetUp(expiresIn, interval, TimeSpan.Zero, new List<DateTimeOffset>(), steps);
 
     private static (AxiamClient Client, List<TimeSpan> Sleeps, Func<int> Polls) SetUp(
-        int expiresIn, int interval, TimeSpan requestTime, List<DateTimeOffset> pollStarts, params Func<HttpResponseMessage>[] steps)
+        int expiresIn, int interval, TimeSpan requestTime, List<DateTimeOffset> pollStarts, params Func<HttpResponseMessage>[] steps) =>
+        SetUp(expiresIn, interval, requestTime, pollStarts, retry: true, steps);
+
+    private static (AxiamClient Client, List<TimeSpan> Sleeps, Func<int> Polls) SetUp(
+        int expiresIn, int interval, TimeSpan requestTime, List<DateTimeOffset> pollStarts, bool retry, params Func<HttpResponseMessage>[] steps)
     {
         var time = new FakeTime();
         var handler = new RoutingHandler();
@@ -75,7 +79,12 @@ public class Contract164DevicePollRateLimitTests
             time.Advance(requestTime);
             return steps[Math.Min(index++, steps.Length - 1)]();
         });
-        AxiamClient client = OidcTestKit.Client(handler, OidcTestKit.Options(clientSecret: null));
+        AxiamClient client = OidcTestKit.Client(handler, OidcTestKit.Options(clientSecret: null) with
+        {
+            RetryEnabled = retry,
+            RetryBaseDelay = TimeSpan.FromMilliseconds(1),
+            RetryMaxDelay = TimeSpan.FromMilliseconds(2),
+        });
         var sleeps = new List<TimeSpan>();
         client.DevicePollTime = time;
         client.DevicePollDelay = (delay, _) =>
@@ -190,6 +199,7 @@ public class Contract164DevicePollRateLimitTests
     /// <summary>
     /// &#167;14.2 rule 6 (contract 1.64 amended; C164-03): a <c>5xx</c> is a transport failure whatever its body. The
     /// mock answers the body the server sends, <c>500 {"error":"server_error",&#8230;}</c>, mid-poll, then the tokens.
+    /// With retry on (the default) each poll retries inside the attempt, so the loop takes no extra interval.
     /// </summary>
     [Fact]
     public async Task A500WithTheServersOwnOAuthBodyIsNotTerminal()
@@ -201,7 +211,90 @@ public class Contract164DevicePollRateLimitTests
 
         Assert.Equal("device-access-token", set.AccessToken.Reveal());
         Assert.Equal(4, polls());
+        Assert.Equal(new[] { 5.0, 5.0 }, sleeps.Select(s => s.TotalSeconds).ToArray());
+    }
+
+    /// <summary>The same with retry disabled: one request per poll, so the loop takes an interval per failure (still not terminal).</summary>
+    [Fact]
+    public async Task WithRetryDisabledA500CostsOneRequestPerPollAndAnInterval()
+    {
+        (AxiamClient client, List<TimeSpan> sleeps, Func<int> polls) = SetUp(
+            expiresIn: 600, interval: 5, TimeSpan.Zero, new List<DateTimeOffset>(), retry: false,
+            Pending, ServerError500, ServerError500, Tokens);
+
+        await client.DeviceLoginAsync(Login());
+
+        Assert.Equal(4, polls());
         Assert.Equal(new[] { 5.0, 5.0, 5.0, 5.0 }, sleeps.Select(s => s.TotalSeconds).ToArray());
+    }
+
+    /// <summary>
+    /// &#167;14.6 (contract 1.64 amended, C164-35): two <c>500</c>s then <c>200</c> - a single poll makes three requests
+    /// and returns the tokens, and <c>DeviceLoginAsync</c> completes within one interval with those three requests.
+    /// </summary>
+    [Fact]
+    public async Task APollRetriesA5xxInsideTheAttemptUnderSection16()
+    {
+        (AxiamClient single, _, Func<int> singlePolls) = SetUp(expiresIn: 600, interval: 5, ServerError500, ServerError500, Tokens);
+        OidcTokenSet set = await single.DevicePollAsync(new DevicePollParams(Sensitive<string>.Wrap(OidcTestKit.DeviceCode)));
+        Assert.Equal("device-access-token", set.AccessToken.Reveal());
+        Assert.Equal(3, singlePolls());
+
+        (AxiamClient client, List<TimeSpan> sleeps, Func<int> polls) = SetUp(expiresIn: 600, interval: 5, ServerError500, ServerError500, Tokens);
+        await client.DeviceLoginAsync(Login());
+        Assert.Equal(3, polls());
+        Assert.Equal(new[] { 5.0 }, sleeps.Select(s => s.TotalSeconds).ToArray());
+    }
+
+    /// <summary>A third <c>500</c> in a row exhausts the cap: three requests, then <c>DevicePollAsync</c> surfaces the failure.</summary>
+    [Fact]
+    public async Task AThirdConsecutive5xxExhaustsTheCapAndIsSurfaced()
+    {
+        (AxiamClient client, _, Func<int> polls) = SetUp(expiresIn: 600, interval: 5, ServerError500);
+
+        NetworkError error = await Assert.ThrowsAsync<NetworkError>(
+            () => client.DevicePollAsync(new DevicePollParams(Sensitive<string>.Wrap(OidcTestKit.DeviceCode))));
+
+        Assert.Equal(500, error.HttpStatus);
+        Assert.Equal(3, polls());
+    }
+
+    /// <summary>A transport failure is retried inside the poll as well.</summary>
+    [Fact]
+    public async Task ATransportFailureIsRetriedInsideThePoll()
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        int attempts = 0;
+        handler.Map(TokenPath, _ => ++attempts < 3 ? throw new HttpRequestException("connection reset") : Tokens());
+        AxiamClient client = OidcTestKit.Client(handler, OidcTestKit.Options(clientSecret: null) with
+        {
+            RetryBaseDelay = TimeSpan.FromMilliseconds(1),
+            RetryMaxDelay = TimeSpan.FromMilliseconds(2),
+        });
+
+        await client.DevicePollAsync(new DevicePollParams(Sensitive<string>.Wrap(OidcTestKit.DeviceCode)));
+
+        Assert.Equal(3, attempts);
+    }
+
+    /// <summary>A <c>429</c> is not retried inside the poll: one request, the wait being the loop's.</summary>
+    [Fact]
+    public async Task A429IsNeverRetriedInsideThePoll()
+    {
+        (AxiamClient client, _, Func<int> polls) = SetUp(expiresIn: 600, interval: 5, () => RateLimited(1), Tokens);
+
+        await Assert.ThrowsAsync<OAuthProtocolError>(
+            () => client.DevicePollAsync(new DevicePollParams(Sensitive<string>.Wrap(OidcTestKit.DeviceCode))));
+
+        Assert.Equal(1, polls());
+
+        // A bodiless 429 as well.
+        (AxiamClient bodiless, _, Func<int> bodilessPolls) = SetUp(
+            expiresIn: 600, interval: 5, () => OidcTestKit.Empty((HttpStatusCode)429), Tokens);
+        await Assert.ThrowsAsync<NetworkError>(
+            () => bodiless.DevicePollAsync(new DevicePollParams(Sensitive<string>.Wrap(OidcTestKit.DeviceCode))));
+        Assert.Equal(1, bodilessPolls());
     }
 
     /// <summary>A single poll on that <c>500</c> is the &#167;2 <c>NetworkError</c>, not an <c>OAuthProtocolError</c>.</summary>

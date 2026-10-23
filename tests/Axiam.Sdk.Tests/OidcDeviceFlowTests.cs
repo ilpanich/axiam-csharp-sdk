@@ -21,6 +21,15 @@ public class OidcDeviceFlowTests
     private const string DeviceAuthPath = "/oauth2/device_authorization";
     private const string TokenPath = "/oauth2/token";
 
+    private sealed class ManualTime : TimeProvider
+    {
+        private DateTimeOffset _now = new(2026, 10, 23, 12, 0, 0, TimeSpan.Zero);
+
+        public override DateTimeOffset GetUtcNow() => _now;
+
+        public void Advance(TimeSpan by) => _now += by;
+    }
+
     /// <summary>A device client: no client secret, per &#167;14.1.</summary>
     private static (RoutingHandler Handler, AxiamClient Client) SetUp(bool withOptionalEndpoints = true)
     {
@@ -196,6 +205,14 @@ public class OidcDeviceFlowTests
         (RoutingHandler handler, AxiamClient client) = SetUp();
         MapAuthorization(handler, expiresIn: 2, interval: 1);
         Func<int> calls = ScriptToken(handler, () => OAuthError("authorization_pending"));
+        // A fake clock moved only by the recorded sleep (C164-33): the test sits on no wall-clock boundary.
+        var time = new ManualTime();
+        client.DevicePollTime = time;
+        client.DevicePollDelay = (delay, _) =>
+        {
+            time.Advance(delay);
+            return Task.CompletedTask;
+        };
 
         OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(
             () => client.DeviceLoginAsync(new DeviceLoginParams(OnUserCode: _ => Task.CompletedTask)));

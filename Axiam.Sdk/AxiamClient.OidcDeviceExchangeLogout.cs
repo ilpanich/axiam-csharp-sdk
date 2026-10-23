@@ -175,9 +175,16 @@ public sealed partial class AxiamClient
     /// <remarks>
     /// <para>
     /// The raw single call, so an application driving its own loop (a UI rendering a countdown,
-    /// say) can. All five RFC 8628 &#167;3.5 answers surface as <see cref="OAuthProtocolError"/> —
-    /// <c>authorization_pending</c> and <c>slow_down</c> included — so a hand-rolled loop sees
-    /// exactly what <see cref="DeviceLoginAsync"/> sees. Most callers want that method.
+    /// say) can. The five RFC 8628 &#167;3.5 answers surface as <see cref="OAuthProtocolError"/> -
+    /// <c>authorization_pending</c> and <c>slow_down</c> included - but a hand-rolled loop does not see
+    /// everything <see cref="DeviceLoginAsync"/> does: a <c>429</c> (<c>rate_limit_exceeded</c>) is an
+    /// <see cref="OAuthProtocolError"/> whose HTTP status and <c>Retry-After</c> are internal to the SDK, so only
+    /// <see cref="DeviceLoginAsync"/> applies &#167;14.2 rule 9 to it (a wait of at least the <c>Retry-After</c>, the
+    /// interval unchanged, even when its body says <c>slow_down</c>). A <c>5xx</c> or transport failure is retried
+    /// within the call under &#167;16 (at most <see cref="Options.AxiamClientOptions.MaxRetryAttempts"/> requests, and
+    /// none when <see cref="Options.AxiamClientOptions.RetryEnabled"/> is off), then surfaced as a
+    /// <see cref="NetworkError"/>; a <c>429</c> is never retried inside the call. Most callers want
+    /// <see cref="DeviceLoginAsync"/>.
     /// </para>
     /// <para>
     /// <b>Client authentication (contract 1.62, &#167;14.1 rules 2 and 3).</b> Every poll sends
@@ -213,9 +220,41 @@ public sealed partial class AxiamClient
         // credential the client was configured with, at the poll as at `device_authorize`.
         AppendOidcClientSecretIfConfigured(form);
 
-        // §16: `device_poll` on a 5xx or transport failure is retried (the loop below re-sends it), so
-        // a re-send is nothing new and the poll may share the cookie-less pool (C163-20).
-        TokenResponseWire wire = await PostTokenAsync(configuration, form, tenantId, cancellationToken, anyStatusErrors: true, retryEligible: true).ConfigureAwait(false);
+        // §14.2 rule 6, §16.2: a 5xx or a transport failure on the poll is retried inside the attempt (at most
+        // MaxRetryAttempts in all), and never a 429, which is the loop's rule-9 wait (C164-25). The 200 is
+        // parsed outside the retry: the server may already have redeemed the device code. It is also what makes
+        // the poll a request the SDK itself re-sends, so it may share the pooled cookie-less connection (C163-20).
+        string endpoint = PreferredRequiredEndpoint(configuration, a => a.TokenEndpoint, configuration.TokenEndpoint);
+        string body = await RetryPolicy.ExecuteAsync(
+            "device_poll",
+            _options,
+            _telemetry,
+            Random.Shared.NextDouble,
+            async _ =>
+            {
+                using HttpResponseMessage response = await PostOAuth2FormAsync(
+                    endpoint, form, tenantId, cancellationToken, retryEligible: true).ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw await MapDevicePollErrorAsync(response, cancellationToken).ConfigureAwait(false);
+                }
+
+                return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            },
+            cancellationToken,
+            retryable: e => e is not Axiam.Sdk.Management.ValidationError && e.HttpStatus is null or >= 500).ConfigureAwait(false);
+
+        TokenResponseWire wire;
+        try
+        {
+            wire = JsonSerializer.Deserialize<TokenResponseWire>(body)
+                   ?? throw NetworkError.FromMessage("the device poll response deserialized to null");
+        }
+        catch (JsonException ex)
+        {
+            throw NetworkError.FromException(ex, "failed to parse the device poll response");
+        }
+
         // No nonce: the device grant has no authorization request to carry one.
         var expectations = new IdTokenExpectations(configuration.Issuer, clientId, HasNonce: false, Nonce: null, _oidcClockSkewSeconds);
         return await ToTokenSetAsync(wire, configuration, expectations, cancellationToken).ConfigureAwait(false);
@@ -239,7 +278,7 @@ public sealed partial class AxiamClient
     /// <see cref="DeviceAuthorization.ExpiresIn"/> even if the server has not yet said
     /// <c>expired_token</c>. A 5xx or transport failure mid-poll is <b>not</b> terminal (rule 6) —
     /// a server restart must not lose a grant the user has already approved. A <c>429</c>
-    /// <c>rate_limit_exceeded</c> is not terminal either (contract 1.64, rule 9): the loop waits its
+    /// (whatever its body names) is not terminal either (contract 1.64, rule 9): the loop waits its
     /// <c>Retry-After</c> (a minimum, capped at the deadline), counts the wait as one interval, does
     /// <b>not</b> raise the interval, and polls again.
     /// </para>
@@ -306,11 +345,22 @@ public sealed partial class AxiamClient
 
             await DevicePollDelay(wait, cancellationToken).ConfigureAwait(false);
 
+            // C164-25: the poll's own §16 retry waits are bounded by the deadline, so a retried poll never
+            // runs past it; reaching it mid-poll is the same typed expired_token (rule 4).
+            using var pollCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            pollCts.CancelAfter(TimeSpan.FromMilliseconds(Math.Max(1, (deadline - DevicePollTime.GetUtcNow()).TotalMilliseconds)));
             try
             {
                 return await DevicePollAsync(
                     new DevicePollParams(authorization.DeviceCode, @params.TenantId, configuration),
-                    cancellationToken).ConfigureAwait(false);
+                    pollCts.Token).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+            {
+                throw new OAuthProtocolError(
+                    "expired_token",
+                    "the device authorization expired before the user completed it " +
+                    "(client-side deadline from expires_in; CONTRACT.md §14.2 rule 4)");
             }
             catch (OAuthProtocolError e) when (e.Error is "authorization_pending")
             {

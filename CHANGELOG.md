@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.2] - 2026-10-23
 
 Contract 1.64 and the 1.63 conformance follow-ups (#110). `CONTRACT.md`, `openapi.json`, `management-registry.json`
-and `proto/` are re-vendored byte for byte from `ilpanich/axiam` `21beda0` (branch `claude/release-1.1.2-w7`; `CONTRACT.md` is the amended 1.64 text, `proto/` is unchanged); the
+and `proto/` are re-vendored byte for byte from `ilpanich/axiam` `b3f8687` (branch `claude/release-1.1.2-w7`; `CONTRACT.md` is the twice-amended 1.64 text, `proto/` is unchanged); the
 §27 surface is regenerated unchanged (202 operations across 29 namespaces). No signature changes: a patch (the
 exception type of the `plan` refusal below narrows to a subclass, so a `catch (NetworkError)` still matches).
 
@@ -30,6 +30,12 @@ exception type of the `plan` refusal below narrows to a subclass, so a `catch (N
   datastore fault at `/oauth2/token` with `500 {"error":"server_error"}`; the first cut of the change above read that
   body, raised `OAuthProtocolError("server_error")` and ended an approved flow. The status is now read before the body,
   as `ciba_poll` does: the poll raises a `NetworkError` and `DeviceLoginAsync` retries it at the same interval.
+- **A `5xx` or transport failure on a device poll is retried inside the attempt under §16 (§14.2 rule 6, §14.6; C164-25).**
+  `DevicePollAsync` sent the poll once, so with retry on (the default) a transient failure cost the loop a whole
+  interval. It now goes through the same §16 runner as `ciba_poll`, retrying only a transport failure or a `5xx`
+  (never a `429`, which is the loop's rule-9 wait), at most `MaxRetryAttempts` requests, none when `RetryEnabled` is
+  off. The `200` is parsed outside the retry, and `DeviceLoginAsync` bounds the retry waits by the `expires_in` deadline.
+  A single `DevicePollAsync` therefore may make up to three requests before it surfaces a `NetworkError`.
 - **The `expires_in` deadline is measured on the clock (§14.2 rule 4; C164-05).** It was `expires_in` minus the
   waits slept, so a slow request or the user-code callback let the loop poll after the real deadline. It is now a
   point in time taken when the authorization returns; no poll is sent once `now + wait` reaches it.
@@ -50,6 +56,8 @@ exception type of the `plan` refusal below narrows to a subclass, so a `catch (N
 
 ### Tests
 
+- C164-32/33: the `DevicePollAsync` and `DeviceLoginAsync` remarks say what a hand-rolled loop does not see (a `429`'s status and
+  `Retry-After` are internal); the `StopsAtExpiresIn` test now runs on a fake clock instead of a wall-clock boundary.
 - C163-08: `Contract163OAuth2NoCookieTests` gains a real `AxiamClient` over a loopback server whose login sets
   `axiam_access` and `axiam_csrf`: `LoginAsync`, then the device authorization, the device poll and a token call
   carry neither `Cookie` nor `X-CSRF-Token`, then a management `POST` carries both (full-path lookup).
