@@ -44,6 +44,12 @@ exception type of the `plan` refusal below narrows to a subclass, so a `catch (N
   at once (so `Retry-After: 120` with 30 s left costs no 120 s sleep), and the request in flight keeps the caller's own
   token. Tests: a `200` arriving after the deadline returns the token set; `Retry-After` past the deadline inside the
   poll is not served; a `200` that does not parse is one request, not a retry (C164-41).
+- **Round 4 (C164-46, C164-48).** `DeviceLoginAsync` serves the in-poll §16 waits on the same sleeper and clock as its own
+  (`DevicePollDelay`, `DevicePollTime`), and refuses a wait that would reach the deadline *before* the `retry` telemetry
+  event announces it, so no retry is reported that is never sent. The C164-40 tests now cross the deadline in real time
+  (a `200` body that takes 1.5 s, and an `id_token` whose JWKS answers 1.5 s late) and fail against a deadline token armed on
+  the real clock. A caller's cancellation during `id_token` or `logout_token` signature verification now propagates as an
+  `OperationCanceledException` in every grant, instead of being reported as an invalid signature (tested).
 - **The `expires_in` deadline is measured on the clock (§14.2 rule 4; C164-05).** It was `expires_in` minus the
   waits slept, so a slow request or the user-code callback let the loop poll after the real deadline. It is now a
   point in time taken when the authorization returns; no poll is sent once `now + wait` reaches it.

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text;
 using System.Net.Http.Headers;
 using Axiam.Sdk;
 using Axiam.Sdk.Auth.Oidc;
@@ -40,6 +41,53 @@ public class Contract164DevicePollRateLimitTests
     /// <summary>What AXIAM's token endpoint answers an internal failure (contract 1.64 amended, §14.2 rule 6).</summary>
     private static HttpResponseMessage ServerError500() =>
         OidcTestKit.JsonStatus(HttpStatusCode.InternalServerError, """{"error":"server_error","error_description":"db"}""");
+
+    /// <summary>A response body whose first read takes 1.5 s of real time and honours the token, as a socket read does.</summary>
+    private sealed class SlowBody(byte[] bytes, Action onDelivered) : Stream
+    {
+        private int _position;
+
+        public override bool CanRead => true;
+
+        public override bool CanSeek => false;
+
+        public override bool CanWrite => false;
+
+        public override long Length => throw new NotSupportedException();
+
+        public override long Position
+        {
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
+        }
+
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            if (_position >= bytes.Length)
+            {
+                return 0;
+            }
+
+            await Task.Delay(1500, cancellationToken).ConfigureAwait(false);
+            int count = Math.Min(buffer.Length, bytes.Length - _position);
+            bytes.AsMemory(_position, count).CopyTo(buffer);
+            _position += count;
+            onDelivered();
+            return count;
+        }
+
+        public override int Read(byte[] buffer, int offset, int count) => ReadAsync(buffer.AsMemory(offset, count)).AsTask().GetAwaiter().GetResult();
+
+        public override void Flush()
+        {
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+
+        public override void SetLength(long value) => throw new NotSupportedException();
+
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+    }
 
     private static HttpResponseMessage Pending() =>
         OidcTestKit.JsonStatus(HttpStatusCode.BadRequest, OidcTestKit.OAuth2ErrorJson("authorization_pending", "pending"));
@@ -96,6 +144,10 @@ public class Contract164DevicePollRateLimitTests
         return (client, sleeps, () => index);
     }
 
+    /// <summary>The loop's own waits: the in-poll &#167;16 backoff (a few ms) is recorded by the same sleeper and left out.</summary>
+    private static double[] Intervals(List<TimeSpan> sleeps) =>
+        sleeps.Where(s => s >= TimeSpan.FromSeconds(1)).Select(s => s.TotalSeconds).ToArray();
+
     private static DeviceLoginParams Login() => new(OnUserCode: _ => Task.CompletedTask);
 
     /// <summary>
@@ -149,7 +201,9 @@ public class Contract164DevicePollRateLimitTests
         (AxiamClient client, List<TimeSpan> sleeps, Func<int> polls) = SetUp(
             expiresIn: 30, interval: 5, () => RateLimited(120), Tokens);
 
-        OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(() => client.DeviceLoginAsync(Login()));
+        // WaitAsync: a wait served on the real clock instead of refused would block for 120 s; fail fast instead.
+        OAuthProtocolError error = await Assert.ThrowsAsync<OAuthProtocolError>(
+            () => client.DeviceLoginAsync(Login()).WaitAsync(TimeSpan.FromSeconds(10)));
 
         Assert.True(error.IsExpiredToken);
         Assert.Equal(1, polls());
@@ -211,7 +265,7 @@ public class Contract164DevicePollRateLimitTests
 
         Assert.Equal("device-access-token", set.AccessToken.Reveal());
         Assert.Equal(4, polls());
-        Assert.Equal(new[] { 5.0, 5.0 }, sleeps.Select(s => s.TotalSeconds).ToArray());
+        Assert.Equal(new[] { 5.0, 5.0 }, Intervals(sleeps));
     }
 
     /// <summary>The same with retry disabled: one request per poll, so the loop takes an interval per failure (still not terminal).</summary>
@@ -243,7 +297,7 @@ public class Contract164DevicePollRateLimitTests
         (AxiamClient client, List<TimeSpan> sleeps, Func<int> polls) = SetUp(expiresIn: 600, interval: 5, ServerError500, ServerError500, Tokens);
         await client.DeviceLoginAsync(Login());
         Assert.Equal(3, polls());
-        Assert.Equal(new[] { 5.0 }, sleeps.Select(s => s.TotalSeconds).ToArray());
+        Assert.Equal(new[] { 5.0 }, Intervals(sleeps));
     }
 
     /// <summary>A third <c>500</c> in a row exhausts the cap: three requests, then <c>DevicePollAsync</c> surfaces the failure.</summary>
@@ -329,22 +383,118 @@ public class Contract164DevicePollRateLimitTests
     }
 
     /// <summary>
-    /// C164-40: the deadline governs the waits and the decision to send, not a request already sent. A poll sent before the
-    /// deadline whose <c>200</c> arrives after it still returns the token set - the server has redeemed the code.
+    /// A client whose deadline runs on a fake clock but whose server answers in real time: with <c>expires_in</c> 6 and
+    /// interval 5, one second is left when the poll is sent. <paramref name="token"/> and <paramref name="jwks"/> answer after
+    /// the real delays they name, and move the fake clock past the deadline.
+    /// </summary>
+    private static (AxiamClient Client, FakeTime Time) SetUpSlowServer(
+        Func<HttpResponseMessage> token, Func<HttpResponseMessage>? jwks = null)
+    {
+        var time = new FakeTime();
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        handler.Map(DeviceAuthPath, _ => OidcTestKit.JsonOk(OidcTestKit.DeviceAuthorizationJson(expiresIn: 6, interval: 5)));
+        handler.Map(TokenPath, _ => token());
+        if (jwks is not null)
+        {
+            handler.Map("/oauth2/jwks", _ => jwks());
+        }
+
+        AxiamClient client = OidcTestKit.Client(handler, OidcTestKit.Options(clientSecret: null));
+        client.DevicePollTime = time;
+        client.DevicePollDelay = (delay, _) =>
+        {
+            time.Advance(delay);
+            return Task.CompletedTask;
+        };
+        return (client, time);
+    }
+
+    /// <summary>
+    /// C164-40 / C164-46: the deadline governs the waits and the decision to send, not a request already sent. The poll is
+    /// sent with one second left, and the <c>200</c> arrives 1.5 s of <b>real</b> time later, after the deadline. The tokens are
+    /// returned. (A deadline token armed on the real clock cancels the read at 1 s and fails this test.)
     /// </summary>
     [Fact]
     public async Task A200ThatArrivesAfterTheDeadlineStillReturnsTheTokens()
     {
-        var pollStarts = new List<DateTimeOffset>();
-        (AxiamClient client, _, Func<int> polls) = SetUp(
-            expiresIn: 30, interval: 5, TimeSpan.FromSeconds(40), pollStarts, Tokens);
-        DateTimeOffset start = client.DevicePollTime.GetUtcNow();
+        FakeTime? clock = null;
+        (AxiamClient client, FakeTime time) = SetUpSlowServer(() => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            // Headers at once; the body takes 1.5 s of real time, and the fake clock passes the deadline with it.
+            Content = new StreamContent(new SlowBody(Encoding.UTF8.GetBytes(Tokens().Content.ReadAsStringAsync().Result), () => clock!.Advance(TimeSpan.FromSeconds(2))))
+            {
+                Headers = { ContentType = new MediaTypeHeaderValue("application/json") },
+            },
+        });
+        clock = time;
+        DateTimeOffset start = time.GetUtcNow();
 
         OidcTokenSet set = await client.DeviceLoginAsync(Login());
 
         Assert.Equal("device-access-token", set.AccessToken.Reveal());
-        Assert.Equal(1, polls());
-        Assert.True(client.DevicePollTime.GetUtcNow() - start > TimeSpan.FromSeconds(30));
+        Assert.True(time.GetUtcNow() - start > TimeSpan.FromSeconds(6));
+    }
+
+    /// <summary>
+    /// C164-46, the variant with an <c>id_token</c>: the <c>200</c> is on time, but the JWKS fetch that verifies its
+    /// <c>id_token</c> answers 1.5 s of real time later, after the deadline. The token set, <c>id_token</c> verified, is returned.
+    /// </summary>
+    [Fact]
+    public async Task AnIdTokenWhoseJwksArrivesAfterTheDeadlineIsStillVerifiedAndReturned()
+    {
+        var jwks = new JwksFixture();
+        string origin = OidcTestKit.BaseUrl.ToString().TrimEnd('/');
+        string idToken = jwks.SignIdToken(new
+        {
+            iss = origin,
+            sub = Guid.NewGuid().ToString(),
+            aud = OidcTestKit.ClientId,
+            exp = DateTimeOffset.UtcNow.AddMinutes(15).ToUnixTimeSeconds(),
+            iat = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+        });
+        (AxiamClient client, _) = SetUpSlowServer(
+            () => OidcTestKit.JsonOk(OidcTestKit.TokenResponseJson("device-access-token", idToken: idToken)),
+            () =>
+            {
+                Thread.Sleep(1500);
+                return OidcTestKit.JsonOk(jwks.BuildJwksDocument());
+            });
+
+        OidcTokenSet set = await client.DeviceLoginAsync(Login());
+
+        Assert.Equal("device-access-token", set.AccessToken.Reveal());
+        Assert.NotNull(set.IdToken);
+    }
+
+    /// <summary>
+    /// The verifier rethrows a caller's own cancellation instead of reporting a bad signature (C164-40, C164-46): a JWKS
+    /// fetch the caller cancels is an <see cref="OperationCanceledException"/>, not an <see cref="AuthError"/>.
+    /// </summary>
+    [Fact]
+    public async Task ACallersCancellationDuringIdTokenVerificationIsNotAnInvalidSignature()
+    {
+        var jwks = new JwksFixture();
+        string idToken = jwks.SignIdToken(new
+        {
+            iss = OidcTestKit.BaseUrl.ToString().TrimEnd('/'),
+            sub = Guid.NewGuid().ToString(),
+            aud = OidcTestKit.ClientId,
+            exp = DateTimeOffset.UtcNow.AddMinutes(15).ToUnixTimeSeconds(),
+            iat = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+        });
+        using var cts = new CancellationTokenSource();
+        (AxiamClient client, _) = SetUpSlowServer(
+            () => OidcTestKit.JsonOk(OidcTestKit.TokenResponseJson("device-access-token", idToken: idToken)),
+            () =>
+            {
+                cts.Cancel();
+                Thread.Sleep(200);
+                return OidcTestKit.JsonOk(jwks.BuildJwksDocument());
+            });
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            () => client.DevicePollAsync(new DevicePollParams(Sensitive<string>.Wrap(OidcTestKit.DeviceCode)), cts.Token));
     }
 
     /// <summary>

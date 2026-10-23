@@ -252,9 +252,16 @@ public sealed partial class AxiamClient
             },
             cancellationToken,
             retryable: e => e is not Axiam.Sdk.Management.ValidationError && e.HttpStatus is null or >= 500,
-            delay: (wait, ct) => deadline is { } limit && DevicePollTime.GetUtcNow() + wait >= limit
-                ? throw ExpiredDeviceAuthorization()
-                : Task.Delay(wait, ct)).ConfigureAwait(false);
+            // The deadline governs the §16 waits (a wait that would reach it is refused before it is announced
+            // or served), on the same clock and sleeper as the loop (C164-48).
+            delay: deadline is null ? null : DevicePollDelay,
+            beforeWait: deadline is not { } limit ? null : wait =>
+            {
+                if (DevicePollTime.GetUtcNow() + wait >= limit)
+                {
+                    throw ExpiredDeviceAuthorization();
+                }
+            }).ConfigureAwait(false);
 
         TokenResponseWire wire;
         try

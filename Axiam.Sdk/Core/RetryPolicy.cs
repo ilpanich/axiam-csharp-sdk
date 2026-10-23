@@ -203,7 +203,8 @@ internal static class RetryPolicy
         Func<int, Task<T>> operation,
         CancellationToken cancellationToken,
         Func<NetworkError, bool>? retryable = null,
-        Func<TimeSpan, CancellationToken, Task>? delay = null)
+        Func<TimeSpan, CancellationToken, Task>? delay = null,
+        Action<TimeSpan>? beforeWait = null)
     {
         int attempts = options.RetryEnabled ? EffectiveMaxAttempts(options) : 1;
 
@@ -225,6 +226,10 @@ internal static class RetryPolicy
                     jitter(),
                     EffectiveBaseDelay(options),
                     EffectiveMaxDelay(options));
+
+                // A caller's veto (the device poll's deadline, C164-48): it may refuse the wait, by throwing, before
+                // the event announces a retry that will never be sent.
+                beforeWait?.Invoke(wait);
 
                 // §16.5 — without this event a retried-then-succeeded call is
                 // invisible: a slow success with no signal the server is failing.
