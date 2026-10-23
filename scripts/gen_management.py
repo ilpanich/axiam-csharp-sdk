@@ -297,8 +297,9 @@ PRECHECK_TEST_BODIES: dict[str, str] = {
 # Models generated `partial`, so a hand-written file can add members to them
 # (`ParseSamlSpMetadata.FromUrl` / `FromXml`, and `ScimTargetResponse`'s and
 # `SsfStream`'s `updated_at` exactly as read for §31.3 rule 4 and §32.2,
-# Axiam.Sdk/Management/ManagementChecks.cs).
-PARTIAL_RECORDS = {"ParseSamlSpMetadata", "ScimTargetResponse", "SsfStream"}
+# Axiam.Sdk/Management/ManagementChecks.cs). `NetworkReplyProfile` keeps the wire spelling of its
+# two open enumerations for the §27.6.2 item 4 refusal (contract 1.64 (c)).
+PARTIAL_RECORDS = {"ParseSamlSpMetadata", "ScimTargetResponse", "SsfStream", "NetworkReplyProfile"}
 
 
 def note_xml(text: str) -> str:

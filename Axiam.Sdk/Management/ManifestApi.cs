@@ -633,27 +633,38 @@ public sealed class ManifestApi
     private static void RequireNoUnknownCarried(
         ManagementManifest.NetworkProfileSpec spec, NetworkReplyProfile read, ManagementManifest.NetworkSegmentSpec segment)
     {
-        var unknown = new List<string>();
+        var unknown = new List<(string Member, string Value)>();
         if (spec.TerminationAction is null && read.TerminationAction == RadiusTerminationAction.Unknown)
         {
-            unknown.Add("termination_action");
+            unknown.Add(("termination_action", QuoteRaw(read.RawTerminationAction)));
         }
 
         if (spec.ServiceType is null && read.ServiceType == RadiusServiceType.Unknown)
         {
-            unknown.Add("service_type");
+            unknown.Add(("service_type", QuoteRaw(read.RawServiceType)));
         }
 
         if (unknown.Count > 0)
         {
-            throw NetworkError.FromMessage(
+            string label = SegmentLabel(segment);
+            // CONTRACT.md §27.6.2 item 4 (contract 1.64 (c), C163-07): the refusal is a ValidationError
+            // naming the member; the value is quoted where this SDK kept it, else said to be unknown.
+            throw new ValidationError(
                 "this manifest cannot be reconciled:\n  - " + string.Join("\n  - ", unknown.Select(
-                    member => $"network profile of segment '{SegmentLabel(segment)}' has a {member} this SDK does not " +
-                              "know (decoded as Unknown); updating it without stating the member would make the server " +
-                              "write its default over it. State the member in the manifest to replace it")) +
-                "\n\nNothing was written: §27.6.2 item 4 refuses it at plan.");
+                    u => $"network profile of segment '{label}' has a {u.Member} {u.Value}; updating it " +
+                         "without stating the member would make the server write its default over it. " +
+                         "State the member in the manifest to replace it")) +
+                "\n\nNothing was written: §27.6.2 item 4 refuses it at plan.",
+                unknown.Select(u => new FieldError(
+                    u.Member, $"network profile of segment '{label}': {u.Member} {u.Value}")).ToList());
         }
     }
+
+    /// <summary>The value as the refusal words it: quoted when kept, "this SDK does not know" otherwise.</summary>
+    private static string QuoteRaw(string? raw) =>
+        string.IsNullOrEmpty(raw)
+            ? "this SDK does not know (decoded as Unknown; the value is unknown)"
+            : $"of \"{raw}\", which this SDK does not know (decoded as Unknown)";
 
     private static string SegmentLabel(ManagementManifest.NetworkSegmentSpec spec) =>
         $"{spec.Site}/{WireName(spec.Kind)}/{spec.Name}";

@@ -67,6 +67,7 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
     private readonly object _gate = new();
     private HttpMessageInvoker? _writes;
     private HttpMessageInvoker? _cookieless;
+    private HttpMessageInvoker? _cookielessPooled;
     private bool _disposed;
 
     /// <summary>Builds the handler; the TLS inputs are the ones <see cref="AxiamHttpClientFactory.CreatePrimaryHandler"/> parsed.</summary>
@@ -92,9 +93,13 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
             {
                 request.Content ??= new ByteArrayContent(Array.Empty<byte>());
                 request.Headers.ConnectionClose = true;
+                return CookielessInvoker(fresh: true).SendAsync(request, cancellationToken);
             }
 
-            return CookielessInvoker().SendAsync(request, cancellationToken);
+            // A retry-eligible request (the device poll's token call among them, §14.2) is a request the
+            // SDK itself would re-send, so it may share a pooled connection: a poll every few seconds
+            // need not pay a TLS handshake each time (C163-20).
+            return CookielessInvoker(fresh: false).SendAsync(request, cancellationToken);
         }
 
         if (!ConnectionPolicy.NeedsFreshConnection(request))
@@ -120,19 +125,21 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
         }
     }
 
-    private HttpMessageInvoker CookielessInvoker()
+    private HttpMessageInvoker CookielessInvoker(bool fresh)
     {
         lock (_gate)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            return _cookieless ??= new HttpMessageInvoker(BuildWriteHandler(useCookies: false), disposeHandler: true);
+            return fresh
+                ? _cookieless ??= new HttpMessageInvoker(BuildWriteHandler(useCookies: false), disposeHandler: true)
+                : _cookielessPooled ??= new HttpMessageInvoker(BuildWriteHandler(useCookies: false, fresh: false), disposeHandler: true);
         }
     }
 
     // Built on the first write rather than in the constructor so it mirrors the handler's state at
     // that moment: UseCookies and CookieContainer are changed after construction by the sessionless
     // client (UseCookies = false), and a SocketsHttpHandler refuses to change once it has sent.
-    private SocketsHttpHandler BuildWriteHandler(bool useCookies = true)
+    private SocketsHttpHandler BuildWriteHandler(bool useCookies = true, bool fresh = true)
     {
         var handler = new SocketsHttpHandler
         {
@@ -140,9 +147,13 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
             AllowAutoRedirect = false, // SDK-17: never follow a redirect with the SDK's headers
             // The point of this handler: a connection is already past its lifetime when it is made,
             // so it is closed after its exchange and never offered to a later request.
-            PooledConnectionLifetime = TimeSpan.Zero,
             UseProxy = UseProxy,
         };
+
+        if (fresh)
+        {
+            handler.PooledConnectionLifetime = TimeSpan.Zero;
+        }
 
         if (handler.UseCookies)
         {
@@ -188,6 +199,8 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
                 _writes = null;
                 _cookieless?.Dispose();
                 _cookieless = null;
+                _cookielessPooled?.Dispose();
+                _cookielessPooled = null;
             }
         }
 

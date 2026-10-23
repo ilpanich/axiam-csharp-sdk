@@ -436,10 +436,15 @@ public sealed class NetworkManifestTests
             },
         };
 
-        // Another member differs and the unknown one is not stated: refused, naming the member, no write.
-        NetworkError refused = await Assert.ThrowsAsync<NetworkError>(() => Manifest(client).PlanAsync(Changing()));
+        // Another member differs and the unknown one is not stated: refused, naming the member and quoting the
+        // value this SDK kept (contract 1.64 (c), C163-07 and C163-10), as a ValidationError with a FieldError.
+        ValidationError refused = await Assert.ThrowsAsync<ValidationError>(() => Manifest(client).PlanAsync(Changing()));
         Assert.Contains(member, refused.Message, StringComparison.Ordinal);
-        await Assert.ThrowsAsync<NetworkError>(() => Manifest(client).ApplyAsync(Changing()));
+        string kept = member == "termination_action" ? "future" : "future_service";
+        Assert.Contains($"\"{kept}\"", refused.Message, StringComparison.Ordinal);
+        FieldError field = Assert.Single(refused.Fields);
+        Assert.Equal(member, field.Field);
+        await Assert.ThrowsAsync<ValidationError>(() => Manifest(client).ApplyAsync(Changing()));
         Assert.DoesNotContain(fake.Requests, r => r.Method != "GET");
 
         // Stating the member resolves it: an Update whose body carries the stated value, never the unknown one.
@@ -453,13 +458,23 @@ public sealed class NetworkManifestTests
         Assert.DoesNotContain("future", put.Body, StringComparison.Ordinal);
     }
 
-    /// <summary>&#167;27.6.2 item 4: a profile with an unknown open-enum value that nothing differs from is <c>NoChange</c>, not refused, and writes nothing.</summary>
-    [Fact]
-    public async Task AnUnknownOpenEnumValueIsNotRefusedWhenNothingDiffers()
+    /// <summary>&#167;27.6.2 item 4: a profile with an unknown open-enum value that nothing differs from is <c>NoChange</c>, not refused, and writes nothing (C163-09: <c>service_type</c> too).</summary>
+    [Theory]
+    [InlineData("termination_action")]
+    [InlineData("service_type")]
+    public async Task AnUnknownOpenEnumValueIsNotRefusedWhenNothingDiffers(string member)
     {
         var fake = new NetworkFake();
         Guid id = fake.SeedSegment("hq", "access", "lab", vlan: 20, rank: 1, filters: new[] { "lab-in", "lab-out" });
-        fake.SeedProfile(id, timeout: 600, filter: "lab-in", termination: "future");
+        if (member == "termination_action")
+        {
+            fake.SeedProfile(id, timeout: 600, filter: "lab-in", termination: "future");
+        }
+        else
+        {
+            fake.SeedProfile(id, timeout: 600, filter: "lab-in", service: "future_service");
+        }
+
         using AxiamClient client = BuildClient(fake);
 
         var manifest = new ManagementManifest

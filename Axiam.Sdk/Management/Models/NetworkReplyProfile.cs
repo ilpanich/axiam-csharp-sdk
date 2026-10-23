@@ -16,7 +16,7 @@ namespace Axiam.Sdk.Management.Models;
 /// already clamped to the tenant's current cap (design note §3.4) and <c>Idle-Timeout</c> kept
 /// within it.
 /// </summary>
-public sealed record NetworkReplyProfile
+public sealed partial record NetworkReplyProfile
 {
     /// <summary>
     /// Creation time.
