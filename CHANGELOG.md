@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.2] - 2026-10-23
 
 Contract 1.64 and the 1.63 conformance follow-ups (#110). `CONTRACT.md`, `openapi.json`, `management-registry.json`
-and `proto/` are re-vendored byte for byte from `ilpanich/axiam` `b3f8687` (branch `claude/release-1.1.2-w7`; `CONTRACT.md` is the twice-amended 1.64 text, `proto/` is unchanged); the
+and `proto/` are re-vendored byte for byte from `ilpanich/axiam` `356a6da` (platform PR #793 merge; `CONTRACT.md` is the twice-amended 1.64 text, `proto/` is unchanged); the
 §27 surface is regenerated unchanged (202 operations across 29 namespaces). No signature changes: a patch (the
 exception type of the `plan` refusal below narrows to a subclass, so a `catch (NetworkError)` still matches).
 
