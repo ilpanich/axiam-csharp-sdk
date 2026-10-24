@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.1.1/apiSpec/new?filename=Axiam_Sdk_Rest_AxiamHttpClientFactory.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Rest.AxiamHttpClientFactory%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.1.2/apiSpec/new?filename=Axiam_Sdk_Rest_AxiamHttpClientFactory.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Rest.AxiamHttpClientFactory%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Rest_AxiamHttpClientFactory" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory" class="text-break">
-Class AxiamHttpClientFactory  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.1/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L17"><i class="bi bi-code-slash"></i></a>
+Class AxiamHttpClientFactory  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.2/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -161,7 +161,7 @@ can never silently drop either guarantee (client-override safety, Java D-27 anal
 
   <h3 id="Axiam_Sdk_Rest_AxiamHttpClientFactory_ConfigureFactoryHandler_System_Net_Http_SocketsHttpHandler_System_Byte___System_Byte___" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.ConfigureFactoryHandler(System.Net.Http.SocketsHttpHandler,System.Byte[],System.Byte[])">
   ConfigureFactoryHandler(SocketsHttpHandler, byte[]?, byte[]?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.1/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L177"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.2/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L186"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Re-applies the SDK's cookie jar (§4) and pooled-connection lifetime settings
@@ -198,6 +198,15 @@ otherwise weakens server verification.</p>
 
 
 
+  <h4 class="section" id="Axiam_Sdk_Rest_AxiamHttpClientFactory_ConfigureFactoryHandler_System_Net_Http_SocketsHttpHandler_System_Byte___System_Byte____remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><b>A hand-composed handler owns its jar (CONTRACT.md §6.1 rule 11, §12.1 rule 3).</b>
+<code>X-CSRF-Token</code> is withheld from <code>/oauth2/<em></em></code> in every composition; the <code>axiam_</code> cookie is
+withheld only by the cookie-less transport that the SDK's own primary handler builds. A
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.socketshttphandler">SocketsHttpHandler</a> composed by hand and registered through <code>IHttpClientFactory</code> is sent
+every request as it stands: with <code>UseCookies = true</code> (as this method sets it) its jar rides along on an
+<code>/oauth2/*</code> request too, and the SDK cannot withhold it per request. A caller that must keep the cookie
+off those endpoints composes a second, <code>UseCookies = false</code> handler for them.</p>
+</div>
 
 
 
@@ -206,7 +215,7 @@ otherwise weakens server verification.</p>
 
   <h3 id="Axiam_Sdk_Rest_AxiamHttpClientFactory_CreateOwned_System_Byte___" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.CreateOwned(System.Byte[])">
   CreateOwned(byte[]?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.1/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.2/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L24"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates the SDK's own, owned <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a> over a fresh
@@ -245,7 +254,7 @@ otherwise weakens server verification.</p>
 
   <h3 id="Axiam_Sdk_Rest_AxiamHttpClientFactory_CreateOwned_System_Byte___System_Byte___System_Byte___" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.CreateOwned(System.Byte[],System.Byte[],System.Byte[])">
   CreateOwned(byte[]?, byte[]?, byte[]?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.1/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.2/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L31"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>mTLS overload of <a class="xref" href="Axiam.Sdk.Rest.AxiamHttpClientFactory.html#Axiam_Sdk_Rest_AxiamHttpClientFactory_CreateOwned_System_Byte___">CreateOwned(byte[]?)</a> (CONTRACT.md §6.1): builds the
@@ -288,7 +297,7 @@ client-certificate identity for mutual-TLS client authentication.</p>
 
   <h3 id="Axiam_Sdk_Rest_AxiamHttpClientFactory_CreatePrimaryHandler_System_Byte___System_Byte___System_Byte___" data-uid="Axiam.Sdk.Rest.AxiamHttpClientFactory.CreatePrimaryHandler(System.Byte[],System.Byte[],System.Byte[])">
   CreatePrimaryHandler(byte[]?, byte[]?, byte[]?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.1/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L56"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.2/Axiam.Sdk/Rest/AxiamHttpClientFactory.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds the primary <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclienthandler">HttpClientHandler</a> with <code>UseCookies = true</code>
