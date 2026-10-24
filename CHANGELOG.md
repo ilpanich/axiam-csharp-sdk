@@ -7,6 +7,80 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-10-23
+
+Contract 1.64 and the 1.63 conformance follow-ups (#110). `CONTRACT.md`, `openapi.json`, `management-registry.json`
+and `proto/` are re-vendored byte for byte from `ilpanich/axiam` `356a6da` (platform PR #793 merge; `CONTRACT.md` is the twice-amended 1.64 text, `proto/` is unchanged); the
+§27 surface is regenerated unchanged (202 operations across 29 namespaces). No signature changes: a patch (the
+exception type of the `plan` refusal below narrows to a subclass, so a `catch (NetworkError)` still matches).
+
+### Fixed
+
+- **A `429 rate_limit_exceeded` on a device poll is waited out (§14.2 rule 9, §14.6; contract 1.64 item (b)).**
+  `DeviceLoginAsync` treated a `429` like a transport failure: no wait beyond the interval, and the `Retry-After`
+  ignored. It now waits the `Retry-After` (a minimum: the longer of it and the interval), capped at the `expires_in`
+  deadline (past it, the `expired_token` of rule 4, nothing sent after), counts the wait as one interval, does not
+  raise the interval and polls again. The status decides, not the body: any `429` on a poll is this wait, and a
+  `429` whose body says `slow_down` does not raise the interval (only the `400` does; C164-04). **A single
+  `DevicePollAsync` now raises the §2 `OAuthProtocolError` (`rate_limit_exceeded`) for a `429` with the error
+  body, as §14.2 rule 9 has required since 1.63; 1.1.1 raised a `NetworkError`, so a hand-rolled loop that
+  catches `NetworkError` around `DevicePollAsync` must also catch `OAuthProtocolError` with
+  `Error == "rate_limit_exceeded"` (C164-22).** Tests: `Contract164DevicePollRateLimitTests`, with a recorded sleep.
+- **A `5xx` on a device poll is a transport failure whatever its body (§14.2 rule 6; C164-03).** AXIAM answers a
+  datastore fault at `/oauth2/token` with `500 {"error":"server_error"}`; the first cut of the change above read that
+  body, raised `OAuthProtocolError("server_error")` and ended an approved flow. The status is now read before the body,
+  as `ciba_poll` does: the poll raises a `NetworkError` and `DeviceLoginAsync` retries it at the same interval.
+- **A `5xx` or transport failure on a device poll is retried inside the attempt under §16 (§14.2 rule 6, §14.6; C164-25).**
+  `DevicePollAsync` sent the poll once, so with retry on (the default) a transient failure cost the loop a whole
+  interval. It now goes through the same §16 runner as `ciba_poll`, retrying only a transport failure or a `5xx`
+  (never a `429`, which is the loop's rule-9 wait), at most `MaxRetryAttempts` requests, none when `RetryEnabled` is
+  off. The `200` is parsed outside the retry, and `DeviceLoginAsync` bounds the retry waits by the `expires_in` deadline.
+  A single `DevicePollAsync` therefore may make up to three requests before it surfaces a `NetworkError`.
+- **The deadline never cancels a request already sent (§14.2 rule 4, §14.3 rule 4; C164-40).** The first cut of the in-poll
+  retry armed a cancellation token at the deadline and handed it to the whole poll, so a `200` still being read when the
+  deadline passed (or the JWKS fetch for its `id_token`) was cancelled after the server had redeemed the device code, and the
+  caller got `expired_token` or a misleading signature error for a grant that succeeded. The deadline now governs only the
+  decision to send and the §16 retry waits: a wait that would reach it is not served and raises the typed `expired_token`
+  at once (so `Retry-After: 120` with 30 s left costs no 120 s sleep), and the request in flight keeps the caller's own
+  token. Tests: a `200` arriving after the deadline returns the token set; `Retry-After` past the deadline inside the
+  poll is not served; a `200` that does not parse is one request, not a retry (C164-41).
+- **Round 4 (C164-46, C164-48).** `DeviceLoginAsync` serves the in-poll §16 waits on the same sleeper and clock as its own
+  (`DevicePollDelay`, `DevicePollTime`), and refuses a wait that would reach the deadline *before* the `retry` telemetry
+  event announces it, so no retry is reported that is never sent. The C164-40 tests now cross the deadline in real time
+  (a `200` body that takes 1.5 s, and an `id_token` whose JWKS answers 1.5 s late) and fail against a deadline token armed on
+  the real clock. A caller's cancellation during `id_token` or `logout_token` signature verification now propagates as an
+  `OperationCanceledException` in every grant, instead of being reported as an invalid signature (tested).
+- **Round 5 (C164-54), tests only.** The in-poll §16 waits are pinned to the loop's sleeper (the interval plus two recorded
+  waits), no `retry` telemetry event is emitted for a wait the deadline refused, and a wait that ends exactly at the deadline is
+  refused; the Retry-After-past-the-deadline test fails in 10 s, not minutes, if the bound is dropped. (The round-4 commit message
+  attributed that guard to the wrong test; this is the test it belongs to.)
+- **The `expires_in` deadline is measured on the clock (§14.2 rule 4; C164-05).** It was `expires_in` minus the
+  waits slept, so a slow request or the user-code callback let the loop poll after the real deadline. It is now a
+  point in time taken when the authorization returns; no poll is sent once `now + wait` reaches it.
+- **`plan` refuses an unknown open-enum value with a `ValidationError` (§27.6.2 item 4; C163-07, C163-10).**
+  The refusal of 1.1.1 was a `NetworkError`; it is now a `ValidationError` with a `FieldError` per member. The
+  message names the member and quotes the value the server sent, which `NetworkReplyProfile` now keeps internally
+  (`RawTerminationAction`, `RawServiceType`, set when the response is decoded, never re-sent); where the SDK did not
+  decode the profile itself, it says the value is unknown (contract 1.64 (c)). The quoted value is capped at 64
+  characters and a control character is shown as `?` (C164-21). The kept spellings are held in an internal object
+  whose equality is always true, so a decoded profile still equals one built from its public members (C164-23). `ValidationError` derives from
+  `NetworkError`, so a `catch (NetworkError)` around `PlanAsync`/`ApplyAsync` still matches.
+- **The cookie-less `/oauth2/*` transport pools its connections (C163-20).** It was built with
+  `PooledConnectionLifetime = TimeSpan.Zero`, so every device poll opened a new TLS connection. Requests the SDK
+  itself re-sends (the device poll, §14.2 rule 6; `ciba_poll`) now share a pooled, cookie-less (`UseCookies = false`)
+  handler with the default lifetime; every other write on `/oauth2/*` keeps a fresh connection (§34.2 P11).
+  `AxiamHttpClientFactory.ConfigureFactoryHandler` now documents that a hand-composed handler keeps its own jar and
+  would send it to `/oauth2/*`.
+
+### Tests
+
+- C164-32/33: the `DevicePollAsync` and `DeviceLoginAsync` remarks say what a hand-rolled loop does not see (a `429`'s status and
+  `Retry-After` are internal); the `StopsAtExpiresIn` test now runs on a fake clock instead of a wall-clock boundary.
+- C163-08: `Contract163OAuth2NoCookieTests` gains a real `AxiamClient` over a loopback server whose login sets
+  `axiam_access` and `axiam_csrf`: `LoginAsync`, then the device authorization, the device poll and a token call
+  carry neither `Cookie` nor `X-CSRF-Token`, then a management `POST` carries both (full-path lookup).
+- C163-09: a `NoChange` is asserted for `service_type` as well as `termination_action`.
+
 ## [1.1.1] - 2026-10-20
 
 Contract 1.63 and the 1.62 conformance follow-ups (#107). `CONTRACT.md`, `openapi.json` and

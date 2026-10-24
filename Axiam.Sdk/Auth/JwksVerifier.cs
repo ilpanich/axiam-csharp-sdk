@@ -442,6 +442,12 @@ public sealed class JwksVerifier
             using JsonDocument payload = JsonDocument.Parse(payloadJson);
             return (payload.RootElement.Clone(), null);
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // A caller's cancellation is not a verdict on the token: it must not be reported as a bad signature
+            // (C164-40) - the JWKS fetch was abandoned, nothing was verified.
+            throw;
+        }
         catch
         {
             // Fail closed on ANY malformed/attacker-controlled input, mirroring

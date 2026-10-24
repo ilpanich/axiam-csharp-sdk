@@ -15,6 +15,12 @@ namespace Axiam.Sdk.Tests.Fixtures;
 /// <param name="Body">The request body.</param>
 public sealed record WireRequest(int ConnectionId, string Method, string Path, IReadOnlyDictionary<string, string> Headers, string Body);
 
+/// <summary>A scripted answer for <see cref="DroppingServer.Responder"/>.</summary>
+/// <param name="Status">The HTTP status.</param>
+/// <param name="Body">The JSON body.</param>
+/// <param name="Headers">Extra header lines, each <c>Name: value</c>.</param>
+public sealed record ServerReply(int Status, string Body, params string[] Headers);
+
 /// <summary>
 /// A real TCP server for CONTRACT.md &#167;34.2 P11's test: it reads a request and <b>drops the connection
 /// without answering</b> when the target starts with <c>/drop</c>, answers <c>200</c> on a kept-alive
@@ -47,6 +53,11 @@ public sealed class DroppingServer : IDisposable
     /// with the body unread.
     /// </summary>
     public Func<string, bool> Drops { get; set; } = path => path.StartsWith("/drop", StringComparison.Ordinal);
+
+    /// <summary>
+    /// Scripts an answer for a request; <c>null</c> (or no responder) keeps the default <c>200 {}</c>.
+    /// </summary>
+    public Func<WireRequest, ServerReply?>? Responder { get; set; }
 
     /// <summary>The listening port.</summary>
     public int Port { get; }
@@ -114,9 +125,18 @@ public sealed class DroppingServer : IDisposable
                     bool close = request.Headers.TryGetValue("connection", out string? c) &&
                                  c.Contains("close", StringComparison.OrdinalIgnoreCase);
                     string extra = request.Path == "/set-cookie" ? "Set-Cookie: axiam_access=issued; Path=/\r\n" : string.Empty;
-                    byte[] reply = Encoding.ASCII.GetBytes(
-                        $"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: 2\r\n{extra}" +
-                        $"{(close ? "Connection: close\r\n" : string.Empty)}\r\n{{}}");
+                    ServerReply? scripted = Responder?.Invoke(request);
+                    string status = scripted is null ? "200 OK" : $"{scripted.Status} Scripted";
+                    byte[] payload = Encoding.UTF8.GetBytes(scripted?.Body ?? "{}");
+                    if (scripted is not null)
+                    {
+                        extra += string.Concat(scripted.Headers.Select(h => h + "\r\n"));
+                    }
+
+                    byte[] head = Encoding.ASCII.GetBytes(
+                        $"HTTP/1.1 {status}\r\nContent-Type: application/json\r\nContent-Length: {payload.Length}\r\n{extra}" +
+                        $"{(close ? "Connection: close\r\n" : string.Empty)}\r\n");
+                    byte[] reply = head.Concat(payload).ToArray();
                     await stream.WriteAsync(reply).ConfigureAwait(false);
                     await stream.FlushAsync().ConfigureAwait(false);
                     if (close)

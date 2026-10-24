@@ -22,6 +22,18 @@ public sealed partial class AxiamClient
     private const string DeviceCodeGrantType = "urn:ietf:params:oauth:grant-type:device_code";
 
     /// <summary>
+    /// How the device polling loop sleeps; <see cref="Task.Delay(TimeSpan, CancellationToken)"/> unless a
+    /// test substitutes a recorder (CONTRACT.md &#167;14.6, contract 1.64: "a fake clock or a recorded sleep").
+    /// </summary>
+    internal Func<TimeSpan, CancellationToken, Task> DevicePollDelay { get; set; } = Task.Delay;
+
+    /// <summary>
+    /// The clock the device loop measures the <c>expires_in</c> deadline on (&#167;14.2 rule 4): wall time,
+    /// so a slow request counts against it as well as a wait does. A test substitutes its own.
+    /// </summary>
+    internal TimeProvider DevicePollTime { get; set; } = TimeProvider.System;
+
+    /// <summary>
     /// Polling interval used when the authorization response omits <c>interval</c> (RFC 8628
     /// &#167;3.2, &#167;14.2 rule 2). An SDK MUST NOT hard-code a faster floor.
     /// </summary>
@@ -163,9 +175,16 @@ public sealed partial class AxiamClient
     /// <remarks>
     /// <para>
     /// The raw single call, so an application driving its own loop (a UI rendering a countdown,
-    /// say) can. All five RFC 8628 &#167;3.5 answers surface as <see cref="OAuthProtocolError"/> —
-    /// <c>authorization_pending</c> and <c>slow_down</c> included — so a hand-rolled loop sees
-    /// exactly what <see cref="DeviceLoginAsync"/> sees. Most callers want that method.
+    /// say) can. The five RFC 8628 &#167;3.5 answers surface as <see cref="OAuthProtocolError"/> -
+    /// <c>authorization_pending</c> and <c>slow_down</c> included - but a hand-rolled loop does not see
+    /// everything <see cref="DeviceLoginAsync"/> does: a <c>429</c> (<c>rate_limit_exceeded</c>) is an
+    /// <see cref="OAuthProtocolError"/> whose HTTP status and <c>Retry-After</c> are internal to the SDK, so only
+    /// <see cref="DeviceLoginAsync"/> applies &#167;14.2 rule 9 to it (a wait of at least the <c>Retry-After</c>, the
+    /// interval unchanged, even when its body says <c>slow_down</c>). A <c>5xx</c> or transport failure is retried
+    /// within the call under &#167;16 (at most <see cref="Options.AxiamClientOptions.MaxRetryAttempts"/> requests, and
+    /// none when <see cref="Options.AxiamClientOptions.RetryEnabled"/> is off), then surfaced as a
+    /// <see cref="NetworkError"/>; a <c>429</c> is never retried inside the call. Most callers want
+    /// <see cref="DeviceLoginAsync"/>.
     /// </para>
     /// <para>
     /// <b>Client authentication (contract 1.62, &#167;14.1 rules 2 and 3).</b> Every poll sends
@@ -183,7 +202,16 @@ public sealed partial class AxiamClient
     /// <param name="params">The poll arguments.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     /// <returns>The issued token set.</returns>
-    public async Task<OidcTokenSet> DevicePollAsync(DevicePollParams @params, CancellationToken cancellationToken = default)
+    public Task<OidcTokenSet> DevicePollAsync(DevicePollParams @params, CancellationToken cancellationToken = default) =>
+        DevicePollCoreAsync(@params, deadline: null, cancellationToken);
+
+    /// <summary>
+    /// One poll, with its §16 retry. <paramref name="deadline"/> is set by <see cref="DeviceLoginAsync"/>: a retry
+    /// wait that would reach it is not served, and the typed <c>expired_token</c> of rule 4 is raised instead (the
+    /// P10 analogue, C164-36). The deadline never cancels a request already sent, nor the reading of its answer:
+    /// the server has redeemed the device code by then, and the tokens are the caller's (C164-40).
+    /// </summary>
+    private async Task<OidcTokenSet> DevicePollCoreAsync(DevicePollParams @params, DateTimeOffset? deadline, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(@params);
         OidcConfiguration configuration = await ResolveOidcConfigurationAsync(@params.Configuration, cancellationToken).ConfigureAwait(false);
@@ -201,7 +229,51 @@ public sealed partial class AxiamClient
         // credential the client was configured with, at the poll as at `device_authorize`.
         AppendOidcClientSecretIfConfigured(form);
 
-        TokenResponseWire wire = await PostTokenAsync(configuration, form, tenantId, cancellationToken).ConfigureAwait(false);
+        // §14.2 rule 6, §16.2: a 5xx or a transport failure on the poll is retried inside the attempt (at most
+        // MaxRetryAttempts in all), and never a 429, which is the loop's rule-9 wait (C164-25). The 200 is
+        // parsed outside the retry: the server may already have redeemed the device code. It is also what makes
+        // the poll a request the SDK itself re-sends, so it may share the pooled cookie-less connection (C163-20).
+        string endpoint = PreferredRequiredEndpoint(configuration, a => a.TokenEndpoint, configuration.TokenEndpoint);
+        string body = await RetryPolicy.ExecuteAsync(
+            "device_poll",
+            _options,
+            _telemetry,
+            Random.Shared.NextDouble,
+            async _ =>
+            {
+                using HttpResponseMessage response = await PostOAuth2FormAsync(
+                    endpoint, form, tenantId, cancellationToken, retryEligible: true).ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw await MapDevicePollErrorAsync(response, cancellationToken).ConfigureAwait(false);
+                }
+
+                return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            },
+            cancellationToken,
+            retryable: e => e is not Axiam.Sdk.Management.ValidationError && e.HttpStatus is null or >= 500,
+            // The deadline governs the §16 waits (a wait that would reach it is refused before it is announced
+            // or served), on the same clock and sleeper as the loop (C164-48).
+            delay: deadline is null ? null : DevicePollDelay,
+            beforeWait: deadline is not { } limit ? null : wait =>
+            {
+                if (DevicePollTime.GetUtcNow() + wait >= limit)
+                {
+                    throw ExpiredDeviceAuthorization();
+                }
+            }).ConfigureAwait(false);
+
+        TokenResponseWire wire;
+        try
+        {
+            wire = JsonSerializer.Deserialize<TokenResponseWire>(body)
+                   ?? throw NetworkError.FromMessage("the device poll response deserialized to null");
+        }
+        catch (JsonException ex)
+        {
+            throw NetworkError.FromException(ex, "failed to parse the device poll response");
+        }
+
         // No nonce: the device grant has no authorization request to carry one.
         var expectations = new IdTokenExpectations(configuration.Issuer, clientId, HasNonce: false, Nonce: null, _oidcClockSkewSeconds);
         return await ToTokenSetAsync(wire, configuration, expectations, cancellationToken).ConfigureAwait(false);
@@ -224,7 +296,10 @@ public sealed partial class AxiamClient
     /// <c>expired_token</c> raise distinct errors; polling stops at
     /// <see cref="DeviceAuthorization.ExpiresIn"/> even if the server has not yet said
     /// <c>expired_token</c>. A 5xx or transport failure mid-poll is <b>not</b> terminal (rule 6) —
-    /// a server restart must not lose a grant the user has already approved.
+    /// a server restart must not lose a grant the user has already approved. A <c>429</c>
+    /// (whatever its body names) is not terminal either (contract 1.64, rule 9): the loop waits its
+    /// <c>Retry-After</c> (a minimum, capped at the deadline), counts the wait as one interval, does
+    /// <b>not</b> raise the interval, and polls again.
     /// </para>
     /// </remarks>
     /// <param name="params">The login arguments, including the user-code callback.</param>
@@ -251,55 +326,84 @@ public sealed partial class AxiamClient
             new DeviceAuthorizeParams(@params.Scope, @params.TenantId, configuration),
             cancellationToken).ConfigureAwait(false);
 
+        // §14.2 rule 4 (C164-05): the deadline is a point on the clock, taken as the authorization returns,
+        // not expires_in minus the waits slept - request time and the user-code callback count too.
+        DateTimeOffset deadline = DevicePollTime.GetUtcNow() + TimeSpan.FromSeconds(authorization.ExpiresIn);
+
         // §14.3 rule 2 — before any polling.
         await @params.OnUserCode(authorization).ConfigureAwait(false);
 
         int intervalSeconds = authorization.Interval;
-        long remainingSeconds = authorization.ExpiresIn;
+
+        // §14.2 rule 9 (contract 1.64): the wait a `429` on a poll asked for. A minimum on the next
+        // wait, which replaces that interval's wait rather than adding to it; the interval itself is
+        // not raised.
+        TimeSpan retryAfter = TimeSpan.Zero;
 
         while (true)
         {
             // §14.2 rule 4: the deadline is authoritative. Checking before waiting keeps the SDK
             // from issuing a request that can only be refused, and reports it under the same
-            // expired_token code the server would have used — so a caller's branch does not care
-            // which side noticed first.
-            if (intervalSeconds >= remainingSeconds)
+            // expired_token code the server would have used - so a caller's branch does not care
+            // which side noticed first. A Retry-After past the deadline is capped by it: the
+            // same expired_token, with nothing sent after the deadline.
+            TimeSpan wait = TimeSpan.FromSeconds(intervalSeconds);
+            if (retryAfter > wait)
             {
-                throw new OAuthProtocolError(
-                    "expired_token",
-                    "the device authorization expired before the user completed it " +
-                    "(client-side deadline from expires_in; CONTRACT.md §14.2 rule 4)");
+                wait = retryAfter;
             }
-            remainingSeconds -= intervalSeconds;
 
-            await Task.Delay(TimeSpan.FromSeconds(intervalSeconds), cancellationToken).ConfigureAwait(false);
+            retryAfter = TimeSpan.Zero;
+            if (DevicePollTime.GetUtcNow() + wait >= deadline)
+            {
+                throw ExpiredDeviceAuthorization();
+            }
+
+            await DevicePollDelay(wait, cancellationToken).ConfigureAwait(false);
 
             try
             {
-                return await DevicePollAsync(
+                return await DevicePollCoreAsync(
                     new DevicePollParams(authorization.DeviceCode, @params.TenantId, configuration),
+                    deadline,
                     cancellationToken).ConfigureAwait(false);
             }
             catch (OAuthProtocolError e) when (e.Error is "authorization_pending")
             {
                 continue;
             }
+            catch (OAuthProtocolError e) when (e.HttpStatus == 429 || e.Error is "rate_limit_exceeded")
+            {
+                // §14.2 rule 9 (contract 1.64, amended): any 429 is this wait, whatever its body names (a
+                // `429 slow_down` from a server before 1.1.2 or an intermediary included). Not terminal,
+                // and not a slow_down: wait Retry-After (a minimum), count it as this interval, leave the
+                // interval alone.
+                retryAfter = e.RetryAfter ?? TimeSpan.Zero;
+                continue;
+            }
             catch (OAuthProtocolError e) when (e.Error is "slow_down")
             {
-                // §14.2 rule 1: cumulative, never reset.
+                // §14.2 rule 1: cumulative, never reset. Only the 400 gets here (rule 9).
                 intervalSeconds += SlowDownIncrementSeconds;
                 continue;
             }
-            catch (NetworkError)
+            catch (NetworkError e)
             {
                 // §14.2 rule 6: transport and 5xx failures are not among the five protocol answers
-                // and are not terminal.
+                // and are not terminal. A bodiless 429 is waited out the same way as rule 9's.
+                retryAfter = e.HttpStatus == 429 ? e.RetryAfter ?? TimeSpan.Zero : TimeSpan.Zero;
                 continue;
             }
 
             // expired_token / access_denied / invalid_grant fall through uncaught — terminal.
         }
     }
+
+    /// <summary>The typed <c>expired_token</c> of &#167;14.2 rule 4, raised by the client when its own deadline is reached.</summary>
+    private static OAuthProtocolError ExpiredDeviceAuthorization() => new(
+        "expired_token",
+        "the device authorization expired before the user completed it " +
+        "(client-side deadline from expires_in; CONTRACT.md §14.2 rule 4)");
 
     // ------------------------------------------------------------------
     // §15 Token Exchange (RFC 8693)

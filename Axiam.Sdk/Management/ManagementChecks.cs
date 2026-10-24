@@ -308,6 +308,75 @@ namespace Axiam.Sdk.Management.Models
         object WithWireVersion(string asRead);
     }
 
+    /// <summary>
+    /// A read model that keeps the wire spelling of open-enumeration members next to their parsed
+    /// value; the decoder (<c>ManagementSupport.Decode</c>) hands it the object it decoded from.
+    /// </summary>
+    internal interface IKeepsRawEnums
+    {
+        /// <summary>This value with the raw spellings read from <paramref name="wire"/> kept.</summary>
+        /// <param name="wire">The JSON object the value was decoded from.</param>
+        /// <returns>A copy carrying them.</returns>
+        object WithRawEnums(System.Text.Json.JsonElement wire);
+    }
+
+    /// <content>
+    /// <c>termination_action</c> and <c>service_type</c> exactly as the server sent them, so the
+    /// &#167;27.6.2 item 4 refusal can quote a value this SDK decoded as <c>Unknown</c> (CONTRACT.md
+    /// &#167;34.8 (c); the value is kept internally and never re-sent, &#167;36.2).
+    /// </content>
+    public sealed partial record NetworkReplyProfile : IKeepsRawEnums
+    {
+        /// <summary>
+        /// The two spellings as the server sent them; empty for a profile this SDK did not decode itself. Held in one object
+        /// whose equality is always true, so the record's value equality is that of its public members (C164-23).
+        /// </summary>
+        [System.Text.Json.Serialization.JsonIgnore]
+        internal RawEnumSpellings Raw { get; init; } = new(null, null);
+
+        /// <summary><c>termination_action</c> as the server sent it, or <c>null</c>.</summary>
+        internal string? RawTerminationAction => Raw.TerminationAction;
+
+        /// <summary><c>service_type</c> as the server sent it, or <c>null</c> when absent or not decoded by this SDK.</summary>
+        internal string? RawServiceType => Raw.ServiceType;
+
+        object IKeepsRawEnums.WithRawEnums(System.Text.Json.JsonElement wire)
+        {
+            static string? Read(System.Text.Json.JsonElement o, string name) =>
+                o.ValueKind == System.Text.Json.JsonValueKind.Object
+                && o.TryGetProperty(name, out System.Text.Json.JsonElement v)
+                && v.ValueKind == System.Text.Json.JsonValueKind.String
+                    ? v.GetString()
+                    : null;
+
+            return this with
+            {
+                Raw = new RawEnumSpellings(Read(wire, "termination_action"), Read(wire, "service_type")),
+            };
+        }
+    }
+
+    /// <summary>
+    /// The wire spellings of <see cref="NetworkReplyProfile"/>'s open enumerations. Every instance equals every
+    /// other, so holding it never changes the owning record's equality.
+    /// </summary>
+    /// <param name="TerminationAction">The <c>termination_action</c> string, or <c>null</c>.</param>
+    /// <param name="ServiceType">The <c>service_type</c> string, or <c>null</c>.</param>
+    internal sealed class RawEnumSpellings(string? TerminationAction, string? ServiceType)
+    {
+        /// <summary>The <c>termination_action</c> string, or <c>null</c>.</summary>
+        public string? TerminationAction { get; } = TerminationAction;
+
+        /// <summary>The <c>service_type</c> string, or <c>null</c>.</summary>
+        public string? ServiceType { get; } = ServiceType;
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj) => obj is RawEnumSpellings;
+
+        /// <inheritdoc />
+        public override int GetHashCode() => 0;
+    }
+
     /// <content>
     /// <c>updated_at</c> exactly as the server sent it, for the <c>expected_updated_at</c> of
     /// the read-modify-write form (CONTRACT.md &#167;31.3 rule 4).

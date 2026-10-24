@@ -38,9 +38,15 @@ namespace Axiam.Sdk.Rest;
 /// <b>What is a "write".</b> Every request whose method is not <c>GET</c>, <c>HEAD</c>, <c>OPTIONS</c> or
 /// <c>TRACE</c>, except one marked with <see cref="ConnectionPolicy.MarkRetryEligible"/>: the
 /// side-effect-free <c>POST</c>s that &#167;16 itself retries (<c>authz/check</c>, <c>authz/check/batch</c>,
-/// <c>ciba_poll</c>, <c>ssf.poll</c>). Those stay on the shared pool &#8212; a re-send of a request the SDK
+/// <c>ciba_poll</c>, <c>device_poll</c>, <c>ssf.poll</c>). Those stay on the shared pool &#8212; a re-send of a request the SDK
 /// would retry anyway costs nothing and a connection per authorization check would. The default is the
 /// safe one: a new write the marker was never added to gets the fresh connection.
+/// </para>
+/// <para>
+/// <b>Under <c>/oauth2/*</c></b> (&#167;6.1 rule 11) the same split holds on a second pair of private handlers with
+/// <c>UseCookies = false</c>: a <c>GET</c> or a retry-eligible <c>POST</c> (<c>ciba_poll</c>, <c>device_poll</c>) goes
+/// through a pooled one with the default <see cref="SocketsHttpHandler.PooledConnectionLifetime"/>, every other
+/// write through a fresh-connection one.
 /// </para>
 /// <para>
 /// <b>How.</b> Writes are sent through a second, private <see cref="SocketsHttpHandler"/> whose
@@ -67,6 +73,7 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
     private readonly object _gate = new();
     private HttpMessageInvoker? _writes;
     private HttpMessageInvoker? _cookieless;
+    private HttpMessageInvoker? _cookielessPooled;
     private bool _disposed;
 
     /// <summary>Builds the handler; the TLS inputs are the ones <see cref="AxiamHttpClientFactory.CreatePrimaryHandler"/> parsed.</summary>
@@ -92,9 +99,13 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
             {
                 request.Content ??= new ByteArrayContent(Array.Empty<byte>());
                 request.Headers.ConnectionClose = true;
+                return CookielessInvoker(fresh: true).SendAsync(request, cancellationToken);
             }
 
-            return CookielessInvoker().SendAsync(request, cancellationToken);
+            // A retry-eligible request (the device poll's token call among them, §14.2) is a request the
+            // SDK itself would re-send, so it may share a pooled connection: a poll every few seconds
+            // need not pay a TLS handshake each time (C163-20).
+            return CookielessInvoker(fresh: false).SendAsync(request, cancellationToken);
         }
 
         if (!ConnectionPolicy.NeedsFreshConnection(request))
@@ -120,29 +131,35 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
         }
     }
 
-    private HttpMessageInvoker CookielessInvoker()
+    private HttpMessageInvoker CookielessInvoker(bool fresh)
     {
         lock (_gate)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            return _cookieless ??= new HttpMessageInvoker(BuildWriteHandler(useCookies: false), disposeHandler: true);
+            return fresh
+                ? _cookieless ??= new HttpMessageInvoker(BuildWriteHandler(useCookies: false), disposeHandler: true)
+                : _cookielessPooled ??= new HttpMessageInvoker(BuildWriteHandler(useCookies: false, fresh: false), disposeHandler: true);
         }
     }
 
     // Built on the first write rather than in the constructor so it mirrors the handler's state at
     // that moment: UseCookies and CookieContainer are changed after construction by the sessionless
     // client (UseCookies = false), and a SocketsHttpHandler refuses to change once it has sent.
-    private SocketsHttpHandler BuildWriteHandler(bool useCookies = true)
+    private SocketsHttpHandler BuildWriteHandler(bool useCookies = true, bool fresh = true)
     {
         var handler = new SocketsHttpHandler
         {
             UseCookies = useCookies && UseCookies,
             AllowAutoRedirect = false, // SDK-17: never follow a redirect with the SDK's headers
-            // The point of this handler: a connection is already past its lifetime when it is made,
-            // so it is closed after its exchange and never offered to a later request.
-            PooledConnectionLifetime = TimeSpan.Zero,
             UseProxy = UseProxy,
         };
+
+        if (fresh)
+        {
+            // The point of this handler: a connection is already past its lifetime when it is made,
+            // so it is closed after its exchange and never offered to a later request.
+            handler.PooledConnectionLifetime = TimeSpan.Zero;
+        }
 
         if (handler.UseCookies)
         {
@@ -188,6 +205,8 @@ internal sealed class WriteIsolatingHandler : HttpClientHandler
                 _writes = null;
                 _cookieless?.Dispose();
                 _cookieless = null;
+                _cookielessPooled?.Dispose();
+                _cookielessPooled = null;
             }
         }
 

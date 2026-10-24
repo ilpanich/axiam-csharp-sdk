@@ -41,6 +41,20 @@ public sealed class OAuthProtocolError : AuthError
     public bool IsExpiredToken => Error == "expired_token";
 
     /// <summary>
+    /// The response's <c>Retry-After</c> as a duration, or <c>null</c> when it carried none. Internal:
+    /// it is how the &#167;14.2 rule 9 polling loop learns how long to wait out a <c>429</c>
+    /// <c>rate_limit_exceeded</c> without the public surface changing.
+    /// </summary>
+    internal TimeSpan? RetryAfter { get; init; }
+
+    /// <summary>
+    /// The HTTP status this error was read from, or <c>null</c> for one raised locally. Internal: the
+    /// &#167;14.2 rule 9 polling loop decides on the status (a <c>429</c> is its wait whatever the body
+    /// names), never on the body alone.
+    /// </summary>
+    internal int? HttpStatus { get; init; }
+
+    /// <summary>
     /// Constructs an <see cref="OAuthProtocolError"/> from the two <c>OAuth2ErrorResponse</c>
     /// wire fields. <see cref="Exception.Message"/> is built as exactly
     /// <c>"&lt;error&gt;: &lt;error_description&gt;"</c> (CONTRACT.md &#167;2 construction rules,

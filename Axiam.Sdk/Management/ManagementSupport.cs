@@ -124,12 +124,16 @@ internal static class ManagementSupport
                        ?? throw NetworkError.FromMessage(
                            $"{operation}: the server's response deserialized to null");
             // §31.3 rule 4: a version sent back must be the server's own string.
-            return result is IKeepsWireVersion keeps &&
-                   element.ValueKind == JsonValueKind.Object &&
-                   element.TryGetProperty(keeps.WireMember, out JsonElement asRead) &&
-                   asRead.ValueKind == JsonValueKind.String
-                ? (T)keeps.WithWireVersion(asRead.GetString()!)
-                : result;
+            if (result is IKeepsWireVersion keeps &&
+                element.ValueKind == JsonValueKind.Object &&
+                element.TryGetProperty(keeps.WireMember, out JsonElement asRead) &&
+                asRead.ValueKind == JsonValueKind.String)
+            {
+                result = (T)keeps.WithWireVersion(asRead.GetString()!);
+            }
+
+            // §27.6.2 item 4 (contract 1.64 (c)): an open enumeration's spelling, kept to be quoted.
+            return result is IKeepsRawEnums raw ? (T)raw.WithRawEnums(element) : result;
         }
         catch (JsonException ex)
         {

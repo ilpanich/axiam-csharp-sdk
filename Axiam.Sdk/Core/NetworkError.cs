@@ -154,7 +154,7 @@ public class NetworkError : Exception
     /// about when it will be ready. A non-positive value collapses to <c>null</c> rather
     /// than becoming a floor, since a negative minimum wait is meaningless.
     /// </remarks>
-    private static TimeSpan? ParseRetryAfter(HttpResponseMessage response)
+    internal static TimeSpan? ParseRetryAfter(HttpResponseMessage response)
     {
         var header = response.Headers.RetryAfter;
         if (header is null)
