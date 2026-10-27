@@ -24,11 +24,11 @@
          matching shared-framework version with it: 8.0.30 targets net8.0 only, so
          restoring it for the net10.0 leg resolves nothing usable. Every other
          dependency in this repo is TFM-agnostic (netstandard2.0 or multi-targeted)
-         and needs no condition. The 10.0.11 pin matches the Microsoft.Extensions.*
-         10.0.11 already pinned in Axiam.Sdk.csproj. -->
+         and needs no condition. The 10.0.14 pin matches the Microsoft.Extensions.*
+         10.0.14 already pinned in Axiam.Sdk.csproj. -->
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.33"
                       Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.11"
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.14"
                       Condition="'$(TargetFramework)' == 'net10.0'" />
     <PackageReference Include="coverlet.collector" Version="10.1.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
