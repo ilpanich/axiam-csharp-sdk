@@ -9,10 +9,10 @@ namespace Axiam.Sdk.Management;
 /// The spelling an enum member has on the wire, when it differs from the C# name.
 /// </summary>
 /// <remarks>
-/// <c>System.Text.Json</c> grew <c>JsonStringEnumMemberNameAttribute</c> in .NET 9, but
-/// this SDK still targets <c>net8.0</c> as its floor — using it would raise the floor
-/// for every consumer to buy nothing a four-line attribute does not already give. This
-/// is that attribute, read by <see cref="WireEnumConverter{TEnum}"/>.
+/// <c>System.Text.Json</c> grew <c>JsonStringEnumMemberNameAttribute</c> in .NET 9. This
+/// attribute predates the SDK's move to a <c>net10.0</c> floor and is kept because it is
+/// public surface the generated management types use; it is read by
+/// <see cref="WireEnumConverter{TEnum}"/>.
 /// </remarks>
 /// <param name="value">The exact string the server sends and expects.</param>
 [AttributeUsage(AttributeTargets.Field)]

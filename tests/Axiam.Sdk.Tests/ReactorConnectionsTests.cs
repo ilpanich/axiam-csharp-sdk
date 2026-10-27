@@ -177,11 +177,7 @@ public class ReactorConnectionsTests
         using X509Certificate2 withKey = SelfSigned("CN=Test Client");
         // Re-import the public half only — the shape someone gets from loading a
         // .crt/.pem without the matching key.
-        // net8.0: X509CertificateLoader is .NET 9+, so the constructor is the
-        // available path here.
-#pragma warning disable SYSLIB0057 // obsolete only from .NET 9; this project targets net8.0
-        using var publicOnly = new X509Certificate2(withKey.Export(X509ContentType.Cert));
-#pragma warning restore SYSLIB0057
+        using var publicOnly = X509CertificateLoader.LoadCertificate(withKey.Export(X509ContentType.Cert));
         Assert.False(publicOnly.HasPrivateKey);
 
         var ex = Assert.Throws<ArgumentException>(

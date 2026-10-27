@@ -58,13 +58,11 @@ public static class AxiamHttpClientFactory
         X509Certificate2? customCa = null;
         if (customCaPem is not null && customCaPem.Length > 0)
         {
-            // net8.0 TFM: `new X509Certificate2(byte[])` is NOT obsolete on this target
-            // (SYSLIB0057's obsolete marking was introduced starting with the .NET 9
-            // reference assemblies; net8.0's reference assembly predates it, so no build
-            // warning is produced when targeting net8.0-only per D-01) — this resolves
-            // 21-RESEARCH.md Open Question 3 / Assumption A2 without a suppression being
-            // strictly required. `X509CertificateLoader` (the newer, non-obsolete .NET
-            // 9+ API) has no net8.0-compatible surface, so it is not used here.
+            // `new X509Certificate2(byte[])` is marked obsolete (SYSLIB0057) from the
+            // .NET 9 reference assemblies on, so the net10.0 build warns here. It is
+            // kept deliberately: it was chosen while net8.0 was the floor (D-01), and
+            // moving to `X509CertificateLoader.LoadCertificate` is left to a separate,
+            // behaviour-reviewed change rather than folded into the floor raise.
             try
             {
                 customCa = new X509Certificate2(customCaPem);

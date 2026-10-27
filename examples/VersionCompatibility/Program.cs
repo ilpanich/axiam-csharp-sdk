@@ -4,7 +4,7 @@
 // NuGet enforces the lower bound at restore time: the package ships a lib/ folder
 // per target framework and refuses to install into a project targeting anything
 // older. It says nothing about the upper end, and that silence is the interesting
-// case — a lib/net8.0 assembly installs happily into a net10.0 project and runs
+// case — a lib/net10.0 assembly installs happily into a net11.0 project and runs
 // there under roll-forward, whether or not anyone ever built or tested it on that
 // runtime. "It restored, so it is supported" does not follow.
 //
@@ -12,7 +12,6 @@
 // versions, so it stays correct across SDK upgrades.
 //
 // Run: dotnet run --project examples/VersionCompatibility
-//      dotnet run --project examples/VersionCompatibility -f net10.0
 
 using System;
 using System.Linq;
@@ -22,9 +21,7 @@ using Axiam.Sdk;
 // The target framework THIS example was compiled for. Determined at compile
 // time, because that is the question that matters: which lib/ folder of the SDK
 // did the build actually bind against?
-#if NET8_0
-const string compiledFor = "net8.0";
-#elif NET10_0
+#if NET10_0
 const string compiledFor = "net10.0";
 #else
 const string compiledFor = "unknown";
@@ -48,11 +45,20 @@ if (!SupportedFrameworks.All.Contains(compiledFor))
 
 // Environment.Version reports the runtime that is actually executing, which is
 // not necessarily the one the assembly was compiled for: .NET rolls forward, so
-// a net8.0 assembly commonly runs on a .NET 10 host.
+// a net10.0 assembly can run on a newer .NET host.
 int runningMajor = Environment.Version.Major;
 int compiledMajor = int.Parse(compiledFor.Replace("net", string.Empty).Split('.')[0]);
 
-if (runningMajor > compiledMajor)
+int newestMajor = int.Parse(SupportedFrameworks.Newest.Replace("net", string.Empty).Split('.')[0]);
+
+if (runningMajor > newestMajor)
+{
+    Console.WriteLine(
+        $"ROLL-FORWARD: compiled for {compiledFor} but running on .NET {runningMajor}, "
+        + $"newer than {SupportedFrameworks.Newest}, the newest framework this SDK "
+        + "builds and tests. It runs under roll-forward, but CI has not tested it.");
+}
+else if (runningMajor > compiledMajor)
 {
     Console.WriteLine(
         $"ROLL-FORWARD: compiled for {compiledFor} but running on .NET {runningMajor}. "
@@ -64,7 +70,7 @@ else
     Console.WriteLine($"SUPPORTED: {compiledFor} is a framework this SDK builds and tests.");
 }
 
-if (compiledFor == SupportedFrameworks.Floor)
+if (compiledFor == SupportedFrameworks.Floor && SupportedFrameworks.Floor != SupportedFrameworks.Newest)
 {
     // Worth saying out loud rather than leaving to a release note: the floor is
     // the leg that gets dropped first.
