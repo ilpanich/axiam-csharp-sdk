@@ -14,7 +14,7 @@ namespace Axiam.Sdk.Tests;
 /// <remarks>
 /// <para>
 /// "Which .NET does this SDK support?" is declared in several places that
-/// nothing compares: <c>&lt;TargetFrameworks&gt;</c> in each <c>.csproj</c> (what
+/// nothing compares: <c>&lt;TargetFramework(s)&gt;</c> in each <c>.csproj</c> (what
 /// NuGet enforces at restore time), the SDK versions installed by the CI
 /// workflows (what is actually compiled), <c>docfx.json</c> (which framework the
 /// published API reference is extracted from), and
@@ -23,16 +23,18 @@ namespace Axiam.Sdk.Tests;
 /// </para>
 /// <para>
 /// Before this suite existed every project targeted <c>net8.0</c> alone — a
-/// framework that reaches <b>end of support on 10 November 2026</b>. Nothing in
+/// framework that reached <b>end of support on 10 November 2026</b>. Nothing in
 /// the build said so, and nothing would have: a <c>lib/net8.0</c> package
 /// installs into a <c>net10.0</c> project and runs there under roll-forward,
 /// so the gap is invisible from both sides until the security updates stop.
+/// The <c>net8.0</c> leg has since been dropped; the floor is <c>net10.0</c>.
 /// </para>
 /// <para>
 /// The policy pinned here is floor + newest. In .NET that is expressed by
-/// multi-targeting rather than by a CI matrix: one build produces both
-/// <c>lib/</c> folders, and <c>dotnet test</c> runs the whole suite once per
-/// target framework — including this class, on each of them.
+/// multi-targeting rather than by a CI matrix: one build produces a
+/// <c>lib/</c> folder per target framework, and <c>dotnet test</c> runs the
+/// whole suite once per target framework — including this class, on each of
+/// them. While floor and newest are the same framework there is one leg.
 /// </para>
 /// </remarks>
 [Trait("Category", "Fast")]
@@ -59,7 +61,7 @@ public sealed class VersionPolicyTests
         };
 
     /// <summary>
-    /// Projects whose <c>&lt;TargetFrameworks&gt;</c> must list exactly the
+    /// Projects whose <c>&lt;TargetFramework(s)&gt;</c> must list exactly the
     /// supported set: the two published packages, both test projects, and every
     /// example. An example that stops building on one end of the range is a
     /// consumability regression on that end.
@@ -159,9 +161,8 @@ public sealed class VersionPolicyTests
     /// </summary>
     /// <remarks>
     /// This fails on the day the floor goes out of support, not whenever
-    /// somebody next thinks to look. .NET 8 reaches end of support on
-    /// 10 November 2026 — so this test turns red on 11 November 2026 and the
-    /// fix is to drop the <c>net8.0</c> leg.
+    /// somebody next thinks to look. The floor is <c>net10.0</c>, which reaches
+    /// end of support on 14 November 2028.
     /// </remarks>
     [Fact]
     public void FloorStillReceivesSecurityUpdates()
@@ -177,19 +178,20 @@ public sealed class VersionPolicyTests
             eol > DateTime.UtcNow,
             $"the declared floor, {SupportedFrameworks.Floor}, reached end of support on "
             + $"{eol:yyyy-MM-dd} and no longer receives security updates. Drop it from "
-            + "<TargetFrameworks> in every project and raise SupportedFrameworks.Floor.");
+            + "<TargetFramework(s)> in every project and raise SupportedFrameworks.Floor.");
     }
 
     /// <summary>
-    /// The newest target framework outlives the floor — otherwise "newest" is not.
+    /// The newest target framework is supported at least as long as the floor —
+    /// otherwise "newest" is not. They may be the same framework.
     /// </summary>
     [Fact]
-    public void NewestOutlivesTheFloor()
+    public void NewestDoesNotLapseBeforeTheFloor()
     {
         Assert.True(EndOfSupport.ContainsKey(SupportedFrameworks.Newest));
         Assert.True(
-            EndOfSupport[SupportedFrameworks.Newest] > EndOfSupport[SupportedFrameworks.Floor],
-            $"{SupportedFrameworks.Newest} does not outlive {SupportedFrameworks.Floor}");
+            EndOfSupport[SupportedFrameworks.Newest] >= EndOfSupport[SupportedFrameworks.Floor],
+            $"{SupportedFrameworks.Newest} goes out of support before {SupportedFrameworks.Floor}");
     }
 
     /// <summary>
@@ -215,7 +217,7 @@ public sealed class VersionPolicyTests
 
         foreach (string tfm in SupportedFrameworks.All)
         {
-            // "net8.0" -> "8.0.x", the setup-dotnet channel form.
+            // "net10.0" -> "10.0.x", the setup-dotnet channel form.
             string channel = tfm.Replace("net", string.Empty, StringComparison.Ordinal) + ".x";
             Assert.True(
                 yaml.Contains(channel, StringComparison.Ordinal),
@@ -249,9 +251,7 @@ public sealed class VersionPolicyTests
     [Fact]
     public void RunningTargetFrameworkIsDeclaredSupported()
     {
-#if NET8_0
-        const string running = "net8.0";
-#elif NET10_0
+#if NET10_0
         const string running = "net10.0";
 #else
         const string running = "unknown";

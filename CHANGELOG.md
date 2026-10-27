@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Dependency and toolchain refresh. **The `net8.0` target framework is dropped**: .NET 8 reaches end of support on
+10 November 2026, so both packages now ship `lib/net10.0` only. No API signature changes.
+
+### Changed
+
+- **`net10.0` is the floor; `net8.0` is no longer built, tested or shipped.** `Axiam.Sdk` and `Axiam.Sdk.AspNetCore`
+  (and every example and test project) target `net10.0` alone, as a single `<TargetFramework>`, so
+  `dotnet run --project examples/<name>` needs no `-f`. A project still targeting `net8.0` will fail to
+  restore this release; stay on 1.1.2 or retarget to .NET 10 (LTS, supported through November 2028).
+  `SupportedFrameworks.Floor` is now `"net10.0"`, the same as `SupportedFrameworks.Newest`, and
+  `SupportedFrameworks.All` lists it once. .NET 11 is not yet GA, so no newer leg is added.
+- **CI installs only the 10.0.x SDK** in all three workflows (`sdk-ci-csharp.yml`, `coverage.yml`,
+  `docs-publish.yml`); the 8.0.x entry is removed. `VersionPolicyTests` still asserts one SDK per declared
+  framework, and its newest-versus-floor check now allows the two to be the same framework.
+- **`Microsoft.AspNetCore.Mvc.Testing`** (test-only) is a single unconditioned `10.0.14` reference; the
+  `8.0.33` reference for the `net8.0` leg is gone.
+- **`Grpc.Tools`** (build-only, `PrivateAssets=all`) 2.84.0 -> 2.85.0.
+- Tests use `Convert.ToHexStringLower` and `X509CertificateLoader`, which the `net8.0` leg could not.
+
 ## [1.1.2] - 2026-10-23
 
 Contract 1.64 and the 1.63 conformance follow-ups (#110). `CONTRACT.md`, `openapi.json`, `management-registry.json`

@@ -38,8 +38,7 @@ public class WebhookVerifyTests
         byte[] key = Encoding.UTF8.GetBytes(secret);
         byte[] signed = Encoding.ASCII.GetBytes($"{timestamp}.").Concat(body).ToArray();
         byte[] mac = HMACSHA256.HashData(key, signed);
-        // net8.0 has no Convert.ToHexStringLower (added in net9.0) -> uppercase then lowercase.
-        return Convert.ToHexString(mac).ToLowerInvariant();
+        return Convert.ToHexStringLower(mac);
     }
 
     private static string Header(long timestamp, string v1) => $"t={timestamp},v1={v1}";
