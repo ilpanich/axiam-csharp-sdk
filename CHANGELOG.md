@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.3] - 2026-10-29
+
 Dependency and toolchain refresh. **The `net8.0` target framework is dropped**: .NET 8 reaches end of support on
 10 November 2026, so both packages now ship `lib/net10.0` only. No API signature changes.
 
@@ -25,6 +27,14 @@ Dependency and toolchain refresh. **The `net8.0` target framework is dropped**: 
   `8.0.33` reference for the `net8.0` leg is gone.
 - **`Grpc.Tools`** (build-only, `PrivateAssets=all`) 2.84.0 -> 2.85.0.
 - Tests use `Convert.ToHexStringLower` and `X509CertificateLoader`, which the `net8.0` leg could not.
+
+- Drop net8.0, raise the floor to net10.0
+
+- Bump Grpc.Tools to 2.85.0 and Mvc.Testing to 10.0.14
+
+- Bump the minor-patch group with 4 updates
+
+- Bump actions/setup-python from 7.0.0 to 7.1.0
 
 ## [1.1.2] - 2026-10-23
 
