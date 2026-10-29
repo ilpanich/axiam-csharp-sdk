@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.1.2/apiSpec/new?filename=Axiam_Sdk_SupportedFrameworks.md&amp;value=---%0Auid%3A%20Axiam.Sdk.SupportedFrameworks%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.1.3/apiSpec/new?filename=Axiam_Sdk_SupportedFrameworks.md&amp;value=---%0Auid%3A%20Axiam.Sdk.SupportedFrameworks%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_SupportedFrameworks" data-uid="Axiam.Sdk.SupportedFrameworks" class="text-break">
-Class SupportedFrameworks  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.2/Axiam.Sdk/SupportedFrameworks.cs/#L28"><i class="bi bi-code-slash"></i></a>
+Class SupportedFrameworks  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.3/Axiam.Sdk/SupportedFrameworks.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -152,8 +152,8 @@ Class SupportedFrameworks  <a class="header-action link-secondary" title="View s
 NuGet already enforces the lower bound at restore time — the package ships a
 <code>lib/</code> folder per target framework and refuses to install into a project
 targeting anything older. What it does not tell you is the *upper* end: a
-package with a <code>lib/net8.0</code> folder installs happily into a
-<code>net10.0</code> project and runs there under roll-forward, whether or not
+package with a <code>lib/net10.0</code> folder installs happily into a
+<code>net11.0</code> project and runs there under roll-forward, whether or not
 anybody ever built or tested it on that runtime.
 </p>
 <p>
@@ -163,7 +163,7 @@ can report which of them the running process is actually on. See
 </p>
 <p>
 <code>VersionPolicyTests</code> asserts these against the
-<code>&lt;TargetFrameworks&gt;</code> in <code>Axiam.Sdk.csproj</code> and against the CI
+<code>&lt;TargetFramework&gt;</code> (or <code>&lt;TargetFrameworks&gt;</code>) in <code>Axiam.Sdk.csproj</code> and against the CI
 workflow, so they cannot drift from what is actually built.
 </p>
 </div>
@@ -176,7 +176,7 @@ workflow, so they cannot drift from what is actually built.
 
   <h3 id="Axiam_Sdk_SupportedFrameworks_Floor" data-uid="Axiam.Sdk.SupportedFrameworks.Floor">
   Floor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.2/Axiam.Sdk/SupportedFrameworks.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.3/Axiam.Sdk/SupportedFrameworks.cs/#L39"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The oldest target framework the SDK is built against.</p>
@@ -184,7 +184,7 @@ workflow, so they cannot drift from what is actually built.
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string Floor = &quot;net8.0&quot;</code></pre>
+    <pre><code class="lang-csharp hljs">public const string Floor = &quot;net10.0&quot;</code></pre>
   </div>
 
 
@@ -201,10 +201,10 @@ workflow, so they cannot drift from what is actually built.
 
 
   <h4 class="section" id="Axiam_Sdk_SupportedFrameworks_Floor_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>.NET 8 reaches end of support on 10 November 2026. When it does, this
-moves to <code>net10.0</code> and the <code>net8.0</code> leg is dropped from
-<code>&lt;TargetFrameworks&gt;</code>; <code>VersionPolicyTests</code> fails the build
-on that date rather than leaving it to be noticed.</p>
+  <div class="markdown level1 remarks"><p>.NET 10 is an LTS release, supported through November 2028. It became the
+floor when the <code>net8.0</code> leg was dropped ahead of .NET 8's end of
+support on 10 November 2026. <code>VersionPolicyTests</code> fails the build on
+the day the floor lapses rather than leaving it to be noticed.</p>
 </div>
 
 
@@ -213,7 +213,7 @@ on that date rather than leaving it to be noticed.</p>
 
   <h3 id="Axiam_Sdk_SupportedFrameworks_Newest" data-uid="Axiam.Sdk.SupportedFrameworks.Newest">
   Newest
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.2/Axiam.Sdk/SupportedFrameworks.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.3/Axiam.Sdk/SupportedFrameworks.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The newest target framework the SDK is built and tested against.</p>
@@ -252,7 +252,7 @@ on that date rather than leaving it to be noticed.</p>
 
   <h3 id="Axiam_Sdk_SupportedFrameworks_All" data-uid="Axiam.Sdk.SupportedFrameworks.All">
   All
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.2/Axiam.Sdk/SupportedFrameworks.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.3/Axiam.Sdk/SupportedFrameworks.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Every target framework the package ships a <code>lib/</code> folder for, oldest first.</p>
@@ -276,6 +276,10 @@ on that date rather than leaving it to be noticed.</p>
 
 
 
+  <h4 class="section" id="Axiam_Sdk_SupportedFrameworks_All_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>While <a class="xref" href="Axiam.Sdk.SupportedFrameworks.html#Axiam_Sdk_SupportedFrameworks_Floor">Floor</a> and <a class="xref" href="Axiam.Sdk.SupportedFrameworks.html#Axiam_Sdk_SupportedFrameworks_Newest">Newest</a> name the same framework
+the package ships a single <code>lib/</code> folder, and this lists it once.</p>
+</div>
 
 
 
