@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using Axiam.Sdk.Auth;
 using Axiam.Sdk.Auth.Oidc;
@@ -187,6 +188,7 @@ public sealed partial class AxiamClient
         ArgumentException.ThrowIfNullOrWhiteSpace(@params.RedirectUri);
 
         string clientId = RequireOidcClientId();
+        ValidateIdpHint(@params.IdpHint);
         string state = OidcPkce.RandomUrlSafeToken();
         string nonce = OidcPkce.RandomUrlSafeToken();
         Sensitive<string> codeVerifier = OidcPkce.GenerateCodeVerifier();
@@ -204,6 +206,12 @@ public sealed partial class AxiamClient
                         $"OidcBegin: ExtraParams may not override the SDK-owned authorization parameter '{extra.Key}' (CONTRACT.md §12.1 rule 5).",
                         nameof(@params));
                 }
+                if (@params.IdpHint is not null && extra.Key == IdpHintParameter)
+                {
+                    // §12.1 idp_hint rule 3: the option is the single source; a duplicate would be
+                    // refused by the server before any hint is read.
+                    continue;
+                }
                 query.Add(EncodeQueryParam(extra.Key, extra.Value));
             }
         }
@@ -216,11 +224,42 @@ public sealed partial class AxiamClient
         query.Add(EncodeQueryParam("nonce", nonce));
         query.Add(EncodeQueryParam("code_challenge", codeChallenge));
         query.Add(EncodeQueryParam("code_challenge_method", OidcPkce.CodeChallengeMethodS256));
+        if (@params.IdpHint is not null)
+        {
+            query.Add(EncodeQueryParam(IdpHintParameter, @params.IdpHint));
+        }
 
         char separator = configuration.AuthorizationEndpoint.Contains('?') ? '&' : '?';
         string url = $"{configuration.AuthorizationEndpoint}{separator}{string.Join("&", query)}";
 
         return new AuthorizationRequest(url, state, nonce, codeVerifier);
+    }
+
+    /// <summary>The ninth authorization parameter of &#167;12.1 rule 5 (contract 1.65). The only spelling:
+    /// there is no <c>kc_idp_hint</c> alias.</summary>
+    private const string IdpHintParameter = "axiam_idp_hint";
+
+    /// <summary>The bound on an <c>idp_hint</c> value, in UTF-8 bytes (&#167;12.1 <c>idp_hint</c> rule 2).</summary>
+    private const int IdpHintMaxBytes = 256;
+
+    /// <summary>
+    /// Emptiness and length, and nothing else (&#167;12.1 <c>idp_hint</c> rule 2): a programming error
+    /// with no URL built and no request sent. <c>null</c> is "unset".
+    /// </summary>
+    private static void ValidateIdpHint(string? idpHint)
+    {
+        if (idpHint is null)
+        {
+            return;
+        }
+        if (idpHint.Length == 0)
+        {
+            throw new ArgumentException("IdpHint must not be empty; leave it null to send no hint (CONTRACT.md §12.1).", nameof(idpHint));
+        }
+        if (Encoding.UTF8.GetByteCount(idpHint) > IdpHintMaxBytes)
+        {
+            throw new ArgumentException($"IdpHint must not exceed {IdpHintMaxBytes} bytes of UTF-8 (CONTRACT.md §12.1).", nameof(idpHint));
+        }
     }
 
     /// <summary>Percent-encodes a query key/value pair per RFC 3986, with spaces as

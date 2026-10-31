@@ -42,6 +42,7 @@ public sealed partial class AxiamClient
         EnsureNotDisposed();
         ArgumentNullException.ThrowIfNull(@params);
         ArgumentException.ThrowIfNullOrWhiteSpace(@params.RedirectUri);
+        ValidateIdpHint(@params.IdpHint);
 
         OidcConfiguration configuration =
             await ResolveOidcConfigurationAsync(@params.Configuration, cancellationToken).ConfigureAwait(false);
@@ -92,6 +93,12 @@ public sealed partial class AxiamClient
         if (@params.DpopJkt is { Length: > 0 } dpopJkt)
         {
             form["dpop_jkt"] = dpopJkt;
+        }
+
+        // §26.2 rule 8: the hint rides the PUSHED body, once, and never the redirect built below.
+        if (@params.IdpHint is not null)
+        {
+            form[IdpHintParameter] = @params.IdpHint;
         }
 
         Guid tenantId = ResolveOidcTenantId(@params.TenantId);

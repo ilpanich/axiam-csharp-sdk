@@ -134,6 +134,52 @@ public class OidcRefreshAndCredentialsTests
         Assert.Equal(2, tokenHits);
     }
 
+    /// <summary>
+    /// CONTRACT.md &#167;9, the contract 1.65 confirmation test. With the server's default
+    /// <c>oauth2.refresh_reuse_response = revoke_session</c> a replayed refresh token ends the
+    /// session, so the whole defence is single-flight: a <c>400 invalid_grant</c> is ONE wire call, every
+    /// concurrent waiter receives that one error, and the spent token is never presented again.
+    /// </summary>
+    [Fact]
+    public async Task OidcRefreshAsync_InvalidGrant_IsOneWireCall_SharedByEveryWaiter_AndTheSpentTokenIsNeverPresentedAgain()
+    {
+        const int Waiters = 8;
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        AxiamClient client = OidcTestKit.Client(handler);
+        await client.OidcDiscoverAsync(); // pre-warm: only the refresh guard is left to race on
+
+        var gate = new SemaphoreSlim(0);
+        handler.Map("/oauth2/token", _ =>
+        {
+            gate.Wait(TimeSpan.FromSeconds(5)); // hold the call in flight so every waiter overlaps it
+            return OidcTestKit.JsonStatus(
+                System.Net.HttpStatusCode.BadRequest,
+                OidcTestKit.OAuth2ErrorJson("invalid_grant", "refresh token is invalid or has been used"));
+        });
+
+        var refreshParams = new OidcRefreshParams { RefreshToken = Sensitive<string>.Wrap("spent-refresh") };
+        Task<OidcTokenSet>[] tasks = Enumerable.Range(0, Waiters).Select(_ => client.OidcRefreshAsync(refreshParams)).ToArray();
+        await Task.Delay(TimeSpan.FromMilliseconds(250));
+        gate.Release(Waiters);
+
+        OAuthProtocolError[] errors = new OAuthProtocolError[Waiters];
+        for (int i = 0; i < Waiters; i++)
+        {
+            errors[i] = await Assert.ThrowsAsync<OAuthProtocolError>(() => tasks[i]);
+            Assert.Equal("invalid_grant", errors[i].Error);
+        }
+        // One shared outcome: the same error object reaches every waiter.
+        Assert.All(errors, e => Assert.Same(errors[0], e));
+
+        // Exactly one wire call, and no retry follows it.
+        await Task.Delay(TimeSpan.FromMilliseconds(250));
+        var tokenRequests = handler.Requests.Where(r => r.RequestUri!.AbsolutePath == "/oauth2/token").ToList();
+        Assert.Single(tokenRequests);
+        Assert.Equal("spent-refresh", OidcTestKit.ReadForm(tokenRequests[0])["refresh_token"]);
+        Assert.Equal(0, handler.CountFor("/api/v1/auth/refresh"));
+    }
+
     [Fact]
     public async Task LoginClientCredentialsAsync_HappyPath_SendsClientCredentialsGrant()
     {
