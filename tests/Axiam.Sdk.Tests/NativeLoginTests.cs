@@ -487,15 +487,19 @@ public class NativeLoginTests
     }
 
     [Fact]
-    public async Task AdoptAsCredentialIsNotImplemented()
+    public async Task ResultIsNotAdoptedAsTheClientsCredential()
     {
         using var handler = new RoutingHandler();
         MapOk(handler);
         using AxiamClient client = PublicClient(handler);
 
-        await Assert.ThrowsAsync<NotSupportedException>(() =>
-            client.LoginWithProviderIdTokenAsync("corp-okta", S("t"), S("n"), configuration: Config, adoptAsCredential: true));
-        Assert.Empty(handler.Requests);
+        await client.LoginWithProviderIdTokenAsync("corp-okta", S("t"), S("n"), configuration: Config);
+
+        // §37.2 rule 9: no adoption, and no adoptAsCredential parameter to ask for it.
+        Assert.Null(ReadAccessCookie(client));
+        Assert.DoesNotContain(
+            typeof(AxiamClient).GetMethod(nameof(AxiamClient.LoginWithProviderIdTokenAsync))!.GetParameters(),
+            p => p.Name == "adoptAsCredential");
     }
 
     private static string? ReadAccessCookie(AxiamClient client) =>

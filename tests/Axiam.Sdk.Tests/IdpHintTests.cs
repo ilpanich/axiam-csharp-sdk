@@ -190,6 +190,47 @@ public class IdpHintTests
             Params(plain.Url).Select(p => p.Key).OrderBy(k => k, StringComparer.Ordinal));
     }
 
+    private async Task<(PushedAuthorizationRequest Pushed, string Raw)> PushFromBeginAsync(string? beginHint, string? argHint)
+    {
+        string? raw = null;
+        using var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        handler.Map("/oauth2/par", r =>
+        {
+            raw = OidcTestKit.ReadRawBody(r);
+            return OidcTestKit.JsonStatus(HttpStatusCode.Created, $$"""{"request_uri":"{{RequestUri}}","expires_in":90}""");
+        });
+        using AxiamClient client = NewClient(handler);
+        AuthorizationRequest begun = client.OidcBegin(Config, new OidcBeginParams { RedirectUri = Redirect, IdpHint = beginHint });
+        PushedAuthorizationRequest pushed = await client.OidcParAsync(new OidcParParams
+        {
+            Request = begun,
+            RedirectUri = Redirect,
+            Configuration = Config,
+            IdpHint = argHint,
+        });
+        return (pushed, raw!);
+    }
+
+    [Fact]
+    public async Task ParIdpHintFromBeginUrlPushed()
+    {
+        (PushedAuthorizationRequest pushed, string raw) = await PushFromBeginAsync("corp-okta", null);
+
+        Assert.Equal(new[] { "corp-okta" }, HttpUtility.ParseQueryString(raw).GetValues("axiam_idp_hint"));
+        Assert.Equal(new[] { "client_id", "request_uri" },
+            Params(pushed.Url).Select(p => p.Key).OrderBy(k => k, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task ParIdpHintArgumentWins()
+    {
+        (_, string raw) = await PushFromBeginAsync("corp-okta", "other");
+
+        Assert.Equal(new[] { "other" }, HttpUtility.ParseQueryString(raw).GetValues("axiam_idp_hint"));
+        Assert.DoesNotContain("corp-okta", raw);
+    }
+
     [Fact]
     public async Task ParIdpHintIsValidatedLikeOidcBegin()
     {

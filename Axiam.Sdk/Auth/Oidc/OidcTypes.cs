@@ -995,7 +995,9 @@ public sealed class OidcParParams
     /// Which provider to send the browser to (CONTRACT.md &#167;26.2 rule 8, contract 1.65). Pushed in the
     /// form body as <c>axiam_idp_hint</c>, exactly once, and absent when <c>null</c>. It is
     /// <b>never</b> added to the redirect URL, which stays exactly <c>client_id</c> and
-    /// <c>request_uri</c>. Validated as for <see cref="OidcBeginParams.IdpHint"/>.
+    /// <c>request_uri</c>. Validated as for <see cref="OidcBeginParams.IdpHint"/>. When <c>null</c>, the
+    /// <c>axiam_idp_hint</c> the <see cref="OidcParParams.Request"/> URL already carries (from
+    /// <see cref="OidcBeginParams.IdpHint"/>) is pushed; when both are set, this value wins (D-N36).
     /// </summary>
     public string? IdpHint { get; init; }
 }

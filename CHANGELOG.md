@@ -13,12 +13,12 @@ nothing here is source-breaking. The release number is the maintainer's.
 ### Added
 
 - **`AxiamClient.LoginWithProviderIdTokenAsync(provider, idToken, nonce, scopes?, resource?, tenantId?,
-  configuration?, adoptAsCredential?, cancellationToken)`** (§37): native sign-in with a Google, Apple or
+  configuration?, cancellationToken)`** (§37): native sign-in with a Google, Apple or
   Facebook ID token, one `POST /oauth2/token` with
   `grant_type=urn:axiam:params:oauth:grant-type:provider-id-token`, returning the ordinary `OidcTokenSet`. `provider`
   is sent verbatim, the nonce is the raw one, no scope is added, empty inputs are refused before any request,
   the call is never retried, `invalid_grant` is surfaced unrefined, and neither the provider token nor the raw nonce
-  is logged or kept. Like `LoginClientCredentialsAsync`, it does not adopt the result as the client's credential.
+  is logged or kept. The result is not adopted as the client's credential (§37.2 rule 9); there is no `adoptAsCredential` parameter.
 - **`AxiamClient.NativeNonce()`** (static, synchronous, no I/O) and the **`ProviderNonce(Raw, Hashed)`** record
   (§37.4): 32 CSPRNG bytes as base64url without padding, wrapped in `Sensitive<string>`, and its lower-case
   hexadecimal SHA-256 for the provider's SDK.
@@ -26,7 +26,7 @@ nothing here is source-breaking. The release number is the maintainer's.
   emitted once as `axiam_idp_hint` on the authorization URL, or pushed in the PAR body and never on the redirect.
   Empty and over-256-byte values are refused with `ArgumentException`.
 - `AxiamClient.ProviderIdTokenGrantType`, the grant URN.
-- Tests: all thirteen §37.9 tests by their names, the five `idp_hint` tests, and the §9 refresh-reuse confirmation
+- Tests: all thirteen §37.9 tests by their names, the five `idp_hint` tests plus `ParIdpHintFromBeginUrlPushed` and `ParIdpHintArgumentWins`, and the §9 refresh-reuse confirmation
   (`invalid_grant` on `OidcRefreshAsync`: one wire call, every concurrent waiter gets that one error, the spent
   token is never presented again).
 
@@ -39,6 +39,16 @@ nothing here is source-breaking. The release number is the maintainer's.
   enum) on `OAuth2Policy`, `SetOrgSettings`, `TenantSettingsOverride` and `SecuritySettings`, `native_login`
   (`NativeLoginTrustRequest`, `NativeLoginTrustResponse`) on the federation config models.
   `FederationConfigResponse.NativeLogin` is a required response member, as the server always sends it.
+- **Server floor:** federation-config admin calls (`federation.create_config`, `get_config`, `list_configs`,
+  `update_config`) of this 1.2-line SDK need an AXIAM server **1.2.0 or later**: `FederationConfigResponse.NativeLogin`
+  is required from 1.2.0, and a response from an older server fails to decode.
+- **`OidcParAsync`** now pushes the `axiam_idp_hint` that the begin URL carries when `OidcParParams.IdpHint` is
+  unset; the argument wins when both are set (§26.2 rule 8, D-N36). Previously `OidcBegin(IdpHint: "x")` followed
+  by `OidcParAsync(request)` pushed no hint.
+- **`OAuthProtocolError.RetryAfter`** is now public (additive; it was `internal`), so a caller can honour the
+  server's `Retry-After` on the `429` of §37.3.
+- **Vendored** `CONTRACT.md` re-vendored as amended 2026-10-31 (AXIAM `d93976b`, sha256 `95ee87ba…59529`); the
+  other vendored files are unchanged.
   `TokenRequest` and `PushedAuthorizationRequest` are not management models in this SDK; the new
   `provider`/`id_token`/`nonce` and `axiam_idp_hint` fields are reached through the hand-written operations above.
 

@@ -32,6 +32,10 @@ public sealed partial class AxiamClient
     /// flow on the caller's behalf (rule 11).
     /// </para>
     /// <para>
+    /// <b>Not adopted.</b> The returned token set is not adopted as the client's own credential
+    /// (&#167;37.2 rule 9); the caller owns it, and there is no <c>adoptAsCredential</c> parameter.
+    /// </para>
+    /// <para>
     /// <b>Secrets.</b> <paramref name="idToken"/> and <paramref name="nonce"/> are credentials. Neither
     /// is logged, stored, cached or placed in an error (rule 12); hold the raw nonce only for
     /// the length of the attempt.
@@ -64,11 +68,6 @@ public sealed partial class AxiamClient
     /// <param name="resource">An RFC 8707 <c>resource</c>; omitted from the body when <see langword="null"/> or empty.</param>
     /// <param name="tenantId">Tenant UUID for the <c>tenant_id</c> query parameter (&#167;12.3 rule 4).</param>
     /// <param name="configuration">A pre-fetched discovery document, or <see langword="null"/> to use the cached one.</param>
-    /// <param name="adoptAsCredential">
-    /// Mirrors <see cref="LoginClientCredentialsParams.AdoptAsCredential"/> and
-    /// <see cref="DeviceLoginParams.AdoptAsCredential"/> (&#167;37.2 rule 9): this port does not adopt a
-    /// returned token set as the client's credential and throws <see cref="NotSupportedException"/> when it is set.
-    /// </param>
     /// <param name="cancellationToken">Cancels the call.</param>
     /// <exception cref="ArgumentException">
     /// <paramref name="provider"/>, <paramref name="idToken"/> or <paramref name="nonce"/> is null or empty
@@ -93,16 +92,9 @@ public sealed partial class AxiamClient
         string? resource = null,
         Guid? tenantId = null,
         OidcConfiguration? configuration = null,
-        bool adoptAsCredential = false,
         CancellationToken cancellationToken = default)
     {
         EnsureNotDisposed();
-        if (adoptAsCredential)
-        {
-            throw new NotSupportedException(
-                "LoginWithProviderIdTokenAsync's adoptAsCredential is not implemented in this SDK port (CONTRACT.md §37.2 rule 9 follows the §12.1 MAY; see CHANGELOG.md).");
-        }
-
         // §37.2 rule 4: refused before any request, discovery included. The messages name the
         // parameter, never its value.
         if (string.IsNullOrEmpty(provider))

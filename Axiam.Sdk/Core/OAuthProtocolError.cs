@@ -41,11 +41,11 @@ public sealed class OAuthProtocolError : AuthError
     public bool IsExpiredToken => Error == "expired_token";
 
     /// <summary>
-    /// The response's <c>Retry-After</c> as a duration, or <c>null</c> when it carried none. Internal:
-    /// it is how the &#167;14.2 rule 9 polling loop learns how long to wait out a <c>429</c>
-    /// <c>rate_limit_exceeded</c> without the public surface changing.
+    /// The response's <c>Retry-After</c> as a duration, or <c>null</c> when it carried none (set on a
+    /// <c>429</c> only). It is how the &#167;14.2 rule 9 polling loop learns how long to wait out a <c>429</c>
+    /// <c>rate_limit_exceeded</c>, and a caller of the native sign-in (&#167;37.3) can honour it too.
     /// </summary>
-    internal TimeSpan? RetryAfter { get; init; }
+    public TimeSpan? RetryAfter { get; init; }
 
     /// <summary>
     /// The HTTP status this error was read from, or <c>null</c> for one raised locally. Internal: the
