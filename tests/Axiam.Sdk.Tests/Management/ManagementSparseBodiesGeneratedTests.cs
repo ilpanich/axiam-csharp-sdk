@@ -143,6 +143,50 @@ public sealed class ManagementSparseBodiesGeneratedTests
     }
 
     /// <summary>
+    /// &#167;27.4 rule 5 for NativeLoginTrustRequest: each property sets exactly its own key.
+    /// </summary>
+    [Fact]
+    public void NativeLoginTrustRequestSendsOnlyWhatWasSet()
+    {
+        AssertKeys(
+            new NativeLoginTrustRequest { ClientIds = Array.Empty<string>() },
+            "client_ids");
+        AssertKeys(
+            new NativeLoginTrustRequest { Enabled = true },
+            "enabled");
+        AssertKeys(
+            new NativeLoginTrustRequest { MaxTokenAgeSecs = 1L },
+            "max_token_age_secs");
+        AssertKeys(
+            new NativeLoginTrustRequest
+            {
+                ClientIds = Array.Empty<string>(),
+                Enabled = true,
+                MaxTokenAgeSecs = 1L,
+            },
+            "client_ids", "enabled", "max_token_age_secs");
+        AssertKeys(new NativeLoginTrustRequest());
+    }
+
+    /// <summary>
+    /// &#167;27.4 rule 5 for OAuth2Policy: each property sets exactly its own key.
+    /// </summary>
+    [Fact]
+    public void OAuth2PolicySendsOnlyWhatWasSet()
+    {
+        AssertKeys(
+            new OAuth2Policy { RefreshReuseResponse = RefreshReuseResponse.RevokeSession },
+            "refresh_reuse_response");
+        AssertKeys(
+            new OAuth2Policy
+            {
+                RefreshReuseResponse = RefreshReuseResponse.RevokeSession,
+            },
+            "refresh_reuse_response");
+        AssertKeys(new OAuth2Policy());
+    }
+
+    /// <summary>
     /// &#167;27.4 rule 5 for ParseSamlSpMetadata: each property sets exactly its own key.
     /// </summary>
     [Fact]
@@ -252,6 +296,9 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new TenantSettingsOverride { PasswordHistoryCount = 1 },
             "password_history_count");
         AssertKeys(
+            new TenantSettingsOverride { RefreshReuseResponse = RefreshReuseResponse.RevokeSession },
+            "refresh_reuse_response");
+        AssertKeys(
             new TenantSettingsOverride { RefreshTokenLifetimeSecs = 1L },
             "refresh_token_lifetime_secs");
         AssertKeys(
@@ -311,6 +358,7 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 OpaqueMode = "example",
                 OpaqueSuite = "example",
                 PasswordHistoryCount = 1,
+                RefreshReuseResponse = RefreshReuseResponse.RevokeSession,
                 RefreshTokenLifetimeSecs = 1L,
                 RequireDigits = true,
                 RequireLowercase = true,
@@ -330,10 +378,10 @@ public sealed class ManagementSparseBodiesGeneratedTests
             "hibp_check_enabled", "lockout_backoff_multiplier", "lockout_duration_secs",
             "max_cert_validity_days", "max_failed_login_attempts", "max_lockout_duration_secs",
             "mfa_challenge_lifetime_secs", "mfa_enforced", "min_length", "opaque_ksf",
-            "opaque_mode", "opaque_suite", "password_history_count", "refresh_token_lifetime_secs",
-            "require_digits", "require_lowercase", "require_symbols", "require_uppercase",
-            "saml_idp_enabled", "sensitive_scopes_enabled", "server_cert_allowed_names",
-            "ssf_enabled", "webauthn_user_verification");
+            "opaque_mode", "opaque_suite", "password_history_count", "refresh_reuse_response",
+            "refresh_token_lifetime_secs", "require_digits", "require_lowercase",
+            "require_symbols", "require_uppercase", "saml_idp_enabled", "sensitive_scopes_enabled",
+            "server_cert_allowed_names", "ssf_enabled", "webauthn_user_verification");
         AssertKeys(new TenantSettingsOverride());
     }
 
@@ -520,6 +568,9 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new UpdateFederationConfigRequest { MetadataUrl = JsonNullable<string>.Of("example") },
             "metadata_url");
         AssertKeys(
+            new UpdateFederationConfigRequest { NativeLogin = new NativeLoginTrustRequest {  } },
+            "native_login");
+        AssertKeys(
             new UpdateFederationConfigRequest { Provider = "example" },
             "provider");
         AssertKeys(
@@ -558,6 +609,7 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 IdpMetadataSigningCertPem = JsonNullable<string>.Of("example"),
                 IdpSigningCertPem = JsonNullable<string>.Of("example"),
                 MetadataUrl = JsonNullable<string>.Of("example"),
+                NativeLogin = new NativeLoginTrustRequest {  },
                 Provider = "example",
                 ProviderSlug = JsonNullable<string>.Of("example"),
                 RequirePkce = true,
@@ -570,8 +622,8 @@ public sealed class ManagementSparseBodiesGeneratedTests
             "allowed_issuer_tenants", "apple_key_id", "apple_team_id", "attribute_map",
             "authorization_endpoint", "button_icon", "client_id", "client_secret",
             "enabled", "idp_metadata_signing_cert_pem", "idp_signing_cert_pem",
-            "metadata_url", "provider", "provider_slug", "require_pkce", "scopes",
-            "token_endpoint", "token_exchange", "userinfo_endpoint");
+            "metadata_url", "native_login", "provider", "provider_slug", "require_pkce",
+            "scopes", "token_endpoint", "token_exchange", "userinfo_endpoint");
         AssertKeys(new UpdateFederationConfigRequest());
         // §27.4 rule 5: an explicit null is sent as null, not omitted.
         AssertJson(new UpdateFederationConfigRequest { AppleKeyId = JsonNullable<string>.Null },
@@ -702,6 +754,9 @@ public sealed class ManagementSparseBodiesGeneratedTests
             new UpdateOAuth2ClientRequest { BrowserSso = true },
             "browser_sso");
         AssertKeys(
+            new UpdateOAuth2ClientRequest { DefaultIdp = ExampleId },
+            "default_idp");
+        AssertKeys(
             new UpdateOAuth2ClientRequest { DpopBoundAccessTokens = true },
             "dpop_bound_access_tokens");
         AssertKeys(
@@ -763,6 +818,7 @@ public sealed class ManagementSparseBodiesGeneratedTests
                 BackchannelTokenDeliveryMode = "example",
                 BackchannelUserCodeParameter = true,
                 BrowserSso = true,
+                DefaultIdp = ExampleId,
                 DpopBoundAccessTokens = true,
                 DpopRequireNonce = true,
                 GrantTypes = Array.Empty<string>(),
@@ -784,7 +840,7 @@ public sealed class ManagementSparseBodiesGeneratedTests
             "allowed_resources", "authn_request_params", "backchannel_authentication_request_signing_alg",
             "backchannel_client_notification_endpoint", "backchannel_logout_uri",
             "backchannel_token_delivery_mode", "backchannel_user_code_parameter",
-            "browser_sso", "dpop_bound_access_tokens", "dpop_require_nonce",
+            "browser_sso", "default_idp", "dpop_bound_access_tokens", "dpop_require_nonce",
             "grant_types", "jwks", "jwks_uri", "name", "post_logout_redirect_uris",
             "profile", "redirect_uris", "require_par", "scopes", "self_signed_tls_client_auth_thumbprints",
             "tls_client_auth_san_dns", "tls_client_auth_san_uri", "tls_client_auth_subject_dn",
@@ -1098,7 +1154,7 @@ public sealed class ManagementSparseBodiesGeneratedTests
         int cases = typeof(ManagementSparseBodiesGeneratedTests)
             .GetMethods()
             .Count(m => m.Name.EndsWith("SendsOnlyWhatWasSet", StringComparison.Ordinal));
-        Assert.Equal(21, cases);
+        Assert.Equal(23, cases);
     }
 
     /// <summary>

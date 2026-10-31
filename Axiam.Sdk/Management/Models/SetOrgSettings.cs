@@ -198,6 +198,16 @@ public sealed record SetOrgSettings
     public required int PasswordHistoryCount { get; init; }
 
     /// <summary>
+    /// G-C (#818) — defaulted to <c>revoke_session</c> (D-N2): an API client written before the
+    /// field lands on the new default. <c>refuse</c> restores the 1.1.x behaviour. Because it
+    /// is defaulted, a <c>PUT</c> from a client written before 1.2.0 (which omits it) sets an
+    /// organization on <c>refuse</c> back to <c>revoke_session</c> — the stricter direction
+    /// (F4-W1-06).
+    /// </summary>
+    [JsonPropertyName("refresh_reuse_response")]
+    public RefreshReuseResponse? RefreshReuseResponse { get; init; }
+
+    /// <summary>
     /// the server's refresh_token_lifetime_secs field
     /// </summary>
     [JsonPropertyName("refresh_token_lifetime_secs")]

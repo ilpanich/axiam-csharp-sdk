@@ -63,6 +63,13 @@ public sealed class Contract160ModelsTests : ManagementTestBase
                 ["scope_map"] = new JsonObject(),
                 ["subject_mapping"] = "email",
             },
+            // Contract 1.65 (§34.9 (j)): a required member of every federation-config response.
+            ["native_login"] = new JsonObject
+            {
+                ["enabled"] = false,
+                ["client_ids"] = new JsonArray(),
+                ["max_token_age_secs"] = 300,
+            },
             ["allow_tenant_inheritance"] = false,
             ["scopes"] = new JsonArray(),
             ["effective_scopes"] = new JsonArray(),

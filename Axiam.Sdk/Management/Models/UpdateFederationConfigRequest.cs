@@ -139,6 +139,12 @@ public sealed record UpdateFederationConfigRequest
     public JsonNullable<string>? MetadataUrl { get; init; }
 
     /// <summary>
+    /// the server's native_login field
+    /// </summary>
+    [JsonPropertyName("native_login")]
+    public NativeLoginTrustRequest? NativeLogin { get; init; }
+
+    /// <summary>
     /// the server's provider field
     /// </summary>
     [JsonPropertyName("provider")]

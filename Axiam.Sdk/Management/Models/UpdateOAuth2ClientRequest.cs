@@ -77,6 +77,14 @@ public sealed record UpdateOAuth2ClientRequest
     public bool? BrowserSso { get; init; }
 
     /// <summary>
+    /// G-B (#817) — see [<c>CreateOAuth2ClientRequest::default_idp</c>]. Omitted leaves it;
+    /// <c>null</c> clears it; an id is held to the create rule (<c>400</c> unless it names a
+    /// provider this tenant can sign in with).
+    /// </summary>
+    [JsonPropertyName("default_idp")]
+    public Guid? DefaultIdp { get; init; }
+
+    /// <summary>
     /// the server's dpop_bound_access_tokens field
     /// </summary>
     [JsonPropertyName("dpop_bound_access_tokens")]
