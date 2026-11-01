@@ -617,4 +617,32 @@ public class NativeLoginTests
         Assert.NotNull(typeof(AxiamClient).GetMethod("NativeNonce"));
         Assert.NotNull(typeof(AxiamClient).GetMethod("LoginWithProviderIdTokenAsync"));
     }
+
+    // C165-25: a 3xx to the /oauth2/token POST is a NetworkError even when its body is an OAuth2 error object.
+    [Theory]
+    [InlineData(301)]
+    [InlineData(302)]
+    [InlineData(307)]
+    [InlineData(308)]
+    public async Task RedirectIsNetworkError_NotFollowed_NoSecretInError(int status)
+    {
+        using var handler = new RoutingHandler();
+        using var otherHost = new RoutingHandler();
+        handler.Map(TokenPath, _ =>
+        {
+            HttpResponseMessage response = OidcTestKit.JsonStatus((HttpStatusCode)status, OidcTestKit.OAuth2ErrorJson("invalid_grant", "redirected"));
+            response.Headers.Location = new Uri("https://other.test/oauth2/token");
+            return response;
+        });
+        using AxiamClient client = PublicClient(handler);
+
+        NetworkError ex = await Assert.ThrowsAsync<NetworkError>(() =>
+            client.LoginWithProviderIdTokenAsync("corp-okta", S(FixtureIdToken), S(FixtureRawNonce), configuration: Config));
+
+        Assert.Single(handler.Requests);
+        Assert.Empty(otherHost.Requests); // the Location target never receives a request
+        string text = ex.ToString() + ex.Message;
+        Assert.DoesNotContain(FixtureIdToken, text);
+        Assert.DoesNotContain(FixtureRawNonce, text);
+    }
 }

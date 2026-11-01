@@ -32,6 +32,7 @@ nothing here is source-breaking. The release number is the maintainer's.
 
 ### Changed
 
+- **A `3xx` answer to an `/oauth2/*` POST is a `NetworkError`** (§12.1 rule 3, C165-25): `MapOAuth2ErrorAnyStatusAsync` now checks the status before the body, so a redirect whose body carries `error` is no longer an `OAuthProtocolError`.
 - **Vendored** `CONTRACT.md` (contract 1.65), `openapi.json` (1.2.0), `management-registry.json` and `proto/` from
   AXIAM `76d35d9`, byte for byte. The README states conformance at contract 1.65 and §37.
 - **The §27 management layer is regenerated** (still 202 operations in 29 namespaces): new members
