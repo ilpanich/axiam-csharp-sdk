@@ -7,6 +7,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Contract 1.65 (the 1.2.0 platform release, CONTRACT.md §34.9). Additive: no existing signature changes and
+nothing here is source-breaking. The release number is the maintainer's.
+
+### Added
+
+- **`AxiamClient.LoginWithProviderIdTokenAsync(provider, idToken, nonce, scopes?, resource?, tenantId?,
+  configuration?, cancellationToken)`** (§37): native sign-in with a Google, Apple or
+  Facebook ID token, one `POST /oauth2/token` with
+  `grant_type=urn:axiam:params:oauth:grant-type:provider-id-token`, returning the ordinary `OidcTokenSet`. `provider`
+  is sent verbatim, the nonce is the raw one, no scope is added, empty inputs are refused before any request,
+  the call is never retried, `invalid_grant` is surfaced unrefined, and neither the provider token nor the raw nonce
+  is logged or kept. The result is not adopted as the client's credential (§37.2 rule 9); there is no `adoptAsCredential` parameter.
+- **`AxiamClient.NativeNonce()`** (static, synchronous, no I/O) and the **`ProviderNonce(Raw, Hashed)`** record
+  (§37.4): 32 CSPRNG bytes as base64url without padding, wrapped in `Sensitive<string>`, and its lower-case
+  hexadecimal SHA-256 for the provider's SDK.
+- **`OidcBeginParams.IdpHint`** and **`OidcParParams.IdpHint`** (§12.1, §26.2 rule 8): the optional provider hint,
+  emitted once as `axiam_idp_hint` on the authorization URL, or pushed in the PAR body and never on the redirect.
+  Empty and over-256-byte values are refused with `ArgumentException`.
+- `AxiamClient.ProviderIdTokenGrantType`, the grant URN.
+- Tests: all thirteen §37.9 tests by their names, the five `idp_hint` tests plus `ParIdpHintFromBeginUrlPushed` and `ParIdpHintArgumentWins`, and the §9 refresh-reuse confirmation
+  (`invalid_grant` on `OidcRefreshAsync`: one wire call, every concurrent waiter gets that one error, the spent
+  token is never presented again).
+
+### Changed
+
+- **A `3xx` answer to an `/oauth2/*` POST is a `NetworkError`** (§12.1 rule 3, C165-25): `MapOAuth2ErrorAnyStatusAsync` now checks the status before the body, so a redirect whose body carries `error` is no longer an `OAuthProtocolError`.
+- **Vendored** `CONTRACT.md` (contract 1.65), `openapi.json` (1.2.0), `management-registry.json` and `proto/` from
+  AXIAM `76d35d9`, byte for byte. The README states conformance at contract 1.65 and §37.
+- **The §27 management layer is regenerated** (still 202 operations in 29 namespaces): new members
+  `default_idp` on the OAuth2 client request/response models, `refresh_reuse_response` (new `RefreshReuseResponse`
+  enum) on `OAuth2Policy`, `SetOrgSettings`, `TenantSettingsOverride` and `SecuritySettings`, `native_login`
+  (`NativeLoginTrustRequest`, `NativeLoginTrustResponse`) on the federation config models.
+  `FederationConfigResponse.NativeLogin` is a required response member, as the server always sends it.
+- **Server floor:** federation-config admin calls (`federation.create_config`, `get_config`, `list_configs`,
+  `update_config`) of this 1.2-line SDK need an AXIAM server **1.2.0 or later**: `FederationConfigResponse.NativeLogin`
+  is required from 1.2.0, and a response from an older server fails to decode.
+- **`OidcParAsync`** now pushes the `axiam_idp_hint` that the begin URL carries when `OidcParParams.IdpHint` is
+  unset; the argument wins when both are set (§26.2 rule 8, D-N36). Previously `OidcBegin(IdpHint: "x")` followed
+  by `OidcParAsync(request)` pushed no hint.
+- **`OAuthProtocolError.RetryAfter`** is now public (additive; it was `internal`), so a caller can honour the
+  server's `Retry-After` on the `429` of §37.3.
+- **Vendored** `CONTRACT.md` re-vendored as amended 2026-10-31 (AXIAM `d93976b`, sha256 `95ee87ba…59529`); the
+  other vendored files are unchanged.
+  `TokenRequest` and `PushedAuthorizationRequest` are not management models in this SDK; the new
+  `provider`/`id_token`/`nonce` and `axiam_idp_hint` fields are reached through the hand-written operations above.
+
+### Behaviour to know about (server side, no SDK change)
+
+- A **replayed refresh token now ends the session**: with the platform's default
+  `oauth2.refresh_reuse_response = revoke_session`, presenting an already-rotated refresh token is still answered
+  `400 invalid_grant` but also invalidates the session and revokes every refresh token under it, the successor
+  included (an organization can set `refuse` to keep the 1.1.x behaviour). Treat `invalid_grant` on
+  `OidcRefreshAsync` as "the session is over" and authorize again; never retry with the same token. The §9
+  single-flight guard is what keeps this SDK from causing it, but it is per client instance: refreshing the same
+  token from two processes is a defect.
+
 ## [1.1.3] - 2026-10-29
 
 Dependency and toolchain refresh. **The `net8.0` target framework is dropped**: .NET 8 reaches end of support on

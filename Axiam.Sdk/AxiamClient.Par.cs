@@ -42,6 +42,7 @@ public sealed partial class AxiamClient
         EnsureNotDisposed();
         ArgumentNullException.ThrowIfNull(@params);
         ArgumentException.ThrowIfNullOrWhiteSpace(@params.RedirectUri);
+        ValidateIdpHint(@params.IdpHint);
 
         OidcConfiguration configuration =
             await ResolveOidcConfigurationAsync(@params.Configuration, cancellationToken).ConfigureAwait(false);
@@ -92,6 +93,15 @@ public sealed partial class AxiamClient
         if (@params.DpopJkt is { Length: > 0 } dpopJkt)
         {
             form["dpop_jkt"] = dpopJkt;
+        }
+
+        // §26.2 rule 8: the hint rides the PUSHED body, once, and never the redirect built below.
+        // D-N36 (C165-11): when the argument is unset, the hint OidcBegin already put on the begin URL
+        // is pushed; the argument wins when both are set, so exactly one value goes out.
+        string? idpHint = @params.IdpHint ?? ReadIdpHintFromUrl(@params.Request.Url);
+        if (idpHint is not null)
+        {
+            form[IdpHintParameter] = idpHint;
         }
 
         Guid tenantId = ResolveOidcTenantId(@params.TenantId);
@@ -163,5 +173,26 @@ public sealed partial class AxiamClient
             @params.Request.State,
             @params.Request.Nonce,
             @params.Request.CodeVerifier);
+    }
+
+    /// <summary>The <c>axiam_idp_hint</c> the begin URL carries, or <see langword="null"/> when it has none
+    /// (or an empty one). <c>OidcBegin</c> emits it at most once and validated it already.</summary>
+    private static string? ReadIdpHintFromUrl(string url)
+    {
+        int q = url.IndexOf('?');
+        if (q < 0)
+        {
+            return null;
+        }
+        foreach (string pair in url[(q + 1)..].Split('&', StringSplitOptions.RemoveEmptyEntries))
+        {
+            string[] kv = pair.Split('=', 2);
+            if (Uri.UnescapeDataString(kv[0]) == IdpHintParameter)
+            {
+                string value = kv.Length > 1 ? Uri.UnescapeDataString(kv[1]) : string.Empty;
+                return value.Length == 0 ? null : value;
+            }
+        }
+        return null;
     }
 }

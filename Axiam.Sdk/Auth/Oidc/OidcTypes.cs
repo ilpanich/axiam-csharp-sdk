@@ -184,6 +184,20 @@ public sealed class OidcBeginParams
     /// AuthError/AuthzError/NetworkError taxonomy (&#167;12 port addendum item 9).
     /// </summary>
     public IReadOnlyDictionary<string, string>? ExtraParams { get; init; }
+
+    /// <summary>
+    /// Which provider to send the browser to (CONTRACT.md &#167;12.1, contract 1.65): a provider's UUID, its
+    /// <c>provider_slug</c> or a branded kind name (<c>google</c>, <c>github</c>, <c>facebook</c>,
+    /// <c>apple</c>, <c>microsoft</c>). Emitted as the ninth query parameter <c>axiam_idp_hint</c>,
+    /// exactly once, and only when set. <c>null</c> (the default) means unset.
+    /// </summary>
+    /// <remarks>
+    /// Validated for emptiness and length only: an empty value and one over 256 UTF-8 bytes are refused
+    /// with <see cref="ArgumentException"/> and no URL is built. It is never trimmed, case-folded,
+    /// parsed or looked up; the server ignores a hint that names nothing. When set, an
+    /// <see cref="ExtraParams"/> entry of the same name is dropped. There is no <c>kc_idp_hint</c> alias.
+    /// </remarks>
+    public string? IdpHint { get; init; }
 }
 
 /// <summary>
@@ -976,6 +990,16 @@ public sealed class OidcParParams
     /// push into a failed exchange.
     /// </remarks>
     public string? DpopJkt { get; init; }
+
+    /// <summary>
+    /// Which provider to send the browser to (CONTRACT.md &#167;26.2 rule 8, contract 1.65). Pushed in the
+    /// form body as <c>axiam_idp_hint</c>, exactly once, and absent when <c>null</c>. It is
+    /// <b>never</b> added to the redirect URL, which stays exactly <c>client_id</c> and
+    /// <c>request_uri</c>. Validated as for <see cref="OidcBeginParams.IdpHint"/>. When <c>null</c>, the
+    /// <c>axiam_idp_hint</c> the <see cref="OidcParParams.Request"/> URL already carries (from
+    /// <see cref="OidcBeginParams.IdpHint"/>) is pushed; when both are set, this value wins (D-N36).
+    /// </summary>
+    public string? IdpHint { get; init; }
 }
 
 /// <summary>
@@ -1019,3 +1043,23 @@ public sealed record PushedAuthorizationRequest(
     string State,
     string Nonce,
     Sensitive<string> CodeVerifier);
+
+// ---------------------------------------------------------------------------
+// §37 Native sign-in with a provider ID token (contract 1.65)
+// ---------------------------------------------------------------------------
+
+/// <summary>
+/// The pair <see cref="AxiamClient.NativeNonce"/> returns (CONTRACT.md &#167;37.4): the raw nonce AXIAM
+/// is sent, and the value the provider's SDK is given.
+/// </summary>
+/// <remarks>
+/// <see cref="Raw"/> is the <i>preimage</i> of the nonce inside the provider's token, and so what makes
+/// holding that token insufficient to spend it: it is <see cref="Sensitive{T}"/> (&#167;37.6), reachable
+/// only through <see cref="Sensitive{T}.Expose"/>, and redacted by <c>ToString()</c> and JSON serialization.
+/// <see cref="Hashed"/> travels to the provider and into its token and is not a secret.
+/// </remarks>
+/// <param name="Raw">At least 32 CSPRNG bytes, base64url without padding. Pass this to
+/// <see cref="AxiamClient.LoginWithProviderIdTokenAsync"/>.</param>
+/// <param name="Hashed">Lower-case hexadecimal SHA-256 of <paramref name="Raw"/>'s UTF-8 bytes (64
+/// characters). Give this to the provider's SDK as its nonce.</param>
+public sealed record ProviderNonce(Sensitive<string> Raw, string Hashed);

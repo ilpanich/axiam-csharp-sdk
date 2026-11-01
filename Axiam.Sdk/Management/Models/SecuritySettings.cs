@@ -59,6 +59,13 @@ public sealed record SecuritySettings
     public required NotificationPolicy Notification { get; init; }
 
     /// <summary>
+    /// G-C (#818) — <c>oauth2.refresh_reuse_response</c>. Defaulted so a document written
+    /// before the field reads as the default.
+    /// </summary>
+    [JsonPropertyName("oauth2")]
+    public OAuth2Policy? Oauth2 { get; init; }
+
+    /// <summary>
     /// the server's oidc field
     /// </summary>
     [JsonPropertyName("oidc")]

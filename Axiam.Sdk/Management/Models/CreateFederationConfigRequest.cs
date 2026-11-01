@@ -119,6 +119,12 @@ public sealed record CreateFederationConfigRequest
     public string? MetadataUrl { get; init; }
 
     /// <summary>
+    /// the server's native_login field
+    /// </summary>
+    [JsonPropertyName("native_login")]
+    public NativeLoginTrustRequest? NativeLogin { get; init; }
+
+    /// <summary>
     /// Federation protocol: "OidcConnect" or "Saml".
     /// </summary>
     [JsonPropertyName("protocol")]

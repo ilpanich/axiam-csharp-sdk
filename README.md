@@ -24,7 +24,7 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
 
 ## Contract conformance
 
-This SDK conforms to **contract 1.64**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
+This SDK conforms to **contract 1.65**: CONTRACT.md §1–§13 and §12.7, §14, §15, §17, §19, §20,
 §21, §22, §23, §24, §25, §26, §27, §28 (including §6.1 mTLS client certificates and the §6.1 rules 6–10
 mTLS device login, the §1.1 gRPC-only `get_user_info` operation, contract 1.3, and the §1.1.1 gRPC
 `validate_token`/`introspect_token` operations, contract 1.51, the §12 OIDC/SSO relying-party
@@ -55,11 +55,11 @@ SDK has no model for it. Contract 1.62 (§34.6) adds the §36 `network` namespac
 the tenant's `Session-Timeout` cap: twelve operations, also a §27.6.2 manifest namespace), a device client that
 authenticates at both device-grant endpoints (§14.1), the change-taking form of an SSF stream
 (`stream.ToInput(new SsfStreamChanges { ... })`, §32.2), and the request `user_id` as a plain `string?`
-(§27.11 rule 5, source-breaking: see the changelog). Contract 1.63 (§34.7) changes one behaviour: no `axiam_*` session cookie and no `X-CSRF-Token` header goes to an `/oauth2/*` request, in either issuer form (§6.1 rule 11, §12.1 rule 3, §14.6), and `plan` refuses a profile `Update` that would carry an unknown `termination_action` or `service_type` the manifest does not state (§27.6.2 item 4). The SDK ships no helper that builds or signs an `AuditEventMessage` (its AMQP surface is a consumer), so the optional producer-side refusal of a reserved `tenants.` / `gdpr.` audit action (§8) has nothing to attach to; the server's refusal stands. This SDK generates no DPoP proofs, so the §21.7.4 key-lifetime rule does not apply. Contract 1.64 (§34.8) changes these behaviours: any `429` on a device-code poll is not terminal, and `DeviceLoginAsync` waits its `Retry-After` out (a minimum, capped at the `expires_in` deadline), counts it as one interval and does not raise the interval (§14.2 rule 9); a `5xx` on the poll is a transport failure whatever its body and is retried inside the poll under §16, never on a `429` (§14.2 rule 6); the `plan` refusal of an unknown open-enum value is a `ValidationError` that names the member and quotes the value this SDK kept (§27.6.2 item 4). Nothing in contract 1.53–1.64 is carved out except what
+(§27.11 rule 5, source-breaking: see the changelog). Contract 1.63 (§34.7) changes one behaviour: no `axiam_*` session cookie and no `X-CSRF-Token` header goes to an `/oauth2/*` request, in either issuer form (§6.1 rule 11, §12.1 rule 3, §14.6), and `plan` refuses a profile `Update` that would carry an unknown `termination_action` or `service_type` the manifest does not state (§27.6.2 item 4). The SDK ships no helper that builds or signs an `AuditEventMessage` (its AMQP surface is a consumer), so the optional producer-side refusal of a reserved `tenants.` / `gdpr.` audit action (§8) has nothing to attach to; the server's refusal stands. This SDK generates no DPoP proofs, so the §21.7.4 key-lifetime rule does not apply. Contract 1.64 (§34.8) changes these behaviours: any `429` on a device-code poll is not terminal, and `DeviceLoginAsync` waits its `Retry-After` out (a minimum, capped at the `expires_in` deadline), counts it as one interval and does not raise the interval (§14.2 rule 9); a `5xx` on the poll is a transport failure whatever its body and is retried inside the poll under §16, never on a `429` (§14.2 rule 6); the `plan` refusal of an unknown open-enum value is a `ValidationError` that names the member and quotes the value this SDK kept (§27.6.2 item 4). Contract 1.65 (§34.9) adds §37 — native sign-in with a provider ID token (`LoginWithProviderIdTokenAsync`, with the `NativeNonce` helper and its `ProviderNonce` pair) — and the optional `IdpHint` input of `OidcBegin` (emitted as `axiam_idp_hint`) and `OidcParAsync` (pushed in the body), regenerates the §27 layer for `default_idp`, `refresh_reuse_response` and `native_login`, and confirms the §9 rule that a replayed refresh token now ends the session server-side by default (`OidcRefreshAsync` makes one wire call per burst and never presents a spent token again). **Server floor:** the federation-config admin calls (`federation.create_config`, `get_config`, `list_configs`, `update_config`) of this 1.2-line SDK need an AXIAM server **1.2.0 or later**: `FederationConfigResponse.NativeLogin` is required from 1.2.0, and a response from an older server fails to decode (the member is a required `init` property). `OidcParAsync` pushes the `axiam_idp_hint` the begin URL carries when its own `IdpHint` is unset; the argument wins (D-N36). `OAuthProtocolError.RetryAfter` is now public. Nothing in contract 1.53–1.65 is carved out except what
 this README says it declines: `webhooks` in the manifest, the `private_key_jwt` client assertion and DPoP
 proof generation. Manifest pruning: not offered in any namespace (§27.10).
 
-§12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27, §28, §28.12, §29, §30, §31, §32, §33 and §36 are named rather than
+§12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27, §28, §28.12, §29, §30, §31, §32, §33, §36 and §37 are named rather than
 folded into the range because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
 statement that was true when written into a different claim without anyone editing it.
 
@@ -437,6 +437,60 @@ Notes:
 See [`examples/AspNetCoreSample`](examples/AspNetCoreSample) for a runnable
 `MapAxiamOidcLogin` wiring and [`examples/Quickstart`](examples/Quickstart) for the
 `LoginClientCredentialsAsync`/`IntrospectAsync`/`RevokeAsync` machine-to-machine flow.
+
+## Native sign-in with a provider ID token (CONTRACT.md §37, contract 1.65)
+
+A mobile or desktop app that uses Google, Apple or Facebook's *native* SDK holds an ID token the provider
+signed for it and no authorization code. `LoginWithProviderIdTokenAsync` presents that token to AXIAM's
+token endpoint (`grant_type=urn:axiam:params:oauth:grant-type:provider-id-token`) and returns the client's
+ordinary `OidcTokenSet`. It is **not** token exchange (§15) and never falls back to it.
+
+```csharp
+// 1. A fresh pair. Give `Hashed` to the provider's SDK as ITS nonce; keep `Raw` for AXIAM only.
+ProviderNonce nonce = AxiamClient.NativeNonce();            // local, synchronous, no network
+
+string idToken = await MyGoogleSignIn.GetIdTokenAsync(nonce.Hashed);   // the provider's SDK, not ours
+
+// 2. A public client (token_endpoint_auth_method none) sends client_id alone.
+OidcTokenSet tokens = await client.LoginWithProviderIdTokenAsync(
+    provider: "corp-google",                     // the provider's UUID or provider_slug, sent verbatim
+    idToken: Sensitive<string>.Wrap(idToken),
+    nonce: nonce.Raw,                            // the RAW nonce, never the hash
+    scopes: new[] { "openid" });                 // omit for no scopes (and so no ID token)
+```
+
+- `provider` is a UUID or the operator's slug — **not** a kind name such as `google` unless the operator also
+  chose it as the slug. It is never trimmed, case-folded or looked up.
+- No scope is added for you: without `openid` the response carries no ID token and `IdClaims` is `null`. When
+  it does, it is validated under §12.4 with the raw nonce as the expected nonce.
+- **Never retried.** The provider's token is single-use across the deployment, so the call is sent once.
+  `invalid_grant` is the server's one answer to every refusal of the token and is surfaced unrefined as
+  `OAuthProtocolError`; recover with a **fresh** provider token and a **fresh** `NativeNonce()`. A
+  `consent_required` answer has also spent the token.
+- Neither the ID token nor the raw nonce is logged, stored or placed in an error. Hold the raw nonce only for the
+  length of the attempt.
+- The result is not adopted as the client's own credential (§37.2 rule 9); the method has no `adoptAsCredential`
+  parameter. This SDK generates no DPoP
+  proofs, so a DPoP-bound client sees the server's `401 invalid_client`.
+
+### Choosing the provider — `IdpHint` (CONTRACT.md §12.1, §26.2 rule 8)
+
+```csharp
+AuthorizationRequest request = client.OidcBegin(config, new OidcBeginParams
+{
+    RedirectUri = "https://app.example/callback",
+    IdpHint = "corp-okta",          // UUID, provider_slug or a branded kind name; emitted once as axiam_idp_hint
+});
+
+PushedAuthorizationRequest pushed = await client.OidcParAsync(new OidcParParams
+{
+    Request = request, RedirectUri = "https://app.example/callback",
+    IdpHint = "corp-okta",          // under PAR the hint is pushed in the body, never on the redirect URL
+});
+```
+
+The hint is validated for emptiness and length (at most 256 UTF-8 bytes) only; an unresolvable hint is ignored by
+the server. There is no `kc_idp_hint` alias.
 
 ## Supported .NET versions
 

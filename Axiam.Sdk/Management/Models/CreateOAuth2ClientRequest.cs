@@ -101,6 +101,18 @@ public sealed record CreateOAuth2ClientRequest
     public bool? BrowserSso { get; init; }
 
     /// <summary>
+    /// G-B (#817) — the federation provider (a federation config <c>id</c>) this client's
+    /// sign-in page starts with when an authorization request carries no <c>axiam_idp_hint</c>;
+    /// a hint that names a provider overrides it. Must name a provider this tenant can sign in
+    /// with — its own enabled configs, or the organization's enabled ones it inherits — or the
+    /// registration is refused with <c>400</c>. If that provider is later disabled or deleted
+    /// the default is ignored at the authorization endpoint (the provider chooser is shown),
+    /// never an error. Omit for none.
+    /// </summary>
+    [JsonPropertyName("default_idp")]
+    public Guid? DefaultIdp { get; init; }
+
+    /// <summary>
     /// RFC 9449 §5.2 — issue DPoP-bound (sender-constrained) access tokens to this client.
     /// Independent of both the authentication method and
     /// <c>tls_client_certificate_bound_access_tokens</c>; a client may ask for both

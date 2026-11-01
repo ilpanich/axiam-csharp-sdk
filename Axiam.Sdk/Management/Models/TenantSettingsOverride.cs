@@ -189,6 +189,12 @@ public sealed record TenantSettingsOverride
     public int? PasswordHistoryCount { get; init; }
 
     /// <summary>
+    /// the server's refresh_reuse_response field
+    /// </summary>
+    [JsonPropertyName("refresh_reuse_response")]
+    public RefreshReuseResponse? RefreshReuseResponse { get; init; }
+
+    /// <summary>
     /// the server's refresh_token_lifetime_secs field
     /// </summary>
     [JsonPropertyName("refresh_token_lifetime_secs")]

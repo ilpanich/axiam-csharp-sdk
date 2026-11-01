@@ -133,6 +133,12 @@ public sealed record FederationConfigResponse
     public required bool MintsClientSecret { get; init; }
 
     /// <summary>
+    /// Native sign-in trust (G-A).
+    /// </summary>
+    [JsonPropertyName("native_login")]
+    public required NativeLoginTrustResponse NativeLogin { get; init; }
+
+    /// <summary>
     /// Whether PKCE is sent on the authorization request. Always true for the OAuth2 variant
     /// regardless of the stored flag.
     /// </summary>

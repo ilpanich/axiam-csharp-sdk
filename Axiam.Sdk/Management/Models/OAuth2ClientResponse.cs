@@ -68,6 +68,14 @@ public sealed record OAuth2ClientResponse
     public required DateTimeOffset CreatedAt { get; init; }
 
     /// <summary>
+    /// G-B (#817) — the provider this client's sign-in page starts with when a request carries
+    /// no hint; absent for none. Echoed as stored: a value whose provider has since been
+    /// disabled is shown, and ignored at the authorization endpoint.
+    /// </summary>
+    [JsonPropertyName("default_idp")]
+    public Guid? DefaultIdp { get; init; }
+
+    /// <summary>
     /// the server's dpop_bound_access_tokens field
     /// </summary>
     [JsonPropertyName("dpop_bound_access_tokens")]

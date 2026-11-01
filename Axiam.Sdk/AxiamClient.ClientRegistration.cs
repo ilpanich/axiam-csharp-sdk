@@ -336,6 +336,14 @@ public sealed partial class AxiamClient
     internal static async Task<Exception> MapOAuth2ErrorAnyStatusAsync(
         HttpResponseMessage response, string context, CancellationToken cancellationToken)
     {
+        // CONTRACT.md §12.1 rule 3: a 3xx is never followed and never an OAuth2 error object, whatever
+        // its body says; it is a NetworkError, decided before the body is read.
+        int statusCode = (int)response.StatusCode;
+        if (statusCode >= 300 && statusCode <= 399)
+        {
+            return NetworkError.FromMessage($"{context}: unexpected redirect (HTTP {statusCode}); redirects are not followed");
+        }
+
         string body;
         try
         {
