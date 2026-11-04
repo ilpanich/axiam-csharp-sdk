@@ -7,10 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Contract 1.65 (the 1.2.0 platform release, CONTRACT.md §34.9). Additive: no existing signature changes and
-nothing here is source-breaking. The release number is the maintainer's.
+Contract 1.65 (the 1.2.0 platform release, CONTRACT.md §34.9) and contract 1.66 (§34.10). Additive: no existing
+signature changes and nothing here is source-breaking. The release number is the maintainer's.
 
 ### Added
+
+- **Contract 1.66 re-sync** (`CONTRACT.md`, `openapi.json` 1.2.0 and `management-registry.json` re-vendored byte
+  for byte from `ilpanich/axiam` `5f9d079`; `proto/` unchanged; spec digest `sha256:09419a6e…4656e`). **No API
+  change**: the regenerated management surface is identical. A federated sign-in is now bound to the client that
+  started it (§12.1 rule 12b): the start and the completion of one sign-in must go through the same `AxiamClient`
+  (one §4 cookie jar). The optional `reauthenticate` start input (rule 12c) is not exposed.
+- Test `SsoStartBindingCookie_IsPresentedOnSsoComplete_FromSameClientOnly` (§12.1 rule 12b), against a real
+  loopback `HttpListener` and the real `CookieContainer`: the `Set-Cookie: axiam_fed_bind=…` of an `SsoStartAsync`
+  response is presented on the following `SsoCompleteAsync` from the same client and absent from a second
+  client's. It passes against the existing §4 jar; no code change was needed.
 
 - **`AxiamClient.LoginWithProviderIdTokenAsync(provider, idToken, nonce, scopes?, resource?, tenantId?,
   configuration?, cancellationToken)`** (§37): native sign-in with a Google, Apple or
