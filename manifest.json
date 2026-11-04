@@ -979,6 +979,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.ProviderNonce.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Auth.Oidc.ProviderNonce.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Auth.Oidc.ProviderNonce",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Auth.Oidc.ProviderNonce.yml\" sourcestartlinenumber=\"1\">The pair <xref href=\"Axiam.Sdk.AxiamClient.NativeNonce\" data-throw-if-not-resolved=\"false\"></xref> returns (CONTRACT.md §37.4): the raw nonce AXIAM\nis sent, and the value the provider's SDK is given.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.yml",
       "output": {
         ".html": {
@@ -3597,6 +3611,34 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.NativeLoginTrustRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.NativeLoginTrustRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.NativeLoginTrustRequest",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.NativeLoginTrustRequest.yml\" sourcestartlinenumber=\"1\">Native sign-in trust (G-A): which ID tokens this provider issued to an app are accepted as a\nsign-in at the token endpoint. Mirrors the domain block on the wire, as\n<code>TokenExchangeTrustRequest</code> does, so an omitted member takes its documented default\nrather than failing deserialization. Only an <code>OidcConnect</code> provider may enable it.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.NativeLoginTrustResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.NativeLoginTrustResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.NativeLoginTrustResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.NativeLoginTrustResponse.yml\" sourcestartlinenumber=\"1\">Native sign-in trust as returned to an administrator. Nothing here is secret; it is never\npart of the unauthenticated providers listing.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.yml",
       "output": {
         ".html": {
@@ -3734,6 +3776,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.OAuth2ClientResponse",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.yml\" sourcestartlinenumber=\"1\">OAuth2 client response -- omits client_secret_hash.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.OAuth2Policy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.OAuth2Policy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.OAuth2Policy",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.OAuth2Policy.yml\" sourcestartlinenumber=\"1\">OAuth 2.0 authorization-server behaviour that is a tenant's to decide (G-C, #818). A struct\nof its own rather than a field on <code>TokenPolicy</code> because it is not a lifetime, and so\nthe resolved setting reads by its documented name, <code>oauth2.refresh_reuse_response</code>.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -4154,6 +4210,20 @@
       "IsMRef": true,
       "Title": "Axiam.Sdk.Management.Models.ReadyResponse",
       "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.ReadyResponse.yml\" sourcestartlinenumber=\"1\">The ReadyResponse schema from the server's OpenAPI document.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Management.Models.RefreshReuseResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Management.Models.RefreshReuseResponse.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Management.Models.RefreshReuseResponse",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Management.Models.RefreshReuseResponse.yml\" sourcestartlinenumber=\"1\">What the token endpoint does when a refresh token that has already been rotated is presented\nagain and <strong sourcefile=\"api/Axiam.Sdk.Management.Models.RefreshReuseResponse.yml\" sourcestartlinenumber=\"2\">refused</strong> (G-C, #818 — the T-254 amendment). Two values, ordered by strictness:</p>\n<ul sourcefile=\"api/Axiam.Sdk.Management.Models.RefreshReuseResponse.yml\" sourcestartlinenumber=\"3\">\n<li sourcefile=\"api/Axiam.Sdk.Management.Models.RefreshReuseResponse.yml\" sourcestartlinenumber=\"3\"><code>revoke_session</code> — the default (D-N2). The refusal also invalidates the session the\nreplayed token names (which publishes to the revocation feed) and revokes every refresh\ntoken issued under that session — whichever client it was issued to, the console sign-in\nincluded, with no back-channel logout sent — as the authorization-code replay path does for\na code (RFC 6749 §10.5; OAuth 2.0 Security BCP §4.14.2). Only a presentation by the token's\nown client, passing the token's sender constraint, triggers it (#821). On a client with no\ngrace window the honest holder of a replayed token has nothing left to lose — its token is\nalready dead and it never received the successor — so the revocation costs it nothing and\ncosts whoever holds the successor everything. * <code>refuse</code> — the 1.1.x behaviour: the\npresentation is refused, marked on the session and audited, and nothing else is revoked.\nNeither value changes what is <em sourcefile=\"api/Axiam.Sdk.Management.Models.RefreshReuseResponse.yml\" sourcestartlinenumber=\"13\">accepted</em>. A <code>fapi2</code> client's presentation inside the\ngrace window is accepted and marked whatever this says (D-N4); a token revoked at logout is\nnot a replay and revokes nothing. This text is published as the schema's description in\n<code>sdks/openapi.json</code>, so it carries no rustdoc intra-doc links (F4-W1-08, #824).</li>\n</ul>\n"
     },
     {
       "type": "ManagedReference",

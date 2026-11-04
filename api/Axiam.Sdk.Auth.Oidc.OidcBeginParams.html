@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.1.3/apiSpec/new?filename=Axiam_Sdk_Auth_Oidc_OidcBeginParams.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.Oidc.OidcBeginParams%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.2.2/apiSpec/new?filename=Axiam_Sdk_Auth_Oidc_OidcBeginParams.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.Oidc.OidcBeginParams%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Auth_Oidc_OidcBeginParams" data-uid="Axiam.Sdk.Auth.Oidc.OidcBeginParams" class="text-break">
-Class OidcBeginParams  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.3/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L166"><i class="bi bi-code-slash"></i></a>
+Class OidcBeginParams  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.2.2/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L166"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -157,7 +157,7 @@ T1 reference judgment call 21).</p>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcBeginParams_ExtraParams" data-uid="Axiam.Sdk.Auth.Oidc.OidcBeginParams.ExtraParams">
   ExtraParams
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.3/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L186"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.2.2/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L186"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Additional caller-supplied authorization-request query parameters (e.g.
@@ -190,11 +190,52 @@ AuthError/AuthzError/NetworkError taxonomy (§12 port addendum item 9).</p>
 
 
 
+  <a id="Axiam_Sdk_Auth_Oidc_OidcBeginParams_IdpHint_" data-uid="Axiam.Sdk.Auth.Oidc.OidcBeginParams.IdpHint*"></a>
+
+  <h3 id="Axiam_Sdk_Auth_Oidc_OidcBeginParams_IdpHint" data-uid="Axiam.Sdk.Auth.Oidc.OidcBeginParams.IdpHint">
+  IdpHint
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.2.2/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L200"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Which provider to send the browser to (CONTRACT.md §12.1, contract 1.65): a provider's UUID, its
+<code>provider_slug</code> or a branded kind name (<code>google</code>, <code>github</code>, <code>facebook</code>,
+<code>apple</code>, <code>microsoft</code>). Emitted as the ninth query parameter <code>axiam_idp_hint</code>,
+exactly once, and only when set. <code>null</code> (the default) means unset.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? IdpHint { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Axiam_Sdk_Auth_Oidc_OidcBeginParams_IdpHint_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Validated for emptiness and length only: an empty value and one over 256 UTF-8 bytes are refused
+with <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a> and no URL is built. It is never trimmed, case-folded,
+parsed or looked up; the server ignores a hint that names nothing. When set, an
+<a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcBeginParams.html#Axiam_Sdk_Auth_Oidc_OidcBeginParams_ExtraParams">ExtraParams</a> entry of the same name is dropped. There is no <code>kc_idp_hint</code> alias.</p>
+</div>
+
+
+
+
   <a id="Axiam_Sdk_Auth_Oidc_OidcBeginParams_RedirectUri_" data-uid="Axiam.Sdk.Auth.Oidc.OidcBeginParams.RedirectUri*"></a>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcBeginParams_RedirectUri" data-uid="Axiam.Sdk.Auth.Oidc.OidcBeginParams.RedirectUri">
   RedirectUri
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.3/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L170"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.2.2/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L170"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The relying party's redirect URI, echoed back into
@@ -227,7 +268,7 @@ AuthError/AuthzError/NetworkError taxonomy (§12 port addendum item 9).</p>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_OidcBeginParams_Scope" data-uid="Axiam.Sdk.Auth.Oidc.OidcBeginParams.Scope">
   Scope
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.1.3/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L176"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.2.2/Axiam.Sdk/Auth/Oidc/OidcTypes.cs/#L176"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The requested scope, space-separated. <code>&quot;openid&quot;</code> is added automatically when

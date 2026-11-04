@@ -512,6 +512,20 @@ ingested yet&quot;), not an error.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.NativeLoginTrustRequest.html">NativeLoginTrustRequest</a></dt>
+      <dd><p>Native sign-in trust (G-A): which ID tokens this provider issued to an app are accepted as a
+sign-in at the token endpoint. Mirrors the domain block on the wire, as
+<code>TokenExchangeTrustRequest</code> does, so an omitted member takes its documented default
+rather than failing deserialization. Only an <code>OidcConnect</code> provider may enable it.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.NativeLoginTrustResponse.html">NativeLoginTrustResponse</a></dt>
+      <dd><p>Native sign-in trust as returned to an administrator. Nothing here is secret; it is never
+part of the unauthenticated providers listing.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.NetworkPolicyResponse.html">NetworkPolicyResponse</a></dt>
       <dd><p>The tenant's network policy, as the management API returns it.</p>
 </dd>
@@ -552,6 +566,13 @@ ignored (design note §3.4).</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.OAuth2ClientResponse.html">OAuth2ClientResponse</a></dt>
       <dd><p>OAuth2 client response -- omits client_secret_hash.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.OAuth2Policy.html">OAuth2Policy</a></dt>
+      <dd><p>OAuth 2.0 authorization-server behaviour that is a tenant's to decide (G-C, #818). A struct
+of its own rather than a field on <code>TokenPolicy</code> because it is not a lifetime, and so
+the resolved setting reads by its documented name, <code>oauth2.refresh_reuse_response</code>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -1367,6 +1388,28 @@ administrative values are refused with a 400.</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Management.Models.ReactorMode.html">ReactorMode</a></dt>
       <dd><p>How a reactor participates in an event.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Management.Models.RefreshReuseResponse.html">RefreshReuseResponse</a></dt>
+      <dd><p>What the token endpoint does when a refresh token that has already been rotated is presented
+again and <strong>refused</strong> (G-C, #818 — the T-254 amendment). Two values, ordered by strictness:</p>
+<ul>
+<li><code>revoke_session</code> — the default (D-N2). The refusal also invalidates the session the
+replayed token names (which publishes to the revocation feed) and revokes every refresh
+token issued under that session — whichever client it was issued to, the console sign-in
+included, with no back-channel logout sent — as the authorization-code replay path does for
+a code (RFC 6749 §10.5; OAuth 2.0 Security BCP §4.14.2). Only a presentation by the token's
+own client, passing the token's sender constraint, triggers it (#821). On a client with no
+grace window the honest holder of a replayed token has nothing left to lose — its token is
+already dead and it never received the successor — so the revocation costs it nothing and
+costs whoever holds the successor everything. * <code>refuse</code> — the 1.1.x behaviour: the
+presentation is refused, marked on the session and audited, and nothing else is revoked.
+Neither value changes what is <em>accepted</em>. A <code>fapi2</code> client's presentation inside the
+grace window is accepted and marked whatever this says (D-N4); a token revoked at logout is
+not a replay and revokes nothing. This text is published as the schema's description in
+<code>sdks/openapi.json</code>, so it carries no rustdoc intra-doc links (F4-W1-08, #824).</li>
+</ul>
 </dd>
     </dl>
     <dl class="jumplist">

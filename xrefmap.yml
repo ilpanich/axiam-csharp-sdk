@@ -4115,6 +4115,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.OidcBeginParams.ExtraParams
   nameWithType: OidcBeginParams.ExtraParams
+- uid: Axiam.Sdk.Auth.Oidc.OidcBeginParams.IdpHint
+  name: IdpHint
+  href: api/Axiam.Sdk.Auth.Oidc.OidcBeginParams.html#Axiam_Sdk_Auth_Oidc_OidcBeginParams_IdpHint
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcBeginParams.IdpHint
+  fullName: Axiam.Sdk.Auth.Oidc.OidcBeginParams.IdpHint
+  nameWithType: OidcBeginParams.IdpHint
+- uid: Axiam.Sdk.Auth.Oidc.OidcBeginParams.IdpHint*
+  name: IdpHint
+  href: api/Axiam.Sdk.Auth.Oidc.OidcBeginParams.html#Axiam_Sdk_Auth_Oidc_OidcBeginParams_IdpHint_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcBeginParams.IdpHint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcBeginParams.IdpHint
+  nameWithType: OidcBeginParams.IdpHint
 - uid: Axiam.Sdk.Auth.Oidc.OidcBeginParams.RedirectUri
   name: RedirectUri
   href: api/Axiam.Sdk.Auth.Oidc.OidcBeginParams.html#Axiam_Sdk_Auth_Oidc_OidcBeginParams_RedirectUri
@@ -4672,6 +4685,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.DpopJkt
   nameWithType: OidcParParams.DpopJkt
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.IdpHint
+  name: IdpHint
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_IdpHint
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcParParams.IdpHint
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.IdpHint
+  nameWithType: OidcParParams.IdpHint
+- uid: Axiam.Sdk.Auth.Oidc.OidcParParams.IdpHint*
+  name: IdpHint
+  href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_IdpHint_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcParParams.IdpHint
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcParParams.IdpHint
+  nameWithType: OidcParParams.IdpHint
 - uid: Axiam.Sdk.Auth.Oidc.OidcParParams.RedirectUri
   name: RedirectUri
   href: api/Axiam.Sdk.Auth.Oidc.OidcParParams.html#Axiam_Sdk_Auth_Oidc_OidcParParams_RedirectUri
@@ -4988,6 +5014,57 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.OidcTokenSet.TokenType
   nameWithType: OidcTokenSet.TokenType
+- uid: Axiam.Sdk.Auth.Oidc.ProviderNonce
+  name: ProviderNonce
+  href: api/Axiam.Sdk.Auth.Oidc.ProviderNonce.html
+  commentId: T:Axiam.Sdk.Auth.Oidc.ProviderNonce
+  fullName: Axiam.Sdk.Auth.Oidc.ProviderNonce
+  nameWithType: ProviderNonce
+- uid: Axiam.Sdk.Auth.Oidc.ProviderNonce.#ctor(Axiam.Sdk.Core.Sensitive{System.String},System.String)
+  name: ProviderNonce(Sensitive<string>, string)
+  href: api/Axiam.Sdk.Auth.Oidc.ProviderNonce.html#Axiam_Sdk_Auth_Oidc_ProviderNonce__ctor_Axiam_Sdk_Core_Sensitive_System_String__System_String_
+  commentId: M:Axiam.Sdk.Auth.Oidc.ProviderNonce.#ctor(Axiam.Sdk.Core.Sensitive{System.String},System.String)
+  name.vb: New(Sensitive(Of String), String)
+  fullName: Axiam.Sdk.Auth.Oidc.ProviderNonce.ProviderNonce(Axiam.Sdk.Core.Sensitive<string>, string)
+  fullName.vb: Axiam.Sdk.Auth.Oidc.ProviderNonce.New(Axiam.Sdk.Core.Sensitive(Of String), String)
+  nameWithType: ProviderNonce.ProviderNonce(Sensitive<string>, string)
+  nameWithType.vb: ProviderNonce.New(Sensitive(Of String), String)
+- uid: Axiam.Sdk.Auth.Oidc.ProviderNonce.#ctor*
+  name: ProviderNonce
+  href: api/Axiam.Sdk.Auth.Oidc.ProviderNonce.html#Axiam_Sdk_Auth_Oidc_ProviderNonce__ctor_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.ProviderNonce.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Auth.Oidc.ProviderNonce.ProviderNonce
+  fullName.vb: Axiam.Sdk.Auth.Oidc.ProviderNonce.New
+  nameWithType: ProviderNonce.ProviderNonce
+  nameWithType.vb: ProviderNonce.New
+- uid: Axiam.Sdk.Auth.Oidc.ProviderNonce.Hashed
+  name: Hashed
+  href: api/Axiam.Sdk.Auth.Oidc.ProviderNonce.html#Axiam_Sdk_Auth_Oidc_ProviderNonce_Hashed
+  commentId: P:Axiam.Sdk.Auth.Oidc.ProviderNonce.Hashed
+  fullName: Axiam.Sdk.Auth.Oidc.ProviderNonce.Hashed
+  nameWithType: ProviderNonce.Hashed
+- uid: Axiam.Sdk.Auth.Oidc.ProviderNonce.Hashed*
+  name: Hashed
+  href: api/Axiam.Sdk.Auth.Oidc.ProviderNonce.html#Axiam_Sdk_Auth_Oidc_ProviderNonce_Hashed_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.ProviderNonce.Hashed
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.ProviderNonce.Hashed
+  nameWithType: ProviderNonce.Hashed
+- uid: Axiam.Sdk.Auth.Oidc.ProviderNonce.Raw
+  name: Raw
+  href: api/Axiam.Sdk.Auth.Oidc.ProviderNonce.html#Axiam_Sdk_Auth_Oidc_ProviderNonce_Raw
+  commentId: P:Axiam.Sdk.Auth.Oidc.ProviderNonce.Raw
+  fullName: Axiam.Sdk.Auth.Oidc.ProviderNonce.Raw
+  nameWithType: ProviderNonce.Raw
+- uid: Axiam.Sdk.Auth.Oidc.ProviderNonce.Raw*
+  name: Raw
+  href: api/Axiam.Sdk.Auth.Oidc.ProviderNonce.html#Axiam_Sdk_Auth_Oidc_ProviderNonce_Raw_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.ProviderNonce.Raw
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.ProviderNonce.Raw
+  nameWithType: ProviderNonce.Raw
 - uid: Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest
   name: PushedAuthorizationRequest
   href: api/Axiam.Sdk.Auth.Oidc.PushedAuthorizationRequest.html
@@ -7091,6 +7168,22 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.LoginOpaqueAsync
   nameWithType: AxiamClient.LoginOpaqueAsync
+- uid: Axiam.Sdk.AxiamClient.LoginWithProviderIdTokenAsync(System.String,Axiam.Sdk.Core.Sensitive{System.String},Axiam.Sdk.Core.Sensitive{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.Nullable{System.Guid},Axiam.Sdk.Auth.Oidc.OidcConfiguration,System.Threading.CancellationToken)
+  name: LoginWithProviderIdTokenAsync(string, Sensitive<string>, Sensitive<string>, IReadOnlyList<string>?, string?, Guid?, OidcConfiguration?, CancellationToken)
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LoginWithProviderIdTokenAsync_System_String_Axiam_Sdk_Core_Sensitive_System_String__Axiam_Sdk_Core_Sensitive_System_String__System_Collections_Generic_IReadOnlyList_System_String__System_String_System_Nullable_System_Guid__Axiam_Sdk_Auth_Oidc_OidcConfiguration_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.AxiamClient.LoginWithProviderIdTokenAsync(System.String,Axiam.Sdk.Core.Sensitive{System.String},Axiam.Sdk.Core.Sensitive{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.Nullable{System.Guid},Axiam.Sdk.Auth.Oidc.OidcConfiguration,System.Threading.CancellationToken)
+  name.vb: LoginWithProviderIdTokenAsync(String, Sensitive(Of String), Sensitive(Of String), IReadOnlyList(Of String), String, Guid?, OidcConfiguration, CancellationToken)
+  fullName: Axiam.Sdk.AxiamClient.LoginWithProviderIdTokenAsync(string, Axiam.Sdk.Core.Sensitive<string>, Axiam.Sdk.Core.Sensitive<string>, System.Collections.Generic.IReadOnlyList<string>?, string?, System.Guid?, Axiam.Sdk.Auth.Oidc.OidcConfiguration?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.AxiamClient.LoginWithProviderIdTokenAsync(String, Axiam.Sdk.Core.Sensitive(Of String), Axiam.Sdk.Core.Sensitive(Of String), System.Collections.Generic.IReadOnlyList(Of String), String, System.Guid?, Axiam.Sdk.Auth.Oidc.OidcConfiguration, System.Threading.CancellationToken)
+  nameWithType: AxiamClient.LoginWithProviderIdTokenAsync(string, Sensitive<string>, Sensitive<string>, IReadOnlyList<string>?, string?, Guid?, OidcConfiguration?, CancellationToken)
+  nameWithType.vb: AxiamClient.LoginWithProviderIdTokenAsync(String, Sensitive(Of String), Sensitive(Of String), IReadOnlyList(Of String), String, Guid?, OidcConfiguration, CancellationToken)
+- uid: Axiam.Sdk.AxiamClient.LoginWithProviderIdTokenAsync*
+  name: LoginWithProviderIdTokenAsync
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LoginWithProviderIdTokenAsync_
+  commentId: Overload:Axiam.Sdk.AxiamClient.LoginWithProviderIdTokenAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.LoginWithProviderIdTokenAsync
+  nameWithType: AxiamClient.LoginWithProviderIdTokenAsync
 - uid: Axiam.Sdk.AxiamClient.LogoutAsync(System.Threading.CancellationToken)
   name: LogoutAsync(CancellationToken)
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_LogoutAsync_System_Threading_CancellationToken_
@@ -7191,6 +7284,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.MfaSetupEnrollAsync
   nameWithType: AxiamClient.MfaSetupEnrollAsync
+- uid: Axiam.Sdk.AxiamClient.NativeNonce
+  name: NativeNonce()
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_NativeNonce
+  commentId: M:Axiam.Sdk.AxiamClient.NativeNonce
+  fullName: Axiam.Sdk.AxiamClient.NativeNonce()
+  nameWithType: AxiamClient.NativeNonce()
+- uid: Axiam.Sdk.AxiamClient.NativeNonce*
+  name: NativeNonce
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_NativeNonce_
+  commentId: Overload:Axiam.Sdk.AxiamClient.NativeNonce
+  isSpec: "True"
+  fullName: Axiam.Sdk.AxiamClient.NativeNonce
+  nameWithType: AxiamClient.NativeNonce
 - uid: Axiam.Sdk.AxiamClient.Network
   name: Network
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_Network
@@ -7421,6 +7527,12 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.AxiamClient.Privacy
   nameWithType: AxiamClient.Privacy
+- uid: Axiam.Sdk.AxiamClient.ProviderIdTokenGrantType
+  name: ProviderIdTokenGrantType
+  href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_ProviderIdTokenGrantType
+  commentId: F:Axiam.Sdk.AxiamClient.ProviderIdTokenGrantType
+  fullName: Axiam.Sdk.AxiamClient.ProviderIdTokenGrantType
+  nameWithType: AxiamClient.ProviderIdTokenGrantType
 - uid: Axiam.Sdk.AxiamClient.Reactors
   name: Reactors
   href: api/Axiam.Sdk.AxiamClient.html#Axiam_Sdk_AxiamClient_Reactors
@@ -8600,6 +8712,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Core.OAuthProtocolError.IsExpiredToken
   nameWithType: OAuthProtocolError.IsExpiredToken
+- uid: Axiam.Sdk.Core.OAuthProtocolError.RetryAfter
+  name: RetryAfter
+  href: api/Axiam.Sdk.Core.OAuthProtocolError.html#Axiam_Sdk_Core_OAuthProtocolError_RetryAfter
+  commentId: P:Axiam.Sdk.Core.OAuthProtocolError.RetryAfter
+  fullName: Axiam.Sdk.Core.OAuthProtocolError.RetryAfter
+  nameWithType: OAuthProtocolError.RetryAfter
+- uid: Axiam.Sdk.Core.OAuthProtocolError.RetryAfter*
+  name: RetryAfter
+  href: api/Axiam.Sdk.Core.OAuthProtocolError.html#Axiam_Sdk_Core_OAuthProtocolError_RetryAfter_
+  commentId: Overload:Axiam.Sdk.Core.OAuthProtocolError.RetryAfter
+  isSpec: "True"
+  fullName: Axiam.Sdk.Core.OAuthProtocolError.RetryAfter
+  nameWithType: OAuthProtocolError.RetryAfter
 - uid: Axiam.Sdk.Core.RefreshEvent
   name: RefreshEvent
   href: api/Axiam.Sdk.Core.RefreshEvent.html
@@ -15742,6 +15867,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.MetadataUrl
   nameWithType: CreateFederationConfigRequest.MetadataUrl
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.NativeLogin
+  name: NativeLogin
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_NativeLogin
+  commentId: P:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.NativeLogin
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.NativeLogin
+  nameWithType: CreateFederationConfigRequest.NativeLogin
+- uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.NativeLogin*
+  name: NativeLogin
+  href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_NativeLogin_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateFederationConfigRequest.NativeLogin
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.NativeLogin
+  nameWithType: CreateFederationConfigRequest.NativeLogin
 - uid: Axiam.Sdk.Management.Models.CreateFederationConfigRequest.Protocol
   name: Protocol
   href: api/Axiam.Sdk.Management.Models.CreateFederationConfigRequest.html#Axiam_Sdk_Management_Models_CreateFederationConfigRequest_Protocol
@@ -16285,6 +16423,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.BrowserSso
   nameWithType: CreateOAuth2ClientRequest.BrowserSso
+- uid: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.DefaultIdp
+  name: DefaultIdp
+  href: api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_CreateOAuth2ClientRequest_DefaultIdp
+  commentId: P:Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.DefaultIdp
+  fullName: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.DefaultIdp
+  nameWithType: CreateOAuth2ClientRequest.DefaultIdp
+- uid: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.DefaultIdp*
+  name: DefaultIdp
+  href: api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_CreateOAuth2ClientRequest_DefaultIdp_
+  commentId: Overload:Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.DefaultIdp
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.DefaultIdp
+  nameWithType: CreateOAuth2ClientRequest.DefaultIdp
 - uid: Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.DpopBoundAccessTokens
   name: DpopBoundAccessTokens
   href: api/Axiam.Sdk.Management.Models.CreateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_CreateOAuth2ClientRequest_DpopBoundAccessTokens
@@ -18360,6 +18511,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.MintsClientSecret
   nameWithType: FederationConfigResponse.MintsClientSecret
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.NativeLogin
+  name: NativeLogin
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_NativeLogin
+  commentId: P:Axiam.Sdk.Management.Models.FederationConfigResponse.NativeLogin
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.NativeLogin
+  nameWithType: FederationConfigResponse.NativeLogin
+- uid: Axiam.Sdk.Management.Models.FederationConfigResponse.NativeLogin*
+  name: NativeLogin
+  href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_NativeLogin_
+  commentId: Overload:Axiam.Sdk.Management.Models.FederationConfigResponse.NativeLogin
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.FederationConfigResponse.NativeLogin
+  nameWithType: FederationConfigResponse.NativeLogin
 - uid: Axiam.Sdk.Management.Models.FederationConfigResponse.PkceRequired
   name: PkceRequired
   href: api/Axiam.Sdk.Management.Models.FederationConfigResponse.html#Axiam_Sdk_Management_Models_FederationConfigResponse_PkceRequired
@@ -20172,6 +20336,96 @@ references:
   commentId: F:Axiam.Sdk.Management.Models.NameIdFormat.Unknown
   fullName: Axiam.Sdk.Management.Models.NameIdFormat.Unknown
   nameWithType: NameIdFormat.Unknown
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustRequest
+  name: NativeLoginTrustRequest
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustRequest.html
+  commentId: T:Axiam.Sdk.Management.Models.NativeLoginTrustRequest
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustRequest
+  nameWithType: NativeLoginTrustRequest
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustRequest.ClientIds
+  name: ClientIds
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustRequest.html#Axiam_Sdk_Management_Models_NativeLoginTrustRequest_ClientIds
+  commentId: P:Axiam.Sdk.Management.Models.NativeLoginTrustRequest.ClientIds
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustRequest.ClientIds
+  nameWithType: NativeLoginTrustRequest.ClientIds
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustRequest.ClientIds*
+  name: ClientIds
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustRequest.html#Axiam_Sdk_Management_Models_NativeLoginTrustRequest_ClientIds_
+  commentId: Overload:Axiam.Sdk.Management.Models.NativeLoginTrustRequest.ClientIds
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustRequest.ClientIds
+  nameWithType: NativeLoginTrustRequest.ClientIds
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustRequest.Enabled
+  name: Enabled
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustRequest.html#Axiam_Sdk_Management_Models_NativeLoginTrustRequest_Enabled
+  commentId: P:Axiam.Sdk.Management.Models.NativeLoginTrustRequest.Enabled
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustRequest.Enabled
+  nameWithType: NativeLoginTrustRequest.Enabled
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustRequest.Enabled*
+  name: Enabled
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustRequest.html#Axiam_Sdk_Management_Models_NativeLoginTrustRequest_Enabled_
+  commentId: Overload:Axiam.Sdk.Management.Models.NativeLoginTrustRequest.Enabled
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustRequest.Enabled
+  nameWithType: NativeLoginTrustRequest.Enabled
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustRequest.MaxTokenAgeSecs
+  name: MaxTokenAgeSecs
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustRequest.html#Axiam_Sdk_Management_Models_NativeLoginTrustRequest_MaxTokenAgeSecs
+  commentId: P:Axiam.Sdk.Management.Models.NativeLoginTrustRequest.MaxTokenAgeSecs
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustRequest.MaxTokenAgeSecs
+  nameWithType: NativeLoginTrustRequest.MaxTokenAgeSecs
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustRequest.MaxTokenAgeSecs*
+  name: MaxTokenAgeSecs
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustRequest.html#Axiam_Sdk_Management_Models_NativeLoginTrustRequest_MaxTokenAgeSecs_
+  commentId: Overload:Axiam.Sdk.Management.Models.NativeLoginTrustRequest.MaxTokenAgeSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustRequest.MaxTokenAgeSecs
+  nameWithType: NativeLoginTrustRequest.MaxTokenAgeSecs
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustResponse
+  name: NativeLoginTrustResponse
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustResponse.html
+  commentId: T:Axiam.Sdk.Management.Models.NativeLoginTrustResponse
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustResponse
+  nameWithType: NativeLoginTrustResponse
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustResponse.ClientIds
+  name: ClientIds
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustResponse.html#Axiam_Sdk_Management_Models_NativeLoginTrustResponse_ClientIds
+  commentId: P:Axiam.Sdk.Management.Models.NativeLoginTrustResponse.ClientIds
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustResponse.ClientIds
+  nameWithType: NativeLoginTrustResponse.ClientIds
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustResponse.ClientIds*
+  name: ClientIds
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustResponse.html#Axiam_Sdk_Management_Models_NativeLoginTrustResponse_ClientIds_
+  commentId: Overload:Axiam.Sdk.Management.Models.NativeLoginTrustResponse.ClientIds
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustResponse.ClientIds
+  nameWithType: NativeLoginTrustResponse.ClientIds
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustResponse.Enabled
+  name: Enabled
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustResponse.html#Axiam_Sdk_Management_Models_NativeLoginTrustResponse_Enabled
+  commentId: P:Axiam.Sdk.Management.Models.NativeLoginTrustResponse.Enabled
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustResponse.Enabled
+  nameWithType: NativeLoginTrustResponse.Enabled
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustResponse.Enabled*
+  name: Enabled
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustResponse.html#Axiam_Sdk_Management_Models_NativeLoginTrustResponse_Enabled_
+  commentId: Overload:Axiam.Sdk.Management.Models.NativeLoginTrustResponse.Enabled
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustResponse.Enabled
+  nameWithType: NativeLoginTrustResponse.Enabled
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustResponse.MaxTokenAgeSecs
+  name: MaxTokenAgeSecs
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustResponse.html#Axiam_Sdk_Management_Models_NativeLoginTrustResponse_MaxTokenAgeSecs
+  commentId: P:Axiam.Sdk.Management.Models.NativeLoginTrustResponse.MaxTokenAgeSecs
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustResponse.MaxTokenAgeSecs
+  nameWithType: NativeLoginTrustResponse.MaxTokenAgeSecs
+- uid: Axiam.Sdk.Management.Models.NativeLoginTrustResponse.MaxTokenAgeSecs*
+  name: MaxTokenAgeSecs
+  href: api/Axiam.Sdk.Management.Models.NativeLoginTrustResponse.html#Axiam_Sdk_Management_Models_NativeLoginTrustResponse_MaxTokenAgeSecs_
+  commentId: Overload:Axiam.Sdk.Management.Models.NativeLoginTrustResponse.MaxTokenAgeSecs
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.NativeLoginTrustResponse.MaxTokenAgeSecs
+  nameWithType: NativeLoginTrustResponse.MaxTokenAgeSecs
 - uid: Axiam.Sdk.Management.Models.NetworkPolicyResponse
   name: NetworkPolicyResponse
   href: api/Axiam.Sdk.Management.Models.NetworkPolicyResponse.html
@@ -21261,6 +21515,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.CreatedAt
   nameWithType: OAuth2ClientResponse.CreatedAt
+- uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.DefaultIdp
+  name: DefaultIdp
+  href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_DefaultIdp
+  commentId: P:Axiam.Sdk.Management.Models.OAuth2ClientResponse.DefaultIdp
+  fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.DefaultIdp
+  nameWithType: OAuth2ClientResponse.DefaultIdp
+- uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.DefaultIdp*
+  name: DefaultIdp
+  href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_DefaultIdp_
+  commentId: Overload:Axiam.Sdk.Management.Models.OAuth2ClientResponse.DefaultIdp
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.DefaultIdp
+  nameWithType: OAuth2ClientResponse.DefaultIdp
 - uid: Axiam.Sdk.Management.Models.OAuth2ClientResponse.DpopBoundAccessTokens
   name: DpopBoundAccessTokens
   href: api/Axiam.Sdk.Management.Models.OAuth2ClientResponse.html#Axiam_Sdk_Management_Models_OAuth2ClientResponse_DpopBoundAccessTokens
@@ -21534,6 +21801,25 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.OAuth2ClientResponse.UpdatedAt
   nameWithType: OAuth2ClientResponse.UpdatedAt
+- uid: Axiam.Sdk.Management.Models.OAuth2Policy
+  name: OAuth2Policy
+  href: api/Axiam.Sdk.Management.Models.OAuth2Policy.html
+  commentId: T:Axiam.Sdk.Management.Models.OAuth2Policy
+  fullName: Axiam.Sdk.Management.Models.OAuth2Policy
+  nameWithType: OAuth2Policy
+- uid: Axiam.Sdk.Management.Models.OAuth2Policy.RefreshReuseResponse
+  name: RefreshReuseResponse
+  href: api/Axiam.Sdk.Management.Models.OAuth2Policy.html#Axiam_Sdk_Management_Models_OAuth2Policy_RefreshReuseResponse
+  commentId: P:Axiam.Sdk.Management.Models.OAuth2Policy.RefreshReuseResponse
+  fullName: Axiam.Sdk.Management.Models.OAuth2Policy.RefreshReuseResponse
+  nameWithType: OAuth2Policy.RefreshReuseResponse
+- uid: Axiam.Sdk.Management.Models.OAuth2Policy.RefreshReuseResponse*
+  name: RefreshReuseResponse
+  href: api/Axiam.Sdk.Management.Models.OAuth2Policy.html#Axiam_Sdk_Management_Models_OAuth2Policy_RefreshReuseResponse_
+  commentId: Overload:Axiam.Sdk.Management.Models.OAuth2Policy.RefreshReuseResponse
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.OAuth2Policy.RefreshReuseResponse
+  nameWithType: OAuth2Policy.RefreshReuseResponse
 - uid: Axiam.Sdk.Management.Models.OidcAuthorizeRequest
   name: OidcAuthorizeRequest
   href: api/Axiam.Sdk.Management.Models.OidcAuthorizeRequest.html
@@ -23166,6 +23452,30 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.ReadyResponse.Status
   nameWithType: ReadyResponse.Status
+- uid: Axiam.Sdk.Management.Models.RefreshReuseResponse
+  name: RefreshReuseResponse
+  href: api/Axiam.Sdk.Management.Models.RefreshReuseResponse.html
+  commentId: T:Axiam.Sdk.Management.Models.RefreshReuseResponse
+  fullName: Axiam.Sdk.Management.Models.RefreshReuseResponse
+  nameWithType: RefreshReuseResponse
+- uid: Axiam.Sdk.Management.Models.RefreshReuseResponse.Refuse
+  name: Refuse
+  href: api/Axiam.Sdk.Management.Models.RefreshReuseResponse.html#Axiam_Sdk_Management_Models_RefreshReuseResponse_Refuse
+  commentId: F:Axiam.Sdk.Management.Models.RefreshReuseResponse.Refuse
+  fullName: Axiam.Sdk.Management.Models.RefreshReuseResponse.Refuse
+  nameWithType: RefreshReuseResponse.Refuse
+- uid: Axiam.Sdk.Management.Models.RefreshReuseResponse.RevokeSession
+  name: RevokeSession
+  href: api/Axiam.Sdk.Management.Models.RefreshReuseResponse.html#Axiam_Sdk_Management_Models_RefreshReuseResponse_RevokeSession
+  commentId: F:Axiam.Sdk.Management.Models.RefreshReuseResponse.RevokeSession
+  fullName: Axiam.Sdk.Management.Models.RefreshReuseResponse.RevokeSession
+  nameWithType: RefreshReuseResponse.RevokeSession
+- uid: Axiam.Sdk.Management.Models.RefreshReuseResponse.Unknown
+  name: Unknown
+  href: api/Axiam.Sdk.Management.Models.RefreshReuseResponse.html#Axiam_Sdk_Management_Models_RefreshReuseResponse_Unknown
+  commentId: F:Axiam.Sdk.Management.Models.RefreshReuseResponse.Unknown
+  fullName: Axiam.Sdk.Management.Models.RefreshReuseResponse.Unknown
+  nameWithType: RefreshReuseResponse.Unknown
 - uid: Axiam.Sdk.Management.Models.RegistrationTokenResponse
   name: RegistrationTokenResponse
   href: api/Axiam.Sdk.Management.Models.RegistrationTokenResponse.html
@@ -25818,6 +26128,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SecuritySettings.Notification
   nameWithType: SecuritySettings.Notification
+- uid: Axiam.Sdk.Management.Models.SecuritySettings.Oauth2
+  name: Oauth2
+  href: api/Axiam.Sdk.Management.Models.SecuritySettings.html#Axiam_Sdk_Management_Models_SecuritySettings_Oauth2
+  commentId: P:Axiam.Sdk.Management.Models.SecuritySettings.Oauth2
+  fullName: Axiam.Sdk.Management.Models.SecuritySettings.Oauth2
+  nameWithType: SecuritySettings.Oauth2
+- uid: Axiam.Sdk.Management.Models.SecuritySettings.Oauth2*
+  name: Oauth2
+  href: api/Axiam.Sdk.Management.Models.SecuritySettings.html#Axiam_Sdk_Management_Models_SecuritySettings_Oauth2_
+  commentId: Overload:Axiam.Sdk.Management.Models.SecuritySettings.Oauth2
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SecuritySettings.Oauth2
+  nameWithType: SecuritySettings.Oauth2
 - uid: Axiam.Sdk.Management.Models.SecuritySettings.Oidc
   name: Oidc
   href: api/Axiam.Sdk.Management.Models.SecuritySettings.html#Axiam_Sdk_Management_Models_SecuritySettings_Oidc
@@ -26991,6 +27314,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.SetOrgSettings.PasswordHistoryCount
   nameWithType: SetOrgSettings.PasswordHistoryCount
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.RefreshReuseResponse
+  name: RefreshReuseResponse
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_RefreshReuseResponse
+  commentId: P:Axiam.Sdk.Management.Models.SetOrgSettings.RefreshReuseResponse
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.RefreshReuseResponse
+  nameWithType: SetOrgSettings.RefreshReuseResponse
+- uid: Axiam.Sdk.Management.Models.SetOrgSettings.RefreshReuseResponse*
+  name: RefreshReuseResponse
+  href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_RefreshReuseResponse_
+  commentId: Overload:Axiam.Sdk.Management.Models.SetOrgSettings.RefreshReuseResponse
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.SetOrgSettings.RefreshReuseResponse
+  nameWithType: SetOrgSettings.RefreshReuseResponse
 - uid: Axiam.Sdk.Management.Models.SetOrgSettings.RefreshTokenLifetimeSecs
   name: RefreshTokenLifetimeSecs
   href: api/Axiam.Sdk.Management.Models.SetOrgSettings.html#Axiam_Sdk_Management_Models_SetOrgSettings_RefreshTokenLifetimeSecs
@@ -28657,6 +28993,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.PasswordHistoryCount
   nameWithType: TenantSettingsOverride.PasswordHistoryCount
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.RefreshReuseResponse
+  name: RefreshReuseResponse
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_RefreshReuseResponse
+  commentId: P:Axiam.Sdk.Management.Models.TenantSettingsOverride.RefreshReuseResponse
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.RefreshReuseResponse
+  nameWithType: TenantSettingsOverride.RefreshReuseResponse
+- uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.RefreshReuseResponse*
+  name: RefreshReuseResponse
+  href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_RefreshReuseResponse_
+  commentId: Overload:Axiam.Sdk.Management.Models.TenantSettingsOverride.RefreshReuseResponse
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.TenantSettingsOverride.RefreshReuseResponse
+  nameWithType: TenantSettingsOverride.RefreshReuseResponse
 - uid: Axiam.Sdk.Management.Models.TenantSettingsOverride.RefreshTokenLifetimeSecs
   name: RefreshTokenLifetimeSecs
   href: api/Axiam.Sdk.Management.Models.TenantSettingsOverride.html#Axiam_Sdk_Management_Models_TenantSettingsOverride_RefreshTokenLifetimeSecs
@@ -29463,6 +29812,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.MetadataUrl
   nameWithType: UpdateFederationConfigRequest.MetadataUrl
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.NativeLogin
+  name: NativeLogin
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_NativeLogin
+  commentId: P:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.NativeLogin
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.NativeLogin
+  nameWithType: UpdateFederationConfigRequest.NativeLogin
+- uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.NativeLogin*
+  name: NativeLogin
+  href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_NativeLogin_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.NativeLogin
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.NativeLogin
+  nameWithType: UpdateFederationConfigRequest.NativeLogin
 - uid: Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.Provider
   name: Provider
   href: api/Axiam.Sdk.Management.Models.UpdateFederationConfigRequest.html#Axiam_Sdk_Management_Models_UpdateFederationConfigRequest_Provider
@@ -29793,6 +30155,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.BrowserSso
   nameWithType: UpdateOAuth2ClientRequest.BrowserSso
+- uid: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.DefaultIdp
+  name: DefaultIdp
+  href: api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_DefaultIdp
+  commentId: P:Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.DefaultIdp
+  fullName: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.DefaultIdp
+  nameWithType: UpdateOAuth2ClientRequest.DefaultIdp
+- uid: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.DefaultIdp*
+  name: DefaultIdp
+  href: api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_DefaultIdp_
+  commentId: Overload:Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.DefaultIdp
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.DefaultIdp
+  nameWithType: UpdateOAuth2ClientRequest.DefaultIdp
 - uid: Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.DpopBoundAccessTokens
   name: DpopBoundAccessTokens
   href: api/Axiam.Sdk.Management.Models.UpdateOAuth2ClientRequest.html#Axiam_Sdk_Management_Models_UpdateOAuth2ClientRequest_DpopBoundAccessTokens
