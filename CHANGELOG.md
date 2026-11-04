@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-11-04
+
 Contract 1.65 (the 1.2.0 platform release, CONTRACT.md §34.9) and contract 1.66 (§34.10). Additive: no existing
 signature changes and nothing here is source-breaking. The release number is the maintainer's.
 
@@ -40,6 +42,8 @@ signature changes and nothing here is source-breaking. The release number is the
   (`invalid_grant` on `OidcRefreshAsync`: one wire call, every concurrent waiter gets that one error, the spent
   token is never presented again).
 
+- Native sign-in with a provider ID token and idp_hint (contract 1.65 §37)
+
 ### Changed
 
 - **A `3xx` answer to an `/oauth2/*` POST is a `NetworkError`** (§12.1 rule 3, C165-25): `MapOAuth2ErrorAnyStatusAsync` now checks the status before the body, so a redirect whose body carries `error` is no longer an `OAuthProtocolError`.
@@ -62,6 +66,24 @@ signature changes and nothing here is source-breaking. The release number is the
   other vendored files are unchanged.
   `TokenRequest` and `PushedAuthorizationRequest` are not management models in this SDK; the new
   `provider`/`id_token`/`nonce` and `axiam_idp_hint` fields are reached through the hand-written operations above.
+
+- re-vendor CONTRACT.md 1.66 as amended at ilpanich/axiam 5f9d079
+
+- re-sync contract 1.66 and openapi.json; confirm the federated sign-in cookie binding (§12.1 rule 12b)
+
+- Bump the minor-patch group with 1 update
+
+- re-vendor openapi.json and the management registry (logout/reset-mfa 500, D-N44)
+
+- re-vendor openapi.json and the management registry (end_session 500, D-N42)
+
+- re-vendor contract 1.65, openapi 1.2.0 and the management registry
+
+### Fixed
+
+- Contract 1.65 review sweep 2 (C165-25)
+
+- Contract 1.65 review findings (C165-04, C165-11, C165-17, C165-18)
 
 ### Behaviour to know about (server side, no SDK change)
 
