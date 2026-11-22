@@ -57,7 +57,9 @@ authenticates at both device-grant endpoints (§14.1), the change-taking form of
 (`stream.ToInput(new SsfStreamChanges { ... })`, §32.2), and the request `user_id` as a plain `string?`
 (§27.11 rule 5, source-breaking: see the changelog). Contract 1.63 (§34.7) changes one behaviour: no `axiam_*` session cookie and no `X-CSRF-Token` header goes to an `/oauth2/*` request, in either issuer form (§6.1 rule 11, §12.1 rule 3, §14.6), and `plan` refuses a profile `Update` that would carry an unknown `termination_action` or `service_type` the manifest does not state (§27.6.2 item 4). The SDK ships no helper that builds or signs an `AuditEventMessage` (its AMQP surface is a consumer), so the optional producer-side refusal of a reserved `tenants.` / `gdpr.` audit action (§8) has nothing to attach to; the server's refusal stands. This SDK generates no DPoP proofs, so the §21.7.4 key-lifetime rule does not apply. Contract 1.64 (§34.8) changes these behaviours: any `429` on a device-code poll is not terminal, and `DeviceLoginAsync` waits its `Retry-After` out (a minimum, capped at the `expires_in` deadline), counts it as one interval and does not raise the interval (§14.2 rule 9); a `5xx` on the poll is a transport failure whatever its body and is retried inside the poll under §16, never on a `429` (§14.2 rule 6); the `plan` refusal of an unknown open-enum value is a `ValidationError` that names the member and quotes the value this SDK kept (§27.6.2 item 4). Contract 1.65 (§34.9) adds §37 — native sign-in with a provider ID token (`LoginWithProviderIdTokenAsync`, with the `NativeNonce` helper and its `ProviderNonce` pair) — and the optional `IdpHint` input of `OidcBegin` (emitted as `axiam_idp_hint`) and `OidcParAsync` (pushed in the body), regenerates the §27 layer for `default_idp`, `refresh_reuse_response` and `native_login`, and confirms the §9 rule that a replayed refresh token now ends the session server-side by default (`OidcRefreshAsync` makes one wire call per burst and never presents a spent token again). **Server floor:** the federation-config admin calls (`federation.create_config`, `get_config`, `list_configs`, `update_config`) of this 1.2-line SDK need an AXIAM server **1.2.0 or later**: `FederationConfigResponse.NativeLogin` is required from 1.2.0, and a response from an older server fails to decode (the member is a required `init` property). `OidcParAsync` pushes the `axiam_idp_hint` the begin URL carries when its own `IdpHint` is unset; the argument wins (D-N36). `OAuthProtocolError.RetryAfter` is now public. Contract 1.66 (§34.10) adds no operation and changes no API: a federated sign-in is bound to the client that started it (§12.1 rule 12b) — `SsoStartAsync`, `SsoStartOauth2Async` and the SAML login set the `__Host-axiam_fed_bind` cookie and the completions refuse with `401` without it, so an application must start and complete one sign-in through the same `AxiamClient` (one §4 cookie jar); a loopback test confirms the jar carries it, and the optional `reauthenticate` start input (rule 12c) is not exposed. Contract 1.67 (§34.11) changes no operation of this SDK. Contract 1.68 (§34.12, security audit 2026-11-14, Wave 2) is the **1.4.0** release and **changes behaviour — read the [1.4.0 migration notes](CHANGELOG.md)**: the "Login with AXIAM" glue binds a callback to the browser that started it and follows only a same-origin `return_to` (§12.8); an unknown `kid` causes at most one JWKS re-fetch per 60 s window and the access-token path refuses a `typ` other than `at+jwt` and any `purpose` claim (§12.4 rule 2, §10.1 rules 10–12); `[Authorize(Roles = …)]` is decided by the `roles` claim alone (§11); and `AxiamAuthzRequester` is the new AMQP requester that verifies the now-signed `AuthzResponse` (§8). Nothing in contract 1.53–1.68 is carved out except what
 this README says it declines: `webhooks` in the manifest, the `private_key_jwt` client assertion and DPoP
-proof generation. Manifest pruning: not offered in any namespace (§27.10).
+proof generation, and, for §11 (contract 1.68), the `require_scope` helper (`[AxiamScope(...)]`) and the
+"no `roles` claim" versus "`roles: []`" distinction of rule 11b on the verified identity (see the
+`[Authorize(Roles = …)]` section). Manifest pruning: not offered in any namespace (§27.10).
 
 §12.7, §14, §15, §17, §19, §20, §21, §22, §23, §24, §25, §26, §27, §28, §28.12, §29, §30, §31, §32, §33, §36 and §37 are named rather than
 folded into the range because they landed after this SDK already claimed §1–§13: widening the range silently would turn a
@@ -264,6 +266,16 @@ all. This SDK has not mapped scopes to roles in any release; the rule is stated 
 SDKs did. Scope-based checks are not a role check: gate on `[AxiamAccess(...)]`, or read the verified `scope`
 claim yourself from `JwksVerifier.VerifyAsync`.
 
+The `roles` claim is a **snapshot** taken when the token was minted (§11.2 rule 11e): a role granted or revoked
+afterwards is not reflected until the holder's next token, so a guard can be stale for at most one access-token
+lifetime (15 minutes by default). Role names compare **exactly** — `roles: ["Admin"]` does not satisfy
+`[Authorize(Roles = "admin")]` (ASP.NET Core's ordinal claim match; pinned by a test).
+
+**Declined in this release (CONTRACT §11.1 / §11.2 rule 11b).** This SDK ships no `[AxiamScope(...)]` /
+`require_scope` helper (a SHOULD where `require_role` ships), and the identity does not tell a token that has no
+`roles` claim from one whose `roles` is `[]`: both yield a principal with no role claims. If you must tell them
+apart, read the claim from `JwksVerifier.VerifyAsync`'s verified payload.
+
 ## OIDC / SSO relying-party helpers (CONTRACT.md §12)
 
 `Axiam.Sdk` ships the thirteen canonical §12 operations directly on the existing
@@ -383,6 +395,11 @@ callback to the browser that called the login route, and follows only a same-ori
   store a `Secure` cookie, so the glue uses `axiam_oidc_bind` without `Secure` there and **only** there; on
   any `https:` `RedirectUri`, and on plain HTTP to another host, it is the `__Host-` name (and on the latter
   the browser drops it, so the callback fails closed). There is no switch that selects the fallback elsewhere.
+- The cookie is marked `IsEssential`, so ASP.NET Core's cookie-consent policy (`UseCookiePolicy` with
+  `CheckConsentNeeded`) does not suppress it. A cookie policy that **forces `SameSite=Strict`**
+  (`MinimumSameSitePolicy = SameSiteMode.Strict`) still breaks the sign-in: the callback is a cross-site
+  top-level navigation and the browser then does not send the cookie, so every callback answers the uniform
+  `401`. Keep `Lax` (or `None` on HTTPS) for this cookie.
 - **Your `IOidcStateStore` must persist `BindingDigest` and return it unchanged**; a store that rebuilds
   entries from a fixed field list refuses every sign-in after the upgrade. Sign-ins in flight across the
   upgrade fail once and restart. Two logins started in one browser: the later one replaces the cookie.
@@ -392,7 +409,11 @@ callback to the browser that called the login route, and follows only a same-ori
   configure, still wins. To honour more (say, your other origins), set `options.AllowReturnTo = value =>
   allowedOrigins.Contains(new Uri(value, UriKind.Absolute).GetLeftPart(UriPartial.Authority))`; it is
   consulted at both points, only for a value the default rule refuses, and a predicate that throws accepts
-  nothing. No predicate that accepts absolute URLs is built in.
+  nothing. No predicate that accepts absolute URLs is built in. A non-ASCII path is percent-encoded
+  (UTF-8) in the `Location` header, because Kestrel refuses non-ASCII header values.
+- An exception from the store, `OnSuccessAsync` or the exchange is logged and answered `500 internal_error`
+  with the clearing `Set-Cookie` still on the response (§12.8 rule 1d), instead of reaching the host's
+  exception handler, which would reset the headers.
 
 Notes:
 
@@ -400,7 +421,7 @@ Notes:
   `state`/`nonce`/`code_verifier` anywhere — your own HTTP session (or `IOidcStateStore`
   for the ASP.NET Core glue) is the only place they live between the redirect and the
   callback. `MemoryOidcStateStore` is a single-process, 10-minute-TTL, single-use
-  reference implementation — a multi-instance deployment needs a shared store (Redis, a
+  reference implementation, bounded at 10 000 entries (the oldest is evicted) — a multi-instance deployment needs a shared store (Redis, a
   database): implement `IOidcStateStore` directly.
 - **An empty provider list is a success** (§12.1 note 9). An unknown organization, a known
   one with nothing configured, and a request naming no workspace at all *all* answer `200`
@@ -1226,7 +1247,8 @@ else Console.WriteLine(decision.ReasonCode);                         // no_grant
   `correlation_id` and logged as a warning, flagged `Unsigned`; one that carries a signature is verified in full, and the
   opt-out never admits one that fails. Remove it once the server is upgraded.
 - `correlation_id` and `nonce` are fresh CSPRNG UUIDs per request. A channel you opened yourself goes to
-  `AxiamAuthzRequester.CreateAsync(channel, …)`, which does not close it on dispose.
+  `AxiamAuthzRequester.CreateAsync(channel, …)`, which does not close it on dispose; disposing the requester cancels its
+  consumer, so the exclusive auto-delete reply queue is deleted while your channel lives on.
 
 ## Reactors — AMQP extension actors (CONTRACT.md §22)
 

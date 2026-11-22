@@ -31,8 +31,8 @@ organization member, one description moved), which changes no operation.
   `AxiamOidcLoginOptions.AllowReturnTo` widens the rule for values the default refuses; a throwing predicate
   accepts nothing.
 - **C5 — JWKS fetch amplification (§12.4 rule 2).** `JwksVerifier` re-fetched the JWKS for every token with an
-  unknown `kid` (50 forged `kid`s caused 50 fetches). It now re-fetches at most once per 60-second window per
-  unknown `kid` on a fresh cache and rejects the rest from the cache with no network call; a rotated `kid` is
+  unknown `kid` (50 forged `kid`s caused 50 fetches). It now re-fetches at most once per 60-second window, whatever the
+  `kid`, while the cache is otherwise fresh, and rejects the rest from the cache with no network call; a rotated `kid` is
   accepted after the window.
 - **N14 — access-token rules 10 and 11 (§10.1).** The access-token path refuses a `typ` other than `at+jwt`
   (compared case-insensitively, with or without `application/`; a header with no `typ` is not refused by this
@@ -42,6 +42,19 @@ organization member, one description moved), which changes no operation.
   `OidcExchangeAsync` refuses an empty expected nonce (`AuthError`,
   `nonce_mismatch`) before the code is spent; the ID-token validator no longer treats an empty expectation as a
   match for `"nonce": ""`.
+
+### Fixed (review gate, round 2)
+
+- **Login glue.** A non-ASCII `return_to` that passes §12.8 rule 3 (`/café`) is percent-encoded (UTF-8) in the
+  `Location` header; Kestrel refuses non-ASCII header values and failed the response after `OnSuccessAsync` had run.
+  The binding cookie is `IsEssential`, so the cookie-consent policy no longer suppresses it (and every sign-in with it).
+  An exception from the store, the hook or the exchange is logged and answered `500` with the clearing cookie still
+  on the response (§12.8 rule 1d). `MemoryOidcStateStore` is bounded at `MemoryOidcStateStore.MaxEntries` (10 000;
+  the oldest is evicted), as the TypeScript, Python and Kotlin stores are.
+- **`AxiamAuthzRequester`.** Disposing a requester built on a caller-owned channel now cancels its consumer, so the
+  exclusive auto-delete reply queue is deleted (it leaked one consumer and one `amq.gen-…` queue per instance).
+- `OidcStateEntry` keeps the five-out `Deconstruct` of 1.3.x (adding `BindingDigest` had replaced it with a six-out
+  one; source and binary break for callers that deconstructed an entry).
 
 ### Added
 
@@ -64,7 +77,10 @@ organization member, one description moved), which changes no operation.
   (the defect was in the Java, Kotlin and PHP SDKs); the README now says so and says that a token with no `roles`
   claim has no roles. Tests pin it: `scope: "openid admin"` with no `roles` is `403`, `roles: ["admin"]` is `200`.
   **Your application must request the `roles` scope** (the server emits the claim only for a client that requested
-  it and is allowed it) for role guards to work. No `[AxiamScope]` attribute is added in this release.
+  it and is allowed it) for role guards to work. The claim is a snapshot, stale for at most one access-token
+  lifetime (§11.2 rule 11e), and role names compare exactly (`"Admin"` does not satisfy `Roles = "admin"`; pinned).
+  **Declined:** no `[AxiamScope]` / `require_scope` helper (§11.1, a SHOULD) is added in this release, and the identity
+  does not distinguish "no `roles` claim" from `roles: []` (§11.2 rule 11b); the README lists both as declined.
 
 ### Migration notes (1.3.1 → 1.4.0)
 
@@ -76,8 +92,13 @@ organization member, one description moved), which changes no operation.
 - **`return_to` (C6).** An absolute or scheme-relative `return_to` is no longer followed. If you relied on one, set
   `AllowReturnTo` to an allowlist, or set `SuccessRedirect`.
 - **Access tokens (N14).** A token whose header says `typ: JWT` (or anything but `at+jwt`) is refused, and so is one
-  with a `purpose` claim. The AXIAM server types its access tokens `at+jwt` from contract 1.67; a token minted by an
-  older server carries no `typ` and still passes. Test fixtures that minted `typ: JWT` must use `at+jwt` or no `typ`.
+  with a `purpose` claim. The AXIAM server types its access tokens `at+jwt` from contract 1.67; the access tokens of servers
+  before 1.67 carry `typ: JWT` and **are refused**. Upgrade the server to 1.67 or later first: the server's
+  `AXIAM__AUTH__REQUIRE_ACCESS_TOKEN_TYP=false` does not relax this SDK, and until the server is upgraded and holders
+  have refreshed (within one access-token lifetime) every request through `AxiamAuthMiddleware`, and every verified
+  gRPC identity resolution, answers 401. Test fixtures that minted `typ: JWT` must use `at+jwt`.
+- **Cookie policy.** The binding cookie is `IsEssential` (consent-gated apps now sign in). A cookie policy that forces
+  `SameSite=Strict` still breaks the callback, which is a cross-site top-level navigation; keep `Lax`.
 - **`JwksCacheTtl`** above 10 minutes is now 10 minutes.
 - **`OidcExchangeAsync`** with an empty `Nonce` now throws `AuthError` instead of accepting an ID token that carries
   an empty nonce.

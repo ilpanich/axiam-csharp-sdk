@@ -8,6 +8,7 @@ using Axiam.Sdk.AspNetCore.Tests.Fixtures;
 using Axiam.Sdk.Auth.Oidc;
 using Axiam.Sdk.Options;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
@@ -275,6 +276,69 @@ public sealed class OidcLoginBindingTests
         Assert.Equal("/dashboard?tab=1", response.Headers.Location!.OriginalString);
     }
 
+    // ---- Round 2: GLUE-R1-2 / GLUE-R1-3 / GLUE-R1-4 / CSH-R1-3 / CSH-R1-8 ------------------
+
+    [Theory]
+    [InlineData("/caf\u00e9", "/caf%C3%A9")]
+    [InlineData("/\u65e5\u672c/\u8a9e?q=\u00fc", "/%E6%97%A5%E6%9C%AC/%E8%AA%9E?q=%C3%BC")]
+    [InlineData("/already%20encoded/a%C3%A9", "/already%20encoded/a%C3%A9")]
+    public async Task ANonAsciiReturnTo_IsPercentEncoded_SoTheLocationHeaderIsAscii(string returnTo, string expectedLocation)
+    {
+        using TestApp app = await TestApp.StartAsync();
+        (string state, string cookie) = await app.BeginAsync(returnTo: returnTo);
+
+        HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
+
+        Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+        string location = response.Headers.Location!.OriginalString;
+        Assert.Equal(expectedLocation, location);
+        Assert.All(location, c => Assert.InRange(c, (char)0x20, (char)0x7e));
+    }
+
+    [Fact]
+    public async Task TheBindingCookie_IsEssential_SoTheCookieConsentPolicyDoesNotSuppressIt()
+    {
+        using TestApp app = await TestApp.StartAsync(beforeRouting: b =>
+            b.UseCookiePolicy(new CookiePolicyOptions { CheckConsentNeeded = _ => true }));
+
+        // No consent has been given. The login still sets the binding cookie, and the callback still completes.
+        (string state, string cookie) = await app.BeginAsync();
+        HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.True(app.OnSuccessCalled);
+        AssertCleared(response, HostCookie);
+    }
+
+    [Fact]
+    public async Task ARefusedCallbackWithAnotherLoginsCookie_ConsumesTheEntry_SoARetryWithTheRightCookieAlsoFails()
+    {
+        using TestApp app = await TestApp.StartAsync();
+        (string stateA, string cookieA) = await app.BeginAsync();
+        (_, string cookieB) = await app.BeginAsync();
+
+        HttpResponseMessage refused = await app.GetWithCookieAsync($"/login/axiam/callback?state={stateA}&code=c1", HostCookie, cookieB);
+        HttpResponseMessage retry = await app.GetWithCookieAsync($"/login/axiam/callback?state={stateA}&code=c1", HostCookie, cookieA);
+
+        await AssertUniform401Async(refused);
+        await AssertUniform401Async(retry);
+        Assert.Equal(0, app.Server.TokenRequests);
+        Assert.False(app.OnSuccessCalled);
+    }
+
+    [Fact]
+    public async Task AnExceptionFromOnSuccess_StillAnswersWithTheClearingCookie()
+    {
+        using TestApp app = await TestApp.StartAsync(o =>
+            o.OnSuccessAsync = (_, _, _, _) => throw new InvalidOperationException("the application's hook failed"));
+        (string state, string cookie) = await app.BeginAsync();
+
+        HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
+
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        AssertCleared(response, HostCookie);
+    }
+
     [Fact]
     public async Task APredicate_WidensTheRule_OnlyForValuesTheDefaultRuleRefuses()
     {
@@ -385,7 +449,7 @@ public sealed class OidcLoginBindingTests
             Server = server;
         }
 
-        public static async Task<TestApp> StartAsync(Action<AxiamOidcLoginOptions>? configure = null, string? forceReturnTo = null)
+        public static async Task<TestApp> StartAsync(Action<AxiamOidcLoginOptions>? configure = null, string? forceReturnTo = null, Action<IApplicationBuilder>? beforeRouting = null)
         {
             var fixture = new JwksFixture();
             var server = new FakeOidcServerHandler(fixture);
@@ -411,6 +475,7 @@ public sealed class OidcLoginBindingTests
                 });
                 webHost.Configure(appBuilder =>
                 {
+                    beforeRouting?.Invoke(appBuilder);
                     appBuilder.UseRouting();
                     appBuilder.UseEndpoints(endpoints =>
                     {

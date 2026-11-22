@@ -75,6 +75,13 @@ public sealed class AxiamAuthzRequesterTests
         public Func<AuthzDelivery, Task>? OnDelivery { get; private set; }
         public Action? OnClosed { get; private set; }
         public List<(string Queue, string ReplyTo, string CorrelationId, byte[] Body)> Published { get; } = new();
+        public int Cancelled { get; private set; }
+
+        public Task CancelAsync(CancellationToken cancellationToken)
+        {
+            Cancelled++;
+            return Task.CompletedTask;
+        }
 
         public Task<string> DeclareReplyQueueAsync(Func<AuthzDelivery, Task> onDelivery, Action onClosed, CancellationToken cancellationToken)
         {
@@ -450,6 +457,37 @@ public sealed class AxiamAuthzRequesterTests
         _ = name;
         Assert.ThrowsAny<ArgumentException>(() =>
             AxiamAuthzRequester.BuildRequest(Subkey, Correlation, Tenant, subject, action, resource, null, Nonce, DateTimeOffset.UnixEpoch));
+    }
+
+    [Fact]
+    public void TheRequest_ReproducesTheServersAuthzRequestReferenceVector_ByteForByte()
+    {
+        // CSH-R1-5: the server re-serializes an AuthzRequest with serde and verifies the HMAC over THOSE bytes.
+        // crates/axiam-amqp/tests/fixtures/v2_reference_vectors.json, "authz_request".
+        using JsonDocument doc = JsonDocument.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Fixtures", "v2_reference_vectors.json")));
+        JsonElement vector = doc.RootElement.GetProperty("authz_request");
+        string canonical = vector.GetProperty("canonical_signed_json").GetString()!;
+        string signature = vector.GetProperty("hmac_signature_hex").GetString()!;
+
+        byte[] wire = AxiamAuthzRequester.BuildRequest(
+            Subkey, Correlation, Tenant, Subject, "documents:read", Resource, "confidential", Nonce,
+            new DateTimeOffset(2026, 7, 10, 12, 0, 0, TimeSpan.Zero));
+
+        Assert.Equal(canonical[..^1] + ",\"hmac_signature\":\"" + signature + "\"}", Encoding.UTF8.GetString(wire));
+    }
+
+    [Fact]
+    public async Task DisposingARequester_CancelsTheConsumer_SoACallerOwnedChannelKeepsNoQueueAlive()
+    {
+        // CSH-R1-4: the requester does not own the channel here, so disposing must cancel the consumer itself
+        // (that is what lets the exclusive auto-delete reply queue go away while the channel lives on).
+        var transport = new FakeTransport();
+        AxiamAuthzRequester requester = await AxiamAuthzRequester.CreateAsync(transport, Tenant, Subkey, null, null, CancellationToken.None);
+
+        await requester.DisposeAsync();
+        await requester.DisposeAsync(); // idempotent
+
+        Assert.Equal(1, transport.Cancelled);
     }
 
     [Fact]

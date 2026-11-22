@@ -46,6 +46,19 @@ public sealed record OidcStateEntry(
         : this(state, nonce, codeVerifier, redirectUri, returnTo, null)
     {
     }
+
+    /// <summary>
+    /// The pre-1.68 five-out <c>Deconstruct</c>, kept so <c>var (state, nonce, verifier, redirect, returnTo) = entry;</c>
+    /// still compiles and links. Adding <see cref="BindingDigest"/> replaced the compiler's own with a six-out one.
+    /// </summary>
+    public void Deconstruct(out string state, out string nonce, out Sensitive<string> codeVerifier, out string redirectUri, out string? returnTo)
+    {
+        state = State;
+        nonce = Nonce;
+        codeVerifier = CodeVerifier;
+        redirectUri = RedirectUri;
+        returnTo = ReturnTo;
+    }
 }
 
 /// <summary>
@@ -86,7 +99,9 @@ public interface IOidcStateStore
 /// <remarks>
 /// Expired entries are dropped lazily on <see cref="SaveAsync"/>/<see cref="ConsumeAsync"/>
 /// — there is NO background timer/thread, since a library must not keep the host process
-/// alive on its own. Suitable for a single-process app and for tests. A multi-instance
+/// alive on its own. The store holds at most <see cref="MaxEntries"/> entries: the login route is
+/// unauthenticated and every call saves one for up to ten minutes, so a client looping on it would
+/// otherwise grow the map without limit; when full, the OLDEST entry is evicted. Suitable for a single-process app and for tests. A multi-instance
 /// deployment needs a shared store (Redis, a database) — implement
 /// <see cref="IOidcStateStore"/> directly for that; nothing in this SDK assumes this type.
 /// </remarks>
@@ -98,8 +113,16 @@ public sealed class MemoryOidcStateStore : IOidcStateStore
     /// </summary>
     public static readonly TimeSpan MaxTtl = TimeSpan.FromMinutes(10);
 
+    /// <summary>
+    /// The most entries the store holds (10&#160;000, as the TypeScript, Python and Kotlin stores). Saving one more
+    /// evicts the oldest; its login then fails as an unknown state.
+    /// </summary>
+    public const int MaxEntries = 10_000;
+
     private readonly TimeSpan _ttl;
-    private readonly ConcurrentDictionary<string, (OidcStateEntry Entry, DateTimeOffset ExpiresAt)> _entries = new();
+    private readonly object _saveGate = new();
+    private long _sequence;
+    private readonly ConcurrentDictionary<string, (OidcStateEntry Entry, DateTimeOffset ExpiresAt, long Sequence)> _entries = new();
 
     /// <summary>
     /// Constructs a <see cref="MemoryOidcStateStore"/>. <paramref name="ttl"/> is the entry
@@ -117,8 +140,29 @@ public sealed class MemoryOidcStateStore : IOidcStateStore
     public Task SaveAsync(OidcStateEntry entry, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(entry);
-        Sweep();
-        _entries[entry.State] = (entry, DateTimeOffset.UtcNow + _ttl);
+        lock (_saveGate)
+        {
+            Sweep();
+            _entries[entry.State] = (entry, DateTimeOffset.UtcNow + _ttl, ++_sequence);
+            while (_entries.Count > MaxEntries)
+            {
+                // Over the bound: drop the oldest. Only reached at capacity, so the scan is not on the normal path.
+                string? oldest = null;
+                long oldestSequence = long.MaxValue;
+                foreach (var kvp in _entries)
+                {
+                    if (kvp.Value.Sequence < oldestSequence)
+                    {
+                        oldestSequence = kvp.Value.Sequence;
+                        oldest = kvp.Key;
+                    }
+                }
+                if (oldest is null || !_entries.TryRemove(oldest, out _))
+                {
+                    break;
+                }
+            }
+        }
         return Task.CompletedTask;
     }
 

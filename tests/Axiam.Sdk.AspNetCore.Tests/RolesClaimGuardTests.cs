@@ -57,6 +57,7 @@ public sealed class RolesClaimGuardTests
         "roles-admin" => Token(fixture, roles: new[] { "admin" }, scope: "openid"),
         "roles-empty-scope-admin" => Token(fixture, roles: Array.Empty<string>(), scope: "openid admin"),
         "roles-other" => Token(fixture, roles: new[] { "viewer" }, scope: "admin"),
+        "roles-capital-admin" => Token(fixture, roles: new[] { "Admin" }, scope: "openid"),
         "roles-string" => Token(fixture, roles: "admin", scope: "openid"),
         _ => throw new ArgumentOutOfRangeException(nameof(recipe)),
     };
@@ -83,6 +84,13 @@ public sealed class RolesClaimGuardTests
     public async Task ARolesClaimHoldingTheRole_IsAllowed_WithoutAMatchingScope()
     {
         Assert.Equal(HttpStatusCode.OK, await GetAsync("roles-admin"));
+    }
+
+    [Fact]
+    public async Task ARolesClaimHoldingAdmin_IsForbidden_ByRolesAdmin_BecauseRoleNamesAreCaseSensitive()
+    {
+        // CONTRACT §11.2 rule 11g: role names compare exactly, so "Admin" does not satisfy Roles = "admin".
+        Assert.Equal(HttpStatusCode.Forbidden, await GetAsync("roles-capital-admin"));
     }
 
     [Fact]

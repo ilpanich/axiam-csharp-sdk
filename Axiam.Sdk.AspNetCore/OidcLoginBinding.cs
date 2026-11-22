@@ -78,6 +78,10 @@ internal static class OidcLoginBinding
         SameSite = SameSiteMode.Lax,
         Path = "/",
         MaxAge = maxAge,
+        // Strictly necessary for the sign-in to complete: without this the ASP.NET Core cookie-consent policy
+        // (UseCookiePolicy with CheckConsentNeeded) silently drops the cookie, the set and the clear alike, and
+        // every callback then answers the uniform 401.
+        IsEssential = true,
     };
 
     internal static void Set(HttpResponse response, string redirectUri, string value) =>
@@ -116,6 +120,45 @@ internal static class OidcLoginBinding
             }
         }
         return true;
+    }
+
+    /// <summary>
+    /// <paramref name="destination"/> as a <c>Location</c> header value: every non-ASCII character is
+    /// percent-encoded as its UTF-8 bytes, because Kestrel refuses a non-ASCII response header (it fails the
+    /// response, after the application's sign-in hook has run) and the &#167;12.8 rule admits non-ASCII paths.
+    /// ASCII, including any existing <c>%</c> escape, is left untouched.
+    /// </summary>
+    internal static string ToLocationHeader(string destination)
+    {
+        bool ascii = true;
+        foreach (char c in destination)
+        {
+            if (c > 0x7e)
+            {
+                ascii = false;
+                break;
+            }
+        }
+        if (ascii)
+        {
+            return destination;
+        }
+        var sb = new StringBuilder(destination.Length + 16);
+        Span<byte> utf8 = stackalloc byte[4];
+        foreach (Rune rune in destination.EnumerateRunes()) // a lone surrogate enumerates as U+FFFD
+        {
+            if (rune.Value < 0x80)
+            {
+                sb.Append((char)rune.Value);
+                continue;
+            }
+            int n = rune.EncodeToUtf8(utf8);
+            for (int i = 0; i < n; i++)
+            {
+                sb.Append('%').Append(utf8[i].ToString("X2", System.Globalization.CultureInfo.InvariantCulture));
+            }
+        }
+        return sb.ToString();
     }
 
     /// <summary>

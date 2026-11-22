@@ -4,6 +4,8 @@ using Axiam.Sdk.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Axiam.Sdk.AspNetCore;
 
@@ -172,82 +174,94 @@ public static class OidcLoginEndpointExtensions
             string? presentedBinding = OidcLoginBinding.Presented(context.Request, options.RedirectUri);
             OidcLoginBinding.Clear(context.Response, options.RedirectUri);
 
-            string? idpError = query["error"];
-            if (!string.IsNullOrEmpty(idpError))
-            {
-                string? description = query["error_description"];
-                string message = string.IsNullOrEmpty(description) ? idpError : $"{idpError}: {description}";
-                await WriteOidcErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", message).ConfigureAwait(false);
-                return;
-            }
-
-            string? state = query["state"];
-            string? code = query["code"];
-            if (string.IsNullOrEmpty(state) || string.IsNullOrEmpty(code))
-            {
-                await WriteOidcErrorAsync(context, StatusCodes.Status400BadRequest, "invalid_request", "callback is missing the state or code query parameter").ConfigureAwait(false);
-                return;
-            }
-
-            // Single-use consume (§12.3 rule 1): a replayed callback finds nothing.
-            // Unknown, already-consumed, and expired states are deliberately
-            // indistinguishable to the caller.
-            OidcStateEntry? entry = await store.ConsumeAsync(state, cancellationToken).ConfigureAwait(false);
-            // §12.8 rule 1 (c): the entry is consumed FIRST, so the state stays single-use whatever
-            // happens next; then the request must present the cookie the login set. A missing
-            // cookie, an entry with no digest and a different digest get the same status and the same
-            // body as an unknown state, and neither exchange the code nor call OnSuccessAsync.
-            if (entry is null || !OidcLoginBinding.Matches(entry, presentedBinding))
-            {
-                await WriteOidcErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "unknown, expired, or already-used login state").ConfigureAwait(false);
-                return;
-            }
-
-            OidcTokenSet tokens;
             try
             {
-                tokens = await client.OidcExchangeAsync(new OidcExchangeParams
+                string? idpError = query["error"];
+                if (!string.IsNullOrEmpty(idpError))
                 {
-                    Code = code,
-                    CodeVerifier = entry.CodeVerifier,
-                    RedirectUri = entry.RedirectUri,
-                    Nonce = entry.Nonce,
-                }, cancellationToken).ConfigureAwait(false);
-            }
-            catch (NetworkError)
-            {
-                await WriteOidcErrorAsync(context, StatusCodes.Status503ServiceUnavailable, "oidc_unavailable", "the AXIAM token endpoint is unreachable").ConfigureAwait(false);
-                return;
-            }
-            catch (AuthError ex)
-            {
-                // Covers OAuthProtocolError and every §12.4 ID-token reason code too — a
-                // login that cannot be proven is a failed login.
-                await WriteOidcErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", ex.Message).ConfigureAwait(false);
-                return;
-            }
+                    string? description = query["error_description"];
+                    string message = string.IsNullOrEmpty(description) ? idpError : $"{idpError}: {description}";
+                    await WriteOidcErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", message).ConfigureAwait(false);
+                    return;
+                }
 
-            if (options.OnSuccessAsync is not null)
-            {
-                await options.OnSuccessAsync(context, tokens, entry, cancellationToken).ConfigureAwait(false);
-            }
+                string? state = query["state"];
+                string? code = query["code"];
+                if (string.IsNullOrEmpty(state) || string.IsNullOrEmpty(code))
+                {
+                    await WriteOidcErrorAsync(context, StatusCodes.Status400BadRequest, "invalid_request", "callback is missing the state or code query parameter").ConfigureAwait(false);
+                    return;
+                }
 
-            // §12.8 rule 3: a stored return_to is checked AGAIN here — the store may be the
-            // integrator's, or the entry older glue's. A value that fails is not followed.
-            string? destination = options.SuccessRedirect
-                ?? (OidcLoginBinding.IsAcceptableReturnTo(entry.ReturnTo, options.AllowReturnTo) ? entry.ReturnTo : null);
-            if (!string.IsNullOrEmpty(destination))
-            {
-                context.Response.Redirect(destination);
-                return;
-            }
+                // Single-use consume (§12.3 rule 1): a replayed callback finds nothing.
+                // Unknown, already-consumed, and expired states are deliberately
+                // indistinguishable to the caller.
+                OidcStateEntry? entry = await store.ConsumeAsync(state, cancellationToken).ConfigureAwait(false);
+                // §12.8 rule 1 (c): the entry is consumed FIRST, so the state stays single-use whatever
+                // happens next; then the request must present the cookie the login set. A missing
+                // cookie, an entry with no digest and a different digest get the same status and the same
+                // body as an unknown state, and neither exchange the code nor call OnSuccessAsync.
+                if (entry is null || !OidcLoginBinding.Matches(entry, presentedBinding))
+                {
+                    await WriteOidcErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", "unknown, expired, or already-used login state").ConfigureAwait(false);
+                    return;
+                }
 
-            var body = new Dictionary<string, object?> { ["authenticated"] = true, ["expires_in"] = tokens.ExpiresIn };
-            if (tokens.IdClaims is { Sub.Length: > 0 } claims)
-            {
-                body["sub"] = claims.Sub;
+                OidcTokenSet tokens;
+                try
+                {
+                    tokens = await client.OidcExchangeAsync(new OidcExchangeParams
+                    {
+                        Code = code,
+                        CodeVerifier = entry.CodeVerifier,
+                        RedirectUri = entry.RedirectUri,
+                        Nonce = entry.Nonce,
+                    }, cancellationToken).ConfigureAwait(false);
+                }
+                catch (NetworkError)
+                {
+                    await WriteOidcErrorAsync(context, StatusCodes.Status503ServiceUnavailable, "oidc_unavailable", "the AXIAM token endpoint is unreachable").ConfigureAwait(false);
+                    return;
+                }
+                catch (AuthError ex)
+                {
+                    // Covers OAuthProtocolError and every §12.4 ID-token reason code too — a
+                    // login that cannot be proven is a failed login.
+                    await WriteOidcErrorAsync(context, StatusCodes.Status401Unauthorized, "authentication_failed", ex.Message).ConfigureAwait(false);
+                    return;
+                }
+
+                if (options.OnSuccessAsync is not null)
+                {
+                    await options.OnSuccessAsync(context, tokens, entry, cancellationToken).ConfigureAwait(false);
+                }
+
+                // §12.8 rule 3: a stored return_to is checked AGAIN here — the store may be the
+                // integrator's, or the entry older glue's. A value that fails is not followed.
+                string? destination = options.SuccessRedirect
+                    ?? (OidcLoginBinding.IsAcceptableReturnTo(entry.ReturnTo, options.AllowReturnTo) ? entry.ReturnTo : null);
+                if (!string.IsNullOrEmpty(destination))
+                {
+                    context.Response.Redirect(OidcLoginBinding.ToLocationHeader(destination));
+                    return;
+                }
+
+                var body = new Dictionary<string, object?> { ["authenticated"] = true, ["expires_in"] = tokens.ExpiresIn };
+                if (tokens.IdClaims is { Sub.Length: > 0 } claims)
+                {
+                    body["sub"] = claims.Sub;
+                }
+                await context.Response.WriteAsJsonAsync(body, cancellationToken).ConfigureAwait(false);
             }
-            await context.Response.WriteAsJsonAsync(body, cancellationToken).ConfigureAwait(false);
+            catch (Exception ex) when (ex is not OperationCanceledException && !context.Response.HasStarted)
+            {
+                // §12.8 rule 1 (d), "any other error": an exception from the store, the application's hook or the
+                // exchange must not lose the clearing Set-Cookie to the host's exception handler (which resets the
+                // response headers). Answer here, with the cookie still on the response, and log the failure.
+                context.RequestServices.GetService<ILoggerFactory>()?.CreateLogger("Axiam.Sdk.AspNetCore.OidcLogin")
+                    .LogError(ex, "the AXIAM OIDC login callback failed");
+                await WriteOidcErrorAsync(context, StatusCodes.Status500InternalServerError, "internal_error", "the login callback failed").ConfigureAwait(false);
+            }
         });
 
         return endpoints;

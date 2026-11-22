@@ -72,12 +72,20 @@ internal interface IAuthzTransport
     /// <paramref name="queue"/>, AMQP <c>reply_to</c> = <paramref name="replyTo"/> and
     /// <c>correlation_id</c> = <paramref name="correlationId"/>.</summary>
     Task PublishRequestAsync(string queue, string replyTo, string correlationId, byte[] body, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Cancels the reply-queue consumer. On a caller-owned channel this is what lets the exclusive auto-delete queue
+    /// go away (auto-delete needs the last consumer to cancel); it is a no-op when nothing was declared. Must not throw
+    /// for a channel that is already closed.
+    /// </summary>
+    Task CancelAsync(CancellationToken cancellationToken);
 }
 
 /// <summary>The <c>RabbitMQ.Client</c> 7.x implementation of <see cref="IAuthzTransport"/>.</summary>
 internal sealed class RabbitMqAuthzTransport : IAuthzTransport
 {
     private readonly IChannel _channel;
+    private string? _consumerTag;
 
     internal RabbitMqAuthzTransport(IChannel channel) => _channel = channel ?? throw new ArgumentNullException(nameof(channel));
 
@@ -105,10 +113,27 @@ internal sealed class RabbitMqAuthzTransport : IAuthzTransport
             return Task.CompletedTask;
         };
 
-        await _channel.BasicConsumeAsync(
+        _consumerTag = await _channel.BasicConsumeAsync(
             declared.QueueName, autoAck: false, consumerTag: string.Empty, noLocal: false,
             exclusive: true, arguments: null, consumer, cancellationToken).ConfigureAwait(false);
         return declared.QueueName;
+    }
+
+    public async Task CancelAsync(CancellationToken cancellationToken)
+    {
+        string? tag = Interlocked.Exchange(ref _consumerTag, null);
+        if (tag is null || !_channel.IsOpen)
+        {
+            return;
+        }
+        try
+        {
+            await _channel.BasicCancelAsync(tag, noWait: false, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception)
+        {
+            // The channel closed under us: the broker has already removed the consumer and the queue.
+        }
     }
 
     public async Task PublishRequestAsync(string queue, string replyTo, string correlationId, byte[] body, CancellationToken cancellationToken)
@@ -327,12 +352,20 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
         }
 
         var requester = new AxiamAuthzRequester(transport, tenant.ToString("D", CultureInfo.InvariantCulture), signingKey, options, ownedResources);
-        string queue = await transport.DeclareReplyQueueAsync(requester.HandleAsync, requester.Close, cancellationToken).ConfigureAwait(false);
+        string queue = await transport.DeclareReplyQueueAsync(requester.HandleAsync, () => requester.Close(), cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrEmpty(queue) || queue.StartsWith(ServerQueuePrefix, StringComparison.Ordinal))
         {
             // The server answers a reply_to naming one of its own queues on the shared axiam.authz.response
             // instead (§8 rule 5), which would put this requester back on the shared queue the contract forbids.
             requester.Close();
+            try
+            {
+                await transport.CancelAsync(CancellationToken.None).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                // Best effort, as on dispose.
+            }
             throw new InvalidOperationException($"the authz reply queue '{queue}' is not a private queue");
         }
 
@@ -387,21 +420,34 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
     /// it with the channel.</summary>
     public async ValueTask DisposeAsync()
     {
-        Close();
+        bool first = Close();
+        if (first)
+        {
+            // Stop consuming so an exclusive auto-delete reply queue on a CALLER-OWNED channel is deleted too (it
+            // goes only when its last consumer cancels, and that channel stays open).
+            try
+            {
+                await _transport.CancelAsync(CancellationToken.None).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                // Best effort: a broker that is already gone has dropped the queue.
+            }
+        }
         if (_ownedResources?.Invoke() is { } owned)
         {
             await owned.DisposeAsync().ConfigureAwait(false);
         }
     }
 
-    internal void Close()
+    internal bool Close()
     {
         List<Pending> outstanding;
         lock (_gate)
         {
             if (_closed)
             {
-                return;
+                return false;
             }
             _closed = true;
             outstanding = new List<Pending>(_pending.Values);
@@ -410,6 +456,7 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
         {
             p.Result.TrySetException(new ObjectDisposedException(nameof(AxiamAuthzRequester)));
         }
+        return true;
     }
 
     /// <summary>Registers an outstanding request without publishing one; a test entry (the contract vectors fix
