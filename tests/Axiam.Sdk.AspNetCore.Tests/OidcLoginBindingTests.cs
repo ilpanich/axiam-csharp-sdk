@@ -340,6 +340,30 @@ public sealed class OidcLoginBindingTests
     }
 
     [Fact]
+    public async Task AnExceptionFromOnSuccess_DoesNotShipTheHeadersTheHookSetBeforeThrowing()
+    {
+        // CSH-R3-1: a hook that signs the user in and then throws must abort the sign-in. The host used to discard
+        // every header on an exception; the callback's own catch must do the same, keeping only the clearing cookie.
+        using TestApp app = await TestApp.StartAsync(o =>
+            o.OnSuccessAsync = (ctx, _, _, _) =>
+            {
+                ctx.Response.Cookies.Append("app_session", "x");
+                ctx.Response.Headers["X-From-Hook"] = "1";
+                throw new InvalidOperationException("the application's rule rejected the user");
+            });
+        (string state, string cookie) = await app.BeginAsync();
+
+        HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
+
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        AssertCleared(response, HostCookie);
+        Assert.DoesNotContain(
+            response.Headers.TryGetValues("Set-Cookie", out IEnumerable<string>? all) ? all : Array.Empty<string>(),
+            c => c.StartsWith("app_session=", StringComparison.Ordinal));
+        Assert.False(response.Headers.Contains("X-From-Hook"));
+    }
+
+    [Fact]
     public async Task APredicate_WidensTheRule_OnlyForValuesTheDefaultRuleRefuses()
     {
         using TestApp app = await TestApp.StartAsync(o => o.AllowReturnTo = v => v == "https://app.example/x");

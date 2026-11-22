@@ -491,6 +491,20 @@ public sealed class AxiamAuthzRequesterTests
     }
 
     [Fact]
+    public async Task ABrokerSideConsumerCancel_ClosesTheRequester_SoACheckFailsAtOnce()
+    {
+        // CSH-R3-2: a deleted reply queue cancels the consumer while the channel stays open; the requester must
+        // close (ObjectDisposedException) instead of publishing with a dead reply_to and waiting out the timeout.
+        (Mock<IChannel> channel, FakeBroker broker) = FakeChannel();
+        await using AxiamAuthzRequester requester = await AxiamAuthzRequester.CreateAsync(
+            channel.Object, Tenant, Subkey, new AxiamAuthzRequesterOptions { Timeout = TimeSpan.FromSeconds(30) });
+
+        await broker.Consumer!.HandleBasicCancelAsync("consumer-tag");
+
+        await Assert.ThrowsAsync<ObjectDisposedException>(() => requester.CheckAsync(Subject, "read", Resource));
+    }
+
+    [Fact]
     public void ALoneSurrogateInTheActionOrScope_IsRefused()
     {
         string lone = new string(new[] { 'a', (char)0xD800, 'b' });

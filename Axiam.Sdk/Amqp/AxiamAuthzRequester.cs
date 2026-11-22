@@ -112,6 +112,13 @@ internal sealed class RabbitMqAuthzTransport : IAuthzTransport
             onClosed();
             return Task.CompletedTask;
         };
+        // A broker-side cancel (the reply queue was deleted while the channel stays open) raises UnregisteredAsync,
+        // not ShutdownAsync; without this the requester would keep publishing with a dead reply_to.
+        consumer.UnregisteredAsync += (_, _) =>
+        {
+            onClosed();
+            return Task.CompletedTask;
+        };
 
         _consumerTag = await _channel.BasicConsumeAsync(
             declared.QueueName, autoAck: false, consumerTag: string.Empty, noLocal: false,

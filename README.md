@@ -412,8 +412,11 @@ callback to the browser that called the login route, and follows only a same-ori
   nothing. No predicate that accepts absolute URLs is built in. A non-ASCII path is percent-encoded
   (UTF-8) in the `Location` header, because Kestrel refuses non-ASCII header values.
 - An exception from the store, `OnSuccessAsync` or the exchange is logged and answered `500 internal_error`
-  with the clearing `Set-Cookie` still on the response (§12.8 rule 1d), instead of reaching the host's
-  exception handler, which would reset the headers.
+  with the clearing `Set-Cookie` and nothing else on the response (§12.8 rule 1d): every header the hook set
+  before it threw, a session cookie included, is dropped, so a throw aborts the sign-in. This differs from the
+  reference binding, which lets such errors propagate; here the callback answers itself because ASP.NET's
+  exception handlers reset the response headers and would lose the clearing cookie. Consequently
+  `UseExceptionHandler` and error pages do not see these exceptions (they are logged at Error).
 
 Notes:
 

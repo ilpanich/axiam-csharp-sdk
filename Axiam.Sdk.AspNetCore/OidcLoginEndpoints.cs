@@ -257,9 +257,13 @@ public static class OidcLoginEndpointExtensions
             {
                 // §12.8 rule 1 (d), "any other error": an exception from the store, the application's hook or the
                 // exchange must not lose the clearing Set-Cookie to the host's exception handler (which resets the
-                // response headers). Answer here, with the cookie still on the response, and log the failure.
+                // response headers). Answer here and log the failure. Like that handler, drop every header set so far
+                // (a session cookie the hook appended before it threw must not reach the browser: the throw aborts the
+                // sign-in), then put the clearing cookie back.
                 context.RequestServices.GetService<ILoggerFactory>()?.CreateLogger("Axiam.Sdk.AspNetCore.OidcLogin")
                     .LogError(ex, "the AXIAM OIDC login callback failed");
+                context.Response.Clear();
+                OidcLoginBinding.Clear(context.Response, options.RedirectUri);
                 await WriteOidcErrorAsync(context, StatusCodes.Status500InternalServerError, "internal_error", "the login callback failed").ConfigureAwait(false);
             }
         });

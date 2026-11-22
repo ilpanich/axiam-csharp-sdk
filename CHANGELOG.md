@@ -30,6 +30,13 @@ organization member, one description moved), which changes no operation.
   redirect; anything else falls back to `SuccessRedirect` or the JSON summary. New optional
   `AxiamOidcLoginOptions.AllowReturnTo` widens the rule for values the default refuses; a throwing predicate
   accepts nothing.
+- **Login glue, further properties of the C7/C6 release.** A non-ASCII `return_to` that passes §12.8 rule 3
+  (`/café`) is percent-encoded (UTF-8) in the `Location` header, because Kestrel refuses non-ASCII header values.
+  The binding cookie is `IsEssential`, so a cookie-consent policy does not suppress it (and every sign-in with it).
+  An exception from the store, the hook or the exchange is logged and answered `500 internal_error` with every header
+  set so far dropped (a session cookie the hook appended before throwing is not delivered, so a throw still aborts the
+  sign-in) and the clearing cookie on the response (§12.8 rule 1d). `MemoryOidcStateStore` is bounded at
+  `MemoryOidcStateStore.MaxEntries` (10 000; the oldest is evicted).
 - **C5 — JWKS fetch amplification (§12.4 rule 2).** `JwksVerifier` re-fetched the JWKS for every token with an
   unknown `kid` (50 forged `kid`s caused 50 fetches). It now re-fetches at most once per 60-second window, whatever the
   `kid`, while the cache is otherwise fresh, and rejects the rest from the cache with no network call; a rotated `kid` is
@@ -43,19 +50,6 @@ organization member, one description moved), which changes no operation.
   `nonce_mismatch`) before the code is spent; the ID-token validator no longer treats an empty expectation as a
   match for `"nonce": ""`.
 
-### Fixed (review gate, round 2)
-
-- **Login glue.** A non-ASCII `return_to` that passes §12.8 rule 3 (`/café`) is percent-encoded (UTF-8) in the
-  `Location` header; Kestrel refuses non-ASCII header values and failed the response after `OnSuccessAsync` had run.
-  The binding cookie is `IsEssential`, so the cookie-consent policy no longer suppresses it (and every sign-in with it).
-  An exception from the store, the hook or the exchange is logged and answered `500` with the clearing cookie still
-  on the response (§12.8 rule 1d). `MemoryOidcStateStore` is bounded at `MemoryOidcStateStore.MaxEntries` (10 000;
-  the oldest is evicted), as the TypeScript, Python and Kotlin stores are.
-- **`AxiamAuthzRequester`.** Disposing a requester built on a caller-owned channel now cancels its consumer, so the
-  exclusive auto-delete reply queue is deleted (it leaked one consumer and one `amq.gen-…` queue per instance).
-- `OidcStateEntry` keeps the five-out `Deconstruct` of 1.3.x (adding `BindingDigest` had replaced it with a six-out
-  one; source and binary break for callers that deconstructed an entry).
-
 ### Added
 
 - **`AxiamAuthzRequester` (§8 "Signed authorization responses"; N2, D-9).** The AMQP authorization requester:
@@ -64,9 +58,11 @@ organization member, one description moved), which changes no operation.
   bytes (HMAC-SHA256 under the requester's own tenant subkey and the `key_version` sent; `tenant_id`,
   `correlation_id` and `nonce` bound to one outstanding request; unsigned refused unless
   `AxiamAuthzRequesterOptions.AllowUnsignedResponses`). `CreateAsync(IChannel, …)` and
-  `ConnectAsync(amqps://…, …)`; `CheckAsync` returns `AmqpAuthzDecision`. Tests: the four contract vectors, the
+  `ConnectAsync(amqps://…, …)`; `CheckAsync` returns `AmqpAuthzDecision`. Disposing a requester cancels its consumer
+  (so the reply queue goes away even on a caller-owned channel), and a broker-side cancel of the queue closes it, so a
+  later `CheckAsync` throws `ObjectDisposedException` at once instead of timing out. Tests: the four contract vectors, the
   discard matrix, the opt-out, and an end-to-end run over a fake channel.
-- `OidcStateEntry.BindingDigest` (optional; a pre-1.68 five-member constructor is kept) and
+- `OidcStateEntry.BindingDigest` (optional; a pre-1.68 five-member constructor and the five-out `Deconstruct` are kept) and
   `AxiamOidcLoginOptions.AllowReturnTo`.
 - README: the `typ`/`purpose`/`kid` rows of §10.1, the `roles`-claim-only note for `[Authorize(Roles = …)]`, the
   login-glue binding, and the requester.
