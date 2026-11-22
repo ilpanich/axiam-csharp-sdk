@@ -21,13 +21,32 @@ namespace Axiam.Sdk.Auth.Oidc;
 /// <see cref="CodeVerifier"/> stays <see cref="Sensitive{T}"/> while stored (&#167;12.5: the
 /// verifier is secret for its whole lifetime, "including &#8230; in any
 /// <see cref="IOidcStateStore"/> entry").
+/// <para>
+/// <see cref="BindingDigest"/> (contract 1.68, &#167;12.3 rule 1 and &#167;12.8; audit C7) is the
+/// lower-case hex SHA-256 of the browser-binding cookie value the login glue set. It is optional
+/// so that a store written for 1.67 still compiles and an entry without it can still be read;
+/// the &#167;12.8 login glue refuses such an entry at the callback. A caller-supplied store MUST
+/// persist it and return it unchanged: a store that rebuilds entries from a fixed column list
+/// and drops it refuses every sign-in, loudly, which is the safe failure.
+/// </para>
 /// </remarks>
 public sealed record OidcStateEntry(
     string State,
     string Nonce,
     Sensitive<string> CodeVerifier,
     string RedirectUri,
-    string? ReturnTo = null);
+    string? ReturnTo = null,
+    string? BindingDigest = null)
+{
+    /// <summary>
+    /// The pre-1.68 five-member constructor, kept so code compiled against it still links;
+    /// the entry carries no <see cref="BindingDigest"/>.
+    /// </summary>
+    public OidcStateEntry(string state, string nonce, Sensitive<string> codeVerifier, string redirectUri, string? returnTo)
+        : this(state, nonce, codeVerifier, redirectUri, returnTo, null)
+    {
+    }
+}
 
 /// <summary>
 /// An OPTIONAL server-side store for in-flight <c>OidcBegin</c> state (CONTRACT.md &#167;12.3

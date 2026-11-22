@@ -64,6 +64,18 @@ namespace Axiam.Sdk.Auth;
 /// <b>clock skew</b> — <see cref="ClockSkewLeeway"/>, a named 60-second constant applied
 /// to rules 2 and 3. It is deliberately NOT operator-configurable.
 /// </description></item>
+/// <item><description>
+/// <b><c>typ</c></b> (contract 1.68, rule 10) — when the header carries <c>typ</c> it must be
+/// <c>at+jwt</c>; a header with no <c>typ</c> is not refused by this rule.
+/// </description></item>
+/// <item><description>
+/// <b><c>purpose</c></b> (rule 11) — a token whose claim set contains a <c>purpose</c> member
+/// (an MFA-challenge or WebAuthn-state token) is refused, whatever its value.
+/// </description></item>
+/// <item><description>
+/// <b><c>kid</c></b> (rule 12) — required; the key is selected by it and never by "the only key
+/// in the set". An unknown <c>kid</c> causes at most one JWKS re-fetch per 60 s window.
+/// </description></item>
 /// </list>
 /// <para>
 /// <see cref="VerifyAsync"/> NEVER throws for attacker-controlled input — every failure
@@ -87,6 +99,26 @@ public sealed class JwksVerifier
     /// </remarks>
     public static readonly TimeSpan ClockSkewLeeway = TimeSpan.FromSeconds(60);
 
+    /// <summary>
+    /// The cooldown window of CONTRACT.md &#167;12.4 rule 2: an unknown <c>kid</c> on an otherwise
+    /// fresh cache causes at most ONE JWKS re-fetch per window; every further unknown
+    /// <c>kid</c> inside it is rejected from the cached set with no network call. Without it an
+    /// unauthenticated client could drive one outbound fetch per forged token (audit C5).
+    /// </summary>
+    internal static readonly TimeSpan UnknownKidRefetchCooldown = TimeSpan.FromSeconds(60);
+
+    /// <summary>The longest a fetched JWKS document is trusted, whatever the configured
+    /// <c>JwksCacheTtl</c> (the same 10-minute bound &#167;34.2 P6 puts on the SSF key cache).</summary>
+    internal static readonly TimeSpan MaxCacheTtl = TimeSpan.FromMinutes(10);
+
+    /// <summary>What a zero or negative <c>JwksCacheTtl</c> becomes: the documented default,
+    /// never "no caching" (which would refetch the JWKS for every token).</summary>
+    internal static readonly TimeSpan DefaultCacheTtl = TimeSpan.FromMinutes(5);
+
+    /// <summary>Clamps a configured cache TTL into (0, <see cref="MaxCacheTtl"/>].</summary>
+    internal static TimeSpan ClampCacheTtl(TimeSpan configured) =>
+        configured <= TimeSpan.Zero ? DefaultCacheTtl : configured > MaxCacheTtl ? MaxCacheTtl : configured;
+
     private readonly HttpClient _http;
     private readonly Uri _jwksUri;
     private readonly TimeSpan _cacheTtl;
@@ -104,6 +136,19 @@ public sealed class JwksVerifier
     private DateTimeOffset _fetchedAt = DateTimeOffset.MinValue;
 
     /// <summary>
+    /// Test seam for the cache clock (the JWKS cache lifetime and the unknown-<c>kid</c>
+    /// cooldown). <c>null</c> — the default and the only production value — is the wall
+    /// clock. The claim checks (<c>exp</c>, <c>nbf</c>) always read the wall clock.
+    /// </summary>
+    internal Func<DateTimeOffset>? CacheClock { get; set; }
+
+    /// <summary>UTC ticks of the last re-fetch caused by an unknown <c>kid</c>; -1 = never.
+    /// A <c>long</c> so it can be read outside <see cref="_fetchLock"/> without tearing.</summary>
+    private long _lastUnknownKidRefetchTicks = -1;
+
+    private DateTimeOffset CacheNow() => CacheClock?.Invoke() ?? DateTimeOffset.UtcNow;
+
+    /// <summary>
     /// Serializes the actual JWKS fetch/cache-mutation path so a concurrent burst of
     /// unknown-<c>kid</c> verifications collapses to exactly one HTTP fetch (D-08/D-09).
     /// Reuses the same <see cref="SemaphoreSlim"/>(1, 1) primitive already used by the
@@ -116,7 +161,8 @@ public sealed class JwksVerifier
 
     /// <param name="httpClient">Used only to fetch the JWKS document; ownership stays with the caller.</param>
     /// <param name="baseUrl">The AXIAM server base URL; the JWKS path is resolved relative to it.</param>
-    /// <param name="cacheTtl">How long a fetched JWKS document is trusted before a refetch is forced.</param>
+    /// <param name="cacheTtl">How long a fetched JWKS document is trusted before a refetch is forced.
+    /// Clamped: a value above 10 minutes becomes 10 minutes, and a zero or negative one the 5-minute default.</param>
     /// <param name="expectedIssuer">
     /// The <c>iss</c> claim value this verifier requires (CONTRACT.md &#167;10.1 rule 5).
     /// CONDITIONAL: <c>null</c>/empty (the default) means no issuer check is performed at
@@ -173,7 +219,7 @@ public sealed class JwksVerifier
     {
         _http = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         _jwksUri = jwksUri ?? throw new ArgumentNullException(nameof(jwksUri));
-        _cacheTtl = cacheTtl;
+        _cacheTtl = ClampCacheTtl(cacheTtl);
         _revocationFeed = revocationFeed;
         // Normalize "" to null so an empty configuration value can never be mistaken for
         // "expect the empty string" — it means "not configured, so not checked".
@@ -298,6 +344,14 @@ public sealed class JwksVerifier
                 return null;
             }
 
+            // Rule 10 (contract 1.68, audit N14): when the header carries `typ` it MUST be
+            // at+jwt. Checked before any key lookup, so a purpose token (an MFA challenge,
+            // a WebAuthn state token, a logout or SET token) causes no JWKS fetch either.
+            if (header.RootElement.TryGetProperty("typ", out JsonElement typEl) && !IsAccessTokenType(typEl))
+            {
+                return null;
+            }
+
             if (!header.RootElement.TryGetProperty("kid", out JsonElement kidEl) ||
                 kidEl.ValueKind != JsonValueKind.String)
             {
@@ -323,6 +377,12 @@ public sealed class JwksVerifier
             byte[] payloadJson = Base64UrlDecode(parts[1]);
             using JsonDocument payload = JsonDocument.Parse(payloadJson);
             JsonElement claims = payload.RootElement.Clone();
+
+            // Rule 11 (contract 1.68, audit N14): a token whose claim set contains a `purpose`
+            // member is not an access token, whatever its value (null included) and whatever
+            // `typ` says. Read from the verified payload itself, not from a claims model.
+            if (claims.ValueKind != JsonValueKind.Object || claims.TryGetProperty("purpose", out _))
+                return null;
 
             if (!ApplyClaimPolicy(claims, expectedTenantId))
                 return null;
@@ -456,6 +516,26 @@ public sealed class JwksVerifier
             // code, and a token this class cannot even parse was never validly signed).
             return (null, OidcSignatureFailure.InvalidSignature);
         }
+    }
+
+    /// <summary>
+    /// CONTRACT.md &#167;10.1 rule 10: <c>typ</c> is <c>at+jwt</c> (RFC 9068 &#167;2.1), compared
+    /// ASCII case-insensitively, with or without the <c>application/</c> prefix (RFC 7515
+    /// &#167;4.1.9). Anything that is not that string, a non-string and JSON <c>null</c> included,
+    /// is not an access-token type.
+    /// </summary>
+    private static bool IsAccessTokenType(JsonElement typ)
+    {
+        if (typ.ValueKind != JsonValueKind.String || typ.GetString() is not { } value)
+        {
+            return false;
+        }
+        const string prefix = "application/";
+        if (value.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        {
+            value = value[prefix.Length..];
+        }
+        return string.Equals(value, "at+jwt", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
@@ -783,8 +863,9 @@ public sealed class JwksVerifier
     /// <summary>
     /// Refetches the JWKS document when the cache is stale OR <paramref name="unknownKid"/>
     /// is not already known — at most once per <see cref="VerifyAsync"/> call (no retry
-    /// loop). Leaves the existing cache untouched if the fetch itself fails; the caller
-    /// fails closed on the still-unknown <c>kid</c>.
+    /// loop), and for an unknown <c>kid</c> on a fresh cache at most once per
+    /// <see cref="UnknownKidRefetchCooldown"/> window. Leaves the existing cache untouched if
+    /// the fetch itself fails; the caller fails closed on the still-unknown <c>kid</c>.
     /// </summary>
     /// <remarks>
     /// D-08/D-09: the fast path below (outside the lock) skips the fetch entirely when
@@ -799,11 +880,28 @@ public sealed class JwksVerifier
         if (IsFresh(unknownKid))
             return;
 
+        // CONTRACT.md §12.4 rule 2 (audit C5): an unknown kid on an otherwise fresh cache is
+        // rejected from the cached set, with no network call, while a re-fetch caused by an
+        // earlier unknown kid is still inside its cooldown window.
+        if (!CacheExpired() && UnknownKidCoolingDown())
+            return;
+
         await _fetchLock.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             if (IsFresh(unknownKid))
                 return; // another caller already refreshed while we waited for the lock
+
+            if (!CacheExpired())
+            {
+                // The cache is fresh, so this fetch is caused by the unknown kid alone.
+                if (UnknownKidCoolingDown())
+                    return; // another caller opened the window while we waited for the lock
+
+                // Open the window BEFORE the fetch: a failed fetch counts, so an unreachable
+                // server cannot be hammered by forged kids either.
+                Interlocked.Exchange(ref _lastUnknownKidRefetchTicks, CacheNow().UtcTicks);
+            }
 
             JwksDocument? document = await _http.GetFromJsonAsync<JwksDocument>(_jwksUri, cancellationToken).ConfigureAwait(false);
             if (document is null)
@@ -818,7 +916,7 @@ public sealed class JwksVerifier
             }
 
             _keysByKid = map;
-            _fetchedAt = DateTimeOffset.UtcNow;
+            _fetchedAt = CacheNow();
         }
         finally
         {
@@ -826,9 +924,17 @@ public sealed class JwksVerifier
         }
     }
 
+    private bool CacheExpired() => CacheNow() - _fetchedAt > _cacheTtl;
+
+    private bool UnknownKidCoolingDown()
+    {
+        long last = Interlocked.Read(ref _lastUnknownKidRefetchTicks);
+        return last >= 0 && CacheNow().UtcTicks - last < UnknownKidRefetchCooldown.Ticks;
+    }
+
     private bool IsFresh(string kid)
     {
-        bool expired = DateTimeOffset.UtcNow - _fetchedAt > _cacheTtl;
+        bool expired = CacheNow() - _fetchedAt > _cacheTtl;
         bool unknown = !_keysByKid.ContainsKey(kid);
         return !expired && !unknown;
     }

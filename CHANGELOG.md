@@ -7,6 +7,81 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-11-22
+
+Contract 1.68 (security audit 2026-11-14, Wave 2; CONTRACT.md §34.12). **This release changes behaviour:** the
+login glue (C7, C6) and the access-token path (N14) refuse what they used to accept, and the `typ`
+rule is required from this first release. Read the migration notes below before upgrading. `CONTRACT.md`,
+`openapi.json` and `management-registry.json` are re-vendored from `ilpanich/axiam` (contract 1.68; `proto/`
+unchanged) and the §27 management surface regenerated (`scripts/gen_management.py`: the audit-log entry gains its
+organization member, one description moved), which changes no operation.
+
+### Security
+
+- **C7 — login CSRF in `MapAxiamOidcLogin` (§12.8 rule 1).** The callback now completes only for the browser that
+  called the login route. The login route sets `__Host-axiam_oidc_bind` (32 CSPRNG bytes, base64url;
+  `HttpOnly; Secure; SameSite=Lax; Path=/`, no `Domain`, `Max-Age=600`) and stores its SHA-256 on the state entry
+  as the new `OidcStateEntry.BindingDigest`; the callback consumes the entry first and then refuses a missing,
+  different or digest-less binding with the uniform `401 authentication_failed`, without exchanging the code and
+  without calling `OnSuccessAsync`. Every callback response clears the cookie. On a plain-HTTP loopback
+  `RedirectUri` the cookie is `axiam_oidc_bind` without `Secure`, and only there.
+- **C6 — open redirect via `?return_to=` (§12.8 rule 3).** `return_to` is kept only as a same-origin relative path
+  (a single leading `/`, not `//` or `/\`, no backslash, no control character), at login and again before the
+  redirect; anything else falls back to `SuccessRedirect` or the JSON summary. New optional
+  `AxiamOidcLoginOptions.AllowReturnTo` widens the rule for values the default refuses; a throwing predicate
+  accepts nothing.
+- **C5 — JWKS fetch amplification (§12.4 rule 2).** `JwksVerifier` re-fetched the JWKS for every token with an
+  unknown `kid` (50 forged `kid`s caused 50 fetches). It now re-fetches at most once per 60-second window per
+  unknown `kid` on a fresh cache and rejects the rest from the cache with no network call; a rotated `kid` is
+  accepted after the window.
+- **N14 — access-token rules 10 and 11 (§10.1).** The access-token path refuses a `typ` other than `at+jwt`
+  (compared case-insensitively, with or without `application/`; a header with no `typ` is not refused by this
+  rule) and any token whose claim set contains a `purpose` member (the MFA-challenge and WebAuthn-state tokens).
+  Rule 12 (`kid` required, no single-key fallback) was already enforced and is pinned by a test.
+- `JwksCacheTtl` is clamped: above 10 minutes becomes 10 minutes, zero or negative becomes the 5-minute default.
+  `OidcExchangeAsync` refuses an empty expected nonce (`AuthError`,
+  `nonce_mismatch`) before the code is spent; the ID-token validator no longer treats an empty expectation as a
+  match for `"nonce": ""`.
+
+### Added
+
+- **`AxiamAuthzRequester` (§8 "Signed authorization responses"; N2, D-9).** The AMQP authorization requester:
+  a signed `AuthzRequest` with a fresh unpredictable `correlation_id` and `nonce` on `axiam.authz.request`, a private
+  exclusive auto-delete broker-named `reply_to` queue, and strict verification of the answer over the **received**
+  bytes (HMAC-SHA256 under the requester's own tenant subkey and the `key_version` sent; `tenant_id`,
+  `correlation_id` and `nonce` bound to one outstanding request; unsigned refused unless
+  `AxiamAuthzRequesterOptions.AllowUnsignedResponses`). `CreateAsync(IChannel, …)` and
+  `ConnectAsync(amqps://…, …)`; `CheckAsync` returns `AmqpAuthzDecision`. Tests: the four contract vectors, the
+  discard matrix, the opt-out, and an end-to-end run over a fake channel.
+- `OidcStateEntry.BindingDigest` (optional; a pre-1.68 five-member constructor is kept) and
+  `AxiamOidcLoginOptions.AllowReturnTo`.
+- README: the `typ`/`purpose`/`kid` rows of §10.1, the `roles`-claim-only note for `[Authorize(Roles = …)]`, the
+  login-glue binding, and the requester.
+
+### Documented
+
+- **N15 — `[Authorize(Roles = …)]` reads the `roles` claim only (§11.1).** This SDK never mapped `scope` to roles
+  (the defect was in the Java, Kotlin and PHP SDKs); the README now says so and says that a token with no `roles`
+  claim has no roles. Tests pin it: `scope: "openid admin"` with no `roles` is `403`, `roles: ["admin"]` is `200`.
+  **Your application must request the `roles` scope** (the server emits the claim only for a client that requested
+  it and is allowed it) for role guards to work. No `[AxiamScope]` attribute is added in this release.
+
+### Migration notes (1.3.1 → 1.4.0)
+
+- **Login glue (C7).** If you replace `IOidcStateStore`, persist `OidcStateEntry.BindingDigest` and return it
+  unchanged; a store that rebuilds entries from a fixed field list refuses every sign-in. Sign-ins in flight at the
+  upgrade fail once (their entries carry no digest) and restart. The callback must reach the application on the
+  same browser that started the login, over HTTPS (or plain HTTP on loopback in development); a reverse proxy that
+  strips `Cookie` headers breaks it. Tests that drive the callback directly must send the cookie the login set.
+- **`return_to` (C6).** An absolute or scheme-relative `return_to` is no longer followed. If you relied on one, set
+  `AllowReturnTo` to an allowlist, or set `SuccessRedirect`.
+- **Access tokens (N14).** A token whose header says `typ: JWT` (or anything but `at+jwt`) is refused, and so is one
+  with a `purpose` claim. The AXIAM server types its access tokens `at+jwt` from contract 1.67; a token minted by an
+  older server carries no `typ` and still passes. Test fixtures that minted `typ: JWT` must use `at+jwt` or no `typ`.
+- **`JwksCacheTtl`** above 10 minutes is now 10 minutes.
+- **`OidcExchangeAsync`** with an empty `Nonce` now throws `AuthError` instead of accepting an ID token that carries
+  an empty nonce.
+
 ## [1.3.1] - 2026-11-11
 
 ### Changed

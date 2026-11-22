@@ -53,6 +53,19 @@ public sealed record AuditLogEntry
     public required JsonElement Metadata { get; init; }
 
     /// <summary>
+    /// The organization a **system-partition** row (nil <c>tenant_id</c>) concerns, recorded
+    /// only where the server resolved it with certainty (SA-02, N1): a deleted tenant's
+    /// organization, a verified SCIM token's tenant's, or an organization or tenant the
+    /// request's path names and that exists. <c>GET /api/v1/audit-logs/system</c> returns a row
+    /// only to an organization principal of this organization, and a row without one to nobody.
+    /// Always <c>None</c> on a tenant's own rows, whose organization is their tenant's, and on
+    /// every system row written before the field existed. Omitted from the serialized form when
+    /// <c>None</c>, so an existing row's export line and dead-letter line are what they were.
+    /// </summary>
+    [JsonPropertyName("organization_id")]
+    public Guid? OrganizationId { get; init; }
+
+    /// <summary>
     /// the server's outcome field
     /// </summary>
     [JsonPropertyName("outcome")]

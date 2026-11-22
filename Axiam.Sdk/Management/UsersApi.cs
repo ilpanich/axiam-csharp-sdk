@@ -220,6 +220,9 @@ public sealed class UsersApi
 
     /// <summary>
     /// Remove a specific MFA method. Returns 400 if it is the last method and MFA is enabled.
+    /// **The person's own act (SR4-1).** On the caller's OWN account a token AXIAM minted for
+    /// an OAuth2 client is refused <c>403</c> (a console sign-in is required); an administrator
+    /// with <c>users:admin</c> acting on another user is not.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -255,7 +258,9 @@ public sealed class UsersApi
     /// mfa_enforced</c> where their tenant's effective policy enforces MFA (D-1, T-267): the
     /// reset is otherwise the one self-service path below the floor an administrator set.
     /// <c>users:admin</c> is unaffected — an administrator resetting a locked-out user is what
-    /// the endpoint exists for.
+    /// the endpoint exists for. **The person's own act (SR4-1).** On the caller's own account a
+    /// token AXIAM minted for an OAuth2 client is refused <c>403</c>; an administrator acting
+    /// on another user keeps accepting one.
     /// </summary>
     /// <remarks>
     /// <para>

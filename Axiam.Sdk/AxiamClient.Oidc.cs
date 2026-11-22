@@ -307,6 +307,16 @@ public sealed partial class AxiamClient
     public async Task<OidcTokenSet> OidcExchangeAsync(OidcExchangeParams @params, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(@params);
+
+        // §12.4 rule 6: the nonce is mandatory here, and an EMPTY expectation would be satisfied
+        // by an ID token carrying `"nonce": ""`. Refuse it before the code is spent.
+        if (string.IsNullOrEmpty(@params.Nonce))
+        {
+            throw new AuthError(
+                $"id_token validation failed ({IdTokenFailureReasons.NonceMismatch}): the expected nonce is empty",
+                IdTokenFailureReasons.NonceMismatch);
+        }
+
         OidcConfiguration configuration = await ResolveOidcConfigurationAsync(@params.Configuration, cancellationToken).ConfigureAwait(false);
         Guid tenantId = ResolveOidcTenantId(@params.TenantId);
         string clientId = RequireOidcClientId();

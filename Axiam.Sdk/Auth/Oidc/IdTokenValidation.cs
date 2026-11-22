@@ -201,7 +201,7 @@ internal static class IdTokenValidator
         string? nonce = GetString(payload, "nonce");
         if (expectations.HasNonce)
         {
-            if (nonce is null || !ConstantTimeEquals(nonce, expectations.Nonce ?? string.Empty))
+            if (string.IsNullOrEmpty(expectations.Nonce) || nonce is null || !ConstantTimeEquals(nonce, expectations.Nonce))
             {
                 throw BuildError(IdTokenFailureReasons.NonceMismatch, "nonce claim is absent or does not match the request nonce");
             }

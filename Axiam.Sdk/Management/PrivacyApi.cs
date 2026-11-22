@@ -37,7 +37,10 @@ public sealed class PrivacyApi
     /// Enqueues an async GDPR Art. 15 data-export job. Returns immediately with <c>{"queued":
     /// true}</c>; the cleanup sweep generates the encrypted JSON, stores it, and emails a
     /// single-use 24 h download link (D-12). Self-service (own account) or admin with
-    /// <c>gdpr:export</c> permission.
+    /// <c>gdpr:export</c> permission. **The person's own act (SA-04 review S-3b).** Takes a
+    /// [<c>ConsoleSignIn</c>]: a token AXIAM minted for an OAuth2 client is refused <c>403</c>.
+    /// The route is bearer-only and so CSRF-exempt, and a relying party holding one of its
+    /// user's tokens must not be able to have the user's personal data exported.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -67,6 +70,9 @@ public sealed class PrivacyApi
     /// Single-use download of the GDPR export blob (D-13). Looks up the job by SHA-256(token),
     /// verifies it is ready and not expired/used, decrypts the blob, marks it as downloaded,
     /// and deletes the record. Requires authentication (self or admin with <c>gdpr:export</c>).
+    /// A [<c>ConsoleSignIn</c>], like the request (S-3b): a token AXIAM minted for an OAuth2
+    /// client is refused <c>403</c> before the token is looked up, so a relying party cannot
+    /// spend the person's download link.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -92,7 +98,11 @@ public sealed class PrivacyApi
     /// <summary>
     /// Initiates Art. 17 erasure: immediately disables the account, revokes all sessions,
     /// emails a single-use cancel link, and schedules purge at +30 d (D-07/D-08/D-09).
-    /// Self-service (own account) or admin with <c>users:erase</c> permission.
+    /// Self-service (own account) or admin with <c>users:erase</c> permission. A
+    /// [<c>ConsoleSignIn</c>] (S-3b): a token AXIAM minted for an OAuth2 client is refused
+    /// <c>403</c>. Erasure is the person's own act, and the route is bearer-only and so
+    /// CSRF-exempt: a relying party holding one of its user's tokens must not be able to
+    /// disable the account and schedule its purge.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -184,7 +194,12 @@ public sealed class PrivacyApi
     /// capability is off cannot sit waiting for somebody to turn it on. Idempotent: the
     /// <c>(tenant, user, type, version)</c> index makes a repeated grant the same grant, and a
     /// second call is answered <c>200</c> rather than a conflict. A consent screen the user
-    /// double-submits has consented once.
+    /// double-submits has consented once. **The person's own act (T-447, SA-04 review S-3).**
+    /// Takes a [<c>ConsoleSignIn</c>]: a token AXIAM minted for an OAuth2 client is refused
+    /// <c>403</c>. <c>/oauth2/authorize</c> reads exactly these records to skip the consent
+    /// screen, and the CSRF middleware exempts bearer-only requests, so a relying party holding
+    /// one of its user's tokens could otherwise record consent for another client in the user's
+    /// name and have a code issued silently.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -223,7 +238,9 @@ public sealed class PrivacyApi
     /// Answers <c>200</c> whether or not anything was there, and says how many records went. A
     /// subject who withdraws twice is not told off, and an attacker who guesses
     /// <c>client_id</c>s learns nothing from the status code — though they would have to be the
-    /// subject to ask at all.
+    /// subject to ask at all. A [<c>ConsoleSignIn</c>], like the grant: withdrawing is the
+    /// person's own act too, and a relying party holding one of its user's tokens must not be
+    /// able to strip a consent the user gave another client (T-447, S-3).
     /// </summary>
     /// <remarks>
     /// <para>
