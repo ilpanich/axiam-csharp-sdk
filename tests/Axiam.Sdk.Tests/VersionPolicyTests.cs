@@ -27,7 +27,8 @@ namespace Axiam.Sdk.Tests;
 /// the build said so, and nothing would have: a <c>lib/net8.0</c> package
 /// installs into a <c>net10.0</c> project and runs there under roll-forward,
 /// so the gap is invisible from both sides until the security updates stop.
-/// The <c>net8.0</c> leg has since been dropped; the floor is <c>net10.0</c>.
+/// The <c>net8.0</c> leg has since been dropped; the floor is <c>net10.0</c>
+/// and the newest leg <c>net11.0</c>.
 /// </para>
 /// <para>
 /// The policy pinned here is floor + newest. In .NET that is expressed by
@@ -58,6 +59,7 @@ public sealed class VersionPolicyTests
             ["net8.0"] = new DateTime(2026, 11, 10, 0, 0, 0, DateTimeKind.Utc),
             ["net9.0"] = new DateTime(2026, 11, 10, 0, 0, 0, DateTimeKind.Utc),
             ["net10.0"] = new DateTime(2028, 11, 14, 0, 0, 0, DateTimeKind.Utc),
+            ["net11.0"] = new DateTime(2028, 11, 14, 0, 0, 0, DateTimeKind.Utc),
         };
 
     /// <summary>
@@ -251,7 +253,9 @@ public sealed class VersionPolicyTests
     [Fact]
     public void RunningTargetFrameworkIsDeclaredSupported()
     {
-#if NET10_0
+#if NET11_0
+        const string running = "net11.0";
+#elif NET10_0
         const string running = "net10.0";
 #else
         const string running = "unknown";

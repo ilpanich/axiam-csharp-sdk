@@ -12,7 +12,7 @@ using Axiam.Sdk.Options;
 // no second set of TLS settings to get wrong.
 //
 // Run: AXIAM_BASE_URL=... AXIAM_TENANT=... AXIAM_ADMIN=... AXIAM_ADMIN_PASSWORD=...
-//      dotnet run --project examples/ManagementBasics
+//      dotnet run --project examples/ManagementBasics -f net10.0
 
 string baseUrl = Env("AXIAM_BASE_URL", "https://localhost:8443");
 string tenant = Env("AXIAM_TENANT", "acme");

@@ -5,6 +5,11 @@ Nine runnable example projects demonstrating the AXIAM C# SDK's public surface
 and reference the SDK's projects directly (not the published NuGet packages), so
 they always exercise the current source tree.
 
+Every example targets both supported frameworks (`net10.0;net11.0`, see the
+[support policy](../README.md#supported-net-versions)), so `dotnet run` needs to
+be told which one to run: append `-f net10.0` or `-f net11.0` to the
+`dotnet run --project …` commands below. `dotnet build` builds both.
+
 ## AspNetCoreSample/
 
 A runnable ASP.NET Core 8+ web app demonstrating `Axiam.Sdk.AspNetCore`'s
