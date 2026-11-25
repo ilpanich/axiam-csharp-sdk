@@ -94,7 +94,9 @@ public sealed record AxiamClientOptions
     public byte[]? ClientKeyPem { get; init; }
 
     /// <summary>How long a fetched JWKS document is trusted before <c>JwksVerifier</c>
-    /// forces a refetch.</summary>
+    /// forces a refetch. Clamped to 10 minutes at most (contract 1.68; a longer value becomes
+    /// 10 minutes), and a zero or negative value becomes the 5-minute default rather than
+    /// disabling the cache.</summary>
     public TimeSpan JwksCacheTtl { get; init; } = TimeSpan.FromMinutes(5);
 
     /// <summary>

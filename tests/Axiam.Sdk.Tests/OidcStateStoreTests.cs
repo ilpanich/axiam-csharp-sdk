@@ -105,4 +105,41 @@ public class OidcStateStoreTests
         Assert.Equal("[SENSITIVE]", entry.CodeVerifier.ToString());
         Assert.DoesNotContain("verifier-1", entry.ToString());
     }
+
+    [Fact]
+    public async Task SaveAsync_BoundsTheStoreAtTenThousandEntries_EvictingTheOldest()
+    {
+        var store = new MemoryOidcStateStore();
+        const int cap = 10_000; // the bound the TypeScript, Python and Kotlin stores share
+
+        for (int i = 0; i < cap + 5; i++)
+        {
+            await store.SaveAsync(Entry("s" + i));
+        }
+
+        Assert.Equal(cap, store.Size);
+        // The five oldest were evicted; the newest are all still there.
+        for (int i = 0; i < 5; i++)
+        {
+            Assert.Null(await store.ConsumeAsync("s" + i));
+        }
+        Assert.NotNull(await store.ConsumeAsync("s5"));
+        Assert.NotNull(await store.ConsumeAsync("s" + (cap + 4)));
+    }
+
+    [Fact]
+    public void OidcStateEntry_StillDeconstructsIntoTheFiveMembersOfTheOlderShape()
+    {
+        // CSH-R1-7: adding BindingDigest must not take away the five-out Deconstruct that 1.3.x callers compiled against.
+        var deconstruct = typeof(OidcStateEntry).GetMethod(
+            "Deconstruct",
+            new[] { typeof(string).MakeByRefType(), typeof(string).MakeByRefType(), typeof(Sensitive<string>).MakeByRefType(), typeof(string).MakeByRefType(), typeof(string).MakeByRefType() });
+        Assert.NotNull(deconstruct);
+
+        OidcStateEntry entry = Entry("s");
+        var args = new object?[] { null, null, null, null, null };
+        deconstruct!.Invoke(entry, args);
+        Assert.Equal("s", args[0]);
+        Assert.Equal("https://app.example/return-to", args[4]);
+    }
 }

@@ -6,7 +6,97 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
 
+Contract 1.68 (security audit 2026-11-14, Wave 2; CONTRACT.md §34.12). **This release changes behaviour:** the
+login glue (C7, C6) and the access-token path (N14) refuse what they used to accept, and the `typ`
+rule is required from this first release. Read the migration notes below before upgrading. `CONTRACT.md`,
+`openapi.json` and `management-registry.json` are re-vendored from `ilpanich/axiam` (contract 1.68; `proto/`
+unchanged) and the §27 management surface regenerated (`scripts/gen_management.py`: the audit-log entry gains its
+organization member, one description moved), which changes no operation.
+
+### Security
+
+- **C7 — login CSRF in `MapAxiamOidcLogin` (§12.8 rule 1).** The callback now completes only for the browser that
+  called the login route. The login route sets `__Host-axiam_oidc_bind` (32 CSPRNG bytes, base64url;
+  `HttpOnly; Secure; SameSite=Lax; Path=/`, no `Domain`, `Max-Age=600`) and stores its SHA-256 on the state entry
+  as the new `OidcStateEntry.BindingDigest`; the callback consumes the entry first and then refuses a missing,
+  different or digest-less binding with the uniform `401 authentication_failed`, without exchanging the code and
+  without calling `OnSuccessAsync`. Every callback response clears the cookie. On a plain-HTTP loopback
+  `RedirectUri` the cookie is `axiam_oidc_bind` without `Secure`, and only there.
+- **C6 — open redirect via `?return_to=` (§12.8 rule 3).** `return_to` is kept only as a same-origin relative path
+  (a single leading `/`, not `//` or `/\`, no backslash, no control character), at login and again before the
+  redirect; anything else falls back to `SuccessRedirect` or the JSON summary. New optional
+  `AxiamOidcLoginOptions.AllowReturnTo` widens the rule for values the default refuses; a throwing predicate
+  accepts nothing.
+- **Login glue, further properties of the C7/C6 release.** A non-ASCII `return_to` that passes §12.8 rule 3
+  (`/café`) is percent-encoded (UTF-8) in the `Location` header, because Kestrel refuses non-ASCII header values.
+  The binding cookie is `IsEssential`, so a cookie-consent policy does not suppress it (and every sign-in with it).
+  An exception from the store, the hook or the exchange is logged and answered `500 internal_error` with every header
+  set so far dropped (a session cookie the hook appended before throwing is not delivered, so a throw still aborts the
+  sign-in) and the clearing cookie on the response (§12.8 rule 1d). `MemoryOidcStateStore` is bounded at
+  `MemoryOidcStateStore.MaxEntries` (10 000; the oldest is evicted).
+- **C5 — JWKS fetch amplification (§12.4 rule 2).** `JwksVerifier` re-fetched the JWKS for every token with an
+  unknown `kid` (50 forged `kid`s caused 50 fetches). It now re-fetches at most once per 60-second window, whatever the
+  `kid`, while the cache is otherwise fresh, and rejects the rest from the cache with no network call; a rotated `kid` is
+  accepted after the window.
+- **N14 — access-token rules 10 and 11 (§10.1).** The access-token path refuses a `typ` other than `at+jwt`
+  (compared case-insensitively, with or without `application/`; a header with no `typ` is not refused by this
+  rule) and any token whose claim set contains a `purpose` member (the MFA-challenge and WebAuthn-state tokens).
+  Rule 12 (`kid` required, no single-key fallback) was already enforced and is pinned by a test.
+- `JwksCacheTtl` is clamped: above 10 minutes becomes 10 minutes, zero or negative becomes the 5-minute default.
+  `OidcExchangeAsync` refuses an empty expected nonce (`AuthError`,
+  `nonce_mismatch`) before the code is spent; the ID-token validator no longer treats an empty expectation as a
+  match for `"nonce": ""`.
+
+### Added
+
+- **`AxiamAuthzRequester` (§8 "Signed authorization responses"; N2, D-9).** The AMQP authorization requester:
+  a signed `AuthzRequest` with a fresh unpredictable `correlation_id` and `nonce` on `axiam.authz.request`, a private
+  exclusive auto-delete broker-named `reply_to` queue, and strict verification of the answer over the **received**
+  bytes (HMAC-SHA256 under the requester's own tenant subkey and the `key_version` sent; `tenant_id`,
+  `correlation_id` and `nonce` bound to one outstanding request; unsigned refused unless
+  `AxiamAuthzRequesterOptions.AllowUnsignedResponses`). `CreateAsync(IChannel, …)` and
+  `ConnectAsync(amqps://…, …)`; `CheckAsync` returns `AmqpAuthzDecision`. Disposing a requester cancels its consumer
+  (so the reply queue goes away even on a caller-owned channel), and a broker-side cancel of the queue closes it, so a
+  later `CheckAsync` throws `ObjectDisposedException` at once instead of timing out. Tests: the four contract vectors, the
+  discard matrix, the opt-out, and an end-to-end run over a fake channel.
+- `OidcStateEntry.BindingDigest` (optional; a pre-1.68 five-member constructor and the five-out `Deconstruct` are kept) and
+  `AxiamOidcLoginOptions.AllowReturnTo`.
+- README: the `typ`/`purpose`/`kid` rows of §10.1, the `roles`-claim-only note for `[Authorize(Roles = …)]`, the
+  login-glue binding, and the requester.
+
+### Documented
+
+- **N15 — `[Authorize(Roles = …)]` reads the `roles` claim only (§11.1).** This SDK never mapped `scope` to roles
+  (the defect was in the Java, Kotlin and PHP SDKs); the README now says so and says that a token with no `roles`
+  claim has no roles. Tests pin it: `scope: "openid admin"` with no `roles` is `403`, `roles: ["admin"]` is `200`.
+  **Your application must request the `roles` scope** (the server emits the claim only for a client that requested
+  it and is allowed it) for role guards to work. The claim is a snapshot, stale for at most one access-token
+  lifetime (§11.2 rule 11e), and role names compare exactly (`"Admin"` does not satisfy `Roles = "admin"`; pinned).
+  **Declined:** no `[AxiamScope]` / `require_scope` helper (§11.1, a SHOULD) is added in this release, and the identity
+  does not distinguish "no `roles` claim" from `roles: []` (§11.2 rule 11b); the README lists both as declined.
+
+### Migration notes (1.3.1 → 1.4.0)
+
+- **Login glue (C7).** If you replace `IOidcStateStore`, persist `OidcStateEntry.BindingDigest` and return it
+  unchanged; a store that rebuilds entries from a fixed field list refuses every sign-in. Sign-ins in flight at the
+  upgrade fail once (their entries carry no digest) and restart. The callback must reach the application on the
+  same browser that started the login, over HTTPS (or plain HTTP on loopback in development); a reverse proxy that
+  strips `Cookie` headers breaks it. Tests that drive the callback directly must send the cookie the login set.
+- **`return_to` (C6).** An absolute or scheme-relative `return_to` is no longer followed. If you relied on one, set
+  `AllowReturnTo` to an allowlist, or set `SuccessRedirect`.
+- **Access tokens (N14).** A token whose header says `typ: JWT` (or anything but `at+jwt`) is refused, and so is one
+  with a `purpose` claim. The AXIAM server types its access tokens `at+jwt` from contract 1.67; the access tokens of servers
+  before 1.67 carry `typ: JWT` and **are refused**. Upgrade the server to 1.67 or later first: the server's
+  `AXIAM__AUTH__REQUIRE_ACCESS_TOKEN_TYP=false` does not relax this SDK, and until the server is upgraded and holders
+  have refreshed (within one access-token lifetime) every request through `AxiamAuthMiddleware`, and every verified
+  gRPC identity resolution, answers 401. Test fixtures that minted `typ: JWT` must use `at+jwt`.
+- **Cookie policy.** The binding cookie is `IsEssential` (consent-gated apps now sign in). A cookie policy that forces
+  `SameSite=Strict` still breaks the callback, which is a cross-site top-level navigation; keep `Lax`.
+- **`JwksCacheTtl`** above 10 minutes is now 10 minutes.
+- **`OidcExchangeAsync`** with an empty `Nonce` now throws `AuthError` instead of accepting an ID token that carries
+  an empty nonce.
 ### Added
 
 - **`net11.0` target framework.** .NET 11 went GA on 2026-11-10, so both packages now multi-target `net10.0;net11.0` and ship a `lib/` folder for each; `SupportedFrameworks.Newest` is `"net11.0"`. The test suite runs once per framework, every example builds for both (pass `-f net10.0` or `-f net11.0` to `dotnet run`), and CI installs the 10.0.x and 11.0.x SDKs. The `net10.0` floor is unchanged (supported through 2028-11-14).

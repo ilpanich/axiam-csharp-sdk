@@ -128,14 +128,16 @@ public sealed class OidcLoginEndpointsTests
         string nonce = ExtractQueryParam(authorizeUrl, "nonce");
         serverHandler.NextIdTokenNonce = nonce;
 
-        HttpResponseMessage callbackResponse = await client.GetAsync($"/login/axiam/callback?state={state}&code=auth-code-1").ConfigureAwait(false);
+        string cookie = BindingCookieOf(loginResponse);
+
+        HttpResponseMessage callbackResponse = await GetCallbackAsync(client, $"/login/axiam/callback?state={state}&code=auth-code-1", cookie).ConfigureAwait(false);
         JsonElement body = JsonDocument.Parse(await callbackResponse.Content.ReadAsStringAsync()).RootElement;
 
         Assert.Equal(HttpStatusCode.OK, callbackResponse.StatusCode);
         Assert.True(body.GetProperty("authenticated").GetBoolean());
         Assert.Equal("user-1", body.GetProperty("sub").GetString());
         // Single-use: a replay of the same callback must now fail.
-        HttpResponseMessage replay = await client.GetAsync($"/login/axiam/callback?state={state}&code=auth-code-1").ConfigureAwait(false);
+        HttpResponseMessage replay = await GetCallbackAsync(client, $"/login/axiam/callback?state={state}&code=auth-code-1", cookie).ConfigureAwait(false);
         Assert.Equal(HttpStatusCode.Unauthorized, replay.StatusCode);
     }
 
@@ -153,8 +155,10 @@ public sealed class OidcLoginEndpointsTests
         string state = ExtractQueryParam(authorizeUrl, "state");
         serverHandler.NextIdTokenNonce = ExtractQueryParam(authorizeUrl, "nonce");
 
-        HttpResponseMessage callbackResponse = await client.GetAsync(
+        HttpResponseMessage callbackResponse = await GetCallbackAsync(
+            client,
             $"/login/axiam/callback?state={state}&code=auth-code-1",
+            BindingCookieOf(loginResponse),
             HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
         Assert.Equal(HttpStatusCode.Found, callbackResponse.StatusCode);
@@ -185,7 +189,7 @@ public sealed class OidcLoginEndpointsTests
         string state = ExtractQueryParam(authorizeUrl, "state");
         serverHandler.NextIdTokenNonce = ExtractQueryParam(authorizeUrl, "nonce");
 
-        await client.GetAsync($"/login/axiam/callback?state={state}&code=auth-code-1").ConfigureAwait(false);
+        await GetCallbackAsync(client, $"/login/axiam/callback?state={state}&code=auth-code-1", BindingCookieOf(loginResponse)).ConfigureAwait(false);
 
         Assert.NotNull(capturedTokens);
         Assert.NotNull(capturedEntry);
@@ -205,7 +209,7 @@ public sealed class OidcLoginEndpointsTests
         string state = ExtractQueryParam(loginResponse.Headers.Location!.ToString(), "state");
         serverHandler.TokenEndpointThrowsNetworkError = true;
 
-        HttpResponseMessage response = await client.GetAsync($"/login/axiam/callback?state={state}&code=auth-code-1").ConfigureAwait(false);
+        HttpResponseMessage response = await GetCallbackAsync(client, $"/login/axiam/callback?state={state}&code=auth-code-1", BindingCookieOf(loginResponse)).ConfigureAwait(false);
         string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
         Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
@@ -225,12 +229,30 @@ public sealed class OidcLoginEndpointsTests
         string state = ExtractQueryParam(loginResponse.Headers.Location!.ToString(), "state");
         serverHandler.TokenEndpointReturnsInvalidGrant = true;
 
-        HttpResponseMessage response = await client.GetAsync($"/login/axiam/callback?state={state}&code=auth-code-1").ConfigureAwait(false);
+        HttpResponseMessage response = await GetCallbackAsync(client, $"/login/axiam/callback?state={state}&code=auth-code-1", BindingCookieOf(loginResponse)).ConfigureAwait(false);
         string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         Assert.Contains("authentication_failed", body);
         Assert.Contains("invalid_grant", body);
+    }
+
+    /// <summary>
+    /// The binding cookie (CONTRACT.md &#167;12.8; contract 1.68) the login response set, as the browser
+    /// that started the login would send it back on the callback. These tests pinned a callback that
+    /// carried no cookie at all, which is the login-CSRF defect (audit C7); they now play the browser.
+    /// </summary>
+    private static string BindingCookieOf(HttpResponseMessage loginResponse)
+    {
+        string setCookie = loginResponse.Headers.GetValues("Set-Cookie").Single(c => c.StartsWith("__Host-axiam_oidc_bind=", StringComparison.Ordinal));
+        return setCookie.Split(';')[0];
+    }
+
+    private static Task<HttpResponseMessage> GetCallbackAsync(HttpClient client, string pathAndQuery, string cookie, HttpCompletionOption option = HttpCompletionOption.ResponseContentRead)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, pathAndQuery);
+        request.Headers.Add("Cookie", cookie);
+        return client.SendAsync(request, option);
     }
 
     private static string ExtractQueryParam(string url, string name)
