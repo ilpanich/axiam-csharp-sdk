@@ -13,7 +13,7 @@ using Axiam.Sdk.Options;
 // (§27.6 rule 4).
 //
 // Run: AXIAM_BASE_URL=... AXIAM_TENANT=... AXIAM_ADMIN=... AXIAM_ADMIN_PASSWORD=...
-//      dotnet run --project examples/ManagementManifest -- --apply
+//      dotnet run --project examples/ManagementManifest -f net10.0 -- --apply
 
 bool apply = args.Length > 0 && args[0] == "--apply";
 string baseUrl = Env("AXIAM_BASE_URL", "https://localhost:8443");

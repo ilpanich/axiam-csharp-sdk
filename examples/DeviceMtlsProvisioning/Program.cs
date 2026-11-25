@@ -20,9 +20,9 @@ using Axiam.Sdk.Options;
 // management access at all. It presents the certificate and key as a §6.1 mutual-TLS
 // identity and does nothing else privileged.
 //
-// Run: dotnet run --project examples/DeviceMtlsProvisioning -- provision sensor-42
-//      dotnet run --project examples/DeviceMtlsProvisioning -- run     sensor-42
-//      dotnet run --project examples/DeviceMtlsProvisioning -- revoke  sensor-42
+// Run: dotnet run --project examples/DeviceMtlsProvisioning -f net10.0 -- provision sensor-42
+//      dotnet run --project examples/DeviceMtlsProvisioning -f net10.0 -- run     sensor-42
+//      dotnet run --project examples/DeviceMtlsProvisioning -f net10.0 -- revoke  sensor-42
 
 string baseUrl = Env("AXIAM_BASE_URL", "https://localhost:8443");
 string tenant = Env("AXIAM_TENANT", "acme");

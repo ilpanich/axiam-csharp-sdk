@@ -30,16 +30,16 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
 
-      # One SDK per target framework the projects declare (today only net10.0,
-      # floor and newest alike — net8.0 was dropped ahead of its 2026-11-10 end
-      # of support). When a newer leg is added (switching each project to <TargetFrameworks>), add its
-      # SDK here too: each target framework needs its own targeting pack, and
-      # VersionPolicyTests asserts every one is installed.
+      # One SDK per target framework the projects declare (net10.0;net11.0,
+      # floor and newest). Each target framework needs its own targeting pack,
+      # and VersionPolicyTests asserts every one is installed; the newest SDK
+      # drives the build and compiles the floor leg too.
       - name: Set up .NET SDKs (floor + newest)
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73  # v6.1.0
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       - name: dotnet restore
         run: dotnet restore Axiam.Sdk.sln
@@ -237,16 +237,16 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
 
-      # One SDK per target framework the projects declare (today only net10.0,
-      # floor and newest alike — net8.0 was dropped ahead of its 2026-11-10 end
-      # of support). When a newer leg is added (switching each project to <TargetFrameworks>), add its
-      # SDK here too: each target framework needs its own targeting pack, and
-      # VersionPolicyTests asserts every one is installed.
+      # One SDK per target framework the projects declare (net10.0;net11.0,
+      # floor and newest). Each target framework needs its own targeting pack,
+      # and VersionPolicyTests asserts every one is installed; the newest SDK
+      # drives the build and compiles the floor leg too.
       - name: Set up .NET SDKs (floor + newest)
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73  # v6.1.0
         with:
           dotnet-version: |
             10.0.x
+            11.0.x
 
       # Both .csproj files carry a placeholder <Version>0.0.0</Version>; the
       # release version is the git tag and is the single source of truth. Derive

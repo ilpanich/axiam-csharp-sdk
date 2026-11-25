@@ -42,9 +42,11 @@ public static class SupportedFrameworks
     /// The newest target framework the SDK is built and tested against.
     /// </summary>
     /// <remarks>
-    /// .NET 10 is an LTS release, supported through November 2028.
+    /// .NET 11 is a standard-term-support release (GA 10 November 2026),
+    /// supported through November 2028 under the 24-month STS policy, the same
+    /// end date as the <see cref="Floor"/>.
     /// </remarks>
-    public const string Newest = "net10.0";
+    public const string Newest = "net11.0";
 
     /// <summary>
     /// Every target framework the package ships a <c>lib/</c> folder for, oldest first.

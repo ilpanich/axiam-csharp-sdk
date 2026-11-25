@@ -16,7 +16,7 @@ Official C# client SDK for [AXIAM](https://github.com/ilpanich/axiam) — Access
   [`Axiam.Sdk.AspNetCore`](https://www.nuget.org/packages/Axiam.Sdk.AspNetCore) (ASP.NET Core middleware)
 - **Source:** [github.com/ilpanich/axiam-csharp-sdk](https://github.com/ilpanich/axiam-csharp-sdk)
 - **License:** Apache-2.0
-- **Target framework:** `net10.0` — see [Supported .NET versions](#supported-net-versions)
+- **Target frameworks:** `net10.0` and `net11.0` — see [Supported .NET versions](#supported-net-versions)
 - **Versioning:** stable from 1.0.0 and follows [Semantic Versioning](https://semver.org/). A
   contract record may **add a member or widen a type with a minor bump** (a new optional property, a
   request member that becomes a plain `string?`), and the [changelog](CHANGELOG.md) names every such
@@ -499,7 +499,7 @@ Both published packages ship a `lib/` folder per target framework they declare:
 | | Framework | Why this one |
 |---|---|---|
 | **Floor** | `net10.0` | LTS, supported through November 2028. |
-| **Newest** | `net10.0` | The same framework: no newer .NET release is GA yet. .NET 11 (STS) is due in November 2026 and will be added as the newest leg once it ships. |
+| **Newest** | `net11.0` | STS, GA on 10 November 2026 and supported through November 2028 (the 24-month STS window, the same end date as .NET 10). |
 
 > **`net8.0` was dropped.** .NET 8 goes out of support on 10 November 2026, so
 > the `net8.0` leg was removed before that date and `net10.0` became the floor.

@@ -12,7 +12,7 @@ using Axiam.Sdk.Options;
 // Uses ONLY the public Axiam.Sdk surface.
 //
 // Run: AXIAM_BASE_URL=https://your-axiam AXIAM_TENANT_ID=acme \
-//          dotnet run --project examples/TelemetryHook
+//          dotnet run --project examples/TelemetryHook -f net10.0
 
 var requests = new ConcurrentDictionary<string, (long Count, long TotalMs)>();
 var retries = new ConcurrentDictionary<string, long>();
