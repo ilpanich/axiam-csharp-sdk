@@ -6,8 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-
-## [1.4.0] - 2026-11-22
+### Changed
 
 Contract 1.68 (security audit 2026-11-14, Wave 2; CONTRACT.md §34.12). **This release changes behaviour:** the
 login glue (C7, C6) and the access-token path (N14) refuse what they used to accept, and the `typ`
@@ -98,6 +97,13 @@ organization member, one description moved), which changes no operation.
 - **`JwksCacheTtl`** above 10 minutes is now 10 minutes.
 - **`OidcExchangeAsync`** with an empty `Nonce` now throws `AuthError` instead of accepting an ID token that carries
   an empty nonce.
+### Added
+
+- **`net11.0` target framework.** .NET 11 went GA on 2026-11-10, so both packages now multi-target `net10.0;net11.0` and ship a `lib/` folder for each; `SupportedFrameworks.Newest` is `"net11.0"`. The test suite runs once per framework, every example builds for both (pass `-f net10.0` or `-f net11.0` to `dotnet run`), and CI installs the 10.0.x and 11.0.x SDKs. The `net10.0` floor is unchanged (supported through 2028-11-14).
+
+### Changed
+
+- Monthly dependency refresh (2026-11): `Microsoft.Extensions.Http` 11.0.0 (it targets `net10.0` too, matching `Microsoft.Extensions.Logging.Abstractions` 11.0.0); the ASP.NET Core test project pins `Microsoft.AspNetCore.Mvc.Testing` per framework (10.0.15 / 11.0.0).
 
 ## [1.3.1] - 2026-11-11
 

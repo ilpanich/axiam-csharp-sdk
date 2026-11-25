@@ -11,7 +11,8 @@
 // This example reads Axiam.Sdk.SupportedFrameworks rather than hardcoding
 // versions, so it stays correct across SDK upgrades.
 //
-// Run: dotnet run --project examples/VersionCompatibility
+// Run: dotnet run --project examples/VersionCompatibility -f net10.0
+//      dotnet run --project examples/VersionCompatibility -f net11.0
 
 using System;
 using System.Linq;
@@ -21,7 +22,9 @@ using Axiam.Sdk;
 // The target framework THIS example was compiled for. Determined at compile
 // time, because that is the question that matters: which lib/ folder of the SDK
 // did the build actually bind against?
-#if NET10_0
+#if NET11_0
+const string compiledFor = "net11.0";
+#elif NET10_0
 const string compiledFor = "net10.0";
 #else
 const string compiledFor = "unknown";
