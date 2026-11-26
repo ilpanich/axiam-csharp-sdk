@@ -68,7 +68,8 @@ organization member, one description moved), which changes no operation.
   and serde_json print them differently). It now cuts the trailing `hmac_signature` member out of the body and HMACs the
   remaining bytes as received, refuses a body that is not one object with unambiguous keys (duplicate or case-variant
   keys, content after the object) or whose signature is not the trailing member, and the consumer hands the handler those
-  same verified bytes.
+  same verified bytes. The consumer also nacks (no requeue) a validly signed message that is
+  not the `AuthzRequest` or `AuditEventMessage` layout of §8 v2 (a republished cache-invalidation message, say).
 - **#883 — the requester's discard event** (§8 consumer obligation 4): one warning per discard with `timestamp`,
   `exchange`, `routing_key` (the reply queue), the requester's own `tenant_id` and `reason` (`malformed`, `unsigned`,
   `signature`, `tenant`, `unknown_request`); never a signature, nonce or body member.

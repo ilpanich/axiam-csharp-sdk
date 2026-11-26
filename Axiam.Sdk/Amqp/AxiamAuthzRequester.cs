@@ -571,7 +571,7 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
     /// </summary>
     private (AmqpAuthzDecision? Decision, string? CorrelationId, string? Failure) VerifyResponse(byte[] body)
     {
-        if (HasAmbiguousKeys(body))
+        if (SignedJson.HasAmbiguousKeys(body))
         {
             return Fail(Discard.Malformed); // not an object with unambiguous keys
         }
@@ -706,104 +706,11 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
     }
 
     /// <summary>
-    /// Removes the final <c>,"hmac_signature":"&lt;64 hex&gt;"</c> member from <paramref name="body"/>, returning
-    /// the canonical bytes (the rest, closed with <c>}</c>) and the signature hex. <c>false</c> when the body does
-    /// not end in exactly that member.
+    /// Removes the final <c>,"hmac_signature":"&lt;64 hex&gt;"</c> member from <paramref name="body"/>
+    /// (see <see cref="SignedJson.TryCutTrailingSignature"/>); the requester's signatures are exactly 64 hex digits.
     /// </summary>
-    internal static bool TryCutTrailingSignature(byte[] body, out byte[]? canonical, out string? signatureHex)
-    {
-        canonical = null;
-        signatureHex = null;
-        int suffixLength = SignatureMember.Length + SignatureHexLength + 2; // + `"}`
-        if (body.Length <= suffixLength || body[^2] != (byte)'"' || body[^1] != (byte)'}')
-        {
-            return false;
-        }
-
-        int start = body.Length - suffixLength;
-        if (!body.AsSpan(start, SignatureMember.Length).SequenceEqual(SignatureMember))
-        {
-            return false;
-        }
-
-        ReadOnlySpan<byte> hex = body.AsSpan(start + SignatureMember.Length, SignatureHexLength);
-        foreach (byte b in hex)
-        {
-            bool isHex = b is >= (byte)'0' and <= (byte)'9' or >= (byte)'a' and <= (byte)'f' or >= (byte)'A' and <= (byte)'F';
-            if (!isHex)
-            {
-                return false;
-            }
-        }
-
-        signatureHex = Encoding.ASCII.GetString(hex);
-        canonical = new byte[start + 1];
-        body.AsSpan(0, start).CopyTo(canonical);
-        canonical[start] = (byte)'}';
-        return true;
-    }
-
-    /// <summary>
-    /// Whether <paramref name="body"/> is not a JSON object with unambiguous keys: the same key twice at any
-    /// depth, or two top-level keys that differ only by case (one decoder reads them as one member and another as
-    /// two). Also <c>true</c> for anything that cannot be tokenized, so malformed input is refused here rather than
-    /// reaching a lenient decoder.
-    /// </summary>
-    internal static bool HasAmbiguousKeys(ReadOnlySpan<byte> body)
-    {
-        try
-        {
-            var reader = new Utf8JsonReader(body, new JsonReaderOptions { MaxDepth = 64 });
-            // One set per open object, null for an open array.
-            var stack = new Stack<HashSet<string>?>();
-            var topLevelFolded = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            bool sawRoot = false;
-
-            while (reader.Read())
-            {
-                switch (reader.TokenType)
-                {
-                    case JsonTokenType.StartObject:
-                        sawRoot = true;
-                        stack.Push(new HashSet<string>(StringComparer.Ordinal));
-                        break;
-                    case JsonTokenType.StartArray:
-                        if (!sawRoot)
-                        {
-                            return true; // the root must be an object
-                        }
-                        stack.Push(null);
-                        break;
-                    case JsonTokenType.EndObject:
-                    case JsonTokenType.EndArray:
-                        stack.Pop();
-                        break;
-                    case JsonTokenType.PropertyName:
-                        string name = reader.GetString()!;
-                        if (!stack.Peek()!.Add(name))
-                        {
-                            return true;
-                        }
-                        if (stack.Count == 1 && !topLevelFolded.Add(name))
-                        {
-                            return true;
-                        }
-                        break;
-                    default:
-                        if (!sawRoot)
-                        {
-                            return true; // a bare scalar at the root
-                        }
-                        break;
-                }
-            }
-            return !sawRoot;
-        }
-        catch (Exception)
-        {
-            return true;
-        }
-    }
+    internal static bool TryCutTrailingSignature(byte[] body, out byte[]? canonical, out string? signatureHex) =>
+        SignedJson.TryCutTrailingSignature(body, SignatureHexLength, out canonical, out signatureHex);
 
     // ---- the request path ------------------------------------------------------------------
 

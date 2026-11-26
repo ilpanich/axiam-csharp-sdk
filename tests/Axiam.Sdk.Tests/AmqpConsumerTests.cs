@@ -465,4 +465,63 @@ public class AmqpConsumerTests
         Assert.False(call.Requeue);
         Assert.NotEmpty(logger.Warnings);
     }
+
+    [Fact]
+    public async Task AValidlySignedMessageOfAnotherShape_IsNackedWithoutRequeue_AndTheHandlerNeverRuns()
+    {
+        // A genuine cache-invalidation message (key_version, nonce, issued_at, signature last), signed under the same
+        // tenant subkey, republished to an event consumer's queue: it verifies and passes the replay gate, but it is
+        // neither an AuthzRequest nor an AuditEventMessage, so it must not reach the handler.
+        (Mock<IChannel> channelMock, List<AckNackCall> calls) = FakeChannel();
+        var logger = new RecordingLogger();
+        bool handlerInvoked = false;
+        byte[] wire = SignedWire("""{"key_version":2,"nonce":"n1","issued_at":"2026-07-10T12:00:00Z"}""");
+        Assert.True(Hmac.Verify(ReceivedBytesKey, wire), "the message must be genuinely signed");
+
+        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+            channelMock.Object,
+            ReceivedBytesKey,
+            (_, _) =>
+            {
+                handlerInvoked = true;
+                return Task.CompletedTask;
+            },
+            logger,
+            NewGuard());
+
+        await received(new object(), Delivery(8, wire));
+
+        Assert.False(handlerInvoked);
+        AckNackCall call = Assert.Single(calls);
+        Assert.Equal("nack", call.Type);
+        Assert.False(call.Requeue);
+        Assert.NotEmpty(logger.Warnings);
+    }
+
+    [Theory]
+    [InlineData("""{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"a","resource_id":"r","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z"}""")]
+    [InlineData("""{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"a","resource_id":"r","scope":"x","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z"}""")]
+    [InlineData("""{"tenant_id":"t","actor_id":"a","actor_type":"user","action":"x","outcome":"success","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z"}""")]
+    [InlineData("""{"tenant_id":"t","actor_id":"a","actor_type":"user","action":"x","resource_id":"r","outcome":"success","ip_address":"1.2.3.4","metadata":{"k":"v"},"key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z"}""")]
+    public async Task TheAuthzRequestAndAuditEventLayouts_ReachTheHandler(string signed)
+    {
+        (Mock<IChannel> channelMock, List<AckNackCall> calls) = FakeChannel();
+        bool handlerInvoked = false;
+
+        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+            channelMock.Object,
+            ReceivedBytesKey,
+            (_, _) =>
+            {
+                handlerInvoked = true;
+                return Task.CompletedTask;
+            },
+            new RecordingLogger(),
+            NewGuard());
+
+        await received(new object(), Delivery(9, SignedWire(signed)));
+
+        Assert.True(handlerInvoked);
+        Assert.Equal("ack", Assert.Single(calls).Type);
+    }
 }

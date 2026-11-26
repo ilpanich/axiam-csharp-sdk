@@ -155,7 +155,7 @@ public class HmacVerifyTests
     /// backslash-u sequence. Every one is a place where System.Text.Json's re-serialization differs from the server's.
     /// </summary>
     internal const string SpecialCharsSigned =
-        """{"correlation_id":"c1","action":"docs:a&b</\"c\">/'+ \u00e9 \u001f \\u0041 é€","key_version":2,"nonce":"n1","issued_at":"2026-07-10T12:00:00Z"}""";
+        """{"correlation_id":"c1","tenant_id":"t1","subject_id":"s1","action":"docs:a&b</\"c\">/'+ \u00e9 \u001f \\u0041 é€","resource_id":"r1","key_version":2,"nonce":"n1","issued_at":"2026-07-10T12:00:00Z"}""";
 
     [Fact]
     public void AGenuineMessageWithCharactersTheEncodersDisagreeOn_Verifies()

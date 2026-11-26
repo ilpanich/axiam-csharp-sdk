@@ -493,6 +493,29 @@ public sealed class OidcLoginBindingTests
     }
 
     [Fact]
+    public async Task AnOperationCanceledExceptionAfterTheClientAborted_IsLeftToTheHost_NoGlue500Body()
+    {
+        using TestApp app = await TestApp.StartAsync(o =>
+            o.OnSuccessAsync = (ctx, _, _, _) =>
+            {
+                ctx.Abort(); // the client went away: RequestAborted is cancelled
+                Assert.True(ctx.RequestAborted.IsCancellationRequested);
+                throw new OperationCanceledException(ctx.RequestAborted);
+            });
+        (string state, string cookie) = await app.BeginAsync();
+
+        try
+        {
+            HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
+            Assert.DoesNotContain("internal_error", await response.Content.ReadAsStringAsync(), StringComparison.Ordinal);
+        }
+        catch (Exception ex) when (ex is not Xunit.Sdk.XunitException)
+        {
+            // The host saw the cancellation: the glue did not answer it with a 500 body.
+        }
+    }
+
+    [Fact]
     public async Task APredicate_WidensTheRule_OnlyForValuesTheDefaultRuleRefuses()
     {
         using TestApp app = await TestApp.StartAsync(o => o.AllowReturnTo = v => v == "https://app.example/x");

@@ -29,8 +29,6 @@ namespace Axiam.Sdk.Amqp;
 /// </summary>
 public static class Hmac
 {
-    private static readonly byte[] SignatureMember = Encoding.ASCII.GetBytes(",\"hmac_signature\":\"");
-
     /// <summary>
     /// Returns <c>true</c> iff <paramref name="body"/> ends in a <c>hmac_signature</c> member whose value is
     /// HMAC-SHA256(<paramref name="signingKey"/>, the body with that trailing member removed), computed via a
@@ -49,12 +47,12 @@ public static class Hmac
     {
         try
         {
-            if (AxiamAuthzRequester.HasAmbiguousKeys(body))
+            if (SignedJson.HasAmbiguousKeys(body))
             {
                 return false; // not one object with unambiguous keys, or content after it
             }
 
-            if (!TrySplitTrailingSignature(body, out byte[]? canonical, out string? signatureHex))
+            if (!SignedJson.TryCutTrailingSignature(body, null, out byte[]? canonical, out string? signatureHex))
             {
                 return false; // §8.3 strict mode: missing, malformed or non-trailing signature = reject
             }
@@ -70,46 +68,5 @@ public static class Hmac
             // Bad hex / bad key -> reject, never throw. Attacker-controlled input must never crash the consumer.
             return false;
         }
-    }
-
-    /// <summary>
-    /// Splits <paramref name="body"/> into the bytes its HMAC covers and the signature: the body with its trailing
-    /// <c>,"hmac_signature":"&lt;hex&gt;"</c> member removed (closed with <c>}</c>), and the hex. <c>false</c> when the
-    /// body does not end in exactly that member with a non-empty hex value.
-    /// </summary>
-    private static bool TrySplitTrailingSignature(byte[] body, out byte[]? canonical, out string? signatureHex)
-    {
-        canonical = null;
-        signatureHex = null;
-
-        ReadOnlySpan<byte> raw = body;
-        int start = raw.LastIndexOf(SignatureMember);
-        if (start < 0)
-        {
-            return false;
-        }
-
-        ReadOnlySpan<byte> rest = raw[(start + SignatureMember.Length)..];
-        int end = rest.IndexOf((byte)'"');
-        if (end <= 0 || !rest[end..].SequenceEqual("\"}"u8))
-        {
-            return false; // empty value, or something other than `"}` follows it
-        }
-
-        ReadOnlySpan<byte> hex = rest[..end];
-        foreach (byte b in hex)
-        {
-            bool isHex = b is >= (byte)'0' and <= (byte)'9' or >= (byte)'a' and <= (byte)'f' or >= (byte)'A' and <= (byte)'F';
-            if (!isHex)
-            {
-                return false;
-            }
-        }
-
-        signatureHex = Encoding.ASCII.GetString(hex);
-        canonical = new byte[start + 1];
-        raw[..start].CopyTo(canonical);
-        canonical[start] = (byte)'}';
-        return true;
     }
 }

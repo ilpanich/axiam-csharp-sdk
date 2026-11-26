@@ -22,6 +22,9 @@ namespace Axiam.Sdk.Amqp;
 /// the HMAC covered (the delivery body, signature member included), never a re-serialization of them. The remaining outcomes follow the exact §8 decision matrix:
 /// </para>
 /// <list type="bullet">
+/// <item><description>HMAC verifies but the message is not an <c>AuthzRequest</c> or <c>AuditEventMessage</c> layout
+/// (§8 v2) → <c>BasicNackAsync(requeue: false)</c> + a security-event log entry; the handler is never
+/// invoked.</description></item>
 /// <item><description>HMAC verification fails → <c>BasicNackAsync(requeue: false)</c>
 /// + a security-event log entry that never contains the received or
 /// expected HMAC value; the handler is never invoked.</description></item>
@@ -155,10 +158,25 @@ public sealed class AxiamAmqpConsumer : IAsyncDisposable
                 return; // handler is structurally unreachable for an unverified message
             }
 
+            // A signature proves the sender held the tenant subkey, not that this is an event this consumer handles:
+            // a genuine message of another signed shape (a cache-invalidation message, say) republished to this queue
+            // verifies too. Accept only the AuthzRequest and AuditEventMessage layouts (§8 v2), read from the
+            // verified bytes.
+            if (!SignedJson.TryCutTrailingSignature(body, null, out byte[]? verifiedBytes, out string? _) ||
+                !SignedJson.MatchesSignedLayout(verifiedBytes!))
+            {
+                logger.LogWarning(
+                    "axiam_sdk_security: AMQP message is not a signed AuthzRequest or AuditEventMessage layout; nacking without requeue (exchange={Exchange}, routingKey={RoutingKey})",
+                    ea.Exchange, ea.RoutingKey);
+                await channel.BasicNackAsync(ea.DeliveryTag, multiple: false, requeue: false, cancellationToken)
+                    .ConfigureAwait(false);
+                return; // handler is structurally unreachable for a message of another shape
+            }
+
             // NEW-4: HMAC verified, but the message may still predate the
             // mandatory replay-protection fields, be stale/future-dated, or be
             // a replay of a nonce already seen within the freshness window.
-            // hmac_signature (order-preserving canonicalization) already
+            // hmac_signature (received-bytes HMAC) already
             // covers nonce/issued_at cryptographically — this gate is the
             // policy check over the now-authenticated values.
             if (!ReplayGuard.TryExtractMetadata(body, out ReplayMetadata metadata) || !replayGuard.Check(metadata))

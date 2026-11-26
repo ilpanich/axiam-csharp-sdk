@@ -1252,7 +1252,7 @@ else Console.WriteLine(decision.ReasonCode);                         // no_grant
 - **A response must** carry `allowed` as a JSON boolean and `tenant_id`, `nonce` and `hmac_signature` with the
   signature as the last member, with no duplicate or case-variant keys; verify under the subkey of **your own**
   tenant and the `key_version` you sent; and match `tenant_id`, `correlation_id` and `nonce` to one outstanding
-  request, which is then retired. Anything else is nacked without requeue, logged as the security event above (never with a
+  request, which is then retired. Anything else is nacked without requeue, logged as the security event below (never with a
   signature value), never an allow, and the check keeps waiting for the genuine answer until it times out
   (`TimeoutException`, default 10 s; `AxiamAuthzRequesterOptions.Timeout`).
 - **Server version, and no unsigned responses.** The AMQP authorization requester requires an AXIAM server of 1.68 or
