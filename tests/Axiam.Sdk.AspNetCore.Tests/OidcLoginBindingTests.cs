@@ -295,6 +295,111 @@ public sealed class OidcLoginBindingTests
         Assert.All(location, c => Assert.InRange(c, (char)0x20, (char)0x7e));
     }
 
+    // ---- Decision 7 (login-glue binding): the adapter writes the percent-encoded form of the destination ----
+
+    private static void AssertLocationIsPureAscii(string location) =>
+        Assert.All(location, c => Assert.InRange(c, (char)0x21, (char)0x7e));
+
+    [Theory]
+    [InlineData("/a b", "/a%20b")]
+    [InlineData("/caf\u00e9", "/caf%C3%A9")]
+    [InlineData("/\u20ac", "/%E2%82%AC")]
+    [InlineData("/a%20b", "/a%20b")]
+    [InlineData("/a%20b c", "/a%20b%20c")]
+    [InlineData("/100%", "/100%25")]
+    [InlineData("/a%zzb", "/a%25zzb")]
+    [InlineData("/%%41", "/%25%41")]
+    [InlineData("/a%2", "/a%252")]
+    [InlineData("/a\"b<c>d`e{f}", "/a%22b%3Cc%3Ed%60e%7Bf%7D")]
+    [InlineData("/ok?x=1&y=2#f", "/ok?x=1&y=2#f")]
+    public async Task TheLocationHeader_IsThePercentEncodedForm_PureAscii_AndTheCookieIsCleared(string returnTo, string expectedLocation)
+    {
+        using TestApp app = await TestApp.StartAsync();
+        (string state, string cookie) = await app.BeginAsync(returnTo: returnTo);
+
+        HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
+
+        Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+        string location = response.Headers.Location!.OriginalString;
+        Assert.Equal(expectedLocation, location);
+        AssertLocationIsPureAscii(location);
+        AssertCleared(response, HostCookie);
+        Assert.True(app.OnSuccessCalled);
+    }
+
+    [Fact]
+    public async Task ALoneSurrogateInTheDestination_BecomesTheReplacementCharacter_AndDoesNotThrow()
+    {
+        using TestApp app = await TestApp.StartAsync(forceReturnTo: "/a\ud800b");
+        (string state, string cookie) = await app.BeginAsync();
+
+        HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
+
+        Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+        string location = response.Headers.Location!.OriginalString;
+        Assert.Equal("/a%EF%BF%BDb", location);
+        AssertLocationIsPureAscii(location);
+        AssertCleared(response, HostCookie);
+    }
+
+    [Fact]
+    public async Task TwoLoneSurrogates_BecomeTwoReplacementCharacters()
+    {
+        using TestApp app = await TestApp.StartAsync(forceReturnTo: "/\ud800\ud800");
+        (string state, string cookie) = await app.BeginAsync();
+
+        HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
+
+        Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+        Assert.Equal("/%EF%BF%BD%EF%BF%BD", response.Headers.Location!.OriginalString);
+    }
+
+    [Fact]
+    public async Task ABackslash_AdmittedByAnApplicationPredicate_IsKeptUnencoded()
+    {
+        using TestApp app = await TestApp.StartAsync(o => o.AllowReturnTo = v => v.StartsWith('/'));
+        (string state, string cookie) = await app.BeginAsync(returnTo: "/a\\b");
+
+        HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
+
+        Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+        Assert.Equal("/a\\b", response.Headers.Location!.OriginalString);
+    }
+
+    [Fact]
+    public async Task ACrLfDestination_AdmittedByAnApplicationPredicate_IsEncoded_AndInjectsNoHeader()
+    {
+        using TestApp app = await TestApp.StartAsync(o => o.AllowReturnTo = v => v.StartsWith('/'));
+        (string state, string cookie) = await app.BeginAsync(returnTo: "/a\r\nSet-Cookie: pwned=1");
+
+        HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
+
+        Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+        string location = response.Headers.Location!.OriginalString;
+        Assert.Equal("/a%0D%0ASet-Cookie:%20pwned=1", location);
+        AssertLocationIsPureAscii(location);
+        Assert.DoesNotContain(
+            response.Headers.TryGetValues("Set-Cookie", out IEnumerable<string>? all) ? all : Array.Empty<string>(),
+            c => c.StartsWith("pwned=", StringComparison.Ordinal));
+        AssertCleared(response, HostCookie);
+    }
+
+    [Fact]
+    public async Task ANonAsciiSuccessRedirect_IsEncodedToo()
+    {
+        using TestApp app = await TestApp.StartAsync(o => o.SuccessRedirect = "/succ\u00e8s \u00e9");
+        (string state, string cookie) = await app.BeginAsync();
+
+        HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
+
+        Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+        string location = response.Headers.Location!.OriginalString;
+        Assert.Equal("/succ%C3%A8s%20%C3%A9", location);
+        AssertLocationIsPureAscii(location);
+        AssertCleared(response, HostCookie);
+        Assert.True(app.OnSuccessCalled);
+    }
+
     [Fact]
     public async Task TheBindingCookie_IsEssential_SoTheCookieConsentPolicyDoesNotSuppressIt()
     {
@@ -361,6 +466,30 @@ public sealed class OidcLoginBindingTests
             response.Headers.TryGetValues("Set-Cookie", out IEnumerable<string>? all) ? all : Array.Empty<string>(),
             c => c.StartsWith("app_session=", StringComparison.Ordinal));
         Assert.False(response.Headers.Contains("X-From-Hook"));
+    }
+
+    [Fact]
+    public async Task AnOperationCanceledExceptionThatIsNotTheClientsAbort_StillAnswers500WithTheClearingCookie()
+    {
+        // CSH-R5-2: an HttpClient timeout in the hook (TaskCanceledException), or a driver's command timeout, is an
+        // OperationCanceledException although the request was not aborted. It must take the same catch as any other
+        // exception: the clearing Set-Cookie (§12.8 rule 1d) and the 500, not the host's handler.
+        using TestApp app = await TestApp.StartAsync(o =>
+            o.OnSuccessAsync = (ctx, _, _, _) =>
+            {
+                Assert.False(ctx.RequestAborted.IsCancellationRequested);
+                ctx.Response.Cookies.Append("app_session", "x");
+                throw new TaskCanceledException("the hook's HttpClient timed out");
+            });
+        (string state, string cookie) = await app.BeginAsync();
+
+        HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
+
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        AssertCleared(response, HostCookie);
+        Assert.DoesNotContain(
+            response.Headers.TryGetValues("Set-Cookie", out IEnumerable<string>? all) ? all : Array.Empty<string>(),
+            c => c.StartsWith("app_session=", StringComparison.Ordinal));
     }
 
     [Fact]

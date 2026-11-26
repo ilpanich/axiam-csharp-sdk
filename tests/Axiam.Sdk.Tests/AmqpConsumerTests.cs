@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading;
@@ -383,6 +384,85 @@ public class AmqpConsumerTests
         Assert.Equal("ack", calls[0].Type);
         Assert.Equal("nack", calls[1].Type);
         Assert.False(calls[1].Requeue, "a replayed nonce must nack WITHOUT requeue");
+        Assert.NotEmpty(logger.Warnings);
+    }
+
+    // ---- #882 (D-5): the handler receives the bytes that were verified, and only those ----------------
+
+    private static readonly byte[] ReceivedBytesKey = Enumerable.Range(1, 32).Select(i => (byte)i).ToArray();
+
+    private static byte[] SignedWire(string signedText) =>
+        Encoding.UTF8.GetBytes(signedText[..^1] + ",\"hmac_signature\":\"" +
+            Convert.ToHexString(HMACSHA256.HashData(ReceivedBytesKey, Encoding.UTF8.GetBytes(signedText))).ToLowerInvariant() + "\"}");
+
+    [Fact]
+    public async Task AGenuineMessageWithSpecialCharacters_VerifiesAndTheHandlerIsHandedTheVerifiedBytes()
+    {
+        (Mock<IChannel> channelMock, List<AckNackCall> calls) = FakeChannel();
+        byte[] wire = SignedWire(HmacVerifyTests.SpecialCharsSigned);
+        byte[]? seen = null;
+
+        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+            channelMock.Object,
+            ReceivedBytesKey,
+            (body, _) =>
+            {
+                seen = body;
+                return Task.CompletedTask;
+            },
+            new RecordingLogger(),
+            NewGuard());
+
+        await received(new object(), Delivery(5, wire));
+
+        Assert.Equal("ack", Assert.Single(calls).Type);
+        Assert.NotNull(seen);
+        Assert.Equal(wire, seen); // the very bytes the HMAC covered (plus the trailing signature member)
+        using System.Text.Json.JsonDocument parsed = System.Text.Json.JsonDocument.Parse(seen!);
+        // Decoded from the verified bytes: \u00e9 -> é, \u001f -> U+001F, \\u0041 -> a literal backslash-u sequence.
+        Assert.Equal("docs:a&b</\"c\">/'+ é \u001f \\u0041 é€", parsed.RootElement.GetProperty("action").GetString());
+    }
+
+    [Theory]
+    [InlineData("duplicate")]
+    [InlineData("trailing")]
+    public async Task ADuplicateKeyOrTrailingContent_IsNackedWithoutRequeue_AndTheHandlerNeverRuns(string kind)
+    {
+        (Mock<IChannel> channelMock, List<AckNackCall> calls) = FakeChannel();
+        var logger = new RecordingLogger();
+        bool handlerInvoked = false;
+
+        byte[] body;
+        if (kind == "duplicate")
+        {
+            // Signed over the last-wins reading, so a verifier that re-serializes would accept it.
+            const string wireText = """{"correlation_id":"c1","action":"read","action":"delete","key_version":2,"nonce":"n1","issued_at":"2026-07-10T12:00:00Z"}""";
+            const string lastWins = """{"correlation_id":"c1","action":"delete","key_version":2,"nonce":"n1","issued_at":"2026-07-10T12:00:00Z"}""";
+            string sig = Convert.ToHexString(HMACSHA256.HashData(ReceivedBytesKey, Encoding.UTF8.GetBytes(lastWins))).ToLowerInvariant();
+            body = Encoding.UTF8.GetBytes(wireText[..^1] + ",\"hmac_signature\":\"" + sig + "\"}");
+        }
+        else
+        {
+            body = SignedWire(HmacVerifyTests.SpecialCharsSigned).Concat(Encoding.UTF8.GetBytes("\n{}")).ToArray();
+        }
+
+        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+            channelMock.Object,
+            ReceivedBytesKey,
+            (_, _) =>
+            {
+                handlerInvoked = true;
+                return Task.CompletedTask;
+            },
+            logger,
+            NewGuard());
+
+        await received(new object(), Delivery(6, body));
+
+        Assert.False(handlerInvoked);
+        AckNackCall call = Assert.Single(calls);
+        Assert.Equal("nack", call.Type);
+        Assert.False(call.Requeue);
         Assert.NotEmpty(logger.Warnings);
     }
 }

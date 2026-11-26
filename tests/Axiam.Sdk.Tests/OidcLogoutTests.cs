@@ -327,4 +327,121 @@ public class OidcLogoutTests
         Assert.Equal(first, second);
         Assert.Equal(LogoutJti, first.Jti);
     }
+
+    // -----------------------------------------------------------------------
+    // Contract 1.69 (#880): the server signs the logout token with a `kid`; the key is selected by it.
+    // -----------------------------------------------------------------------
+
+    private static IReadOnlyList<KeyValuePair<string, object>> ServerLogoutHeader(string? kid) =>
+        kid is null
+            ? new[] { new KeyValuePair<string, object>("alg", "EdDSA"), new KeyValuePair<string, object>("typ", "logout+jwt") }
+            : new[]
+            {
+                new KeyValuePair<string, object>("alg", "EdDSA"),
+                new KeyValuePair<string, object>("typ", "logout+jwt"),
+                new KeyValuePair<string, object>("kid", kid),
+            };
+
+    private static AxiamClient ClientWithJwks(string jwksDocument)
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler, withOptionalEndpoints: true);
+        handler.Map("/oauth2/jwks", _ => OidcTestKit.JsonOk(jwksDocument));
+        return OidcTestKit.Client(handler, OidcTestKit.Options(clientSecret: null));
+    }
+
+    [Fact]
+    public async Task AServerShapedLogoutToken_VerifiesAgainstATwoKeyJwks_TheSigningKeyNotFirst()
+    {
+        var other = new JwksFixture();
+        var signer = new JwksFixture();
+        string token = signer.SignWithExactHeader(ServerLogoutHeader(signer.Kid), LogoutClaims());
+
+        // The header is exactly what the server sends, and nothing else.
+        string headerJson = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(
+            token.Split('.')[0].Replace('-', '+').Replace('_', '/').PadRight((token.Split('.')[0].Length + 3) / 4 * 4, '=')));
+        Assert.Equal($$"""{"alg":"EdDSA","typ":"logout+jwt","kid":"{{signer.Kid}}"}""", headerJson);
+
+        AxiamClient client = ClientWithJwks(JwksFixture.BuildJwksDocument(other, signer));
+
+        VerifiedLogoutToken verified = await client.VerifyLogoutTokenAsync(token);
+
+        Assert.Equal(LogoutSid, verified.Sid);
+        Assert.Equal(LogoutJti, verified.Jti);
+    }
+
+    [Fact]
+    public async Task AKidlessLogoutToken_IsRefusedAsUnknownKid_AgainstAOneKeyJwksWhoseKeySignedIt()
+    {
+        var signer = new JwksFixture();
+        string token = signer.SignWithExactHeader(ServerLogoutHeader(null), LogoutClaims());
+        AxiamClient client = ClientWithJwks(JwksFixture.BuildJwksDocument(signer));
+
+        AuthError error = await Assert.ThrowsAsync<AuthError>(() => client.VerifyLogoutTokenAsync(token));
+
+        Assert.Equal(IdTokenFailureReasons.UnknownKid, error.Reason);
+    }
+
+    [Fact]
+    public async Task AnUnknownKidOnALogoutToken_IsRefusedAsUnknownKid()
+    {
+        var signer = new JwksFixture();
+        var published = new JwksFixture();
+        string token = signer.SignWithExactHeader(ServerLogoutHeader(signer.Kid), LogoutClaims());
+        AxiamClient client = ClientWithJwks(JwksFixture.BuildJwksDocument(published));
+
+        AuthError error = await Assert.ThrowsAsync<AuthError>(() => client.VerifyLogoutTokenAsync(token));
+
+        Assert.Equal(IdTokenFailureReasons.UnknownKid, error.Reason);
+    }
+
+    [Fact]
+    public async Task Rules10And11_StayOffTheLogoutAndIdTokenPaths_WhileTheAccessTokenGuardRefusesBoth()
+    {
+        // §10.1 rules 10 (typ at+jwt) and 11 (purpose) belong to the access-token path only. The server-shaped
+        // logout token (typ logout+jwt) and an ID token (typ JWT) verify through the OIDC path, which the guard's
+        // verifier shares, while that guard refuses both.
+        var signer = new JwksFixture();
+        string jwksDoc = signer.BuildJwksDocument();
+        AxiamClient client = ClientWithJwks(jwksDoc);
+
+        string logoutToken = signer.SignWithExactHeader(ServerLogoutHeader(signer.Kid), LogoutClaims());
+        VerifiedLogoutToken verified = await client.VerifyLogoutTokenAsync(logoutToken);
+        Assert.Equal(LogoutJti, verified.Jti);
+
+        var idHeader = new[]
+        {
+            new KeyValuePair<string, object>("alg", "EdDSA"),
+            new KeyValuePair<string, object>("typ", "JWT"),
+            new KeyValuePair<string, object>("kid", signer.Kid),
+        };
+        long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        string idToken = signer.SignWithExactHeader(idHeader, new Dictionary<string, object?>
+        {
+            ["iss"] = Issuer, ["aud"] = OidcTestKit.ClientId, ["sub"] = "user-1", ["tenant_id"] = "acme",
+            ["iat"] = now, ["exp"] = now + 600,
+        });
+
+        var http = new HttpClient(new StubJwksHandler(jwksDoc)) { BaseAddress = new Uri("https://axiam.test") };
+        var guard = new Axiam.Sdk.Auth.JwksVerifier(http, new Uri("https://axiam.test"), TimeSpan.FromMinutes(5));
+        Assert.Null(await guard.VerifyAsync(logoutToken, "acme"));
+        Assert.Null(await guard.VerifyAsync(idToken, "acme"));
+
+        // ... and the OIDC path's signature step (the one VerifyLogoutTokenAsync and the ID-token validator use)
+        // accepts both, because it applies neither rule.
+        var oidcVerifier = Axiam.Sdk.Auth.JwksVerifier.ForJwksUri(http, new Uri("https://axiam.test/oauth2/jwks"), TimeSpan.FromMinutes(5));
+        Assert.NotNull((await oidcVerifier.VerifyOidcIdTokenSignatureAsync(logoutToken)).Payload);
+        Assert.NotNull((await oidcVerifier.VerifyOidcIdTokenSignatureAsync(idToken)).Payload);
+    }
+
+    private sealed class StubJwksHandler : HttpMessageHandler
+    {
+        private readonly string _doc;
+        public StubJwksHandler(string doc) => _doc = doc;
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
+            Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+            {
+                Content = new StringContent(_doc, System.Text.Encoding.UTF8, "application/json"),
+            });
+    }
 }

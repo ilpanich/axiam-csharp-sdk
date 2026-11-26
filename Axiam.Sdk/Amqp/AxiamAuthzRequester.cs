@@ -18,32 +18,24 @@ namespace Axiam.Sdk.Amqp;
 /// A verified answer to one AMQP authorization request (CONTRACT.md &#167;8, "Signed authorization
 /// responses", contract 1.68).
 /// </summary>
-/// <param name="Allowed">The decision. <c>true</c> only for a response that verified under the tenant
-/// subkey, or, with <see cref="AxiamAuthzRequesterOptions.AllowUnsignedResponses"/>, for a response that
-/// carried no signature at all (see <paramref name="Unsigned"/>).</param>
+/// <param name="Allowed">The decision. <c>true</c> only for a response that verified under the tenant subkey: no
+/// response without a valid signature is ever surfaced, so there is nothing to flag.</param>
 /// <param name="Reason">The server's human-readable reason; <c>null</c> when absent.</param>
 /// <param name="ReasonCode">The machine-readable code (<c>allowed</c>, <c>no_grant</c>,
 /// <c>denied_by_rule</c>, <c>tenant_suspended</c>, &#8230;); <c>null</c> when absent. A code this SDK does not
 /// know is surfaced verbatim (&#167;11.2 rule 9).</param>
-/// <param name="Unsigned"><c>true</c> when the response carried no <c>hmac_signature</c> and was accepted only
-/// because <see cref="AxiamAuthzRequesterOptions.AllowUnsignedResponses"/> is set.</param>
-public sealed record AmqpAuthzDecision(bool Allowed, string? Reason, string? ReasonCode, bool Unsigned);
+public sealed record AmqpAuthzDecision(bool Allowed, string? Reason, string? ReasonCode);
 
-/// <summary>Options for <see cref="AxiamAuthzRequester"/>.</summary>
+/// <summary>
+/// Options for <see cref="AxiamAuthzRequester"/>. There is deliberately no option to accept an unsigned response
+/// (CONTRACT.md &#167;8, contract 1.69): see the remarks of <see cref="AxiamAuthzRequester"/>.
+/// </summary>
 public sealed class AxiamAuthzRequesterOptions
 {
-    /// <summary>
-    /// The explicit, integrator-set opt-out for ONE rolling upgrade against a server older than contract 1.68,
-    /// whose responses are unsigned (CONTRACT.md &#167;8). Off by default. With it set, a response that carries
-    /// NO <c>hmac_signature</c> member at all is accepted on its <c>correlation_id</c> alone and logged as a
-    /// security warning; a response that carries a signature member is verified in full whatever this option
-    /// says, and the opt-out never admits one that fails. Remove it once the server is upgraded.
-    /// </summary>
-    public bool AllowUnsignedResponses { get; init; }
-
-    /// <summary>Receives the security event for every discarded response, and the warning for an unsigned one
-    /// admitted by <see cref="AllowUnsignedResponses"/>. Nothing it receives contains a signature value.
-    /// Defaults to a silent logger.</summary>
+    /// <summary>Receives the security event for every discarded response (CONTRACT.md &#167;8 consumer obligation 4:
+    /// <c>timestamp</c>, <c>exchange</c>, <c>routing_key</c>, the requester's own <c>tenant_id</c> and a
+    /// <c>reason</c>). Nothing it receives contains a signature value, a nonce, or any member read from the discarded
+    /// body. Defaults to a silent logger.</summary>
     public ILogger? Logger { get; init; }
 
     /// <summary>Bounds each <see cref="AxiamAuthzRequester.CheckAsync"/> (default 10 seconds). Zero or
@@ -51,8 +43,17 @@ public sealed class AxiamAuthzRequesterOptions
     public TimeSpan Timeout { get; init; } = AxiamAuthzRequester.DefaultTimeout;
 }
 
-/// <summary>One delivery from the private reply queue, with the two settlements the requester uses.</summary>
-internal readonly record struct AuthzDelivery(byte[] Body, Func<ValueTask> Ack, Func<ValueTask> NackWithoutRequeue);
+/// <summary>
+/// One delivery from the private reply queue, with the two settlements the requester uses. <see cref="Exchange"/>
+/// and <see cref="RoutingKey"/> are what the broker reported for the delivery, or <c>null</c> where the transport
+/// cannot report them (the requester then names the values it consumes from: <c>""</c> and its reply queue).
+/// </summary>
+internal readonly record struct AuthzDelivery(
+    byte[] Body,
+    Func<ValueTask> Ack,
+    Func<ValueTask> NackWithoutRequeue,
+    string? Exchange = null,
+    string? RoutingKey = null);
 
 /// <summary>
 /// The seam between <see cref="AxiamAuthzRequester"/> and a broker: it declares the private reply queue and
@@ -104,7 +105,9 @@ internal sealed class RabbitMqAuthzTransport : IAuthzTransport
             var delivery = new AuthzDelivery(
                 ea.Body.ToArray(), // library-owned memory is only valid for this event
                 () => _channel.BasicAckAsync(tag, multiple: false),
-                () => _channel.BasicNackAsync(tag, multiple: false, requeue: false));
+                () => _channel.BasicNackAsync(tag, multiple: false, requeue: false),
+                ea.Exchange,
+                ea.RoutingKey);
             return onDelivery(delivery);
         };
         consumer.ShutdownAsync += (_, _) =>
@@ -191,6 +194,23 @@ internal sealed class RabbitMqAuthzTransport : IAuthzTransport
 /// A broker confirm is not evidence that AXIAM decided a request, and a minimal-profile server
 /// (<c>AXIAM__AMQP__ENABLED=false</c>) reads no AMQP queue at all: a check then times out. Use REST or gRPC there.
 /// </para>
+/// <para>
+/// <b>Server version, and no unsigned responses.</b> The AMQP authorization requester requires an AXIAM server of
+/// 1.68 or later (contract 1.68). Such a server signs every authorization response with the tenant's AMQP subkey and
+/// answers on the requester's private <c>reply_to</c> queue. A server older than 1.68 ignores <c>reply_to</c> and
+/// answers, unsigned, only on the shared <c>axiam.authz.response</c> queue, which this requester never reads: against
+/// it every check times out. There is no option to accept unsigned responses (CONTRACT 1.69 &#167;8): no AXIAM
+/// server sends one to a reply queue, so an unsigned response can only have been published by someone else, and it
+/// is discarded and logged. During a rolling upgrade from a pre-1.68 server, use REST or gRPC authorization until
+/// every replica runs 1.68 or later.
+/// </para>
+/// <para>
+/// <b>The discard event.</b> Every response that is discarded (reason <c>malformed</c>, <c>unsigned</c>,
+/// <c>signature</c>, <c>tenant</c> or <c>unknown_request</c>) logs one warning on <see cref="AxiamAuthzRequesterOptions.Logger"/>
+/// with exactly the members <c>timestamp</c> (RFC 3339 UTC), <c>exchange</c>, <c>routing_key</c> (the requester's own
+/// reply queue), <c>tenant_id</c> (the requester's OWN tenant, never the one the response claims) and <c>reason</c>.
+/// The body is unauthenticated input: no signature, nonce, correlation id or other body member is ever logged.
+/// </para>
 /// </remarks>
 public sealed class AxiamAuthzRequester : IAsyncDisposable
 {
@@ -222,7 +242,6 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
     private readonly IAuthzTransport _transport;
     private readonly string _tenantId;
     private readonly byte[] _signingKey;
-    private readonly bool _allowUnsigned;
     private readonly ILogger _logger;
     private readonly TimeSpan _timeout;
     private readonly object _gate = new();
@@ -244,7 +263,6 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
         _transport = transport;
         _tenantId = tenantId;
         _signingKey = (byte[])signingKey.Clone();
-        _allowUnsigned = options?.AllowUnsignedResponses ?? false;
         _logger = options?.Logger ?? NullLogger.Instance;
         _timeout = options?.Timeout is { } t && t > TimeSpan.Zero ? t : DefaultTimeout;
         _ownedResources = ownedResources;
@@ -491,15 +509,25 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
 
     // ---- the response path -----------------------------------------------------------------
 
+    /// <summary>Why a response was discarded: the five <c>reason</c> codes of the discard event (CONTRACT.md &#167;8
+    /// consumer obligation 4).</summary>
+    private static class Discard
+    {
+        internal const string Malformed = "malformed";
+        internal const string Unsigned = "unsigned";
+        internal const string Signature = "signature";
+        internal const string Tenant = "tenant";
+        internal const string UnknownRequest = "unknown_request";
+    }
+
     /// <summary>Verifies one delivery and completes the matching request, or discards it (nack without requeue
-    /// plus a security event).</summary>
+    /// plus the security event).</summary>
     internal async Task HandleAsync(AuthzDelivery delivery)
     {
         (AmqpAuthzDecision? decision, string? correlationId, string? failure) = VerifyResponse(delivery.Body);
         if (decision is null || correlationId is null)
         {
-            // The fact of failure only — never a signature value (§8 protocol rule 4).
-            _logger.LogWarning("axiam_sdk_security: AMQP authz response discarded: {Reason}", failure);
+            LogDiscard(delivery, failure ?? Discard.Malformed);
             await delivery.NackWithoutRequeue().ConfigureAwait(false);
             return;
         }
@@ -512,7 +540,7 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
         }
         if (pending is null)
         {
-            _logger.LogWarning("axiam_sdk_security: AMQP authz response discarded: no outstanding request");
+            LogDiscard(delivery, Discard.UnknownRequest);
             await delivery.NackWithoutRequeue().ConfigureAwait(false);
             return;
         }
@@ -522,15 +550,30 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
     }
 
     /// <summary>
+    /// The one security event of a discarded response (CONTRACT.md &#167;8 consumer obligation 4; protocol rule 4).
+    /// Carries exactly <c>timestamp</c>, <c>exchange</c>, <c>routing_key</c>, <c>tenant_id</c> and <c>reason</c>:
+    /// <c>tenant_id</c> is the requester's own tenant, <c>routing_key</c> its own reply queue where the transport does
+    /// not report the delivery's, and nothing is read from the body, which is unauthenticated input.
+    /// </summary>
+    private void LogDiscard(AuthzDelivery delivery, string reason)
+    {
+        string timestamp = Clock.GetUtcNow().UtcDateTime.ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'", CultureInfo.InvariantCulture);
+        _logger.LogWarning(
+            "axiam_sdk_security: AMQP authz response discarded (timestamp={timestamp}, exchange={exchange}, routing_key={routing_key}, tenant_id={tenant_id}, reason={reason})",
+            timestamp, delivery.Exchange ?? string.Empty, delivery.RoutingKey ?? _replyTo, _tenantId, reason);
+    }
+
+    /// <summary>
     /// Applies consumer obligations 1&#8211;3 to <paramref name="body"/>. It never re-serializes: the signature is
     /// checked over <paramref name="body"/> minus its trailing signature member, and the decision is decoded from
-    /// those same bytes. The outstanding map is read, not changed.
+    /// those same bytes. The outstanding map is read, not changed. On a discard the third member is one of the
+    /// <see cref="Discard"/> codes.
     /// </summary>
     private (AmqpAuthzDecision? Decision, string? CorrelationId, string? Failure) VerifyResponse(byte[] body)
     {
         if (HasAmbiguousKeys(body))
         {
-            return Fail("body is not an object with unambiguous keys");
+            return Fail(Discard.Malformed); // not an object with unambiguous keys
         }
 
         JsonDocument document;
@@ -540,7 +583,7 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
         }
         catch (JsonException)
         {
-            return Fail("body is not a JSON object");
+            return Fail(Discard.Malformed);
         }
 
         using (document)
@@ -548,18 +591,18 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
             JsonElement root = document.RootElement;
             if (root.ValueKind != JsonValueKind.Object)
             {
-                return Fail("body is not a JSON object");
+                return Fail(Discard.Malformed);
             }
 
             // Rule 1: `allowed` must be a JSON boolean, whatever else the body is.
             if (!root.TryGetProperty("allowed", out JsonElement allowed) ||
                 allowed.ValueKind is not (JsonValueKind.True or JsonValueKind.False))
             {
-                return Fail("allowed is missing or not a boolean");
+                return Fail(Discard.Malformed);
             }
 
-            // A member named hmac_signature in any letter case is a signature member: the opt-out below
-            // must never read a body carrying one as "unsigned".
+            // A member named hmac_signature in any letter case is a signature member: a body carrying one is
+            // malformed or fails verification, never "unsigned".
             bool hasSignatureMember = false;
             foreach (JsonProperty property in root.EnumerateObject())
             {
@@ -572,20 +615,20 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
 
             if (!hasSignatureMember)
             {
-                return AcceptUnsigned(root);
+                return Fail(Discard.Unsigned); // rule 1: no hmac_signature at all; there is no opt-out (contract 1.69)
             }
 
             // The canonical bytes: body with the final `,"hmac_signature":"<64 hex>"` taken out of the
             // closing brace. A body not ending in that member is discarded (rule 1) — never repaired.
             if (!TryCutTrailingSignature(body, out byte[]? canonical, out string? signatureHex))
             {
-                return Fail("body does not end in the hmac_signature member");
+                return Fail(Discard.Malformed);
             }
             if (!root.TryGetProperty("hmac_signature", out JsonElement embedded) ||
                 embedded.ValueKind != JsonValueKind.String ||
                 embedded.GetString() != signatureHex)
             {
-                return Fail("hmac_signature is not the trailing member");
+                return Fail(Discard.Malformed);
             }
 
             // Rule 2: HMAC-SHA256 under the requester's own tenant subkey, constant-time.
@@ -593,7 +636,7 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
             byte[] computed = HMACSHA256.HashData(_signingKey, canonical!);
             if (!CryptographicOperations.FixedTimeEquals(computed, expected))
             {
-                return Fail("signature does not verify");
+                return Fail(Discard.Signature);
             }
 
             // Everything below reads the VERIFIED canonical bytes, never `body` (audit C2).
@@ -604,7 +647,7 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
             }
             catch (JsonException)
             {
-                return Fail("verified bytes do not decode");
+                return Fail(Discard.Malformed);
             }
 
             using (verified)
@@ -619,13 +662,13 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
                     !TryString(v, "reason", required: false, out string? reason) ||
                     !TryString(v, "reason_code", required: false, out string? reasonCode))
                 {
-                    return Fail("tenant_id, nonce or correlation_id is missing, or a member has the wrong type");
+                    return Fail(Discard.Malformed); // tenant_id, nonce or correlation_id missing, or a member of the wrong type
                 }
 
                 // Rule 3: bound to this requester's tenant and to one outstanding request.
                 if (!string.Equals(tenantId, _tenantId, StringComparison.Ordinal))
                 {
-                    return Fail("tenant_id is not the requester's");
+                    return Fail(Discard.Tenant);
                 }
                 bool outstanding;
                 lock (_gate)
@@ -635,44 +678,12 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
                 }
                 if (!outstanding)
                 {
-                    return Fail("correlation_id and nonce match no outstanding request");
+                    return Fail(Discard.UnknownRequest);
                 }
 
-                return (new AmqpAuthzDecision(vAllowed.ValueKind == JsonValueKind.True, reason, reasonCode, Unsigned: false), correlationId, null);
+                return (new AmqpAuthzDecision(vAllowed.ValueKind == JsonValueKind.True, reason, reasonCode), correlationId, null);
             }
         }
-    }
-
-    /// <summary>
-    /// A response with no <c>hmac_signature</c> member: refused unless the opt-out is set, in which case it is
-    /// accepted on its <c>correlation_id</c> alone (a pre-1.68 server answers with no <c>tenant_id</c> or
-    /// <c>nonce</c>).
-    /// </summary>
-    private (AmqpAuthzDecision? Decision, string? CorrelationId, string? Failure) AcceptUnsigned(JsonElement root)
-    {
-        if (!_allowUnsigned)
-        {
-            return Fail("response is unsigned");
-        }
-        if (!TryString(root, "correlation_id", required: true, out string? correlationId) ||
-            !TryString(root, "reason", required: false, out string? reason) ||
-            !TryString(root, "reason_code", required: false, out string? reasonCode))
-        {
-            return Fail("unsigned response has no correlation_id");
-        }
-        bool outstanding;
-        lock (_gate)
-        {
-            outstanding = _pending.ContainsKey(correlationId!);
-        }
-        if (!outstanding)
-        {
-            return Fail("correlation_id matches no outstanding request");
-        }
-
-        _logger.LogWarning("axiam_sdk_security: AMQP authz response accepted UNSIGNED because AllowUnsignedResponses is set");
-        bool isAllowed = root.GetProperty("allowed").ValueKind == JsonValueKind.True;
-        return (new AmqpAuthzDecision(isAllowed, reason, reasonCode, Unsigned: true), correlationId, null);
     }
 
     private static (AmqpAuthzDecision?, string?, string?) Fail(string reason) => (null, null, reason);

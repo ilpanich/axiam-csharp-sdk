@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Nodes;
 using Axiam.Sdk.Amqp;
@@ -135,5 +136,78 @@ public class HmacVerifyTests
         Assert.False(Hmac.Verify(key, Encoding.UTF8.GetBytes("not json at all")));
         Assert.False(Hmac.Verify(key, Array.Empty<byte>()));
         Assert.False(Hmac.Verify(key, Encoding.UTF8.GetBytes("[1,2,3]"))); // valid JSON, not an object
+    }
+
+    // ---- #882 (D-5): verify over the RECEIVED bytes, never over a re-serialization -----------------------
+
+    private static readonly byte[] BytesKey = Enumerable.Range(1, 32).Select(i => (byte)i).ToArray();
+
+    private static string HexMac(byte[] key, string signedText) =>
+        Convert.ToHexString(HMACSHA256.HashData(key, Encoding.UTF8.GetBytes(signedText))).ToLowerInvariant();
+
+    /// <summary>The wire form the server writes: the signed bytes with the signature appended as the LAST member.</summary>
+    private static byte[] Wire(string signedText, string signatureHex) =>
+        Encoding.UTF8.GetBytes(signedText[..^1] + ",\"hmac_signature\":\"" + signatureHex + "\"}");
+
+    /// <summary>
+    /// What serde_json writes for a message whose action holds <c>&amp; &lt; &gt; ' +</c>, a non-ASCII character
+    /// written raw, a lowercase <c>\u001f</c> escape (serde_json's form for a control character) and a literal
+    /// backslash-u sequence. Every one is a place where System.Text.Json's re-serialization differs from the server's.
+    /// </summary>
+    internal const string SpecialCharsSigned =
+        """{"correlation_id":"c1","action":"docs:a&b</\"c\">/'+ \u00e9 \u001f \\u0041 é€","key_version":2,"nonce":"n1","issued_at":"2026-07-10T12:00:00Z"}""";
+
+    [Fact]
+    public void AGenuineMessageWithCharactersTheEncodersDisagreeOn_Verifies()
+    {
+        byte[] body = Wire(SpecialCharsSigned, HexMac(BytesKey, SpecialCharsSigned));
+
+        Assert.True(Hmac.Verify(BytesKey, body));
+    }
+
+    [Fact]
+    public void ADuplicateKey_IsRefused_EvenWhenTheSignatureWasComputedOverOneOfTheReadings()
+    {
+        // The wire has `action` twice. A verifier that re-serializes sees one reading (last wins); a handler that parses
+        // the same bytes may see the other (first wins). The signature below is over the last-wins reading, so a
+        // verifier that parses then re-serializes would accept this body while the handler could read "read".
+        const string wireText = """{"correlation_id":"c1","action":"read","action":"delete","key_version":2,"nonce":"n1","issued_at":"2026-07-10T12:00:00Z"}""";
+        const string lastWins = """{"correlation_id":"c1","action":"delete","key_version":2,"nonce":"n1","issued_at":"2026-07-10T12:00:00Z"}""";
+        byte[] body = Wire(wireText, HexMac(BytesKey, lastWins));
+
+        Assert.False(Hmac.Verify(BytesKey, body));
+    }
+
+    [Fact]
+    public void ACaseVariantKey_IsRefused_EvenWhenSignedOverTheReceivedBytes()
+    {
+        const string signed = """{"correlation_id":"c1","action":"read","ACTION":"delete","key_version":2,"nonce":"n1","issued_at":"2026-07-10T12:00:00Z"}""";
+        byte[] body = Wire(signed, HexMac(BytesKey, signed));
+
+        Assert.False(Hmac.Verify(BytesKey, body));
+    }
+
+    [Fact]
+    public void TrailingContentAfterTheObject_IsRefused()
+    {
+        const string plain = """{"correlation_id":"c1","action":"read","key_version":2,"nonce":"n1","issued_at":"2026-07-10T12:00:00Z"}""";
+        byte[] genuine = Wire(plain, HexMac(BytesKey, plain));
+
+        Assert.True(Hmac.Verify(BytesKey, genuine));
+        Assert.False(Hmac.Verify(BytesKey, genuine.Concat(Encoding.UTF8.GetBytes("\n")).ToArray()));
+        Assert.False(Hmac.Verify(BytesKey, genuine.Concat(Encoding.UTF8.GetBytes(" {}")).ToArray()));
+        Assert.False(Hmac.Verify(BytesKey, genuine.Concat(genuine).ToArray()));
+    }
+
+    [Fact]
+    public void ASignatureThatIsNotTheTrailingMember_IsRefused()
+    {
+        // The server always writes `hmac_signature` last. A body that carries it elsewhere was not written by the
+        // server (or was re-encoded on the way); it is refused rather than repaired by moving the member.
+        const string signed = """{"correlation_id":"c1","action":"read","key_version":2,"nonce":"n1","issued_at":"2026-07-10T12:00:00Z"}""";
+        string sig = HexMac(BytesKey, signed);
+        byte[] body = Encoding.UTF8.GetBytes("{\"hmac_signature\":\"" + sig + "\"," + signed[1..]);
+
+        Assert.False(Hmac.Verify(BytesKey, body));
     }
 }

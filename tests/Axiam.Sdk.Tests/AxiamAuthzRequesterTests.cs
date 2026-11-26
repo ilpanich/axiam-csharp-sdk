@@ -129,15 +129,38 @@ public sealed class AxiamAuthzRequesterTests
     private sealed class RecordingLogger : ILogger
     {
         public List<string> Warnings { get; } = new();
+
+        /// <summary>Every warning's structured members, plus the formatted message under the key <c>{message}</c>.</summary>
+        public List<Dictionary<string, string>> WarningEvents { get; } = new();
+
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
         public bool IsEnabled(LogLevel logLevel) => true;
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
-            if (logLevel == LogLevel.Warning)
+            if (logLevel != LogLevel.Warning)
             {
-                Warnings.Add(formatter(state, exception));
+                return;
             }
+
+            string message = formatter(state, exception);
+            Warnings.Add(message);
+            var members = new Dictionary<string, string> { ["{message}"] = message };
+            if (state is IEnumerable<KeyValuePair<string, object?>> pairs)
+            {
+                foreach (KeyValuePair<string, object?> pair in pairs)
+                {
+                    members[pair.Key] = Convert.ToString(pair.Value, System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
+                }
+            }
+            WarningEvents.Add(members);
         }
+    }
+
+    private sealed class FixedTimeProvider : TimeProvider
+    {
+        private readonly DateTimeOffset _now;
+        public FixedTimeProvider(DateTimeOffset now) => _now = now;
+        public override DateTimeOffset GetUtcNow() => _now;
     }
 
     private static Task<AxiamAuthzRequester> NewRequester(FakeTransport? transport = null, AxiamAuthzRequesterOptions? options = null) =>
@@ -173,7 +196,6 @@ public sealed class AxiamAuthzRequesterTests
         Assert.Equal(v.Allowed, decision!.Allowed);
         Assert.Equal(v.Reason, decision.Reason);
         Assert.Equal(v.Code, decision.ReasonCode);
-        Assert.False(decision.Unsigned);
         Assert.Equal(1, settled.Acked);
 
         // Retired on acceptance: the same response again finds nothing and is nacked without requeue.
@@ -244,45 +266,38 @@ public sealed class AxiamAuthzRequesterTests
         Assert.True(genuine!.Allowed);
     }
 
-    // ---- unsigned responses ------------------------------------------------------------
+    // ---- unsigned responses (contract 1.69, #881: there is no opt-out) ----------------------
 
     private static readonly byte[] Unsigned = Encoding.UTF8.GetBytes($$"""{"correlation_id":"{{Correlation}}","allowed":true,"reason_code":"allowed"}""");
 
     [Fact]
-    public async Task AnUnsignedResponse_IsRefusedByDefault()
+    public async Task AnUnsignedResponse_IsDiscardedAsUnsigned_TheCheckKeepsWaiting_AndNothingOffersToAcceptIt()
     {
-        await using AxiamAuthzRequester requester = await NewRequester();
+        var logger = new RecordingLogger();
+        var transport = new FakeTransport();
+        await using AxiamAuthzRequester requester = await NewRequester(transport, new AxiamAuthzRequesterOptions { Logger = logger });
         Task<AmqpAuthzDecision> outstanding = requester.ExpectAsync(Correlation, Nonce);
 
         (AmqpAuthzDecision? decision, Settlement settled) = await OfferAsync(requester, outstanding, Unsigned);
 
         Assert.Null(decision);
+        Assert.False(outstanding.IsCompleted);
+        Assert.Equal(0, settled.Acked);
         Assert.Equal(1, settled.NackedWithoutRequeue);
-    }
+        Dictionary<string, string> evt = Assert.Single(logger.WarningEvents);
+        Assert.Equal("unsigned", evt["reason"]);
 
-    [Fact]
-    public async Task AnUnsignedResponse_IsAcceptedWithTheOptOut_FlaggedAndLogged()
-    {
-        var logger = new RecordingLogger();
-        await using AxiamAuthzRequester requester = await NewRequester(options: new AxiamAuthzRequesterOptions { AllowUnsignedResponses = true, Logger = logger });
-        Task<AmqpAuthzDecision> outstanding = requester.ExpectAsync(Correlation, Nonce);
-
-        (AmqpAuthzDecision? decision, _) = await OfferAsync(requester, outstanding, Unsigned);
-
-        Assert.NotNull(decision);
-        Assert.True(decision!.Allowed);
-        Assert.True(decision.Unsigned);
-        Assert.Equal("allowed", decision.ReasonCode);
-        Assert.Contains(logger.Warnings, w => w.Contains("UNSIGNED", StringComparison.Ordinal));
+        // The option is gone: no public member of the options or the decision mentions an unsigned acceptance.
+        Assert.DoesNotContain(typeof(AxiamAuthzRequesterOptions).GetProperties(), p => p.Name.Contains("Unsigned", StringComparison.Ordinal));
+        Assert.DoesNotContain(typeof(AmqpAuthzDecision).GetProperties(), p => p.Name.Contains("Unsigned", StringComparison.Ordinal));
     }
 
     [Theory]
-    [InlineData("""{"correlation_id":"77777777-7777-7777-7777-777777777777","allowed":true}""")]
-    [InlineData("""{"correlation_id":"22222222-2222-2222-2222-222222222222"}""")]
-    [InlineData("""{"correlation_id":"22222222-2222-2222-2222-222222222222","allowed":"yes"}""")]
-    public async Task TheOptOut_NeedsAnOutstandingCorrelationId_AndABooleanAllowed(string body)
+    [InlineData("""{"correlation_id":"22222222-2222-2222-2222-222222222222","allowed":true,"hmac_signature":null}""")]
+    [InlineData("""{"correlation_id":"22222222-2222-2222-2222-222222222222","allowed":true,"HMAC_SIGNATURE":"0000000000000000000000000000000000000000000000000000000000000000"}""")]
+    public async Task AResponseCarryingAFailingSignatureMember_IsNeverAdmitted(string body)
     {
-        await using AxiamAuthzRequester requester = await NewRequester(options: new AxiamAuthzRequesterOptions { AllowUnsignedResponses = true });
+        await using AxiamAuthzRequester requester = await NewRequester();
         Task<AmqpAuthzDecision> outstanding = requester.ExpectAsync(Correlation, Nonce);
 
         (AmqpAuthzDecision? decision, _) = await OfferAsync(requester, outstanding, Encoding.UTF8.GetBytes(body));
@@ -290,21 +305,94 @@ public sealed class AxiamAuthzRequesterTests
         Assert.Null(decision);
     }
 
-    [Fact]
-    public async Task TheOptOut_NeverAdmitsAResponseCarryingAFailingSignature()
+    // ---- the discard event (contract 1.69 §8 consumer obligation 4; #883) ---------------------
+
+    private static byte[] Resign(string canonical) => SignWith(Subkey, canonical);
+
+    public static IEnumerable<object[]> DiscardPaths()
     {
-        await using AxiamAuthzRequester requester = await NewRequester(options: new AxiamAuthzRequesterOptions { AllowUnsignedResponses = true });
+        Vector v1 = Vectors[0];
+        yield return new object[] { "signature", SignWith(SubkeyFor(OtherTenant, 2), v1.Canonical) };
+        yield return new object[] { "tenant", Resign(v1.Canonical.Replace(Tenant, OtherTenant)) };
+        yield return new object[] { "unsigned", Unsigned };
+        yield return new object[] { "unknown_request", Resign(v1.Canonical.Replace(Correlation, "77777777-7777-7777-7777-777777777777")) };
+        yield return new object[] { "unknown_request", Resign(v1.Canonical.Replace(Nonce, "66666666-6666-6666-6666-666666666666")) };
+        yield return new object[] { "malformed", Encoding.UTF8.GetBytes("not json") };
+        yield return new object[] { "malformed", Resign(v1.Canonical.Replace("\"allowed\":true", "\"allowed\":\"true\"")) };
+        yield return new object[] { "malformed", Resign(v1.Canonical.Replace($",\"nonce\":\"{Nonce}\"", string.Empty)) };
+        yield return new object[] { "malformed", Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(v1.Wire()).Replace(v1.Signature, v1.Signature[..62])) };
+    }
+
+    [Theory]
+    [MemberData(nameof(DiscardPaths))]
+    public async Task EveryDiscard_LogsOneWarningWithTheRoutingKeyAndTheOwnTenant_AndNoSecretOrBodyMember(string reason, byte[] body)
+    {
+        var logger = new RecordingLogger();
+        var transport = new FakeTransport { Queue = "amq.gen-ReplyQueue42" };
+        await using AxiamAuthzRequester requester = await NewRequester(transport, new AxiamAuthzRequesterOptions { Logger = logger });
+        requester.Clock = new FixedTimeProvider(DateTimeOffset.Parse("2026-11-26T10:11:12.345Z", System.Globalization.CultureInfo.InvariantCulture));
         Task<AmqpAuthzDecision> outstanding = requester.ExpectAsync(Correlation, Nonce);
 
-        byte[] tampered = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(Vectors[1].Wire()).Replace("\"allowed\":false", "\"allowed\":true"));
-        byte[] nullSignature = Encoding.UTF8.GetBytes($$"""{"correlation_id":"{{Correlation}}","allowed":true,"hmac_signature":null}""");
-        byte[] caseVariant = Encoding.UTF8.GetBytes($$"""{"correlation_id":"{{Correlation}}","allowed":true,"HMAC_SIGNATURE":"{{new string('0', 64)}}"}""");
+        (AmqpAuthzDecision? decision, Settlement settled) = await OfferAsync(requester, outstanding, body);
 
-        foreach (byte[] body in new[] { tampered, nullSignature, caseVariant })
+        Assert.Null(decision);
+        Assert.Equal(1, settled.NackedWithoutRequeue);
+        Dictionary<string, string> evt = Assert.Single(logger.WarningEvents);
+
+        // The five members, canonical names.
+        Assert.Equal("amq.gen-ReplyQueue42", evt["routing_key"]);
+        Assert.Equal(Tenant, evt["tenant_id"]);
+        Assert.Equal(string.Empty, evt["exchange"]);
+        Assert.Equal(reason, evt["reason"]);
+        Assert.Equal("2026-11-26T10:11:12.345Z", evt["timestamp"]);
+        Assert.Contains("axiam_sdk_security", evt["{message}"], StringComparison.Ordinal);
+
+        // Nothing read from the body, no signature (received or computed), no nonce, no key, anywhere in the event.
+        string everything = string.Join("\n", evt.Select(kv => kv.Key + "=" + kv.Value));
+        string bodyText = Encoding.UTF8.GetString(body, 0, body.Length);
+        var secrets = new List<string>
         {
-            (AmqpAuthzDecision? decision, _) = await OfferAsync(requester, outstanding, body);
-            Assert.Null(decision);
+            Nonce, "66666666-6666-6666-6666-666666666666", Correlation, "77777777-7777-7777-7777-777777777777", OtherTenant, SubkeyHex, MasterKeyHex,
+            Vectors[0].Signature, Convert.ToHexString(HMACSHA256.HashData(Subkey, Encoding.UTF8.GetBytes(Vectors[0].Canonical))).ToLowerInvariant(),
+        };
+        foreach (string hex in System.Text.RegularExpressions.Regex.Matches(bodyText, "[0-9a-fA-F]{62,64}").Select(m => m.Value))
+        {
+            secrets.Add(hex);
         }
+        Assert.All(secrets, secret => Assert.DoesNotContain(secret, everything, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task ASecondAnswerToARetiredRequest_IsDiscardedAsUnknownRequest()
+    {
+        var logger = new RecordingLogger();
+        await using AxiamAuthzRequester requester = await NewRequester(options: new AxiamAuthzRequesterOptions { Logger = logger });
+        Task<AmqpAuthzDecision> outstanding = requester.ExpectAsync(Correlation, Nonce);
+
+        (AmqpAuthzDecision? first, _) = await OfferAsync(requester, outstanding, Vectors[0].Wire());
+        Assert.NotNull(first);
+        Assert.Empty(logger.WarningEvents);
+
+        (_, Settlement again) = await OfferAsync(requester, outstanding, Vectors[0].Wire());
+
+        Assert.Equal(1, again.NackedWithoutRequeue);
+        Assert.Equal("unknown_request", Assert.Single(logger.WarningEvents)["reason"]);
+    }
+
+    [Fact]
+    public async Task TheEventCarriesTheExchangeAndRoutingKeyTheBrokerReported_WhenTheTransportKnowsThem()
+    {
+        var logger = new RecordingLogger();
+        await using AxiamAuthzRequester requester = await NewRequester(options: new AxiamAuthzRequesterOptions { Logger = logger });
+        Task<AmqpAuthzDecision> outstanding = requester.ExpectAsync(Correlation, Nonce);
+        var settled = new Settlement();
+
+        await requester.HandleAsync(settled.Delivery(Unsigned) with { Exchange = "some.exchange", RoutingKey = "amq.gen-Xk3p" });
+
+        Dictionary<string, string> evt = Assert.Single(logger.WarningEvents);
+        Assert.Equal("some.exchange", evt["exchange"]);
+        Assert.Equal("amq.gen-Xk3p", evt["routing_key"]);
+        Assert.False(outstanding.IsCompleted);
     }
 
     // ---- end to end over the RabbitMQ.Client adapter with a fake channel ----------------

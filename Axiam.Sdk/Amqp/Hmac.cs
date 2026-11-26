@@ -1,7 +1,6 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json.Nodes;
 
 namespace Axiam.Sdk.Amqp;
 
@@ -10,34 +9,37 @@ namespace Axiam.Sdk.Amqp;
 /// (<c>sdks/CONTRACT.md</c> §8, D-11).
 ///
 /// <para>
-/// <b>Canonicalization is wire/insertion-order preserving, NEVER
-/// alphabetically sorted.</b> The canonical Rust signer
-/// (<c>crates/axiam-amqp/src/messages.rs</c>'s <c>sign_payload</c>) signs the
-/// <c>serde_json</c> struct-declaration-order serialization of the message
-/// body (with <c>hmac_signature</c> absent). <see cref="JsonObject"/> is
-/// backed by an ordered dictionary and preserves insertion order from
-/// parsing by default — <see cref="JsonObject.Remove"/> mutates that same
-/// ordered map in place, preserving the relative order of all remaining
-/// keys. This is the single load-bearing property of this class: do NOT
-/// introduce an alphabetized copy, <c>OrderBy</c>/<c>Sort</c>, or a POCO
-/// deserialize-then-reserialize round-trip here — any of those would
-/// silently reorder fields and break every cross-language HMAC
-/// verification.
+/// <b>The signature is checked over the received bytes, never over a re-serialization.</b> The canonical Rust
+/// signer (<c>crates/axiam-amqp/src/messages.rs</c>, <c>split_trailing_signature</c> on the verifying side) signs the
+/// <c>serde_json</c> compact serialization of the message with <c>hmac_signature</c> absent and then appends
+/// <c>,"hmac_signature":"&lt;hex&gt;"</c> as the LAST member. This class cuts that trailing member out of the
+/// delivery body and HMACs the remaining bytes exactly as they arrived, so the result does not depend on how any
+/// JSON library in this process would print what it parsed (<c>System.Text.Json</c> escapes <c>&amp; &lt; &gt; '</c>
+/// and non-ASCII text, and writes <c>\u001F</c> where serde_json writes <c>\u001f</c>: a genuine message whose
+/// fields hold them failed verification when the body was re-serialized).
+/// </para>
+///
+/// <para>
+/// <b>What is verified is what the handler reads (audit C2).</b> The consumer hands its handler the very bytes
+/// that were verified. To make that equivalence hold, a body is refused unless it is one JSON object with
+/// unambiguous keys (no key twice at any depth, no two top-level keys differing only by case, nothing after the
+/// closing brace) and ends in the trailing signature member: the one reading of the signed bytes is then the only
+/// reading any parser can take.
 /// </para>
 /// </summary>
 public static class Hmac
 {
+    private static readonly byte[] SignatureMember = Encoding.ASCII.GetBytes(",\"hmac_signature\":\"");
+
     /// <summary>
-    /// Returns <c>true</c> iff <paramref name="body"/>'s <c>hmac_signature</c>
-    /// field matches HMAC-SHA256(<paramref name="signingKey"/>,
-    /// canonical_json_of(body_without_hmac_signature)), computed via a
-    /// constant-time comparison.
+    /// Returns <c>true</c> iff <paramref name="body"/> ends in a <c>hmac_signature</c> member whose value is
+    /// HMAC-SHA256(<paramref name="signingKey"/>, the body with that trailing member removed), computed via a
+    /// constant-time comparison over the bytes as received.
     ///
     /// <para>
-    /// Never throws: malformed JSON, a missing/null signature, non-hex
-    /// signature text, or a wrong-length signature all verify as
-    /// <c>false</c> — matching §8.3's strict-mode default that rejects
-    /// (rather than silently accepts) an unparseable or absent signature.
+    /// Never throws: malformed JSON, a body that is not one object with unambiguous keys, a missing, null, non-hex or
+    /// not-trailing signature, or a wrong-length signature all verify as <c>false</c> — matching §8.3's strict-mode
+    /// default that rejects (rather than silently accepts) an unparseable or absent signature.
     /// </para>
     /// </summary>
     /// <param name="signingKey">The per-tenant AMQP HMAC signing secret (§8.1).</param>
@@ -47,36 +49,67 @@ public static class Hmac
     {
         try
         {
-            JsonObject? node = JsonNode.Parse(body)?.AsObject();
-            if (node is null)
+            if (AxiamAuthzRequester.HasAmbiguousKeys(body))
             {
-                return false;
+                return false; // not one object with unambiguous keys, or content after it
             }
 
-            if (!node.TryGetPropertyValue("hmac_signature", out JsonNode? sigNode) || sigNode is null)
+            if (!TrySplitTrailingSignature(body, out byte[]? canonical, out string? signatureHex))
             {
-                return false; // §8.3 strict mode: missing signature = reject
+                return false; // §8.3 strict mode: missing, malformed or non-trailing signature = reject
             }
 
-            string sigHex = sigNode.GetValue<string>();
-
-            // Remove() mutates the SAME ordered-dictionary-backed JsonObject in
-            // place, preserving the relative order of all remaining keys — this
-            // is the load-bearing property documented in the class remarks above.
-            node.Remove("hmac_signature");
-            byte[] canonical = Encoding.UTF8.GetBytes(node.ToJsonString());
-
-            byte[] expected = Convert.FromHexString(sigHex);
-            byte[] computed = HMACSHA256.HashData(signingKey, canonical);
+            byte[] expected = Convert.FromHexString(signatureHex!);
+            byte[] computed = HMACSHA256.HashData(signingKey, canonical!);
 
             return computed.Length == expected.Length
                 && CryptographicOperations.FixedTimeEquals(computed, expected);
         }
         catch
         {
-            // Parse failure / bad hex / bad key / non-object body -> reject,
-            // never throw. Attacker-controlled input must never crash the consumer.
+            // Bad hex / bad key -> reject, never throw. Attacker-controlled input must never crash the consumer.
             return false;
         }
+    }
+
+    /// <summary>
+    /// Splits <paramref name="body"/> into the bytes its HMAC covers and the signature: the body with its trailing
+    /// <c>,"hmac_signature":"&lt;hex&gt;"</c> member removed (closed with <c>}</c>), and the hex. <c>false</c> when the
+    /// body does not end in exactly that member with a non-empty hex value.
+    /// </summary>
+    private static bool TrySplitTrailingSignature(byte[] body, out byte[]? canonical, out string? signatureHex)
+    {
+        canonical = null;
+        signatureHex = null;
+
+        ReadOnlySpan<byte> raw = body;
+        int start = raw.LastIndexOf(SignatureMember);
+        if (start < 0)
+        {
+            return false;
+        }
+
+        ReadOnlySpan<byte> rest = raw[(start + SignatureMember.Length)..];
+        int end = rest.IndexOf((byte)'"');
+        if (end <= 0 || !rest[end..].SequenceEqual("\"}"u8))
+        {
+            return false; // empty value, or something other than `"}` follows it
+        }
+
+        ReadOnlySpan<byte> hex = rest[..end];
+        foreach (byte b in hex)
+        {
+            bool isHex = b is >= (byte)'0' and <= (byte)'9' or >= (byte)'a' and <= (byte)'f' or >= (byte)'A' and <= (byte)'F';
+            if (!isHex)
+            {
+                return false;
+            }
+        }
+
+        signatureHex = Encoding.ASCII.GetString(hex);
+        canonical = new byte[start + 1];
+        raw[..start].CopyTo(canonical);
+        canonical[start] = (byte)'}';
+        return true;
     }
 }

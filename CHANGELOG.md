@@ -29,12 +29,16 @@ organization member, one description moved), which changes no operation.
   redirect; anything else falls back to `SuccessRedirect` or the JSON summary. New optional
   `AxiamOidcLoginOptions.AllowReturnTo` widens the rule for values the default refuses; a throwing predicate
   accepts nothing.
-- **Login glue, further properties of the C7/C6 release.** A non-ASCII `return_to` that passes §12.8 rule 3
-  (`/café`) is percent-encoded (UTF-8) in the `Location` header, because Kestrel refuses non-ASCII header values.
+- **Login glue, further properties of the C7/C6 release.** The `Location` header of the callback's `302` carries the percent-encoded form of the destination, written by the glue
+  (login-glue Decision 7): characters outside the URL-safe set are UTF-8 percent-encoded, a well-formed `%XX` is kept and any
+  other `%` becomes `%25`, a lone surrogate becomes U+FFFD, `\` is kept, and the result is pure ASCII (a CR/LF a predicate
+  admitted cannot split the header; Kestrel refuses non-ASCII header values).
   The binding cookie is `IsEssential`, so a cookie-consent policy does not suppress it (and every sign-in with it).
   An exception from the store, the hook or the exchange is logged and answered `500 internal_error` with every header
-  set so far dropped (a session cookie the hook appended before throwing is not delivered, so a throw still aborts the
-  sign-in) and the clearing cookie on the response (§12.8 rule 1d). `MemoryOidcStateStore` is bounded at
+  set so far dropped (a cookie-authentication cookie the hook appended before throwing is not delivered; state the hook
+  committed elsewhere, or a cookie registered with `Response.OnStarting`, is not undone) and the clearing cookie on
+  the response (§12.8 rule 1d). An `OperationCanceledException` that is not the client's abort (an `HttpClient` or
+  database timeout in the hook) takes the same path. `MemoryOidcStateStore` is bounded at
   `MemoryOidcStateStore.MaxEntries` (10 000; the oldest is evicted).
 - **C5 — JWKS fetch amplification (§12.4 rule 2).** `JwksVerifier` re-fetched the JWKS for every token with an
   unknown `kid` (50 forged `kid`s caused 50 fetches). It now re-fetches at most once per 60-second window, whatever the
@@ -49,14 +53,39 @@ organization member, one description moved), which changes no operation.
   `nonce_mismatch`) before the code is spent; the ID-token validator no longer treats an empty expectation as a
   match for `"nonce": ""`.
 
+### Removed
+
+- The AMQP authz requester's unsigned-response opt-out (`AxiamAuthzRequesterOptions.AllowUnsignedResponses`) and the
+  `AmqpAuthzDecision.Unsigned` flag, added earlier in 1.4.0 and never released: no AXIAM server sends an unsigned response
+  to a reply queue, so the option could admit only a forged one (CONTRACT 1.69 §8, server #881). The requester requires a
+  1.68 server; a response with no `hmac_signature` is discarded as `unsigned`. During a rolling upgrade from a pre-1.68
+  server use REST or gRPC authorization.
+
+### Fixed
+
+- **#882 / D-5 — `Hmac.Verify` verifies the received bytes.** It re-serialized the parsed body, so a genuine message
+  whose fields held `& < > '`, a non-ASCII character or a control-character escape failed verification (System.Text.Json
+  and serde_json print them differently). It now cuts the trailing `hmac_signature` member out of the body and HMACs the
+  remaining bytes as received, refuses a body that is not one object with unambiguous keys (duplicate or case-variant
+  keys, content after the object) or whose signature is not the trailing member, and the consumer hands the handler those
+  same verified bytes.
+- **#883 — the requester's discard event** (§8 consumer obligation 4): one warning per discard with `timestamp`,
+  `exchange`, `routing_key` (the reply queue), the requester's own `tenant_id` and `reason` (`malformed`, `unsigned`,
+  `signature`, `tenant`, `unknown_request`); never a signature, nonce or body member.
+- **#880 — contract 1.69, logout-token `kid`.** `VerifyLogoutTokenAsync` already selected the key by `kid` and refused a
+  token without one; new tests pin it with a server-shaped token (header exactly `alg`, `typ: logout+jwt`, `kid`) against
+  a two-key JWKS, the kid-less and unknown-`kid` refusals, and that §10.1 rules 10 and 11 stay off the logout and ID-token
+  paths.
+- **CSH-R5-1, CSH-R5-2** (login glue): the documentation states what `Response.Clear()` guarantees, and an
+  `OperationCanceledException` that is not the client's abort takes the 500 / clearing-cookie path.
+
 ### Added
 
 - **`AxiamAuthzRequester` (§8 "Signed authorization responses"; N2, D-9).** The AMQP authorization requester:
   a signed `AuthzRequest` with a fresh unpredictable `correlation_id` and `nonce` on `axiam.authz.request`, a private
   exclusive auto-delete broker-named `reply_to` queue, and strict verification of the answer over the **received**
   bytes (HMAC-SHA256 under the requester's own tenant subkey and the `key_version` sent; `tenant_id`,
-  `correlation_id` and `nonce` bound to one outstanding request; unsigned refused unless
-  `AxiamAuthzRequesterOptions.AllowUnsignedResponses`). `CreateAsync(IChannel, …)` and
+  `correlation_id` and `nonce` bound to one outstanding request; an unsigned response is discarded). `CreateAsync(IChannel, …)` and
   `ConnectAsync(amqps://…, …)`; `CheckAsync` returns `AmqpAuthzDecision`. Disposing a requester cancels its consumer
   (so the reply queue goes away even on a caller-owned channel), and a broker-side cancel of the queue closes it, so a
   later `CheckAsync` throws `ObjectDisposedException` at once instead of timing out. Tests: the four contract vectors, the

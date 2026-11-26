@@ -18,7 +18,8 @@ namespace Axiam.Sdk.Amqp;
 /// <see cref="StartAsync"/> NEVER hands an unverified delivery to the
 /// caller-supplied handler — <see cref="Hmac.Verify"/> runs first, and the
 /// handler call site is structurally unreachable until it returns
-/// <c>true</c>. The remaining outcomes follow the exact §8 decision matrix:
+/// <c>true</c>. The handler is handed the very bytes
+/// the HMAC covered (the delivery body, signature member included), never a re-serialization of them. The remaining outcomes follow the exact §8 decision matrix:
 /// </para>
 /// <list type="bullet">
 /// <item><description>HMAC verification fails → <c>BasicNackAsync(requeue: false)</c>
