@@ -495,24 +495,44 @@ public sealed class OidcLoginBindingTests
     [Fact]
     public async Task AnOperationCanceledExceptionAfterTheClientAborted_IsLeftToTheHost_NoGlue500Body()
     {
-        using TestApp app = await TestApp.StartAsync(o =>
-            o.OnSuccessAsync = (ctx, _, _, _) =>
+        // Observed from the server side, because once the client has aborted its own side fails whatever the glue
+        // does: a middleware around the endpoint records what reached it. If the glue's catch took the exception it
+        // would have answered 500 (and the exception would never arrive here); left to the host, it propagates.
+        Exception? seenByMiddleware = null;
+        int statusAfterNext = 0;
+        using TestApp app = await TestApp.StartAsync(
+            o => o.OnSuccessAsync = (ctx, _, _, _) =>
             {
                 ctx.Abort(); // the client went away: RequestAborted is cancelled
                 Assert.True(ctx.RequestAborted.IsCancellationRequested);
                 throw new OperationCanceledException(ctx.RequestAborted);
-            });
+            },
+            beforeRouting: builder => builder.Use(async (ctx, next) =>
+            {
+                try
+                {
+                    await next();
+                    statusAfterNext = ctx.Response.StatusCode;
+                }
+                catch (Exception ex) when (ctx.Request.Path.StartsWithSegments("/login/axiam/callback"))
+                {
+                    seenByMiddleware = ex;
+                    throw;
+                }
+            }));
         (string state, string cookie) = await app.BeginAsync();
 
         try
         {
-            HttpResponseMessage response = await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
-            Assert.DoesNotContain("internal_error", await response.Content.ReadAsStringAsync(), StringComparison.Ordinal);
+            await app.GetWithCookieAsync($"/login/axiam/callback?state={state}&code=c1", HostCookie, cookie);
         }
         catch (Exception ex) when (ex is not Xunit.Sdk.XunitException)
         {
-            // The host saw the cancellation: the glue did not answer it with a 500 body.
+            // The client side fails after an abort; that is not what is under test.
         }
+
+        Assert.IsAssignableFrom<OperationCanceledException>(seenByMiddleware);
+        Assert.NotEqual(StatusCodes.Status500InternalServerError, statusAfterNext);
     }
 
     [Fact]
