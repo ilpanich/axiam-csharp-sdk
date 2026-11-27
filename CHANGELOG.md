@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Changed
+
+### Security
 
 Contract 1.68 (security audit 2026-11-14, Wave 2; CONTRACT.md §34.12). **This release changes behaviour:** the
 login glue (C7, C6) and the access-token path (N14) refuse what they used to accept, and the `typ`
@@ -14,8 +15,6 @@ rule is required from this first release. Read the migration notes below before 
 `openapi.json` and `management-registry.json` are re-vendored from `ilpanich/axiam` (contract 1.68; `proto/`
 unchanged) and the §27 management surface regenerated (`scripts/gen_management.py`: the audit-log entry gains its
 organization member, one description moved), which changes no operation.
-
-### Security
 
 - **C7 — login CSRF in `MapAxiamOidcLogin` (§12.8 rule 1).** The callback now completes only for the browser that
   called the login route. The login route sets `__Host-axiam_oidc_bind` (32 CSPRNG bytes, base64url;
@@ -52,6 +51,28 @@ organization member, one description moved), which changes no operation.
   `OidcExchangeAsync` refuses an empty expected nonce (`AuthError`,
   `nonce_mismatch`) before the code is spent; the ID-token validator no longer treats an empty expectation as a
   match for `"nonce": ""`.
+
+### Added
+
+- **`AxiamAuthzRequester` (§8 "Signed authorization responses"; N2, D-9).** The AMQP authorization requester:
+  a signed `AuthzRequest` with a fresh unpredictable `correlation_id` and `nonce` on `axiam.authz.request`, a private
+  exclusive auto-delete broker-named `reply_to` queue, and strict verification of the answer over the **received**
+  bytes (HMAC-SHA256 under the requester's own tenant subkey and the `key_version` sent; `tenant_id`,
+  `correlation_id` and `nonce` bound to one outstanding request; an unsigned response is discarded). `CreateAsync(IChannel, …)` and
+  `ConnectAsync(amqps://…, …)`; `CheckAsync` returns `AmqpAuthzDecision`. Disposing a requester cancels its consumer
+  (so the reply queue goes away even on a caller-owned channel), and a broker-side cancel of the queue closes it, so a
+  later `CheckAsync` throws `ObjectDisposedException` at once instead of timing out. Tests: the four contract vectors, the
+  discard matrix, the opt-out, and an end-to-end run over a fake channel.
+- `OidcStateEntry.BindingDigest` (optional; a pre-1.68 five-member constructor and the five-out `Deconstruct` are kept) and
+  `AxiamOidcLoginOptions.AllowReturnTo`.
+- README: the `typ`/`purpose`/`kid` rows of §10.1, the `roles`-claim-only note for `[Authorize(Roles = …)]`, the
+  login-glue binding, and the requester.
+
+- **`net11.0` target framework.** .NET 11 went GA on 2026-11-10, so both packages now multi-target `net10.0;net11.0` and ship a `lib/` folder for each; `SupportedFrameworks.Newest` is `"net11.0"`. The test suite runs once per framework, every example builds for both (pass `-f net10.0` or `-f net11.0` to `dotnet run`), and CI installs the 10.0.x and 11.0.x SDKs. The `net10.0` floor is unchanged (supported through 2028-11-14).
+
+### Changed
+
+- Monthly dependency refresh (2026-11): `Microsoft.Extensions.Http` 11.0.0 (it targets `net10.0` too, matching `Microsoft.Extensions.Logging.Abstractions` 11.0.0); the ASP.NET Core test project pins `Microsoft.AspNetCore.Mvc.Testing` per framework (10.0.15 / 11.0.0).
 
 ### Removed
 
@@ -118,23 +139,7 @@ organization member, one description moved), which changes no operation.
 - **CSH-R5-1, CSH-R5-2** (login glue): the documentation states what `Response.Clear()` guarantees, and an
   `OperationCanceledException` that is not the client's abort takes the 500 / clearing-cookie path.
 
-### Added
-
-- **`AxiamAuthzRequester` (§8 "Signed authorization responses"; N2, D-9).** The AMQP authorization requester:
-  a signed `AuthzRequest` with a fresh unpredictable `correlation_id` and `nonce` on `axiam.authz.request`, a private
-  exclusive auto-delete broker-named `reply_to` queue, and strict verification of the answer over the **received**
-  bytes (HMAC-SHA256 under the requester's own tenant subkey and the `key_version` sent; `tenant_id`,
-  `correlation_id` and `nonce` bound to one outstanding request; an unsigned response is discarded). `CreateAsync(IChannel, …)` and
-  `ConnectAsync(amqps://…, …)`; `CheckAsync` returns `AmqpAuthzDecision`. Disposing a requester cancels its consumer
-  (so the reply queue goes away even on a caller-owned channel), and a broker-side cancel of the queue closes it, so a
-  later `CheckAsync` throws `ObjectDisposedException` at once instead of timing out. Tests: the four contract vectors, the
-  discard matrix, the opt-out, and an end-to-end run over a fake channel.
-- `OidcStateEntry.BindingDigest` (optional; a pre-1.68 five-member constructor and the five-out `Deconstruct` are kept) and
-  `AxiamOidcLoginOptions.AllowReturnTo`.
-- README: the `typ`/`purpose`/`kid` rows of §10.1, the `roles`-claim-only note for `[Authorize(Roles = …)]`, the
-  login-glue binding, and the requester.
-
-### Documented
+### Documentation
 
 - **N15 — `[Authorize(Roles = …)]` reads the `roles` claim only (§11.1).** This SDK never mapped `scope` to roles
   (the defect was in the Java, Kotlin and PHP SDKs); the README now says so and says that a token with no `roles`
@@ -169,13 +174,6 @@ organization member, one description moved), which changes no operation.
   `AuthzRequest` and `AuditEventMessage` to one handler must be split into two typed consumers.
 - **`OidcExchangeAsync`** with an empty `Nonce` now throws `AuthError` instead of accepting an ID token that carries
   an empty nonce.
-### Added
-
-- **`net11.0` target framework.** .NET 11 went GA on 2026-11-10, so both packages now multi-target `net10.0;net11.0` and ship a `lib/` folder for each; `SupportedFrameworks.Newest` is `"net11.0"`. The test suite runs once per framework, every example builds for both (pass `-f net10.0` or `-f net11.0` to `dotnet run`), and CI installs the 10.0.x and 11.0.x SDKs. The `net10.0` floor is unchanged (supported through 2028-11-14).
-
-### Changed
-
-- Monthly dependency refresh (2026-11): `Microsoft.Extensions.Http` 11.0.0 (it targets `net10.0` too, matching `Microsoft.Extensions.Logging.Abstractions` 11.0.0); the ASP.NET Core test project pins `Microsoft.AspNetCore.Mvc.Testing` per framework (10.0.15 / 11.0.0).
 
 ## [1.3.1] - 2026-11-11
 
