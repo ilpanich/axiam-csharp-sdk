@@ -447,7 +447,30 @@ public sealed class JwksStaleIfErrorTests
             clock.Advance(TimeSpan.FromSeconds(2));
             Assert.True(await Accepts(verifier, fixture));
         }
-        Assert.True(server.Count - count <= 1, $"{server.Count - count} fetches in 40 s with a 60 s window");
+        Assert.Equal(count, server.Count); // nothing inside the 60 s window
+
+        // Past the window the advertised max-age=1 is honoured: exactly one refetch, not none.
+        for (int i = 0; i < 12; i++)
+        {
+            clock.Advance(TimeSpan.FromSeconds(2));
+            Assert.True(await Accepts(verifier, fixture));
+        }
+        Assert.Equal(1, server.Count - count);
+    }
+
+    [Fact]
+    public async Task ASmallBackwardStepSoonAfterAFetch_StillRefreshes_AndTheHeldKidVerifiesAfterIt()
+    {
+        (JwksVerifier verifier, JwksFixture fixture, Server server, Clock clock) = Create();
+        Assert.True(await Accepts(verifier, fixture));
+        int count = server.Count;
+        clock.Advance(TimeSpan.FromSeconds(10));
+        clock.Advance(TimeSpan.FromSeconds(-30)); // the clock is 20 s before the fetch: negative age
+
+        await verifier.VerifyAsync(Token(fixture), Tenant); // refused while the age is negative; a refresh is due
+        await verifier.IdleAsync();
+        Assert.Equal(count + 1, server.Count);
+        Assert.True(await Accepts(verifier, fixture));
     }
 
     // ---- config_clamped at construction (§19 rule 6) ----

@@ -135,8 +135,8 @@ public sealed class JwksVerifier
     /// <c>max-age</c> is ignored; otherwise the advertised one (clamped) is used when the response carries it.</summary>
     private readonly bool _ttlConfigured;
 
-    /// <summary>The TTL in force: the configured one, lowered by an advertised <c>max-age</c> (never raised above
-    /// <see cref="MaxCacheTtl"/>). Written under the in-flight guard only.</summary>
+    /// <summary>The TTL in force: the configured one when set, else the advertised <c>max-age</c> (clamped to
+    /// <see cref="MaxCacheTtl"/>), else the default. Written by the single in-flight refresh only.</summary>
     private TimeSpan _cacheTtl;
 
     /// <summary>The <c>ETag</c> of the held set, sent as <c>If-None-Match</c> on a refresh.</summary>
@@ -170,7 +170,7 @@ public sealed class JwksVerifier
     internal Func<DateTimeOffset>? CacheClock { get; set; }
 
     /// <summary>UTC ticks of the last re-fetch caused by an unknown <c>kid</c>; -1 = never.
-    /// A <c>long</c> so it can be read outside the in-flight guard without tearing.</summary>
+    /// A <c>long</c> so it can be read without tearing.</summary>
     private long _lastUnknownKidRefetchTicks = -1;
 
     private DateTimeOffset CacheNow() => CacheClock?.Invoke() ?? DateTimeOffset.UtcNow;
@@ -907,12 +907,11 @@ public sealed class JwksVerifier
     /// stops serving held keys at TTL + <see cref="StaleBound"/>.
     /// </summary>
     /// <remarks>
-    /// D-08/D-09: the fast path below (outside the lock) skips the fetch entirely when
-    /// the cache is already fresh — the common case. On a miss, the in-flight guard
-    /// is acquired and freshness is re-checked ONE more time under the lock, since
-    /// another concurrent caller may have just performed the refetch while this one was
-    /// waiting; only if still stale/unknown does the actual HTTP fetch + cache mutation
-    /// happen. This collapses a concurrent invalid-<c>kid</c> burst to exactly one fetch.
+    /// D-08/D-09, single flight: the fast path below skips everything when the cache is fresh — the common case.
+    /// Otherwise, under a short lock that is never held across network I/O, the caller either joins the refresh
+    /// already in flight or starts one on a scope detached from itself. A caller whose held key is usable returns at
+    /// once; only a caller with no usable key waits (cancellably) for that one fetch. This collapses a concurrent
+    /// invalid-<c>kid</c> burst to exactly one fetch.
     /// </remarks>
     private async Task EnsureFreshAsync(string unknownKid, CancellationToken cancellationToken)
     {
@@ -1126,14 +1125,14 @@ public sealed class JwksVerifier
         return age < TimeSpan.Zero || age > _cacheTtl; // a clock that moved backwards: refresh due, never fresh
     }
 
-    /// <summary>Whether a window that began at <paramref name="lastTicks"/> (-1 = never) is still open. A start more than
-    /// one window in the future means the wall clock stepped backwards: the window is over, never extended.</summary>
+    /// <summary>Whether a window that began at <paramref name="lastTicks"/> (-1 = never) is still open. A start in the
+    /// future (at all) means the wall clock stepped backwards: the window is over, never extended.</summary>
     private bool WithinWindow(long lastTicks)
     {
         if (lastTicks < 0)
             return false;
         long elapsed = CacheNow().UtcTicks - lastTicks;
-        return elapsed > -UnknownKidRefetchCooldown.Ticks && elapsed < UnknownKidRefetchCooldown.Ticks;
+        return elapsed >= 0 && elapsed < UnknownKidRefetchCooldown.Ticks; // a start in the future: the clock stepped back
     }
 
     private bool UnknownKidCoolingDown() => WithinWindow(Interlocked.Read(ref _lastUnknownKidRefetchTicks));
