@@ -180,6 +180,173 @@ public class OidcRefreshAndCredentialsTests
         Assert.Equal(0, handler.CountFor("/api/v1/auth/refresh"));
     }
 
+    // ---- CONTRACT.md §9 (per-refresh-token keying): the oidc_refresh single-flight is keyed by a digest of
+    // the refresh token (plus tenant); callers presenting a DIFFERENT token never join and never receive
+    // another token's outcome.
+
+    private static void MapEchoingTokenEndpoint(RoutingHandler handler, SemaphoreSlim? hold = null)
+    {
+        handler.Map("/oauth2/token", request =>
+        {
+            string presented = OidcTestKit.ReadForm(request)["refresh_token"];
+            hold?.Wait(TimeSpan.FromSeconds(5));
+            return OidcTestKit.JsonOk(OidcTestKit.TokenResponseJson("access-for-" + presented, "next-for-" + presented));
+        });
+    }
+
+    private static OidcRefreshParams RefreshWith(string token) =>
+        new() { RefreshToken = Sensitive<string>.Wrap(token) };
+
+    [Fact]
+    public async Task OidcRefreshAsync_DifferentToken_DuringALiveFlight_GetsItsOwnWireCallAndItsOwnTokenSet()
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        AxiamClient client = OidcTestKit.Client(handler);
+        await client.OidcDiscoverAsync();
+        var hold = new SemaphoreSlim(0);
+        MapEchoingTokenEndpoint(handler, hold);
+
+        Task<OidcTokenSet> a = client.OidcRefreshAsync(RefreshWith("token-A"));
+        await Task.Delay(TimeSpan.FromMilliseconds(200)); // A is in flight, parked on the wire
+        Task<OidcTokenSet> b = client.OidcRefreshAsync(RefreshWith("token-B"));
+        await Task.Delay(TimeSpan.FromMilliseconds(200));
+        hold.Release(2);
+
+        Assert.Equal("access-for-token-A", (await a).AccessToken.Reveal());
+        Assert.Equal("access-for-token-B", (await b).AccessToken.Reveal());
+        Assert.Equal(2, handler.CountFor("/oauth2/token"));
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_PublishBeforeVacateWindow_SameTokenJoins_DifferentTokenRefreshesItself_AndFullVacateStartsFresh()
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        AxiamClient client = OidcTestKit.Client(handler);
+        await client.OidcDiscoverAsync();
+        MapEchoingTokenEndpoint(handler);
+
+        var windowOpen = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseWindow = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        int hookCalls = 0;
+        client.OidcRefreshBeforeVacateHook = () =>
+        {
+            // Hold only the FIRST owner (token-A's) between publish and vacate.
+            if (Interlocked.Increment(ref hookCalls) != 1)
+            {
+                return Task.CompletedTask;
+            }
+            windowOpen.SetResult();
+            return releaseWindow.Task;
+        };
+
+        Task<OidcTokenSet> a = client.OidcRefreshAsync(RefreshWith("token-A"));
+        await windowOpen.Task.WaitAsync(TimeSpan.FromSeconds(5)); // A's outcome is published, its slot not yet vacated
+        Assert.Equal(1, handler.CountFor("/oauth2/token"));
+
+        // Same token, inside the window: joins the published outcome (rule 6a) — wire count stays at 1.
+        OidcTokenSet joined = await client.OidcRefreshAsync(RefreshWith("token-A")).WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.Equal("access-for-token-A", joined.AccessToken.Reveal());
+        Assert.Equal(1, handler.CountFor("/oauth2/token"));
+
+        // A different token, inside the same window: its own wire call and its own result.
+        OidcTokenSet other = await client.OidcRefreshAsync(RefreshWith("token-B")).WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.Equal("access-for-token-B", other.AccessToken.Reveal());
+        Assert.Equal(2, handler.CountFor("/oauth2/token"));
+
+        releaseWindow.SetResult();
+        Assert.Equal("access-for-token-A", (await a).AccessToken.Reveal());
+
+        // After the full vacate the same token gets a fresh wire call, with that call's own outcome.
+        handler.Map("/oauth2/token", _ => OidcTestKit.JsonOk(OidcTestKit.TokenResponseJson("access-second-burst")));
+        OidcTokenSet fresh = await client.OidcRefreshAsync(RefreshWith("token-A"));
+        Assert.Equal("access-second-burst", fresh.AccessToken.Reveal());
+        Assert.Equal(3, handler.CountFor("/oauth2/token"));
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_TheRegistryNeverHoldsTheRawToken_AndEverySlotIsRemovedOnceVacated()
+    {
+        const string Secret = "raw-refresh-secret-value";
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        AxiamClient client = OidcTestKit.Client(handler);
+        await client.OidcDiscoverAsync();
+        var hold = new SemaphoreSlim(0);
+        MapEchoingTokenEndpoint(handler, hold);
+
+        Task<OidcTokenSet> a = client.OidcRefreshAsync(RefreshWith(Secret));
+        Task<OidcTokenSet> b = client.OidcRefreshAsync(RefreshWith("another-secret-value"));
+        await Task.Delay(TimeSpan.FromMilliseconds(200));
+
+        Assert.Equal(2, client.OidcRefreshSlotCount);
+        Assert.All(client.OidcRefreshSlotKeys, k =>
+        {
+            Assert.DoesNotContain("secret", k, StringComparison.OrdinalIgnoreCase);
+            Assert.Equal(64, k.Length); // lowercase hex SHA-256
+            Assert.Matches("^[0-9a-f]{64}$", k);
+        });
+
+        hold.Release(2);
+        await a;
+        await b;
+        Assert.Equal(0, client.OidcRefreshSlotCount);
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_SameTokenInADifferentTenant_IsADifferentFlight()
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        AxiamClient client = OidcTestKit.Client(handler);
+        await client.OidcDiscoverAsync();
+        var hold = new SemaphoreSlim(0);
+        MapEchoingTokenEndpoint(handler, hold);
+
+        Task<OidcTokenSet> t1 = client.OidcRefreshAsync(new OidcRefreshParams { RefreshToken = Sensitive<string>.Wrap("same"), TenantId = Guid.NewGuid() });
+        Task<OidcTokenSet> t2 = client.OidcRefreshAsync(new OidcRefreshParams { RefreshToken = Sensitive<string>.Wrap("same"), TenantId = Guid.NewGuid() });
+        await Task.Delay(TimeSpan.FromMilliseconds(200));
+        hold.Release(2);
+        await t1;
+        await t2;
+        Assert.Equal(2, handler.CountFor("/oauth2/token"));
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_TenantSpelledUpperLowerOrOmittedDefault_IsOneFlight_AndScopeIsNotPartOfTheKey()
+    {
+        const string Tenant = "abcdef01-2345-4678-89ab-cdef01234567";
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        // The client's default tenant is configured in UPPER case.
+        AxiamClient client = OidcTestKit.Client(handler, tenantId: Tenant.ToUpperInvariant());
+        await client.OidcDiscoverAsync();
+        var hold = new SemaphoreSlim(0);
+        MapEchoingTokenEndpoint(handler, hold);
+
+        Task<OidcTokenSet> omitted = client.OidcRefreshAsync(RefreshWith("same"));
+        Task<OidcTokenSet> lower = client.OidcRefreshAsync(new OidcRefreshParams
+        {
+            RefreshToken = Sensitive<string>.Wrap("same"),
+            TenantId = Guid.Parse(Tenant.ToLowerInvariant()),
+            Scope = "a-different-scope",
+        });
+        Task<OidcTokenSet> upper = client.OidcRefreshAsync(new OidcRefreshParams
+        {
+            RefreshToken = Sensitive<string>.Wrap("same"),
+            TenantId = Guid.Parse(Tenant.ToUpperInvariant()),
+        });
+        await Task.Delay(TimeSpan.FromMilliseconds(250));
+        hold.Release(3);
+
+        foreach (Task<OidcTokenSet> t in new[] { omitted, lower, upper })
+        {
+            Assert.Equal("access-for-same", (await t).AccessToken.Reveal());
+        }
+        Assert.Equal(1, handler.CountFor("/oauth2/token"));
+    }
+
     [Fact]
     public async Task LoginClientCredentialsAsync_HappyPath_SendsClientCredentialsGrant()
     {

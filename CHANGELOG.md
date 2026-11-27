@@ -138,6 +138,13 @@ organization member, one description moved), which changes no operation.
   paths.
 - **CSH-R5-1, CSH-R5-2** (login glue): the documentation states what `Response.Clear()` guarantees, and an
   `OperationCanceledException` that is not the client's abort takes the 500 / clearing-cookie path.
+- **`OidcRefreshAsync` single-flight keyed per refresh token (§9; #130).** A call with refresh token B made while a
+  refresh of a different token A was in flight (or in its publish-before-vacate window, rule 6a) joined A's flight and
+  returned A's token set; B was never sent. The flight is now keyed by a SHA-256 digest of the refresh token and the
+  tenant (the raw token is never a key, logged or in an error): callers presenting the same token still form one
+  burst, a different token gets its own wire call and its own result, a key's slot is removed once vacated, and a
+  caller inside the publish-before-vacate window now joins the published outcome instead of starting a second wire
+  call. The §1 `RefreshAsync` (the session's own token) is unchanged.
 
 ### Documentation
 
