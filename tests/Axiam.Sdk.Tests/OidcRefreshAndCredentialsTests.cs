@@ -4,6 +4,7 @@ using System.Text;
 using Axiam.Sdk;
 using Axiam.Sdk.Auth.Oidc;
 using Axiam.Sdk.Core;
+using Axiam.Sdk.Options;
 using Axiam.Sdk.Tests.Fixtures;
 using Xunit;
 
@@ -529,6 +530,56 @@ public class OidcRefreshAndCredentialsTests
         }
         Assert.Equal(N, handler.CountFor("/oauth2/token"));
         await WaitForVacateAsync(client);
+    }
+
+    /// <summary>Serves discovery from the inner handler; the token endpoint never answers until cancelled.</summary>
+    private sealed class HangingTokenHandler(RoutingHandler inner) : DelegatingHandler(inner)
+    {
+        public int TokenCalls;
+
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            if (request.RequestUri!.AbsolutePath == "/oauth2/token")
+            {
+                Interlocked.Increment(ref TokenCalls);
+                await Task.Delay(Timeout.Infinite, cancellationToken).ConfigureAwait(false);
+            }
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_FlightBoundFires_EveryCallerGetsNetworkError_NotARawCancellation()
+    {
+        var routing = new RoutingHandler();
+        OidcTestKit.MapDiscovery(routing);
+        var handler = new HangingTokenHandler(routing);
+        AxiamClient client = OidcTestKit.Client(handler);
+        await client.OidcDiscoverAsync();
+        client.OidcRefreshFlightTimeoutOverride = TimeSpan.FromMilliseconds(300);
+
+        Task<OidcTokenSet>[] callers = Enumerable.Range(0, 3).Select(_ => client.OidcRefreshAsync(RefreshWith("hangs"))).ToArray();
+
+        foreach (Task<OidcTokenSet> caller in callers)
+        {
+            NetworkError error = await Assert.ThrowsAsync<NetworkError>(() => caller.WaitAsync(TimeSpan.FromSeconds(10)));
+            Assert.DoesNotContain("hangs", error.Message, StringComparison.Ordinal);
+        }
+        Assert.Equal(1, handler.TokenCalls);
+        await WaitForVacateAsync(client);
+    }
+
+    [Fact]
+    public void OidcRefreshFlightTimeout_IsDerivedFromTheClientsOptions_AndNeverBelowOneRequestTimeout()
+    {
+        var handler = new RoutingHandler();
+        AxiamClientOptions longOptions = OidcTestKit.Options() with { RequestTimeout = TimeSpan.FromSeconds(120) };
+        AxiamClient longer = OidcTestKit.Client(handler, longOptions);
+        Assert.True(longer.OidcRefreshFlightTimeout > TimeSpan.FromSeconds(120));
+
+        AxiamClientOptions singleOptions = OidcTestKit.Options() with { RequestTimeout = TimeSpan.FromSeconds(7), RetryEnabled = false };
+        AxiamClient single = OidcTestKit.Client(handler, singleOptions);
+        Assert.True(single.OidcRefreshFlightTimeout >= TimeSpan.FromSeconds(7));
     }
 
     [Fact]

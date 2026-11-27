@@ -147,7 +147,7 @@ organization member, one description moved), which changes no operation.
   call. The §1 `RefreshAsync` (the session's own token) is unchanged.
   The tenant is resolved once, before the guard, and that one value keys the flight and goes on the wire (a
   login or logout during discovery can no longer give the key one tenant and the request another). The shared flight
-  runs on a token detached from every caller and bounded by a 30 s SDK timeout; each caller waits on its own token, so
+  runs on a token detached from every caller and bounded by a timeout derived from the client's own `RequestTimeout`, retry attempts and backoff (never below one `RequestTimeout`), surfaced to every caller as `NetworkError` when it fires; each caller waits on its own token, so
   one caller's cancellation never cancels the flight or another caller. Flights of different keys run concurrently and
   no lock is held across the wire call.
 
