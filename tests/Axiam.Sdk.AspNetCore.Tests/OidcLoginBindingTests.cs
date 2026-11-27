@@ -452,7 +452,7 @@ public sealed class OidcLoginBindingTests
         using TestApp app = await TestApp.StartAsync(o =>
             o.OnSuccessAsync = (ctx, _, _, _) =>
             {
-                ctx.Response.Cookies.Append("app_session", "x");
+                ctx.Response.Cookies.Append("app_session", "x", new CookieOptions { HttpOnly = true, Secure = true });
                 ctx.Response.Headers["X-From-Hook"] = "1";
                 throw new InvalidOperationException("the application's rule rejected the user");
             });
@@ -478,7 +478,7 @@ public sealed class OidcLoginBindingTests
             o.OnSuccessAsync = (ctx, _, _, _) =>
             {
                 Assert.False(ctx.RequestAborted.IsCancellationRequested);
-                ctx.Response.Cookies.Append("app_session", "x");
+                ctx.Response.Cookies.Append("app_session", "x", new CookieOptions { HttpOnly = true, Secure = true });
                 throw new TaskCanceledException("the hook's HttpClient timed out");
             });
         (string state, string cookie) = await app.BeginAsync();
