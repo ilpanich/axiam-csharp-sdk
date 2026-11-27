@@ -500,6 +500,9 @@ public sealed class OidcLoginBindingTests
         // would have answered 500 (and the exception would never arrive here); left to the host, it propagates.
         Exception? seenByMiddleware = null;
         int statusAfterNext = 0;
+        // The client's request fails as soon as the server aborts, which can be before the middleware below has run
+        // its catch; the assertions wait for the server side to finish instead of racing it.
+        TaskCompletionSource middlewareDone = new(TaskCreationOptions.RunContinuationsAsynchronously);
         using TestApp app = await TestApp.StartAsync(
             o => o.OnSuccessAsync = (ctx, _, _, _) =>
             {
@@ -519,6 +522,13 @@ public sealed class OidcLoginBindingTests
                     seenByMiddleware = ex;
                     throw;
                 }
+                finally
+                {
+                    if (ctx.Request.Path.StartsWithSegments("/login/axiam/callback"))
+                    {
+                        middlewareDone.TrySetResult();
+                    }
+                }
             }));
         (string state, string cookie) = await app.BeginAsync();
 
@@ -531,6 +541,7 @@ public sealed class OidcLoginBindingTests
             // The client side fails after an abort; that is not what is under test.
         }
 
+        await middlewareDone.Task.WaitAsync(TimeSpan.FromSeconds(10));
         Assert.IsAssignableFrom<OperationCanceledException>(seenByMiddleware);
         Assert.NotEqual(StatusCodes.Status500InternalServerError, statusAfterNext);
     }
