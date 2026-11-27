@@ -95,9 +95,7 @@ public sealed record AxiamClientOptions
 
     /// <summary>How long a fetched JWKS document is trusted before <c>JwksVerifier</c>
     /// forces a refetch. Clamped to 300 s at most (contract 1.69, CONTRACT.md &#167;12.4 rule 2; a longer value
-    /// becomes 300 s and one <c>config_clamped</c> telemetry event is emitted at construction), and a zero or
-    /// negative value becomes the 300 s default rather than disabling the cache. A response's <c>Cache-Control:
-    /// max-age</c> may lower it, never raise it. Keys held when a refresh fails keep verifying for at most
+    /// becomes 300 s and one <c>config_clamped</c> telemetry event is emitted at construction), and a zero or negative value means "not set": the response's <c>Cache-Control: max-age</c> (clamped to 300 s) is used if advertised, else 300 s. A configured TTL ignores max-age. The cache is never disabled. Keys held when a refresh fails keep verifying for at most
     /// 300 s beyond it.</summary>
     public TimeSpan JwksCacheTtl { get; init; } = TimeSpan.FromMinutes(5);
 

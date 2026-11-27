@@ -808,6 +808,9 @@ public class AmqpConsumerTests
         yield return new object[] { "malformed", Encoding.UTF8.GetBytes("{not json") };
         yield return new object[] { "malformed", Encoding.UTF8.GetBytes(good + " trailing") };
         yield return new object[] { "unsigned", Encoding.UTF8.GetBytes(good) };
+        yield return new object[] { "unsigned", Encoding.UTF8.GetBytes(good[..^1] + ",\"HMAC_SIGNATURE\":\"" + new string('a', 64) + "\"}") }; // case variant only
+        yield return new object[] { "malformed", SignedWire(AuthzCanonical(issuedAt: "2026-07-10T12:00:00")) }; // no offset
+        yield return new object[] { "malformed", SignedWire(AuthzCanonical(nonce: "{55555555-5555-5555-5555-555555555555}")) }; // not form D
         // unsigned wins over a duplicate member (position 2 before 3)
         yield return new object[] { "unsigned", Encoding.UTF8.GetBytes(good[..^1] + ",\"action\":\"x\"}") };
         yield return new object[] { "malformed", SignedWire(good[..^1] + ",\"extra\":1}") }; // layout

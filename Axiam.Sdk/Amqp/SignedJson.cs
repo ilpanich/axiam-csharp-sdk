@@ -114,13 +114,13 @@ internal static class SignedJson
         }
     }
 
-    /// <summary>Whether the root object of <paramref name="body"/> has a top-level member named
-    /// <c>hmac_signature</c>, in any letter case (so a case-variant is a signature member that fails step 2b, never
-    /// "unsigned"). Only meaningful for a body that passed <see cref="IsOneJsonObject"/>.</summary>
+    /// <summary>Whether the root object of <paramref name="body"/> has a top-level member named exactly
+    /// <c>hmac_signature</c> (a body with only a case-variant such as <c>HMAC_SIGNATURE</c> has no signature member:
+    /// <c>unsigned</c>). Only meaningful for a body that passed <see cref="IsOneJsonObject"/>.</summary>
     internal static bool HasSignatureMember(byte[] body)
     {
         List<string>? keys = TopLevelKeys(body);
-        return keys is not null && keys.Exists(k => string.Equals(k, "hmac_signature", StringComparison.OrdinalIgnoreCase));
+        return keys is not null && keys.Exists(k => string.Equals(k, "hmac_signature", StringComparison.Ordinal));
     }
 
     /// <summary>
@@ -146,7 +146,7 @@ internal static class SignedJson
                 bool ok = member.Name switch
                 {
                     "correlation_id" or "tenant_id" or "subject_id" or "resource_id" or "actor_id" or "nonce" =>
-                        v.ValueKind == JsonValueKind.String && Guid.TryParse(v.GetString(), out _),
+                        v.ValueKind == JsonValueKind.String && Guid.TryParseExact(v.GetString(), "D", out _),
                     "action" or "scope" or "actor_type" or "outcome" or "ip_address" => v.ValueKind == JsonValueKind.String,
                     "key_version" => v.ValueKind == JsonValueKind.Number && v.TryGetByte(out _),
                     "issued_at" => v.ValueKind == JsonValueKind.String && IsRfc3339(v.GetString()),
@@ -168,9 +168,11 @@ internal static class SignedJson
 
     private static readonly string[] Rfc3339Formats =
     {
-        "yyyy-MM-dd'T'HH:mm:ssK", "yyyy-MM-dd'T'HH:mm:ss.FFFFFFFFFK",
+        "yyyy-MM-dd'T'HH:mm:ss'Z'", "yyyy-MM-dd'T'HH:mm:sszzz",
+        "yyyy-MM-dd'T'HH:mm:ss.FFFFFFFFF'Z'", "yyyy-MM-dd'T'HH:mm:ss.FFFFFFFFFzzz",
     };
 
+    /// <summary>RFC 3339 with an explicit offset: <c>Z</c> or <c>&#177;hh:mm</c>. A timestamp with no offset is not one.</summary>
     private static bool IsRfc3339(string? text) =>
         text is not null &&
         System.DateTimeOffset.TryParseExact(text, Rfc3339Formats, System.Globalization.CultureInfo.InvariantCulture,

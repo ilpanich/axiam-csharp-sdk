@@ -31,13 +31,20 @@ public sealed class JwksStaleIfErrorTests
         public Func<HttpRequestMessage, HttpResponseMessage> Respond { get; set; }
         public List<string?> IfNoneMatch { get; } = new();
 
+        /// <summary>When set, a request waits (asynchronously) for it before being answered: a hanging endpoint.</summary>
+        public Task? Gate { get; set; }
+
         public Server(Func<HttpRequestMessage, HttpResponseMessage> respond) => Respond = respond;
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             Interlocked.Increment(ref _count);
             IfNoneMatch.Add(request.Headers.IfNoneMatch.ToString());
-            return Task.FromResult(Respond(request));
+            if (Gate is { } gate)
+            {
+                await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+            }
+            return Respond(request);
         }
     }
 
@@ -78,8 +85,12 @@ public sealed class JwksStaleIfErrorTests
     private static string Token(JwksFixture fixture, string? kid = null) =>
         fixture.SignJwt("user-1", Tenant, Roles, DateTimeOffset.UtcNow.AddMinutes(15), kidOverride: kid);
 
-    private static async Task<bool> Accepts(JwksVerifier verifier, JwksFixture fixture, string? kid = null) =>
-        await verifier.VerifyAsync(Token(fixture, kid), Tenant) is not null;
+    private static async Task<bool> Accepts(JwksVerifier verifier, JwksFixture fixture, string? kid = null)
+    {
+        bool ok = await verifier.VerifyAsync(Token(fixture, kid), Tenant) is not null;
+        await verifier.IdleAsync(); // a usable held key answers without waiting; let its background refresh land
+        return ok;
+    }
 
     // The conformance test of §12.4 rule 2, in the contract's order.
     [Fact]
@@ -109,7 +120,9 @@ public sealed class JwksStaleIfErrorTests
         // One successful fetch and it is accepted again.
         server.Respond = _ => Ok(fixture.BuildJwksDocument(), "\"v2\"");
         clock.Advance(TimeSpan.FromSeconds(61));
+        int fetchesBefore = server.Count;
         Assert.True(await Accepts(verifier, fixture), "accepted again after one successful fetch");
+        Assert.Equal(fetchesBefore + 1, server.Count);
     }
 
     [Fact]
@@ -215,7 +228,9 @@ public sealed class JwksStaleIfErrorTests
         Assert.True(await Accepts(verifier, fixture));
         server.Respond = _ => Ok("""{"keys":[{"kty":"RSA","kid":"r","n":"AQAB","e":"AQAB"}]}""");
         clock.Advance(Ttl + TimeSpan.FromSeconds(1));
-        Assert.False(await Accepts(verifier, fixture));
+        await verifier.VerifyAsync(Token(fixture), Tenant); // starts the refresh (the held key may answer first)
+        await verifier.IdleAsync();
+        Assert.False(await Accepts(verifier, fixture)); // the adopted RSA-only set verifies nothing
     }
 
     [Fact]
@@ -295,20 +310,144 @@ public sealed class JwksStaleIfErrorTests
         Assert.True(await Accepts(verifier, fixture));
         Assert.Equal(afterFill + 1, server.Count);
 
-        (verifier, fixture, server, clock) = Create(TimeSpan.Zero, cacheControl: "max-age=30");
+        (verifier, fixture, server, clock) = Create(TimeSpan.Zero, cacheControl: "max-age=90");
         Assert.True(await Accepts(verifier, fixture));
         afterFill = server.Count;
-        clock.Advance(TimeSpan.FromSeconds(31));
+        clock.Advance(TimeSpan.FromSeconds(91));
         Assert.True(await Accepts(verifier, fixture));
         Assert.Equal(afterFill + 1, server.Count);
 
         // A configured TTL wins over the advertised max-age.
-        (verifier, fixture, server, clock) = Create(TimeSpan.FromSeconds(300), cacheControl: "max-age=30");
+        (verifier, fixture, server, clock) = Create(TimeSpan.FromSeconds(300), cacheControl: "max-age=90");
         Assert.True(await Accepts(verifier, fixture));
         afterFill = server.Count;
-        clock.Advance(TimeSpan.FromSeconds(31));
+        clock.Advance(TimeSpan.FromSeconds(91));
         Assert.True(await Accepts(verifier, fixture));
         Assert.Equal(afterFill, server.Count);
+    }
+
+    [Fact]
+    public async Task A203WithAJwksBody_IsAFailedRefresh_TheHeldSetIsKept_AndTheAnchorUnmoved()
+    {
+        (JwksVerifier verifier, JwksFixture fixture, Server server, Clock clock) = Create();
+        Assert.True(await Accepts(verifier, fixture));
+        string doc = fixture.BuildJwksDocument();
+        server.Respond = _ => new HttpResponseMessage(HttpStatusCode.NonAuthoritativeInformation)
+        {
+            Content = new StringContent(doc, Encoding.UTF8, "application/json"),
+        };
+        clock.Advance(Ttl + TimeSpan.FromSeconds(1));
+        Assert.True(await Accepts(verifier, fixture));
+        clock.Advance(TimeSpan.FromSeconds(300)); // TTL + 301 s after the original anchor
+        Assert.False(await Accepts(verifier, fixture), "a 203 did not move the anchor");
+    }
+
+    [Fact]
+    public async Task ANotModified_RereadsTheMaxAgeItCarries_WhenNoTtlIsConfigured()
+    {
+        (JwksVerifier verifier, JwksFixture fixture, Server server, Clock clock) = Create(TimeSpan.Zero, cacheControl: "max-age=300");
+        Assert.True(await Accepts(verifier, fixture));
+        server.Respond = _ =>
+        {
+            var r = new HttpResponseMessage(HttpStatusCode.NotModified);
+            r.Headers.CacheControl = CacheControlHeaderValue.Parse("max-age=90");
+            return r;
+        };
+        clock.Advance(TimeSpan.FromSeconds(301));
+        Assert.True(await Accepts(verifier, fixture)); // the 304 moved the anchor and set TTL 90 s
+        int count = server.Count;
+        clock.Advance(TimeSpan.FromSeconds(89));
+        Assert.True(await Accepts(verifier, fixture));
+        Assert.Equal(count, server.Count);
+        clock.Advance(TimeSpan.FromSeconds(2)); // past the 90 s the 304 carried
+        Assert.True(await Accepts(verifier, fixture));
+        Assert.Equal(count + 1, server.Count);
+    }
+
+    [Fact]
+    public async Task AHeldKeyWithAHangingRefresh_IsNotKeptWaiting()
+    {
+        (JwksVerifier verifier, JwksFixture fixture, Server server, Clock clock) = Create();
+        Assert.True(await Accepts(verifier, fixture));
+        var release = new TaskCompletionSource();
+        server.Gate = release.Task;
+        server.Respond = _ => new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
+        clock.Advance(Ttl + TimeSpan.FromSeconds(1));
+
+        // The first verification starts the hanging fetch; others while it is in flight must not queue behind it.
+        Task<System.Text.Json.JsonElement?> first = verifier.VerifyAsync(Token(fixture), Tenant);
+        Assert.Same(first, await Task.WhenAny(first, Task.Delay(TimeSpan.FromSeconds(5))));
+        for (int i = 0; i < 3; i++)
+        {
+            Task<System.Text.Json.JsonElement?> next = verifier.VerifyAsync(Token(fixture), Tenant);
+            Assert.Same(next, await Task.WhenAny(next, Task.Delay(TimeSpan.FromSeconds(5))));
+            Assert.NotNull(await next);
+        }
+        release.SetResult();
+        await verifier.IdleAsync();
+    }
+
+    [Fact]
+    public async Task ACancelledCaller_NeverOpensTheUnknownKidWindow_TheNextNewKidTokenFetches()
+    {
+        (JwksVerifier verifier, JwksFixture fixture, Server server, Clock clock) = Create();
+        Assert.True(await Accepts(verifier, fixture));
+        var rotated = new JwksFixture();
+        var release = new TaskCompletionSource();
+        string rotatedDoc = rotated.BuildJwksDocument();
+        server.Gate = release.Task;
+        server.Respond = _ => Ok(rotatedDoc);
+
+        using var cts = new CancellationTokenSource();
+        Task<System.Text.Json.JsonElement?> cancelled = verifier.VerifyAsync(Token(rotated), Tenant, cts.Token);
+        await Task.Delay(100);
+        cts.Cancel(); // the client went away while the fetch was in flight
+        Assert.Null(await Record.ExceptionAsync(async () => { try { await cancelled; } catch (OperationCanceledException) { } }));
+        release.SetResult();
+        await verifier.IdleAsync();
+
+        // The fetch ran to its own end and succeeded: the new kid is now known, no window refused it.
+        Assert.True(await Accepts(verifier, rotated));
+    }
+
+    [Fact]
+    public async Task ANegativeAge_WithAFailingRefresh_RefusesTheHeldKey()
+    {
+        (JwksVerifier verifier, JwksFixture fixture, Server server, Clock clock) = Create();
+        Assert.True(await Accepts(verifier, fixture));
+        server.Respond = _ => new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
+        clock.Advance(TimeSpan.FromHours(-1));
+        Assert.False(await Accepts(verifier, fixture));
+    }
+
+    [Fact]
+    public async Task AWindowStartedMoreThanAWindowInTheFuture_MeansTheClockSteppedBack_AndTheWindowIsOver()
+    {
+        (JwksVerifier verifier, JwksFixture fixture, Server server, Clock clock) = Create();
+        Assert.True(await Accepts(verifier, fixture));
+        server.Respond = _ => new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
+        clock.Advance(Ttl + TimeSpan.FromSeconds(1));
+        Assert.True(await Accepts(verifier, fixture)); // a failed refresh opens the window at T
+        int count = server.Count;
+
+        clock.Advance(TimeSpan.FromMinutes(-10)); // the window start is now ten minutes in the future
+        await verifier.VerifyAsync(Token(fixture, "unknown-kid"), Tenant);
+        await verifier.IdleAsync();
+        Assert.Equal(count + 1, server.Count);
+    }
+
+    [Fact]
+    public async Task ATinyAdvertisedMaxAge_NeverMeansOneFetchPerVerification()
+    {
+        (JwksVerifier verifier, JwksFixture fixture, Server server, Clock clock) = Create(TimeSpan.Zero, cacheControl: "max-age=1");
+        Assert.True(await Accepts(verifier, fixture));
+        int count = server.Count;
+        for (int i = 0; i < 20; i++)
+        {
+            clock.Advance(TimeSpan.FromSeconds(2));
+            Assert.True(await Accepts(verifier, fixture));
+        }
+        Assert.True(server.Count - count <= 1, $"{server.Count - count} fetches in 40 s with a 60 s window");
     }
 
     // ---- config_clamped at construction (§19 rule 6) ----

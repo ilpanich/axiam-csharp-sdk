@@ -85,6 +85,12 @@ organization member, one description moved), which changes no operation.
     moves the age; held keys verify until exactly TTL + 300 s, then every token is refused until a fetch succeeds. A
     failed attempt counts toward the 60 s re-fetch window. A configured `JwksCacheTtl` above 300 s emits one
     `config_clamped` event at construction.
+  - **Review round 1 (JWKS refresh).** The fetch is single-flight on a scope detached from the caller (the SDK's own
+    30 s bound); a usable held key answers without waiting for it, and a caller's cancellation neither fails the fetch
+    nor opens the unknown-`kid` window. A negative age (clock stepped back) refuses held keys; a cooldown window that
+    began more than 60 s in the future is over; every TTL-driven refresh respects the 60 s window. The event consumer
+    treats only an exact `hmac_signature` member as a signature (`HMAC_SIGNATURE` alone is `unsigned`), requires an
+    RFC 3339 `issued_at` with `Z` or an offset, and UUIDs in form D.
 
 - **AMQP alignment with contract 1.69 §8 (OI-13, axiam#882, axiam#883).** `AxiamAuthzRequester` now picks the discard
   reason in the contract's normative order: a body with no `hmac_signature` member is `unsigned` whatever else is

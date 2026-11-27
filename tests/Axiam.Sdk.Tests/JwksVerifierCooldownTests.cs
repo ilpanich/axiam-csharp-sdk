@@ -117,6 +117,7 @@ public sealed class JwksVerifierCooldownTests
 
         clock.Advance(TimeSpan.FromMinutes(2)); // 6 minutes after the fill
         Assert.NotNull(await verifier.VerifyAsync(Token(fixture), Tenant));
+        await verifier.IdleAsync(); // the held key answered at once; its refresh runs in the background
         Assert.Equal(afterFill + 1, handler.Count);
     }
 
