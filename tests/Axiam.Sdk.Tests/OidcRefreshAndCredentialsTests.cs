@@ -1,3 +1,6 @@
+using System.Net;
+using System.Reflection;
+using System.Text;
 using Axiam.Sdk;
 using Axiam.Sdk.Auth.Oidc;
 using Axiam.Sdk.Core;
@@ -124,6 +127,7 @@ public class OidcRefreshAndCredentialsTests
         Assert.Equal(1, tokenHits);
 
         // A subsequent call starts a genuinely fresh attempt once the in-flight slot clears.
+        await WaitForVacateAsync(client);
         handler.Map("/oauth2/token", _ =>
         {
             Interlocked.Increment(ref tokenHits);
@@ -194,6 +198,16 @@ public class OidcRefreshAndCredentialsTests
         });
     }
 
+    /// <summary>Waits for every oidc_refresh slot to be vacated (the flight vacates after it publishes its outcome).</summary>
+    private static async Task WaitForVacateAsync(AxiamClient client)
+    {
+        for (int i = 0; i < 500 && client.OidcRefreshSlotCount != 0; i++)
+        {
+            await Task.Delay(10);
+        }
+        Assert.Equal(0, client.OidcRefreshSlotCount);
+    }
+
     private static OidcRefreshParams RefreshWith(string token) =>
         new() { RefreshToken = Sensitive<string>.Wrap(token) };
 
@@ -257,6 +271,7 @@ public class OidcRefreshAndCredentialsTests
 
         releaseWindow.SetResult();
         Assert.Equal("access-for-token-A", (await a).AccessToken.Reveal());
+        await WaitForVacateAsync(client);
 
         // After the full vacate the same token gets a fresh wire call, with that call's own outcome.
         handler.Map("/oauth2/token", _ => OidcTestKit.JsonOk(OidcTestKit.TokenResponseJson("access-second-burst")));
@@ -291,7 +306,7 @@ public class OidcRefreshAndCredentialsTests
         hold.Release(2);
         await a;
         await b;
-        Assert.Equal(0, client.OidcRefreshSlotCount);
+        await WaitForVacateAsync(client);
     }
 
     [Fact]
@@ -345,6 +360,175 @@ public class OidcRefreshAndCredentialsTests
             Assert.Equal("access-for-same", (await t).AccessToken.Reveal());
         }
         Assert.Equal(1, handler.CountFor("/oauth2/token"));
+    }
+
+    private static CookieContainer CookiesOf(AxiamClient client) =>
+        (CookieContainer)typeof(AxiamClient).GetField("_cookieContainer", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(client)!;
+
+    private static void SetAccessCookie(AxiamClient client, string? tenantGuid)
+    {
+        static string B64(string json) => Convert.ToBase64String(Encoding.UTF8.GetBytes(json)).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        CookieContainer container = CookiesOf(client);
+        var cookie = new Cookie("axiam_access", tenantGuid is null ? "gone" : $"{B64("{\"alg\":\"none\"}")}.{B64($"{{\"tenant_id\":\"{tenantGuid}\"}}")}.unsigned");
+        if (tenantGuid is null)
+        {
+            cookie.Expired = true;
+        }
+        container.Add(OidcTestKit.BaseUrl, cookie);
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_TenantFromTheSessionCookie_IsResolvedOnce_TheKeyAndTheWireAgree_EvenIfTheSessionChangesDuringDiscovery()
+    {
+        const string TenantX = "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee";
+        const string TenantY = "11111111-2222-4333-8444-555555555555";
+        var handler = new RoutingHandler();
+        AxiamClient client = OidcTestKit.Client(handler, OidcTestKit.Options(tenantId: "acme"), tenantId: "acme");
+        SetAccessCookie(client, TenantX);
+        // The session changes (a login as another tenant, then a logout) while discovery is being fetched.
+        handler.Map("/.well-known/openid-configuration", _ =>
+        {
+            SetAccessCookie(client, TenantY);
+            SetAccessCookie(client, null);
+            return OidcTestKit.JsonOk(OidcTestKit.DiscoveryJson(OidcTestKit.BaseUrl, null, true));
+        });
+        MapEchoingTokenEndpoint(handler);
+
+        OidcTokenSet result = await client.OidcRefreshAsync(RefreshWith("rotating"));
+
+        Assert.Equal("access-for-rotating", result.AccessToken.Reveal());
+        var token = handler.Requests.Single(r => r.RequestUri!.AbsolutePath == "/oauth2/token");
+        Assert.Equal($"tenant_id={TenantX}", token.RequestUri!.Query.TrimStart('?'));
+        await WaitForVacateAsync(client); // no slot is left behind
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_UnresolvableTenant_FailsAtOnce_NoSlot_NoDiscovery_NoTokenCall()
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        MapEchoingTokenEndpoint(handler);
+        AxiamClient client = OidcTestKit.Client(handler, OidcTestKit.Options(tenantId: "acme"), tenantId: "acme");
+
+        await Assert.ThrowsAsync<AuthError>(() => client.OidcRefreshAsync(RefreshWith("r")));
+
+        Assert.Equal(0, client.OidcRefreshSlotCount);
+        Assert.Empty(handler.Requests);
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_OwnerCancels_TheJoinerStillGetsTheTokenSet_AndOnlyTheOwnerSeesTheCancellation()
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        AxiamClient client = OidcTestKit.Client(handler);
+        await client.OidcDiscoverAsync();
+        var hold = new SemaphoreSlim(0);
+        MapEchoingTokenEndpoint(handler, hold);
+
+        using var ownerCts = new CancellationTokenSource();
+        Task<OidcTokenSet> owner = client.OidcRefreshAsync(RefreshWith("shared"), ownerCts.Token);
+        await Task.Delay(TimeSpan.FromMilliseconds(200));
+        Task<OidcTokenSet> joiner = client.OidcRefreshAsync(RefreshWith("shared"));
+        await Task.Delay(TimeSpan.FromMilliseconds(100));
+
+        ownerCts.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => owner);
+        hold.Release(1);
+
+        Assert.Equal("access-for-shared", (await joiner).AccessToken.Reveal());
+        Assert.Equal(1, handler.CountFor("/oauth2/token"));
+        await WaitForVacateAsync(client);
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_JoinerCancels_OnlyTheJoinerSeesTheCancellation_TheOwnerStillGetsTheTokenSet()
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        AxiamClient client = OidcTestKit.Client(handler);
+        await client.OidcDiscoverAsync();
+        var hold = new SemaphoreSlim(0);
+        MapEchoingTokenEndpoint(handler, hold);
+
+        Task<OidcTokenSet> owner = client.OidcRefreshAsync(RefreshWith("shared"));
+        await Task.Delay(TimeSpan.FromMilliseconds(200));
+        using var joinerCts = new CancellationTokenSource();
+        Task<OidcTokenSet> joiner = client.OidcRefreshAsync(RefreshWith("shared"), joinerCts.Token);
+        await Task.Delay(TimeSpan.FromMilliseconds(100));
+
+        joinerCts.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => joiner);
+        hold.Release(1);
+
+        Assert.Equal("access-for-shared", (await owner).AccessToken.Reveal());
+        Assert.Equal(1, handler.CountFor("/oauth2/token"));
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_AThrowingBeforeVacateHook_StillVacatesTheSlot()
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        AxiamClient client = OidcTestKit.Client(handler);
+        await client.OidcDiscoverAsync();
+        MapEchoingTokenEndpoint(handler);
+        client.OidcRefreshBeforeVacateHook = () => throw new InvalidOperationException("hook failure");
+
+        Assert.Equal("access-for-r", (await client.OidcRefreshAsync(RefreshWith("r"))).AccessToken.Reveal());
+        await WaitForVacateAsync(client);
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_ADifferentKeysWireCallStartsAndCompletesWhileAnothersIsHeldOnTheTransport()
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        AxiamClient client = OidcTestKit.Client(handler);
+        await client.OidcDiscoverAsync();
+        var holdA = new SemaphoreSlim(0);
+        handler.Map("/oauth2/token", request =>
+        {
+            string presented = OidcTestKit.ReadForm(request)["refresh_token"];
+            if (presented == "token-A")
+            {
+                holdA.Wait(TimeSpan.FromSeconds(10));
+            }
+            return OidcTestKit.JsonOk(OidcTestKit.TokenResponseJson("access-for-" + presented));
+        });
+
+        Task<OidcTokenSet> a = client.OidcRefreshAsync(RefreshWith("token-A"));
+        await Task.Delay(TimeSpan.FromMilliseconds(200)); // A's request is parked on the transport
+        Assert.Equal(1, handler.CountFor("/oauth2/token"));
+
+        OidcTokenSet b = await client.OidcRefreshAsync(RefreshWith("token-B")).WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.Equal("access-for-token-B", b.AccessToken.Reveal());
+        Assert.Equal(2, handler.CountFor("/oauth2/token")); // B's wire call happened while A's was held
+        Assert.False(a.IsCompleted);
+
+        holdA.Release();
+        Assert.Equal("access-for-token-A", (await a).AccessToken.Reveal());
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_TwentyConcurrentDistinctTokens_AllCompleteUnderATimeout()
+    {
+        const int N = 20;
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        AxiamClient client = OidcTestKit.Client(handler);
+        await client.OidcDiscoverAsync();
+        MapEchoingTokenEndpoint(handler);
+
+        Task<OidcTokenSet>[] tasks = Enumerable.Range(0, N).Select(i => client.OidcRefreshAsync(RefreshWith("token-" + i))).ToArray();
+        OidcTokenSet[] results = await Task.WhenAll(tasks).WaitAsync(TimeSpan.FromSeconds(20));
+
+        for (int i = 0; i < N; i++)
+        {
+            Assert.Equal("access-for-token-" + i, results[i].AccessToken.Reveal());
+        }
+        Assert.Equal(N, handler.CountFor("/oauth2/token"));
+        await WaitForVacateAsync(client);
     }
 
     [Fact]
