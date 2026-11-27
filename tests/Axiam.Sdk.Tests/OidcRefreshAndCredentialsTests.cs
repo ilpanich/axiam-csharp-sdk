@@ -583,6 +583,46 @@ public class OidcRefreshAndCredentialsTests
     }
 
     [Fact]
+    public async Task OidcRefreshAsync_ExtremeRequestTimeout_ClampsTheBound_AndTheCallSettles()
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        MapEchoingTokenEndpoint(handler);
+        AxiamClientOptions options = OidcTestKit.Options() with { RequestTimeout = TimeSpan.FromDays(10) };
+        AxiamClient client = OidcTestKit.Client(handler, options);
+
+        Assert.Equal(AxiamClient.MaxOidcRefreshFlightTimeout, client.OidcRefreshFlightTimeout);
+        OidcTokenSet result = await client.OidcRefreshAsync(RefreshWith("r")).WaitAsync(TimeSpan.FromSeconds(10));
+        Assert.Equal("access-for-r", result.AccessToken.Reveal());
+        await WaitForVacateAsync(client);
+    }
+
+    [Fact]
+    public async Task OidcRefreshAsync_AnExceptionBuildingTheFlightsTokenSource_StillCompletesEveryCaller()
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler);
+        MapEchoingTokenEndpoint(handler);
+        AxiamClient client = OidcTestKit.Client(handler);
+        client.OidcRefreshFlightTimeoutOverride = TimeSpan.FromDays(100); // above the token source's limit: its constructor throws
+
+        Task<OidcTokenSet>[] callers = Enumerable.Range(0, 3).Select(_ => client.OidcRefreshAsync(RefreshWith("r"))).ToArray();
+        foreach (Task<OidcTokenSet> caller in callers)
+        {
+            await Assert.ThrowsAnyAsync<ArgumentOutOfRangeException>(() => caller.WaitAsync(TimeSpan.FromSeconds(10)));
+        }
+        await WaitForVacateAsync(client);
+    }
+
+    [Fact]
+    public void OidcRefreshFlightTimeout_InfiniteRequestTimeout_IsInfinite()
+    {
+        AxiamClientOptions options = OidcTestKit.Options() with { RequestTimeout = Timeout.InfiniteTimeSpan };
+        AxiamClient client = OidcTestKit.Client(new RoutingHandler(), options);
+        Assert.Equal(Timeout.InfiniteTimeSpan, client.OidcRefreshFlightTimeout);
+    }
+
+    [Fact]
     public async Task LoginClientCredentialsAsync_HappyPath_SendsClientCredentialsGrant()
     {
         (RoutingHandler handler, AxiamClient client) = SetUp();

@@ -86,6 +86,8 @@ public sealed partial class AxiamClient
     // BEFORE it vacates its slot, so a test can hold CONTRACT.md §9 rule 6a's bookkeeping window open.
     internal Func<Task>? OidcRefreshBeforeVacateHook { get; set; }
 
+    internal static readonly TimeSpan MaxOidcRefreshFlightTimeout = TimeSpan.FromMilliseconds(int.MaxValue);
+
     // Test seam: replaces the derived bound below.
     internal TimeSpan? OidcRefreshFlightTimeoutOverride { get; set; }
 
@@ -103,10 +105,19 @@ public sealed partial class AxiamClient
             {
                 return overridden;
             }
+            if (_options.RequestTimeout == Timeout.InfiniteTimeSpan)
+            {
+                return Timeout.InfiniteTimeSpan; // an infinite RequestTimeout is not cut short
+            }
             int attempts = _options.RetryEnabled ? RetryPolicy.EffectiveMaxAttempts(_options) : 1;
             TimeSpan perCall = (_options.RequestTimeout * attempts) + (RetryPolicy.EffectiveMaxDelay(_options) * (attempts - 1));
             TimeSpan bound = perCall * 2; // discovery fetch + token call
-            return bound < _options.RequestTimeout ? _options.RequestTimeout : bound;
+            if (bound < _options.RequestTimeout)
+            {
+                bound = _options.RequestTimeout;
+            }
+            // CancellationTokenSource's limit is int.MaxValue milliseconds (about 24.8 days).
+            return bound > MaxOidcRefreshFlightTimeout ? MaxOidcRefreshFlightTimeout : bound;
         }
     }
 
@@ -532,12 +543,14 @@ public sealed partial class AxiamClient
         await Task.Yield(); // the caller's lock/stack is never held across the flight's synchronous prefix
         try
         {
-            using var timeout = new CancellationTokenSource(OidcRefreshFlightTimeout);
+            // Everything that can throw sits inside this try, so the outcome is always completed.
+            CancellationTokenSource? timeout = null;
             try
             {
+                timeout = new CancellationTokenSource(OidcRefreshFlightTimeout);
                 outcome.TrySetResult(await DoOidcRefreshAsync(@params, tenantId, timeout.Token).ConfigureAwait(false));
             }
-            catch (OperationCanceledException ex) when (timeout.IsCancellationRequested)
+            catch (OperationCanceledException ex) when (timeout is { IsCancellationRequested: true })
             {
                 // The flight's own bound fired; no caller cancelled (callers cancel only their own wait).
                 outcome.TrySetException(NetworkError.FromException(ex, "oidc_refresh timed out"));
@@ -545,6 +558,10 @@ public sealed partial class AxiamClient
             catch (Exception ex)
             {
                 outcome.TrySetException(ex);
+            }
+            finally
+            {
+                timeout?.Dispose();
             }
         }
         finally
