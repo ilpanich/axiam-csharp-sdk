@@ -1266,6 +1266,11 @@ else Console.WriteLine(decision.ReasonCode);                         // no_grant
   `AxiamAuthzRequesterOptions.Logger` with `timestamp` (RFC 3339 UTC), `exchange`, `routing_key` (your reply queue),
   `tenant_id` (your own tenant, never the one the response claims) and `reason`: `malformed`, `unsigned`, `signature`,
   `tenant` or `unknown_request`. No signature, nonce, correlation id or other body member is ever logged.
+  The reason follows the contract's normative order: not one JSON object is `malformed`; no `hmac_signature` member is
+  `unsigned`, whatever else is missing; a bad signature member, or `allowed`, `tenant_id`, `nonce` or `correlation_id`
+  missing or ill-typed, is `malformed`; a failing HMAC is `signature`; a foreign tenant is `tenant`; no outstanding
+  request is `unknown_request`. After the requester is closed, answers are nacked without requeue, not decoded and not
+  logged.
 - `correlation_id` and `nonce` are fresh CSPRNG UUIDs per request. A channel you opened yourself goes to
   `AxiamAuthzRequester.CreateAsync(channel, …)`, which does not close it on dispose; disposing the requester cancels its
   consumer, so the exclusive auto-delete reply queue is deleted while your channel lives on.

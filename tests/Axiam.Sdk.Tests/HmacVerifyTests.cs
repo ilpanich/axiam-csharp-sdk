@@ -210,4 +210,16 @@ public class HmacVerifyTests
 
         Assert.False(Hmac.Verify(BytesKey, body));
     }
+
+    [Theory]
+    [InlineData("00")]
+    [InlineData("0000")]
+    public void ASignatureLongerThan64HexDigits_DoesNotVerify(string extra)
+    {
+        byte[] key = Convert.FromHexString("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20");
+        string canonical = """{"a":"b"}""";
+        string sig = Convert.ToHexString(HMACSHA256.HashData(key, Encoding.UTF8.GetBytes(canonical))).ToLowerInvariant();
+        Assert.True(Hmac.Verify(key, Encoding.UTF8.GetBytes(canonical[..^1] + ",\"hmac_signature\":\"" + sig + "\"}")));
+        Assert.False(Hmac.Verify(key, Encoding.UTF8.GetBytes(canonical[..^1] + ",\"hmac_signature\":\"" + sig + extra + "\"}")));
+    }
 }

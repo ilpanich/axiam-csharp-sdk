@@ -63,6 +63,15 @@ organization member, one description moved), which changes no operation.
 
 ### Fixed
 
+- **AMQP alignment with contract 1.69 §8 (OI-13, axiam#882, axiam#883).** `AxiamAuthzRequester` now picks the discard
+  reason in the contract's normative order: a body with no `hmac_signature` member is `unsigned` whatever else is
+  missing (it was `malformed` when `allowed` was absent), and a missing or ill-typed `allowed`, `tenant_id`, `nonce` or
+  `correlation_id` is `malformed` before the HMAC is checked (it was `signature`). After the requester is closed,
+  answers are nacked without requeue, never decoded or dispatched, and raise no event. `Hmac.Verify` and the event
+  consumer require exactly 64 hex digits for the signature. The vendored `CONTRACT.md` and
+  `v2_reference_vectors.json` (which gains `wire_json`) are re-synced; the consumer is tested against `wire_json` and
+  the full negative list.
+
 - **#882 / D-5 — `Hmac.Verify` verifies the received bytes.** It re-serialized the parsed body, so a genuine message
   whose fields held `& < > '`, a non-ASCII character or a control-character escape failed verification (System.Text.Json
   and serde_json print them differently). It now cuts the trailing `hmac_signature` member out of the body and HMACs the

@@ -395,6 +395,57 @@ public sealed class AxiamAuthzRequesterTests
         Assert.False(outstanding.IsCompleted);
     }
 
+    // ---- contract 1.69 §8 normative reason order (OI-13) --------------------------------
+
+    public static IEnumerable<object[]> ReasonOrder()
+    {
+        // (2) no hmac_signature member: unsigned, whatever else is missing (allowed absent, ill-typed, ...).
+        yield return new object[] { "unsigned", Encoding.UTF8.GetBytes("""{"correlation_id":"22222222-2222-2222-2222-222222222222"}""") };
+        yield return new object[] { "unsigned", Encoding.UTF8.GetBytes("""{"allowed":"yes"}""") };
+        yield return new object[] { "unsigned", Encoding.UTF8.GetBytes("{}") };
+        // (1) not one JSON object: malformed.
+        yield return new object[] { "malformed", Encoding.UTF8.GetBytes("[]") };
+        // (3) a bad signature member, or a missing/ill-typed required member: malformed, even though the HMAC is wrong too.
+        yield return new object[] { "malformed", Encoding.UTF8.GetBytes($$"""{"allowed":true,"hmac_signature":"{{new string('a', 64)}}"}""") };
+        yield return new object[] { "malformed", Encoding.UTF8.GetBytes($$"""{"correlation_id":"{{Correlation}}","tenant_id":"{{Tenant}}","allowed":true,"hmac_signature":"{{new string('a', 64)}}"}""") };
+        yield return new object[] { "malformed", Encoding.UTF8.GetBytes($$"""{"correlation_id":"{{Correlation}}","tenant_id":"{{Tenant}}","nonce":"{{Nonce}}","allowed":"true","hmac_signature":"{{new string('a', 64)}}"}""") };
+        yield return new object[] { "malformed", Encoding.UTF8.GetBytes($$"""{"correlation_id":"{{Correlation}}","tenant_id":"{{Tenant}}","nonce":"{{Nonce}}","allowed":true,"hmac_signature":"{{new string('a', 63)}}"}""") };
+        // (4) HMAC fails with every required member present: signature.
+        yield return new object[] { "signature", Encoding.UTF8.GetBytes(Vectors[0].Canonical[..^1] + $$""","hmac_signature":"{{new string('a', 64)}}"}""") };
+    }
+
+    [Theory]
+    [MemberData(nameof(ReasonOrder))]
+    public async Task TheDiscardReason_FollowsTheNormativeOrder(string reason, byte[] body)
+    {
+        var logger = new RecordingLogger();
+        await using AxiamAuthzRequester requester = await NewRequester(options: new AxiamAuthzRequesterOptions { Logger = logger });
+        Task<AmqpAuthzDecision> outstanding = requester.ExpectAsync(Correlation, Nonce);
+
+        (AmqpAuthzDecision? decision, Settlement settled) = await OfferAsync(requester, outstanding, body);
+
+        Assert.Null(decision);
+        Assert.Equal(1, settled.NackedWithoutRequeue);
+        Assert.Equal(reason, Assert.Single(logger.WarningEvents)["reason"]);
+    }
+
+    [Fact]
+    public async Task AfterClose_AnAnswerIsNotDecodedOrDispatched_NackedWithoutRequeue_AndNoEventIsLogged()
+    {
+        var logger = new RecordingLogger();
+        AxiamAuthzRequester requester = await NewRequester(options: new AxiamAuthzRequesterOptions { Logger = logger });
+        Task<AmqpAuthzDecision> outstanding = requester.ExpectAsync(Correlation, Nonce);
+        await requester.DisposeAsync();
+        var settled = new Settlement();
+
+        await requester.HandleAsync(settled.Delivery(Vectors[0].Wire())); // a genuine answer to the outstanding request
+
+        Assert.Equal(1, settled.NackedWithoutRequeue);
+        Assert.Equal(0, settled.Acked);
+        Assert.Empty(logger.WarningEvents);
+        await Assert.ThrowsAsync<ObjectDisposedException>(() => outstanding); // closed, not answered
+    }
+
     // ---- end to end over the RabbitMQ.Client adapter with a fake channel ----------------
 
     [Fact]

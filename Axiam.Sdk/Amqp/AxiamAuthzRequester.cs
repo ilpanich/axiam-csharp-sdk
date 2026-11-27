@@ -524,6 +524,19 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
     /// plus the security event).</summary>
     internal async Task HandleAsync(AuthzDelivery delivery)
     {
+        // After Close: the answer is not decoded or dispatched, only nacked without requeue; no event (§8 consumer
+        // obligation 4): the requester no longer has a request this could answer.
+        bool closed;
+        lock (_gate)
+        {
+            closed = _closed;
+        }
+        if (closed)
+        {
+            await delivery.NackWithoutRequeue().ConfigureAwait(false);
+            return;
+        }
+
         (AmqpAuthzDecision? decision, string? correlationId, string? failure) = VerifyResponse(delivery.Body);
         if (decision is null || correlationId is null)
         {
@@ -594,13 +607,6 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
                 return Fail(Discard.Malformed);
             }
 
-            // Rule 1: `allowed` must be a JSON boolean, whatever else the body is.
-            if (!root.TryGetProperty("allowed", out JsonElement allowed) ||
-                allowed.ValueKind is not (JsonValueKind.True or JsonValueKind.False))
-            {
-                return Fail(Discard.Malformed);
-            }
-
             // A member named hmac_signature in any letter case is a signature member: a body carrying one is
             // malformed or fails verification, never "unsigned".
             bool hasSignatureMember = false;
@@ -627,6 +633,17 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
             if (!root.TryGetProperty("hmac_signature", out JsonElement embedded) ||
                 embedded.ValueKind != JsonValueKind.String ||
                 embedded.GetString() != signatureHex)
+            {
+                return Fail(Discard.Malformed);
+            }
+
+            // Reason order step 3 (before the HMAC): allowed, tenant_id, nonce and correlation_id present and
+            // well-typed in the received bytes, else malformed. The verified bytes are read again below.
+            if (!root.TryGetProperty("allowed", out JsonElement receivedAllowed) ||
+                receivedAllowed.ValueKind is not (JsonValueKind.True or JsonValueKind.False) ||
+                !TryString(root, "correlation_id", required: true, out _) ||
+                !TryString(root, "tenant_id", required: true, out _) ||
+                !TryString(root, "nonce", required: true, out _))
             {
                 return Fail(Discard.Malformed);
             }

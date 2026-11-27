@@ -36,7 +36,7 @@ public static class Hmac
     ///
     /// <para>
     /// Never throws: malformed JSON, a body that is not one object with unambiguous keys, a missing, null, non-hex or
-    /// not-trailing signature, or a wrong-length signature all verify as <c>false</c> — matching §8.3's strict-mode
+    /// not-trailing signature, or one that is not exactly 64 hex digits all verify as <c>false</c> — matching §8.3's strict-mode
     /// default that rejects (rather than silently accepts) an unparseable or absent signature.
     /// </para>
     /// </summary>
@@ -52,7 +52,7 @@ public static class Hmac
                 return false; // not one object with unambiguous keys, or content after it
             }
 
-            if (!SignedJson.TryCutTrailingSignature(body, null, out byte[]? canonical, out string? signatureHex))
+            if (!SignedJson.TryCutTrailingSignature(body, 64, out byte[]? canonical, out string? signatureHex))
             {
                 return false; // §8.3 strict mode: missing, malformed or non-trailing signature = reject
             }

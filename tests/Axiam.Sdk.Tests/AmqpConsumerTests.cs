@@ -524,4 +524,113 @@ public class AmqpConsumerTests
         Assert.True(handlerInvoked);
         Assert.Equal("ack", Assert.Single(calls).Type);
     }
+
+    // ---- contract 1.69 §8 alignment (OI-13): reference vectors fed as wire_json; the negative list -----------
+
+    private static JsonObject FixtureVector(string name)
+    {
+        JsonObject root = JsonNode.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Fixtures", "v2_reference_vectors.json")))!.AsObject();
+        return root[name]!.AsObject();
+    }
+
+    private static byte[] FixtureSubkey() =>
+        Convert.FromHexString(JsonNode.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Fixtures", "v2_reference_vectors.json")))!["hkdf"]!["derived_subkey_hex"]!.GetValue<string>());
+
+    private static async Task<(bool HandlerRan, byte[]? Seen, List<AckNackCall> Calls, RecordingLogger Logger)> Feed(byte[] key, byte[] body)
+    {
+        (Mock<IChannel> channelMock, List<AckNackCall> calls) = FakeChannel();
+        var logger = new RecordingLogger();
+        bool ran = false;
+        byte[]? seen = null;
+        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+            channelMock.Object, key, (b, _) => { ran = true; seen = b; return Task.CompletedTask; }, logger, NewGuard());
+        await received(new object(), Delivery(40, body));
+        return (ran, seen, calls, logger);
+    }
+
+    [Theory]
+    [InlineData("authz_request")]
+    [InlineData("audit_event")]
+    public async Task TheReferenceVectorWireJson_CutsToTheCanonicalBytes_VerifiesPassesTheLayoutAndDispatches(string name)
+    {
+        JsonObject vector = FixtureVector(name);
+        byte[] wire = Encoding.UTF8.GetBytes(vector["wire_json"]!.GetValue<string>());
+
+        Assert.True(SignedJson.TryCutTrailingSignature(wire, 64, out byte[]? canonical, out _));
+        Assert.Equal(vector["canonical_signed_json"]!.GetValue<string>(), Encoding.UTF8.GetString(canonical!));
+        Assert.True(Hmac.Verify(FixtureSubkey(), wire));
+        Assert.True(SignedJson.MatchesSignedLayout(canonical!));
+
+        (bool ran, byte[]? seen, List<AckNackCall> calls, _) = await Feed(FixtureSubkey(), wire);
+
+        Assert.True(ran);
+        Assert.Equal(wire, seen);
+        Assert.Equal("ack", Assert.Single(calls).Type);
+    }
+
+    public static IEnumerable<object[]> RefusedBodies()
+    {
+        const string good = """{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"a","resource_id":"r","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z"}""";
+        yield return new object[] { "nested duplicate member", """{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"a","resource_id":"r","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z","x":{"k":1,"k":2}}""", false };
+        yield return new object[] { "trailing newline", good, true };
+        yield return new object[] { "trailing space", good, true };
+        yield return new object[] { "reordered members", """{"tenant_id":"t","correlation_id":"c","subject_id":"s","action":"a","resource_id":"r","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z"}""", false };
+        yield return new object[] { "extra member", """{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"a","resource_id":"r","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z","extra":1}""", false };
+        yield return new object[] { "top-level names that fold together", """{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"a","Action":"b","resource_id":"r","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z"}""", false };
+        yield return new object[] { "validly signed AuthzResponse", """{"correlation_id":"c","allowed":true,"reason_code":"allowed","tenant_id":"t","nonce":"n"}""", false };
+    }
+
+    [Theory]
+    [MemberData(nameof(RefusedBodies))]
+    public async Task ARefusedBody_IsNackedWithoutRequeue_AndTheHandlerNeverRuns(string name, string signedText, bool appendAfterBrace)
+    {
+        byte[] wire = SignedWire(signedText);
+        if (appendAfterBrace)
+        {
+            wire = wire.Concat(Encoding.ASCII.GetBytes(name == "trailing newline" ? "\n" : " ")).ToArray();
+        }
+
+        (bool ran, _, List<AckNackCall> calls, RecordingLogger logger) = await Feed(ReceivedBytesKey, wire);
+
+        Assert.False(ran, name);
+        AckNackCall call = Assert.Single(calls);
+        Assert.Equal("nack", call.Type);
+        Assert.False(call.Requeue);
+        Assert.NotEmpty(logger.Warnings);
+    }
+
+    [Theory]
+    [InlineData("null")]
+    [InlineData("number")]
+    [InlineData("not last")]
+    [InlineData("missing")]
+    public async Task ASignatureMemberThatIsNullNonStringNotLastOrMissing_IsNackedAndNeverRepaired(string kind)
+    {
+        string sig = new string('a', 64);
+        string body = kind switch
+        {
+            "null" => """{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"a","resource_id":"r","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z","hmac_signature":null}""",
+            "number" => """{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"a","resource_id":"r","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z","hmac_signature":1}""",
+            "not last" => $$"""{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"a","resource_id":"r","key_version":2,"nonce":"n","hmac_signature":"{{sig}}","issued_at":"2026-07-10T12:00:00Z"}""",
+            _ => """{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"a","resource_id":"r","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z"}""",
+        };
+
+        (bool ran, _, List<AckNackCall> calls, _) = await Feed(ReceivedBytesKey, Encoding.UTF8.GetBytes(body));
+
+        Assert.False(ran);
+        AckNackCall call = Assert.Single(calls);
+        Assert.Equal("nack", call.Type);
+        Assert.False(call.Requeue);
+    }
+
+    [Fact]
+    public async Task AGenuineMessageWithAngleBracketsAmpersandNonAsciiAndAUnicodeEscape_VerifiesAndDispatches()
+    {
+        const string signed = """{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"<a>&b \u00e9 é \u001f","resource_id":"r","key_version":2,"nonce":"n9","issued_at":"2026-07-10T12:00:00Z"}""";
+
+        (bool ran, _, List<AckNackCall> calls, _) = await Feed(ReceivedBytesKey, SignedWire(signed));
+
+        Assert.True(ran);
+        Assert.Equal("ack", Assert.Single(calls).Type);
+    }
 }

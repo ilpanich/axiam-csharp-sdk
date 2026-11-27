@@ -162,7 +162,7 @@ public sealed class AxiamAmqpConsumer : IAsyncDisposable
             // a genuine message of another signed shape (a cache-invalidation message, say) republished to this queue
             // verifies too. Accept only the AuthzRequest and AuditEventMessage layouts (§8 v2), read from the
             // verified bytes.
-            if (!SignedJson.TryCutTrailingSignature(body, null, out byte[]? verifiedBytes, out string? _) ||
+            if (!SignedJson.TryCutTrailingSignature(body, 64, out byte[]? verifiedBytes, out string? _) ||
                 !SignedJson.MatchesSignedLayout(verifiedBytes!))
             {
                 logger.LogWarning(
