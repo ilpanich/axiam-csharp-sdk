@@ -524,6 +524,22 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
     /// plus the security event).</summary>
     internal async Task HandleAsync(AuthzDelivery delivery)
     {
+        // No body escapes the consumer (CONTRACT.md §8 step 2, contract 1.69; D-10): whatever the bytes, and whatever
+        // the broker or the application does while the delivery is settled, nothing may leave the delivery loop. The
+        // next delivery is handled as if this one had not happened.
+        try
+        {
+            await HandleCoreAsync(delivery).ConfigureAwait(false);
+        }
+        catch (Exception)
+        {
+            // Deliberately empty: the exception text could carry body content, and a nack that failed because the
+            // channel closed is already the broker's to resolve.
+        }
+    }
+
+    private async Task HandleCoreAsync(AuthzDelivery delivery)
+    {
         // After Close: the answer is not decoded or dispatched, only nacked without requeue; no event (§8 consumer
         // obligation 4): the requester no longer has a request this could answer.
         bool closed;
@@ -584,6 +600,13 @@ public sealed class AxiamAuthzRequester : IAsyncDisposable
     /// </summary>
     private (AmqpAuthzDecision? Decision, string? CorrelationId, string? Failure) VerifyResponse(byte[] body)
     {
+        // Reason (1): the first byte is `{`. A byte-order mark, whitespace or any other prefix is refused, never
+        // stripped (CONTRACT.md §8 step 2a): the bytes the HMAC covers are the bytes received.
+        if (!SignedJson.StartsWithObject(body))
+        {
+            return Fail(Discard.Malformed);
+        }
+
         if (SignedJson.HasAmbiguousKeys(body))
         {
             return Fail(Discard.Malformed); // not an object with unambiguous keys

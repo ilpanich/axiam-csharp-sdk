@@ -305,6 +305,57 @@ public sealed class AxiamAuthzRequesterTests
         Assert.Null(decision);
     }
 
+    // ---- contract 1.69 §8 step 2 (D-10): a BOM-prefixed body is refused, never stripped; no body escapes ------
+
+    [Fact]
+    public async Task ABomPrefixedResponse_IsDiscardedAsMalformed_WithoutAnException_AndTheNextDeliveryIsProcessed()
+    {
+        var logger = new RecordingLogger();
+        await using AxiamAuthzRequester requester = await NewRequester(options: new AxiamAuthzRequesterOptions { Logger = logger });
+        Task<AmqpAuthzDecision> outstanding = requester.ExpectAsync(Correlation, Nonce);
+
+        byte[] withBom = new byte[] { 0xEF, 0xBB, 0xBF }.Concat(Vectors[0].Wire()).ToArray();
+        (AmqpAuthzDecision? decision, Settlement settled) = await OfferAsync(requester, outstanding, withBom);
+
+        Assert.Null(decision);
+        Assert.Equal(0, settled.Acked);
+        Assert.Equal(1, settled.NackedWithoutRequeue);
+        Assert.Equal("malformed", Assert.Single(logger.WarningEvents)["reason"]);
+
+        (AmqpAuthzDecision? next, Settlement nextSettled) = await OfferAsync(requester, outstanding, Vectors[0].Wire());
+        Assert.NotNull(next);
+        Assert.Equal(1, nextSettled.Acked);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("\n")]
+    public async Task AnEmptyOrWhitespacePrefixedResponse_IsDiscardedAsMalformed(string prefix)
+    {
+        var logger = new RecordingLogger();
+        await using AxiamAuthzRequester requester = await NewRequester(options: new AxiamAuthzRequesterOptions { Logger = logger });
+        Task<AmqpAuthzDecision> outstanding = requester.ExpectAsync(Correlation, Nonce);
+
+        byte[] body = prefix.Length == 0 ? Array.Empty<byte>() : Encoding.ASCII.GetBytes(prefix).Concat(Vectors[0].Wire()).ToArray();
+        (AmqpAuthzDecision? decision, _) = await OfferAsync(requester, outstanding, body);
+
+        Assert.Null(decision);
+        Assert.Equal("malformed", Assert.Single(logger.WarningEvents)["reason"]);
+    }
+
+    [Fact]
+    public async Task AFailingNack_DoesNotEscapeTheDeliveryLoop()
+    {
+        await using AxiamAuthzRequester requester = await NewRequester();
+        var delivery = new AuthzDelivery(
+            Encoding.UTF8.GetBytes("not json"),
+            () => ValueTask.CompletedTask,
+            () => throw new InvalidOperationException("channel closed"));
+
+        await requester.HandleAsync(delivery); // must not throw
+    }
+
     // ---- the discard event (contract 1.69 §8 consumer obligation 4; #883) ---------------------
 
     private static byte[] Resign(string canonical) => SignWith(Subkey, canonical);

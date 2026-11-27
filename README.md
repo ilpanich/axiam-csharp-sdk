@@ -144,9 +144,18 @@ absent, unparseable, or of the wrong JSON type is a rejection, never a skipped c
 | 11 | `purpose` (**contract 1.68**) | A token whose claim set contains a `purpose` member — the MFA-challenge and WebAuthn-state tokens AXIAM signs with the access-token key — is refused, whatever its value (`null` included) and whatever `typ` says. Read from the verified payload itself. |
 | 12 | `kid` (**contract 1.68**) | **Required.** The key is selected by the header's `kid`; a token with no `kid` is refused and the verifier never falls back to "the only key in the set". An unknown `kid` causes **at most one** JWKS re-fetch per 60-second window (`JwksVerifier.UnknownKidRefetchCooldown`); further unknown `kid`s inside it are rejected from the cache with no network call (§12.4 rule 2). |
 
-**`JwksCacheTtl` is clamped** (contract 1.68): a value above 10 minutes becomes 10 minutes, and a zero or
-negative one becomes the 5-minute default rather than disabling the cache (which would re-fetch the JWKS for
-every token).
+**`JwksCacheTtl` is clamped** (contract 1.69, §12.4 rule 2): a value above 300 s becomes 300 s (and one
+`config_clamped` telemetry event is emitted when the client is constructed), and a zero or negative one becomes
+the 300 s default rather than disabling the cache (which would re-fetch the JWKS for every token). A response's
+`Cache-Control: max-age` is used only when no TTL is set (zero or negative), clamped to 300 s, silently.
+
+**A failed refresh keeps the held keys for a bounded time** (contract 1.69, §12.4 rule 2, "Stale-if-error,
+bounded"). The cache's age runs from the last *successful* fetch: a `200` with at least one key, or a `304` to the
+conditional request (`If-None-Match`). A transport error, any other status, a body that is not a JWKS document and
+an empty key set (`{"keys":[]}`) are failed refreshes: they never replace or empty the held keys and never move
+the age. Held keys keep verifying until exactly TTL + 300 s after the last successful fetch; from then on every
+token is refused until a fetch succeeds. An unknown-`kid` refresh that fails refuses that token, keeps the held
+set, and never opens or extends that window; the failed attempt counts toward the 60-second re-fetch window.
 
 **Rule 9 in practice.** Every §6.1 device token (`AuthenticateDeviceAsync`) is
 certificate-bound, and a DPoP-bound token carries `cnf.jkt`. Before this fix,
@@ -1337,6 +1346,27 @@ verification-skip parameter under any name (rule 4), and no loopback exception �
 1 and 5 carry no host carve-out, and the AXIAM server is TLS-only.
 
 `AxiamAmqpConsumer.StartAsync` enforces the same scheme rule for §8 consumers.
+
+### The event consumer is typed, and logs one event per discard (§8, contract 1.69; D-8, D-9, D-10)
+
+```csharp
+await consumer.StartAsync(amqpUri, "axiam.audit.events",
+    AmqpEventType.AuditEvent,   // the ONE signed type this consumer consumes
+    tenantId,                   // the consumer's OWN tenant: the tenant_id of every discard event
+    signingKey, handler, logger);
+```
+
+- **One type per consumer.** A body with the layout of the *other* signed type (an `AuthzRequest` on an
+  `AuditEvent` consumer, or the reverse) is refused as `malformed` before the HMAC is computed and never reaches the
+  handler; so is every other tenant-signed shape. To consume both types, run two consumers. This changes the
+  signature of `StartAsync` (`eventType` and `tenantId` are new, required, beside the key).
+- **One warning per discard** with exactly `timestamp`, `exchange`, `routing_key`, `tenant_id` (always the
+  configured one, never read from the body) and `reason`, one of `malformed`, `unsigned`, `signature`,
+  `key_version`, `stale`, `replay` — the first that applies in §8 rule 4's order. Never a signature, nonce, key or
+  body.
+- **No body escapes the consumer.** A body starting with a byte-order mark (or any byte but `{`) is refused as
+  `malformed`, never stripped; nothing thrown while handling one delivery leaves the delivery loop. The
+  `AxiamAuthzRequester` follows the same rule.
 
 `ReactorServeOptions` still accepts any channel: enforcing at construction cannot
 retroactively constrain a channel someone else opened.

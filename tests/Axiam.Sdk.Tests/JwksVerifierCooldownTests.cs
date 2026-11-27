@@ -105,17 +105,17 @@ public sealed class JwksVerifierCooldownTests
     }
 
     [Fact]
-    public async Task ACacheTtlLongerThanTenMinutes_IsClampedToTenMinutes()
+    public async Task ACacheTtlLongerThanFiveMinutes_IsClampedToFiveMinutes()
     {
         (JwksVerifier verifier, JwksFixture fixture, CountingJwksHandler handler, MockClock clock) = Create(TimeSpan.FromDays(30));
         Assert.NotNull(await verifier.VerifyAsync(Token(fixture), Tenant));
         int afterFill = handler.Count;
 
-        clock.Advance(TimeSpan.FromMinutes(9));
+        clock.Advance(TimeSpan.FromMinutes(4));
         Assert.NotNull(await verifier.VerifyAsync(Token(fixture), Tenant));
         Assert.Equal(afterFill, handler.Count); // still cached
 
-        clock.Advance(TimeSpan.FromMinutes(2)); // 11 minutes after the fill
+        clock.Advance(TimeSpan.FromMinutes(2)); // 6 minutes after the fill
         Assert.NotNull(await verifier.VerifyAsync(Token(fixture), Tenant));
         Assert.Equal(afterFill + 1, handler.Count);
     }

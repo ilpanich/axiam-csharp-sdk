@@ -161,11 +161,18 @@ public sealed class ReplayGuard
     /// <item><description><c>nonce</c> has not already been seen within the freshness
     /// window.</description></item>
     /// </list>
-    public bool Check(ReplayMetadata metadata)
+    public bool Check(ReplayMetadata metadata) => Evaluate(metadata) == ReplayVerdict.Accepted;
+
+    /// <summary>
+    /// <see cref="Check"/> with the reason: the FIRST gate that refuses, in the order of CONTRACT.md &#167;8 rule 4
+    /// positions (6)&#8211;(8) &#8212; <c>key_version</c>, then freshness, then the nonce. The nonce is recorded only when
+    /// the verdict is <see cref="ReplayVerdict.Accepted"/>.
+    /// </summary>
+    internal ReplayVerdict Evaluate(ReplayMetadata metadata)
     {
         if (metadata.KeyVersion < MinKeyVersion)
         {
-            return false;
+            return ReplayVerdict.KeyVersion;
         }
 
         if (!DateTimeOffset.TryParse(
@@ -174,19 +181,19 @@ public sealed class ReplayGuard
                 DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
                 out DateTimeOffset issuedAt))
         {
-            return false;
+            return ReplayVerdict.Stale;
         }
 
         DateTimeOffset now = _clock();
         TimeSpan age = now - issuedAt;
         if (age > _skew || age < -_skew)
         {
-            return false; // stale or future-dated beyond the freshness window
+            return ReplayVerdict.Stale; // stale or future-dated beyond the freshness window
         }
 
         Prune(now);
 
-        return TryRecordNonce(metadata.Nonce, now);
+        return TryRecordNonce(metadata.Nonce, now) ? ReplayVerdict.Accepted : ReplayVerdict.Replay;
     }
 
     /// <summary>
@@ -233,4 +240,14 @@ public sealed class ReplayGuard
             }
         }
     }
+}
+
+/// <summary>The outcome of <see cref="ReplayGuard"/>'s gates: <c>Accepted</c>, or the first gate that refused,
+/// named by the discard <c>reason</c> of CONTRACT.md &#167;8 rule 4.</summary>
+internal enum ReplayVerdict
+{
+    Accepted,
+    KeyVersion,
+    Stale,
+    Replay,
 }

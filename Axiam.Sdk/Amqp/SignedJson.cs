@@ -28,6 +28,11 @@ internal static class SignedJson
         ("outcome", false), ("ip_address", true), ("metadata", true), ("key_version", false), ("nonce", false), ("issued_at", false),
     };
 
+    /// <summary>Whether the first byte of <paramref name="body"/> is <c>{</c> (CONTRACT.md &#167;8 step 2a). A UTF-8 byte-order
+    /// mark, whitespace, or any other prefix is not, and an empty body is not: such a body is refused as malformed and
+    /// never stripped or repaired.</summary>
+    internal static bool StartsWithObject(ReadOnlySpan<byte> body) => !body.IsEmpty && body[0] == (byte)'{';
+
     /// <summary>
     /// Removes the final <c>,"hmac_signature":"&lt;hex&gt;"</c> member from <paramref name="body"/>, returning the
     /// canonical bytes (the rest, closed with <c>}</c>) and the signature hex. <paramref name="hexLength"/> is the
@@ -71,16 +76,105 @@ internal static class SignedJson
     }
 
     /// <summary>
-    /// Whether the top-level members of <paramref name="canonical"/> (the verified bytes, signature cut out) are, in
-    /// order, exactly the <c>AuthzRequest</c> layout or the <c>AuditEventMessage</c> layout (optional members may be
-    /// absent). A message of any other signed shape (a cache-invalidation message, say), however validly signed under
-    /// the tenant subkey, is not an event this consumer accepts. Names are compared exactly.
+    /// Whether the top-level members of <paramref name="canonical"/> (the signature cut out) are, in order, exactly the
+    /// layout of <paramref name="type"/> (optional members may be absent) and no other member (&#167;8 step 2c). There is
+    /// no "matches some signed layout": a message of any other signed shape, however validly signed under the tenant
+    /// subkey, is not an event this consumer accepts. Names are compared exactly.
     /// </summary>
-    internal static bool MatchesSignedLayout(byte[] canonical)
+    internal static bool MatchesLayout(byte[] canonical, AmqpEventType type)
     {
         List<string>? keys = TopLevelKeys(canonical);
-        return keys is not null && (Matches(keys, AuthzRequestLayout) || Matches(keys, AuditEventLayout));
+        return keys is not null && Matches(keys, type == AmqpEventType.AuthzRequest ? AuthzRequestLayout : AuditEventLayout);
     }
+
+    /// <summary>
+    /// Whether <paramref name="body"/> is exactly one JSON object and nothing else: it tokenizes to the end without an
+    /// error (so no trailing content, no invalid UTF-8, no unbounded nesting) and its root is an object. This is
+    /// reason position (1) of &#167;8 rule 4 once the first byte has been checked.
+    /// </summary>
+    internal static bool IsOneJsonObject(ReadOnlySpan<byte> body)
+    {
+        try
+        {
+            var reader = new Utf8JsonReader(body, new JsonReaderOptions { MaxDepth = 64 });
+            bool first = true;
+            while (reader.Read())
+            {
+                if (first && reader.TokenType != JsonTokenType.StartObject)
+                {
+                    return false;
+                }
+                first = false;
+            }
+            return !first;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>Whether the root object of <paramref name="body"/> has a top-level member named
+    /// <c>hmac_signature</c>, in any letter case (so a case-variant is a signature member that fails step 2b, never
+    /// "unsigned"). Only meaningful for a body that passed <see cref="IsOneJsonObject"/>.</summary>
+    internal static bool HasSignatureMember(byte[] body)
+    {
+        List<string>? keys = TopLevelKeys(body);
+        return keys is not null && keys.Exists(k => string.Equals(k, "hmac_signature", StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>
+    /// Step 2f's decode of the verified canonical bytes into <paramref name="type"/> (&#167;8 rule 4 position (5)): every
+    /// present member has its JSON type (UUIDs and the <c>action</c>/<c>actor_type</c>/<c>outcome</c> strings are
+    /// strings, <c>key_version</c> an integer 0&#8211;255, <c>issued_at</c> an RFC 3339 timestamp, <c>nonce</c> a UUID). The
+    /// layout has already been checked, so no member is missing or foreign. Never throws.
+    /// </summary>
+    internal static bool DecodesAs(byte[] canonical, AmqpEventType type)
+    {
+        try
+        {
+            using JsonDocument document = JsonDocument.Parse(canonical, new JsonDocumentOptions { MaxDepth = 64 });
+            JsonElement root = document.RootElement;
+            if (root.ValueKind != JsonValueKind.Object)
+            {
+                return false;
+            }
+
+            foreach (JsonProperty member in root.EnumerateObject())
+            {
+                JsonElement v = member.Value;
+                bool ok = member.Name switch
+                {
+                    "correlation_id" or "tenant_id" or "subject_id" or "resource_id" or "actor_id" or "nonce" =>
+                        v.ValueKind == JsonValueKind.String && Guid.TryParse(v.GetString(), out _),
+                    "action" or "scope" or "actor_type" or "outcome" or "ip_address" => v.ValueKind == JsonValueKind.String,
+                    "key_version" => v.ValueKind == JsonValueKind.Number && v.TryGetByte(out _),
+                    "issued_at" => v.ValueKind == JsonValueKind.String && IsRfc3339(v.GetString()),
+                    "metadata" => true,
+                    _ => false,
+                };
+                if (!ok)
+                {
+                    return false;
+                }
+            }
+            return type is AmqpEventType.AuthzRequest or AmqpEventType.AuditEvent;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    private static readonly string[] Rfc3339Formats =
+    {
+        "yyyy-MM-dd'T'HH:mm:ssK", "yyyy-MM-dd'T'HH:mm:ss.FFFFFFFFFK",
+    };
+
+    private static bool IsRfc3339(string? text) =>
+        text is not null &&
+        System.DateTimeOffset.TryParseExact(text, Rfc3339Formats, System.Globalization.CultureInfo.InvariantCulture,
+            System.Globalization.DateTimeStyles.None, out _);
 
     private static bool Matches(List<string> keys, (string Name, bool Optional)[] layout)
     {

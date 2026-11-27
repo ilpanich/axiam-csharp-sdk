@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Cryptography;
@@ -108,12 +109,19 @@ public sealed class JwksVerifier
     internal static readonly TimeSpan UnknownKidRefetchCooldown = TimeSpan.FromSeconds(60);
 
     /// <summary>The longest a fetched JWKS document is trusted, whatever the configured
-    /// <c>JwksCacheTtl</c> (the same 10-minute bound &#167;34.2 P6 puts on the SSF key cache).</summary>
-    internal static readonly TimeSpan MaxCacheTtl = TimeSpan.FromMinutes(10);
+    /// <c>JwksCacheTtl</c> or the advertised <c>Cache-Control: max-age</c> (CONTRACT.md &#167;12.4 rule 2,
+    /// contract 1.69: at most 300 s, which keeps the stale bound below inside the ten minutes &#167;32.7 allows
+    /// the SSF key cache).</summary>
+    internal static readonly TimeSpan MaxCacheTtl = TimeSpan.FromSeconds(300);
 
     /// <summary>What a zero or negative <c>JwksCacheTtl</c> becomes: the documented default,
     /// never "no caching" (which would refetch the JWKS for every token).</summary>
-    internal static readonly TimeSpan DefaultCacheTtl = TimeSpan.FromMinutes(5);
+    internal static readonly TimeSpan DefaultCacheTtl = TimeSpan.FromSeconds(300);
+
+    /// <summary>How long past the TTL the held keys keep verifying while every refresh fails
+    /// (CONTRACT.md &#167;12.4 rule 2, "Stale-if-error, bounded", owner decision D-10). After
+    /// TTL + this, measured from the last SUCCESSFUL fetch, every token is refused until a fetch succeeds.</summary>
+    internal static readonly TimeSpan StaleBound = TimeSpan.FromSeconds(300);
 
     /// <summary>Clamps a configured cache TTL into (0, <see cref="MaxCacheTtl"/>].</summary>
     internal static TimeSpan ClampCacheTtl(TimeSpan configured) =>
@@ -121,7 +129,23 @@ public sealed class JwksVerifier
 
     private readonly HttpClient _http;
     private readonly Uri _jwksUri;
-    private readonly TimeSpan _cacheTtl;
+    private readonly TimeSpan _configuredTtl;
+
+    /// <summary><c>true</c> when the caller set a positive TTL: then it wins (clamped to 300 s) and an advertised
+    /// <c>max-age</c> is ignored; otherwise the advertised one (clamped) is used when the response carries it.</summary>
+    private readonly bool _ttlConfigured;
+
+    /// <summary>The TTL in force: the configured one, lowered by an advertised <c>max-age</c> (never raised above
+    /// <see cref="MaxCacheTtl"/>). Written under <see cref="_fetchLock"/> only.</summary>
+    private TimeSpan _cacheTtl;
+
+    /// <summary>The <c>ETag</c> of the held set, sent as <c>If-None-Match</c> on a refresh.</summary>
+    private string? _etag;
+
+    /// <summary>UTC ticks of the last FAILED refresh; -1 = none since the last success. A failed attempt counts
+    /// toward the cooldown window, so a failing endpoint costs one fetch per window, not one per token.</summary>
+    private long _lastFailedRefreshTicks = -1;
+
     private readonly string? _expectedIssuer;
     private readonly string? _expectedAudience;
 
@@ -162,7 +186,8 @@ public sealed class JwksVerifier
     /// <param name="httpClient">Used only to fetch the JWKS document; ownership stays with the caller.</param>
     /// <param name="baseUrl">The AXIAM server base URL; the JWKS path is resolved relative to it.</param>
     /// <param name="cacheTtl">How long a fetched JWKS document is trusted before a refetch is forced.
-    /// Clamped: a value above 10 minutes becomes 10 minutes, and a zero or negative one the 5-minute default.</param>
+    /// Clamped: a value above 300 s becomes 300 s. A zero or negative one means "not set": the advertised
+    /// <c>Cache-Control: max-age</c> (clamped to 300 s) is used when present, else the 300 s default.</param>
     /// <param name="expectedIssuer">
     /// The <c>iss</c> claim value this verifier requires (CONTRACT.md &#167;10.1 rule 5).
     /// CONDITIONAL: <c>null</c>/empty (the default) means no issuer check is performed at
@@ -219,7 +244,9 @@ public sealed class JwksVerifier
     {
         _http = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         _jwksUri = jwksUri ?? throw new ArgumentNullException(nameof(jwksUri));
-        _cacheTtl = ClampCacheTtl(cacheTtl);
+        _ttlConfigured = cacheTtl > TimeSpan.Zero;
+        _configuredTtl = ClampCacheTtl(cacheTtl);
+        _cacheTtl = _configuredTtl;
         _revocationFeed = revocationFeed;
         // Normalize "" to null so an empty configuration value can never be mistaken for
         // "expect the empty string" — it means "not configured, so not checked".
@@ -362,8 +389,8 @@ public sealed class JwksVerifier
                 return null;
 
             await EnsureFreshAsync(kid, cancellationToken).ConfigureAwait(false);
-            if (!_keysByKid.TryGetValue(kid, out byte[]? rawPublicKey))
-                return null; // unknown kid even after the one refetch attempt above
+            if (!TryGetHeldKey(kid, out byte[]? rawPublicKey))
+                return null; // unknown kid even after the one refetch attempt above, or the stale bound has passed
 
             byte[] signingInput = Encoding.ASCII.GetBytes($"{parts[0]}.{parts[1]}");
             byte[] signature = Base64UrlDecode(parts[2]);
@@ -482,9 +509,9 @@ public sealed class JwksVerifier
             string kid = kidEl.GetString()!;
 
             await EnsureFreshAsync(kid, cancellationToken).ConfigureAwait(false);
-            if (!_keysByKid.TryGetValue(kid, out byte[]? rawPublicKey))
+            if (!TryGetHeldKey(kid, out byte[]? rawPublicKey))
             {
-                return (null, OidcSignatureFailure.UnknownKid); // still unknown after the one refetch
+                return (null, OidcSignatureFailure.UnknownKid); // still unknown after the one refetch, or past the stale bound
             }
 
             byte[] signingInput = Encoding.ASCII.GetBytes($"{parts[0]}.{parts[1]}");
@@ -861,11 +888,13 @@ public sealed class JwksVerifier
     }
 
     /// <summary>
-    /// Refetches the JWKS document when the cache is stale OR <paramref name="unknownKid"/>
+    /// Refreshes the JWKS document when the cache is past its TTL OR <paramref name="unknownKid"/>
     /// is not already known — at most once per <see cref="VerifyAsync"/> call (no retry
     /// loop), and for an unknown <c>kid</c> on a fresh cache at most once per
-    /// <see cref="UnknownKidRefetchCooldown"/> window. Leaves the existing cache untouched if
-    /// the fetch itself fails; the caller fails closed on the still-unknown <c>kid</c>.
+    /// <see cref="UnknownKidRefetchCooldown"/> window. A FAILED refresh (CONTRACT.md &#167;12.4 rule 2,
+    /// "Stale-if-error, bounded") leaves the held keys and the anchor untouched and counts toward that
+    /// window; the caller then fails closed on a still-unknown <c>kid</c> and <see cref="TryGetHeldKey"/>
+    /// stops serving held keys at TTL + <see cref="StaleBound"/>.
     /// </summary>
     /// <remarks>
     /// D-08/D-09: the fast path below (outside the lock) skips the fetch entirely when
@@ -882,8 +911,9 @@ public sealed class JwksVerifier
 
         // CONTRACT.md §12.4 rule 2 (audit C5): an unknown kid on an otherwise fresh cache is
         // rejected from the cached set, with no network call, while a re-fetch caused by an
-        // earlier unknown kid is still inside its cooldown window.
-        if (!CacheExpired() && UnknownKidCoolingDown())
+        // earlier unknown kid is still inside its cooldown window. The same window bounds a
+        // failing endpoint: one attempt per window, not one per token.
+        if ((!CacheExpired() && UnknownKidCoolingDown()) || FailedRefreshCoolingDown())
             return;
 
         await _fetchLock.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -891,6 +921,9 @@ public sealed class JwksVerifier
         {
             if (IsFresh(unknownKid))
                 return; // another caller already refreshed while we waited for the lock
+
+            if (FailedRefreshCoolingDown())
+                return; // another caller's attempt just failed: it counts for this one too
 
             if (!CacheExpired())
             {
@@ -903,20 +936,15 @@ public sealed class JwksVerifier
                 Interlocked.Exchange(ref _lastUnknownKidRefetchTicks, CacheNow().UtcTicks);
             }
 
-            JwksDocument? document = await _http.GetFromJsonAsync<JwksDocument>(_jwksUri, cancellationToken).ConfigureAwait(false);
-            if (document is null)
-                return;
-
-            var map = new Dictionary<string, byte[]>();
-            foreach (Jwk jwk in document.Keys)
+            bool succeeded = await TryRefreshAsync(cancellationToken).ConfigureAwait(false);
+            if (succeeded)
             {
-                if (jwk.Kty != "OKP" || jwk.Crv != "Ed25519")
-                    continue; // ignore non-EdDSA entries defensively — alg is pinned by the caller too
-                map[jwk.Kid] = Base64UrlDecode(jwk.X); // raw 32-byte Ed25519 public key
+                Interlocked.Exchange(ref _lastFailedRefreshTicks, -1);
             }
-
-            _keysByKid = map;
-            _fetchedAt = CacheNow();
+            else
+            {
+                Interlocked.Exchange(ref _lastFailedRefreshTicks, CacheNow().UtcTicks);
+            }
         }
         finally
         {
@@ -924,7 +952,137 @@ public sealed class JwksVerifier
         }
     }
 
-    private bool CacheExpired() => CacheNow() - _fetchedAt > _cacheTtl;
+    /// <summary>
+    /// One refresh. <c>true</c> only for a successful fetch (CONTRACT.md &#167;12.4 rule 2): a <c>200</c> whose body is a
+    /// JWKS document with at least one usable key, or a <c>304</c> answering a conditional request. Anything else —
+    /// a transport error or timeout, another status, a body that is not a JWKS document, an empty key set — is
+    /// <c>false</c> and changes nothing: the held keys and the anchor stay as they were. Called under
+    /// <see cref="_fetchLock"/>.
+    /// </summary>
+    private async Task<bool> TryRefreshAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            bool conditional = _etag is not null && _keysByKid.Count > 0;
+            using var request = new HttpRequestMessage(HttpMethod.Get, _jwksUri);
+            if (conditional)
+            {
+                request.Headers.TryAddWithoutValidation("If-None-Match", _etag);
+            }
+
+            using HttpResponseMessage response = await _http.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested(); // the caller's cancellation is theirs, whatever came back
+
+            if (response.StatusCode == HttpStatusCode.NotModified)
+            {
+                if (!conditional)
+                    return false; // a 304 to a request that was not conditional confirms nothing
+
+                _cacheTtl = EffectiveTtl(response);
+                _fetchedAt = CacheNow(); // the 304 re-confirms the held set and moves the anchor
+                return true;
+            }
+
+            if (response.StatusCode != HttpStatusCode.OK)
+                return false;
+
+            // Only a JWKS document is a success: a JSON object whose `keys` array holds at least one JWK object
+            // (a JSON object with a string `kty`). `{"keys":[]}`, `{"keys":[{}]}`, `[0]`, `[null]` and a non-JWKS
+            // body are failed refreshes. A set of valid JWKs none of which is of this SDK's algorithm is a success
+            // per the contract: it is adopted, and verifies nothing.
+            byte[] content = await response.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+            using JsonDocument parsed = JsonDocument.Parse(content);
+            if (parsed.RootElement.ValueKind != JsonValueKind.Object ||
+                !parsed.RootElement.TryGetProperty("keys", out JsonElement keysEl) ||
+                keysEl.ValueKind != JsonValueKind.Array)
+                return false;
+
+            var map = new Dictionary<string, byte[]>();
+            int validJwks = 0;
+            foreach (JsonElement entry in keysEl.EnumerateArray())
+            {
+                if (entry.ValueKind != JsonValueKind.Object ||
+                    !entry.TryGetProperty("kty", out JsonElement kty) || kty.ValueKind != JsonValueKind.String)
+                    continue;
+                validJwks++;
+                if (kty.GetString() != "OKP" ||
+                    !entry.TryGetProperty("crv", out JsonElement crv) || crv.ValueKind != JsonValueKind.String || crv.GetString() != "Ed25519" ||
+                    !entry.TryGetProperty("kid", out JsonElement kid) || kid.ValueKind != JsonValueKind.String ||
+                    !entry.TryGetProperty("x", out JsonElement x) || x.ValueKind != JsonValueKind.String)
+                    continue; // not an EdDSA key (alg is pinned by the caller too) or unusable
+                try
+                {
+                    map[kid.GetString()!] = Base64UrlDecode(x.GetString()!); // raw 32-byte Ed25519 public key
+                }
+                catch (FormatException)
+                {
+                    // an unusable key is skipped; it still counted as a JWK
+                }
+            }
+
+            if (validJwks == 0)
+                return false; // no JWK at all: not a JWKS document (the empty set is a failure, not a replacement)
+
+            _keysByKid = map;
+            _etag = SafeEtag(response.Headers.ETag?.ToString());
+            _cacheTtl = EffectiveTtl(response);
+            _fetchedAt = CacheNow();
+            return true;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw; // the caller's own cancellation is theirs to see
+        }
+        catch (Exception)
+        {
+            return false; // transport error, timeout, a body that is not a JWKS document, a bad key
+        }
+    }
+
+    /// <summary>An ETag worth echoing as <c>If-None-Match</c>: at most 256 bytes, no control character. Anything else
+    /// is not stored (the next refresh is unconditional).</summary>
+    private static string? SafeEtag(string? etag)
+    {
+        if (string.IsNullOrEmpty(etag) || etag.Length > 256)
+            return null;
+        foreach (char c in etag)
+        {
+            if (c < 0x20 || c == 0x7f || c > 0x7e)
+                return null;
+        }
+        return etag;
+    }
+
+    /// <summary>The TTL for a freshly fetched set: the configured one when set; otherwise the advertised
+    /// <c>Cache-Control: max-age</c>, clamped to 300 s (&#167;12.4 rule 2), else the 300 s default.</summary>
+    private TimeSpan EffectiveTtl(HttpResponseMessage response)
+    {
+        if (_ttlConfigured)
+            return _configuredTtl;
+        TimeSpan? advertised = response.Headers.CacheControl?.MaxAge;
+        if (advertised is not { } maxAge || maxAge <= TimeSpan.Zero)
+            return _configuredTtl;
+        return maxAge > MaxCacheTtl ? MaxCacheTtl : maxAge;
+    }
+
+    /// <summary>
+    /// The held key for <paramref name="kid"/>, or <c>false</c> when the set does not contain it OR the stale bound
+    /// has passed: while no refresh has succeeded, held keys verify until exactly TTL + <see cref="StaleBound"/>
+    /// after the last successful fetch and not after, whatever the cause and however many attempts failed.
+    /// </summary>
+    private bool TryGetHeldKey(string kid, out byte[]? rawPublicKey)
+    {
+        rawPublicKey = null;
+        if (CacheNow() - _fetchedAt > _cacheTtl + StaleBound)
+            return false;
+        return _keysByKid.TryGetValue(kid, out rawPublicKey);
+    }
+
+    private bool CacheExpired()
+    {
+        TimeSpan age = CacheNow() - _fetchedAt;
+        return age < TimeSpan.Zero || age > _cacheTtl; // a clock that moved backwards: refresh due, never fresh
+    }
 
     private bool UnknownKidCoolingDown()
     {
@@ -932,9 +1090,15 @@ public sealed class JwksVerifier
         return last >= 0 && CacheNow().UtcTicks - last < UnknownKidRefetchCooldown.Ticks;
     }
 
+    private bool FailedRefreshCoolingDown()
+    {
+        long last = Interlocked.Read(ref _lastFailedRefreshTicks);
+        return last >= 0 && CacheNow().UtcTicks - last < UnknownKidRefetchCooldown.Ticks;
+    }
+
     private bool IsFresh(string kid)
     {
-        bool expired = CacheNow() - _fetchedAt > _cacheTtl;
+        bool expired = CacheExpired();
         bool unknown = !_keysByKid.ContainsKey(kid);
         return !expired && !unknown;
     }

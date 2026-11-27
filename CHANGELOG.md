@@ -48,7 +48,7 @@ organization member, one description moved), which changes no operation.
   (compared case-insensitively, with or without `application/`; a header with no `typ` is not refused by this
   rule) and any token whose claim set contains a `purpose` member (the MFA-challenge and WebAuthn-state tokens).
   Rule 12 (`kid` required, no single-key fallback) was already enforced and is pinned by a test.
-- `JwksCacheTtl` is clamped: above 10 minutes becomes 10 minutes, zero or negative becomes the 5-minute default.
+- `JwksCacheTtl` is clamped: above 300 s becomes 300 s (contract 1.69, see Fixed; earlier 1.4.0 drafts clamped to 10 minutes), zero or negative becomes the 300 s default.
   `OidcExchangeAsync` refuses an empty expected nonce (`AuthError`,
   `nonce_mismatch`) before the code is spent; the ID-token validator no longer treats an empty expectation as a
   match for `"nonce": ""`.
@@ -62,6 +62,29 @@ organization member, one description moved), which changes no operation.
   server use REST or gRPC authorization.
 
 ### Fixed
+
+- **Cross-SDK alignment, wave B2 (OI-35; axiam#883; owner decisions D-8, D-9, D-10; contract 1.69).**
+  - **D-8, the discard event.** `AxiamAmqpConsumer` logs, for every discard, exactly one warning with `timestamp`,
+    `exchange`, `routing_key`, `tenant_id` (the consumer's own configured tenant, never read from the body) and `reason`
+    (`malformed`, `unsigned`, `signature`, `key_version`, `stale`, `replay`), in the normative order of §8 rule 4; no
+    signature, nonce, key or body is logged. The reason now distinguishes the v2 gates.
+  - **D-9, typed consume (breaking).** `StartAsync` takes `AmqpEventType eventType` and `string tenantId`. The consumer
+    checks the canonical bytes against that type's layout only; a body with the other signed type's layout (a genuine
+    signed `audit_event` on an `AuthzRequest` consumer, or the reverse) is refused as `malformed` before the HMAC and
+    never reaches the handler. The match-any-layout check is gone. The verified bytes must decode into the type (UUID
+    members, an integer `key_version`, an RFC 3339 `issued_at`) or the body is `malformed`, after the HMAC and before
+    the `key_version`, freshness and replay gates; a nonce is recorded only after every gate passes.
+  - **D-10, BOM and no escape.** The event consumer and the `AxiamAuthzRequester` refuse a body whose first byte is not
+    `{` (a byte-order mark, whitespace, an empty body) as `malformed`, never strip it, and let nothing thrown while
+    handling a delivery (a failing nack, a throwing logger) leave the delivery loop. The requester already refused a
+    byte-order mark; it now refuses other prefixes as `malformed` too.
+  - **D-10, JWKS stale-if-error (§12.4 rule 2).** `JwksVerifier`'s TTL is the configured one (a set value wins), else the response's
+    `Cache-Control: max-age`, at most 300 s (was 10 minutes), default 300 s. Its age runs from the last successful fetch
+    (a `200` with at least one key, or a `304` to the `If-None-Match` refresh). A failed refresh (transport error, other
+    status, non-JWKS body, an empty key set) no longer discards the held keys (it used to refuse every token) and never
+    moves the age; held keys verify until exactly TTL + 300 s, then every token is refused until a fetch succeeds. A
+    failed attempt counts toward the 60 s re-fetch window. A configured `JwksCacheTtl` above 300 s emits one
+    `config_clamped` event at construction.
 
 - **AMQP alignment with contract 1.69 §8 (OI-13, axiam#882, axiam#883).** `AxiamAuthzRequester` now picks the discard
   reason in the contract's normative order: a body with no `hmac_signature` member is `unsigned` whatever else is
@@ -133,7 +156,11 @@ organization member, one description moved), which changes no operation.
   gRPC identity resolution, answers 401. Test fixtures that minted `typ: JWT` must use `at+jwt`.
 - **Cookie policy.** The binding cookie is `IsEssential` (consent-gated apps now sign in). A cookie policy that forces
   `SameSite=Strict` still breaks the callback, which is a cross-site top-level navigation; keep `Lax`.
-- **`JwksCacheTtl`** above 10 minutes is now 10 minutes.
+- **`JwksCacheTtl`** above 300 s (5 minutes) is now 300 s, and one `config_clamped` telemetry event is emitted when the
+  client is constructed with such a value (contract 1.69, §12.4 rule 2).
+- **`AxiamAmqpConsumer.StartAsync`** takes the one signed type it consumes (`AmqpEventType`) and the consumer's own
+  tenant id, both required, beside the key (contract 1.69, §8 step 2c and rule 4). A consumer that fed both
+  `AuthzRequest` and `AuditEventMessage` to one handler must be split into two typed consumers.
 - **`OidcExchangeAsync`** with an empty `Nonce` now throws `AuthError` instead of accepting an ID token that carries
   an empty nonce.
 ### Added

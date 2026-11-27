@@ -24,7 +24,7 @@ namespace Axiam.Sdk.Tests;
 /// <c>BasicAckAsync</c>/<c>BasicNackAsync(tag, multiple, requeue)</c> calls)
 /// and synthesized <see cref="BasicDeliverEventArgs"/> instances. The
 /// delegate under test is obtained via
-/// <see cref="AxiamAmqpConsumer.CreateReceivedHandler"/> and invoked
+/// <see cref="AxiamAmqpConsumer.CreateReceivedHandler"/> (through <c>NewHandler</c>) and invoked
 /// directly — no live broker is involved.
 ///
 /// <para>
@@ -41,6 +41,19 @@ public class AmqpConsumerTests
     private static readonly string FixturePath =
         Path.Combine(AppContext.BaseDirectory, "Fixtures", "amqp_hmac_vectors.json");
 
+    /// <summary>The configured tenant of every consumer under test: the <c>tenant_id</c> of each discard event.</summary>
+    private const string ConsumerTenant = "99999999-9999-9999-9999-999999999999";
+
+    private static AsyncEventHandler<BasicDeliverEventArgs> NewHandler(
+        IChannel channel,
+        byte[] key,
+        Func<byte[], CancellationToken, Task> handler,
+        ILogger logger,
+        ReplayGuard guard,
+        AmqpEventType type = AmqpEventType.AuthzRequest,
+        TimeProvider? clock = null) =>
+        AxiamAmqpConsumer.CreateReceivedHandler(channel, type, ConsumerTenant, "axiam.queue", key, handler, logger, guard, CancellationToken.None, clock);
+
     private sealed record AckNackCall(string Type, ulong DeliveryTag, bool Multiple, bool Requeue);
 
     /// <summary>
@@ -51,6 +64,9 @@ public class AmqpConsumerTests
     private sealed class RecordingLogger : ILogger
     {
         public List<string> Warnings { get; } = new();
+
+        /// <summary>Every warning's structured members.</summary>
+        public List<Dictionary<string, string>> Events { get; } = new();
 
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
 
@@ -66,6 +82,15 @@ public class AmqpConsumerTests
             if (logLevel == LogLevel.Warning)
             {
                 Warnings.Add(formatter(state, exception));
+                var members = new Dictionary<string, string>();
+                if (state is IEnumerable<KeyValuePair<string, object?>> pairs)
+                {
+                    foreach (KeyValuePair<string, object?> pair in pairs)
+                    {
+                        members[pair.Key] = Convert.ToString(pair.Value, CultureInfo.InvariantCulture) ?? string.Empty;
+                    }
+                }
+                Events.Add(members);
             }
         }
     }
@@ -155,7 +180,7 @@ public class AmqpConsumerTests
         (Mock<IChannel> channelMock, List<AckNackCall> calls) = FakeChannel();
         bool handlerInvoked = false;
 
-        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
             channelMock.Object,
             signingKey,
             (_, _) =>
@@ -185,7 +210,7 @@ public class AmqpConsumerTests
         var logger = new RecordingLogger();
         bool handlerInvoked = false;
 
-        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
             channelMock.Object,
             signingKey,
             (_, _) =>
@@ -219,7 +244,7 @@ public class AmqpConsumerTests
         (byte[] signingKey, byte[] validBody, _, _) = LoadHmacFixtureBodies();
         (Mock<IChannel> channelMock, List<AckNackCall> calls) = FakeChannel();
 
-        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
             channelMock.Object,
             signingKey,
             (_, _) => throw new PoisonMessageException("poison message"),
@@ -243,7 +268,7 @@ public class AmqpConsumerTests
         (byte[] signingKey, byte[] validBody, _, _) = LoadHmacFixtureBodies();
         (Mock<IChannel> channelMock, List<AckNackCall> calls) = FakeChannel();
 
-        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
             channelMock.Object,
             signingKey,
             (_, _) => throw new InvalidOperationException("transient downstream failure"),
@@ -294,7 +319,7 @@ public class AmqpConsumerTests
         var logger = new RecordingLogger();
         bool handlerInvoked = false;
 
-        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
             channelMock.Object,
             signingKey,
             (_, _) =>
@@ -329,7 +354,7 @@ public class AmqpConsumerTests
         // is authentic (HMAC verifies) but stale.
         ReplayGuard guard = NewGuard(clock: () => FixtureIssuedAt.AddDays(1));
 
-        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
             channelMock.Object,
             signingKey,
             (_, _) =>
@@ -363,7 +388,7 @@ public class AmqpConsumerTests
         // a fresh guard were built per delivery.
         ReplayGuard guard = NewGuard();
 
-        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
             channelMock.Object,
             signingKey,
             (_, _) =>
@@ -402,7 +427,7 @@ public class AmqpConsumerTests
         byte[] wire = SignedWire(HmacVerifyTests.SpecialCharsSigned);
         byte[]? seen = null;
 
-        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
             channelMock.Object,
             ReceivedBytesKey,
             (body, _) =>
@@ -446,7 +471,7 @@ public class AmqpConsumerTests
             body = SignedWire(HmacVerifyTests.SpecialCharsSigned).Concat(Encoding.UTF8.GetBytes("\n{}")).ToArray();
         }
 
-        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
             channelMock.Object,
             ReceivedBytesKey,
             (_, _) =>
@@ -478,7 +503,7 @@ public class AmqpConsumerTests
         byte[] wire = SignedWire("""{"key_version":2,"nonce":"n1","issued_at":"2026-07-10T12:00:00Z"}""");
         Assert.True(Hmac.Verify(ReceivedBytesKey, wire), "the message must be genuinely signed");
 
-        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
             channelMock.Object,
             ReceivedBytesKey,
             (_, _) =>
@@ -499,16 +524,16 @@ public class AmqpConsumerTests
     }
 
     [Theory]
-    [InlineData("""{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"a","resource_id":"r","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z"}""")]
-    [InlineData("""{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"a","resource_id":"r","scope":"x","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z"}""")]
-    [InlineData("""{"tenant_id":"t","actor_id":"a","actor_type":"user","action":"x","outcome":"success","key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z"}""")]
-    [InlineData("""{"tenant_id":"t","actor_id":"a","actor_type":"user","action":"x","resource_id":"r","outcome":"success","ip_address":"1.2.3.4","metadata":{"k":"v"},"key_version":2,"nonce":"n","issued_at":"2026-07-10T12:00:00Z"}""")]
-    public async Task TheAuthzRequestAndAuditEventLayouts_ReachTheHandler(string signed)
+    [InlineData(AmqpEventType.AuthzRequest, """{"correlation_id":"11111111-1111-1111-1111-111111111111","tenant_id":"22222222-2222-2222-2222-222222222222","subject_id":"33333333-3333-3333-3333-333333333333","action":"a","resource_id":"44444444-4444-4444-4444-444444444444","key_version":2,"nonce":"55555555-5555-5555-5555-555555555555","issued_at":"2026-07-10T12:00:00Z"}""")]
+    [InlineData(AmqpEventType.AuthzRequest, """{"correlation_id":"11111111-1111-1111-1111-111111111111","tenant_id":"22222222-2222-2222-2222-222222222222","subject_id":"33333333-3333-3333-3333-333333333333","action":"a","resource_id":"44444444-4444-4444-4444-444444444444","scope":"x","key_version":2,"nonce":"55555555-5555-5555-5555-555555555555","issued_at":"2026-07-10T12:00:00Z"}""")]
+    [InlineData(AmqpEventType.AuditEvent, """{"tenant_id":"22222222-2222-2222-2222-222222222222","actor_id":"33333333-3333-3333-3333-333333333333","actor_type":"user","action":"x","outcome":"success","key_version":2,"nonce":"55555555-5555-5555-5555-555555555555","issued_at":"2026-07-10T12:00:00Z"}""")]
+    [InlineData(AmqpEventType.AuditEvent, """{"tenant_id":"22222222-2222-2222-2222-222222222222","actor_id":"33333333-3333-3333-3333-333333333333","actor_type":"user","action":"x","resource_id":"44444444-4444-4444-4444-444444444444","outcome":"success","ip_address":"1.2.3.4","metadata":{"k":"v"},"key_version":2,"nonce":"55555555-5555-5555-5555-555555555555","issued_at":"2026-07-10T12:00:00Z"}""")]
+    public async Task TheConfiguredTypesLayout_ReachesTheHandler(AmqpEventType type, string signed)
     {
         (Mock<IChannel> channelMock, List<AckNackCall> calls) = FakeChannel();
         bool handlerInvoked = false;
 
-        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
             channelMock.Object,
             ReceivedBytesKey,
             (_, _) =>
@@ -517,7 +542,8 @@ public class AmqpConsumerTests
                 return Task.CompletedTask;
             },
             new RecordingLogger(),
-            NewGuard());
+            NewGuard(),
+            type);
 
         await received(new object(), Delivery(9, SignedWire(signed)));
 
@@ -536,14 +562,15 @@ public class AmqpConsumerTests
     private static byte[] FixtureSubkey() =>
         Convert.FromHexString(JsonNode.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Fixtures", "v2_reference_vectors.json")))!["hkdf"]!["derived_subkey_hex"]!.GetValue<string>());
 
-    private static async Task<(bool HandlerRan, byte[]? Seen, List<AckNackCall> Calls, RecordingLogger Logger)> Feed(byte[] key, byte[] body)
+    private static async Task<(bool HandlerRan, byte[]? Seen, List<AckNackCall> Calls, RecordingLogger Logger)> Feed(
+        byte[] key, byte[] body, AmqpEventType type = AmqpEventType.AuthzRequest)
     {
         (Mock<IChannel> channelMock, List<AckNackCall> calls) = FakeChannel();
         var logger = new RecordingLogger();
         bool ran = false;
         byte[]? seen = null;
-        AsyncEventHandler<BasicDeliverEventArgs> received = AxiamAmqpConsumer.CreateReceivedHandler(
-            channelMock.Object, key, (b, _) => { ran = true; seen = b; return Task.CompletedTask; }, logger, NewGuard());
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
+            channelMock.Object, key, (b, _) => { ran = true; seen = b; return Task.CompletedTask; }, logger, NewGuard(), type);
         await received(new object(), Delivery(40, body));
         return (ran, seen, calls, logger);
     }
@@ -559,9 +586,10 @@ public class AmqpConsumerTests
         Assert.True(SignedJson.TryCutTrailingSignature(wire, 64, out byte[]? canonical, out _));
         Assert.Equal(vector["canonical_signed_json"]!.GetValue<string>(), Encoding.UTF8.GetString(canonical!));
         Assert.True(Hmac.Verify(FixtureSubkey(), wire));
-        Assert.True(SignedJson.MatchesSignedLayout(canonical!));
+        AmqpEventType type = name == "authz_request" ? AmqpEventType.AuthzRequest : AmqpEventType.AuditEvent;
+        Assert.True(SignedJson.MatchesLayout(canonical!, type));
 
-        (bool ran, byte[]? seen, List<AckNackCall> calls, _) = await Feed(FixtureSubkey(), wire);
+        (bool ran, byte[]? seen, List<AckNackCall> calls, _) = await Feed(FixtureSubkey(), wire, type);
 
         Assert.True(ran);
         Assert.Equal(wire, seen);
@@ -626,11 +654,225 @@ public class AmqpConsumerTests
     [Fact]
     public async Task AGenuineMessageWithAngleBracketsAmpersandNonAsciiAndAUnicodeEscape_VerifiesAndDispatches()
     {
-        const string signed = """{"correlation_id":"c","tenant_id":"t","subject_id":"s","action":"<a>&b \u00e9 é \u001f","resource_id":"r","key_version":2,"nonce":"n9","issued_at":"2026-07-10T12:00:00Z"}""";
+        const string signed = """{"correlation_id":"11111111-1111-1111-1111-111111111111","tenant_id":"22222222-2222-2222-2222-222222222222","subject_id":"33333333-3333-3333-3333-333333333333","action":"<a>&b \u00e9 é \u001f","resource_id":"44444444-4444-4444-4444-444444444444","key_version":2,"nonce":"55555555-5555-5555-5555-555555555555","issued_at":"2026-07-10T12:00:00Z"}""";
 
         (bool ran, _, List<AckNackCall> calls, _) = await Feed(ReceivedBytesKey, SignedWire(signed));
 
         Assert.True(ran);
         Assert.Equal("ack", Assert.Single(calls).Type);
+    }
+
+    // ---- contract 1.69 D-8 / D-9 / D-10: typed consume, the discard event, BOM refusal ------------------------------
+
+    private static string Wire(string vector) =>
+        FixtureVector(vector)["wire_json"]!.GetValue<string>();
+
+    private static string FlipLastSignatureDigit(string wireJson)
+    {
+        int end = wireJson.LastIndexOf("\"}", StringComparison.Ordinal);
+        char c = wireJson[end - 1];
+        return wireJson[..(end - 1)] + (c == '0' ? '1' : '0') + wireJson[end..];
+    }
+
+    private static string Field(Dictionary<string, string> evt, string name) => evt[name];
+
+    [Theory]
+    [InlineData("audit_event", AmqpEventType.AuthzRequest, false)]
+    [InlineData("authz_request", AmqpEventType.AuditEvent, false)]
+    [InlineData("audit_event", AmqpEventType.AuthzRequest, true)]
+    [InlineData("authz_request", AmqpEventType.AuditEvent, true)]
+    public async Task TheOtherTypesGenuineSignedWireJson_IsRefusedAsMalformed_BeforeTheHmac_EvenWithASignatureDigitChanged(
+        string vector, AmqpEventType configured, bool flipped)
+    {
+        string wire = flipped ? FlipLastSignatureDigit(Wire(vector)) : Wire(vector);
+        string signature = FixtureVector(vector)["hmac_signature_hex"]!.GetValue<string>();
+
+        (bool ran, _, List<AckNackCall> calls, RecordingLogger logger) = await Feed(FixtureSubkey(), Encoding.UTF8.GetBytes(wire), configured);
+
+        Assert.False(ran, "a body with another signed type's layout is never handed to the application");
+        AckNackCall call = Assert.Single(calls);
+        Assert.Equal("nack", call.Type);
+        Assert.False(call.Requeue);
+        Dictionary<string, string> evt = Assert.Single(logger.Events);
+        Assert.Equal("malformed", Field(evt, "reason")); // not "signature": the typed check precedes the HMAC
+        Assert.Equal("axiam.authz.request", Field(evt, "exchange"));
+        Assert.Equal("authz.request", Field(evt, "routing_key"));
+        Assert.Equal(ConsumerTenant, Field(evt, "tenant_id"));
+        Assert.Contains("timestamp", evt.Keys);
+        AssertNoSecrets(logger, signature, FixtureVector(vector)["message"]!["nonce"]!.GetValue<string>());
+    }
+
+    private static void AssertNoSecrets(RecordingLogger logger, string signatureHex, string nonce)
+    {
+        Assert.All(logger.Warnings, w =>
+        {
+            Assert.DoesNotContain(signatureHex, w);
+            Assert.DoesNotContain(nonce, w);
+        });
+        Assert.All(logger.Events, e =>
+            Assert.Equal(
+                new[] { "exchange", "reason", "routing_key", "tenant_id", "timestamp" },
+                e.Keys.Where(k => !k.StartsWith('{')).OrderBy(k => k, StringComparer.Ordinal).ToArray()));
+    }
+
+    [Theory]
+    [InlineData("authz_request", AmqpEventType.AuthzRequest)]
+    [InlineData("audit_event", AmqpEventType.AuditEvent)]
+    public async Task EachVectorIsAcceptedByItsOwnTypedConsumer(string vector, AmqpEventType configured)
+    {
+        (bool ran, _, List<AckNackCall> calls, RecordingLogger logger) = await Feed(FixtureSubkey(), Encoding.UTF8.GetBytes(Wire(vector)), configured);
+
+        Assert.True(ran);
+        Assert.Equal("ack", Assert.Single(calls).Type);
+        Assert.Empty(logger.Warnings);
+    }
+
+    [Theory]
+    [InlineData("authz_request", AmqpEventType.AuthzRequest)]
+    [InlineData("audit_event", AmqpEventType.AuditEvent)]
+    public async Task ABomPrefixedVector_IsRefusedAsMalformed_NeverStripped_NoExceptionEscapes_AndTheNextDeliveryIsProcessed(
+        string vector, AmqpEventType configured)
+    {
+        (Mock<IChannel> channelMock, List<AckNackCall> calls) = FakeChannel();
+        var logger = new RecordingLogger();
+        int handled = 0;
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
+            channelMock.Object, FixtureSubkey(), (_, _) => { handled++; return Task.CompletedTask; }, logger, NewGuard(), configured);
+
+        byte[] good = Encoding.UTF8.GetBytes(Wire(vector));
+        byte[] withBom = new byte[] { 0xEF, 0xBB, 0xBF }.Concat(good).ToArray();
+
+        await received(new object(), Delivery(50, withBom)); // must not throw
+        await received(new object(), Delivery(51, good));
+
+        Assert.Equal(1, handled); // only the genuine one, and still processed after the BOM body
+        Assert.Equal("nack", calls[0].Type);
+        Assert.False(calls[0].Requeue);
+        Assert.Equal("ack", calls[1].Type);
+        Assert.Equal("malformed", Assert.Single(logger.Events)["reason"]);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("\r\n")]
+    public async Task AnEmptyOrWhitespacePrefixedBody_IsRefusedAsMalformed(string prefix)
+    {
+        byte[] body = prefix.Length == 0 ? Array.Empty<byte>() : Encoding.ASCII.GetBytes(prefix + Wire("authz_request"));
+
+        (bool ran, _, List<AckNackCall> calls, RecordingLogger logger) = await Feed(FixtureSubkey(), body);
+
+        Assert.False(ran);
+        Assert.False(Assert.Single(calls).Requeue);
+        Assert.Equal("malformed", Assert.Single(logger.Events)["reason"]);
+    }
+
+    [Fact]
+    public async Task AnEmptyRoutingKey_IsReportedAsReported_NotReplacedByTheQueue()
+    {
+        (Mock<IChannel> channelMock, _) = FakeChannel();
+        var logger = new RecordingLogger();
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(channelMock.Object, ReceivedBytesKey, (_, _) => Task.CompletedTask, logger, NewGuard());
+
+        await received(new object(), new BasicDeliverEventArgs("t", 80, false, "", "", new BasicProperties(), Encoding.UTF8.GetBytes("x"), CancellationToken.None));
+
+        Dictionary<string, string> evt = Assert.Single(logger.Events);
+        Assert.Equal(string.Empty, evt["exchange"]);
+        Assert.Equal(string.Empty, evt["routing_key"]);
+    }
+
+    [Fact]
+    public async Task AFailingNack_AndAThrowingLogger_DoNotEscapeTheDeliveryLoop()
+    {
+        var mock = new Mock<IChannel>();
+        mock.Setup(c => c.BasicNackAsync(It.IsAny<ulong>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            .Throws(new InvalidOperationException("channel closed"));
+        var logger = new Mock<ILogger>();
+        logger.Setup(l => l.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
+        logger.Setup(l => l.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception?>(),
+            (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>())).Throws(new InvalidOperationException("sink down"));
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
+            mock.Object, FixtureSubkey(), (_, _) => Task.CompletedTask, logger.Object, NewGuard());
+
+        await received(new object(), Delivery(60, Encoding.UTF8.GetBytes("garbage"))); // must not throw
+    }
+
+    // The reason order of §8 rule 4, one probe per position.
+
+    private static string AuthzCanonical(string key = "2", string issuedAt = "2026-07-10T12:00:00Z", string nonce = "55555555-5555-5555-5555-555555555555") =>
+        $$"""{"correlation_id":"11111111-1111-1111-1111-111111111111","tenant_id":"22222222-2222-2222-2222-222222222222","subject_id":"33333333-3333-3333-3333-333333333333","action":"read","resource_id":"44444444-4444-4444-4444-444444444444","key_version":{{key}},"nonce":"{{nonce}}","issued_at":"{{issuedAt}}"}""";
+
+    public static IEnumerable<object[]> ReasonOrder()
+    {
+        string good = AuthzCanonical();
+        yield return new object[] { "malformed", Encoding.UTF8.GetBytes("{not json") };
+        yield return new object[] { "malformed", Encoding.UTF8.GetBytes(good + " trailing") };
+        yield return new object[] { "unsigned", Encoding.UTF8.GetBytes(good) };
+        // unsigned wins over a duplicate member (position 2 before 3)
+        yield return new object[] { "unsigned", Encoding.UTF8.GetBytes(good[..^1] + ",\"action\":\"x\"}") };
+        yield return new object[] { "malformed", SignedWire(good[..^1] + ",\"extra\":1}") }; // layout
+        yield return new object[] { "signature", WrongKey(good) };
+        yield return new object[] { "malformed", SignedWire(AuthzCanonical(nonce: "not-a-uuid")) }; // decode, after the HMAC
+        yield return new object[] { "malformed", SignedWire(AuthzCanonical(issuedAt: "yesterday")) };
+        yield return new object[] { "malformed", SignedWire(AuthzCanonical(key: "\"2\"")) };
+        yield return new object[] { "key_version", SignedWire(AuthzCanonical(key: "1")) };
+        yield return new object[] { "stale", SignedWire(AuthzCanonical(issuedAt: "2026-07-10T11:00:00Z")) };
+    }
+
+    private static byte[] WrongKey(string canonical) =>
+        Encoding.UTF8.GetBytes(canonical[..^1] + ",\"hmac_signature\":\"" + new string('a', 64) + "\"}");
+
+    [Theory]
+    [MemberData(nameof(ReasonOrder))]
+    public async Task EveryDiscard_LogsOneEventWithTheFirstReasonThatApplies(string reason, byte[] body)
+    {
+        (bool ran, _, List<AckNackCall> calls, RecordingLogger logger) = await Feed(ReceivedBytesKey, body);
+
+        Assert.False(ran);
+        Assert.False(Assert.Single(calls).Requeue);
+        Dictionary<string, string> evt = Assert.Single(logger.Events);
+        Assert.Equal(reason, evt["reason"]);
+        Assert.Equal(ConsumerTenant, evt["tenant_id"]); // never read from the body
+        Assert.Equal("axiam.authz.request", evt["exchange"]);
+        Assert.Equal("authz.request", evt["routing_key"]);
+        Assert.DoesNotContain("55555555-5555-5555-5555-555555555555", logger.Warnings[0]);
+        Assert.DoesNotContain("22222222-2222-2222-2222-222222222222", logger.Warnings[0]); // the body's tenant, not ours
+        Assert.Contains("timestamp", evt.Keys);
+        Assert.Equal(
+            new[] { "exchange", "reason", "routing_key", "tenant_id", "timestamp" },
+            evt.Keys.Where(k => !k.StartsWith('{')).OrderBy(k => k, StringComparer.Ordinal).ToArray());
+        Assert.DoesNotContain(new string('a', 64), logger.Warnings[0]);
+    }
+
+    [Fact]
+    public async Task ANonceIsRecordedOnlyAfterEveryGatePasses_AndAReplayIsReportedAsReplay()
+    {
+        (Mock<IChannel> channelMock, List<AckNackCall> calls) = FakeChannel();
+        var logger = new RecordingLogger();
+        int handled = 0;
+        ReplayGuard guard = NewGuard();
+        AsyncEventHandler<BasicDeliverEventArgs> received = NewHandler(
+            channelMock.Object, ReceivedBytesKey, (_, _) => { handled++; return Task.CompletedTask; }, logger, guard);
+
+        // Refused at the key_version gate: leaves no nonce behind...
+        await received(new object(), Delivery(70, SignedWire(AuthzCanonical(key: "1"))));
+        // ...so the same nonce under key_version 2 is not a replay.
+        await received(new object(), Delivery(71, SignedWire(AuthzCanonical())));
+        await received(new object(), Delivery(72, SignedWire(AuthzCanonical())));
+
+        Assert.Equal(1, handled);
+        Assert.Equal(new[] { "key_version", "replay" }, logger.Events.Select(e => e["reason"]).ToArray());
+        Assert.Equal(new[] { "nack", "ack", "nack" }, calls.Select(c => c.Type).ToArray());
+    }
+
+    [Fact]
+    public void TheConsumerTakesItsTypeAndTenant_ThereIsNoMatchAnyLayout()
+    {
+        System.Reflection.MethodInfo start = typeof(AxiamAmqpConsumer).GetMethod(nameof(AxiamAmqpConsumer.StartAsync))!;
+        string[] names = start.GetParameters().Select(p => p.Name!).ToArray();
+        Assert.Contains("eventType", names);
+        Assert.Contains("tenantId", names);
+        Assert.DoesNotContain(typeof(SignedJson).GetMethods(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic),
+            m => m.Name == "MatchesSignedLayout");
     }
 }

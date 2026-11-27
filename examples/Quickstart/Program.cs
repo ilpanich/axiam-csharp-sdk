@@ -109,7 +109,10 @@ try
 
     // The handler is invoked ONLY after Hmac.Verify succeeds — it never sees an
     // unverified message (§8, D-11).
-    await amqpConsumer.StartAsync(amqpUri, "axiam.audit.events", signingKey, async (body, ct) =>
+    // The consumer is typed (§8 step 2c): one signed type per consumer, and the tenant whose subkey it holds,
+    // which is the tenant_id of every discard event. Consume both types with two consumers.
+    string amqpTenantId = Environment.GetEnvironmentVariable("AXIAM_TENANT_ID") ?? "00000000-0000-0000-0000-000000000000";
+    await amqpConsumer.StartAsync(amqpUri, "axiam.audit.events", AmqpEventType.AuditEvent, amqpTenantId, signingKey, async (body, ct) =>
     {
         Console.WriteLine($"Verified AMQP event received ({body.Length} bytes).");
         await Task.CompletedTask;

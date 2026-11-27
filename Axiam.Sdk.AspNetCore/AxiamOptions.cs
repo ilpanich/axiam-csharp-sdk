@@ -63,8 +63,8 @@ public sealed class AxiamOptions
     /// <summary>How long a fetched JWKS document is trusted before
     /// <see cref="AxiamClient"/>'s <c>JwksVerifier</c> forces a refetch — governs how
     /// quickly <see cref="AxiamAuthMiddleware"/>'s local verification fast path picks up
-    /// a rotated signing key. Clamped to 10 minutes at most; a zero or negative value
-    /// becomes the 5-minute default.</summary>
+    /// a rotated signing key. Clamped to 300 s at most (CONTRACT.md &#167;12.4 rule 2); a zero or negative value
+    /// becomes the 300 s default.</summary>
     public TimeSpan JwksCacheTtl { get; set; } = TimeSpan.FromMinutes(5);
 
     /// <summary>
