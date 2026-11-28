@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-11-28
+
 ### Security
 
 Contract 1.68 (security audit 2026-11-14, Wave 2; CONTRACT.md §34.12). **This release changes behaviour:** the
@@ -73,6 +75,30 @@ organization member, one description moved), which changes no operation.
 ### Changed
 
 - Monthly dependency refresh (2026-11): `Microsoft.Extensions.Http` 11.0.0 (it targets `net10.0` too, matching `Microsoft.Extensions.Logging.Abstractions` 11.0.0); the ASP.NET Core test project pins `Microsoft.AspNetCore.Mvc.Testing` per framework (10.0.15 / 11.0.0).
+
+- re-vendor CONTRACT.md 1.69 (§9 rule 7: oidc_refresh single-flight per tenant and token)
+
+- re-vendor CONTRACT.md after the server merged ilpanich/axiam#893
+
+- Mark the simulated application cookie HttpOnly and Secure
+
+- Wait for the callback's middleware before asserting the abort test
+
+- re-vendor CONTRACT.md 1.69 (typed consume, BOM refusal, bounded JWKS stale-if-error; axiam#883)
+
+- re-vendor CONTRACT.md 1.69 wire-form clarification (axiam#883)
+
+- re-vendor CONTRACT.md, openapi.json and the management registry
+
+- Add the net11.0 target framework (monthly update 2026-11)
+
+- Bump coverlet.collector and 3 others
+
+- Bump Microsoft.SourceLink.GitHub from 10.0.403 to 11.0.100
+
+- Bump Microsoft.Extensions.Logging.Abstractions from 10.0.14 to 11.0.0
+
+- Bump the minor-patch group with 6 updates
 
 ### Removed
 
@@ -150,6 +176,34 @@ organization member, one description moved), which changes no operation.
   runs on a token detached from every caller and bounded by a timeout derived from the client's own `RequestTimeout`, retry attempts and backoff (never below one `RequestTimeout`, capped at the token source's ~24.8-day limit, and infinite when `RequestTimeout` is infinite), surfaced to every caller as `NetworkError` when it fires; each caller waits on its own token, so
   one caller's cancellation never cancels the flight or another caller. Flights of different keys run concurrently and
   no lock is held across the wire call.
+
+- Never leave a refresh flight unsettled on an extreme timeout (#130)
+
+- Derive the refresh flight bound from the client and surface it as NetworkError (#130)
+
+- Resolve the refresh tenant once and detach the shared flight (#130)
+
+- Key the oidc_refresh single-flight per refresh token (#130)
+
+- OI-35 review round 2 (axiam#883)
+
+- OI-35 review round 1 (axiam#883)
+
+- Typed consume, discard event fields, BOM refusal, bounded JWKS stale-if-error (OI-35, axiam#883)
+
+- Align with contract 1.69 §8 (OI-13 alignment, axiam#882, axiam#883)
+
+- Assert the RequestAborted branch from the server side (OI wave B, round 2)
+
+- Consumer layout check, abort-branch test, shared SignedJson (OI wave B, round 1)
+
+- received-bytes HMAC, discard event, no unsigned opt-out, login-glue fixes (OI-13, #125, axiam#880, axiam#881, axiam#882, axiam#883)
+
+- Drop hook-set headers on the callback 500, close requester on broker cancel (wave 3, round 4)
+
+- Migration note, essential binding cookie, consumer cancel, ASCII Location, bounded state store (wave 3, round 2)
+
+- JWKS refetch window, bound login glue, safe return_to, access-token rules, authz requester (SA-23, C5/C6/C7/N14/N2)
 
 ### Documentation
 
