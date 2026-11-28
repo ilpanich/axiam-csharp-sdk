@@ -319,6 +319,17 @@ public sealed partial class AxiamClient : IDisposable
         RetryPolicy.ReportClamps(_options, _telemetry);
         _decisionMemo.ReportClamp(_options.DecisionMemoTtl, _telemetry);
 
+        // §12.4 rule 2 (contract 1.69) with §19 rule 6: a configured JWKS TTL above 300 s is a caller-supplied value
+        // the contract clamps, so say so once, here. A clamped ADVERTISED max-age is not a caller setting: no event.
+        if (_options.JwksCacheTtl > JwksVerifier.MaxCacheTtl)
+        {
+            _telemetry.Emit(new ConfigClampedEvent(
+                "JwksCacheTtl",
+                _options.JwksCacheTtl.ToString(),
+                JwksVerifier.MaxCacheTtl.ToString(),
+                "§12.4 rule 2"));
+        }
+
         // CONTRACT.md §12 — initializes the OidcClientId/OidcClientSecret/discovery-TTL/
         // clock-skew fields declared in AxiamClient.Oidc.cs from this same _options
         // instance. Kept as a separate initializer (rather than inline field

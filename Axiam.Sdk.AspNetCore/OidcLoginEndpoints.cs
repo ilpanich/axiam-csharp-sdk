@@ -253,13 +253,18 @@ public static class OidcLoginEndpointExtensions
                 }
                 await context.Response.WriteAsJsonAsync(body, cancellationToken).ConfigureAwait(false);
             }
-            catch (Exception ex) when (ex is not OperationCanceledException && !context.Response.HasStarted)
+            catch (Exception ex) when (!(ex is OperationCanceledException && context.RequestAborted.IsCancellationRequested) && !context.Response.HasStarted)
             {
                 // §12.8 rule 1 (d), "any other error": an exception from the store, the application's hook or the
                 // exchange must not lose the clearing Set-Cookie to the host's exception handler (which resets the
-                // response headers). Answer here and log the failure. Like that handler, drop every header set so far
-                // (a session cookie the hook appended before it threw must not reach the browser: the throw aborts the
-                // sign-in), then put the clearing cookie back.
+                // response headers). Answer here and log the failure. Only the client's own abort (an
+                // OperationCanceledException while RequestAborted is cancelled) is left to the host: nobody reads the
+                // response. An OperationCanceledException from anything else, such as an HttpClient or database
+                // timeout inside the hook, is an ordinary failure and is answered here too. Like the host's handler,
+                // drop every header set so far (a cookie-authentication cookie the hook appended before it threw must
+                // not reach the browser), then put the clearing cookie back. That is all Response.Clear() undoes: state
+                // the hook committed elsewhere (a server-side session, a database row) or a cookie it registered with
+                // Response.OnStarting is not undone, so a check that can reject the user belongs before the sign-in.
                 context.RequestServices.GetService<ILoggerFactory>()?.CreateLogger("Axiam.Sdk.AspNetCore.OidcLogin")
                     .LogError(ex, "the AXIAM OIDC login callback failed");
                 context.Response.Clear();

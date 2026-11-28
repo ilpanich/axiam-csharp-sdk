@@ -327,4 +327,132 @@ public class OidcLogoutTests
         Assert.Equal(first, second);
         Assert.Equal(LogoutJti, first.Jti);
     }
+
+    // -----------------------------------------------------------------------
+    // Contract 1.69 (#880): the server signs the logout token with a `kid`; the key is selected by it.
+    // -----------------------------------------------------------------------
+
+    private static IReadOnlyList<KeyValuePair<string, object>> ServerLogoutHeader(string? kid) =>
+        kid is null
+            ? new[] { new KeyValuePair<string, object>("alg", "EdDSA"), new KeyValuePair<string, object>("typ", "logout+jwt") }
+            : new[]
+            {
+                new KeyValuePair<string, object>("alg", "EdDSA"),
+                new KeyValuePair<string, object>("typ", "logout+jwt"),
+                new KeyValuePair<string, object>("kid", kid),
+            };
+
+    private static AxiamClient ClientWithJwks(string jwksDocument)
+    {
+        var handler = new RoutingHandler();
+        OidcTestKit.MapDiscovery(handler, withOptionalEndpoints: true);
+        handler.Map("/oauth2/jwks", _ => OidcTestKit.JsonOk(jwksDocument));
+        return OidcTestKit.Client(handler, OidcTestKit.Options(clientSecret: null));
+    }
+
+    [Fact]
+    public async Task AServerShapedLogoutToken_VerifiesAgainstATwoKeyJwks_TheSigningKeyNotFirst()
+    {
+        var other = new JwksFixture();
+        var signer = new JwksFixture();
+        string token = signer.SignWithExactHeader(ServerLogoutHeader(signer.Kid), LogoutClaims());
+
+        // The header is exactly what the server sends, and nothing else.
+        string headerJson = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(
+            token.Split('.')[0].Replace('-', '+').Replace('_', '/').PadRight((token.Split('.')[0].Length + 3) / 4 * 4, '=')));
+        Assert.Equal($$"""{"alg":"EdDSA","typ":"logout+jwt","kid":"{{signer.Kid}}"}""", headerJson);
+
+        AxiamClient client = ClientWithJwks(JwksFixture.BuildJwksDocument(other, signer));
+
+        VerifiedLogoutToken verified = await client.VerifyLogoutTokenAsync(token);
+
+        Assert.Equal(LogoutSid, verified.Sid);
+        Assert.Equal(LogoutJti, verified.Jti);
+    }
+
+    [Fact]
+    public async Task AKidlessLogoutToken_IsRefusedAsUnknownKid_AgainstAOneKeyJwksWhoseKeySignedIt()
+    {
+        var signer = new JwksFixture();
+        string token = signer.SignWithExactHeader(ServerLogoutHeader(null), LogoutClaims());
+        AxiamClient client = ClientWithJwks(JwksFixture.BuildJwksDocument(signer));
+
+        AuthError error = await Assert.ThrowsAsync<AuthError>(() => client.VerifyLogoutTokenAsync(token));
+
+        Assert.Equal(IdTokenFailureReasons.UnknownKid, error.Reason);
+    }
+
+    [Fact]
+    public async Task AnUnknownKidOnALogoutToken_IsRefusedAsUnknownKid()
+    {
+        var signer = new JwksFixture();
+        var published = new JwksFixture();
+        string token = signer.SignWithExactHeader(ServerLogoutHeader(signer.Kid), LogoutClaims());
+        AxiamClient client = ClientWithJwks(JwksFixture.BuildJwksDocument(published));
+
+        AuthError error = await Assert.ThrowsAsync<AuthError>(() => client.VerifyLogoutTokenAsync(token));
+
+        Assert.Equal(IdTokenFailureReasons.UnknownKid, error.Reason);
+    }
+
+    [Fact]
+    public async Task Rules10And11_StayOffTheLogoutAndIdTokenPaths_WhileTheAccessTokenGuardRefusesOnThem()
+    {
+        // §10.1 rules 10 (typ at+jwt) and 11 (purpose) belong to the access-token path only. Every token below
+        // carries tenant_id and a future exp, so no other rule of the guard can refuse it: the control (typ at+jwt, no
+        // purpose) is accepted, and each variant differs from it ONLY in what rule 10 or rule 11 looks at.
+        var signer = new JwksFixture();
+        string jwksDoc = signer.BuildJwksDocument();
+        AxiamClient client = ClientWithJwks(jwksDoc);
+        long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+        string Mint(string typ, bool purpose) => signer.SignWithExactHeader(
+            new[]
+            {
+                new KeyValuePair<string, object>("alg", "EdDSA"),
+                new KeyValuePair<string, object>("typ", typ),
+                new KeyValuePair<string, object>("kid", signer.Kid),
+            },
+            new Dictionary<string, object?>
+            {
+                ["iss"] = Issuer, ["aud"] = OidcTestKit.ClientId, ["sub"] = "user-1", ["tenant_id"] = "acme",
+                ["iat"] = now, ["exp"] = now + 600, ["jti"] = LogoutJti, ["sid"] = LogoutSid,
+                ["events"] = new Dictionary<string, object> { [BackchannelEvent] = new { } },
+                ["purpose"] = purpose ? "mfa" : null,
+            }.Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value));
+
+        var http = new HttpClient(new StubJwksHandler(jwksDoc)) { BaseAddress = new Uri("https://axiam.test") };
+        var guard = new Axiam.Sdk.Auth.JwksVerifier(http, new Uri("https://axiam.test"), TimeSpan.FromMinutes(5));
+        var oidc = Axiam.Sdk.Auth.JwksVerifier.ForJwksUri(http, new Uri("https://axiam.test/oauth2/jwks"), TimeSpan.FromMinutes(5));
+
+        // Control: with at+jwt and no purpose the guard accepts, so nothing else in these tokens can refuse them.
+        Assert.NotNull(await guard.VerifyAsync(Mint("at+jwt", purpose: false), "acme"));
+
+        string logoutTyp = Mint("logout+jwt", purpose: false);   // rule 10 alone
+        string idTyp = Mint("JWT", purpose: false);              // rule 10 alone
+        string withPurpose = Mint("at+jwt", purpose: true);      // rule 11 alone
+        Assert.Null(await guard.VerifyAsync(logoutTyp, "acme"));
+        Assert.Null(await guard.VerifyAsync(idTyp, "acme"));
+        Assert.Null(await guard.VerifyAsync(withPurpose, "acme"));
+
+        // The OIDC path's signature step (shared by VerifyLogoutTokenAsync and the ID-token validator) applies
+        // neither rule: all three verify.
+        Assert.NotNull((await oidc.VerifyOidcIdTokenSignatureAsync(logoutTyp)).Payload);
+        Assert.NotNull((await oidc.VerifyOidcIdTokenSignatureAsync(idTyp)).Payload);
+        Assert.NotNull((await oidc.VerifyOidcIdTokenSignatureAsync(withPurpose)).Payload);
+
+        // And the public logout verifier accepts the server-shaped logout+jwt token (rule 10 does not apply).
+        Assert.Equal(LogoutJti, (await client.VerifyLogoutTokenAsync(logoutTyp)).Jti);
+    }
+
+    private sealed class StubJwksHandler : HttpMessageHandler
+    {
+        private readonly string _doc;
+        public StubJwksHandler(string doc) => _doc = doc;
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
+            Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+            {
+                Content = new StringContent(_doc, System.Text.Encoding.UTF8, "application/json"),
+            });
+    }
 }

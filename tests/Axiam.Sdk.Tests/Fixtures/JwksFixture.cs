@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -130,6 +131,49 @@ public sealed class JwksFixture
         byte[] signature = signer.GenerateSignature();
 
         return $"{headerB64}.{payloadB64}.{Base64UrlEncode(signature)}";
+    }
+
+    /// <summary>A JWKS document holding the public keys of several fixtures, in the order given (a rotation).</summary>
+    public static string BuildJwksDocument(params JwksFixture[] fixtures) =>
+        JsonSerializer.Serialize(new
+        {
+            keys = fixtures.Select(f => new
+            {
+                kty = "OKP",
+                crv = "Ed25519",
+                x = Base64UrlEncode(f.PublicKey.GetEncoded()),
+                kid = f.Kid,
+                use = "sig",
+                alg = "EdDSA",
+            }).ToArray(),
+        });
+
+    private static readonly JsonSerializerOptions Relaxed = new() { Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+
+    /// <summary>
+    /// Signs <paramref name="payload"/> under EXACTLY the header members given, in that order: nothing is added
+    /// (no <c>kid</c>, no <c>typ</c>) that the caller did not name. For a server-shaped token.
+    /// </summary>
+    public string SignWithExactHeader(IReadOnlyList<KeyValuePair<string, object>> header, object payload)
+    {
+        var sb = new StringBuilder("{");
+        for (int i = 0; i < header.Count; i++)
+        {
+            if (i > 0)
+            {
+                sb.Append(',');
+            }
+            sb.Append(JsonSerializer.Serialize(header[i].Key, Relaxed)).Append(':').Append(JsonSerializer.Serialize(header[i].Value, Relaxed));
+        }
+        sb.Append('}');
+        string headerB64 = Base64UrlEncode(Encoding.UTF8.GetBytes(sb.ToString()));
+        string payloadB64 = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(payload));
+        byte[] signingInput = Encoding.ASCII.GetBytes($"{headerB64}.{payloadB64}");
+
+        var signer = new Ed25519Signer();
+        signer.Init(forSigning: true, PrivateKey);
+        signer.BlockUpdate(signingInput, 0, signingInput.Length);
+        return $"{headerB64}.{payloadB64}.{Base64UrlEncode(signer.GenerateSignature())}";
     }
 
     /// <summary>

@@ -123,40 +123,51 @@ internal static class OidcLoginBinding
     }
 
     /// <summary>
-    /// <paramref name="destination"/> as a <c>Location</c> header value: every non-ASCII character is
-    /// percent-encoded as its UTF-8 bytes, because Kestrel refuses a non-ASCII response header (it fails the
-    /// response, after the application's sign-in hook has run) and the &#167;12.8 rule admits non-ASCII paths.
-    /// ASCII, including any existing <c>%</c> escape, is left untouched.
+    /// <paramref name="destination"/> as a <c>Location</c> header value: its percent-encoded form, produced here, at the
+    /// point the header is written (login-glue Decision 7). Every character outside the URL-safe set (<c>A-Z a-z 0-9</c>
+    /// and <c>! # $ &amp; ' ( ) * + , - . / : ; = ? @ [ \ ] ^ _ | ~</c>) is encoded as its UTF-8 bytes with upper-case hex
+    /// digits (space <c>%20</c>, <c>&#233;</c> <c>%C3%A9</c>, CR <c>%0D</c>, LF <c>%0A</c>, a quote <c>%22</c>); a
+    /// <c>%</c> that already starts a well-formed escape is kept, so a value that is already encoded is not encoded twice,
+    /// and any other <c>%</c> becomes <c>%25</c>; a lone surrogate becomes U+FFFD. The result is pure ASCII with no byte
+    /// below <c>0x21</c> or above <c>0x7E</c>, so a CR/LF in a destination an application predicate admitted can neither
+    /// split the header nor inject another, and Kestrel never sees a non-ASCII header value (it fails the response, after
+    /// the application's sign-in hook has run). The application is never asked to encode; its hooks see the raw value.
     /// </summary>
     internal static string ToLocationHeader(string destination)
     {
-        bool ascii = true;
-        foreach (char c in destination)
-        {
-            if (c > 0x7e)
-            {
-                ascii = false;
-                break;
-            }
-        }
-        if (ascii)
-        {
-            return destination;
-        }
+        const string urlSafePunctuation = "!#$&'()*+,-./:;=?@[\\]^_|~";
         var sb = new StringBuilder(destination.Length + 16);
         Span<byte> utf8 = stackalloc byte[4];
-        foreach (Rune rune in destination.EnumerateRunes()) // a lone surrogate enumerates as U+FFFD
+        int i = 0;
+        while (i < destination.Length)
         {
-            if (rune.Value < 0x80)
+            char c = destination[i];
+            if (c == '%')
             {
-                sb.Append((char)rune.Value);
+                // A well-formed escape (% and two hex digits) is kept; the two digits are URL-safe and follow on.
+                bool escape = i + 2 < destination.Length && char.IsAsciiHexDigit(destination[i + 1]) && char.IsAsciiHexDigit(destination[i + 2]);
+                sb.Append(escape ? "%" : "%25");
+                i++;
                 continue;
             }
-            int n = rune.EncodeToUtf8(utf8);
-            for (int i = 0; i < n; i++)
+            if (char.IsAsciiLetterOrDigit(c) || urlSafePunctuation.Contains(c, StringComparison.Ordinal))
             {
-                sb.Append('%').Append(utf8[i].ToString("X2", System.Globalization.CultureInfo.InvariantCulture));
+                sb.Append(c);
+                i++;
+                continue;
             }
+
+            // Everything else is encoded as UTF-8; a lone surrogate is one UTF-16 unit that becomes U+FFFD.
+            if (!Rune.TryGetRuneAt(destination, i, out Rune rune))
+            {
+                rune = Rune.ReplacementChar;
+            }
+            int n = rune.EncodeToUtf8(utf8);
+            for (int k = 0; k < n; k++)
+            {
+                sb.Append('%').Append(utf8[k].ToString("X2", System.Globalization.CultureInfo.InvariantCulture));
+            }
+            i += rune.Utf16SequenceLength; // 2 for a valid pair, 1 for a BMP character or a lone surrogate
         }
         return sb.ToString();
     }

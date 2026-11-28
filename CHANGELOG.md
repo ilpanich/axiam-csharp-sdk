@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Changed
+
+### Security
 
 Contract 1.68 (security audit 2026-11-14, Wave 2; CONTRACT.md §34.12). **This release changes behaviour:** the
 login glue (C7, C6) and the access-token path (N14) refuse what they used to accept, and the `typ`
@@ -14,8 +15,6 @@ rule is required from this first release. Read the migration notes below before 
 `openapi.json` and `management-registry.json` are re-vendored from `ilpanich/axiam` (contract 1.68; `proto/`
 unchanged) and the §27 management surface regenerated (`scripts/gen_management.py`: the audit-log entry gains its
 organization member, one description moved), which changes no operation.
-
-### Security
 
 - **C7 — login CSRF in `MapAxiamOidcLogin` (§12.8 rule 1).** The callback now completes only for the browser that
   called the login route. The login route sets `__Host-axiam_oidc_bind` (32 CSPRNG bytes, base64url;
@@ -29,12 +28,16 @@ organization member, one description moved), which changes no operation.
   redirect; anything else falls back to `SuccessRedirect` or the JSON summary. New optional
   `AxiamOidcLoginOptions.AllowReturnTo` widens the rule for values the default refuses; a throwing predicate
   accepts nothing.
-- **Login glue, further properties of the C7/C6 release.** A non-ASCII `return_to` that passes §12.8 rule 3
-  (`/café`) is percent-encoded (UTF-8) in the `Location` header, because Kestrel refuses non-ASCII header values.
+- **Login glue, further properties of the C7/C6 release.** The `Location` header of the callback's `302` carries the percent-encoded form of the destination, written by the glue
+  (login-glue Decision 7): characters outside the URL-safe set are UTF-8 percent-encoded, a well-formed `%XX` is kept and any
+  other `%` becomes `%25`, a lone surrogate becomes U+FFFD, `\` is kept, and the result is pure ASCII (a CR/LF a predicate
+  admitted cannot split the header; Kestrel refuses non-ASCII header values).
   The binding cookie is `IsEssential`, so a cookie-consent policy does not suppress it (and every sign-in with it).
   An exception from the store, the hook or the exchange is logged and answered `500 internal_error` with every header
-  set so far dropped (a session cookie the hook appended before throwing is not delivered, so a throw still aborts the
-  sign-in) and the clearing cookie on the response (§12.8 rule 1d). `MemoryOidcStateStore` is bounded at
+  set so far dropped (a cookie-authentication cookie the hook appended before throwing is not delivered; state the hook
+  committed elsewhere, or a cookie registered with `Response.OnStarting`, is not undone) and the clearing cookie on
+  the response (§12.8 rule 1d). An `OperationCanceledException` that is not the client's abort (an `HttpClient` or
+  database timeout in the hook) takes the same path. `MemoryOidcStateStore` is bounded at
   `MemoryOidcStateStore.MaxEntries` (10 000; the oldest is evicted).
 - **C5 — JWKS fetch amplification (§12.4 rule 2).** `JwksVerifier` re-fetched the JWKS for every token with an
   unknown `kid` (50 forged `kid`s caused 50 fetches). It now re-fetches at most once per 60-second window, whatever the
@@ -44,7 +47,7 @@ organization member, one description moved), which changes no operation.
   (compared case-insensitively, with or without `application/`; a header with no `typ` is not refused by this
   rule) and any token whose claim set contains a `purpose` member (the MFA-challenge and WebAuthn-state tokens).
   Rule 12 (`kid` required, no single-key fallback) was already enforced and is pinned by a test.
-- `JwksCacheTtl` is clamped: above 10 minutes becomes 10 minutes, zero or negative becomes the 5-minute default.
+- `JwksCacheTtl` is clamped: above 300 s becomes 300 s (contract 1.69, see Fixed; earlier 1.4.0 drafts clamped to 10 minutes), zero or negative becomes the 300 s default.
   `OidcExchangeAsync` refuses an empty expected nonce (`AuthError`,
   `nonce_mismatch`) before the code is spent; the ID-token validator no longer treats an empty expectation as a
   match for `"nonce": ""`.
@@ -55,8 +58,7 @@ organization member, one description moved), which changes no operation.
   a signed `AuthzRequest` with a fresh unpredictable `correlation_id` and `nonce` on `axiam.authz.request`, a private
   exclusive auto-delete broker-named `reply_to` queue, and strict verification of the answer over the **received**
   bytes (HMAC-SHA256 under the requester's own tenant subkey and the `key_version` sent; `tenant_id`,
-  `correlation_id` and `nonce` bound to one outstanding request; unsigned refused unless
-  `AxiamAuthzRequesterOptions.AllowUnsignedResponses`). `CreateAsync(IChannel, …)` and
+  `correlation_id` and `nonce` bound to one outstanding request; an unsigned response is discarded). `CreateAsync(IChannel, …)` and
   `ConnectAsync(amqps://…, …)`; `CheckAsync` returns `AmqpAuthzDecision`. Disposing a requester cancels its consumer
   (so the reply queue goes away even on a caller-owned channel), and a broker-side cancel of the queue closes it, so a
   later `CheckAsync` throws `ObjectDisposedException` at once instead of timing out. Tests: the four contract vectors, the
@@ -66,7 +68,90 @@ organization member, one description moved), which changes no operation.
 - README: the `typ`/`purpose`/`kid` rows of §10.1, the `roles`-claim-only note for `[Authorize(Roles = …)]`, the
   login-glue binding, and the requester.
 
-### Documented
+- **`net11.0` target framework.** .NET 11 went GA on 2026-11-10, so both packages now multi-target `net10.0;net11.0` and ship a `lib/` folder for each; `SupportedFrameworks.Newest` is `"net11.0"`. The test suite runs once per framework, every example builds for both (pass `-f net10.0` or `-f net11.0` to `dotnet run`), and CI installs the 10.0.x and 11.0.x SDKs. The `net10.0` floor is unchanged (supported through 2028-11-14).
+
+### Changed
+
+- Monthly dependency refresh (2026-11): `Microsoft.Extensions.Http` 11.0.0 (it targets `net10.0` too, matching `Microsoft.Extensions.Logging.Abstractions` 11.0.0); the ASP.NET Core test project pins `Microsoft.AspNetCore.Mvc.Testing` per framework (10.0.15 / 11.0.0).
+
+### Removed
+
+- The AMQP authz requester's unsigned-response opt-out (`AxiamAuthzRequesterOptions.AllowUnsignedResponses`) and the
+  `AmqpAuthzDecision.Unsigned` flag, added earlier in 1.4.0 and never released: no AXIAM server sends an unsigned response
+  to a reply queue, so the option could admit only a forged one (CONTRACT 1.69 §8, server #881). The requester requires a
+  1.68 server; a response with no `hmac_signature` is discarded as `unsigned`. During a rolling upgrade from a pre-1.68
+  server use REST or gRPC authorization.
+
+### Fixed
+
+- **Cross-SDK alignment, wave B2 (OI-35; axiam#883; owner decisions D-8, D-9, D-10; contract 1.69).**
+  - **D-8, the discard event.** `AxiamAmqpConsumer` logs, for every discard, exactly one warning with `timestamp`,
+    `exchange`, `routing_key`, `tenant_id` (the consumer's own configured tenant, never read from the body) and `reason`
+    (`malformed`, `unsigned`, `signature`, `key_version`, `stale`, `replay`), in the normative order of §8 rule 4; no
+    signature, nonce, key or body is logged. The reason now distinguishes the v2 gates.
+  - **D-9, typed consume (breaking).** `StartAsync` takes `AmqpEventType eventType` and `string tenantId`. The consumer
+    checks the canonical bytes against that type's layout only; a body with the other signed type's layout (a genuine
+    signed `audit_event` on an `AuthzRequest` consumer, or the reverse) is refused as `malformed` before the HMAC and
+    never reaches the handler. The match-any-layout check is gone. The verified bytes must decode into the type (UUID
+    members, an integer `key_version`, an RFC 3339 `issued_at`) or the body is `malformed`, after the HMAC and before
+    the `key_version`, freshness and replay gates; a nonce is recorded only after every gate passes.
+  - **D-10, BOM and no escape.** The event consumer and the `AxiamAuthzRequester` refuse a body whose first byte is not
+    `{` (a byte-order mark, whitespace, an empty body) as `malformed`, never strip it, and let nothing thrown while
+    handling a delivery (a failing nack, a throwing logger) leave the delivery loop. The requester already refused a
+    byte-order mark; it now refuses other prefixes as `malformed` too.
+  - **D-10, JWKS stale-if-error (§12.4 rule 2).** `JwksVerifier`'s TTL is the configured one (a set value wins), else the response's
+    `Cache-Control: max-age`, at most 300 s (was 10 minutes), default 300 s. Its age runs from the last successful fetch
+    (a `200` with at least one key, or a `304` to the `If-None-Match` refresh). A failed refresh (transport error, other
+    status, non-JWKS body, an empty key set) no longer discards the held keys (it used to refuse every token) and never
+    moves the age; held keys verify until exactly TTL + 300 s, then every token is refused until a fetch succeeds. A
+    failed attempt counts toward the 60 s re-fetch window. A configured `JwksCacheTtl` above 300 s emits one
+    `config_clamped` event at construction.
+  - **Review round 1 (JWKS refresh).** The fetch is single-flight on a scope detached from the caller (the SDK's own
+    30 s bound); a usable held key answers without waiting for it, and a caller's cancellation neither fails the fetch
+    nor opens the unknown-`kid` window. A negative age (clock stepped back) refuses held keys; a cooldown window that
+    began more than 60 s in the future is over; every TTL-driven refresh respects the 60 s window. The event consumer
+    treats only an exact `hmac_signature` member as a signature (`HMAC_SIGNATURE` alone is `unsigned`), requires an
+    RFC 3339 `issued_at` with `Z` or an offset, and UUIDs in form D.
+
+- **AMQP alignment with contract 1.69 §8 (OI-13, axiam#882, axiam#883).** `AxiamAuthzRequester` now picks the discard
+  reason in the contract's normative order: a body with no `hmac_signature` member is `unsigned` whatever else is
+  missing (it was `malformed` when `allowed` was absent), and a missing or ill-typed `allowed`, `tenant_id`, `nonce` or
+  `correlation_id` is `malformed` before the HMAC is checked (it was `signature`). After the requester is closed,
+  answers are nacked without requeue, never decoded or dispatched, and raise no event. `Hmac.Verify` and the event
+  consumer require exactly 64 hex digits for the signature. The vendored `CONTRACT.md` and
+  `v2_reference_vectors.json` (which gains `wire_json`) are re-synced; the consumer is tested against `wire_json` and
+  the full negative list.
+
+- **#882 / D-5 — `Hmac.Verify` verifies the received bytes.** It re-serialized the parsed body, so a genuine message
+  whose fields held `& < > '`, a non-ASCII character or a control-character escape failed verification (System.Text.Json
+  and serde_json print them differently). It now cuts the trailing `hmac_signature` member out of the body and HMACs the
+  remaining bytes as received, refuses a body that is not one object with unambiguous keys (duplicate or case-variant
+  keys, content after the object) or whose signature is not the trailing member, and the consumer hands the handler those
+  same verified bytes. The consumer also nacks (no requeue) a validly signed message that is
+  not the `AuthzRequest` or `AuditEventMessage` layout of §8 v2 (a republished cache-invalidation message, say).
+- **#883 — the requester's discard event** (§8 consumer obligation 4): one warning per discard with `timestamp`,
+  `exchange`, `routing_key` (the reply queue), the requester's own `tenant_id` and `reason` (`malformed`, `unsigned`,
+  `signature`, `tenant`, `unknown_request`); never a signature, nonce or body member.
+- **#880 — contract 1.69, logout-token `kid`.** `VerifyLogoutTokenAsync` already selected the key by `kid` and refused a
+  token without one; new tests pin it with a server-shaped token (header exactly `alg`, `typ: logout+jwt`, `kid`) against
+  a two-key JWKS, the kid-less and unknown-`kid` refusals, and that §10.1 rules 10 and 11 stay off the logout and ID-token
+  paths.
+- **CSH-R5-1, CSH-R5-2** (login glue): the documentation states what `Response.Clear()` guarantees, and an
+  `OperationCanceledException` that is not the client's abort takes the 500 / clearing-cookie path.
+- **`OidcRefreshAsync` single-flight keyed per refresh token (§9; #130).** A call with refresh token B made while a
+  refresh of a different token A was in flight (or in its publish-before-vacate window, rule 6a) joined A's flight and
+  returned A's token set; B was never sent. The flight is now keyed by a SHA-256 digest of the refresh token and the
+  tenant (the raw token is never a key, logged or in an error): callers presenting the same token still form one
+  burst, a different token gets its own wire call and its own result, a key's slot is removed once vacated, and a
+  caller inside the publish-before-vacate window now joins the published outcome instead of starting a second wire
+  call. The §1 `RefreshAsync` (the session's own token) is unchanged.
+  The tenant is resolved once, before the guard, and that one value keys the flight and goes on the wire (a
+  login or logout during discovery can no longer give the key one tenant and the request another). The shared flight
+  runs on a token detached from every caller and bounded by a timeout derived from the client's own `RequestTimeout`, retry attempts and backoff (never below one `RequestTimeout`, capped at the token source's ~24.8-day limit, and infinite when `RequestTimeout` is infinite), surfaced to every caller as `NetworkError` when it fires; each caller waits on its own token, so
+  one caller's cancellation never cancels the flight or another caller. Flights of different keys run concurrently and
+  no lock is held across the wire call.
+
+### Documentation
 
 - **N15 — `[Authorize(Roles = …)]` reads the `roles` claim only (§11.1).** This SDK never mapped `scope` to roles
   (the defect was in the Java, Kotlin and PHP SDKs); the README now says so and says that a token with no `roles`
@@ -94,16 +179,13 @@ organization member, one description moved), which changes no operation.
   gRPC identity resolution, answers 401. Test fixtures that minted `typ: JWT` must use `at+jwt`.
 - **Cookie policy.** The binding cookie is `IsEssential` (consent-gated apps now sign in). A cookie policy that forces
   `SameSite=Strict` still breaks the callback, which is a cross-site top-level navigation; keep `Lax`.
-- **`JwksCacheTtl`** above 10 minutes is now 10 minutes.
+- **`JwksCacheTtl`** above 300 s (5 minutes) is now 300 s, and one `config_clamped` telemetry event is emitted when the
+  client is constructed with such a value (contract 1.69, §12.4 rule 2).
+- **`AxiamAmqpConsumer.StartAsync`** takes the one signed type it consumes (`AmqpEventType`) and the consumer's own
+  tenant id, both required, beside the key (contract 1.69, §8 step 2c and rule 4). A consumer that fed both
+  `AuthzRequest` and `AuditEventMessage` to one handler must be split into two typed consumers.
 - **`OidcExchangeAsync`** with an empty `Nonce` now throws `AuthError` instead of accepting an ID token that carries
   an empty nonce.
-### Added
-
-- **`net11.0` target framework.** .NET 11 went GA on 2026-11-10, so both packages now multi-target `net10.0;net11.0` and ship a `lib/` folder for each; `SupportedFrameworks.Newest` is `"net11.0"`. The test suite runs once per framework, every example builds for both (pass `-f net10.0` or `-f net11.0` to `dotnet run`), and CI installs the 10.0.x and 11.0.x SDKs. The `net10.0` floor is unchanged (supported through 2028-11-14).
-
-### Changed
-
-- Monthly dependency refresh (2026-11): `Microsoft.Extensions.Http` 11.0.0 (it targets `net10.0` too, matching `Microsoft.Extensions.Logging.Abstractions` 11.0.0); the ASP.NET Core test project pins `Microsoft.AspNetCore.Mvc.Testing` per framework (10.0.15 / 11.0.0).
 
 ## [1.3.1] - 2026-11-11
 

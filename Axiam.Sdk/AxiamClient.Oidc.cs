@@ -78,7 +78,48 @@ public sealed partial class AxiamClient
     // SEPARATE instance from the cookie-session RefreshGuard field above, not the literal
     // same guard.
     private readonly SemaphoreSlim _oidcRefreshGate = new(1, 1);
-    private Task<OidcTokenSet>? _oidcRefreshInFlight;
+    // One slot per refresh token (CONTRACT.md §9), keyed by OidcRefreshFlightKey — a digest, never the raw
+    // token. Guarded by its own monitor; a key's slot is removed once its flight vacates it.
+    private readonly Dictionary<string, Task<OidcTokenSet>> _oidcRefreshInFlight = new();
+
+    // Test seam (InternalsVisibleTo): awaited by a flight's owner after its outcome is published and
+    // BEFORE it vacates its slot, so a test can hold CONTRACT.md §9 rule 6a's bookkeeping window open.
+    internal Func<Task>? OidcRefreshBeforeVacateHook { get; set; }
+
+    internal static readonly TimeSpan MaxOidcRefreshFlightTimeout = TimeSpan.FromMilliseconds(int.MaxValue);
+
+    // Test seam: replaces the derived bound below.
+    internal TimeSpan? OidcRefreshFlightTimeoutOverride { get; set; }
+
+    /// <summary>
+    /// The SDK's own bound on one oidc_refresh flight, which runs detached from every caller's token: the
+    /// discovery fetch plus the token call, each at most <c>RequestTimeout</c> per attempt across the
+    /// retry attempts and their backoff. Derived from this client's options, never below one
+    /// <c>RequestTimeout</c>, so it cannot cut short a call the client's own timeout would have allowed.
+    /// </summary>
+    internal TimeSpan OidcRefreshFlightTimeout
+    {
+        get
+        {
+            if (OidcRefreshFlightTimeoutOverride is { } overridden)
+            {
+                return overridden;
+            }
+            if (_options.RequestTimeout == Timeout.InfiniteTimeSpan)
+            {
+                return Timeout.InfiniteTimeSpan; // an infinite RequestTimeout is not cut short
+            }
+            int attempts = _options.RetryEnabled ? RetryPolicy.EffectiveMaxAttempts(_options) : 1;
+            TimeSpan perCall = (_options.RequestTimeout * attempts) + (RetryPolicy.EffectiveMaxDelay(_options) * (attempts - 1));
+            TimeSpan bound = perCall * 2; // discovery fetch + token call
+            if (bound < _options.RequestTimeout)
+            {
+                bound = _options.RequestTimeout;
+            }
+            // CancellationTokenSource's limit is int.MaxValue milliseconds (about 24.8 days).
+            return bound > MaxOidcRefreshFlightTimeout ? MaxOidcRefreshFlightTimeout : bound;
+        }
+    }
 
     private void InitializeOidcState()
     {
@@ -358,13 +399,56 @@ public sealed partial class AxiamClient
     public Task<OidcTokenSet> OidcRefreshAsync(OidcRefreshParams @params, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(@params);
-        return RunOidcRefreshSingleFlightAsync(() => DoOidcRefreshAsync(@params, cancellationToken), cancellationToken);
+        return RunOidcRefreshSingleFlightAsync(@params, cancellationToken);
     }
 
-    private async Task<OidcTokenSet> DoOidcRefreshAsync(OidcRefreshParams @params, CancellationToken cancellationToken)
+    /// <summary>
+    /// The single-flight key of one <c>oidc_refresh</c> call (CONTRACT.md &#167;9): the lowercase hex SHA-256 of
+    /// the RESOLVED tenant the call is scoped to (resolved once, and the same value goes on the wire) and the refresh token. The raw token is never a map key, never logged
+    /// and never in an error; callers presenting the same token (and tenant) share a flight, a different token
+    /// never does.
+    /// </summary>
+    internal static string OidcRefreshFlightKey(Guid tenantId, OidcRefreshParams @params)
+    {
+        // Guid "D" is the lower-case hyphenated form whatever the spelling it was parsed from.
+        byte[] material = Encoding.UTF8.GetBytes(tenantId.ToString("D") + "\n" + @params.RefreshToken.Reveal());
+        try
+        {
+            return Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(material));
+        }
+        finally
+        {
+            Array.Clear(material);
+        }
+    }
+
+    /// <summary>The number of occupied <c>oidc_refresh</c> single-flight slots (test seam).</summary>
+    internal int OidcRefreshSlotCount
+    {
+        get
+        {
+            lock (_oidcRefreshInFlight)
+            {
+                return _oidcRefreshInFlight.Count;
+            }
+        }
+    }
+
+    /// <summary>The keys of the occupied <c>oidc_refresh</c> single-flight slots (test seam).</summary>
+    internal IReadOnlyCollection<string> OidcRefreshSlotKeys
+    {
+        get
+        {
+            lock (_oidcRefreshInFlight)
+            {
+                return _oidcRefreshInFlight.Keys.ToArray();
+            }
+        }
+    }
+
+    private async Task<OidcTokenSet> DoOidcRefreshAsync(OidcRefreshParams @params, Guid tenantId, CancellationToken cancellationToken)
     {
         OidcConfiguration configuration = await ResolveOidcConfigurationAsync(@params.Configuration, cancellationToken).ConfigureAwait(false);
-        Guid tenantId = ResolveOidcTenantId(@params.TenantId);
         string clientId = RequireOidcClientId();
 
         var form = new Dictionary<string, string>
@@ -401,48 +485,106 @@ public sealed partial class AxiamClient
     /// instance would corrupt its cookie-session comparison state with an unrelated token
     /// stream. This mirrors the Go sibling port's identical, documented deviation from the
     /// TypeScript reference (whose guard has no such comparison state to corrupt in the
-    /// first place). Concurrent callers that arrive while a refresh is in flight share the
-    /// SAME <see cref="Task{T}"/> (and thus the same outcome, success or failure) instead of
-    /// each starting their own wire call; the in-flight slot is cleared once its own call
-    /// completes so the NEXT call always starts a fresh attempt — no retry loop (&#167;9.3).
+    /// first place). The guard is keyed PER REFRESH TOKEN (<see cref="OidcRefreshFlightKey"/>):
+    /// concurrent callers presenting the SAME token share one <see cref="Task{T}"/> (and thus the
+    /// same outcome, success or failure) instead of each starting their own wire call, while a
+    /// caller presenting a DIFFERENT token never joins and never receives another token's
+    /// outcome. A key's slot is vacated by its own owner only (identity-checked), strictly after
+    /// the outcome is published (&#167;9 rule 6a), so the NEXT call after a full vacate always
+    /// starts a fresh attempt — no retry loop (&#167;9.3).
     /// </remarks>
-    private async Task<OidcTokenSet> RunOidcRefreshSingleFlightAsync(Func<Task<OidcTokenSet>> action, CancellationToken cancellationToken)
+    private async Task<OidcTokenSet> RunOidcRefreshSingleFlightAsync(OidcRefreshParams @params, CancellationToken cancellationToken)
     {
-        await _oidcRefreshGate.WaitAsync(cancellationToken).ConfigureAwait(false);
-        Task<OidcTokenSet> task;
-        bool owner;
-        if (_oidcRefreshInFlight is { IsCompleted: false } pending)
-        {
-            task = pending;
-            owner = false;
-        }
-        else
-        {
-            task = action();
-            _oidcRefreshInFlight = task;
-            owner = true;
-        }
-        _oidcRefreshGate.Release();
+        // Resolve the tenant ONCE, before the guard: the same value keys the flight and goes on the wire, so a
+        // login/logout between the two can never give the key one tenant and the request another. An
+        // unresolvable tenant fails here: no slot, no discovery fetch, no token call.
+        Guid tenantId = ResolveOidcTenantId(@params.TenantId);
+        string key = OidcRefreshFlightKey(tenantId, @params);
 
+        Task<OidcTokenSet> task;
+        await _oidcRefreshGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            return await task.ConfigureAwait(false);
+            lock (_oidcRefreshInFlight)
+            {
+                // A slot that is present is joined even once its outcome is published: the outcome is published
+                // strictly BEFORE the flight vacates the slot (§9 rule 6a).
+                if (!_oidcRefreshInFlight.TryGetValue(key, out Task<OidcTokenSet>? pending))
+                {
+                    var outcome = new TaskCompletionSource<OidcTokenSet>(TaskCreationOptions.RunContinuationsAsynchronously);
+                    pending = outcome.Task;
+                    _oidcRefreshInFlight[key] = pending;
+                    _ = DriveOidcRefreshFlightAsync(key, pending, outcome, @params, tenantId);
+                }
+                task = pending;
+            }
         }
         finally
         {
-            if (owner)
+            _oidcRefreshGate.Release();
+        }
+
+        // Every caller, the one that started the flight included, waits on its OWN token: a caller's
+        // cancellation ends its own wait only, never the flight and never another caller's wait.
+        return await task.WaitAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Runs one flight on a token detached from every caller and bounded by the SDK's own timeout, publishes the
+    /// outcome, and only then vacates the key's slot (identity-checked, &#167;9 rules 6a/6c). Never throws.
+    /// </summary>
+    private async Task DriveOidcRefreshFlightAsync(
+        string key,
+        Task<OidcTokenSet> slot,
+        TaskCompletionSource<OidcTokenSet> outcome,
+        OidcRefreshParams @params,
+        Guid tenantId)
+    {
+        await Task.Yield(); // the caller's lock/stack is never held across the flight's synchronous prefix
+        try
+        {
+            // Everything that can throw sits inside this try, so the outcome is always completed.
+            CancellationTokenSource? timeout = null;
+            try
             {
-                await _oidcRefreshGate.WaitAsync(CancellationToken.None).ConfigureAwait(false);
-                try
+                timeout = new CancellationTokenSource(OidcRefreshFlightTimeout);
+                outcome.TrySetResult(await DoOidcRefreshAsync(@params, tenantId, timeout.Token).ConfigureAwait(false));
+            }
+            catch (OperationCanceledException ex) when (timeout is { IsCancellationRequested: true })
+            {
+                // The flight's own bound fired; no caller cancelled (callers cancel only their own wait).
+                outcome.TrySetException(NetworkError.FromException(ex, "oidc_refresh timed out"));
+            }
+            catch (Exception ex)
+            {
+                outcome.TrySetException(ex);
+            }
+            finally
+            {
+                timeout?.Dispose();
+            }
+        }
+        finally
+        {
+            try
+            {
+                if (OidcRefreshBeforeVacateHook is { } beforeVacate)
                 {
-                    if (ReferenceEquals(_oidcRefreshInFlight, task))
-                    {
-                        _oidcRefreshInFlight = null;
-                    }
+                    await beforeVacate().ConfigureAwait(false);
                 }
-                finally
+            }
+            catch (Exception)
+            {
+                // a test seam must never keep the slot occupied
+            }
+            finally
+            {
+                lock (_oidcRefreshInFlight)
                 {
-                    _oidcRefreshGate.Release();
+                    if (_oidcRefreshInFlight.TryGetValue(key, out Task<OidcTokenSet>? current) && ReferenceEquals(current, slot))
+                    {
+                        _oidcRefreshInFlight.Remove(key);
+                    }
                 }
             }
         }

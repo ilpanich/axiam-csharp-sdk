@@ -519,7 +519,10 @@ public sealed class SsfReceiverTests : IDisposable
         using (client)
         {
             SsfReceiver receiver = ReceiverOver(client);
-            ConfigClampedEvent clamped = Assert.Single(events.OfType<ConfigClampedEvent>());
+            // The client's own JwksCacheTtl clamp (300 s, §12.4 rule 2) was reported at its construction; this
+            // receiver's key-cache clamp (10 minutes, §34.2 P6) is the one reported here.
+            Assert.Single(events.OfType<ConfigClampedEvent>(), e => e.Setting == "JwksCacheTtl");
+            ConfigClampedEvent clamped = Assert.Single(events.OfType<ConfigClampedEvent>(), e => e.Setting.Contains("SsfReceiver", StringComparison.Ordinal));
             Assert.Equal(TimeSpan.FromMinutes(10).ToString(), clamped.Effective);
             Assert.Equal("§34.2 P6", clamped.ContractReference);
 
