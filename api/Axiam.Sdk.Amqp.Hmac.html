@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Hmac | AXIAM .NET SDK ">
       
-      <meta name="description" content="HMAC-SHA256 verify-before-handler primitive for inbound AMQP messages (sdks/CONTRACT.md &#167;8, D-11).  Canonicalization is wire/insertion-order preserving, NEVER alphabetically sorted. The canonical Rust signer (crates/axiam-amqp/src/messages.rs&#39;s sign_payload) signs the serde_json struct-declaration-order serialization of the message body (with hmac_signature absent).  is backed by an ordered dictionary and preserves insertion order from parsing by default —  mutates that same ordered map in place, preserving the relative order of all remaining keys. This is the single load-bearing property of this class: do NOT introduce an alphabetized copy, OrderBy/Sort, or a POCO deserialize-then-reserialize round-trip here — any of those would silently reorder fields and break every cross-language HMAC verification.">
+      <meta name="description" content="HMAC-SHA256 verify-before-handler primitive for inbound AMQP messages (sdks/CONTRACT.md &#167;8, D-11).  The signature is checked over the received bytes, never over a re-serialization. The canonical Rust signer (crates/axiam-amqp/src/messages.rs, split_trailing_signature on the verifying side) signs the serde_json compact serialization of the message with hmac_signature absent and then appends ,&quot;hmac_signature&quot;:&quot;&amp;lt;hex&amp;gt;&quot; as the LAST member. This class cuts that trailing member out of the delivery body and HMACs the remaining bytes exactly as they arrived, so the result does not depend on how any JSON library in this process would print what it parsed (System.Text.Json escapes &amp;amp; &amp;lt; &amp;gt; &#39; and non-ASCII text, and writes \u001F where serde_json writes \u001f: a genuine message whose fields hold them failed verification when the body was re-serialized).   What is verified is what the handler reads (audit C2). The consumer hands its handler the very bytes that were verified. To make that equivalence hold, a body is refused unless it is one JSON object with unambiguous keys (no key twice at any depth, no two top-level keys differing only by case, nothing after the closing brace) and ends in the trailing signature member: the one reading of the signed bytes is then the only reading any parser can take.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.3.1/apiSpec/new?filename=Axiam_Sdk_Amqp_Hmac.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Amqp.Hmac%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.4.0/apiSpec/new?filename=Axiam_Sdk_Amqp_Hmac.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Amqp.Hmac%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Amqp_Hmac" data-uid="Axiam.Sdk.Amqp.Hmac" class="text-break">
-Class Hmac  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Amqp/Hmac.cs/#L28"><i class="bi bi-code-slash"></i></a>
+Class Hmac  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/Hmac.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -100,19 +100,21 @@ Class Hmac  <a class="header-action link-secondary" title="View source" href="ht
   <div class="markdown summary"><p>HMAC-SHA256 verify-before-handler primitive for inbound AMQP messages
 (<code>sdks/CONTRACT.md</code> §8, D-11).</p>
 <p>
-<b>Canonicalization is wire/insertion-order preserving, NEVER
-alphabetically sorted.</b> The canonical Rust signer
-(<code>crates/axiam-amqp/src/messages.rs</code>'s <code>sign_payload</code>) signs the
-<code>serde_json</code> struct-declaration-order serialization of the message
-body (with <code>hmac_signature</code> absent). <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.nodes.jsonobject">JsonObject</a> is
-backed by an ordered dictionary and preserves insertion order from
-parsing by default — <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.nodes.jsonobject.remove">Remove(string)</a> mutates that same
-ordered map in place, preserving the relative order of all remaining
-keys. This is the single load-bearing property of this class: do NOT
-introduce an alphabetized copy, <code>OrderBy</code>/<code>Sort</code>, or a POCO
-deserialize-then-reserialize round-trip here — any of those would
-silently reorder fields and break every cross-language HMAC
-verification.
+<b>The signature is checked over the received bytes, never over a re-serialization.</b> The canonical Rust
+signer (<code>crates/axiam-amqp/src/messages.rs</code>, <code>split_trailing_signature</code> on the verifying side) signs the
+<code>serde_json</code> compact serialization of the message with <code>hmac_signature</code> absent and then appends
+<code>,"hmac_signature":"&lt;hex&gt;"</code> as the LAST member. This class cuts that trailing member out of the
+delivery body and HMACs the remaining bytes exactly as they arrived, so the result does not depend on how any
+JSON library in this process would print what it parsed (<code>System.Text.Json</code> escapes <code>&amp; &lt; &gt; '</code>
+and non-ASCII text, and writes <code>\u001F</code> where serde_json writes <code>\u001f</code>: a genuine message whose
+fields hold them failed verification when the body was re-serialized).
+</p>
+<p>
+<b>What is verified is what the handler reads (audit C2).</b> The consumer hands its handler the very bytes
+that were verified. To make that equivalence hold, a body is refused unless it is one JSON object with
+unambiguous keys (no key twice at any depth, no two top-level keys differing only by case, nothing after the
+closing brace) and ends in the trailing signature member: the one reading of the signed bytes is then the only
+reading any parser can take.
 </p>
 </div>
   <div class="markdown conceptual"></div>
@@ -173,18 +175,16 @@ verification.
 
   <h3 id="Axiam_Sdk_Amqp_Hmac_Verify_System_Byte___System_Byte___" data-uid="Axiam.Sdk.Amqp.Hmac.Verify(System.Byte[],System.Byte[])">
   Verify(byte[], byte[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Amqp/Hmac.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/Hmac.cs/#L46"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Returns <code>true</code> iff <code class="paramref">body</code>'s <code>hmac_signature</code>
-field matches HMAC-SHA256(<code class="paramref">signingKey</code>,
-canonical_json_of(body_without_hmac_signature)), computed via a
-constant-time comparison.</p>
+  <div class="markdown level1 summary"><p>Returns <code>true</code> iff <code class="paramref">body</code> ends in a <code>hmac_signature</code> member whose value is
+HMAC-SHA256(<code class="paramref">signingKey</code>, the body with that trailing member removed), computed via a
+constant-time comparison over the bytes as received.</p>
 <p>
-Never throws: malformed JSON, a missing/null signature, non-hex
-signature text, or a wrong-length signature all verify as
-<code>false</code> — matching §8.3's strict-mode default that rejects
-(rather than silently accepts) an unparseable or absent signature.
+Never throws: malformed JSON, a body that is not one object with unambiguous keys, a missing, null, non-hex or
+not-trailing signature, or one that is not exactly 64 hex digits all verify as <code>false</code> — matching §8.3's strict-mode
+default that rejects (rather than silently accepts) an unparseable or absent signature.
 </p>
 </div>
   <div class="markdown level1 conceptual"></div>

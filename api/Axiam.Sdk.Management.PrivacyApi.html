@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.3.1/apiSpec/new?filename=Axiam_Sdk_Management_PrivacyApi.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.PrivacyApi%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.4.0/apiSpec/new?filename=Axiam_Sdk_Management_PrivacyApi.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Management.PrivacyApi%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Management_PrivacyApi" data-uid="Axiam.Sdk.Management.PrivacyApi" class="text-break">
-Class PrivacyApi  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Management/PrivacyApi.cs/#L25"><i class="bi bi-code-slash"></i></a>
+Class PrivacyApi  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Management/PrivacyApi.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -160,7 +160,7 @@ A view over the client that created it, not a connection: constructing one perfo
 
   <h3 id="Axiam_Sdk_Management_PrivacyApi_CancelDeleteAsync_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.CancelDeleteAsync(System.String,System.Threading.CancellationToken)">
   CancelDeleteAsync(string?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Management/PrivacyApi.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Management/PrivacyApi.cs/#L145"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p><strong>Public endpoint</strong> (token-authenticated; listed in <code>PUBLIC_PATHS</code>). Validates the
@@ -210,12 +210,15 @@ Issues <code>GET /api/v1/auth/account/delete/cancel</code>.
 
   <h3 id="Axiam_Sdk_Management_PrivacyApi_DownloadExportAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.DownloadExportAsync(System.Guid,System.Threading.CancellationToken)">
   DownloadExportAsync(Guid, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Management/PrivacyApi.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Management/PrivacyApi.cs/#L85"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Single-use download of the GDPR export blob (D-13). Looks up the job by SHA-256(token),
 verifies it is ready and not expired/used, decrypts the blob, marks it as downloaded,
-and deletes the record. Requires authentication (self or admin with <code>gdpr:export</code>).</p>
+and deletes the record. Requires authentication (self or admin with <code>gdpr:export</code>).
+A [<code>ConsoleSignIn</code>], like the request (S-3b): a token AXIAM minted for an OAuth2
+client is refused <code>403</code> before the token is looked up, so a relying party cannot
+spend the person's download link.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -259,7 +262,7 @@ Issues <code>GET /api/v1/account/export/{token}</code>.
 
   <h3 id="Axiam_Sdk_Management_PrivacyApi_GrantScopeConsentAsync_Axiam_Sdk_Management_Models_GrantScopeConsent_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.GrantScopeConsentAsync(Axiam.Sdk.Management.Models.GrantScopeConsent,System.Threading.CancellationToken)">
   GrantScopeConsentAsync(GrantScopeConsent, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Management/PrivacyApi.cs/#L201"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Management/PrivacyApi.cs/#L216"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>What the SPA's consent screen calls when the end user says yes. Everything it accepts is
@@ -273,7 +276,12 @@ authorised for; * the tenant switch must be on, so consent collected while the
 capability is off cannot sit waiting for somebody to turn it on. Idempotent: the
 <code>(tenant, user, type, version)</code> index makes a repeated grant the same grant, and a
 second call is answered <code>200</code> rather than a conflict. A consent screen the user
-double-submits has consented once.</p>
+double-submits has consented once. <strong>The person's own act (T-447, SA-04 review S-3).</strong>
+Takes a [<code>ConsoleSignIn</code>]: a token AXIAM minted for an OAuth2 client is refused
+<code>403</code>. <code>/oauth2/authorize</code> reads exactly these records to skip the consent
+screen, and the CSRF middleware exempts bearer-only requests, so a relying party holding
+one of its user's tokens could otherwise record consent for another client in the user's
+name and have a code issued silently.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -321,7 +329,7 @@ the ones that look idempotent.
 
   <h3 id="Axiam_Sdk_Management_PrivacyApi_ListConsentsAsync_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.ListConsentsAsync(System.Threading.CancellationToken)">
   ListConsentsAsync(CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Management/PrivacyApi.cs/#L161"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Management/PrivacyApi.cs/#L171"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Art. 7(1) says a controller must be able to demonstrate that consent was given; Art.
@@ -367,12 +375,16 @@ Issues <code>GET /api/v1/account/consents</code>.
 
   <h3 id="Axiam_Sdk_Management_PrivacyApi_RequestDeleteAsync_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.RequestDeleteAsync(System.Threading.CancellationToken)">
   RequestDeleteAsync(CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Management/PrivacyApi.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Management/PrivacyApi.cs/#L118"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initiates Art. 17 erasure: immediately disables the account, revokes all sessions,
 emails a single-use cancel link, and schedules purge at +30 d (D-07/D-08/D-09).
-Self-service (own account) or admin with <code>users:erase</code> permission.</p>
+Self-service (own account) or admin with <code>users:erase</code> permission. A
+[<code>ConsoleSignIn</code>] (S-3b): a token AXIAM minted for an OAuth2 client is refused
+<code>403</code>. Erasure is the person's own act, and the route is bearer-only and so
+CSRF-exempt: a relying party holding one of its user's tokens must not be able to
+disable the account and schedule its purge.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -417,13 +429,16 @@ the ones that look idempotent.
 
   <h3 id="Axiam_Sdk_Management_PrivacyApi_RequestExportAsync_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.RequestExportAsync(System.Threading.CancellationToken)">
   RequestExportAsync(CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Management/PrivacyApi.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Management/PrivacyApi.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enqueues an async GDPR Art. 15 data-export job. Returns immediately with <code>{&quot;queued&quot;:
 true}</code>; the cleanup sweep generates the encrypted JSON, stores it, and emails a
 single-use 24 h download link (D-12). Self-service (own account) or admin with
-<code>gdpr:export</code> permission.</p>
+<code>gdpr:export</code> permission. <strong>The person's own act (SA-04 review S-3b).</strong> Takes a
+[<code>ConsoleSignIn</code>]: a token AXIAM minted for an OAuth2 client is refused <code>403</code>.
+The route is bearer-only and so CSRF-exempt, and a relying party holding one of its
+user's tokens must not be able to have the user's personal data exported.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -468,7 +483,7 @@ the ones that look idempotent.
 
   <h3 id="Axiam_Sdk_Management_PrivacyApi_WithdrawScopeConsentAsync_System_Guid_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Management.PrivacyApi.WithdrawScopeConsentAsync(System.Guid,System.Threading.CancellationToken)">
   WithdrawScopeConsentAsync(Guid, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Management/PrivacyApi.cs/#L240"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Management/PrivacyApi.cs/#L257"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Art. 7(3): as easy to withdraw as to give. One call, no grace period, no confirmation
@@ -481,7 +496,9 @@ not one of them: a subject saying &quot;stop giving my address to this app&quot;
 Answers <code>200</code> whether or not anything was there, and says how many records went. A
 subject who withdraws twice is not told off, and an attacker who guesses
 <code>client_id</code>s learns nothing from the status code — though they would have to be the
-subject to ask at all.</p>
+subject to ask at all. A [<code>ConsoleSignIn</code>], like the grant: withdrawing is the
+person's own act too, and a relying party holding one of its user's tokens must not be
+able to strip a consent the user gave another client (T-447, S-3).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

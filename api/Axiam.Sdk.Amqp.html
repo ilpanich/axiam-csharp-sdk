@@ -95,26 +95,54 @@
 Classes
 </h3>
     <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Amqp.AmqpAuthzDecision.html">AmqpAuthzDecision</a></dt>
+      <dd><p>A verified answer to one AMQP authorization request (CONTRACT.md §8, &quot;Signed authorization
+responses&quot;, contract 1.68).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Axiam.Sdk.Amqp.AxiamAmqpConsumer.html">AxiamAmqpConsumer</a></dt>
       <dd><p>AMQP event consumer: verify-before-handler HMAC gate plus the
 <code>sdks/CONTRACT.md</code> §8 ack/nack matrix, built on <code>RabbitMQ.Client</code>
 7.x's async consumer API with automatic connection/topology recovery
 enabled (D-11).</p>
 <p>
-<a class="xref" href="Axiam.Sdk.Amqp.AxiamAmqpConsumer.html#Axiam_Sdk_Amqp_AxiamAmqpConsumer_StartAsync_System_String_System_String_System_Byte___System_Func_System_Byte___System_Threading_CancellationToken_System_Threading_Tasks_Task__Microsoft_Extensions_Logging_ILogger_System_Nullable_System_TimeSpan__System_Threading_CancellationToken_">StartAsync(string, string, byte[], Func&lt;byte[], CancellationToken, Task&gt;, ILogger?, TimeSpan?, CancellationToken)</a> NEVER hands an unverified delivery to the
+<a class="xref" href="Axiam.Sdk.Amqp.AxiamAmqpConsumer.html#Axiam_Sdk_Amqp_AxiamAmqpConsumer_StartAsync_System_String_System_String_Axiam_Sdk_Amqp_AmqpEventType_System_String_System_Byte___System_Func_System_Byte___System_Threading_CancellationToken_System_Threading_Tasks_Task__Microsoft_Extensions_Logging_ILogger_System_Nullable_System_TimeSpan__System_Threading_CancellationToken_">StartAsync(string, string, AmqpEventType, string, byte[], Func&lt;byte[], CancellationToken, Task&gt;, ILogger?, TimeSpan?, CancellationToken)</a> NEVER hands an unverified delivery to the
 caller-supplied handler — <a class="xref" href="Axiam.Sdk.Amqp.Hmac.html#Axiam_Sdk_Amqp_Hmac_Verify_System_Byte___System_Byte___">Verify(byte[], byte[])</a> runs first, and the
 handler call site is structurally unreachable until it returns
-<code>true</code>. The remaining outcomes follow the exact §8 decision matrix:
+<code>true</code>. The handler is handed the very bytes
+the HMAC covered (the delivery body, signature member included), never a re-serialization of them. The remaining outcomes follow the exact §8 decision matrix:
 </p>
-<ul><li>HMAC verification fails → <code>BasicNackAsync(requeue: false)</code>
-+ a security-event log entry that never contains the received or
-expected HMAC value; the handler is never invoked.</li><li>HMAC verifies but the NEW-4 replay-protection gate
-(<a class="xref" href="Axiam.Sdk.Amqp.ReplayGuard.html">ReplayGuard</a>) rejects the delivery — <code>key_version</code> below
-<a class="xref" href="Axiam.Sdk.Amqp.ReplayGuard.html#Axiam_Sdk_Amqp_ReplayGuard_MinKeyVersion">MinKeyVersion</a>, a stale/future <code>issued_at</code>, or a
-replayed <code>nonce</code> — → <code>BasicNackAsync(requeue: false)</code> + a security-event
-log entry; the handler is never invoked.</li><li>Handler returns normally → <code>BasicAckAsync</code>.</li><li>Handler throws <a class="xref" href="Axiam.Sdk.Amqp.PoisonMessageException.html">PoisonMessageException</a> (poison
+<ul><li>Every discard — <code>nack(requeue: false)</code>, the handler never invoked — is logged as ONE
+warning-level security event carrying exactly <code>timestamp</code>, <code>exchange</code>, <code>routing_key</code>,
+<code>tenant_id</code> (the consumer's OWN configured tenant, never one read from the body) and <code>reason</code>, the first
+that applies in the order of §8 rule 4: <code>malformed</code> (not one JSON object: the first byte is not <code>{</code>,
+or it does not parse), <code>unsigned</code> (no <code>hmac_signature</code> member), <code>malformed</code> (a duplicate or folded
+member, a signature that is not a trailing 64-hex member, or a layout that is not the configured
+<a class="xref" href="Axiam.Sdk.Amqp.AmqpEventType.html">AmqpEventType</a>'s — before the HMAC is computed), <code>signature</code>, <code>malformed</code> (the verified
+bytes do not decode), <code>key_version</code>, <code>stale</code>, <code>replay</code>. The event never contains a signature, a
+nonce, a key, the body, or any member read from it.</li><li>Handler returns normally → <code>BasicAckAsync</code>.</li><li>Handler throws <a class="xref" href="Axiam.Sdk.Amqp.PoisonMessageException.html">PoisonMessageException</a> (poison
 message) → <code>BasicNackAsync(requeue: false)</code>.</li><li>Handler throws any other exception (transient/retryable)
 → <code>BasicNackAsync(requeue: true)</code>.</li></ul>
+<p>
+No body escapes the consumer (§8 step 2, contract 1.69): whatever the bytes — empty, not UTF-8, a byte-order mark,
+deeply nested, truncated, of another type — nothing is thrown out of the delivery loop and the next delivery is
+handled.
+</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequester.html">AxiamAuthzRequester</a></dt>
+      <dd><p>The AMQP authorization requester (CONTRACT.md §8, &quot;Signed authorization responses&quot;, contract 1.68;
+audit finding N2). It publishes a signed <code>AuthzRequest</code> on <code>axiam.authz.request</code> with a private,
+exclusive, broker-named <code>reply_to</code> queue, and accepts an answer only when it verifies as the server's
+signed response to THAT request.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.html">AxiamAuthzRequesterOptions</a></dt>
+      <dd><p>Options for <a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequester.html">AxiamAuthzRequester</a>. There is deliberately no option to accept an unsigned response
+(CONTRACT.md §8, contract 1.69): see the remarks of <a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequester.html">AxiamAuthzRequester</a>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -122,19 +150,21 @@ message) → <code>BasicNackAsync(requeue: false)</code>.</li><li>Handler throws
       <dd><p>HMAC-SHA256 verify-before-handler primitive for inbound AMQP messages
 (<code>sdks/CONTRACT.md</code> §8, D-11).</p>
 <p>
-<b>Canonicalization is wire/insertion-order preserving, NEVER
-alphabetically sorted.</b> The canonical Rust signer
-(<code>crates/axiam-amqp/src/messages.rs</code>'s <code>sign_payload</code>) signs the
-<code>serde_json</code> struct-declaration-order serialization of the message
-body (with <code>hmac_signature</code> absent). <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.nodes.jsonobject">JsonObject</a> is
-backed by an ordered dictionary and preserves insertion order from
-parsing by default — <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.nodes.jsonobject.remove">Remove(string)</a> mutates that same
-ordered map in place, preserving the relative order of all remaining
-keys. This is the single load-bearing property of this class: do NOT
-introduce an alphabetized copy, <code>OrderBy</code>/<code>Sort</code>, or a POCO
-deserialize-then-reserialize round-trip here — any of those would
-silently reorder fields and break every cross-language HMAC
-verification.
+<b>The signature is checked over the received bytes, never over a re-serialization.</b> The canonical Rust
+signer (<code>crates/axiam-amqp/src/messages.rs</code>, <code>split_trailing_signature</code> on the verifying side) signs the
+<code>serde_json</code> compact serialization of the message with <code>hmac_signature</code> absent and then appends
+<code>,"hmac_signature":"&lt;hex&gt;"</code> as the LAST member. This class cuts that trailing member out of the
+delivery body and HMACs the remaining bytes exactly as they arrived, so the result does not depend on how any
+JSON library in this process would print what it parsed (<code>System.Text.Json</code> escapes <code>&amp; &lt; &gt; '</code>
+and non-ASCII text, and writes <code>\u001F</code> where serde_json writes <code>\u001f</code>: a genuine message whose
+fields hold them failed verification when the body was re-serialized).
+</p>
+<p>
+<b>What is verified is what the handler reads (audit C2).</b> The consumer hands its handler the very bytes
+that were verified. To make that equivalence hold, a body is refused unless it is one JSON object with
+unambiguous keys (no key twice at any depth, no two top-level keys differing only by case, nothing after the
+closing brace) and ends in the trailing signature member: the one reading of the signed bytes is then the only
+reading any parser can take.
 </p>
 </dd>
     </dl>
@@ -164,6 +194,20 @@ an already HMAC-verified AMQP message body (<code>sdks/CONTRACT.md</code> §8
 &quot;v2 — Replay Protection&quot;, NEW-4). Extraction happens strictly AFTER
 <a class="xref" href="Axiam.Sdk.Amqp.Hmac.html#Axiam_Sdk_Amqp_Hmac_Verify_System_Byte___System_Byte___">Verify(byte[], byte[])</a> has returned <code>true</code> — these values are
 meaningless (and MUST NOT be trusted) on an unverified body.</p>
+</dd>
+    </dl>
+    <h3 id="enums">
+Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Axiam.Sdk.Amqp.AmqpEventType.html">AmqpEventType</a></dt>
+      <dd><p>The ONE signed event type an <a class="xref" href="Axiam.Sdk.Amqp.AxiamAmqpConsumer.html">AxiamAmqpConsumer</a> consumes (CONTRACT.md §8 step 2c, &quot;Typed: one
+configured type&quot;, contract 1.69, owner decision D-9). <code>AuthzRequest</code>, <code>AuditEventMessage</code> and
+<code>AuthzResponse</code> are signed with the same scheme under the same tenant subkey, so a genuine message of one
+type replayed onto a queue that carries another passes the signature check; only its layout tells it apart. A
+consumer therefore checks the canonical bytes against its configured type's layout and no other, and refuses
+every other body as <code>malformed</code> before the HMAC is computed. An application that consumes both types runs
+two consumers, each typed.</p>
 </dd>
     </dl>
 

@@ -224,6 +224,88 @@ references:
   commentId: N:Axiam.Sdk.Amqp
   fullName: Axiam.Sdk.Amqp
   nameWithType: Axiam.Sdk.Amqp
+- uid: Axiam.Sdk.Amqp.AmqpAuthzDecision
+  name: AmqpAuthzDecision
+  href: api/Axiam.Sdk.Amqp.AmqpAuthzDecision.html
+  commentId: T:Axiam.Sdk.Amqp.AmqpAuthzDecision
+  fullName: Axiam.Sdk.Amqp.AmqpAuthzDecision
+  nameWithType: AmqpAuthzDecision
+- uid: Axiam.Sdk.Amqp.AmqpAuthzDecision.#ctor(System.Boolean,System.String,System.String)
+  name: AmqpAuthzDecision(bool, string?, string?)
+  href: api/Axiam.Sdk.Amqp.AmqpAuthzDecision.html#Axiam_Sdk_Amqp_AmqpAuthzDecision__ctor_System_Boolean_System_String_System_String_
+  commentId: M:Axiam.Sdk.Amqp.AmqpAuthzDecision.#ctor(System.Boolean,System.String,System.String)
+  name.vb: New(Boolean, String, String)
+  fullName: Axiam.Sdk.Amqp.AmqpAuthzDecision.AmqpAuthzDecision(bool, string?, string?)
+  fullName.vb: Axiam.Sdk.Amqp.AmqpAuthzDecision.New(Boolean, String, String)
+  nameWithType: AmqpAuthzDecision.AmqpAuthzDecision(bool, string?, string?)
+  nameWithType.vb: AmqpAuthzDecision.New(Boolean, String, String)
+- uid: Axiam.Sdk.Amqp.AmqpAuthzDecision.#ctor*
+  name: AmqpAuthzDecision
+  href: api/Axiam.Sdk.Amqp.AmqpAuthzDecision.html#Axiam_Sdk_Amqp_AmqpAuthzDecision__ctor_
+  commentId: Overload:Axiam.Sdk.Amqp.AmqpAuthzDecision.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Axiam.Sdk.Amqp.AmqpAuthzDecision.AmqpAuthzDecision
+  fullName.vb: Axiam.Sdk.Amqp.AmqpAuthzDecision.New
+  nameWithType: AmqpAuthzDecision.AmqpAuthzDecision
+  nameWithType.vb: AmqpAuthzDecision.New
+- uid: Axiam.Sdk.Amqp.AmqpAuthzDecision.Allowed
+  name: Allowed
+  href: api/Axiam.Sdk.Amqp.AmqpAuthzDecision.html#Axiam_Sdk_Amqp_AmqpAuthzDecision_Allowed
+  commentId: P:Axiam.Sdk.Amqp.AmqpAuthzDecision.Allowed
+  fullName: Axiam.Sdk.Amqp.AmqpAuthzDecision.Allowed
+  nameWithType: AmqpAuthzDecision.Allowed
+- uid: Axiam.Sdk.Amqp.AmqpAuthzDecision.Allowed*
+  name: Allowed
+  href: api/Axiam.Sdk.Amqp.AmqpAuthzDecision.html#Axiam_Sdk_Amqp_AmqpAuthzDecision_Allowed_
+  commentId: Overload:Axiam.Sdk.Amqp.AmqpAuthzDecision.Allowed
+  isSpec: "True"
+  fullName: Axiam.Sdk.Amqp.AmqpAuthzDecision.Allowed
+  nameWithType: AmqpAuthzDecision.Allowed
+- uid: Axiam.Sdk.Amqp.AmqpAuthzDecision.Reason
+  name: Reason
+  href: api/Axiam.Sdk.Amqp.AmqpAuthzDecision.html#Axiam_Sdk_Amqp_AmqpAuthzDecision_Reason
+  commentId: P:Axiam.Sdk.Amqp.AmqpAuthzDecision.Reason
+  fullName: Axiam.Sdk.Amqp.AmqpAuthzDecision.Reason
+  nameWithType: AmqpAuthzDecision.Reason
+- uid: Axiam.Sdk.Amqp.AmqpAuthzDecision.Reason*
+  name: Reason
+  href: api/Axiam.Sdk.Amqp.AmqpAuthzDecision.html#Axiam_Sdk_Amqp_AmqpAuthzDecision_Reason_
+  commentId: Overload:Axiam.Sdk.Amqp.AmqpAuthzDecision.Reason
+  isSpec: "True"
+  fullName: Axiam.Sdk.Amqp.AmqpAuthzDecision.Reason
+  nameWithType: AmqpAuthzDecision.Reason
+- uid: Axiam.Sdk.Amqp.AmqpAuthzDecision.ReasonCode
+  name: ReasonCode
+  href: api/Axiam.Sdk.Amqp.AmqpAuthzDecision.html#Axiam_Sdk_Amqp_AmqpAuthzDecision_ReasonCode
+  commentId: P:Axiam.Sdk.Amqp.AmqpAuthzDecision.ReasonCode
+  fullName: Axiam.Sdk.Amqp.AmqpAuthzDecision.ReasonCode
+  nameWithType: AmqpAuthzDecision.ReasonCode
+- uid: Axiam.Sdk.Amqp.AmqpAuthzDecision.ReasonCode*
+  name: ReasonCode
+  href: api/Axiam.Sdk.Amqp.AmqpAuthzDecision.html#Axiam_Sdk_Amqp_AmqpAuthzDecision_ReasonCode_
+  commentId: Overload:Axiam.Sdk.Amqp.AmqpAuthzDecision.ReasonCode
+  isSpec: "True"
+  fullName: Axiam.Sdk.Amqp.AmqpAuthzDecision.ReasonCode
+  nameWithType: AmqpAuthzDecision.ReasonCode
+- uid: Axiam.Sdk.Amqp.AmqpEventType
+  name: AmqpEventType
+  href: api/Axiam.Sdk.Amqp.AmqpEventType.html
+  commentId: T:Axiam.Sdk.Amqp.AmqpEventType
+  fullName: Axiam.Sdk.Amqp.AmqpEventType
+  nameWithType: AmqpEventType
+- uid: Axiam.Sdk.Amqp.AmqpEventType.AuditEvent
+  name: AuditEvent
+  href: api/Axiam.Sdk.Amqp.AmqpEventType.html#Axiam_Sdk_Amqp_AmqpEventType_AuditEvent
+  commentId: F:Axiam.Sdk.Amqp.AmqpEventType.AuditEvent
+  fullName: Axiam.Sdk.Amqp.AmqpEventType.AuditEvent
+  nameWithType: AmqpEventType.AuditEvent
+- uid: Axiam.Sdk.Amqp.AmqpEventType.AuthzRequest
+  name: AuthzRequest
+  href: api/Axiam.Sdk.Amqp.AmqpEventType.html#Axiam_Sdk_Amqp_AmqpEventType_AuthzRequest
+  commentId: F:Axiam.Sdk.Amqp.AmqpEventType.AuthzRequest
+  fullName: Axiam.Sdk.Amqp.AmqpEventType.AuthzRequest
+  nameWithType: AmqpEventType.AuthzRequest
 - uid: Axiam.Sdk.Amqp.AxiamAmqpConsumer
   name: AxiamAmqpConsumer
   href: api/Axiam.Sdk.Amqp.AxiamAmqpConsumer.html
@@ -255,15 +337,15 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Amqp.AxiamAmqpConsumer.DisposeAsync
   nameWithType: AxiamAmqpConsumer.DisposeAsync
-- uid: Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(System.String,System.String,System.Byte[],System.Func{System.Byte[],System.Threading.CancellationToken,System.Threading.Tasks.Task},Microsoft.Extensions.Logging.ILogger,System.Nullable{System.TimeSpan},System.Threading.CancellationToken)
-  name: StartAsync(string, string, byte[], Func<byte[], CancellationToken, Task>, ILogger?, TimeSpan?, CancellationToken)
-  href: api/Axiam.Sdk.Amqp.AxiamAmqpConsumer.html#Axiam_Sdk_Amqp_AxiamAmqpConsumer_StartAsync_System_String_System_String_System_Byte___System_Func_System_Byte___System_Threading_CancellationToken_System_Threading_Tasks_Task__Microsoft_Extensions_Logging_ILogger_System_Nullable_System_TimeSpan__System_Threading_CancellationToken_
-  commentId: M:Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(System.String,System.String,System.Byte[],System.Func{System.Byte[],System.Threading.CancellationToken,System.Threading.Tasks.Task},Microsoft.Extensions.Logging.ILogger,System.Nullable{System.TimeSpan},System.Threading.CancellationToken)
-  name.vb: StartAsync(String, String, Byte(), Func(Of Byte(), CancellationToken, Task), ILogger, TimeSpan?, CancellationToken)
-  fullName: Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(string, string, byte[], System.Func<byte[], System.Threading.CancellationToken, System.Threading.Tasks.Task>, Microsoft.Extensions.Logging.ILogger?, System.TimeSpan?, System.Threading.CancellationToken)
-  fullName.vb: Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(String, String, Byte(), System.Func(Of Byte(), System.Threading.CancellationToken, System.Threading.Tasks.Task), Microsoft.Extensions.Logging.ILogger, System.TimeSpan?, System.Threading.CancellationToken)
-  nameWithType: AxiamAmqpConsumer.StartAsync(string, string, byte[], Func<byte[], CancellationToken, Task>, ILogger?, TimeSpan?, CancellationToken)
-  nameWithType.vb: AxiamAmqpConsumer.StartAsync(String, String, Byte(), Func(Of Byte(), CancellationToken, Task), ILogger, TimeSpan?, CancellationToken)
+- uid: Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(System.String,System.String,Axiam.Sdk.Amqp.AmqpEventType,System.String,System.Byte[],System.Func{System.Byte[],System.Threading.CancellationToken,System.Threading.Tasks.Task},Microsoft.Extensions.Logging.ILogger,System.Nullable{System.TimeSpan},System.Threading.CancellationToken)
+  name: StartAsync(string, string, AmqpEventType, string, byte[], Func<byte[], CancellationToken, Task>, ILogger?, TimeSpan?, CancellationToken)
+  href: api/Axiam.Sdk.Amqp.AxiamAmqpConsumer.html#Axiam_Sdk_Amqp_AxiamAmqpConsumer_StartAsync_System_String_System_String_Axiam_Sdk_Amqp_AmqpEventType_System_String_System_Byte___System_Func_System_Byte___System_Threading_CancellationToken_System_Threading_Tasks_Task__Microsoft_Extensions_Logging_ILogger_System_Nullable_System_TimeSpan__System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(System.String,System.String,Axiam.Sdk.Amqp.AmqpEventType,System.String,System.Byte[],System.Func{System.Byte[],System.Threading.CancellationToken,System.Threading.Tasks.Task},Microsoft.Extensions.Logging.ILogger,System.Nullable{System.TimeSpan},System.Threading.CancellationToken)
+  name.vb: StartAsync(String, String, AmqpEventType, String, Byte(), Func(Of Byte(), CancellationToken, Task), ILogger, TimeSpan?, CancellationToken)
+  fullName: Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(string, string, Axiam.Sdk.Amqp.AmqpEventType, string, byte[], System.Func<byte[], System.Threading.CancellationToken, System.Threading.Tasks.Task>, Microsoft.Extensions.Logging.ILogger?, System.TimeSpan?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(String, String, Axiam.Sdk.Amqp.AmqpEventType, String, Byte(), System.Func(Of Byte(), System.Threading.CancellationToken, System.Threading.Tasks.Task), Microsoft.Extensions.Logging.ILogger, System.TimeSpan?, System.Threading.CancellationToken)
+  nameWithType: AxiamAmqpConsumer.StartAsync(string, string, AmqpEventType, string, byte[], Func<byte[], CancellationToken, Task>, ILogger?, TimeSpan?, CancellationToken)
+  nameWithType.vb: AxiamAmqpConsumer.StartAsync(String, String, AmqpEventType, String, Byte(), Func(Of Byte(), CancellationToken, Task), ILogger, TimeSpan?, CancellationToken)
 - uid: Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync*
   name: StartAsync
   href: api/Axiam.Sdk.Amqp.AxiamAmqpConsumer.html#Axiam_Sdk_Amqp_AxiamAmqpConsumer_StartAsync_
@@ -271,6 +353,136 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync
   nameWithType: AxiamAmqpConsumer.StartAsync
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester
+  name: AxiamAuthzRequester
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html
+  commentId: T:Axiam.Sdk.Amqp.AxiamAuthzRequester
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester
+  nameWithType: AxiamAuthzRequester
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.CheckAsync(System.String,System.String,System.String,System.String,System.Threading.CancellationToken)
+  name: CheckAsync(string, string, string, string?, CancellationToken)
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_CheckAsync_System_String_System_String_System_String_System_String_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Amqp.AxiamAuthzRequester.CheckAsync(System.String,System.String,System.String,System.String,System.Threading.CancellationToken)
+  name.vb: CheckAsync(String, String, String, String, CancellationToken)
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.CheckAsync(string, string, string, string?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Amqp.AxiamAuthzRequester.CheckAsync(String, String, String, String, System.Threading.CancellationToken)
+  nameWithType: AxiamAuthzRequester.CheckAsync(string, string, string, string?, CancellationToken)
+  nameWithType.vb: AxiamAuthzRequester.CheckAsync(String, String, String, String, CancellationToken)
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.CheckAsync*
+  name: CheckAsync
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_CheckAsync_
+  commentId: Overload:Axiam.Sdk.Amqp.AxiamAuthzRequester.CheckAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.CheckAsync
+  nameWithType: AxiamAuthzRequester.CheckAsync
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.ConnectAsync(System.String,System.String,System.Byte[],Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions,System.Security.Cryptography.X509Certificates.X509Certificate2,System.Security.Cryptography.X509Certificates.X509Certificate2,System.Threading.CancellationToken)
+  name: ConnectAsync(string, string, byte[], AxiamAuthzRequesterOptions?, X509Certificate2?, X509Certificate2?, CancellationToken)
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_ConnectAsync_System_String_System_String_System_Byte___Axiam_Sdk_Amqp_AxiamAuthzRequesterOptions_System_Security_Cryptography_X509Certificates_X509Certificate2_System_Security_Cryptography_X509Certificates_X509Certificate2_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Amqp.AxiamAuthzRequester.ConnectAsync(System.String,System.String,System.Byte[],Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions,System.Security.Cryptography.X509Certificates.X509Certificate2,System.Security.Cryptography.X509Certificates.X509Certificate2,System.Threading.CancellationToken)
+  name.vb: ConnectAsync(String, String, Byte(), AxiamAuthzRequesterOptions, X509Certificate2, X509Certificate2, CancellationToken)
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.ConnectAsync(string, string, byte[], Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions?, System.Security.Cryptography.X509Certificates.X509Certificate2?, System.Security.Cryptography.X509Certificates.X509Certificate2?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Amqp.AxiamAuthzRequester.ConnectAsync(String, String, Byte(), Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions, System.Security.Cryptography.X509Certificates.X509Certificate2, System.Security.Cryptography.X509Certificates.X509Certificate2, System.Threading.CancellationToken)
+  nameWithType: AxiamAuthzRequester.ConnectAsync(string, string, byte[], AxiamAuthzRequesterOptions?, X509Certificate2?, X509Certificate2?, CancellationToken)
+  nameWithType.vb: AxiamAuthzRequester.ConnectAsync(String, String, Byte(), AxiamAuthzRequesterOptions, X509Certificate2, X509Certificate2, CancellationToken)
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.ConnectAsync*
+  name: ConnectAsync
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_ConnectAsync_
+  commentId: Overload:Axiam.Sdk.Amqp.AxiamAuthzRequester.ConnectAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.ConnectAsync
+  nameWithType: AxiamAuthzRequester.ConnectAsync
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.CreateAsync(RabbitMQ.Client.IChannel,System.String,System.Byte[],Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions,System.Threading.CancellationToken)
+  name: CreateAsync(IChannel, string, byte[], AxiamAuthzRequesterOptions?, CancellationToken)
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_CreateAsync_RabbitMQ_Client_IChannel_System_String_System_Byte___Axiam_Sdk_Amqp_AxiamAuthzRequesterOptions_System_Threading_CancellationToken_
+  commentId: M:Axiam.Sdk.Amqp.AxiamAuthzRequester.CreateAsync(RabbitMQ.Client.IChannel,System.String,System.Byte[],Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions,System.Threading.CancellationToken)
+  name.vb: CreateAsync(IChannel, String, Byte(), AxiamAuthzRequesterOptions, CancellationToken)
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.CreateAsync(RabbitMQ.Client.IChannel, string, byte[], Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions?, System.Threading.CancellationToken)
+  fullName.vb: Axiam.Sdk.Amqp.AxiamAuthzRequester.CreateAsync(RabbitMQ.Client.IChannel, String, Byte(), Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions, System.Threading.CancellationToken)
+  nameWithType: AxiamAuthzRequester.CreateAsync(IChannel, string, byte[], AxiamAuthzRequesterOptions?, CancellationToken)
+  nameWithType.vb: AxiamAuthzRequester.CreateAsync(IChannel, String, Byte(), AxiamAuthzRequesterOptions, CancellationToken)
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.CreateAsync*
+  name: CreateAsync
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_CreateAsync_
+  commentId: Overload:Axiam.Sdk.Amqp.AxiamAuthzRequester.CreateAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.CreateAsync
+  nameWithType: AxiamAuthzRequester.CreateAsync
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.DefaultTimeout
+  name: DefaultTimeout
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_DefaultTimeout
+  commentId: F:Axiam.Sdk.Amqp.AxiamAuthzRequester.DefaultTimeout
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.DefaultTimeout
+  nameWithType: AxiamAuthzRequester.DefaultTimeout
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.DisposeAsync
+  name: DisposeAsync()
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_DisposeAsync
+  commentId: M:Axiam.Sdk.Amqp.AxiamAuthzRequester.DisposeAsync
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.DisposeAsync()
+  nameWithType: AxiamAuthzRequester.DisposeAsync()
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.DisposeAsync*
+  name: DisposeAsync
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_DisposeAsync_
+  commentId: Overload:Axiam.Sdk.Amqp.AxiamAuthzRequester.DisposeAsync
+  isSpec: "True"
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.DisposeAsync
+  nameWithType: AxiamAuthzRequester.DisposeAsync
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.KeyVersion
+  name: KeyVersion
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_KeyVersion
+  commentId: F:Axiam.Sdk.Amqp.AxiamAuthzRequester.KeyVersion
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.KeyVersion
+  nameWithType: AxiamAuthzRequester.KeyVersion
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.ReplyTo
+  name: ReplyTo
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_ReplyTo
+  commentId: P:Axiam.Sdk.Amqp.AxiamAuthzRequester.ReplyTo
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.ReplyTo
+  nameWithType: AxiamAuthzRequester.ReplyTo
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.ReplyTo*
+  name: ReplyTo
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_ReplyTo_
+  commentId: Overload:Axiam.Sdk.Amqp.AxiamAuthzRequester.ReplyTo
+  isSpec: "True"
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.ReplyTo
+  nameWithType: AxiamAuthzRequester.ReplyTo
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequester.RequestQueue
+  name: RequestQueue
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_RequestQueue
+  commentId: F:Axiam.Sdk.Amqp.AxiamAuthzRequester.RequestQueue
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequester.RequestQueue
+  nameWithType: AxiamAuthzRequester.RequestQueue
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions
+  name: AxiamAuthzRequesterOptions
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.html
+  commentId: T:Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions
+  nameWithType: AxiamAuthzRequesterOptions
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.Logger
+  name: Logger
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.html#Axiam_Sdk_Amqp_AxiamAuthzRequesterOptions_Logger
+  commentId: P:Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.Logger
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.Logger
+  nameWithType: AxiamAuthzRequesterOptions.Logger
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.Logger*
+  name: Logger
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.html#Axiam_Sdk_Amqp_AxiamAuthzRequesterOptions_Logger_
+  commentId: Overload:Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.Logger
+  isSpec: "True"
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.Logger
+  nameWithType: AxiamAuthzRequesterOptions.Logger
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.Timeout
+  name: Timeout
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.html#Axiam_Sdk_Amqp_AxiamAuthzRequesterOptions_Timeout
+  commentId: P:Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.Timeout
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.Timeout
+  nameWithType: AxiamAuthzRequesterOptions.Timeout
+- uid: Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.Timeout*
+  name: Timeout
+  href: api/Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.html#Axiam_Sdk_Amqp_AxiamAuthzRequesterOptions_Timeout_
+  commentId: Overload:Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.Timeout
+  isSpec: "True"
+  fullName: Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.Timeout
+  nameWithType: AxiamAuthzRequesterOptions.Timeout
 - uid: Axiam.Sdk.Amqp.Hmac
   name: Hmac
   href: api/Axiam.Sdk.Amqp.Hmac.html
@@ -653,6 +865,19 @@ references:
   commentId: T:Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions
   fullName: Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions
   nameWithType: AxiamOidcLoginOptions
+- uid: Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.AllowReturnTo
+  name: AllowReturnTo
+  href: api/Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.html#Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_AllowReturnTo
+  commentId: P:Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.AllowReturnTo
+  fullName: Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.AllowReturnTo
+  nameWithType: AxiamOidcLoginOptions.AllowReturnTo
+- uid: Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.AllowReturnTo*
+  name: AllowReturnTo
+  href: api/Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.html#Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_AllowReturnTo_
+  commentId: Overload:Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.AllowReturnTo
+  isSpec: "True"
+  fullName: Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.AllowReturnTo
+  nameWithType: AxiamOidcLoginOptions.AllowReturnTo
 - uid: Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.OnSuccessAsync
   name: OnSuccessAsync
   href: api/Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.html#Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_OnSuccessAsync
@@ -3948,6 +4173,12 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.ConsumeAsync
   nameWithType: MemoryOidcStateStore.ConsumeAsync
+- uid: Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.MaxEntries
+  name: MaxEntries
+  href: api/Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.html#Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore_MaxEntries
+  commentId: F:Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.MaxEntries
+  fullName: Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.MaxEntries
+  nameWithType: MemoryOidcStateStore.MaxEntries
 - uid: Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.MaxTtl
   name: MaxTtl
   href: api/Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.html#Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore_MaxTtl
@@ -4823,6 +5054,15 @@ references:
   fullName.vb: Axiam.Sdk.Auth.Oidc.OidcStateEntry.New(String, String, Axiam.Sdk.Core.Sensitive(Of String), String, String)
   nameWithType: OidcStateEntry.OidcStateEntry(string, string, Sensitive<string>, string, string?)
   nameWithType.vb: OidcStateEntry.New(String, String, Sensitive(Of String), String, String)
+- uid: Axiam.Sdk.Auth.Oidc.OidcStateEntry.#ctor(System.String,System.String,Axiam.Sdk.Core.Sensitive{System.String},System.String,System.String,System.String)
+  name: OidcStateEntry(string, string, Sensitive<string>, string, string?, string?)
+  href: api/Axiam.Sdk.Auth.Oidc.OidcStateEntry.html#Axiam_Sdk_Auth_Oidc_OidcStateEntry__ctor_System_String_System_String_Axiam_Sdk_Core_Sensitive_System_String__System_String_System_String_System_String_
+  commentId: M:Axiam.Sdk.Auth.Oidc.OidcStateEntry.#ctor(System.String,System.String,Axiam.Sdk.Core.Sensitive{System.String},System.String,System.String,System.String)
+  name.vb: New(String, String, Sensitive(Of String), String, String, String)
+  fullName: Axiam.Sdk.Auth.Oidc.OidcStateEntry.OidcStateEntry(string, string, Axiam.Sdk.Core.Sensitive<string>, string, string?, string?)
+  fullName.vb: Axiam.Sdk.Auth.Oidc.OidcStateEntry.New(String, String, Axiam.Sdk.Core.Sensitive(Of String), String, String, String)
+  nameWithType: OidcStateEntry.OidcStateEntry(string, string, Sensitive<string>, string, string?, string?)
+  nameWithType.vb: OidcStateEntry.New(String, String, Sensitive(Of String), String, String, String)
 - uid: Axiam.Sdk.Auth.Oidc.OidcStateEntry.#ctor*
   name: OidcStateEntry
   href: api/Axiam.Sdk.Auth.Oidc.OidcStateEntry.html#Axiam_Sdk_Auth_Oidc_OidcStateEntry__ctor_
@@ -4833,6 +5073,19 @@ references:
   fullName.vb: Axiam.Sdk.Auth.Oidc.OidcStateEntry.New
   nameWithType: OidcStateEntry.OidcStateEntry
   nameWithType.vb: OidcStateEntry.New
+- uid: Axiam.Sdk.Auth.Oidc.OidcStateEntry.BindingDigest
+  name: BindingDigest
+  href: api/Axiam.Sdk.Auth.Oidc.OidcStateEntry.html#Axiam_Sdk_Auth_Oidc_OidcStateEntry_BindingDigest
+  commentId: P:Axiam.Sdk.Auth.Oidc.OidcStateEntry.BindingDigest
+  fullName: Axiam.Sdk.Auth.Oidc.OidcStateEntry.BindingDigest
+  nameWithType: OidcStateEntry.BindingDigest
+- uid: Axiam.Sdk.Auth.Oidc.OidcStateEntry.BindingDigest*
+  name: BindingDigest
+  href: api/Axiam.Sdk.Auth.Oidc.OidcStateEntry.html#Axiam_Sdk_Auth_Oidc_OidcStateEntry_BindingDigest_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcStateEntry.BindingDigest
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcStateEntry.BindingDigest
+  nameWithType: OidcStateEntry.BindingDigest
 - uid: Axiam.Sdk.Auth.Oidc.OidcStateEntry.CodeVerifier
   name: CodeVerifier
   href: api/Axiam.Sdk.Auth.Oidc.OidcStateEntry.html#Axiam_Sdk_Auth_Oidc_OidcStateEntry_CodeVerifier
@@ -4846,6 +5099,22 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Auth.Oidc.OidcStateEntry.CodeVerifier
   nameWithType: OidcStateEntry.CodeVerifier
+- uid: Axiam.Sdk.Auth.Oidc.OidcStateEntry.Deconstruct(System.String@,System.String@,Axiam.Sdk.Core.Sensitive{System.String}@,System.String@,System.String@)
+  name: Deconstruct(out string, out string, out Sensitive<string>, out string, out string?)
+  href: api/Axiam.Sdk.Auth.Oidc.OidcStateEntry.html#Axiam_Sdk_Auth_Oidc_OidcStateEntry_Deconstruct_System_String__System_String__Axiam_Sdk_Core_Sensitive_System_String___System_String__System_String__
+  commentId: M:Axiam.Sdk.Auth.Oidc.OidcStateEntry.Deconstruct(System.String@,System.String@,Axiam.Sdk.Core.Sensitive{System.String}@,System.String@,System.String@)
+  name.vb: Deconstruct(String, String, Sensitive(Of String), String, String)
+  fullName: Axiam.Sdk.Auth.Oidc.OidcStateEntry.Deconstruct(out string, out string, out Axiam.Sdk.Core.Sensitive<string>, out string, out string?)
+  fullName.vb: Axiam.Sdk.Auth.Oidc.OidcStateEntry.Deconstruct(String, String, Axiam.Sdk.Core.Sensitive(Of String), String, String)
+  nameWithType: OidcStateEntry.Deconstruct(out string, out string, out Sensitive<string>, out string, out string?)
+  nameWithType.vb: OidcStateEntry.Deconstruct(String, String, Sensitive(Of String), String, String)
+- uid: Axiam.Sdk.Auth.Oidc.OidcStateEntry.Deconstruct*
+  name: Deconstruct
+  href: api/Axiam.Sdk.Auth.Oidc.OidcStateEntry.html#Axiam_Sdk_Auth_Oidc_OidcStateEntry_Deconstruct_
+  commentId: Overload:Axiam.Sdk.Auth.Oidc.OidcStateEntry.Deconstruct
+  isSpec: "True"
+  fullName: Axiam.Sdk.Auth.Oidc.OidcStateEntry.Deconstruct
+  nameWithType: OidcStateEntry.Deconstruct
 - uid: Axiam.Sdk.Auth.Oidc.OidcStateEntry.Nonce
   name: Nonce
   href: api/Axiam.Sdk.Auth.Oidc.OidcStateEntry.html#Axiam_Sdk_Auth_Oidc_OidcStateEntry_Nonce
@@ -14382,6 +14651,19 @@ references:
   isSpec: "True"
   fullName: Axiam.Sdk.Management.Models.AuditLogEntry.Metadata
   nameWithType: AuditLogEntry.Metadata
+- uid: Axiam.Sdk.Management.Models.AuditLogEntry.OrganizationId
+  name: OrganizationId
+  href: api/Axiam.Sdk.Management.Models.AuditLogEntry.html#Axiam_Sdk_Management_Models_AuditLogEntry_OrganizationId
+  commentId: P:Axiam.Sdk.Management.Models.AuditLogEntry.OrganizationId
+  fullName: Axiam.Sdk.Management.Models.AuditLogEntry.OrganizationId
+  nameWithType: AuditLogEntry.OrganizationId
+- uid: Axiam.Sdk.Management.Models.AuditLogEntry.OrganizationId*
+  name: OrganizationId
+  href: api/Axiam.Sdk.Management.Models.AuditLogEntry.html#Axiam_Sdk_Management_Models_AuditLogEntry_OrganizationId_
+  commentId: Overload:Axiam.Sdk.Management.Models.AuditLogEntry.OrganizationId
+  isSpec: "True"
+  fullName: Axiam.Sdk.Management.Models.AuditLogEntry.OrganizationId
+  nameWithType: AuditLogEntry.OrganizationId
 - uid: Axiam.Sdk.Management.Models.AuditLogEntry.Outcome
   name: Outcome
   href: api/Axiam.Sdk.Management.Models.AuditLogEntry.html#Axiam_Sdk_Management_Models_AuditLogEntry_Outcome

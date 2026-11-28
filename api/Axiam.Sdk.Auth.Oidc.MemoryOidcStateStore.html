@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.3.1/apiSpec/new?filename=Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.4.0/apiSpec/new?filename=Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore" data-uid="Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore" class="text-break">
-Class MemoryOidcStateStore  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L74"><i class="bi bi-code-slash"></i></a>
+Class MemoryOidcStateStore  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L108"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -155,7 +155,9 @@ backed by a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
   <h2 id="Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>Expired entries are dropped lazily on <a class="xref" href="Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.html#Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore_SaveAsync_Axiam_Sdk_Auth_Oidc_OidcStateEntry_System_Threading_CancellationToken_">SaveAsync(OidcStateEntry, CancellationToken)</a>/<a class="xref" href="Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.html#Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore_ConsumeAsync_System_String_System_Threading_CancellationToken_">ConsumeAsync(string, CancellationToken)</a>
 — there is NO background timer/thread, since a library must not keep the host process
-alive on its own. Suitable for a single-process app and for tests. A multi-instance
+alive on its own. The store holds at most <a class="xref" href="Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.html#Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore_MaxEntries">MaxEntries</a> entries: the login route is
+unauthenticated and every call saves one for up to ten minutes, so a client looping on it would
+otherwise grow the map without limit; when full, the OLDEST entry is evicted. Suitable for a single-process app and for tests. A multi-instance
 deployment needs a shared store (Redis, a database) — implement
 <a class="xref" href="Axiam.Sdk.Auth.Oidc.IOidcStateStore.html">IOidcStateStore</a> directly for that; nothing in this SDK assumes this type.</p>
 </div>
@@ -169,7 +171,7 @@ deployment needs a shared store (Redis, a database) — implement
 
   <h3 id="Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore__ctor_System_Nullable_System_TimeSpan__" data-uid="Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.#ctor(System.Nullable{System.TimeSpan})">
   MemoryOidcStateStore(TimeSpan?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L133"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs a <a class="xref" href="Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.html">MemoryOidcStateStore</a>. <code class="paramref">ttl</code> is the entry
@@ -205,9 +207,41 @@ maximum, while a shorter TTL is honored verbatim (useful in tests).</p>
 
 
 
+  <h3 id="Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore_MaxEntries" data-uid="Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.MaxEntries">
+  MaxEntries
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L120"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The most entries the store holds (10 000, as the TypeScript, Python and Kotlin stores). Saving one more
+evicts the oldest; its login then fails as an unknown state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int MaxEntries = 10000</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
   <h3 id="Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore_MaxTtl" data-uid="Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.MaxTtl">
   MaxTtl
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L80"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The CONTRACT.md §12.3 rule 1 MAXIMUM TTL for stored login state: 10 minutes,
@@ -244,7 +278,7 @@ matching the server's <code>federation_login_state</code> row lifetime (D-22).</
 
   <h3 id="Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore_Size" data-uid="Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.Size">
   Size
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L124"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L187"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The number of unexpired entries currently held. Intended for tests and
@@ -281,7 +315,7 @@ metrics.</p>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore_ConsumeAsync_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.ConsumeAsync(System.String,System.Threading.CancellationToken)">
   ConsumeAsync(string, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L175"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Atomically fetches AND REMOVES the entry for <code class="paramref">state</code>. Returns
@@ -328,7 +362,7 @@ regardless of timing.</p>
 
   <h3 id="Axiam_Sdk_Auth_Oidc_MemoryOidcStateStore_SaveAsync_Axiam_Sdk_Auth_Oidc_OidcStateEntry_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Auth.Oidc.MemoryOidcStateStore.SaveAsync(Axiam.Sdk.Auth.Oidc.OidcStateEntry,System.Threading.CancellationToken)">
   SaveAsync(OidcStateEntry, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Auth/Oidc/OidcStateStore.cs/#L140"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Persists <code class="paramref">entry</code>, keyed by its

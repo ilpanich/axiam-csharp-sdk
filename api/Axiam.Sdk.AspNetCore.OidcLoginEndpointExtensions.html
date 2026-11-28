@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.3.1/apiSpec/new?filename=Axiam_Sdk_AspNetCore_OidcLoginEndpointExtensions.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.4.0/apiSpec/new?filename=Axiam_Sdk_AspNetCore_OidcLoginEndpointExtensions.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_AspNetCore_OidcLoginEndpointExtensions" data-uid="Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions" class="text-break">
-Class OidcLoginEndpointExtensions  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L72"><i class="bi bi-code-slash"></i></a>
+Class OidcLoginEndpointExtensions  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L94"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -153,9 +153,11 @@ register.</p>
 
 
   <h2 id="Axiam_Sdk_AspNetCore_OidcLoginEndpointExtensions_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>This class performs no token extraction, sets no cookie, and touches no
-request/response object beyond what a minimal-API handler naturally does —
-establishing the application's OWN session is deliberately left to
+  <div class="markdown level0 remarks"><p>This class performs no token extraction and sets no application cookie — its one cookie is
+the browser-binding cookie of CONTRACT.md §12.8 (<code>__Host-axiam_oidc_bind</code>, or
+<code>axiam_oidc_bind</code> on a plain-HTTP loopback <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.html#Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_RedirectUri">RedirectUri</a>),
+set at login and cleared on every callback response. Establishing the application's OWN
+session is deliberately left to
 <a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.html#Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_OnSuccessAsync">OnSuccessAsync</a>, exactly as CONTRACT.md §12
 leaves &quot;what a session means&quot; to the application. The state store is what makes the two
 HTTP requests of a redirect flow into one login: <code>OidcBegin</code> produces
@@ -174,7 +176,7 @@ operations store nothing themselves).</p>
 
   <h3 id="Axiam_Sdk_AspNetCore_OidcLoginEndpointExtensions_MapAxiamOidcLogin_Microsoft_AspNetCore_Routing_IEndpointRouteBuilder_System_String_System_String_System_Action_Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions__" data-uid="Axiam.Sdk.AspNetCore.OidcLoginEndpointExtensions.MapAxiamOidcLogin(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.String,System.Action{Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions})">
   MapAxiamOidcLogin(IEndpointRouteBuilder, string, string, Action&lt;AxiamOidcLoginOptions&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Registers the &quot;Login with AXIAM&quot; login-redirect (<code class="paramref">loginPath</code>) and
@@ -218,9 +220,17 @@ already-used login state, an ID-token failure, or an OAuth2 protocol error;
 <code>503 oidc_unavailable</code> for a network failure reaching AXIAM (or any failure
 starting the flow). An optional <code>?return_to=</code> query parameter on the login
 request is captured with the state entry and used as the post-login destination when
-<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.html#Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_SuccessRedirect">SuccessRedirect</a> is unset — the caller (this
-application) owns the destination it names; that URL is never validated here
-(documented open-redirect responsibility of whoever populates <code>return_to</code>).</p>
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.html#Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_SuccessRedirect">SuccessRedirect</a> is unset — but only a same-origin
+relative path is kept (CONTRACT.md §12.8 rule 3; contract 1.68): an absolute URL, a
+scheme-relative one, a backslash form or a value with a control character is dropped at login
+and checked again before the redirect, and the flow falls back to the JSON summary.</p>
+<p>
+<b>Browser binding (§12.8 rule 1).</b> The login route sets a random binding cookie and stores
+its SHA-256 on the entry; the callback consumes the entry first and then refuses, with the same
+<code>401</code> it answers for an unknown state, unless the request presents the matching cookie — and
+in that case neither exchanges the code nor calls
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.html#Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_OnSuccessAsync">OnSuccessAsync</a>. Every callback response clears the cookie.
+</p>
 </div>
 
 

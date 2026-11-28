@@ -83,6 +83,34 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Amqp.AmqpAuthzDecision.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Amqp.AmqpAuthzDecision.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Amqp.AmqpAuthzDecision",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.AmqpAuthzDecision.yml\" sourcestartlinenumber=\"1\">A verified answer to one AMQP authorization request (CONTRACT.md §8, &quot;Signed authorization\nresponses&quot;, contract 1.68).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Amqp.AmqpEventType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Amqp.AmqpEventType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Amqp.AmqpEventType",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.AmqpEventType.yml\" sourcestartlinenumber=\"1\">The ONE signed event type an <xref href=\"Axiam.Sdk.Amqp.AxiamAmqpConsumer\" data-throw-if-not-resolved=\"false\"></xref> consumes (CONTRACT.md §8 step 2c, &quot;Typed: one\nconfigured type&quot;, contract 1.69, owner decision D-9). <code>AuthzRequest</code>, <code>AuditEventMessage</code> and\n<code>AuthzResponse</code> are signed with the same scheme under the same tenant subkey, so a genuine message of one\ntype replayed onto a queue that carries another passes the signature check; only its layout tells it apart. A\nconsumer therefore checks the canonical bytes against its configured type's layout and no other, and refuses\nevery other body as <code>malformed</code> before the HMAC is computed. An application that consumes both types runs\ntwo consumers, each typed.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Axiam.Sdk.Amqp.AxiamAmqpConsumer.yml",
       "output": {
         ".html": {
@@ -93,7 +121,35 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.Amqp.AxiamAmqpConsumer",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.AxiamAmqpConsumer.yml\" sourcestartlinenumber=\"1\">AMQP event consumer: verify-before-handler HMAC gate plus the\n<code>sdks/CONTRACT.md</code> §8 ack/nack matrix, built on <code>RabbitMQ.Client</code>\n7.x's async consumer API with automatic connection/topology recovery\nenabled (D-11).</p>\n<p>\n<xref href=\"Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(System.String%2cSystem.String%2cSystem.Byte%5b%5d%2cSystem.Func%7bSystem.Byte%5b%5d%2cSystem.Threading.CancellationToken%2cSystem.Threading.Tasks.Task%7d%2cMicrosoft.Extensions.Logging.ILogger%2cSystem.Nullable%7bSystem.TimeSpan%7d%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> NEVER hands an unverified delivery to the\ncaller-supplied handler — <xref href=\"Axiam.Sdk.Amqp.Hmac.Verify(System.Byte%5b%5d%2cSystem.Byte%5b%5d)\" data-throw-if-not-resolved=\"false\"></xref> runs first, and the\nhandler call site is structurally unreachable until it returns\n<code>true</code>. The remaining outcomes follow the exact §8 decision matrix:\n</p>\n<ul><li>HMAC verification fails → <code>BasicNackAsync(requeue: false)</code>\n+ a security-event log entry that never contains the received or\nexpected HMAC value; the handler is never invoked.</li><li>HMAC verifies but the NEW-4 replay-protection gate\n(<xref href=\"Axiam.Sdk.Amqp.ReplayGuard\" data-throw-if-not-resolved=\"false\"></xref>) rejects the delivery — <code>key_version</code> below\n<xref href=\"Axiam.Sdk.Amqp.ReplayGuard.MinKeyVersion\" data-throw-if-not-resolved=\"false\"></xref>, a stale/future <code>issued_at</code>, or a\nreplayed <code>nonce</code> — → <code>BasicNackAsync(requeue: false)</code> + a security-event\nlog entry; the handler is never invoked.</li><li>Handler returns normally → <code>BasicAckAsync</code>.</li><li>Handler throws <xref href=\"Axiam.Sdk.Amqp.PoisonMessageException\" data-throw-if-not-resolved=\"false\"></xref> (poison\nmessage) → <code>BasicNackAsync(requeue: false)</code>.</li><li>Handler throws any other exception (transient/retryable)\n→ <code>BasicNackAsync(requeue: true)</code>.</li></ul>\n"
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.AxiamAmqpConsumer.yml\" sourcestartlinenumber=\"1\">AMQP event consumer: verify-before-handler HMAC gate plus the\n<code>sdks/CONTRACT.md</code> §8 ack/nack matrix, built on <code>RabbitMQ.Client</code>\n7.x's async consumer API with automatic connection/topology recovery\nenabled (D-11).</p>\n<p>\n<xref href=\"Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(System.String%2cSystem.String%2cAxiam.Sdk.Amqp.AmqpEventType%2cSystem.String%2cSystem.Byte%5b%5d%2cSystem.Func%7bSystem.Byte%5b%5d%2cSystem.Threading.CancellationToken%2cSystem.Threading.Tasks.Task%7d%2cMicrosoft.Extensions.Logging.ILogger%2cSystem.Nullable%7bSystem.TimeSpan%7d%2cSystem.Threading.CancellationToken)\" data-throw-if-not-resolved=\"false\"></xref> NEVER hands an unverified delivery to the\ncaller-supplied handler — <xref href=\"Axiam.Sdk.Amqp.Hmac.Verify(System.Byte%5b%5d%2cSystem.Byte%5b%5d)\" data-throw-if-not-resolved=\"false\"></xref> runs first, and the\nhandler call site is structurally unreachable until it returns\n<code>true</code>. The handler is handed the very bytes\nthe HMAC covered (the delivery body, signature member included), never a re-serialization of them. The remaining outcomes follow the exact §8 decision matrix:\n</p>\n<ul><li>Every discard — <code>nack(requeue: false)</code>, the handler never invoked — is logged as ONE\nwarning-level security event carrying exactly <code>timestamp</code>, <code>exchange</code>, <code>routing_key</code>,\n<code>tenant_id</code> (the consumer's OWN configured tenant, never one read from the body) and <code>reason</code>, the first\nthat applies in the order of §8 rule 4: <code>malformed</code> (not one JSON object: the first byte is not <code>{</code>,\nor it does not parse), <code>unsigned</code> (no <code>hmac_signature</code> member), <code>malformed</code> (a duplicate or folded\nmember, a signature that is not a trailing 64-hex member, or a layout that is not the configured\n<xref href=\"Axiam.Sdk.Amqp.AmqpEventType\" data-throw-if-not-resolved=\"false\"></xref>'s — before the HMAC is computed), <code>signature</code>, <code>malformed</code> (the verified\nbytes do not decode), <code>key_version</code>, <code>stale</code>, <code>replay</code>. The event never contains a signature, a\nnonce, a key, the body, or any member read from it.</li><li>Handler returns normally → <code>BasicAckAsync</code>.</li><li>Handler throws <xref href=\"Axiam.Sdk.Amqp.PoisonMessageException\" data-throw-if-not-resolved=\"false\"></xref> (poison\nmessage) → <code>BasicNackAsync(requeue: false)</code>.</li><li>Handler throws any other exception (transient/retryable)\n→ <code>BasicNackAsync(requeue: true)</code>.</li></ul>\n<p>\nNo body escapes the consumer (§8 step 2, contract 1.69): whatever the bytes — empty, not UTF-8, a byte-order mark,\ndeeply nested, truncated, of another type — nothing is thrown out of the delivery loop and the next delivery is\nhandled.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Amqp.AxiamAuthzRequester.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Amqp.AxiamAuthzRequester.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Amqp.AxiamAuthzRequester",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.AxiamAuthzRequester.yml\" sourcestartlinenumber=\"1\">The AMQP authorization requester (CONTRACT.md §8, &quot;Signed authorization responses&quot;, contract 1.68;\naudit finding N2). It publishes a signed <code>AuthzRequest</code> on <code>axiam.authz.request</code> with a private,\nexclusive, broker-named <code>reply_to</code> queue, and accepts an answer only when it verifies as the server's\nsigned response to THAT request.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions",
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.yml\" sourcestartlinenumber=\"1\">Options for <xref href=\"Axiam.Sdk.Amqp.AxiamAuthzRequester\" data-throw-if-not-resolved=\"false\"></xref>. There is deliberately no option to accept an unsigned response\n(CONTRACT.md §8, contract 1.69): see the remarks of <xref href=\"Axiam.Sdk.Amqp.AxiamAuthzRequester\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -107,7 +163,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Axiam.Sdk.Amqp.Hmac",
-      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.Hmac.yml\" sourcestartlinenumber=\"1\">HMAC-SHA256 verify-before-handler primitive for inbound AMQP messages\n(<code>sdks/CONTRACT.md</code> §8, D-11).</p>\n<p>\n<b>Canonicalization is wire/insertion-order preserving, NEVER\nalphabetically sorted.</b> The canonical Rust signer\n(<code>crates/axiam-amqp/src/messages.rs</code>'s <code>sign_payload</code>) signs the\n<code>serde_json</code> struct-declaration-order serialization of the message\nbody (with <code>hmac_signature</code> absent). <xref href=\"System.Text.Json.Nodes.JsonObject\" data-throw-if-not-resolved=\"false\"></xref> is\nbacked by an ordered dictionary and preserves insertion order from\nparsing by default — <xref href=\"System.Text.Json.Nodes.JsonObject.Remove(System.String)\" data-throw-if-not-resolved=\"false\"></xref> mutates that same\nordered map in place, preserving the relative order of all remaining\nkeys. This is the single load-bearing property of this class: do NOT\nintroduce an alphabetized copy, <code>OrderBy</code>/<code>Sort</code>, or a POCO\ndeserialize-then-reserialize round-trip here — any of those would\nsilently reorder fields and break every cross-language HMAC\nverification.\n</p>\n"
+      "Summary": "<p sourcefile=\"api/Axiam.Sdk.Amqp.Hmac.yml\" sourcestartlinenumber=\"1\">HMAC-SHA256 verify-before-handler primitive for inbound AMQP messages\n(<code>sdks/CONTRACT.md</code> §8, D-11).</p>\n<p>\n<b>The signature is checked over the received bytes, never over a re-serialization.</b> The canonical Rust\nsigner (<code>crates/axiam-amqp/src/messages.rs</code>, <code>split_trailing_signature</code> on the verifying side) signs the\n<code>serde_json</code> compact serialization of the message with <code>hmac_signature</code> absent and then appends\n<code>,\"hmac_signature\":\"&lt;hex&gt;\"</code> as the LAST member. This class cuts that trailing member out of the\ndelivery body and HMACs the remaining bytes exactly as they arrived, so the result does not depend on how any\nJSON library in this process would print what it parsed (<code>System.Text.Json</code> escapes <code>&amp; &lt; &gt; '</code>\nand non-ASCII text, and writes <code>\\u001F</code> where serde_json writes <code>\\u001f</code>: a genuine message whose\nfields hold them failed verification when the body was re-serialized).\n</p>\n<p>\n<b>What is verified is what the handler reads (audit C2).</b> The consumer hands its handler the very bytes\nthat were verified. To make that equivalence hold, a body is refused unless it is one JSON object with\nunambiguous keys (no key twice at any depth, no two top-level keys differing only by case, nothing after the\nclosing brace) and ends in the trailing signature member: the one reading of the signed bytes is then the only\nreading any parser can take.\n</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -7603,11 +7659,11 @@
       "type": "Toc",
       "source_relative_path": "api/toc.yml",
       "output": {
-        ".json": {
-          "relative_path": "api/toc.json"
-        },
         ".html": {
           "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
         }
       },
       "version": ""
@@ -7626,11 +7682,11 @@
       "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
-        ".json": {
-          "relative_path": "toc.json"
-        },
         ".html": {
           "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
         }
       },
       "version": ""

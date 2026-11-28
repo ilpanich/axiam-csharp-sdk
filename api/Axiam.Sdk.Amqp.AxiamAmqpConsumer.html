@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class AxiamAmqpConsumer | AXIAM .NET SDK ">
       
-      <meta name="description" content="AMQP event consumer: verify-before-handler HMAC gate plus the sdks/CONTRACT.md &#167;8 ack/nack matrix, built on RabbitMQ.Client 7.x&#39;s async consumer API with automatic connection/topology recovery enabled (D-11).   NEVER hands an unverified delivery to the caller-supplied handler —  runs first, and the handler call site is structurally unreachable until it returns true. The remaining outcomes follow the exact &#167;8 decision matrix:  HMAC verification fails → BasicNackAsync(requeue: false) + a security-event log entry that never contains the received or expected HMAC value; the handler is never invoked.HMAC verifies but the NEW-4 replay-protection gate () rejects the delivery — key_version below , a stale/future issued_at, or a replayed nonce — → BasicNackAsync(requeue: false) + a security-event log entry; the handler is never invoked.Handler returns normally → BasicAckAsync.Handler throws  (poison message) → BasicNackAsync(requeue: false).Handler throws any other exception (transient/retryable) → BasicNackAsync(requeue: true).">
+      <meta name="description" content="AMQP event consumer: verify-before-handler HMAC gate plus the sdks/CONTRACT.md &#167;8 ack/nack matrix, built on RabbitMQ.Client 7.x&#39;s async consumer API with automatic connection/topology recovery enabled (D-11).   NEVER hands an unverified delivery to the caller-supplied handler —  runs first, and the handler call site is structurally unreachable until it returns true. The handler is handed the very bytes the HMAC covered (the delivery body, signature member included), never a re-serialization of them. The remaining outcomes follow the exact &#167;8 decision matrix:  Every discard — nack(requeue: false), the handler never invoked — is logged as ONE warning-level security event carrying exactly timestamp, exchange, routing_key, tenant_id (the consumer&#39;s OWN configured tenant, never one read from the body) and reason, the first that applies in the order of &#167;8 rule 4: malformed (not one JSON object: the first byte is not {, or it does not parse), unsigned (no hmac_signature member), malformed (a duplicate or folded member, a signature that is not a trailing 64-hex member, or a layout that is not the configured &#39;s — before the HMAC is computed), signature, malformed (the verified bytes do not decode), key_version, stale, replay. The event never contains a signature, a nonce, a key, the body, or any member read from it.Handler returns normally → BasicAckAsync.Handler throws  (poison message) → BasicNackAsync(requeue: false).Handler throws any other exception (transient/retryable) → BasicNackAsync(requeue: true).  No body escapes the consumer (&#167;8 step 2, contract 1.69): whatever the bytes — empty, not UTF-8, a byte-order mark, deeply nested, truncated, of another type — nothing is thrown out of the delivery loop and the next delivery is handled.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.3.1/apiSpec/new?filename=Axiam_Sdk_Amqp_AxiamAmqpConsumer.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Amqp.AxiamAmqpConsumer%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.4.0/apiSpec/new?filename=Axiam_Sdk_Amqp_AxiamAmqpConsumer.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Amqp.AxiamAmqpConsumer%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_Amqp_AxiamAmqpConsumer" data-uid="Axiam.Sdk.Amqp.AxiamAmqpConsumer" class="text-break">
-Class AxiamAmqpConsumer  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Amqp/AxiamAmqpConsumer.cs/#L39"><i class="bi bi-code-slash"></i></a>
+Class AxiamAmqpConsumer  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAmqpConsumer.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -102,20 +102,28 @@ Class AxiamAmqpConsumer  <a class="header-action link-secondary" title="View sou
 7.x's async consumer API with automatic connection/topology recovery
 enabled (D-11).</p>
 <p>
-<a class="xref" href="Axiam.Sdk.Amqp.AxiamAmqpConsumer.html#Axiam_Sdk_Amqp_AxiamAmqpConsumer_StartAsync_System_String_System_String_System_Byte___System_Func_System_Byte___System_Threading_CancellationToken_System_Threading_Tasks_Task__Microsoft_Extensions_Logging_ILogger_System_Nullable_System_TimeSpan__System_Threading_CancellationToken_">StartAsync(string, string, byte[], Func&lt;byte[], CancellationToken, Task&gt;, ILogger?, TimeSpan?, CancellationToken)</a> NEVER hands an unverified delivery to the
+<a class="xref" href="Axiam.Sdk.Amqp.AxiamAmqpConsumer.html#Axiam_Sdk_Amqp_AxiamAmqpConsumer_StartAsync_System_String_System_String_Axiam_Sdk_Amqp_AmqpEventType_System_String_System_Byte___System_Func_System_Byte___System_Threading_CancellationToken_System_Threading_Tasks_Task__Microsoft_Extensions_Logging_ILogger_System_Nullable_System_TimeSpan__System_Threading_CancellationToken_">StartAsync(string, string, AmqpEventType, string, byte[], Func&lt;byte[], CancellationToken, Task&gt;, ILogger?, TimeSpan?, CancellationToken)</a> NEVER hands an unverified delivery to the
 caller-supplied handler — <a class="xref" href="Axiam.Sdk.Amqp.Hmac.html#Axiam_Sdk_Amqp_Hmac_Verify_System_Byte___System_Byte___">Verify(byte[], byte[])</a> runs first, and the
 handler call site is structurally unreachable until it returns
-<code>true</code>. The remaining outcomes follow the exact §8 decision matrix:
+<code>true</code>. The handler is handed the very bytes
+the HMAC covered (the delivery body, signature member included), never a re-serialization of them. The remaining outcomes follow the exact §8 decision matrix:
 </p>
-<ul><li>HMAC verification fails → <code>BasicNackAsync(requeue: false)</code>
-+ a security-event log entry that never contains the received or
-expected HMAC value; the handler is never invoked.</li><li>HMAC verifies but the NEW-4 replay-protection gate
-(<a class="xref" href="Axiam.Sdk.Amqp.ReplayGuard.html">ReplayGuard</a>) rejects the delivery — <code>key_version</code> below
-<a class="xref" href="Axiam.Sdk.Amqp.ReplayGuard.html#Axiam_Sdk_Amqp_ReplayGuard_MinKeyVersion">MinKeyVersion</a>, a stale/future <code>issued_at</code>, or a
-replayed <code>nonce</code> — → <code>BasicNackAsync(requeue: false)</code> + a security-event
-log entry; the handler is never invoked.</li><li>Handler returns normally → <code>BasicAckAsync</code>.</li><li>Handler throws <a class="xref" href="Axiam.Sdk.Amqp.PoisonMessageException.html">PoisonMessageException</a> (poison
+<ul><li>Every discard — <code>nack(requeue: false)</code>, the handler never invoked — is logged as ONE
+warning-level security event carrying exactly <code>timestamp</code>, <code>exchange</code>, <code>routing_key</code>,
+<code>tenant_id</code> (the consumer's OWN configured tenant, never one read from the body) and <code>reason</code>, the first
+that applies in the order of §8 rule 4: <code>malformed</code> (not one JSON object: the first byte is not <code>{</code>,
+or it does not parse), <code>unsigned</code> (no <code>hmac_signature</code> member), <code>malformed</code> (a duplicate or folded
+member, a signature that is not a trailing 64-hex member, or a layout that is not the configured
+<a class="xref" href="Axiam.Sdk.Amqp.AmqpEventType.html">AmqpEventType</a>'s — before the HMAC is computed), <code>signature</code>, <code>malformed</code> (the verified
+bytes do not decode), <code>key_version</code>, <code>stale</code>, <code>replay</code>. The event never contains a signature, a
+nonce, a key, the body, or any member read from it.</li><li>Handler returns normally → <code>BasicAckAsync</code>.</li><li>Handler throws <a class="xref" href="Axiam.Sdk.Amqp.PoisonMessageException.html">PoisonMessageException</a> (poison
 message) → <code>BasicNackAsync(requeue: false)</code>.</li><li>Handler throws any other exception (transient/retryable)
 → <code>BasicNackAsync(requeue: true)</code>.</li></ul>
+<p>
+No body escapes the consumer (§8 step 2, contract 1.69): whatever the bytes — empty, not UTF-8, a byte-order mark,
+deeply nested, truncated, of another type — nothing is thrown out of the delivery loop and the next delivery is
+handled.
+</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -177,7 +185,7 @@ message) → <code>BasicNackAsync(requeue: false)</code>.</li><li>Handler throws
 
   <h3 id="Axiam_Sdk_Amqp_AxiamAmqpConsumer_DefaultNetworkRecoveryInterval" data-uid="Axiam.Sdk.Amqp.AxiamAmqpConsumer.DefaultNetworkRecoveryInterval">
   DefaultNetworkRecoveryInterval
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Amqp/AxiamAmqpConsumer.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAmqpConsumer.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Default network-recovery interval applied to the connection factory.</p>
@@ -208,7 +216,7 @@ message) → <code>BasicNackAsync(requeue: false)</code>.</li><li>Handler throws
 
   <h3 id="Axiam_Sdk_Amqp_AxiamAmqpConsumer_DefaultPrefetchCount" data-uid="Axiam.Sdk.Amqp.AxiamAmqpConsumer.DefaultPrefetchCount">
   DefaultPrefetchCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Amqp/AxiamAmqpConsumer.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAmqpConsumer.cs/#L50"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Default QoS prefetch count.</p>
@@ -244,7 +252,7 @@ message) → <code>BasicNackAsync(requeue: false)</code>.</li><li>Handler throws
 
   <h3 id="Axiam_Sdk_Amqp_AxiamAmqpConsumer_DisposeAsync" data-uid="Axiam.Sdk.Amqp.AxiamAmqpConsumer.DisposeAsync">
   DisposeAsync()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Amqp/AxiamAmqpConsumer.cs/#L194"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAmqpConsumer.cs/#L306"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs application-defined tasks associated with freeing, releasing, or
@@ -276,9 +284,9 @@ resetting unmanaged resources asynchronously.</p>
 
   <a id="Axiam_Sdk_Amqp_AxiamAmqpConsumer_StartAsync_" data-uid="Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync*"></a>
 
-  <h3 id="Axiam_Sdk_Amqp_AxiamAmqpConsumer_StartAsync_System_String_System_String_System_Byte___System_Func_System_Byte___System_Threading_CancellationToken_System_Threading_Tasks_Task__Microsoft_Extensions_Logging_ILogger_System_Nullable_System_TimeSpan__System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(System.String,System.String,System.Byte[],System.Func{System.Byte[],System.Threading.CancellationToken,System.Threading.Tasks.Task},Microsoft.Extensions.Logging.ILogger,System.Nullable{System.TimeSpan},System.Threading.CancellationToken)">
-  StartAsync(string, string, byte[], Func&lt;byte[], CancellationToken, Task&gt;, ILogger?, TimeSpan?, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk/Amqp/AxiamAmqpConsumer.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Axiam_Sdk_Amqp_AxiamAmqpConsumer_StartAsync_System_String_System_String_Axiam_Sdk_Amqp_AmqpEventType_System_String_System_Byte___System_Func_System_Byte___System_Threading_CancellationToken_System_Threading_Tasks_Task__Microsoft_Extensions_Logging_ILogger_System_Nullable_System_TimeSpan__System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Amqp.AxiamAmqpConsumer.StartAsync(System.String,System.String,Axiam.Sdk.Amqp.AmqpEventType,System.String,System.Byte[],System.Func{System.Byte[],System.Threading.CancellationToken,System.Threading.Tasks.Task},Microsoft.Extensions.Logging.ILogger,System.Nullable{System.TimeSpan},System.Threading.CancellationToken)">
+  StartAsync(string, string, AmqpEventType, string, byte[], Func&lt;byte[], CancellationToken, Task&gt;, ILogger?, TimeSpan?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAmqpConsumer.cs/#L89"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Connects to <code class="paramref">amqpUri</code>, opens a channel with automatic
@@ -291,7 +299,7 @@ matrix documented on this class.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task StartAsync(string amqpUri, string queue, byte[] signingKey, Func&lt;byte[], CancellationToken, Task&gt; handler, ILogger? logger = null, TimeSpan? replaySkew = null, CancellationToken cancellationToken = default)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task StartAsync(string amqpUri, string queue, AmqpEventType eventType, string tenantId, byte[] signingKey, Func&lt;byte[], CancellationToken, Task&gt; handler, ILogger? logger = null, TimeSpan? replaySkew = null, CancellationToken cancellationToken = default)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -301,6 +309,14 @@ matrix documented on this class.</p>
 </dd>
     <dt><code>queue</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd><p>The queue name to consume from.</p>
+</dd>
+    <dt><code>eventType</code> <a class="xref" href="Axiam.Sdk.Amqp.AmqpEventType.html">AmqpEventType</a></dt>
+    <dd><p>The ONE signed type this consumer consumes (§8 step 2c, contract 1.69). A body with
+any other layout is refused as <code>malformed</code>, before the HMAC. To consume both types, run two consumers.</p>
+</dd>
+    <dt><code>tenantId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The consumer's OWN tenant: the tenant whose subkey <code class="paramref">signingKey</code> is. It
+is the <code>tenant_id</code> of every discard event; nothing is read from a body for it.</p>
 </dd>
     <dt><code>signingKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
     <dd><p>The per-tenant AMQP HMAC signing secret (§8.1

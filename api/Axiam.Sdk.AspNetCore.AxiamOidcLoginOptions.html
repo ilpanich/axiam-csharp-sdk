@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.3.1/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.4.0/apiSpec/new?filename=Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions.md&amp;value=---%0Auid%3A%20Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions" class="text-break">
-Class AxiamOidcLoginOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L15"><i class="bi bi-code-slash"></i></a>
+Class AxiamOidcLoginOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -152,11 +152,49 @@ the two routes of a login flow cannot drift apart (same redirect URI, same scope
 </h2>
 
 
+  <a id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_AllowReturnTo_" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.AllowReturnTo*"></a>
+
+  <h3 id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_AllowReturnTo" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.AllowReturnTo">
+  AllowReturnTo
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Widens the <code>return_to</code> rule (CONTRACT.md §12.8 rule 3; contract 1.68). By default a
+<code>return_to</code> is honoured only when it is a same-origin relative path: it starts with a single
+<code>/</code>, does not start with <code>//</code> or <code>/&lt;/code&gt;, and contains no backslash and no control
+character. Supply a predicate to accept more, for example an allowlist of the application's other
+origins; it is consulted, when the value is stored and again before it is followed, only for a value the
+default rule refuses, and a predicate that throws accepts nothing. <code>null</code> — the default — means
+the default rule alone decides. There is no built-in predicate that accepts absolute URLs.</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Func&lt;string, bool&gt;? AllowReturnTo { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_OnSuccessAsync_" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.OnSuccessAsync*"></a>
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_OnSuccessAsync" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.OnSuccessAsync">
   OnSuccessAsync
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L69"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Called with the validated token set once the exchange succeeds — the hook where an
@@ -185,6 +223,12 @@ login time is available. May be <code>null</code>.</p>
 
 
 
+  <h4 class="section" id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_OnSuccessAsync_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.httpcontext">HttpContext</a> is the request that completed the sign-in, so an application
+creates its session on it without ambient context. It runs only after the callback has proved
+it came from the browser that started the login (the binding cookie, CONTRACT.md §12.8) and
+the code exchange and ID-token checks have succeeded.</p>
+</div>
 
 
 
@@ -193,7 +237,7 @@ login time is available. May be <code>null</code>.</p>
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_RedirectUri" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.RedirectUri">
   RedirectUri
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The relying party's redirect URI — the public URL of the callback route — replayed
@@ -233,7 +277,7 @@ delegate, so properties must be settable after construction.</p>
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_Scope" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.Scope">
   Scope
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The requested scope. <code>&quot;openid&quot;</code> is added automatically when absent
@@ -266,12 +310,13 @@ delegate, so properties must be settable after construction.</p>
 
   <h3 id="Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_SuccessRedirect" data-uid="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.SuccessRedirect">
   SuccessRedirect
-  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.3.1/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk.AspNetCore/OidcLoginEndpoints.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Where to send the browser after a successful login. Falls back to the
 <a class="xref" href="Axiam.Sdk.Auth.Oidc.OidcStateEntry.html#Axiam_Sdk_Auth_Oidc_OidcStateEntry_ReturnTo">ReturnTo</a> captured at login time (from the
-<code>?return_to=</code> query parameter), then to a <code>200</code> JSON summary.</p>
+<code>?return_to=</code> query parameter) when that is a same-origin relative path (see
+<a class="xref" href="Axiam.Sdk.AspNetCore.AxiamOidcLoginOptions.html#Axiam_Sdk_AspNetCore_AxiamOidcLoginOptions_AllowReturnTo">AllowReturnTo</a>), then to a <code>200</code> JSON summary.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

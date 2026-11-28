@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class AxiamAuthzRequester | AXIAM .NET SDK </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class AxiamAuthzRequester | AXIAM .NET SDK ">
+      
+      <meta name="description" content="The AMQP authorization requester (CONTRACT.md &#167;8, &amp;quot;Signed authorization responses&amp;quot;, contract 1.68; audit finding N2). It publishes a signed AuthzRequest on axiam.authz.request with a private, exclusive, broker-named reply_to queue, and accepts an answer only when it verifies as the server&#39;s signed response to THAT request.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/ilpanich/axiam-csharp-sdk/new/v1.4.0/apiSpec/new?filename=Axiam_Sdk_Amqp_AxiamAuthzRequester.md&amp;value=---%0Auid%3A%20Axiam.Sdk.Amqp.AxiamAuthzRequester%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AXIAM">
+            AXIAM
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester">
+
+
+
+  <h1 id="Axiam_Sdk_Amqp_AxiamAuthzRequester" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester" class="text-break">
+Class AxiamAuthzRequester  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAuthzRequester.cs/#L215"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><span class="xref">Axiam</span>.<a class="xref" href="Axiam.Sdk.html">Sdk</a>.<a class="xref" href="Axiam.Sdk.Amqp.html">Amqp</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Axiam.Sdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>The AMQP authorization requester (CONTRACT.md §8, &quot;Signed authorization responses&quot;, contract 1.68;
+audit finding N2). It publishes a signed <code>AuthzRequest</code> on <code>axiam.authz.request</code> with a private,
+exclusive, broker-named <code>reply_to</code> queue, and accepts an answer only when it verifies as the server's
+signed response to THAT request.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class AxiamAuthzRequester : IAsyncDisposable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">AxiamAuthzRequester</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iasyncdisposable">IAsyncDisposable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Axiam_Sdk_Amqp_AxiamAuthzRequester_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+<b>Verify the received bytes, deliver the same bytes (audit C2).</b> The signature is checked over the
+delivery body with its trailing <code>hmac_signature</code> member cut out — never over a re-serialization,
+whose string escaping would differ from the server's for a <code>reason</code> that echoes
+<code>&lt; &gt; &amp;</code> or non-ASCII text — and the decision handed to the caller is decoded from those
+very canonical bytes.
+</p>
+<p>
+<b>What a response must satisfy</b> (consumer obligations 1–4): <code>allowed</code> a JSON boolean and
+<code>tenant_id</code>, <code>nonce</code> and <code>hmac_signature</code> present, with the signature the last member and no
+duplicate or case-variant keys; <code>HMAC-SHA256</code> under the subkey of the requester's OWN tenant and the
+<code>key_version</code> it sent, compared in constant time; and <code>tenant_id</code>, <code>correlation_id</code> and
+<code>nonce</code> equal to one outstanding request, which is then retired. Anything else is nacked without
+requeue, logged as a security event without a signature value, and never an allow; the check keeps waiting
+for the genuine answer until it times out.
+</p>
+<p>
+<b>Trust boundary.</b> The key is the tenant's own subkey, so a valid signature proves the answer came from a
+holder of it, not from the server in particular; this is why every requester uses its own exclusive reply
+queue (see the contract's trust-boundary clause). The requester takes the subkey for <code>key_version</code> 2 from
+the caller — derive it as §8 describes, from the key the management API returns; it never reads it
+from a response.
+</p>
+<p>
+A broker confirm is not evidence that AXIAM decided a request, and a minimal-profile server
+(<code>AXIAM__AMQP__ENABLED=false</code>) reads no AMQP queue at all: a check then times out. Use REST or gRPC there.
+</p>
+<p>
+<b>Server version, and no unsigned responses.</b> The AMQP authorization requester requires an AXIAM server of
+1.68 or later (contract 1.68). Such a server signs every authorization response with the tenant's AMQP subkey and
+answers on the requester's private <code>reply_to</code> queue. A server older than 1.68 ignores <code>reply_to</code> and
+answers, unsigned, only on the shared <code>axiam.authz.response</code> queue, which this requester never reads: against
+it every check times out. There is no option to accept unsigned responses (CONTRACT 1.69 §8): no AXIAM
+server sends one to a reply queue, so an unsigned response can only have been published by someone else, and it
+is discarded and logged. During a rolling upgrade from a pre-1.68 server, use REST or gRPC authorization until
+every replica runs 1.68 or later.
+</p>
+<p>
+<b>The discard event.</b> Every response that is discarded (reason <code>malformed</code>, <code>unsigned</code>,
+<code>signature</code>, <code>tenant</code> or <code>unknown_request</code>) logs one warning on <a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.html#Axiam_Sdk_Amqp_AxiamAuthzRequesterOptions_Logger">Logger</a>
+with exactly the members <code>timestamp</code> (RFC 3339 UTC), <code>exchange</code>, <code>routing_key</code> (the requester's own
+reply queue), <code>tenant_id</code> (the requester's OWN tenant, never the one the response claims) and <code>reason</code>.
+The body is unauthenticated input: no signature, nonce, correlation id or other body member is ever logged.
+</p>
+</div>
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="Axiam_Sdk_Amqp_AxiamAuthzRequester_DefaultTimeout" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.DefaultTimeout">
+  DefaultTimeout
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAuthzRequester.cs/#L224"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The default bound on one <a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_CheckAsync_System_String_System_String_System_String_System_String_System_Threading_CancellationToken_">CheckAsync(string, string, string, string?, CancellationToken)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly TimeSpan DefaultTimeout</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Axiam_Sdk_Amqp_AxiamAuthzRequester_KeyVersion" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.KeyVersion">
+  KeyVersion
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAuthzRequester.cs/#L221"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The <code>key_version</code> this requester sends; the caller supplies the matching tenant subkey.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int KeyVersion = 2</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Axiam_Sdk_Amqp_AxiamAuthzRequester_RequestQueue" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.RequestQueue">
+  RequestQueue
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAuthzRequester.cs/#L218"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The queue the server consumes <code>AuthzRequest</code> from.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string RequestQueue = &quot;axiam.authz.request&quot;</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Axiam_Sdk_Amqp_AxiamAuthzRequester_ReplyTo_" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.ReplyTo*"></a>
+
+  <h3 id="Axiam_Sdk_Amqp_AxiamAuthzRequester_ReplyTo" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.ReplyTo">
+  ReplyTo
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAuthzRequester.cs/#L272"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The private reply queue requests name in their <code>reply_to</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ReplyTo { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Axiam_Sdk_Amqp_AxiamAuthzRequester_CheckAsync_" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.CheckAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Amqp_AxiamAuthzRequester_CheckAsync_System_String_System_String_System_String_System_String_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.CheckAsync(System.String,System.String,System.String,System.String,System.Threading.CancellationToken)">
+  CheckAsync(string, string, string, string?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAuthzRequester.cs/#L411"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Asks the server whether <code class="paramref">subjectId</code> may perform <code class="paramref">action</code> on
+<code class="paramref">resourceId</code> (optionally narrowed by <code class="paramref">scope</code>) and waits for the verified
+answer. A response that fails verification or binding is discarded and the call keeps waiting for the
+genuine one until it is cancelled or times out: a failed verification is never an allow and never
+completes the request.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;AmqpAuthzDecision&gt; CheckAsync(string subjectId, string action, string resourceId, string? scope = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>subjectId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>action</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>resourceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>scope</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Amqp.AmqpAuthzDecision.html">AmqpAuthzDecision</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timeoutexception">TimeoutException</a></dt>
+    <dd><p>No verified answer arrived within the configured timeout.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></dt>
+    <dd><p>The requester, or its reply queue, is closed.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.operationcanceledexception">OperationCanceledException</a></dt>
+    <dd><p><code class="paramref">cancellationToken</code> was cancelled.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Axiam_Sdk_Amqp_AxiamAuthzRequester_ConnectAsync_" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.ConnectAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Amqp_AxiamAuthzRequester_ConnectAsync_System_String_System_String_System_Byte___Axiam_Sdk_Amqp_AxiamAuthzRequesterOptions_System_Security_Cryptography_X509Certificates_X509Certificate2_System_Security_Cryptography_X509Certificates_X509Certificate2_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.ConnectAsync(System.String,System.String,System.Byte[],Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions,System.Security.Cryptography.X509Certificates.X509Certificate2,System.Security.Cryptography.X509Certificates.X509Certificate2,System.Threading.CancellationToken)">
+  ConnectAsync(string, string, byte[], AxiamAuthzRequesterOptions?, X509Certificate2?, X509Certificate2?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAuthzRequester.cs/#L308"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Connects to <code class="paramref">amqpUri</code> (<code>amqps://</code> only, §8b, with the broker verified), opens a
+channel, and returns a requester that owns both: disposing it closes them.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;AxiamAuthzRequester&gt; ConnectAsync(string amqpUri, string tenantId, byte[] signingKey, AxiamAuthzRequesterOptions? options = null, X509Certificate2? brokerCaCertificate = null, X509Certificate2? clientCertificate = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>amqpUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The broker URI; anything but <code>amqps://</code> is refused.</p>
+</dd>
+    <dt><code>tenantId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The requester's OWN tenant.</p>
+</dd>
+    <dt><code>signingKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The tenant's AMQP subkey for <a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_KeyVersion">KeyVersion</a>.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.html">AxiamAuthzRequesterOptions</a></dt>
+    <dd><p>Optional behaviour.</p>
+</dd>
+    <dt><code>brokerCaCertificate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.security.cryptography.x509certificates.x509certificate2">X509Certificate2</a></dt>
+    <dd><p>The CA of a privately-issued broker certificate, or <code>null</code>.</p>
+</dd>
+    <dt><code>clientCertificate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.security.cryptography.x509certificates.x509certificate2">X509Certificate2</a></dt>
+    <dd><p>A client certificate with its private key for mutual TLS, or <code>null</code>.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels connecting and the queue declaration.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequester.html">AxiamAuthzRequester</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Amqp_AxiamAuthzRequester_CreateAsync_" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.CreateAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Amqp_AxiamAuthzRequester_CreateAsync_RabbitMQ_Client_IChannel_System_String_System_Byte___Axiam_Sdk_Amqp_AxiamAuthzRequesterOptions_System_Threading_CancellationToken_" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.CreateAsync(RabbitMQ.Client.IChannel,System.String,System.Byte[],Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions,System.Threading.CancellationToken)">
+  CreateAsync(IChannel, string, byte[], AxiamAuthzRequesterOptions?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAuthzRequester.cs/#L286"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Opens a private reply queue on <code class="paramref">channel</code> and returns a requester for
+<code class="paramref">tenantId</code>. The channel stays the caller's: disposing the requester stops consuming but
+does not close it. For a connection this SDK opens (and verifies, §8b), see
+<a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_ConnectAsync_System_String_System_String_System_Byte___Axiam_Sdk_Amqp_AxiamAuthzRequesterOptions_System_Security_Cryptography_X509Certificates_X509Certificate2_System_Security_Cryptography_X509Certificates_X509Certificate2_System_Threading_CancellationToken_">ConnectAsync(string, string, byte[], AxiamAuthzRequesterOptions?, X509Certificate2?, X509Certificate2?, CancellationToken)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;AxiamAuthzRequester&gt; CreateAsync(IChannel channel, string tenantId, byte[] signingKey, AxiamAuthzRequesterOptions? options = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>channel</code> <span class="xref">IChannel</span></dt>
+    <dd><p>A channel on a connection the caller opened over <code>amqps://</code> (§8b).</p>
+</dd>
+    <dt><code>tenantId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The requester's OWN tenant: the only tenant a response is accepted for.</p>
+</dd>
+    <dt><code>signingKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The tenant's AMQP subkey for <a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequester.html#Axiam_Sdk_Amqp_AxiamAuthzRequester_KeyVersion">KeyVersion</a> (§8: HKDF of the key
+the management API returns).</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequesterOptions.html">AxiamAuthzRequesterOptions</a></dt>
+    <dd><p>Optional behaviour.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Cancels the queue declaration.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="Axiam.Sdk.Amqp.AxiamAuthzRequester.html">AxiamAuthzRequester</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Axiam_Sdk_Amqp_AxiamAuthzRequester_DisposeAsync_" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.DisposeAsync*"></a>
+
+  <h3 id="Axiam_Sdk_Amqp_AxiamAuthzRequester_DisposeAsync" data-uid="Axiam.Sdk.Amqp.AxiamAuthzRequester.DisposeAsync">
+  DisposeAsync()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/ilpanich/axiam-csharp-sdk/blob/v1.4.0/Axiam.Sdk/Amqp/AxiamAuthzRequester.cs/#L446"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Stops accepting answers; outstanding and later checks fail with
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a>. The reply queue is exclusive and auto-delete, so the broker removes
+it with the channel.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ValueTask DisposeAsync()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.valuetask">ValueTask</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
